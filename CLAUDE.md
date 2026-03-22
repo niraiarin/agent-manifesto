@@ -60,6 +60,7 @@
 - `/metrics` — P4 V1–V7 ダッシュボード
 - `/adjust-action-space` — D8 行動空間の拡張/縮小提案
 - `/design-implementation-plan` — D1–D9 のプロバイダマッピング
+- `/package-plugin` — .claude/ 構成を Plugin としてパッケージ化
 
 ## Hook による構造的強制
 

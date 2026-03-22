@@ -16,10 +16,10 @@ STRUCTURAL_PATTERNS='\.claude/|tests/|manifesto\.md|constraints-taxonomy|design-
 STAGED=$(git diff --cached --name-only 2>/dev/null)
 
 if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then
-  # コミットメッセージを抽出（-m "..." パターン）
-  MSG=$(echo "$COMMAND" | grep -oP '(?<=-m\s)["\x27].*?["\x27]' | tr -d "\"'" || echo "")
-  
-  # 互換性分類キーワードの検出
+  # コミットメッセージを抽出（-m "..." or -m '...' パターン、POSIX互換）
+  MSG=$(echo "$COMMAND" | sed -n 's/.*-m[[:space:]]*["'"'"']\([^"'"'"']*\)["'"'"'].*/\1/p')
+
+  # 互換性分類キーワードの検出（MSG が空でも COMMAND 全体を検索）
   if echo "$MSG$COMMAND" | grep -qiE '(conservative|compatible|breaking|保守的|互換的|破壊的)'; then
     exit 0
   fi
