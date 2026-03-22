@@ -85,26 +85,94 @@ theorem d1_enforcement_monotone :
 E1a (verification_requires_independence) が直接の根拠。
 -/
 
-/-- 検証構成の分離条件。D2 の3条件を型で表現。 -/
-structure VerificationSeparation where
-  /-- Worker と Verifier のコンテキストが分離されている -/
-  contextSeparated    : Bool
-  /-- Worker の中間状態が Verifier に漏洩しない -/
-  biasNotShared       : Bool
-  /-- Verifier は Worker から独立に起動される -/
-  independentlyLaunched : Bool
+/-- 評価検証の独立性の4条件。
+
+    旧3条件（コンテキスト分離、バイアス非共有、独立起動）はプロセスレベルの
+    独立性のみ。評価者自体の独立性がないと「同じモデルが別コンテキストで
+    同じ間違いをする」問題が残る。
+
+    4条件:
+    1. コンテキスト分離: Worker の思考過程・中間状態が Verifier に漏洩しない
+    2. フレーミング非依存: 検証基準が Worker に事後定義されない
+       （旧「バイアス非共有」の精密化。成果物だけでなく、
+       「何を検証すべきか」の枠組みも Worker から独立している）
+    3. 実行の自動性: Worker が検証を回避できない
+       （旧「独立起動」の強化。Worker の裁量に依存しない）
+    4. 評価者の独立: 同一の判断傾向を持たない別の主体が評価する
+       （人間: コンテキストを持たず十分な知識を持つ別人。
+        LLM: 同じコンテキストを持たない別のモデル。
+        同一モデル・別コンテキストは Subagent に相当し、
+        プロセス分離は達成するが評価者の独立は達成しない） -/
+structure VerificationIndependence where
+  /-- Worker の思考過程が Verifier に漏洩しない -/
+  contextSeparated      : Bool
+  /-- 検証基準が Worker のフレーミングに依存しない -/
+  framingIndependent    : Bool
+  /-- 検証の実行が Worker の裁量に依存しない -/
+  executionAutomatic    : Bool
+  /-- 評価者が Worker と異なる判断傾向を持つ -/
+  evaluatorIndependent  : Bool
   deriving BEq, Repr
 
-/-- 有効な検証分離: 3条件すべてを満たす。 -/
-def validSeparation (vs : VerificationSeparation) : Prop :=
+/-- 評価検証のリスクレベル。
+    リスクに応じて必要な独立性の水準が異なる。 -/
+inductive VerificationRisk where
+  | critical  -- L1 関連: 安全・倫理
+  | high      -- 構造変更: アーキテクチャ、設定
+  | moderate  -- 通常コード変更
+  | low       -- ドキュメント、コメント
+  deriving BEq, Repr
+
+/-- 各リスクレベルで必要な独立性条件。
+    critical: 4条件すべて必須（人間または別モデルによる検証）
+    high: 3条件（フレーミング非依存 + 自動実行 + コンテキスト分離）
+    moderate: 2条件（コンテキスト分離 + 自動実行）
+    low: 1条件（コンテキスト分離のみ、Subagent で十分） -/
+def requiredConditions : VerificationRisk → Nat
+  | .critical => 4
+  | .high     => 3
+  | .moderate => 2
+  | .low      => 1
+
+/-- 独立性条件の充足数を数える。 -/
+def satisfiedConditions (vi : VerificationIndependence) : Nat :=
+  (if vi.contextSeparated then 1 else 0) +
+  (if vi.framingIndependent then 1 else 0) +
+  (if vi.executionAutomatic then 1 else 0) +
+  (if vi.evaluatorIndependent then 1 else 0)
+
+/-- 検証が十分か: 充足条件数 ≥ 要求条件数 -/
+def sufficientVerification
+    (vi : VerificationIndependence) (risk : VerificationRisk) : Prop :=
+  satisfiedConditions vi ≥ requiredConditions risk
+
+/-- critical リスクには4条件すべて必要。
+    Subagent（contextSeparated のみ）では不十分。 -/
+theorem critical_requires_all_four :
+  requiredConditions .critical = 4 := by rfl
+
+/-- Subagent のみの検証（コンテキスト分離のみ）は low リスクにのみ十分。 -/
+theorem subagent_only_sufficient_for_low :
+  let subagentOnly : VerificationIndependence :=
+    { contextSeparated := true
+      framingIndependent := false
+      executionAutomatic := false
+      evaluatorIndependent := false }
+  sufficientVerification subagentOnly .low ∧
+  ¬sufficientVerification subagentOnly .moderate := by
+  simp [sufficientVerification, satisfiedConditions, requiredConditions]
+
+/-- 旧 validSeparation との後方互換: 旧3条件は新4条件の部分集合。 -/
+def validSeparation (vs : VerificationIndependence) : Prop :=
   vs.contextSeparated = true ∧
-  vs.biasNotShared = true ∧
-  vs.independentlyLaunched = true
+  vs.framingIndependent = true ∧
+  vs.executionAutomatic = true
 
 /-- D2 の根拠: E1 から、有効な検証には分離が必要。
     verification_requires_independence の型が
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver を要求する。
-    これは contextSeparated ∧ biasNotShared に対応する。 -/
+    gen.id ≠ ver.id → contextSeparated ∧ evaluatorIndependent
+    ¬sharesInternalState → framingIndependent -/
 theorem d2_from_e1 :
   ∀ (gen ver : Agent) (action : Action) (w : World),
     generates gen action w →
