@@ -11,19 +11,29 @@ description: >
 
 .claude/ の構成を dist/agent-manifesto-plugin/ にパッケージ化する。
 
-## 実行方法
+## このスキルが呼ばれたら
 
-パッケージングスクリプトを実行する:
+引数でバージョンが指定された場合はそれを使い、なければ自動 increment する。
+以下のコマンドを実行する:
 
 ```bash
-bash .claude/skills/package-plugin/scripts/package.sh [version]
+bash .claude/skills/package-plugin/scripts/package.sh {{args}}
 ```
 
-バージョンを省略すると、現在の patch を +1 する（e.g. 0.2.0 → 0.2.1）。
-互換性分類に応じて明示的にバージョンを指定する:
-- conservative extension: patch（0.2.0 → 0.2.1）
-- compatible change: minor（0.2.0 → 0.3.0）
-- breaking change: major（0.2.0 → 1.0.0）
+実行後、結果を確認して以下を行う:
+
+1. パッケージングスクリプトの出力を表示する
+2. エラーがあれば修正を提案する
+3. 成功したら `/verify` でパッケージを独立検証するか聞く
+4. コミットする場合は互換性分類を付与する
+
+## バージョニング
+
+引数なし → 現在の patch を +1（e.g. 0.2.1 → 0.2.2）。
+互換性分類に応じて明示的に指定する:
+- conservative extension: patch（0.2.1 → 0.2.2）
+- compatible change: minor（0.2.1 → 0.3.0）
+- breaking change: major（0.2.1 → 1.0.0）
 
 ## スクリプトが行うこと
 
@@ -35,11 +45,6 @@ bash .claude/skills/package-plugin/scripts/package.sh [version]
 6. plugin.json を生成（指定バージョン）
 7. README.md を自動生成（コンポーネント数を自動カウント）
 8. 検証: JSON 妥当性、参照整合性、絶対パスの不在
-
-## スクリプト実行後に行うべきこと
-
-1. `/verify` でパッケージを独立検証する
-2. 結果を確認してコミットする（互換性分類を付与）
 
 ## D9 自己適用
 
