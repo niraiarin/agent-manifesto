@@ -4,36 +4,21 @@
       {
         "matcher": "Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-safety-check.sh"
-          },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p2-verify-on-commit.sh"
-          },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p3-compatibility-check.sh"
-          }
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-safety-check.sh"},
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p2-verify-on-commit.sh"},
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p3-compatibility-check.sh"}
         ]
       },
       {
         "matcher": "Edit",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-file-guard.sh"
-          }
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-file-guard.sh"}
         ]
       },
       {
         "matcher": "Write",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-file-guard.sh"
-          }
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-file-guard.sh"}
         ]
       }
     ],
@@ -41,11 +26,7 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-metrics-collector.sh",
-            "async": true
-          }
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-metrics-collector.sh", "async": true}
         ]
       }
     ],
@@ -53,10 +34,21 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-gate-logger.sh"
-          }
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-gate-logger.sh"}
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-v5-approval-tracker.sh", "async": true}
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-v7-task-tracker.sh", "async": true}
         ]
       }
     ]

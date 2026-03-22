@@ -26,12 +26,12 @@ V1–V7 の現在値を .claude/metrics/ のログから計算して表示する
 | V3 | git commit 成功率（コミット試行 / コミット成功） | tool-usage.jsonl の git commit パターン |
 | V6 | MEMORY.md のエントリ数と最終更新日 | ファイルシステム直接参照 |
 
-### 測定基盤が未整備
+### UserPromptSubmit / TaskCompleted ベース
 
-| V | 必要な追加基盤 |
-|---|--------------|
-| V5 | 人間の承認/却下率の追跡（Elicitation ログ） |
-| V7 | タスク完了率/リソース比の追跡（タスクリスト連携） |
+| V | 測定方法 | データソース |
+|---|---------|------------|
+| V5 | 人間の承認/却下率（ヒューリスティック検出） | `.claude/metrics/v5-approvals.jsonl` |
+| V7 | タスク完了数と完了率 | `.claude/metrics/v7-tasks.jsonl` |
 
 ## 実行手順
 
@@ -50,9 +50,9 @@ V1 (Skill Quality):       [値 or "測定中"]
 V2 (Context Efficiency):  [ツール呼び出し/セッション]
 V3 (Output Quality):      [コミット成功率]
 V4 (Gate Pass Rate):      [通過率 %]
-V5 (Proposal Accuracy):   [測定基盤未整備]
+V5 (Proposal Accuracy):   [承認率 %]
 V6 (Knowledge Structure): [MEMORY.md entries: N, last updated: date]
-V7 (Task Design):         [測定基盤未整備]
+V7 (Task Design):         [タスク完了数]
 
 System Health: [HEALTHY / WARNING / DEGRADED]
 ```
