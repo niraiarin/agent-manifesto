@@ -41,13 +41,13 @@ fi
 
 # アラートがあればセッション開始時に表示
 if [ -n "$ALERTS" ]; then
-  echo -e "$ALERTS" >> "$METRICS_DIR/drift-alerts.log"
+  printf "%s\n" "$ALERTS" >> "$METRICS_DIR/drift-alerts.log"
   # SessionStart の stdout は context に追加される
   cat << JSON
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "BEHAVIORAL DRIFT ALERT: Check /metrics for details. $(echo -e "$ALERTS" | tr '\n' ' ')"
+    "additionalContext": "BEHAVIORAL DRIFT ALERT: Check /metrics for details. $(printf "%s\n" "$ALERTS" | tr '\n' ' ')"
   }
 }
 JSON

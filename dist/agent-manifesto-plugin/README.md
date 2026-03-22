@@ -1,11 +1,18 @@
-# agent-manifesto Plugin v0.2.1
+# agent-manifesto Plugin v0.2.2
 
 Manifest-compliant AI agent governance for Claude Code.
 
 ## Install
 
 ```bash
-claude plugin install /Users/nirarin/work/agent-manifesto/dist/agent-manifesto-plugin --scope user
+claude plugin install <path-to-plugin> --scope user
+```
+
+## .gitignore
+
+Add to your project's `.gitignore`:
+```
+.claude/metrics/*.jsonl
 ```
 
 ## Contents

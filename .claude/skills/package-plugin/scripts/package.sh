@@ -136,7 +136,14 @@ Manifest-compliant AI agent governance for Claude Code.
 ## Install
 
 \`\`\`bash
-claude plugin install $DEST --scope user
+claude plugin install <path-to-plugin> --scope user
+\`\`\`
+
+## .gitignore
+
+Add to your project's \`.gitignore\`:
+\`\`\`
+.claude/metrics/*.jsonl
 \`\`\`
 
 ## Contents
