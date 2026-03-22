@@ -6,6 +6,7 @@ import Manifest.Workflow
 import Manifest.Observable
 import Manifest.Meta
 import Manifest.Evolution
+import Manifest.DesignFoundation
 
 /-!
 # Agent Manifest — Formal Specification

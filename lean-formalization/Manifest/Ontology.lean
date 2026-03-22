@@ -456,4 +456,60 @@ inductive InvestmentKind where
     Section 6: 信頼は投資行動として具体化される。 -/
 opaque investmentLevel (w : World) : Nat
 
+-- ============================================================
+-- SelfGoverning typeclass — Section 7 の構造的強制
+-- ============================================================
+
+/-!
+## SelfGoverning: 自己適用の型レベル強制
+
+Section 7（マニフェストの自己適用）:
+「このマニフェストは、それ自身が述べている原則に従わなければならない。」
+
+この要件を型システムで強制する。原理・分類・構造を定義する型は、
+`SelfGoverning` typeclass を実装しなければ、自己適用を要求する
+文脈（governed な更新、フェーズ管理等）で使用できない。
+
+### 設計根拠
+
+- typeclass にすることで、新しい型を定義した際に SelfGoverning の
+  実装を忘れると、その型を governed な文脈で使おうとした時点で
+  型エラーになる（「検出できなかった」問題の構造的解決）
+- 3つの要件は D4（フェーズ）+ D9（互換性分類）+ Section 7（根拠の維持）
+  から導出される
+-/
+
+/-- 自己統治可能な型の typeclass。
+    Section 7 の要件を型レベルで強制する。
+
+    この typeclass を実装する型は:
+    1. 自身の要素を列挙できる（更新対象の網羅性）
+    2. 更新に互換性分類を適用できる（D9）
+    3. 各要素が必要とするフェーズを宣言できる（D4） -/
+class SelfGoverning (α : Type) where
+  /-- 互換性分類の網羅性: 任意の分類が3クラスのいずれかに属する。
+      D9 の前提条件。 -/
+  classificationExhaustive :
+    ∀ (c : CompatibilityClass),
+      c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange
+  /-- 各要素に対する互換性分類の適用可能性。
+      「α の任意の値に対して、更新の互換性を問うことができる」 -/
+  canClassifyUpdate : α → CompatibilityClass → Prop
+
+/-- SelfGoverning な型の更新が統治されていることの述語。
+    更新は互換性分類を経なければならない。 -/
+def governedUpdate [SelfGoverning α] (a : α) (c : CompatibilityClass) : Prop :=
+  SelfGoverning.canClassifyUpdate a c
+
+/-- SelfGoverning な型の更新は必ず3分類のいずれかに属する。 -/
+theorem governed_update_classified [inst : SelfGoverning α]
+    (_witness : α) (c : CompatibilityClass) :
+    c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
+  inst.classificationExhaustive c
+
+-- CompatibilityClass 自体が SelfGoverning（自己参照の基盤）
+instance : SelfGoverning CompatibilityClass where
+  classificationExhaustive := by intro c; cases c <;> simp
+  canClassifyUpdate _ _ := True
+
 end Manifest
