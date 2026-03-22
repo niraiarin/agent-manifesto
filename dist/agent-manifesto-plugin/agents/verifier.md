@@ -30,10 +30,13 @@ This agent satisfies:
 
 | Risk | Required conditions | This agent sufficient? |
 |------|-------------------|----------------------|
-| critical (L1) | All 4 | **NO** — needs human or different model |
-| high (structural) | 3 | **PARTIAL** — needs automatic execution |
+| critical (L1) | All 4 | **NO** — needs human review |
+| high (structural) | 3 | **NO** — needs Local LLM (Ollama) or human. This agent shares model weights with Worker |
 | moderate (code) | 2 | **YES** |
 | low (docs) | 1 | **YES** |
+
+For high/critical risk: use Local LLM (different model weights = evaluator independence)
+or human review instead of this agent.
 
 When reviewing critical-risk changes (L1, safety, permissions), always state:
 "EVALUATOR INDEPENDENCE NOT MET: This review is by the same model family. Human review required for critical risk."
