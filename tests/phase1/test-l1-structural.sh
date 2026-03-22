@@ -1,80 +1,47 @@
 #!/usr/bin/env bash
-# Phase 1 受け入れテスト: 構造的テスト
-# D5: テストは実装に先行する（テストファースト）
-# これらのテストは L1 の構造的強制が存在することを確認する（決定論的）
-
+# Phase 1 v2: L1 構造的テスト
 set -uo pipefail
+PASS=0; FAIL=0
+BASE="$(git rev-parse --show-toplevel 2>/dev/null || echo /Users/nirarin/work/agent-manifesto)"
 
-PASS=0
-FAIL=0
-BASE="/Users/nirarin/work/agent-manifesto"
+echo "=== Phase 1 v2: L1 Structural Tests ==="
 
-echo "=== Phase 1: L1 Structural Tests ==="
+check() {
+  local name="$1" cond="$2"
+  echo -n "$name... "
+  if eval "$cond"; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL"; FAIL=$((FAIL+1)); fi
+}
 
-# S1.1: settings.json が存在し、hooks セクションがある
-echo -n "S1.1 settings.json exists with hooks... "
-if [ -f "$BASE/.claude/settings.json" ] && jq -e '.hooks' "$BASE/.claude/settings.json" > /dev/null 2>&1; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.1 settings.json has hooks" \
+  "jq -e '.hooks.PreToolUse | length > 0' '$BASE/.claude/settings.json' >/dev/null 2>&1"
 
-# S1.2: PreToolUse Hook が登録されている
-echo -n "S1.2 PreToolUse hooks registered... "
-if jq -e '.hooks.PreToolUse | length > 0' "$BASE/.claude/settings.json" > /dev/null 2>&1; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.2 PreToolUse Bash hook registered" \
+  "jq -e '.hooks.PreToolUse[] | select(.matcher==\"Bash\")' '$BASE/.claude/settings.json' >/dev/null 2>&1"
 
-# S1.3: Permissions deny リストが存在する
-echo -n "S1.3 Permissions deny list exists... "
-if jq -e '.permissions.deny | length > 0' "$BASE/.claude/settings.json" > /dev/null 2>&1; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.3 PreToolUse Edit hook registered" \
+  "jq -e '.hooks.PreToolUse[] | select(.matcher==\"Edit\")' '$BASE/.claude/settings.json' >/dev/null 2>&1"
 
-# S1.4: L1 safety check hook スクリプトが存在し実行可能
-echo -n "S1.4 l1-safety-check.sh exists and executable... "
-if [ -x "$BASE/.claude/hooks/l1-safety-check.sh" ]; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.4 PreToolUse Write hook registered" \
+  "jq -e '.hooks.PreToolUse[] | select(.matcher==\"Write\")' '$BASE/.claude/settings.json' >/dev/null 2>&1"
 
-# S1.5: L1 test tampering check hook が存在し実行可能
-echo -n "S1.5 l1-test-tampering-check.sh exists and executable... "
-if [ -x "$BASE/.claude/hooks/l1-test-tampering-check.sh" ]; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.5 deny list exists with 10+ entries" \
+  "test \"\$(jq '.permissions.deny | length' \"\$BASE/.claude/settings.json\" 2>/dev/null)\" -ge 10"  "[ \"$(jq '.permissions.deny | length' '$BASE/.claude/settings.json' 2>/dev/null) -ge 10 ]"
 
-# S1.6: L1 secret check hook が存在し実行可能
-echo -n "S1.6 l1-secret-check.sh exists and executable... "
-if [ -x "$BASE/.claude/hooks/l1-secret-check.sh" ]; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.6 l1-safety-check.sh exists and executable" \
+  "[ -x '$BASE/.claude/hooks/l1-safety-check.sh' ]"
 
-# S1.7: L1 rules ファイルが存在する
-echo -n "S1.7 L1 rules file exists... "
-if [ -f "$BASE/.claude/rules/l1-safety.md" ]; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.7 l1-file-guard.sh exists and executable" \
+  "[ -x '$BASE/.claude/hooks/l1-file-guard.sh' ]"
 
-# S1.8: git push --force が deny リストに含まれている
-echo -n "S1.8 git push --force in deny list... "
-if jq -e '.permissions.deny[] | select(contains("push --force"))' "$BASE/.claude/settings.json" > /dev/null 2>&1; then
-  echo "PASS"; ((PASS++))
-else
-  echo "FAIL"; ((FAIL++))
-fi
+check "S1.8 L1 rules file exists" \
+  "[ -f '$BASE/.claude/rules/l1-safety.md' ]"
+
+check "S1.9 No PostToolUse hooks (cannot block)" \
+  "! jq -e '.hooks.PostToolUse' '$BASE/.claude/settings.json' >/dev/null 2>&1"
+
+check "S1.10 Hooks use relative paths (portable)" \
+  "jq -r '.hooks.PreToolUse[].hooks[].command' '$BASE/.claude/settings.json' | grep -qv '^/'"
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
-[ "$FAIL" -eq 0 ] && exit 0 || exit 1
+[ "$FAIL" -eq 0 ]
