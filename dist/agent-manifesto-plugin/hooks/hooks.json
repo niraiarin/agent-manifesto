@@ -6,7 +6,8 @@
         "hooks": [
           {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/l1-safety-check.sh"},
           {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p2-verify-on-commit.sh"},
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p3-compatibility-check.sh"}
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p3-compatibility-check.sh"},
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-temporal-tracker.sh"}
         ]
       },
       {
@@ -34,7 +35,8 @@
       {
         "matcher": "",
         "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-gate-logger.sh"}
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-gate-logger.sh"},
+          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/p4-drift-detector.sh"}
         ]
       }
     ],
