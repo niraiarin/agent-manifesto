@@ -69,3 +69,33 @@
 - **PreToolUse: Edit/Write** → L1 テスト改竄・秘密ファイル・Hook 自己保護
 - **PostToolUse** → P4 メトリクス収集（async、非ブロック）
 - **SessionStart** → P4 セッションサマリ
+
+## Build & Test Commands
+
+- `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
+- `bash tests/test-all.sh` — run all 66 acceptance tests (Phase 1–5)
+- `grep -r "^axiom " Manifest/ --include="*.lean" | grep -v "axiom は" | wc -l` — count axioms
+- `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
+
+## Lean 4 Gotchas
+
+- `import` must precede `/-!` doc comments (Lean 4 requirement)
+- `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
+- `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
+- Current stats: 41 axioms, 65+ theorems, 0 sorry
+
+## Hook Development Patterns
+
+- exit 2 + stderr = block. stdout is ignored on exit 2
+- PostToolUse CANNOT block (exit 2 ignored). Use PreToolUse only for enforcement
+- Matcher is tool name only (`Bash`, `Edit`, `Write`). Content inspection in hook body via `jq`
+- deny rules are bypassable via indirect execution (`bash -c`). Hooks are primary enforcement
+- `grep -oP` (Perl regex) unavailable on macOS. Use POSIX alternatives
+- Plugin hooks: use `${CLAUDE_PLUGIN_ROOT}/hooks/` for portable paths
+
+## Development Process
+
+- Step 0 before implementation: spec research (0a) + prior art (0b) + PoC (0c)
+- Commits on structural files require compatibility classification (P3 hook enforces)
+- `/verify` before committing high-risk changes (P2)
+- `/metrics` to check V1–V7 baseline before and after changes
