@@ -36,8 +36,8 @@ check "S1.7 l1-file-guard.sh exists and executable" \
 check "S1.8 L1 rules file exists" \
   "[ -f '$BASE/.claude/rules/l1-safety.md' ]"
 
-check "S1.9 No PostToolUse hooks (cannot block)" \
-  "! jq -e '.hooks.PostToolUse' '$BASE/.claude/settings.json' >/dev/null 2>&1"
+check "S1.9 PostToolUse hooks are async-only (non-blocking)" \
+  "jq -e '.hooks.PostToolUse[0].hooks[0].async == true' '$BASE/.claude/settings.json' >/dev/null 2>&1"
 
 check "S1.10 Hooks use relative paths (portable)" \
   "jq -r '.hooks.PreToolUse[].hooks[].command' '$BASE/.claude/settings.json' | grep -qv '^/'"
