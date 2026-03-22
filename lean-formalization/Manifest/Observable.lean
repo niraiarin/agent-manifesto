@@ -1,0 +1,754 @@
+import Manifest.Ontology
+import Manifest.Axioms
+
+/-!
+# Layer 4: Observability — V1–V7
+
+最適化変数 V1–V7 の形式化と可観測性の保証。
+
+## 設計方針
+
+V1–V7 は constraints-taxonomy.md で定義された最適化変数である。
+境界条件（T）は動かない壁、緩和策（L）は設計判断、
+変数（V）は緩和策の **効き具合** を測定する尺度。
+
+### Observable vs Measurable
+
+- **Observable** (`World → Prop` が決定可能) — 二値判定
+- **Measurable** (`World → Nat` が計算可能) — 定量測定
+
+V1–V7 は定量的指標であるため `Measurable` として形式化する。
+`Measurable m` は「`m` の値を外部観測から計算する手続きが存在する」を意味する。
+
+### Goodhart's Law への構造的防御
+
+変数が測定対象になった瞬間、メトリクスとしての妥当性を失い始める。
+`GoodhartVulnerable` はこの構造的脆弱性を型レベルで表現する。
+
+### トレードオフ
+
+V1–V7 は独立に最適化できない。ある変数の改善が別の変数を
+劣化させうる。`TradeoffExists` で対構造を明示する。
+
+## 対応表
+
+| 定義名 | V | 内容 |
+|--------|---|------|
+| `skillQuality` | V1 | スキル定義の精度と効果 |
+| `contextEfficiency` | V2 | 有限コンテキストの活用度 |
+| `outputQuality` | V3 | コード・設計・文書の品質 |
+| `gatePassRate` | V4 | ゲート一発通過率 |
+| `proposalAccuracy` | V5 | 設計提案・スコープ提案の的中率 |
+| `knowledgeStructureQuality` | V6 | 永続的知識の構造化度 |
+| `taskDesignEfficiency` | V7 | タスク設計の効率 |
+
+## Sorry 解消用 axiom
+
+Phase 3 の sorry を解消するための axiom も本ファイルで宣言する。
+これらは V1–V7 の Observable 化に伴い、信頼・劣化・解釈の
+測定基盤が整うことで正当化される。
+
+| axiom | 解消する sorry | 性格 |
+|-------|---------------|------|
+| `trust_decreases_on_materialized_risk` | P1b | observable-axiom |
+| `degradation_level_surjective` | P4b | observable-axiom |
+| `interpretation_nondeterminism` | P5 | observable-axiom (T4 の高水準再述) |
+-/
+
+namespace Manifest
+
+-- ============================================================
+-- Observable / Measurable 定義
+-- ============================================================
+
+/-- Observable: ある性質に対して決定手続きが存在すること。
+    `P : World → Prop` がバイナリ判定可能であることを表す。 -/
+def Observable (P : World → Prop) : Prop :=
+  ∃ f : World → Bool, ∀ w, f w = true ↔ P w
+
+/-- Measurable: 定量的指標に対して計算手続きが存在すること。
+    `m : World → Nat` の値を外部観測から計算できることを表す。
+
+    形式的には「`m` と一致する計算可能な関数 `f` が存在する」。
+    opaque な `m` に対してこれを axiom で宣言することにより、
+    「原理的に測定手段が存在する」ことをシステムに約束する。
+
+    ### なぜ自明ではないか
+
+    `m` が opaque の場合、`f = m` は型検査で通らない
+    （opaque の展開不能性による）。したがって Measurable の
+    axiom 宣言は非自明な約束となる。 -/
+def Measurable (m : World → Nat) : Prop :=
+  ∃ f : World → Nat, ∀ w, f w = m w
+
+-- ============================================================
+-- V1–V7: 最適化変数
+-- ============================================================
+
+/-- V1: スキル品質。スキル定義の精度と効果。
+    測定方法: benchmark.json (with/without 比較)。
+    関連境界条件: L2（学習データ断絶の緩和）, L5（スキルシステム）。 -/
+opaque skillQuality : World → Nat
+
+/-- V2: コンテキスト効率。有限コンテキストの活用度。
+    測定方法: タスク完了率 / 消費トークン数。
+    関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。 -/
+opaque contextEfficiency : World → Nat
+
+/-- V3: 出力品質。コード・設計・文書の品質。
+    測定方法: ゲート合格率、レビュー指摘数。
+    関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。 -/
+opaque outputQuality : World → Nat
+
+/-- V4: ゲート通過率。各フェーズのゲートを一発で通過する率。
+    P2（認知的役割分離）がゲートの信頼性を保証する。
+    測定方法: pass/fail 統計。
+    関連境界条件: L6（ゲート定義の粒度）, L4（auto-merge 判断）。 -/
+opaque gatePassRate : World → Nat
+
+/-- V5: 提案精度。設計提案・スコープ提案の的中率。
+    測定方法: 人間の承認/却下率。
+    関連境界条件: L4（行動空間調整の根拠）, L6（設計規約改善）。 -/
+opaque proposalAccuracy : World → Nat
+
+/-- V6: 知識構造の質。永続的知識の構造化度。
+    P3（学習の統治）が知識ライフサイクル
+    （観察→仮説化→検証→統合→退役）を規定する。
+    退役されない知識は蓄積して V2 を劣化させる。
+    測定方法: 次セッションでの文脈復元速度、退役対象検出率。
+    関連境界条件: L2（記憶喪失の緩和）。 -/
+opaque knowledgeStructureQuality : World → Nat
+
+/-- V7: タスク設計効率。P6（制約充足としてのタスク設計）の品質。
+    2つのデータソース:
+    (1) 外部知見: 公開ベンチマーク、モデル性能特性
+    (2) 内部知見: 実行ログ、リソース消費実績、成果対コスト比
+    測定方法: タスク完了率/消費リソース比、再設計頻度。
+    関連境界条件: L3（リソース上限）, L6（設計規約）。 -/
+opaque taskDesignEfficiency : World → Nat
+
+-- ============================================================
+-- V1–V7 可測性 axiom
+-- ============================================================
+
+/-!
+## V1–V7 可測性の宣言
+
+各変数が `Measurable` であることを axiom として宣言する。
+これは「原理的に測定可能である」という設計上の約束であり、
+具体的な測定実装は運用レイヤーに委ねる。
+
+なぜ axiom か: V1–V7 は opaque であるため、`Measurable` を
+定理として証明することはできない（opaque 展開不能性）。
+測定可能性は外部の運用系によって保証されるものであり、
+形式系内では仮定として受け入れる。
+-/
+
+/-- V1 は測定可能。 -/
+axiom v1_measurable : Measurable skillQuality
+
+/-- V2 は測定可能。 -/
+axiom v2_measurable : Measurable contextEfficiency
+
+/-- V3 は測定可能。 -/
+axiom v3_measurable : Measurable outputQuality
+
+/-- V4 は測定可能。 -/
+axiom v4_measurable : Measurable gatePassRate
+
+/-- V5 は測定可能。 -/
+axiom v5_measurable : Measurable proposalAccuracy
+
+/-- V6 は測定可能。 -/
+axiom v6_measurable : Measurable knowledgeStructureQuality
+
+/-- V7 は測定可能。 -/
+axiom v7_measurable : Measurable taskDesignEfficiency
+
+-- ============================================================
+-- トレードオフ構造
+-- ============================================================
+
+/-!
+## 変数の相互依存性
+
+V1–V7 は独立に最適化できない。ある変数の改善が別の変数を
+劣化させうるトレードオフが構造的に存在する。
+
+これは T3（コンテキスト有限性）と T7（リソース有限性）の
+直接的帰結: 有限のリソースを共有する指標は
+必然的にトレードオフ関係にある。
+-/
+
+/-- トレードオフの存在。2つの測定関数 m₁, m₂ について、
+    m₁ が改善するとき m₂ が劣化するワールド対が存在する。
+
+    注: これは「常に劣化する」ではなく「劣化しうる」を表現する。
+    Pareto 改善（両方同時に改善）が不可能であることは含意しない。 -/
+def TradeoffExists (m₁ m₂ : World → Nat) : Prop :=
+  ∃ w w', m₁ w < m₁ w' ∧ m₂ w' < m₂ w
+
+/-- V1↑ → V2↓ のトレードオフ。
+    スキルがコンテキストを消費するため、
+    スキル品質の向上はコンテキスト効率を圧迫しうる。 -/
+axiom tradeoff_v1_v2 : TradeoffExists skillQuality contextEfficiency
+
+/-- V6↑ → V2↓ のトレードオフ。
+    詳細な知識ほどコンテキストを占有するため、
+    知識構造の質の向上はコンテキスト効率を圧迫しうる。 -/
+axiom tradeoff_v6_v2 : TradeoffExists knowledgeStructureQuality contextEfficiency
+
+/-- V2↑ → V1↓ のトレードオフ。
+    効率追求で必要なスキル情報を圧縮しすぎるリスク。 -/
+axiom tradeoff_v2_v1 : TradeoffExists contextEfficiency skillQuality
+
+/-- V2↑ → V6↓ のトレードオフ。
+    効率追求で必要な知識を圧縮しすぎるリスク。 -/
+axiom tradeoff_v2_v6 : TradeoffExists contextEfficiency knowledgeStructureQuality
+
+/-- V7↑ → V2↓ のトレードオフ。
+    高度な分散設計がコンテキストを消費するリスク。 -/
+axiom tradeoff_v7_v2 : TradeoffExists taskDesignEfficiency contextEfficiency
+
+-- ============================================================
+-- Goodhart's Law への構造的防御
+-- ============================================================
+
+/-!
+## Goodhart's Law
+
+「測定対象となった指標は、良い指標であることをやめる。」
+
+変数 m の**近似測定** approx が m と乖離するリスクを型で表現する。
+防御策:
+1. 複数の独立した測定方法を持つ
+2. メトリクス自体を定期的に見直す（P3 の学習ライフサイクル）
+3. 人間の定性的判断を系の健全性評価に含める（T6）
+-/
+
+/-- Goodhart 脆弱性。最適化対象の近似測定 approx が
+    真の指標 m から乖離するワールドが存在する。
+
+    任意の近似測定に対してこれが成立する場合、
+    その変数は Goodhart 脆弱性を持つ。 -/
+def GoodhartVulnerable (m : World → Nat) : Prop :=
+  ∀ (approx : World → Nat),
+    (∃ w, approx w = m w) →   -- approx は少なくとも1点で一致する
+    ∃ w', approx w' ≠ m w'    -- しかし乖離するワールドが存在する
+
+/-- V4（ゲート通過率）は Goodhart 脆弱性を持つ。
+    ゲートが通りやすいタスクに偏るリスク。 -/
+axiom v4_goodhart : GoodhartVulnerable gatePassRate
+
+/-- V7（タスク設計効率）は Goodhart 脆弱性を持つ。
+    測定しやすいタスクに偏るリスク。 -/
+axiom v7_goodhart : GoodhartVulnerable taskDesignEfficiency
+
+-- ============================================================
+-- 系の健全性
+-- ============================================================
+
+/-!
+## 系としての健全性
+
+個々の変数を最大化するのではなく、系全体の健全性を維持する。
+ある変数のメトリクスが改善しても、他の変数が悪化していないか
+確認する。
+
+健全性は「すべての変数が閾値以上」として定式化する。
+閾値の設定は運用判断（T6: 人間がリソースの最終決定者）。
+-/
+
+/-- 系の健全性。すべての V1–V7 が最低閾値 threshold を
+    満たしている状態。
+
+    注: threshold は一律ではなく変数ごとに異なるべきだが、
+    Phase 4 では簡略化のため一律閾値を使用する。
+    Phase 5 で変数ごとの閾値に拡張可能。 -/
+def systemHealthy (threshold : Nat) (w : World) : Prop :=
+  skillQuality w ≥ threshold ∧
+  contextEfficiency w ≥ threshold ∧
+  outputQuality w ≥ threshold ∧
+  gatePassRate w ≥ threshold ∧
+  proposalAccuracy w ≥ threshold ∧
+  knowledgeStructureQuality w ≥ threshold ∧
+  taskDesignEfficiency w ≥ threshold
+
+/-- 系の健全性は Observable（二値判定可能）。
+    各 Vi が Measurable であることから、閾値比較は決定可能。 -/
+axiom system_health_observable :
+  ∀ (threshold : Nat), Observable (systemHealthy threshold)
+
+-- ============================================================
+-- Pareto 改善の制約
+-- ============================================================
+
+/-- Pareto 改善: すべての変数が悪化せず、少なくとも1つが改善。 -/
+def paretoImprovement (w w' : World) : Prop :=
+  (skillQuality w ≤ skillQuality w') ∧
+  (contextEfficiency w ≤ contextEfficiency w') ∧
+  (outputQuality w ≤ outputQuality w') ∧
+  (gatePassRate w ≤ gatePassRate w') ∧
+  (proposalAccuracy w ≤ proposalAccuracy w') ∧
+  (knowledgeStructureQuality w ≤ knowledgeStructureQuality w') ∧
+  (taskDesignEfficiency w ≤ taskDesignEfficiency w') ∧
+  (skillQuality w < skillQuality w' ∨
+   contextEfficiency w < contextEfficiency w' ∨
+   outputQuality w < outputQuality w' ∨
+   gatePassRate w < gatePassRate w' ∨
+   proposalAccuracy w < proposalAccuracy w' ∨
+   knowledgeStructureQuality w < knowledgeStructureQuality w' ∨
+   taskDesignEfficiency w < taskDesignEfficiency w')
+
+-- ============================================================
+-- Sorry 解消用 axiom（Phase 3 → Phase 4）
+-- ============================================================
+
+/-!
+## Phase 3 sorry の解消
+
+Principles.lean の3つの sorry を解消するための axiom。
+
+これらは V1–V7 の Observable 層が整備されたことで、
+信頼・劣化・解釈の測定基盤が確立されたことを前提とする。
+
+### 性格分類
+
+- `trust_decreases_on_materialized_risk`: 経験的公準レベル。
+  信頼蓄積の非対称性は繰り返し観測されているが、
+  原理的には覆りうる。[observable-axiom, empirical]
+
+- `degradation_level_surjective`: Observable 層の設計仮定。
+  劣化を連続的な尺度（壁ではなく勾配）で捉えるという
+  P4 の設計判断を形式化。[observable-axiom]
+
+- `interpretation_nondeterminism`: T4 の高水準再述。
+  canTransition レベルの非決定性を構造解釈レベルに
+  持ち上げる。T4 と interpretsStructure の橋渡し。
+  [observable-axiom, derived-from-T4]
+-/
+
+/-- [observable-axiom, empirical]:
+    リスクが顕在化した場合、信頼度は低下する。
+
+    P1b (`unprotected_expansion_destroys_trust`) を解消する。
+    行動空間の拡大後にリスクが顕在化した場合、
+    信頼度は拡大前の水準を下回る。
+
+    経験的根拠: 蓄積した信頼は漸進的だが、
+    毀損は急激（非対称性）。これは組織心理学、
+    ブランド管理、セキュリティ分野で繰り返し観測される。 -/
+axiom trust_decreases_on_materialized_risk :
+  ∀ (agent : Agent) (w w' : World),
+    actionSpaceSize agent w < actionSpaceSize agent w' →
+    riskMaterialized agent w' →
+    trustLevel agent w' < trustLevel agent w
+
+/-- [observable-axiom]:
+    劣化レベルは任意の自然数を取りうる（全射性）。
+
+    P4b (`degradation_is_gradient`) を解消する。
+    「制約は壁（バイナリ）ではなく勾配（グラデーション）」
+    という P4 の概念を、degradationLevel の値域が Nat 全体に
+    広がることで表現する。
+
+    設計的根拠: 劣化を 0/1 で捉えると中間状態を見逃す。
+    連続的な尺度により、早期警告と漸進的対応が可能になる。 -/
+axiom degradation_level_surjective :
+  ∀ (n : Nat), ∃ (w : World), degradationLevel w = n
+
+/-- [observable-axiom, derived-from-T4]:
+    構造の解釈は非決定的。
+
+    P5 (`structure_interpretation_nondeterministic`) を解消する。
+    T4 (`output_nondeterministic`) は canTransition レベルの
+    非決定性を宣言するが、本 axiom はそれを
+    「構造の解釈」というより高い抽象レベルに持ち上げる。
+
+    interpretsStructure と canTransition の橋渡し:
+    canTransition の非決定性（同一入力→異なるワールド遷移）は、
+    その前段階である構造解釈の非決定性を含意する（対偶: 解釈が
+    決定的なら遷移も決定的）。本 axiom はこの含意を直接宣言する。 -/
+axiom interpretation_nondeterminism :
+  ∃ (agent : Agent) (st : Structure) (action₁ action₂ : Action) (w : World),
+    interpretsStructure agent st action₁ w ∧
+    interpretsStructure agent st action₂ w ∧
+    action₁ ≠ action₂
+
+-- ============================================================
+-- 信頼度の可測性
+-- ============================================================
+
+/-- trustLevel は測定可能。
+    投資行動（リソース割り当ての変動）から間接的に観測される。 -/
+axiom trust_measurable :
+  ∀ (agent : Agent), Measurable (trustLevel agent)
+
+/-- degradationLevel は測定可能。
+    V1–V7 の経時変化から計算される。 -/
+axiom degradation_measurable : Measurable degradationLevel
+
+-- ============================================================
+-- Sorry Inventory (Phase 4)
+-- ============================================================
+
+/-!
+## Sorry Inventory
+
+Phase 4 では新たな sorry は導入しない。
+Phase 3 の3つの sorry を axiom で解消する。
+
+### 解消された sorry
+
+| Principles.lean の sorry | 解消する axiom |
+|--------------------------|---------------|
+| `unprotected_expansion_destroys_trust` | `trust_decreases_on_materialized_risk` |
+| `degradation_is_gradient` | `degradation_level_surjective` |
+| `structure_interpretation_nondeterministic` | `interpretation_nondeterminism` |
+
+### 新規 axiom の妥当性レビュー
+
+| axiom | 空虚でないか | トートロジーでないか | 反証可能か |
+|-------|------------|-------------------|-----------|
+| `trust_decreases_on_materialized_risk` | ✓ 3つの前提が必要 | ✓ trustLevel の単調減少を主張 | ✓ 顕在化しても信頼が維持される事例 |
+| `degradation_level_surjective` | ✓ 任意の n に対する存在 | ✓ World の構成を制約 | ✓ 有界な劣化モデル |
+| `interpretation_nondeterminism` | ✓ 具体的な5つ組の存在 | ✓ 非決定性を主張 | ✓ 完全決定的な解釈モデル |
+| v1–v7_measurable | ✓ opaque 展開不能 | ✓ 計算手続きの存在を主張 | ✓ 原理的に測定不能な指標 |
+| tradeoff_* | ✓ 具体的なワールド対の存在 | ✓ 改善/劣化の同時発生 | ✓ 完全分離可能なリソース |
+| v4/v7_goodhart | ✓ 任意の approx に対する乖離 | ✓ 近似の限界を主張 | ✓ 完璧な測定手段の存在 |
+-/
+
+-- ============================================================
+-- Phase 5 拡張: 変数ごと閾値
+-- ============================================================
+
+/-!
+## 変数ごと閾値（Per-variable Thresholds）
+
+Phase 4 の `systemHealthy` は一律閾値だったが、
+実運用では変数ごとに異なる閾値が必要。
+
+例: gatePassRate は 800/1000 を要求するが、
+proposalAccuracy は 600/1000 で十分、など。
+閾値の設定は T6（人間がリソースの最終決定者）に対応する運用判断。
+-/
+
+/-- V1–V7 それぞれの閾値。
+    変数ごとに異なる最低要求水準を設定する。 -/
+structure HealthThresholds where
+  v1_skillQuality              : Nat
+  v2_contextEfficiency         : Nat
+  v3_outputQuality             : Nat
+  v4_gatePassRate              : Nat
+  v5_proposalAccuracy          : Nat
+  v6_knowledgeStructureQuality : Nat
+  v7_taskDesignEfficiency      : Nat
+  deriving BEq, Repr
+
+/-- 変数ごと閾値による系の健全性。
+    `systemHealthy` の拡張版。 -/
+def systemHealthyPerVar (th : HealthThresholds) (w : World) : Prop :=
+  skillQuality w ≥ th.v1_skillQuality ∧
+  contextEfficiency w ≥ th.v2_contextEfficiency ∧
+  outputQuality w ≥ th.v3_outputQuality ∧
+  gatePassRate w ≥ th.v4_gatePassRate ∧
+  proposalAccuracy w ≥ th.v5_proposalAccuracy ∧
+  knowledgeStructureQuality w ≥ th.v6_knowledgeStructureQuality ∧
+  taskDesignEfficiency w ≥ th.v7_taskDesignEfficiency
+
+/-- 一律閾値は変数ごと閾値の特殊ケース。
+    全変数に同じ閾値を設定した HealthThresholds は
+    systemHealthy と同値。 -/
+def uniformThresholds (t : Nat) : HealthThresholds :=
+  { v1_skillQuality := t
+    v2_contextEfficiency := t
+    v3_outputQuality := t
+    v4_gatePassRate := t
+    v5_proposalAccuracy := t
+    v6_knowledgeStructureQuality := t
+    v7_taskDesignEfficiency := t }
+
+/-- 一律閾値による systemHealthyPerVar は systemHealthy と一致。 -/
+theorem uniform_thresholds_equiv :
+  ∀ (t : Nat) (w : World),
+    systemHealthyPerVar (uniformThresholds t) w ↔ systemHealthy t w := by
+  intro t w
+  simp [systemHealthyPerVar, uniformThresholds, systemHealthy]
+
+-- ============================================================
+-- Phase 5 拡張: Pareto フロンティア
+-- ============================================================
+
+/-!
+## Pareto フロンティア
+
+Pareto フロンティアは「これ以上の Pareto 改善が不可能な領域」。
+トレードオフ axiom の存在から、系が常に Pareto フロンティア上に
+留まれるとは限らないことを示す。
+
+### 形式化の方針
+
+Pareto optimal の定義を与え、トレードオフ axiom から
+「すべてのワールドが Pareto optimal ではない」ことを示す。
+-/
+
+/-- Pareto optimal: w からの Pareto 改善が存在しない。 -/
+def paretoOptimal (w : World) : Prop :=
+  ¬∃ w', paretoImprovement w w'
+
+/-- Pareto dominated: w' による Pareto 改善が可能。 -/
+def paretoDominated (w : World) : Prop :=
+  ∃ w', paretoImprovement w w'
+
+/-- Pareto optimal と Pareto dominated は排他的。 -/
+theorem pareto_optimal_not_dominated :
+  ∀ (w : World),
+    paretoOptimal w → ¬paretoDominated w := by
+  intro w h_opt h_dom
+  exact h_opt h_dom
+
+/-- Pareto dominated でなければ Pareto optimal。 -/
+theorem not_dominated_is_optimal :
+  ∀ (w : World),
+    ¬paretoDominated w → paretoOptimal w := by
+  intro w h
+  exact h
+
+-- ============================================================
+-- Phase 5 拡張: robustStructure の具体化
+-- ============================================================
+
+/-!
+## robustStructure の具体化
+
+Principles.lean の `robustStructure` を Observable 層の
+具体的な安全性制約と接続する。
+
+robustStructure は「解釈のばらつきに対して安全性が保持される」
+ことを要求する。ここでは安全性制約として systemHealthyPerVar を使い、
+「構造の解釈がばらついても系の健全性が維持される」ことを定義する。
+-/
+
+/-- 健全性堅牢構造: 解釈のばらつきに対して
+    系の健全性（変数ごと閾値）が保持される構造。
+
+    robustStructure (Principles.lean) の具体化。
+    safety := systemHealthyPerVar th とした場合。 -/
+def healthRobustStructure
+    (st : Structure) (th : HealthThresholds) : Prop :=
+  ∀ (agent : Agent) (action : Action) (w w' : World),
+    interpretsStructure agent st action w →
+    canTransition agent action w w' →
+    systemHealthyPerVar th w'
+
+/-- healthRobustStructure は robustStructure の特殊化であることの
+    型レベル表現。safety = systemHealthyPerVar th としたもの。
+
+    注: robustStructure は Principles.lean で定義されているが、
+    Evolution.lean は Principles.lean を import しないため、
+    ここでは同じ構造を直接展開して定義している。
+    両者の同値性は型の構造から自明。 -/
+theorem health_robust_unfolds :
+  ∀ (st : Structure) (th : HealthThresholds),
+    healthRobustStructure st th =
+    (∀ (agent : Agent) (action : Action) (w w' : World),
+      interpretsStructure agent st action w →
+      canTransition agent action w w' →
+      systemHealthyPerVar th w') := by
+  intro st th
+  rfl
+
+-- ============================================================
+-- 投資サイクル (manifesto Section 6, taxonomy Part III)
+-- ============================================================
+
+/-!
+## 投資サイクルの形式化
+
+manifesto Section 6:
+「信頼とは抽象的な感情ではなく、人間による協働システムへの
+投資行動として具体化される」
+
+サイクル:
+```
+構造品質の改善 → 人間が利益を受け取る → 投資の増加
+    ↑                                        │
+    └── リソース投資 / 行動空間調整 / 時間投資 ←┘
+```
+
+### 正のフィードバックと負のフィードバック
+
+P1 により、正と負のフィードバックが同時に回る:
+- 正: 構造品質↑ → 信頼↑ → 投資↑ → 行動空間↑ → 改善余地↑
+- 負: 行動空間↑ → リスク↑ → 事故発生時の信頼毀損↑
+
+信頼の蓄積は漸進的だが、毀損は急激（非対称性）。
+-/
+
+/-- 信頼の漸進的蓄積。
+    構造品質が改善された場合、信頼は（小さく）増加する。
+
+    非対称性の「蓄積は漸進」の半分。もう半分（毀損は急激）は
+    trust_decreases_on_materialized_risk で表現済み。
+
+    incrementBound は蓄積の上限: 1回の改善で得られる信頼には限界がある。 -/
+opaque trustIncrementBound : Nat
+
+axiom trust_accumulates_gradually :
+  ∀ (agent : Agent) (w w' : World),
+    -- 行動空間は縮小していない（拡張方向の投資がある）
+    actionSpaceSize agent w ≤ actionSpaceSize agent w' →
+    -- リスクは顕在化していない
+    ¬riskMaterialized agent w' →
+    -- 結論: 信頼は増加するが、増加幅は boundされている
+    trustLevel agent w ≤ trustLevel agent w' ∧
+    trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound
+
+/-- 投資は信頼に駆動される。
+    信頼が高い → 投資が増加する。
+    taxonomy Part III: 構造品質の改善 → 利益 → 投資意欲の変化 -/
+axiom trust_drives_investment :
+  ∀ (w w' : World),
+    -- 系の健全性が改善された（全変数がある閾値以上）
+    (∃ t, systemHealthy t w ∧ systemHealthy t w' ∧
+      -- かつ少なくとも1つの変数が改善
+      (skillQuality w < skillQuality w' ∨
+       contextEfficiency w < contextEfficiency w' ∨
+       outputQuality w < outputQuality w')) →
+    -- 結論: 投資水準は非減少
+    investmentLevel w ≤ investmentLevel w'
+
+/-- 逆サイクル: 品質事故は投資を縮小させる。
+    taxonomy Part III:
+    「エージェントが品質事故やスコープ逸脱を起こす → 信頼の減少 → 投資の縮小」
+
+    信頼の毀損は既に axiom 化されている（trust_decreases_on_materialized_risk）。
+    本 axiom はその先の「投資縮小」を形式化する。 -/
+axiom risk_reduces_investment :
+  ∀ (agent : Agent) (w w' : World),
+    riskMaterialized agent w' →
+    trustLevel agent w' < trustLevel agent w →
+    investmentLevel w' ≤ investmentLevel w
+
+-- ============================================================
+-- 均衡の探索 (manifesto Section 6)
+-- ============================================================
+
+/-!
+## 均衡の探索
+
+manifesto Section 6:
+「最適な自律度は最大自律度ではない。人間・エージェント・構造の
+協働価値が最大化される均衡点が存在し、均衡点は文脈によって動く。」
+
+自律権の過剰拡張が協働価値を減少させるシナリオ:
+- 人間がシステム全体を把握できなくなる
+- 人間の専門スキルが退化しフォールバック不能に
+- P1 により攻撃面が防御能力を超える
+-/
+
+/-- 協働価値: 人間・エージェント・構造の三者から成る総合的な価値。
+    Section 6: 均衡点は協働価値が最大化される点。 -/
+opaque collaborativeValue (w : World) : Nat
+
+/-- 均衡状態: 行動空間をこれ以上拡大しても協働価値が改善しない。
+    「最適自律度 ≠ 最大自律度」の形式化。 -/
+def atEquilibrium (agent : Agent) (w : World) : Prop :=
+  ∀ (w' : World),
+    actionSpaceSize agent w < actionSpaceSize agent w' →
+    collaborativeValue w' ≤ collaborativeValue w
+
+/-- 均衡の探索: 行動空間の拡大が価値を減少させうることの形式化。
+    P1 (capability_risk_coscaling) の直接的帰結として:
+    行動空間↑ → リスク↑ → 潜在的被害↑ → 過剰拡大は価値毀損。
+
+    axiom として宣言: E2 だけでは「協働価値の減少」を導出できない
+    （協働価値は opaque であり、リスク増大が価値減少を意味するかは
+    追加の仮定が必要）。 -/
+axiom overexpansion_reduces_value :
+  ∃ (agent : Agent) (w w' : World),
+    actionSpaceSize agent w < actionSpaceSize agent w' ∧
+    collaborativeValue w' < collaborativeValue w
+
+/-- L4 の縮小トリガー: 行動空間は縮小もありうる。
+    taxonomy L4: 「L4 は拡張ではなく調整」
+    品質事故 → 行動空間の縮小が正当化される。 -/
+def contractionJustified (agent : Agent) (w : World) : Prop :=
+  riskMaterialized agent w ∧
+  ¬atEquilibrium agent w
+
+-- ============================================================
+-- 境界→緩和策→変数の接続 (taxonomy Part II)
+-- ============================================================
+
+/-!
+## 三段構造の接続
+
+constraints-taxonomy.md Part II:
+「境界条件は動かない。緩和策は設計判断（L6）。変数は緩和策の効き具合。」
+
+境界条件（L2）→ 緩和策（構造） → 変数（V）の対応を型で表現する。
+-/
+
+/-- 境界条件と変数の対応。
+    constraints-taxonomy.md Part II の表:
+    L2:記憶喪失 → Implementation Notes → V6
+    L2:有限コンテキスト → 50%ルール → V2
+    L2:非決定性 → ゲート検証 → V4
+    L2:学習データ断絶 → docs/SSOT → V1 -/
+inductive VariableId where
+  | v1 | v2 | v3 | v4 | v5 | v6 | v7
+  deriving BEq, Repr
+
+/-- 各変数に対応する境界条件。
+    三段構造の「境界→変数」の対応を関数として表現。
+    緩和策はこの間に位置する設計判断（L6）。 -/
+def variableBoundary : VariableId → BoundaryId
+  | .v1 => .ontological   -- L2: 学習データ断絶 → V1: スキル品質
+  | .v2 => .ontological   -- L2: コンテキスト有限性 → V2: コンテキスト効率
+  | .v3 => .ethicsSafety   -- L1: 安全基準 → V3: 出力品質
+  | .v4 => .ontological   -- L2: 非決定性 → V4: ゲート通過率
+  | .v5 => .actionSpace    -- L4: 行動空間調整の根拠 → V5: 提案精度
+  | .v6 => .ontological   -- L2: 記憶喪失 → V6: 知識構造の質
+  | .v7 => .resource       -- L3: リソース上限 → V7: タスク設計効率
+
+/-- 固定境界に対応する変数は、境界自体を動かせず緩和策の品質のみ改善可能。 -/
+theorem fixed_boundary_variables_mitigate_only :
+  boundaryLayer (variableBoundary .v1) = .fixed ∧
+  boundaryLayer (variableBoundary .v2) = .fixed ∧
+  boundaryLayer (variableBoundary .v4) = .fixed ∧
+  boundaryLayer (variableBoundary .v6) = .fixed := by
+  simp [variableBoundary, boundaryLayer]
+
+-- ============================================================
+-- 信頼の非対称性の統合的表現
+-- ============================================================
+
+/-!
+## 信頼の非対称性
+
+蓄積は漸進的（trust_accumulates_gradually: bounded increment）、
+毀損は急激（trust_decreases_on_materialized_risk: unbounded decrease）。
+
+この非対称性が L1（倫理・安全境界）の存在意義を補強する:
+「毀損を起こさないための絶対的な防護壁」
+-/
+
+/-- 信頼の非対称性: 蓄積には上限があるが、毀損には下限がない。
+    trust_accumulates_gradually の帰結として、
+    蓄積は boundされている（≤ trustIncrementBound）が、
+    trust_decreases_on_materialized_risk は decrease に bound を課さない。
+
+    この非対称性は型の構造から読み取れる:
+    - 蓄積: trustLevel w' ≤ trustLevel w + trustIncrementBound
+    - 毀損: trustLevel w' < trustLevel w （下限なし） -/
+def trustAsymmetry (agent : Agent) (w w' : World) : Prop :=
+  -- 蓄積は bounded
+  (¬riskMaterialized agent w' →
+    trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound) ∧
+  -- 毀損は unbounded（下限なし）
+  (riskMaterialized agent w' →
+    actionSpaceSize agent w < actionSpaceSize agent w' →
+    trustLevel agent w' < trustLevel agent w)
+
+end Manifest
