@@ -487,3 +487,26 @@ Phase 4 の監査（導出の完全性・公理衛生・形式化ギャップ検
 | 反例探索 | 充足可能性の検査 | §3.2 |
 | Lean コンパイル | 導出項の型検査（CIC） | §7.3 |
 | `#print axioms` | 導出の公理依存性の監査 | §4.1 |
+
+---
+
+## 6. Lean 形式化との対応
+
+本手順書の規則体系は以下の Lean ファイルで形式的に定義・証明されている:
+
+| 手順書の概念 | Lean ファイル | 定義/定理 |
+|------------|-------------|----------|
+| T₀ 縮小禁止 (§2.4/§3 Phase 3b) | `Manifest/Procedure.lean` | `t0_contraction_forbidden` |
+| Γ \ T₀ 全操作許容 (§2.4) | `Manifest/Procedure.lean` | `extension_all_ops_permitted` |
+| T₀ エンコード方法の安全性 (§2.4) | `Manifest/Procedure.lean` | `definitional_encoding_safer` |
+| 公理カードの反証条件要否 (§2.5) | `Manifest/Procedure.lean` | `refutation_cond_rule` |
+| 公理衛生検査の独立性 (§2.6) | `Manifest/Procedure.lean` | `hygiene_checks_independent` |
+| Phase 順序 (§3) | `Manifest/Procedure.lean` | `phase_sequential` |
+| 修正の安全性順序 (§3 Phase 3b) | `Manifest/Procedure.lean` | `modification_safety_chain` |
+| 戦略変更の優先順位 (§3 Phase 3c) | `Manifest/Procedure.lean` | `revise_extension_first` / `weaken_goal_last` |
+| バックトラック保持規則 (§3 Phase 3c) | `Manifest/Procedure.lean` | `t0_always_retained` |
+| 終了条件の決定性 (§4) | `Manifest/Procedure.lean` | `termination_decisiveness` |
+| 手順書の全規則の整合性 | `Manifest/Procedure.lean` | `procedure_rules_consistent` |
+
+用語リファレンスの概念は `Manifest/Terminology.lean` で形式化されている。
+手順書の構成要素（Phase, Step, Check 等）の型は `Manifest/FormalDerivationSkill.lean` で定義されている。
