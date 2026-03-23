@@ -98,6 +98,35 @@ inductive StrategyChangeOption where
   | weakenGoal             -- φ の弱化（最終手段）
   deriving BEq, Repr, DecidableEq
 
+/-- 公理ソースカテゴリ。手順書 §2.4 (lines 135-137, 153-154)。
+    公理カードの「所属」フィールドで使用される根拠の種類。 -/
+inductive AxiomSourceCategory where
+  | contract      -- 契約由来（T₀）
+  | naturalLaw    -- 自然科学由来（T₀）
+  | environment   -- 環境由来（T₀）
+  | hypothesis    -- 仮説由来（Γ \ T₀）
+  | design        -- 設計由来（Γ \ T₀）
+  deriving BEq, Repr, DecidableEq
+
+/-- Phase 3a: Lean コンパイラのエラー種別。手順書 §3 Phase 3a (lines 316-322)。 -/
+inductive LeanErrorKind where
+  | typeMismatch       -- type mismatch
+  | unknownIdentifier  -- unknown identifier
+  | simpFailed         -- tactic 'simp' failed
+  | unsolvedGoals      -- unsolved goals
+  | usesSorry          -- declaration uses 'sorry'
+  deriving BEq, Repr, DecidableEq
+
+/-- Phase 3c: バックトラック時の構成要素カテゴリ。
+    手順書 §3 Phase 3c (lines 365-369)。
+    各カテゴリごとに保持/破棄ルールが異なる。 -/
+inductive BacktrackComponent where
+  | baseTheory        -- T₀: 常に保持
+  | extensionAxioms   -- Γ \ T₀: 縮小・破棄可能
+  | domainTypes       -- 論議領域: 戦略 2 のみ破棄
+  | derivedLemmas     -- 導出済み補題: 依存先が変更されない限り保持
+  deriving BEq, Repr, DecidableEq
+
 /-- ワークフローの終了種別。手順書 §4 の 3 条件。 -/
 inductive TerminationKind where
   | success    -- Γ ⊢ φ の導出完了
@@ -222,6 +251,30 @@ theorem phase3c_has_four_strategy_options :
     o = .reviseExtension ∨ o = .redefDomain ∨
     o = .changeDecomposition ∨ o = .weakenGoal := by
   intro o; cases o <;> simp
+
+/-- T₀: 公理ソースは 5 カテゴリで構成される。
+    ソース: docs/formal-derivation-procedure.md §2.4 (lines 135-137, 153-154) -/
+theorem axiom_sources_have_five_categories :
+  ∀ (s : AxiomSourceCategory),
+    s = .contract ∨ s = .naturalLaw ∨ s = .environment ∨
+    s = .hypothesis ∨ s = .design := by
+  intro s; cases s <;> simp
+
+/-- T₀: Phase 3a のエラー種別は 5 つで構成される。
+    ソース: docs/formal-derivation-procedure.md §3 Phase 3a (lines 316-322) -/
+theorem phase3a_has_five_error_kinds :
+  ∀ (e : LeanErrorKind),
+    e = .typeMismatch ∨ e = .unknownIdentifier ∨
+    e = .simpFailed ∨ e = .unsolvedGoals ∨ e = .usesSorry := by
+  intro e; cases e <;> simp
+
+/-- T₀: バックトラック時の構成要素は 4 カテゴリで構成される。
+    ソース: docs/formal-derivation-procedure.md §3 Phase 3c (lines 365-369) -/
+theorem phase3c_has_four_backtrack_components :
+  ∀ (b : BacktrackComponent),
+    b = .baseTheory ∨ b = .extensionAxioms ∨
+    b = .domainTypes ∨ b = .derivedLemmas := by
+  intro b; cases b <;> simp
 
 /-- T₀: ワークフローは 3 種の終了条件を持つ。
     ソース: docs/formal-derivation-procedure.md §4 (lines 432-456) -/
@@ -433,6 +486,34 @@ axiom skill_covers_premise_partitions :
 axiom skill_covers_t0_encoding_methods :
   ∀ (e : T0EncodingMethod), skillCovers e
 
+/-- [公理カード]
+    所属: Γ \ T₀（分析由来）
+    内容: SKILL.md は公理ソースの 5 カテゴリを明示している
+    根拠: SKILL.md Step 1.4 に T₀ の 3 カテゴリ（契約/科学/環境）と
+          Γ \ T₀ の 2 カテゴリ（仮説/設計）が記述されている
+    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.4
+    反証条件: SKILL.md にいずれかのカテゴリが存在しない場合 -/
+axiom skill_covers_axiom_source_categories :
+  ∀ (s : AxiomSourceCategory), skillCovers s
+
+/-- [公理カード]
+    所属: Γ \ T₀（分析由来）
+    内容: SKILL.md は Phase 3a の 5 つのエラー種別を含む
+    根拠: SKILL.md Phase 3a のテーブルに 5 種のエラーが列挙されている
+    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3a
+    反証条件: SKILL.md にいずれかのエラー種別が存在しない場合 -/
+axiom skill_covers_error_kinds :
+  ∀ (e : LeanErrorKind), skillCovers e
+
+/-- [公理カード]
+    所属: Γ \ T₀（分析由来）
+    内容: SKILL.md は Phase 3c のバックトラック保持/破棄ルールの 4 カテゴリを含む
+    根拠: SKILL.md Phase 3c に T₀/Γ\T₀/論議領域/導出済み補題の保持/破棄ルールが記述
+    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3c
+    反証条件: SKILL.md にいずれかのカテゴリが存在しない場合 -/
+axiom skill_covers_backtrack_components :
+  ∀ (b : BacktrackComponent), skillCovers b
+
 -- ============================================================
 -- Phase 2: Γ ⊢ φ の導出 (Step 2.1–2.3)
 -- ============================================================
@@ -508,6 +589,21 @@ theorem t0_encoding_coverage :
   ∀ (e : T0EncodingMethod), skillCovers e :=
   skill_covers_t0_encoding_methods
 
+/-- [補題] 公理ソースの全カテゴリがスキルで定義されている -/
+theorem axiom_source_coverage :
+  ∀ (s : AxiomSourceCategory), skillCovers s :=
+  skill_covers_axiom_source_categories
+
+/-- [補題] Phase 3a の全エラー種別がスキルで定義されている -/
+theorem error_kind_coverage :
+  ∀ (e : LeanErrorKind), skillCovers e :=
+  skill_covers_error_kinds
+
+/-- [補題] バックトラック保持/破棄ルールの全カテゴリがスキルで定義されている -/
+theorem backtrack_coverage :
+  ∀ (b : BacktrackComponent), skillCovers b :=
+  skill_covers_backtrack_components
+
 /-- [補題] 全終了条件がスキルで定義されている -/
 theorem termination_coverage :
   ∀ (t : TerminationKind), skillCovers t :=
@@ -553,6 +649,12 @@ theorem skill_implements_procedure :
   (∀ (p : PremisePartition), skillCovers p) ∧
   -- T₀ エンコード方法網羅
   (∀ (e : T0EncodingMethod), skillCovers e) ∧
+  -- 公理ソースカテゴリ網羅
+  (∀ (s : AxiomSourceCategory), skillCovers s) ∧
+  -- Phase 3a エラー種別網羅
+  (∀ (e : LeanErrorKind), skillCovers e) ∧
+  -- Phase 3c バックトラックカテゴリ網羅
+  (∀ (b : BacktrackComponent), skillCovers b) ∧
   -- 終了条件網羅
   (∀ (t : TerminationKind), skillCovers t) :=
   ⟨skill_covers_all_phases,
@@ -568,6 +670,9 @@ theorem skill_implements_procedure :
    axiom_card_coverage,
    premise_partition_coverage,
    t0_encoding_coverage,
+   axiom_source_coverage,
+   error_kind_coverage,
+   backtrack_coverage,
    termination_coverage⟩
 
 -- ============================================================
@@ -590,6 +695,9 @@ inductive ProcedureRequirement where
   | axiomCardFields
   | premisePartitions
   | t0EncodingMethods
+  | axiomSourceCategories
+  | errorKinds
+  | backtrackComponents
   | terminationKinds
   deriving BEq, Repr, DecidableEq
 
@@ -608,7 +716,8 @@ theorem all_requirements_enumerated :
     r = .strategyOptions ∨ r = .auditComponents ∨ r = .hygieneChecks ∨
     r = .gapVerificationLayers ∨ r = .axiomCardFields ∨
     r = .premisePartitions ∨ r = .t0EncodingMethods ∨
-    r = .terminationKinds := by
+    r = .axiomSourceCategories ∨ r = .errorKinds ∨
+    r = .backtrackComponents ∨ r = .terminationKinds := by
   intro r; cases r <;> simp
 
 end Manifest.FormalDerivationSkill
