@@ -135,6 +135,13 @@ inductive PremisePartition where
   | extension    -- Γ \ T₀: 構成者の推論に由来
   deriving BEq, Repr, DecidableEq
 
+/-- T₀ のエンコード方法。手順書 §2.4 (T₀ エンコード方法)。
+    T₀ の主張が型定義で表現可能か否かで選択する。 -/
+inductive T0EncodingMethod where
+  | definitionalTheorem  -- 型定義（定義的拡大）+ theorem で証明
+  | axiomWithCard        -- axiom（公理カード必須）
+  deriving BEq, Repr, DecidableEq
+
 -- ============================================================
 -- T₀: 型定義から導出される構造的性質 (定理)
 -- ============================================================
@@ -246,6 +253,13 @@ theorem premise_has_two_partitions :
   ∀ (p : PremisePartition),
     p = .baseTheory ∨ p = .extension := by
   intro p; cases p <;> simp
+
+/-- T₀: T₀ のエンコード方法は 2 つの選択肢で構成される。
+    ソース: docs/formal-derivation-procedure.md §2.4 (lines 139-146) -/
+theorem t0_has_two_encoding_methods :
+  ∀ (e : T0EncodingMethod),
+    e = .definitionalTheorem ∨ e = .axiomWithCard := by
+  intro e; cases e <;> simp
 
 -- ============================================================
 -- Γ \ T₀: SKILL.md の実装に関する主張 (非論理的公理)
@@ -384,6 +398,16 @@ axiom skill_covers_axiom_card_fields :
 axiom skill_covers_premise_partitions :
   ∀ (p : PremisePartition), skillCovers p
 
+/-- [公理カード]
+    所属: Γ \ T₀（分析由来）
+    内容: SKILL.md は T₀ エンコード方法の 2 選択肢を明示している
+    根拠: SKILL.md Step 1.4 に「T₀ のエンコード方法の選択」セクションがあり、
+          型定義 + theorem と axiom の 2 選択肢が記述されている
+    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.4
+    反証条件: SKILL.md に T₀ エンコード方法の選択肢が存在しない場合 -/
+axiom skill_covers_t0_encoding_methods :
+  ∀ (e : T0EncodingMethod), skillCovers e
+
 -- ============================================================
 -- Phase 2: Γ ⊢ φ の導出 (Step 2.1–2.3)
 -- ============================================================
@@ -449,6 +473,11 @@ theorem premise_partition_coverage :
   ∀ (p : PremisePartition), skillCovers p :=
   skill_covers_premise_partitions
 
+/-- [補題] T₀ エンコード方法の全選択肢がスキルで定義されている -/
+theorem t0_encoding_coverage :
+  ∀ (e : T0EncodingMethod), skillCovers e :=
+  skill_covers_t0_encoding_methods
+
 /-- [補題] 全終了条件がスキルで定義されている -/
 theorem termination_coverage :
   ∀ (t : TerminationKind), skillCovers t :=
@@ -490,6 +519,8 @@ theorem skill_implements_procedure :
   (∀ (f : AxiomCardField), skillCovers f) ∧
   -- 前提区分網羅
   (∀ (p : PremisePartition), skillCovers p) ∧
+  -- T₀ エンコード方法網羅
+  (∀ (e : T0EncodingMethod), skillCovers e) ∧
   -- 終了条件網羅
   (∀ (t : TerminationKind), skillCovers t) :=
   ⟨skill_covers_all_phases,
@@ -503,6 +534,7 @@ theorem skill_implements_procedure :
    gap_verification_coverage,
    axiom_card_coverage,
    premise_partition_coverage,
+   t0_encoding_coverage,
    termination_coverage⟩
 
 -- ============================================================
@@ -523,6 +555,7 @@ inductive ProcedureRequirement where
   | gapVerificationLayers
   | axiomCardFields
   | premisePartitions
+  | t0EncodingMethods
   | terminationKinds
   deriving BEq, Repr, DecidableEq
 
@@ -540,7 +573,8 @@ theorem all_requirements_enumerated :
     r = .modificationKinds ∨ r = .strategyTriggers ∨
     r = .auditComponents ∨ r = .hygieneChecks ∨
     r = .gapVerificationLayers ∨ r = .axiomCardFields ∨
-    r = .premisePartitions ∨ r = .terminationKinds := by
+    r = .premisePartitions ∨ r = .t0EncodingMethods ∨
+    r = .terminationKinds := by
   intro r; cases r <;> simp
 
 end Manifest.FormalDerivationSkill
