@@ -125,4 +125,4 @@ opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
 - `manifesto.md` Section 3, P3 — 学習の統治、互換性分類
 - `manifesto.md` Section 5 — 制約という進化圧
 - `manifesto.md` Section 7 — マニフェスト自身のメンテナンス、進化する構造
-- `constraints-taxonomy.md` Part IV — 分類自体のメンテナンス
+- `Observable.lean` Part IV — 分類自体のメンテナンス

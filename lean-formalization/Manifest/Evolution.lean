@@ -6,7 +6,7 @@ import Manifest.EmpiricalPostulates
 # Layer 5: Manifest Evolution
 
 マニフェスト自身の進化を形式化する。manifesto.md Section 7
-「このマニフェストの自己適用」および constraints-taxonomy.md
+「このマニフェストの自己適用」および Observable.lean
 Part IV「この分類自体のメンテナンス」に対応。
 
 ## 設計方針
@@ -278,20 +278,20 @@ theorem ungoverned_manifest_change_irreversible :
     structure_accumulates _ w_future h_trans
 
 -- ============================================================
--- constraints-taxonomy.md Part IV: 分類自体のメンテナンス
+-- 分類自体のメンテナンス (Observable.lean Part IV)
 -- ============================================================
 
 /-!
 ## 分類の自己硬直化の防止
 
-constraints-taxonomy.md Part IV:
+Observable.lean Part IV:
 「この分類の最大のリスクは、分類自体が境界条件として機能してしまうこと」
 
 分類の見直しシグナルとトリガーを型として表現する。
 -/
 
 /-- 分類の見直しが必要なシグナル。
-    constraints-taxonomy.md Part IV の表を型として表現。 -/
+    Observable.lean Part IV の見直しシグナル表を型として表現。 -/
 inductive ReviewSignal where
   | misclassification    -- 分類の誤配置
   | missingConstraint    -- 境界条件の欠落
@@ -308,7 +308,6 @@ structure ClassificationReview where
   deriving Repr
 
 /-- 分類の見直しはマニフェストの精神に合致する正当な行為。
-    constraints-taxonomy.md:
     「境界条件の再分類は、マニフェストの精神（構造の永続的改善）に合致する正当な行為である」
 
     型レベル表現: 任意の ReviewSignal に対して、

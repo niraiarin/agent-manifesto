@@ -9,16 +9,16 @@
 ## ドキュメント読み順
 
 1. **[manifesto.md](manifesto.md)** — 公理系の原典。拘束条件（T1–T8）、経験的公準（E1–E2）、基盤原理（P1–P6）
-2. **[docs/constraints-taxonomy.md](docs/constraints-taxonomy.md)** — 境界条件（L1–L6）と変数（V1–V7）の体系的分類
-3. **[docs/design-development-foundation.md](docs/design-development-foundation.md)** — 設計開発基礎論（D1–D9）。プラットフォーム非依存の設計原理
-4. **[docs/implementation-boundaries.md](docs/implementation-boundaries.md)** — 実装判断基準。何をどう実装するかの選択指針
+2. **[lean-formalization/Manifest/Ontology.lean](lean-formalization/Manifest/Ontology.lean)** — 境界条件（L1–L6）の定義と詳細
+3. **[lean-formalization/Manifest/Observable.lean](lean-formalization/Manifest/Observable.lean)** — 変数（V1–V7）の定義と詳細
+4. **[docs/design-development-foundation.md](docs/design-development-foundation.md)** — 設計開発基礎論（D1–D9）。プラットフォーム非依存の設計原理
+5. **[docs/implementation-boundaries.md](docs/implementation-boundaries.md)** — 実装判断基準。何をどう実装するかの選択指針
 
 ## ディレクトリ構造
 
 ```
 ├── manifesto.md                 # 公理系の原典
 ├── docs/                        # 派生ドキュメント
-│   ├── constraints-taxonomy.md  #   境界条件と変数
 │   ├── design-development-foundation.md  #   設計開発基礎論
 │   └── implementation-boundaries.md      #   実装判断基準
 ├── lean-formalization/          # Lean 4 形式検証

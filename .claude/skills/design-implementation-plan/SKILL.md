@@ -23,7 +23,8 @@ description: >
 2. `lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
 3. `lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
 4. `manifesto.md` — 公理系の原典（T/E/P）
-5. `docs/constraints-taxonomy.md` — 境界条件（L1–L6）と変数（V1–V7）
+5. `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
+6. `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 
 **重要:** `SelfGoverning` typeclass は、原理を定義する型が自己適用（Section 7）を
 型レベルで強制するメカニズムである。このスキルが生成する計画書、
@@ -102,7 +103,8 @@ Step 0 の成果を以下の形式でまとめる:
 以下のファイルを読み込む:
 
 - `docs/design-development-foundation.md` の D1–D9 全文
-- `docs/constraints-taxonomy.md` の L1–L6, V1–V7
+- `lean-formalization/Manifest/Ontology.lean` の L1–L6（境界条件セクションの doc comment）
+- `lean-formalization/Manifest/Observable.lean` の V1–V7（変数セクションの doc comment）
 - `manifesto.md` の T1–T8, E1–E2, P1–P6
 
 ### Step 2: Provider プリミティブの列挙

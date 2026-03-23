@@ -16,7 +16,7 @@ P3（学習の統治）の統治ライフサイクルを型として表現する
 仮説がすべて統合されるわけではない。
 統合された知識も文脈の変化により退役する。
 
-## ゲートと検証（manifesto.md Section 5, constraints-taxonomy.md L6）
+## ゲートと検証（manifesto.md Section 5, Ontology.lean L6）
 
 ゲートは T4（確率的出力）に対する防御機構。
 P2（認知的役割分離）がゲートの信頼性を保証する。
@@ -152,7 +152,6 @@ def integrationGateCondition
 
 /-- 退役ゲートの前提条件:
     breakingChange により無効化された知識は退役候補。
-    constraints-taxonomy.md:
     「破壊的変更により無効化された知識は退役の候補となる」 -/
 def retirementCandidate (ki : KnowledgeItem) : Prop :=
   ki.status = .integrated ∧
@@ -188,13 +187,13 @@ theorem feedback_precedes_improvement :
   rfl
 
 -- ============================================================
--- V6 退役接続 (constraints-taxonomy V6)
+-- V6 退役接続 (Observable.lean V6)
 -- ============================================================
 
 /-!
 ## V6 と退役の接続
 
-constraints-taxonomy.md V6:
+Observable.lean V6:
 「退役されない知識は蓄積してコンテキスト効率（V2）を劣化させる」
 
 V6（知識構造の質）は退役の測定を含む:

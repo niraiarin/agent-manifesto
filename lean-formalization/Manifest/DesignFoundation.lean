@@ -293,7 +293,7 @@ theorem d5_test_has_precision :
 /-!
 ## D6: 三段設計
 
-根拠: constraints-taxonomy Part II
+根拠: Ontology.lean/Observable.lean 三段構造（境界→緩和策→変数）
 
 Ontology.lean に BoundaryLayer, BoundaryId, Mitigation が
 既に定義されている。ここではその設計原理を定理として表現する。
@@ -371,7 +371,7 @@ theorem d8_capability_risk :
 /-!
 ## D9: 分類自体のメンテナンス
 
-根拠: constraints-taxonomy Part IV + P3（学習の統治）+ Section 7（自己適用）
+根拠: Observable.lean Part IV（分類自体のメンテナンス）+ P3（学習の統治）+ Section 7（自己適用）
 
 設計基礎論自体が更新対象であり、更新は P3 の互換性分類に従う。
 
