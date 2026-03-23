@@ -11,11 +11,24 @@ description: >
 
 L4（行動空間境界）の調整を、V の実績データに基づいて提案する。
 
+## Lean 形式化との対応
+
+| スキルの概念 | Lean ファイル | 定理/定義 |
+|------------|-------------|----------|
+| D8: 過剰拡大は価値を毀損 | DesignFoundation.lean | `d8_overexpansion_risk` |
+| D8: 能力-リスク共成長 | DesignFoundation.lean | `d8_capability_risk` |
+| D7: 蓄積は bounded | DesignFoundation.lean | `d7_accumulation_bounded` |
+| D7: 毀損は unbounded | DesignFoundation.lean | `d7_damage_unbounded` |
+| D12: タスク設計は制約充足 | DesignFoundation.lean | `d12_task_is_csp` |
+| T₀ 縮小禁止 | Procedure.lean | `t0_contraction_forbidden` |
+| 均衡状態の定義 | Observable.lean | `atEquilibrium` |
+
 ## 原則
 
-- **最適 ≠ 最大** (D8): 行動空間の最大化は目的ではない
-- **拡張と防護はセット** (D7/P1): 拡張提案には必ず対応する防護設計を含める
+- **最適 ≠ 最大** (D8: `d8_overexpansion_risk`): 行動空間の最大化は目的ではない
+- **拡張と防護はセット** (D7/P1: `d7_damage_unbounded`): 拡張提案には必ず対応する防護設計を含める
 - **人間が最終決定者** (T6): 提案のみ。実行は人間の承認後
+- **タスク設計も制約充足** (D12: `d12_task_is_csp`): 行動空間の調整はタスク制約の変更に等しい
 
 ## 拡張トリガー
 

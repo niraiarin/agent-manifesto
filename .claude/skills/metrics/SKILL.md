@@ -9,6 +9,18 @@ description: >
 
 V1–V7 の現在値を .claude/metrics/ のログから計算して表示する。
 
+## Lean 形式化との対応
+
+| スキルの概念 | Lean ファイル | 定理/定義 |
+|------------|-------------|----------|
+| D3: 可観測性 3 条件 | DesignFoundation.lean | `ObservabilityConditions`, `effectivelyOptimizable` |
+| D3: 3 条件すべてが必要 | DesignFoundation.lean | `d3_partial_observability_insufficient` |
+| D11: コンテキストコスト | DesignFoundation.lean | `contextCost`, `d11_enforcement_cost_inverse` |
+| V1–V7 可測性 | Observable.lean | `v1_measurable` ... `v7_measurable` |
+| 系の健全性 | Observable.lean | `systemHealthy`, `system_health_observable` |
+| トレードオフ | Observable.lean | `tradeoff_v1_v2` 等 |
+| Goodhart 脆弱性 | Observable.lean | `v4_goodhart`, `v7_goodhart` |
+
 ## 測定方法
 
 ### 即時測定可能
@@ -58,3 +70,26 @@ System Health: [HEALTHY / WARNING / DEGRADED]
 ```
 
 4. WARNING/DEGRADED の場合、具体的な劣化指標と推奨アクションを表示する
+
+## D3 可観測性 3 条件の確認
+
+各 V に対して D3 の 3 条件（DesignFoundation.lean `ObservabilityConditions`）を評価する:
+
+| V | 測定可能 | 劣化検知 | 改善検証 | 実効性 |
+|---|---------|---------|---------|--------|
+| V2 | ✅ ツール呼び出し/セッション | ✅ 経時比較 | ✅ 前後比較 | 実効的 |
+| V4 | ✅ pass/fail 統計 | ✅ 閾値比較 | ✅ 前後比較 | 実効的 |
+| V1 | △ スキル使用率（間接） | △ 推定 | △ 推定 | 部分的 |
+| V3 | △ commit 成功率（間接） | △ 推定 | △ 推定 | 部分的 |
+| V5 | △ 承認/却下率 | △ 推定 | △ 推定 | 部分的 |
+| V6 | △ エントリ数 | △ 推定 | △ 推定 | 部分的 |
+| V7 | △ タスク完了数 | △ 推定 | △ 推定 | 部分的 |
+
+D3 (`d3_partial_observability_insufficient`): 3 条件すべてが必要。
+部分的な V は名目上の最適化対象であり、測定手段の改善が優先。
+
+## D11 コンテキスト経済の指標
+
+D11 (`d11_enforcement_cost_inverse`): 構造的強制のコンテキストコストが最低。
+メトリクスダッシュボード自体は規範的指針（コンテキストコスト高）に属するが、
+測定結果を構造的改善に活かすことでコストを正当化する。
