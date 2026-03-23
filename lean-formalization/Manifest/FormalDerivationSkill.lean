@@ -90,6 +90,14 @@ inductive StrategyChangeTrigger where
   | complexityIncrease   -- 複雑度の単調増大
   deriving BEq, Repr, DecidableEq
 
+/-- Phase 3c: 戦略変更の選択肢。手順書 §3 Phase 3c (lines 360-363)。 -/
+inductive StrategyChangeOption where
+  | reviseExtension        -- Γ \ T₀ の見直し
+  | redefDomain            -- 論議領域の再定義
+  | changeDecomposition    -- φ の分解方法を変更
+  | weakenGoal             -- φ の弱化（最終手段）
+  deriving BEq, Repr, DecidableEq
+
 /-- ワークフローの終了種別。手順書 §4 の 3 条件。 -/
 inductive TerminationKind where
   | success    -- Γ ⊢ φ の導出完了
@@ -206,6 +214,14 @@ theorem phase3c_has_three_strategy_triggers :
     t = .sameErrorRepetition ∨ t = .axiomInflation ∨
     t = .complexityIncrease := by
   intro t; cases t <;> simp
+
+/-- T₀: Phase 3c の戦略変更は 4 つの選択肢で構成される。
+    ソース: docs/formal-derivation-procedure.md §3 Phase 3c (lines 360-363) -/
+theorem phase3c_has_four_strategy_options :
+  ∀ (o : StrategyChangeOption),
+    o = .reviseExtension ∨ o = .redefDomain ∨
+    o = .changeDecomposition ∨ o = .weakenGoal := by
+  intro o; cases o <;> simp
 
 /-- T₀: ワークフローは 3 種の終了条件を持つ。
     ソース: docs/formal-derivation-procedure.md §4 (lines 432-456) -/
@@ -346,6 +362,15 @@ axiom skill_covers_strategy_triggers :
 
 /-- [公理カード]
     所属: Γ \ T₀（分析由来）
+    内容: SKILL.md は Phase 3c の 4 つの戦略変更選択肢を含む
+    根拠: SKILL.md L224-228 に 4 選択肢が列挙されている
+    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3c
+    反証条件: SKILL.md にいずれかの選択肢が存在しない場合 -/
+axiom skill_covers_strategy_options :
+  ∀ (o : StrategyChangeOption), skillCovers o
+
+/-- [公理カード]
+    所属: Γ \ T₀（分析由来）
     内容: SKILL.md は 3 つの終了条件を含む
     根拠: SKILL.md L289(成功), L297(失敗), L302(未決)
     ソース: .claude/skills/formal-derivation/SKILL.md
@@ -448,6 +473,11 @@ theorem phase3c_strategy_coverage :
   ∀ (t : StrategyChangeTrigger), skillCovers t :=
   skill_covers_strategy_triggers
 
+/-- [補題] Phase 3c の全戦略変更選択肢がスキルで実装されている -/
+theorem phase3c_option_coverage :
+  ∀ (o : StrategyChangeOption), skillCovers o :=
+  skill_covers_strategy_options
+
 /-- [補題] Phase 4 の全監査構成要素がスキルで実装されている -/
 theorem phase4_coverage :
   ∀ (a : AuditComponent), skillCovers a :=
@@ -509,6 +539,8 @@ theorem skill_implements_procedure :
   (∀ (m : ModificationKind), skillCovers m) ∧
   -- Phase 3c の戦略変更トリガー網羅
   (∀ (t : StrategyChangeTrigger), skillCovers t) ∧
+  -- Phase 3c の戦略変更選択肢網羅
+  (∀ (o : StrategyChangeOption), skillCovers o) ∧
   -- Phase 4 の監査構成要素網羅
   (∀ (a : AuditComponent), skillCovers a) ∧
   -- 公理衛生チェック網羅
@@ -529,6 +561,7 @@ theorem skill_implements_procedure :
    phase3_coverage,
    phase3b_modification_coverage,
    phase3c_strategy_coverage,
+   phase3c_option_coverage,
    phase4_coverage,
    hygiene_coverage,
    gap_verification_coverage,
@@ -550,6 +583,7 @@ inductive ProcedureRequirement where
   | correctionComponents
   | modificationKinds
   | strategyTriggers
+  | strategyOptions
   | auditComponents
   | hygieneChecks
   | gapVerificationLayers
@@ -571,7 +605,7 @@ theorem all_requirements_enumerated :
     r = .phaseStructure ∨ r = .constructionSteps ∨
     r = .derivationSteps ∨ r = .correctionComponents ∨
     r = .modificationKinds ∨ r = .strategyTriggers ∨
-    r = .auditComponents ∨ r = .hygieneChecks ∨
+    r = .strategyOptions ∨ r = .auditComponents ∨ r = .hygieneChecks ∨
     r = .gapVerificationLayers ∨ r = .axiomCardFields ∨
     r = .premisePartitions ∨ r = .t0EncodingMethods ∨
     r = .terminationKinds := by
