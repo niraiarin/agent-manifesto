@@ -2,7 +2,9 @@
 # observe.sh — Observer の計測スクリプト
 # P4（可観測性）: 構造の現在状態を計測してJSON で出力する。
 # 使い方: bash .claude/skills/evolve/scripts/observe.sh
-set -euo pipefail
+set -uo pipefail
+# Note: set -e を外している。grep が 0 マッチで exit 1 を返すと
+# スクリプト全体が終了するため。各コマンドは || true で保護済み。
 
 BASE="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 METRICS_DIR="$BASE/.claude/metrics"
@@ -12,7 +14,7 @@ echo "{"
 
 # --- Lean 品質指標 ---
 if [ -d "$LEAN_DIR/Manifest" ]; then
-  AXIOM_COUNT=$(grep -r "^axiom " "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v "axiom は" | wc -l | tr -d ' ')
+  AXIOM_COUNT=$(grep -r "^axiom [a-z]" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   THEOREM_COUNT=$(grep -r "^theorem " "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
   MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" 2>/dev/null | wc -l | tr -d ' ')
