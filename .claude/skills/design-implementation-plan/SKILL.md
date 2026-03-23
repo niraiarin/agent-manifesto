@@ -19,11 +19,11 @@ description: >
 
 このスキルは以下のファイルを参照する:
 
-1. `design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
+1. `docs/design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
 2. `lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
 3. `lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
 4. `manifesto.md` — 公理系の原典（T/E/P）
-5. `constraints-taxonomy.md` — 境界条件（L1–L6）と変数（V1–V7）
+5. `docs/constraints-taxonomy.md` — 境界条件（L1–L6）と変数（V1–V7）
 
 **重要:** `SelfGoverning` typeclass は、原理を定義する型が自己適用（Section 7）を
 型レベルで強制するメカニズムである。このスキルが生成する計画書、
@@ -101,8 +101,8 @@ Step 0 の成果を以下の形式でまとめる:
 
 以下のファイルを読み込む:
 
-- `design-development-foundation.md` の D1–D9 全文
-- `constraints-taxonomy.md` の L1–L6, V1–V7
+- `docs/design-development-foundation.md` の D1–D9 全文
+- `docs/constraints-taxonomy.md` の L1–L6, V1–V7
 - `manifesto.md` の T1–T8, E1–E2, P1–P6
 
 ### Step 2: Provider プリミティブの列挙
@@ -280,7 +280,7 @@ DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
 
 以下のいずれかが発生した場合、このスキルの更新を検討する:
 
-- `design-development-foundation.md` の D1–D9 に変更があった
+- `docs/design-development-foundation.md` の D1–D9 に変更があった
 - `DesignFoundation.lean` に新しい型・定理が追加された
 - テスト実行で品質基準を満たさない出力が繰り返し生成された
 - 新しい Provider への適用で、Step 2–8 が不十分であることが判明した

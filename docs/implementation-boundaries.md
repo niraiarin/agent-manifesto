@@ -4,7 +4,7 @@
 >
 > When you have a hammer, everything looks like a nail. When you have an LLM, everything looks like a prompt. This document defines when **not** to use an LLM — and when each implementation strategy is the right choice.
 >
-> **位置づけ:** [マニフェスト](manifesto.md)が公理系——拘束条件（T1〜T8）、経験的公準（E1〜E2）、基盤原理（P1〜P6）——を定義し、[constraints-taxonomy.md](constraints-taxonomy.md)が行動空間を定義する。本文書はその行動空間の中で**何をどう実装するか**の判断基準を定義する。
+> **位置づけ:** [マニフェスト](../manifesto.md)が公理系——拘束条件（T1〜T8）、経験的公準（E1〜E2）、基盤原理（P1〜P6）——を定義し、[constraints-taxonomy.md](constraints-taxonomy.md)が行動空間を定義する。本文書はその行動空間の中で**何をどう実装するか**の判断基準を定義する。
 >
 > **技術非依存性:** 本文書は特定のプラットフォーム（Claude Code, Codex CLI, Gemini CLI等）に依存しない原則を定義する。以下の用語は汎用概念として使用する:
 > - **Skill** — エージェントに判断力・ワークフロー知識・ドメイン専門性を提供する、再利用可能な知識モジュール。プラットフォーム固有の実装形態は問わない。
@@ -157,7 +157,7 @@ simpler                              more complex
 
 ## Design Principle: Cognitive Separation (P2)
 
-[マニフェスト](manifesto.md)のP2（認知的役割分離）は実装手段を問わないが、実装設計には直接的な含意がある。P2はT4（確率的出力）とE1（検証の独立性、経験的公準）から導出される。E1に依拠するためP群の中では根拠の強度が異なるが、実装設計においてこの原理は交渉不可能として扱う:
+[マニフェスト](../manifesto.md)のP2（認知的役割分離）は実装手段を問わないが、実装設計には直接的な含意がある。P2はT4（確率的出力）とE1（検証の独立性、経験的公準）から導出される。E1に依拠するためP群の中では根拠の強度が異なるが、実装設計においてこの原理は交渉不可能として扱う:
 
 **生成と評価の分離は、品質保証の構造的前提条件である。**
 

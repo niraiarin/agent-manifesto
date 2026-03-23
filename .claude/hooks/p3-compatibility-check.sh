@@ -12,7 +12,7 @@ if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
   exit 0
 fi
 
-STRUCTURAL_PATTERNS='\.claude/|tests/|manifesto\.md|constraints-taxonomy|design-development-foundation|lean-formalization/'
+STRUCTURAL_PATTERNS='\.claude/|tests/|manifesto\.md|docs/|research/|reports/|lean-formalization/'
 STAGED=$(git diff --cached --name-only 2>/dev/null)
 
 if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then

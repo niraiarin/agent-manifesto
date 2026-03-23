@@ -13,8 +13,8 @@
 ## このプロジェクトの構成
 
 - `manifesto.md` — 公理系の原典（T1–T8, E1–E2, P1–P6）
-- `constraints-taxonomy.md` — 境界条件（L1–L6）と変数（V1–V7）
-- `design-development-foundation.md` — 設計開発基礎論（D1–D9）
+- `docs/constraints-taxonomy.md` — 境界条件（L1–L6）と変数（V1–V7）
+- `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
 - `lean-formalization/` — Lean 4 形式検証（41 axioms, 65 theorems, 0 sorry）
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
