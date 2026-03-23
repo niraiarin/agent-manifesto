@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "deny": [
       "Bash(rm -rf /)",
@@ -69,6 +72,11 @@
             "type": "command",
             "command": "bash .claude/hooks/p4-metrics-collector.sh",
             "async": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/evolve-metrics-recorder.sh",
+            "async": true
           }
         ]
       }
@@ -84,6 +92,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/p4-drift-detector.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/evolve-state-loader.sh"
           }
         ]
       }
