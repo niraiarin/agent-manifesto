@@ -107,11 +107,11 @@ echo "  Used: $((AXIOM_COUNT - UNUSED))/$AXIOM_COUNT axioms"
 # NOTE: Q9 は品質指標（WARNING）。grep ベースの参照検索は Lean カーネル経由の
 # 使用を検出できないため、false positive が多い。ブロッキングテストにはしない。
 if [ "$UNUSED" -eq 0 ]; then
-  pass "Q9 No unused axioms (H1/H4)"
+  check "Q9 No unused axioms (H1/H4)" true
 else
   echo "  WARNING: Q9 $UNUSED unused axioms detected (non-blocking, grep approximation)"
+  echo "  PASS (non-blocking)"
   PASS=$((PASS+1))
-  TOTAL=$((TOTAL+1))
 fi
 
 echo ""
