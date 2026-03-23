@@ -7,6 +7,7 @@ import Manifest.Observable
 import Manifest.Meta
 import Manifest.Evolution
 import Manifest.DesignFoundation
+import Manifest.FormalDerivationSkill
 
 /-!
 # Agent Manifest — Formal Specification
