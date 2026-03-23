@@ -103,7 +103,7 @@ else
   V7_COMPLETED=0
 fi
 
-# V2: Context Efficiency (tool calls / sessions)
+# V2: Context Efficiency (tool calls / sessions) with delta-based recent average
 if [ -f "$SESSIONS_FILE" ]; then
   SESSION_COUNT=$(wc -l < "$SESSIONS_FILE" | tr -d ' ')
   if [ "$SESSION_COUNT" -gt 0 ] 2>/dev/null && [ "$TOOL_CALLS" -gt 0 ] 2>/dev/null; then
@@ -111,16 +111,78 @@ if [ -f "$SESSIONS_FILE" ]; then
   else
     V2_CALLS_PER_SESSION=0
   fi
+  # Compute per-session deltas from consecutive total_tool_calls values
+  V2_RECENT_AVG=0
+  if [ "$SESSION_COUNT" -gt 1 ] 2>/dev/null; then
+    # Extract last 11 total_tool_calls to compute 10 deltas
+    TOTALS=$(tail -11 "$SESSIONS_FILE" | jq -r '.total_tool_calls // empty' 2>/dev/null)
+    PREV=""
+    DELTA_SUM=0
+    DELTA_COUNT=0
+    for T in $TOTALS; do
+      if [ -n "$PREV" ] 2>/dev/null; then
+        D=$((T - PREV))
+        if [ "$D" -ge 0 ] 2>/dev/null; then
+          DELTA_SUM=$((DELTA_SUM + D))
+          DELTA_COUNT=$((DELTA_COUNT + 1))
+        fi
+      fi
+      PREV=$T
+    done
+    if [ "$DELTA_COUNT" -gt 0 ] 2>/dev/null; then
+      V2_RECENT_AVG=$((DELTA_SUM / DELTA_COUNT))
+    fi
+  fi
 else
   SESSION_COUNT=0
   V2_CALLS_PER_SESSION=0
+  V2_RECENT_AVG=0
+fi
+
+# V4: Gate Pass Rate — Bash tool_use events = passed (PostToolUse only fires after PreToolUse pass)
+# gate_blocked events are not yet instrumented in l1-safety-check.sh (L1 file guard prevents hook edits)
+if [ -f "$TOOL_LOG" ]; then
+  V4_PASSED=$(grep -c '"tool":"Bash"' "$TOOL_LOG" 2>/dev/null || true)
+  V4_PASSED=${V4_PASSED:-0}
+  V4_BLOCKED=$(grep -c '"event":"gate_blocked"' "$TOOL_LOG" 2>/dev/null || true)
+  V4_BLOCKED=${V4_BLOCKED:-0}
+  V4_TOTAL=$((V4_PASSED + V4_BLOCKED))
+  if [ "$V4_TOTAL" -gt 0 ] 2>/dev/null; then
+    V4_RATE=$((V4_PASSED * 100 / V4_TOTAL))
+  else
+    V4_RATE=100
+  fi
+else
+  V4_PASSED=0
+  V4_BLOCKED=0
+  V4_TOTAL=0
+  V4_RATE=100
+fi
+
+# V1: Skill Quality — provisional proxy (not benchmark.json-based)
+SKILL_COUNT=$(find "$BASE/.claude/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
+EVOLVE_SUCCESS=0
+EVOLVE_TOTAL_RUNS=0
+if [ -f "$HISTORY_FILE" ]; then
+  EVOLVE_TOTAL_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
+  EVOLVE_SUCCESS=$(grep -c '"result":"success"' "$HISTORY_FILE" 2>/dev/null || true)
+  EVOLVE_SUCCESS=${EVOLVE_SUCCESS:-0}
+fi
+if [ "$EVOLVE_TOTAL_RUNS" -gt 0 ] 2>/dev/null; then
+  EVOLVE_SUCCESS_RATE=$((EVOLVE_SUCCESS * 100 / EVOLVE_TOTAL_RUNS))
+else
+  EVOLVE_SUCCESS_RATE=0
+fi
+LEAN_HEALTH=1
+if [ "${SORRY_COUNT:-0}" -gt 0 ] 2>/dev/null; then
+  LEAN_HEALTH=0
 fi
 
 echo "  \"v1_v7\": {"
-echo "    \"v1_skill_quality\": \"not_available\","
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION },"
+echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION, \"recent_avg\": $V2_RECENT_AVG },"
 echo "    \"v3_output_quality\": \"not_available\","
-echo "    \"v4_gate_pass_rate\": \"not_available\","
+echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
 echo "    \"v6_knowledge_structure\": \"see_memory_and_lean_sections\","
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED }"
