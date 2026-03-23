@@ -19,9 +19,11 @@ check_output() {
 }
 
 # P2 hook: git commit with high-risk files
+# Clean warned state to ensure first-attempt behavior (warning, not block)
+rm -f /tmp/p2-warned-unknown /tmp/p2-warned-test 2>/dev/null || true
 check_output "B2.1 High-risk commit triggers warning" \
   "$HOOKS/p2-verify-on-commit.sh" \
-  '{"tool_input":{"command":"git commit -m test"}}' \
+  '{"tool_input":{"command":"git commit -m test"},"session_id":"test"}' \
   "EXIT:0"
 
 # P2 hook: non-commit command is skipped

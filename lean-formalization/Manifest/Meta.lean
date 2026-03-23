@@ -92,7 +92,7 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 24   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 24 axioms)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 209  -- 全モジュール合計
+    theoremCount     := 210  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -103,9 +103,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 61 := by rfl
 
-/-- 現在の公理系の定理数は 209。 -/
+/-- 現在の公理系の定理数は 210。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 209 := by rfl
+  currentProfile.theoremCount = 210 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
