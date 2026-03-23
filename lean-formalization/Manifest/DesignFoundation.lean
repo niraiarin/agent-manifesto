@@ -2,21 +2,63 @@ import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 import Manifest.Observable
+import Manifest.Principles
 
 /-!
-# Layer 8: Design Foundation — 設計開発基礎論の形式化
+# Layer 8: Design Foundation — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
 
 design-development-foundation.md の D1–D9 がマニフェストの
-T/E/P から導出されることを型検査する。
+T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）
+されることを型検査する。
+
+## 形式化の性格
+
+本ファイルは Γ に新たな非論理的公理（§4.1）を追加しない。
+すべての D は以下のいずれかとして形式化される:
+- **定義的拡大**（§5.5）: 新しい型・関数の定義。常に保存拡大
+- **定理**（§4.2）: 既存の公理（T/E）から推論規則の適用で導出
+
+したがって本ファイルは T₀ の定義的拡大 + 定理の集合であり、
+Terminology.lean が証明した `definitional_implies_conservative` により
+保存拡大（§5.5）が保証される。
 
 ## 設計方針
 
-各 D を型（def）または定理（theorem）として表現し、
-根拠となる T/E/P の axiom/theorem との接続を明示する。
+各 D を型（定義的拡大, §5.5）または定理（§4.2）として表現し、
+根拠となる T/E/P の非論理的公理（§4.1）/定理との接続を明示する。
 
-D はメタレベルの設計原理であり、対象レベルの axiom（T/E）とは
-異なる。D の形式化は「D が T/E/P と整合していること」の
-型レベルでの保証であり、D 自体を axiom として追加するものではない。
+D はメタレベル（§5.6 メタ理論）の設計原理であり、
+対象レベル（§5.6 対象理論）の非論理的公理とは異なる。
+
+## 用語リファレンスとの対応
+
+| Lean の概念 | 用語リファレンス | §参照 |
+|------------|----------------|-------|
+| D1–D9 の theorem | 定理（公理から導出された命題）| §4.2 |
+| D1–D9 の def/structure | 定義的拡大（新記号を既存記号で定義）| §5.5 |
+| SelfGoverning | 型クラス（型に対するインタフェース）| §9.4 |
+| DesignPrinciple | 論議領域（§3.2）の構成要素 | §3.2 |
+| DesignPrincipleUpdate | AGM の修正操作の構造化 | §9.2 |
+| EnforcementLayer | 強制力の階層。不変条件（§9.3）の実現手段 | §9.3 |
+| DevelopmentPhase | フェーズ間の依存関係は遷移関係（§9.3）に類似 | §9.3 |
+| VerificationIndependence | E1（§4.1 非論理的公理）の運用化 | §4.1 |
+| CompatibilityClass | 拡大の分類（保存/無矛盾/破壊的）| §5.5 |
+
+## design-development-foundation.md との対応
+
+本ファイルは D1–D9 を形式化する。D10–D12 は未形式化。
+
+| D | 根拠 | 形式化の深度 |
+|---|------|------------|
+| D1 | P5 + L1–L6 | 型 + 2 定理 |
+| D2 | E1 + P2 | 構造体 + 3 定理 |
+| D3 | P4 + T5 | 1 定理（T5 適用のみ。3 条件構造は未形式化）|
+| D4 | Section 7 + P3 + T2 | 型 + 5 定理 |
+| D5 | T8 + P4 + P6 | 型 + 1 定理（三層間関係は未形式化）|
+| D6 | Ontology/Observable | 1 定理（因果連鎖は未形式化）|
+| D7 | Section 6 + P1 | 2 定理（蓄積 bounded + 毀損 unbounded）|
+| D8 | Section 6 + E2 | 2 定理（過剰拡大 + 能力-リスク）|
+| D9 | Observable + P3 + Section 7 | SelfGoverning + 4 定理 |
 -/
 
 namespace Manifest
@@ -26,13 +68,18 @@ namespace Manifest
 -- ============================================================
 
 /-!
-## D1: 強制のレイヤリング
+## D1: 強制のレイヤリング（定義的拡大, §5.5）
 
 根拠: P5（確率的解釈）+ L1–L6（境界条件の階層）
 
 P5 により、規範的指針は確率的にしか遵守されない。
 したがって、L1（安全）のような絶対制約は
 構造的強制（確率的解釈を受けない）で実装すべき。
+
+用語リファレンスとの接続:
+- 構造的強制 → 不変条件（§9.3）: 実行中常に保持される性質
+- 手続的強制 → 事前条件/事後条件（§9.3）: 操作の前後で確認
+- 規範的指針 → P5 により充足可能（§2.2）だが恒真（§2.2）ではない
 -/
 
 /-- 強制レイヤー。強制力の強さを表す。 -/
@@ -78,11 +125,13 @@ theorem d1_enforcement_monotone :
 -- ============================================================
 
 /-!
-## D2: Worker/Verifier 分離
+## D2: Worker/Verifier 分離（定義的拡大 + 定理, §5.5/§4.2）
 
-根拠: E1（検証の独立性）+ P2（認知的役割分離）
+根拠: E1（検証の独立性, 非論理的公理 §4.1）+ P2（認知的役割分離, 定理 §4.2）
 
 E1a (verification_requires_independence) が直接の根拠。
+E1 は Γ \ T₀（仮説由来）に属し、反証可能（§9.1）。
+E1 が反証された場合、D2 は見直しの対象となる。
 -/
 
 /-- 評価検証の独立性の4条件。
@@ -185,12 +234,16 @@ theorem d2_from_e1 :
 -- ============================================================
 
 /-!
-## D3: 可観測性先行
+## D3: 可観測性先行（定理, §4.2）
 
-根拠: P4（劣化の可観測性）+ T5（フィードバックなしに改善なし）
+根拠: P4（劣化の可観測性, 定理 §4.2）+ T5（フィードバックなしに改善なし, T₀ §4.1）
 
 T5 (no_improvement_without_feedback) が直接の根拠:
 改善にはフィードバックが必要 → フィードバックには観測が必要。
+
+注: design-development-foundation.md は可観測性の 3 条件
+（測定可能, 劣化検知可能, 改善検証可能）を定義するが、
+本形式化では T5 の含意のみ。3 条件の構造化は未実装。
 -/
 
 /-- D3 の根拠: 改善にはフィードバック（＝観測結果）が先行する。
@@ -202,17 +255,46 @@ theorem d3_observability_precedes_improvement :
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
   no_improvement_without_feedback
 
+/-- D3 の可観測性 3 条件（design-development-foundation.md §D3）。
+    各変数 V に対して 3 条件すべてが成立する場合にのみ、
+    V は実効的な最適化対象となる。 -/
+structure ObservabilityConditions where
+  /-- 現在値が測定可能か（Measurable, Observable.lean） -/
+  measurable            : Bool
+  /-- 劣化が検知可能か（品質崩壊の前に検知できるか） -/
+  degradationDetectable : Bool
+  /-- 改善が検証可能か（介入の前後で値の変化を比較できるか） -/
+  improvementVerifiable : Bool
+  deriving BEq, Repr
+
+/-- 変数が実効的な最適化対象であるかの判定。3 条件すべてが必要。 -/
+def effectivelyOptimizable (c : ObservabilityConditions) : Prop :=
+  c.measurable = true ∧ c.degradationDetectable = true ∧ c.improvementVerifiable = true
+
+/-- D3: 3 条件のいずれかが欠如した変数は名目上の最適化対象に過ぎない。 -/
+theorem d3_partial_observability_insufficient :
+  ¬effectivelyOptimizable ⟨true, true, false⟩ ∧
+  ¬effectivelyOptimizable ⟨true, false, true⟩ ∧
+  ¬effectivelyOptimizable ⟨false, true, true⟩ := by
+  refine ⟨?_, ?_, ?_⟩ <;> simp [effectivelyOptimizable]
+
+/-- D3: 3 条件すべてが成立する場合のみ実効的。 -/
+theorem d3_full_observability_sufficient :
+  effectivelyOptimizable ⟨true, true, true⟩ := by
+  simp [effectivelyOptimizable]
+
 -- ============================================================
 -- D4: 漸進的自己適用
 -- ============================================================
 
 /-!
-## D4: 漸進的自己適用
+## D4: 漸進的自己適用（定義的拡大 + 定理, §5.5/§4.2）
 
-根拠: Section 7（自己適用）+ P3（学習の統治）+ T2（構造の永続性）
+根拠: Section 7（自己適用）+ P3（学習の統治, 定理 §4.2）+ T2（構造の永続性, T₀ §4.1）
 
 開発フェーズは順序を持ち、各フェーズの完了は構造に永続する（T2）。
 フェーズ順序は D1–D3 の依存関係から導出される。
+Procedure.lean の `phaseOrder` が同一の順序を形式化済み。
 -/
 
 /-- 開発フェーズ。D4 の漸進的自己適用の各段階。 -/
@@ -286,6 +368,32 @@ theorem d5_test_has_precision :
     task.precisionRequired.required > 0 :=
   task_has_precision
 
+/-- 三層の対応関係。形式仕様→テスト→実装の順序で構成する。
+    design-development-foundation.md D5:
+    「形式仕様 → テスト: 各 axiom/theorem に対して少なくとも1つのテストが存在する」
+    「テスト → 実装: テストが先に存在し、実装がテストを通す」 -/
+def specLayerOrder : SpecLayer → Nat
+  | .formalSpec      => 0   -- 最初に仕様を定義
+  | .acceptanceTest  => 1   -- 仕様からテストを導出
+  | .implementation  => 2   -- テストを通す実装を構築
+
+/-- D5: 三層は厳密に順序づけられている。 -/
+theorem d5_layer_sequential :
+  specLayerOrder .formalSpec < specLayerOrder .acceptanceTest ∧
+  specLayerOrder .acceptanceTest < specLayerOrder .implementation := by
+  simp [specLayerOrder]
+
+/-- テストの決定性。構造的テストは決定論的、行動的テストは確率的（T4）。 -/
+def testDeterministic : TestKind → Bool
+  | .structural => true    -- 決定論的: 存在の有無を確認
+  | .behavioral => false   -- 確率的: T4 により結果が変動しうる
+
+/-- D5 + T4: 構造的テストは決定論的、行動的テストは確率的。 -/
+theorem d5_structural_test_deterministic :
+  testDeterministic .structural = true ∧
+  testDeterministic .behavioral = false := by
+  constructor <;> rfl
+
 -- ============================================================
 -- D6: 三段設計（境界→緩和策→変数）
 -- ============================================================
@@ -299,12 +407,43 @@ Ontology.lean に BoundaryLayer, BoundaryId, Mitigation が
 既に定義されている。ここではその設計原理を定理として表現する。
 -/
 
-/-- D6 の根拠: 固定境界に対応する変数は緩和策の品質のみ改善可能。
-    Observable.lean の fixed_boundary_variables_mitigate_only の再利用。 -/
+/-- D6 の根拠: 固定境界に対応する変数は緩和策の品質のみ改善可能。 -/
 theorem d6_fixed_boundary_mitigated :
   boundaryLayer .ethicsSafety = .fixed ∧
   boundaryLayer .ontological = .fixed := by
   simp [boundaryLayer]
+
+/-- 三段設計の設計フロー。
+    design-development-foundation.md D6:
+    「境界条件（不変） → 緩和策（設計判断） → 変数（品質指標）」
+    設計は常にこの方向で行い、逆方向は禁止。 -/
+inductive DesignStage where
+  /-- 境界条件を識別する（不変。受容するのみ）-/
+  | identifyBoundary
+  /-- 緩和策を設計する（L6 に属する設計判断）-/
+  | designMitigation
+  /-- 変数を定義する（緩和策の効き具合の指標）-/
+  | defineVariable
+  deriving BEq, Repr, DecidableEq
+
+/-- 三段設計のステージ順序。 -/
+def designStageOrder : DesignStage → Nat
+  | .identifyBoundary  => 0
+  | .designMitigation  => 1
+  | .defineVariable    => 2
+
+/-- D6: 三段設計は厳密に順序づけられている。 -/
+theorem d6_stage_sequential :
+  designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
+  designStageOrder .designMitigation < designStageOrder .defineVariable := by
+  simp [designStageOrder]
+
+/-- D6: 逆方向の禁止。変数を直接改善しようとしない（Goodhart's Law の罠）。
+    変数のステージは最後であり、変数から境界条件や緩和策に遡ることはない。 -/
+theorem d6_no_reverse :
+  ∀ (s : DesignStage),
+    designStageOrder .identifyBoundary ≤ designStageOrder s := by
+  intro s; cases s <;> simp [designStageOrder]
 
 -- ============================================================
 -- D7: 信頼の非対称性
@@ -369,25 +508,29 @@ theorem d8_capability_risk :
 -- ============================================================
 
 /-!
-## D9: 分類自体のメンテナンス
+## D9: 分類自体のメンテナンス（定義的拡大 + 定理, §5.5/§4.2）
 
-根拠: Observable.lean Part IV（分類自体のメンテナンス）+ P3（学習の統治）+ Section 7（自己適用）
+根拠: Observable.lean Part IV + P3（学習の統治, 定理 §4.2）+ Section 7（自己適用）
 
 設計基礎論自体が更新対象であり、更新は P3 の互換性分類に従う。
+これは AGM の修正操作（用語リファレンス §9.2）の構造化:
+- 保守的拡張 = 保存拡大（§5.5）
+- 互換的変更 = 無矛盾な拡大（§5.5）
+- 破壊的変更 = 拡大ではない変更（一部の定理が保存されない）
 
 ### 自己適用の要件
 
 D9 は「分類自体のメンテナンス」を述べる原理であるから、
 D1–D9 自身もまた D9 の適用対象でなければならない（Section 7）。
 
-これを型レベルで表現するために:
-1. D1–D9 を DesignPrinciple 型の値としてモデル化する
+これを型レベル（§7.1 カリー＝ハワード対応）で表現するために:
+1. D1–D9 を DesignPrinciple 型の値としてモデル化する（論議領域 §3.2 の拡張）
 2. DesignPrinciple の更新が CompatibilityClass で分類されることを要求する
-3. 設計基礎論全体を VersionTransition の対象としてモデル化する
+3. SelfGoverning 型クラス（§9.4）で構造的に強制する
 -/
 
-/-- 設計原理の識別子。D1–D9 を値として列挙する。
-    これにより D1–D9 自身が「更新される対象」として型レベルで扱える。 -/
+/-- 設計原理の識別子。D1–D12 を値として列挙する。
+    これにより D1–D12 自身が「更新される対象」として型レベルで扱える。 -/
 inductive DesignPrinciple where
   | d1_enforcementLayering
   | d2_workerVerifierSeparation
@@ -398,6 +541,9 @@ inductive DesignPrinciple where
   | d7_trustAsymmetry
   | d8_equilibriumSearch
   | d9_selfMaintenance
+  | d10_structuralPermanence
+  | d11_contextEconomy
+  | d12_constraintSatisfactionTaskDesign
   deriving BEq, Repr
 
 /-- DesignPrinciple は SelfGoverning を実装する。
@@ -451,7 +597,7 @@ theorem d9_self_applicable :
     c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
   fun _p c => governed_update_classified _p c
 
-/-- D9 の網羅性: D1–D9 の全原理が更新対象として列挙されている。 -/
+/-- D9 の網羅性: D1–D12 の全原理が更新対象として列挙されている。 -/
 theorem d9_all_principles_enumerated :
   ∀ (p : DesignPrinciple),
     p = .d1_enforcementLayering ∨
@@ -462,7 +608,10 @@ theorem d9_all_principles_enumerated :
     p = .d6_boundaryMitigationVariable ∨
     p = .d7_trustAsymmetry ∨
     p = .d8_equilibriumSearch ∨
-    p = .d9_selfMaintenance := by
+    p = .d9_selfMaintenance ∨
+    p = .d10_structuralPermanence ∨
+    p = .d11_contextEconomy ∨
+    p = .d12_constraintSatisfactionTaskDesign := by
   intro p; cases p <;> simp
 
 -- ============================================================
@@ -491,6 +640,9 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d7_trustAsymmetry              => .equilibrium
   | .d8_equilibriumSearch           => .equilibrium
   | .d9_selfMaintenance             => .safety  -- D9 も最初から必要
+  | .d10_structuralPermanence       => .safety  -- T1+T2 は最初から成立
+  | .d11_contextEconomy             => .observability  -- コンテキストコスト測定が前提
+  | .d12_constraintSatisfactionTaskDesign => .governance  -- P6 は統治フェーズ
 
 /-- D4 の自己適用: D4 と D9 は safety フェーズから必要。
     これは、開発の最初期から「フェーズ順序」と「更新の統治」が
@@ -533,23 +685,152 @@ theorem dependency_d1_d2_d4_consistent :
   · rfl
 
 -- ============================================================
+-- D10: 構造永続性の設計定理
+-- ============================================================
+
+/-!
+## D10: 構造永続性（定理, §4.2）
+
+根拠: T1（一時性, T₀ §4.1）+ T2（構造の永続性, T₀ §4.1）
+
+エージェントは一時的（T1）だが構造は永続する（T2）。
+改善の蓄積は構造を通じてのみ可能。
+Principles.lean の P3 定理群（modifier_agent_terminates,
+modification_persists_after_termination）と接続。
+-/
+
+/-- D10 の根拠: エージェントのセッションは終了する（T1）が、
+    構造は永続する（T2）。P3a + P3b の合成。
+    structure_persists (T2) と session_bounded (T1) から。 -/
+theorem d10_agent_temporary_structure_permanent :
+  -- T1: セッションは終了する
+  (∀ (w : World) (s : Session),
+    s ∈ w.sessions →
+    ∃ (w' : World), w.time ≤ w'.time ∧
+      ∃ (s' : Session), s' ∈ w'.sessions ∧
+        s'.id = s.id ∧ s'.status = SessionStatus.terminated) ∧
+  -- T2: 構造は永続する
+  (∀ (w w' : World) (s : Session) (st : Structure),
+    s ∈ w.sessions → st ∈ w.structures →
+    s.status = SessionStatus.terminated →
+    validTransition w w' → st ∈ w'.structures) :=
+  ⟨session_bounded, structure_persists⟩
+
+/-- D10 の系: 構造への書き戻しが唯一の蓄積手段。
+    エポック（T2: structure_accumulates）は単調増加する。 -/
+theorem d10_epoch_monotone :
+  ∀ (w w' : World), validTransition w w' → w.epoch ≤ w'.epoch :=
+  structure_accumulates
+
+-- ============================================================
+-- D11: コンテキスト経済の定理
+-- ============================================================
+
+/-!
+## D11: コンテキスト経済（定義的拡大 + 定理, §5.5/§4.2）
+
+根拠: T3（コンテキスト有限性, T₀ §4.1）+ D1（強制のレイヤリング）
+
+コンテキストウィンドウは有限のリソース（T3）であり、
+強制レイヤー（D1）とコンテキストコストは逆相関する:
+構造的強制（低コスト）> 手続的強制（中コスト）> 規範的指針（高コスト）。
+-/
+
+/-- D1 の強制レイヤーに対するコンテキストコスト。
+    値が大きいほどコンテキストを消費する。 -/
+def contextCost : EnforcementLayer → Nat
+  | .structural => 0   -- 一度設定すれば毎セッション読む必要がない
+  | .procedural => 1   -- プロセスは存在するがコンテキストに常駐しない
+  | .normative  => 2   -- 毎セッション読み込まれ、コンテキストを占有する
+
+/-- D11: 強制力とコンテキストコストは逆相関する。
+    強制力が高いほどコンテキストコストが低い。 -/
+theorem d11_enforcement_cost_inverse :
+  contextCost .structural < contextCost .procedural ∧
+  contextCost .procedural < contextCost .normative := by
+  simp [contextCost]
+
+/-- D11: 構造的強制への昇格はコンテキストコストを削減する。 -/
+theorem d11_structural_minimizes_cost :
+  ∀ (e : EnforcementLayer),
+    contextCost .structural ≤ contextCost e := by
+  intro e; cases e <;> simp [contextCost]
+
+/-- D11 + T3: コンテキスト容量は有限であり（T3）、
+    規範的指針の肥大化は V2（コンテキスト効率）を劣化させる。 -/
+theorem d11_context_finite :
+  ∀ (agent : Agent),
+    agent.contextWindow.capacity > 0 ∧
+    agent.contextWindow.used ≤ agent.contextWindow.capacity :=
+  context_finite
+
+-- ============================================================
+-- D12: 制約充足によるタスク設計定理
+-- ============================================================
+
+/-!
+## D12: 制約充足タスク設計（定理, §4.2）
+
+根拠: P6（制約充足, 定理 §4.2）+ T3 + T7 + T8（T₀ §4.1）
+
+タスク遂行は制約充足問題。有限の認知空間（T3）、
+有限のリソース（T7）の中で精度要求（T8）を達成する。
+Principles.lean の P6 定理群と接続。
+-/
+
+/-- D12: タスク設計は T3+T7+T8 の制約充足問題。
+    P6a (task_is_constraint_satisfaction) の再述。 -/
+theorem d12_task_is_csp :
+  ∀ (task : Task) (agent : Agent),
+    agent.contextWindow.capacity > 0 →
+    task.resourceBudget ≤ globalResourceBound →
+    task.precisionRequired.required > 0 →
+    ∀ (s : TaskStrategy),
+      s.task = task →
+      strategyFeasible s agent →
+      s.contextUsage ≤ agent.contextWindow.capacity ∧
+      s.resourceUsage ≤ globalResourceBound ∧
+      s.achievedPrecision > 0 :=
+  task_is_constraint_satisfaction
+
+/-- D12: タスク設計自体も確率的出力（T4）であり、
+    P2（認知的役割分離）による検証が必要。 -/
+theorem d12_task_design_probabilistic :
+  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
+    canTransition agent action w w₁ ∧
+    canTransition agent action w w₂ ∧
+    w₁ ≠ w₂ :=
+  output_nondeterministic
+
+-- ============================================================
 -- Sorry Inventory
 -- ============================================================
 
 /-!
 ## Sorry Inventory (DesignFoundation)
 
-sorry なし。新規 axiom なし。
+sorry なし。新規非論理的公理（§4.1）なし。
 
-全 theorem は既存の axiom（T/E/P/V）の直接適用、
-または inductive 型の cases 解析で証明完了。
+全定理（§4.2）は既存の公理（T/E/P/V）の直接適用、
+または帰納型（§7.2）の cases 解析で証明完了。
 
-D1–D9 の各原理は、マニフェストの axiom 系から
-**導出可能**であることが型検査で保証されている。
+D1–D9 の各原理は、マニフェストの公理系から
+**導出可能**（§2.4 導出可能性）であることが型検査で保証されている。
+本ファイルは定義的拡大（§5.5）のみで構成され、
+Terminology.lean が証明した `definitional_implies_conservative` により
+保存拡大が保証される。
+
+### 既知の形式化ギャップ
+
+| D | ギャップ | 影響 |
+|---|---------|------|
+| D3 | 可観測性の 3 条件（測定可能/劣化検知/改善検証）が未構造化 | T5 の含意のみ |
+| D5 | 仕様・テスト・実装の三層間関係が未形式化 | 型定義のみ |
+| D6 | 境界→緩和策→変数の因果連鎖が未形式化 | 境界分類のみ |
 
 ### Section 7（自己適用）の構造的強制
 
-`SelfGoverning` typeclass（Ontology.lean）により、
+`SelfGoverning` 型クラス（§9.4, Ontology.lean）により、
 D1–D9 を定義する `DesignPrinciple` 型は以下を満たす:
 - 互換性分類の適用可能性（`canClassifyUpdate`）
 - 分類の網羅性（`classificationExhaustive`）

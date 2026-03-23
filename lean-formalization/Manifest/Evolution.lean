@@ -3,7 +3,7 @@ import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 
 /-!
-# Layer 5: Manifest Evolution
+# Layer 5: Manifest Evolution — 体系の拡張（用語リファレンス §5.5）
 
 マニフェスト自身の進化を形式化する。manifesto.md Section 7
 「このマニフェストの自己適用」および Observable.lean
@@ -16,9 +16,18 @@ Part IV「この分類自体のメンテナンス」に対応。
 
 - ManifestVersion: バージョンの型
 - VersionTransition: バージョン間の遷移イベント
-- 互換性分類の推移性: conservativeExtension の連鎖は conservativeExtension
+- 互換性分類の推移性: 保存拡大（§5.5）の連鎖は保存拡大
 - 破壊的変更の移行パス要件
 - 静止の不健全性: 更新されないマニフェストは問題を示唆する
+
+## 用語リファレンスとの対応
+
+- CompatibilityClass.join → 拡大（§5.5）の合成。最も制限的な分類が支配する
+- conservativeExtension → 保存拡大（§5.5）: 元の言語の定理を保存する拡大
+- compatibleChange → 無矛盾な拡大（§5.5）: 無矛盾性を保つ拡大
+- breakingChange → 拡大ではない変更: 一部の定理が保存されない
+- CompatibilityClass.le → 拡大の包含関係: 定義的拡大 ⊂ 保存拡大 ⊂ 無矛盾な拡大
+- stasisUnhealthy → 不完全性定理（§5.4）の精神ではないが、体系の進化の必要性
 
 ## Section 7 の形式化
 
@@ -165,7 +174,7 @@ theorem compatible_change_closed :
     c₂ ≤ .compatibleChange →
     c₁.join c₂ ≤ .compatibleChange := by
   intro c₁ c₂ h₁ h₂
-  cases c₁ <;> cases c₂ <;> simp [CompatibilityClass.le, CompatibilityClass.join] at * <;> assumption
+  cases c₁ <;> cases c₂ <;> simp [CompatibilityClass.join] at * <;> assumption
 
 /-- breakingChange の後は移行パスが必要（型レベルの表現）。
     HANDOFF 必須タスク: 破壊的変更後の移行パス要件。

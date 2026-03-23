@@ -4,33 +4,42 @@ import Manifest.EmpiricalPostulates
 import Manifest.Observable
 
 /-!
-# Layer 3: Foundational Principles (P1–P6)
+# Layer 3: Foundational Principles (P1–P6) — 定理の導出（手順書 Phase 2）
 
-拘束条件（T）と経験的公準（E）から導出される設計原理を
-Lean theorem として記述する。
+前提集合 Γ（T₀ = T1–T8, Γ \ T₀ = E1–E2）から導出される設計原理を
+Lean の定理（用語リファレンス §4.2）として記述する。
+各 P は Γ ⊢ φ の形式で、前提集合 Γ のもとでの条件付き導出（§2.5）である。
 
-## 導出構造
+## 導出構造（Γ ⊢ φ の依存関係）
 
-各 P の根拠となる T/E と、堅牢性の層:
+各 P の根拠となる T/E（公理依存性）と、堅牢性の層:
 
-| P | 根拠 | 堅牢性 |
-|---|------|--------|
-| P1 | E2 | 経験的（E に依拠） |
-| P2 | T4 + E1 | 経験的（E に依拠） |
-| P3 | T1 + T2 | 堅牢（T のみ） |
-| P4 | T5 (+ T7) | 堅牢（T のみ） |
-| P5 | T4 | 堅牢（T のみ） |
-| P6 | T3 + T7 + T8 | 堅牢（T のみ） |
+| P | 根拠 | 堅牢性 | 導出の種類 |
+|---|------|--------|----------|
+| P1 | E2 | 経験的（Γ \ T₀ に依拠） | E2 の直接適用 |
+| P2 | T4 + E1 | 経験的（Γ \ T₀ に依拠） | E1a の直接適用 |
+| P3 | T1 + T2 | 堅牢（T₀ のみ） | T1, T2 の合成 |
+| P4 | T5 (+ T7) | 堅牢（T₀ のみ） | T5 の直接適用 |
+| P5 | T4 | 堅牢（T₀ のみ） | T4 の高水準再述 |
+| P6 | T3 + T7 + T8 | 堅牢（T₀ のみ） | T3, T7, T8 の制約構造の展開 |
 
-## sorry の意味
+Γ \ T₀（E1, E2）が反証（用語リファレンス §9.1 反証可能性）された場合、
+影響を受けるのは P1, P2 のみ。P3–P6 は T₀ のみに依拠するため、
+Γ \ T₀ の縮小（§9.2）に対して不変。
+これは拡大の単調性（§2.5 / §5.3）の帰結。
 
-各 theorem の `sorry` は「証明が未完了」を意味する。
-sorry を消すことが Phase 3 の設計作業そのものである。
+## 用語リファレンスとの対応
+
+- theorem → 定理 (§4.2): 公理と推論規則から証明された命題
+- sorry → 導出の未完了 (§1): 証明（公理から定理に至る推論規則の適用列）が欠如
+- E1b の冗長性 → 独立性の検査 (§4.3): E1b は E1a から導出可能（独立でない）
 
 ## 付録: E1b 冗長性の証明
 
 E1b (`no_self_verification`) が E1a (`verification_requires_independence`)
 から導出可能であることを theorem として示す。
+これは公理衛生検査 3（独立性, 手順書 §2.6）の具体例:
+E1b は冗長な公理であり、定理として証明すべきである。
 -/
 
 namespace Manifest
@@ -197,7 +206,7 @@ theorem ungoverned_breaking_change_irrecoverable :
     ∀ (w_future : World),
       validTransition ki.after w_future →
       ki.after.epoch ≤ w_future.epoch :=
-  fun _ _ _ ki _ _ _ _ _ h_persist w_future h_trans =>
+  fun _ _ _ ki _ _ _ _ _ _ w_future h_trans =>
     structure_accumulates ki.after w_future h_trans
 
 /-- P3 の結論: 統治が必要な理由。

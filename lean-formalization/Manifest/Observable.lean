@@ -2,13 +2,20 @@ import Manifest.Ontology
 import Manifest.Axioms
 
 /-!
-# Layer 4: Observability — V1–V7（最適化変数）
+# Layer 4: Observability — V1–V7（最適化変数）— Γ \ T₀ の設計由来公理
 
 **変数は境界条件ではない。** エージェントが構造を通じて改善できるパラメータであり、
 構造品質の指標。境界条件（Ontology.lean の L1–L6）が「行動空間の壁」なら、
 変数は「壁の中で構造が動かせるレバー」。
 
 ただし、変数は**独立したレバーではなく、相互に影響する系（system）**である。
+
+## Γ \ T₀ としての位置づけ（手順書 §2.4）
+
+本ファイルの axiom は前提集合 Γ の拡大部分（Γ \ T₀）に属し、
+設計由来（ドメインモデルの前提、設計判断に基づく）の非論理的公理（§4.1）である。
+T₀（Axioms.lean）の無矛盾な拡大（用語リファレンス §5.5）であり、
+修正ループにおいて縮小（§9.2）の対象となりうる。
 
 ## 設計方針
 
@@ -17,8 +24,8 @@ import Manifest.Axioms
 
 ### Observable vs Measurable
 
-- **Observable** (`World → Prop` が決定可能) — 二値判定
-- **Measurable** (`World → Nat` が計算可能) — 定量測定
+- **Observable** (`World → Prop` が決定可能) — 二値判定。用語リファレンス §9.3 事前条件/事後条件に類似
+- **Measurable** (`World → Nat` が計算可能) — 定量測定。用語リファレンス §9.5 注記: 測度論の可測関数とは異なる概念
 
 V1–V7 は定量的指標であるため `Measurable` として形式化する。
 `Measurable m` は「`m` の値を外部観測から計算する手続きが存在する」を意味する。
@@ -161,37 +168,76 @@ opaque taskDesignEfficiency : World → Nat
 -- ============================================================
 
 /-!
-## V1–V7 可測性の宣言
+## V1–V7 可測性の宣言 — Γ \ T₀（設計由来）
 
-各変数が `Measurable` であることを axiom として宣言する。
-これは「原理的に測定可能である」という設計上の約束であり、
+各変数が `Measurable` であることを非論理的公理（用語リファレンス §4.1）
+として宣言する。これは「原理的に測定可能である」という設計上の約束であり、
 具体的な測定実装は運用レイヤーに委ねる。
 
-なぜ axiom か: V1–V7 は opaque であるため、`Measurable` を
-定理として証明することはできない（opaque 展開不能性）。
-測定可能性は外部の運用系によって保証されるものであり、
-形式系内では仮定として受け入れる。
+Γ \ T₀ への所属判定（手順書 §2.4）: これらの公理の根拠は
+構成者の設計判断に由来する（外的権威ではない）ため、
+拡大部分に所属する。
+
+なぜ axiom か: V1–V7 は opaque（不透明定義, 用語リファレンス §9.4）
+であるため、`Measurable` を定理（§4.2）として証明することはできない
+（opaque 展開不能性）。測定可能性は外部の運用系によって保証されるものであり、
+形式系内では非論理的公理として仮定する。
 -/
 
-/-- V1 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V1（スキル品質）は測定可能
+    根拠: benchmark.json による with/without 比較が測定手続きとして存在する
+    ソース: Ontology.lean V1 定義
+    反証条件: スキル品質の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v1_measurable : Measurable skillQuality
 
-/-- V2 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V2（コンテキスト効率）は測定可能
+    根拠: タスク完了率/消費トークン数の比が測定手続きとして存在する
+    ソース: Ontology.lean V2 定義
+    反証条件: コンテキスト効率の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v2_measurable : Measurable contextEfficiency
 
-/-- V3 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V3（出力品質）は測定可能
+    根拠: ゲート合格率・レビュー指摘数が測定手続きとして存在する
+    ソース: Ontology.lean V3 定義
+    反証条件: 出力品質の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v3_measurable : Measurable outputQuality
 
-/-- V4 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V4（ゲート通過率）は測定可能
+    根拠: pass/fail 統計が測定手続きとして存在する
+    ソース: Ontology.lean V4 定義
+    反証条件: ゲート通過率の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v4_measurable : Measurable gatePassRate
 
-/-- V5 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V5（提案精度）は測定可能
+    根拠: 人間の承認/却下率が測定手続きとして存在する
+    ソース: Ontology.lean V5 定義
+    反証条件: 提案精度の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v5_measurable : Measurable proposalAccuracy
 
-/-- V6 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V6（知識構造の質）は測定可能
+    根拠: 文脈復元速度・退役対象検出率が測定手続きとして存在する
+    ソース: Ontology.lean V6 定義
+    反証条件: 知識構造の質の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v6_measurable : Measurable knowledgeStructureQuality
 
-/-- V7 は測定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V7（タスク設計効率）は測定可能
+    根拠: タスク完了率/消費リソース比が測定手続きとして存在する
+    ソース: Ontology.lean V7 定義
+    反証条件: タスク設計効率の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom v7_measurable : Measurable taskDesignEfficiency
 
 -- ============================================================
@@ -217,26 +263,52 @@ V1–V7 は独立に最適化できない。ある変数の改善が別の変数
 def TradeoffExists (m₁ m₂ : World → Nat) : Prop :=
   ∃ w w', m₁ w < m₁ w' ∧ m₂ w' < m₂ w
 
-/-- V1↑ → V2↓ のトレードオフ。
-    スキルがコンテキストを消費するため、
-    スキル品質の向上はコンテキスト効率を圧迫しうる。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V1↑ → V2↓ のトレードオフ。
+          スキルがコンテキストを消費するため、スキル品質の向上は
+          コンテキスト効率を圧迫しうる
+    根拠: T3（コンテキスト有限性）の帰結。有限リソースを共有する指標間の
+          トレードオフは T3 + T7 から構造的に導出される
+    ソース: Ontology.lean L2/L3 境界条件の分析
+    反証条件: スキルのコンテキスト消費が 0 になる技術が実現した場合 -/
 axiom tradeoff_v1_v2 : TradeoffExists skillQuality contextEfficiency
 
-/-- V6↑ → V2↓ のトレードオフ。
-    詳細な知識ほどコンテキストを占有するため、
-    知識構造の質の向上はコンテキスト効率を圧迫しうる。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V6↑ → V2↓ のトレードオフ。
+          詳細な知識ほどコンテキストを占有するため、
+          知識構造の質の向上はコンテキスト効率を圧迫しうる
+    根拠: T3（コンテキスト有限性）の帰結
+    ソース: Ontology.lean L2 境界条件の分析
+    反証条件: 知識のコンテキスト消費が 0 になる技術が実現した場合 -/
 axiom tradeoff_v6_v2 : TradeoffExists knowledgeStructureQuality contextEfficiency
 
-/-- V2↑ → V1↓ のトレードオフ。
-    効率追求で必要なスキル情報を圧縮しすぎるリスク。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V2↑ → V1↓ のトレードオフ。
+          効率追求で必要なスキル情報を圧縮しすぎるリスク
+    根拠: 圧縮は情報損失を伴いうるという情報理論的制約
+    ソース: V1/V2 の相互依存性分析
+    反証条件: 無損失圧縮がスキル情報に対して常に実現可能な場合 -/
 axiom tradeoff_v2_v1 : TradeoffExists contextEfficiency skillQuality
 
-/-- V2↑ → V6↓ のトレードオフ。
-    効率追求で必要な知識を圧縮しすぎるリスク。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V2↑ → V6↓ のトレードオフ。
+          効率追求で必要な知識を圧縮しすぎるリスク
+    根拠: 圧縮は情報損失を伴いうるという情報理論的制約
+    ソース: V2/V6 の相互依存性分析
+    反証条件: 無損失圧縮が知識構造に対して常に実現可能な場合 -/
 axiom tradeoff_v2_v6 : TradeoffExists contextEfficiency knowledgeStructureQuality
 
-/-- V7↑ → V2↓ のトレードオフ。
-    高度な分散設計がコンテキストを消費するリスク。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V7↑ → V2↓ のトレードオフ。
+          高度な分散設計がコンテキストを消費するリスク
+    根拠: T3（コンテキスト有限性）の帰結。設計の複雑性はコンテキストを消費する
+    ソース: V7/V2 の相互依存性分析
+    反証条件: タスク設計の複雑性がコンテキスト消費と無相関になった場合 -/
 axiom tradeoff_v7_v2 : TradeoffExists taskDesignEfficiency contextEfficiency
 
 -- ============================================================
@@ -265,12 +337,23 @@ def GoodhartVulnerable (m : World → Nat) : Prop :=
     (∃ w, approx w = m w) →   -- approx は少なくとも1点で一致する
     ∃ w', approx w' ≠ m w'    -- しかし乖離するワールドが存在する
 
-/-- V4（ゲート通過率）は Goodhart 脆弱性を持つ。
-    ゲートが通りやすいタスクに偏るリスク。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V4（ゲート通過率）は Goodhart 脆弱性を持つ。
+          ゲートが通りやすいタスクに偏るリスク
+    根拠: Goodhart の法則は経済学・教育学で繰り返し観測されている
+          （用語リファレンス §9.1 経験的命題に類似）
+    ソース: V4 の設計分析
+    反証条件: 近似測定が真の指標から乖離しないことが証明された場合 -/
 axiom v4_goodhart : GoodhartVulnerable gatePassRate
 
-/-- V7（タスク設計効率）は Goodhart 脆弱性を持つ。
-    測定しやすいタスクに偏るリスク。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V7（タスク設計効率）は Goodhart 脆弱性を持つ。
+          測定しやすいタスクに偏るリスク
+    根拠: Goodhart の法則の適用
+    ソース: V7 の設計分析
+    反証条件: 近似測定が真の指標から乖離しないことが証明された場合 -/
 axiom v7_goodhart : GoodhartVulnerable taskDesignEfficiency
 
 -- ============================================================
@@ -303,8 +386,13 @@ def systemHealthy (threshold : Nat) (w : World) : Prop :=
   knowledgeStructureQuality w ≥ threshold ∧
   taskDesignEfficiency w ≥ threshold
 
-/-- 系の健全性は Observable（二値判定可能）。
-    各 Vi が Measurable であることから、閾値比較は決定可能。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: 系の健全性は Observable（二値判定可能）。
+          各 Vi が Measurable であることから、閾値比較は決定可能
+    根拠: V1–V7 の Measurable axiom から、閾値との比較は計算可能
+    ソース: systemHealthy の定義
+    反証条件: いずれかの Vi の Measurable が反証された場合 -/
 axiom system_health_observable :
   ∀ (threshold : Nat), Observable (systemHealthy threshold)
 
@@ -357,47 +445,46 @@ Principles.lean の3つの sorry を解消するための axiom。
   [observable-axiom, derived-from-T4]
 -/
 
-/-- [observable-axiom, empirical]:
-    リスクが顕在化した場合、信頼度は低下する。
-
-    P1b (`unprotected_expansion_destroys_trust`) を解消する。
-    行動空間の拡大後にリスクが顕在化した場合、
-    信頼度は拡大前の水準を下回る。
-
-    経験的根拠: 蓄積した信頼は漸進的だが、
-    毀損は急激（非対称性）。これは組織心理学、
-    ブランド管理、セキュリティ分野で繰り返し観測される。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（仮説由来）
+    内容: リスクが顕在化した場合、信頼度は低下する。
+          行動空間の拡大後にリスクが顕在化した場合、
+          信頼度は拡大前の水準を下回る
+    根拠: 蓄積した信頼は漸進的だが、毀損は急激（非対称性）。
+          組織心理学、ブランド管理、セキュリティ分野で繰り返し観測される
+          （用語リファレンス §9.1 経験的命題）
+    ソース: P1b (`unprotected_expansion_destroys_trust`) の sorry 解消
+    反証条件: 信頼毀損が信頼蓄積と同等の速度でしか生じないことが実証された場合 -/
 axiom trust_decreases_on_materialized_risk :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskMaterialized agent w' →
     trustLevel agent w' < trustLevel agent w
 
-/-- [observable-axiom]:
-    劣化レベルは任意の自然数を取りうる（全射性）。
-
-    P4b (`degradation_is_gradient`) を解消する。
-    「制約は壁（バイナリ）ではなく勾配（グラデーション）」
-    という P4 の概念を、degradationLevel の値域が Nat 全体に
-    広がることで表現する。
-
-    設計的根拠: 劣化を 0/1 で捉えると中間状態を見逃す。
-    連続的な尺度により、早期警告と漸進的対応が可能になる。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: 劣化レベルは任意の自然数を取りうる（全射性）。
+          「制約は壁（バイナリ）ではなく勾配（グラデーション）」
+          という P4 の概念を、degradationLevel の値域が Nat 全体に
+          広がることで表現する
+    根拠: 劣化を 0/1 で捉えると中間状態を見逃す。
+          連続的な尺度により、早期警告と漸進的対応が可能になる
+    ソース: P4b (`degradation_is_gradient`) の sorry 解消
+    反証条件: 劣化が本質的に二値（正常/異常）でしかないことが示された場合 -/
 axiom degradation_level_surjective :
   ∀ (n : Nat), ∃ (w : World), degradationLevel w = n
 
-/-- [observable-axiom, derived-from-T4]:
-    構造の解釈は非決定的。
-
-    P5 (`structure_interpretation_nondeterministic`) を解消する。
-    T4 (`output_nondeterministic`) は canTransition レベルの
-    非決定性を宣言するが、本 axiom はそれを
-    「構造の解釈」というより高い抽象レベルに持ち上げる。
-
-    interpretsStructure と canTransition の橋渡し:
-    canTransition の非決定性（同一入力→異なるワールド遷移）は、
-    その前段階である構造解釈の非決定性を含意する（対偶: 解釈が
-    決定的なら遷移も決定的）。本 axiom はこの含意を直接宣言する。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: 構造の解釈は非決定的。
+          同一の構造を読んでも、異なるアクションが生成されうる
+    根拠: T4 (`output_nondeterministic`) の高水準再述。
+          canTransition の非決定性（同一入力→異なるワールド遷移）は、
+          その前段階である構造解釈の非決定性を含意する
+          （対偶: 解釈が決定的なら遷移も決定的）
+    ソース: P5 (`structure_interpretation_nondeterministic`) の sorry 解消
+    反証条件: LLM の構造解釈が決定論的になった場合（T4 の反証に相当するが、
+              T4 は T₀ であるため、本 axiom の反証は T4 との矛盾を意味する） -/
 axiom interpretation_nondeterminism :
   ∃ (agent : Agent) (st : Structure) (action₁ action₂ : Action) (w : World),
     interpretsStructure agent st action₁ w ∧
@@ -408,13 +495,22 @@ axiom interpretation_nondeterminism :
 -- 信頼度の可測性
 -- ============================================================
 
-/-- trustLevel は測定可能。
-    投資行動（リソース割り当ての変動）から間接的に観測される。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: trustLevel は測定可能。
+          投資行動（リソース割り当ての変動）から間接的に観測される
+    根拠: 信頼は投資行動（リソース割り当て変動）として具体化される
+    ソース: manifesto.md Section 6
+    反証条件: 信頼度の測定手続きが原理的に構成不能であることが示された場合 -/
 axiom trust_measurable :
   ∀ (agent : Agent), Measurable (trustLevel agent)
 
-/-- degradationLevel は測定可能。
-    V1–V7 の経時変化から計算される。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: degradationLevel は測定可能。V1–V7 の経時変化から計算される
+    根拠: V1–V7 が Measurable であれば、その変化量も計算可能
+    ソース: P4 (劣化の可観測性) の設計
+    反証条件: 劣化度合いの測定手続きが原理的に構成不能であることが示された場合 -/
 axiom degradation_measurable : Measurable degradationLevel
 
 -- ============================================================
@@ -643,15 +739,17 @@ theorem health_robust_unfolds :
 - 人間側の投資意思決定がより複雑（組織力学、予算サイクル等）かもしれない
 -/
 
-/-- 信頼の漸進的蓄積。
-    構造品質が改善された場合、信頼は（小さく）増加する。
-
-    非対称性の「蓄積は漸進」の半分。もう半分（毀損は急激）は
-    trust_decreases_on_materialized_risk で表現済み。
-
-    incrementBound は蓄積の上限: 1回の改善で得られる信頼には限界がある。 -/
+/-- 信頼蓄積の上限: 1回の改善で得られる信頼には限界がある。 -/
 opaque trustIncrementBound : Nat
 
+/-- [公理カード]
+    所属: Γ \ T₀（仮説由来）
+    内容: 信頼の漸進的蓄積。構造品質が改善された場合、信頼は（小さく）増加する。
+          非対称性の「蓄積は漸進」の半分
+    根拠: 信頼蓄積の漸進性は組織心理学で繰り返し観測されている
+          （用語リファレンス §9.1 経験的命題）
+    ソース: manifesto.md Section 6
+    反証条件: 信頼が一度の改善で無制限に蓄積されることが実証された場合 -/
 axiom trust_accumulates_gradually :
   ∀ (agent : Agent) (w w' : World),
     -- 行動空間は縮小していない（拡張方向の投資がある）
@@ -662,9 +760,12 @@ axiom trust_accumulates_gradually :
     trustLevel agent w ≤ trustLevel agent w' ∧
     trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound
 
-/-- 投資は信頼に駆動される。
-    信頼が高い → 投資が増加する。
-    taxonomy Part III: 構造品質の改善 → 利益 → 投資意欲の変化 -/
+/-- [公理カード]
+    所属: Γ \ T₀（仮説由来）
+    内容: 投資は信頼に駆動される。信頼が高い → 投資が増加する
+    根拠: 構造品質の改善 → 利益 → 投資意欲の変化
+    ソース: manifesto.md Section 6 投資サイクル
+    反証条件: 品質改善が投資増加に結びつかないことが繰り返し観測された場合 -/
 axiom trust_drives_investment :
   ∀ (w w' : World),
     -- 系の健全性が改善された（全変数がある閾値以上）
@@ -676,12 +777,13 @@ axiom trust_drives_investment :
     -- 結論: 投資水準は非減少
     investmentLevel w ≤ investmentLevel w'
 
-/-- 逆サイクル: 品質事故は投資を縮小させる。
-    taxonomy Part III:
-    「エージェントが品質事故やスコープ逸脱を起こす → 信頼の減少 → 投資の縮小」
-
-    信頼の毀損は既に axiom 化されている（trust_decreases_on_materialized_risk）。
-    本 axiom はその先の「投資縮小」を形式化する。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（仮説由来）
+    内容: 逆サイクル: 品質事故は投資を縮小させる。
+          リスク顕在化 → 信頼減少 → 投資縮小
+    根拠: 信頼毀損→投資縮小のサイクルは経済学・組織論で観測されている
+    ソース: manifesto.md Section 6「品質事故やスコープ逸脱 → 信頼の減少 → 投資の縮小」
+    反証条件: 品質事故後も投資が維持・増加されることが繰り返し観測された場合 -/
 axiom risk_reduces_investment :
   ∀ (agent : Agent) (w w' : World),
     riskMaterialized agent w' →
@@ -726,13 +828,16 @@ def atEquilibrium (agent : Agent) (w : World) : Prop :=
     actionSpaceSize agent w < actionSpaceSize agent w' →
     collaborativeValue w' ≤ collaborativeValue w
 
-/-- 均衡の探索: 行動空間の拡大が価値を減少させうることの形式化。
-    P1 (capability_risk_coscaling) の直接的帰結として:
-    行動空間↑ → リスク↑ → 潜在的被害↑ → 過剰拡大は価値毀損。
-
-    axiom として宣言: E2 だけでは「協働価値の減少」を導出できない
-    （協働価値は opaque であり、リスク増大が価値減少を意味するかは
-    追加の仮定が必要）。 -/
+/-- [公理カード]
+    所属: Γ \ T₀（仮説由来）
+    内容: 過剰拡大は協働価値を減少させうる。
+          行動空間の拡大が価値を減少させるシナリオが存在する
+    根拠: P1 (capability_risk_coscaling) の帰結として
+          行動空間↑ → リスク↑ → 潜在的被害↑ → 過剰拡大は価値毀損。
+          E2 だけでは「協働価値の減少」を導出できない
+          （協働価値は opaque であり、追加の仮定が必要）
+    ソース: manifesto.md Section 6「最適な自律度は最大自律度ではない」
+    反証条件: 行動空間の拡大が常に協働価値を改善することが証明された場合 -/
 axiom overexpansion_reduces_value :
   ∃ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' ∧

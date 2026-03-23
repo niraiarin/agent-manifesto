@@ -8,6 +8,11 @@ import Manifest.Meta
 import Manifest.Evolution
 import Manifest.DesignFoundation
 import Manifest.FormalDerivationSkill
+import Manifest.Terminology
+import Manifest.Procedure
+import Manifest.ConformanceVerification
+import Manifest.AxiomQuality
+import Manifest.EvolveSkill
 
 /-!
 # Agent Manifest — Formal Specification

@@ -4,25 +4,35 @@ import Manifest.EmpiricalPostulates
 import Manifest.Observable
 
 /-!
-# Layer 7: Meta — 公理系のメタ性質
+# Layer 7: Meta — 公理系のメタ性質（メタ理論, 用語リファレンス §5.6）
 
 公理系自体の構造的性質を検証する。
+本ファイルの定理はメタ定理（§5.6）であり、対象理論の性質を論じる。
 
 ## 設計方針
 
 メタ層は公理系の「内部整合性」と「層構造」を型レベルで表現する。
 具体的には:
 
-1. **層の分離**: T（拘束条件）と E（経験的公準）は独立に仮定されている
-2. **公理の性格分類**: 各 axiom がどの層に属するかの型レベル表現
-3. **導出の方向性**: P は T/E から導出される（逆方向の依存はない）
-4. **反証可能性の保持**: E が反証された場合に影響を受ける P の追跡
+1. **層の分離**: T₀（基底理論）と Γ \ T₀（拡大部分）は独立に仮定されている
+2. **公理の性格分類**: 各非論理的公理（§4.1）がどの層に属するかの型レベル表現
+3. **導出の方向性**: P（定理, §4.2）は T/E（公理）から導出される（逆方向の依存はない）
+4. **反証可能性の保持**: Γ \ T₀ が反証（§9.1）された場合に影響を受ける P の追跡
 
-## メタ定理 vs 対象定理
+## メタ定理 vs 対象定理（用語リファレンス §5.6）
 
-対象定理（P1–P6 等）は「システムの性質」を述べる。
-メタ定理は「公理系自体の性質」を述べる。
-Lean の型システム内で両方を表現できることが形式化の利点。
+- **対象理論** (Object Theory): Axioms.lean, EmpiricalPostulates.lean, Principles.lean の公理系
+- **メタ理論** (Metatheory): 本ファイル。対象理論の性質を論じる理論
+- **メタ定理** (Metatheorem): 本ファイルの theorem。例:「E の反証が影響するのは P1, P2 のみ」
+- **対象言語** (Object Language): Lean の型と命題
+- **メタ言語** (Metalanguage): 同じく Lean（Lean は自身のメタ理論を内部化できる）
+
+## 用語リファレンスとの対応
+
+- AxiomValidityCriteria → 公理衛生（手順書 §2.6）の 3 検査項目への対応
+- isFalsifiable → 反証可能性（§9.1）
+- AxiomStatus → 非論理的公理（§4.1）の認識論的分類
+- DerivationBasis → 導出可能性（§2.4）の根拠分類
 -/
 
 namespace Manifest
@@ -60,35 +70,42 @@ def DerivationBasis.robustness : DerivationBasis → Nat
 -- ============================================================
 
 /-- 公理系の層構成。
-    manifesto.md の三層構造を型として表現。 -/
+    マニフェストの公理系（T₀ / Γ \ T₀, 用語リファレンス §4.1）を型として表現。 -/
 structure AxiomSystemProfile where
-  /-- T（拘束条件）の axiom 数 -/
+  /-- T₀: 拘束条件（T1–T8）の axiom 数 -/
   constraintCount       : Nat
-  /-- E（経験的公準）の axiom 数 -/
+  /-- Γ \ T₀: 経験的公準（E1–E2）の axiom 数 -/
   empiricalCount        : Nat
-  /-- V（Observable）の axiom 数 -/
+  /-- Γ \ T₀: Observable 層の axiom 数 -/
   observableCount       : Nat
-  /-- theorem 数 -/
+  /-- Γ \ T₀: 応用層（FormalDerivationSkill, ConformanceVerification）の axiom 数 -/
+  applicationCount      : Nat
+  /-- theorem 数（全モジュール合計）-/
   theoremCount          : Nat
   /-- sorry の数 -/
   sorryCount            : Nat
   deriving BEq, Repr
 
-/-- 現在の公理系のプロファイル。Phase 5 完了時点。 -/
+/-- 現在の公理系のプロファイル。 -/
 def currentProfile : AxiomSystemProfile :=
-  { constraintCount  := 13  -- T1–T8 (13 axioms)
-    empiricalCount   := 4   -- E1–E2 (4 axioms)
-    observableCount  := 24  -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資サイクル (24 axioms)
-    theoremCount     := 50  -- P1–P6 + Evolution + Observable + Workflow + Meta
+  { constraintCount  := 13   -- T1–T8 (Axioms.lean: 13 axioms)
+    empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
+    observableCount  := 24   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 24 axioms)
+    applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
+    theoremCount     := 209  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
 def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
-  p.constraintCount + p.empiricalCount + p.observableCount
+  p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount
 
-/-- 現在の公理系の総 axiom 数は 37。 -/
+/-- 現在の公理系の総 axiom 数は 61。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 41 := by rfl
+  currentProfile.totalAxioms = 61 := by rfl
+
+/-- 現在の公理系の定理数は 209。 -/
+theorem current_theorem_count :
+  currentProfile.theoremCount = 209 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
