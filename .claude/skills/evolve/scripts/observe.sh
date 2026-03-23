@@ -14,7 +14,7 @@ echo "{"
 
 # --- Lean 品質指標 ---
 if [ -d "$LEAN_DIR/Manifest" ]; then
-  AXIOM_COUNT=$(grep -r "^axiom [a-z]" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
+  AXIOM_COUNT=$(grep -r "^axiom [a-zA-Z_]" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   THEOREM_COUNT=$(grep -r "^theorem " "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
   MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" 2>/dev/null | wc -l | tr -d ' ')
@@ -74,6 +74,56 @@ else
 fi
 echo "  \"metrics\": {"
 echo "    \"tool_calls\": $TOOL_CALLS"
+echo "  },"
+
+# --- V1-V7 計測 ---
+V5_FILE="$METRICS_DIR/v5-approvals.jsonl"
+V7_FILE="$METRICS_DIR/v7-tasks.jsonl"
+SESSIONS_FILE="$METRICS_DIR/sessions.jsonl"
+
+# V5: Proposal Accuracy (approved / total)
+if [ -f "$V5_FILE" ]; then
+  V5_APPROVED=$(grep -c '"type":"approved"' "$V5_FILE" 2>/dev/null || echo "0")
+  V5_TOTAL=$(wc -l < "$V5_FILE" | tr -d ' ')
+  if [ "$V5_TOTAL" -gt 0 ] 2>/dev/null; then
+    V5_RATE=$((V5_APPROVED * 100 / V5_TOTAL))
+  else
+    V5_RATE=0
+  fi
+else
+  V5_APPROVED=0
+  V5_TOTAL=0
+  V5_RATE=0
+fi
+
+# V7: Task Design (completed tasks)
+if [ -f "$V7_FILE" ]; then
+  V7_COMPLETED=$(wc -l < "$V7_FILE" | tr -d ' ')
+else
+  V7_COMPLETED=0
+fi
+
+# V2: Context Efficiency (tool calls / sessions)
+if [ -f "$SESSIONS_FILE" ]; then
+  SESSION_COUNT=$(wc -l < "$SESSIONS_FILE" | tr -d ' ')
+  if [ "$SESSION_COUNT" -gt 0 ] 2>/dev/null && [ "$TOOL_CALLS" -gt 0 ] 2>/dev/null; then
+    V2_CALLS_PER_SESSION=$((TOOL_CALLS / SESSION_COUNT))
+  else
+    V2_CALLS_PER_SESSION=0
+  fi
+else
+  SESSION_COUNT=0
+  V2_CALLS_PER_SESSION=0
+fi
+
+echo "  \"v1_v7\": {"
+echo "    \"v1_skill_quality\": \"not_available\","
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION },"
+echo "    \"v3_output_quality\": \"not_available\","
+echo "    \"v4_gate_pass_rate\": \"not_available\","
+echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
+echo "    \"v6_knowledge_structure\": \"see_memory_and_lean_sections\","
+echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED }"
 echo "  }"
 
 echo "}"

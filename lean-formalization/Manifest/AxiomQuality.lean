@@ -52,7 +52,7 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 178 theorems / 61 axioms = 291 (= 2.91x) -/
+    例: 210 theorems / 61 axioms = 344 (= 3.44x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
@@ -345,7 +345,7 @@ inductive QualitySignal where
 /-- 現在の公理系の静的品質プロファイル（axiom count ベース）。
     fan-in/fan-out/coverage は動的計測が必要なため含まない。 -/
 def currentQuality : QualityProfile :=
-  { compressionRatio := compressionRatio currentProfile  -- 291
+  { compressionRatio := compressionRatio currentProfile  -- 344
     coveragePercent  := 100  -- 監査で確認済み（全 axiom が使用されている）
     axiomFreePercent := 0    -- 動的計測で確定すべき値（暫定 0）
     sorryCount       := currentProfile.sorryCount }       -- 0
