@@ -224,6 +224,33 @@ grep -q "^theorem constraint_boundary_covers_except_platform" "$OBSERVABLE" && p
 echo ""
 
 # ============================================================
+# Section 9: EvolveSkill.lean Theorem Traceability (D5)
+# ============================================================
+echo "--- Section 9: EvolveSkill.lean Theorem Traceability ---"
+
+EVOLVE_SKILL_LEAN="lean-formalization/Manifest/EvolveSkill.lean"
+
+# φ₁: Phase order
+grep -q "phase_order_aligns_with_workflow" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₁ phase_order_aligns_with_workflow" || fail "Lean trace: EvolveSkill φ₁ phase_order_aligns_with_workflow"
+
+# φ₂: All agents used
+grep -q "all_agents_used" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₂ all_agents_used" || fail "Lean trace: EvolveSkill φ₂ all_agents_used"
+
+# φ₃: Verifier sufficient for low
+grep -q "evolve_verifier_sufficient_for_low" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₃ evolve_verifier_sufficient_for_low" || fail "Lean trace: EvolveSkill φ₃ evolve_verifier_sufficient_for_low"
+
+# φ₁₁: Deferral requires justification
+grep -q "deferral_requires_justification" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₁₁ deferral_requires_justification" || fail "Lean trace: EvolveSkill φ₁₁ deferral_requires_justification"
+
+# Composite: evolve_skill_compliant
+grep -q "evolve_skill_compliant" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill composite evolve_skill_compliant" || fail "Lean trace: EvolveSkill composite evolve_skill_compliant"
+
+# φ₆: Conservative strategy safe
+grep -q "conservative_strategy_safe" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₆ conservative_strategy_safe" || fail "Lean trace: EvolveSkill φ₆ conservative_strategy_safe"
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="
