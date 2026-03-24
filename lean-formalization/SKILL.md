@@ -262,6 +262,17 @@ For project setup, build pipeline, and genre extensions, see `references/verso-s
 
 ---
 
+## Known Constraints
+
+### evolve-history.jsonl の deferred 重複
+
+evolve-history.jsonl は append-only audit log であるため、deferred エントリは各 run で
+繰り返し記録される。同一 ID の deferred が複数エントリとして蓄積するのは設計上の帰結であり、
+バグではない。deferred の正規状態は **deferred-status.json** のみが保持する。
+Observer は JSONL の raw 走査ではなく deferred-status.json を参照すること。
+
+---
+
 ## Reference: File Descriptions
 
 Read these files for more detail on specific topics:
