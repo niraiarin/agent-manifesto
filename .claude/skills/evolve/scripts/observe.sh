@@ -30,7 +30,8 @@ if [ -d "$LEAN_DIR/Manifest" ]; then
   # De Bruijn factor (formal_lines * 100 / informal_lines, 100x scale)
   FORMAL_LINES=$(find "$LEAN_DIR/Manifest" -name "*.lean" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
   FORMAL_LINES=${FORMAL_LINES:-0}
-  INFORMAL_LINES=$(cat "$BASE/manifesto.md" "$BASE/docs/design-development-foundation.md" 2>/dev/null | wc -l | tr -d ' ')
+  # test-axiom-quality.sh と統一: 4 ファイル（manifesto + docs 3 ファイル）
+  INFORMAL_LINES=$(cat "$BASE/manifesto.md" "$BASE/docs/design-development-foundation.md" "$BASE/docs/formal-derivation-procedure.md" "$BASE/docs/mathematical-logic-terminology.md" 2>/dev/null | wc -l | tr -d ' ')
   INFORMAL_LINES=${INFORMAL_LINES:-0}
   if [ "${INFORMAL_LINES:-0}" -gt 0 ] 2>/dev/null; then
     DE_BRUIJN=$((FORMAL_LINES * 100 / INFORMAL_LINES))
