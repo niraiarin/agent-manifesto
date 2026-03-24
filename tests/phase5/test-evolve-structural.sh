@@ -167,6 +167,33 @@ grep -q "evolve-metrics-recorder" "$SETTINGS" && pass "evolve-metrics-recorder r
 echo ""
 
 # ============================================================
+# 7. Lean Formal Spec Traceability（D5 三層対応検証）
+# ============================================================
+echo "--- 7. Lean Formal Spec Traceability ---"
+
+# Workflow.lean の validPhaseTransition 6 ケースが SKILL.md/AGENT.md に対応しているか確認
+
+# observation -> hypothesizing (Phase 1 -> Phase 2)
+grep -q "観察\|observation" "$SKILL" && grep -q "仮説化\|hypothesiz" "$SKILL" && pass "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" || fail "Lean trace: observation -> hypothesizing not covered in SKILL.md"
+
+# hypothesizing -> verification (Phase 2 -> Phase 3)
+grep -q "仮説化\|hypothesiz" "$SKILL" && grep -q "検証\|verif" "$SKILL" && pass "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" || fail "Lean trace: hypothesizing -> verification not covered in SKILL.md"
+
+# verification -> integration (Phase 3 -> Phase 4)
+grep -q "検証\|verif" "$SKILL" && grep -q "統合\|integrat" "$SKILL" && pass "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" || fail "Lean trace: verification -> integration not covered in SKILL.md"
+
+# integration -> retirement (Phase 4 -> Phase 5)
+grep -q "統合\|integrat" "$SKILL" && grep -q "退役\|retir" "$SKILL" && pass "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" || fail "Lean trace: integration -> retirement not covered in SKILL.md"
+
+# verification -> hypothesizing (FAIL ループバック) — D5 断裂修復の核心
+grep -q "FAIL.*分析\|ループバック\|loopback" "$SKILL" && pass "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" || fail "Lean trace: FAIL loopback (verification->hypothesizing) not documented in SKILL.md"
+
+# retirement -> observation (サイクル循環)
+grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "Lean trace: retirement -> observation (cycle in SKILL.md)" || fail "Lean trace: retirement -> observation cycle not covered in SKILL.md"
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="

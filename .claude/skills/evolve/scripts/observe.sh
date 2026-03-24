@@ -246,7 +246,13 @@ if [ "$V3_TOTAL_TESTS" -gt 0 ] 2>/dev/null; then
 else
   V3_TEST_PASS_RATE=0
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"note\": \"provisional_proxy: fix_ratio_by_keyword + test_pass_rate\" },"
+V3_BASELINE_THRESHOLD=20
+if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -eq 100 ] 2>/dev/null; then
+  V3_BASELINE_MET="true"
+else
+  V3_BASELINE_MET="false"
+fi
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_keyword + test_pass_rate\" },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
