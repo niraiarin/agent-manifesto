@@ -357,6 +357,30 @@ axiom v4_goodhart : GoodhartVulnerable gatePassRate
 axiom v7_goodhart : GoodhartVulnerable taskDesignEfficiency
 
 -- ============================================================
+-- Goodhart 脆弱性からの導出定理
+-- ============================================================
+
+/-- Goodhart 脆弱な指標には完全な代理測定が存在しない。
+    GoodhartVulnerable m は「任意の approx に乖離点が存在する」を述べるが、
+    本定理はその直接的帰結として「全点で一致する approx は存在しない」を示す。 -/
+theorem goodhart_no_perfect_proxy (m : World → Nat) (h : GoodhartVulnerable m) :
+    ¬∃ (approx : World → Nat), ∀ w, approx w = m w := by
+  intro ⟨approx, h_all⟩
+  have h_some : ∃ w, approx w = m w := ⟨default, h_all default⟩
+  obtain ⟨w', hw'⟩ := h approx h_some
+  exact hw' (h_all w')
+
+/-- V4 (gatePassRate) には完全な代理測定が存在しない。 -/
+theorem v4_no_perfect_proxy :
+    ¬∃ (approx : World → Nat), ∀ w, approx w = gatePassRate w :=
+  goodhart_no_perfect_proxy gatePassRate v4_goodhart
+
+/-- V7 (taskDesignEfficiency) には完全な代理測定が存在しない。 -/
+theorem v7_no_perfect_proxy :
+    ¬∃ (approx : World → Nat), ∀ w, approx w = taskDesignEfficiency w :=
+  goodhart_no_perfect_proxy taskDesignEfficiency v7_goodhart
+
+-- ============================================================
 -- 系の健全性
 -- ============================================================
 
@@ -386,15 +410,8 @@ def systemHealthy (threshold : Nat) (w : World) : Prop :=
   knowledgeStructureQuality w ≥ threshold ∧
   taskDesignEfficiency w ≥ threshold
 
-/-- [公理カード]
-    所属: Γ \ T₀（設計由来）
-    内容: 系の健全性は Observable（二値判定可能）。
-          各 Vi が Measurable であることから、閾値比較は決定可能
-    根拠: V1–V7 の Measurable axiom から、閾値との比較は計算可能
-    ソース: systemHealthy の定義
-    反証条件: いずれかの Vi の Measurable が反証された場合 -/
-axiom system_health_observable :
-  ∀ (threshold : Nat), Observable (systemHealthy threshold)
+-- Note: system_health_observable は measurable_threshold_observable の後に定義
+-- （measurable_threshold_observable に依存するため、下方に配置）
 
 -- ============================================================
 -- Pareto 改善の制約
@@ -1037,6 +1054,36 @@ theorem all_variables_measurable :
     Measurable taskDesignEfficiency :=
   ⟨v1_measurable, v2_measurable, v3_measurable, v4_measurable,
    v5_measurable, v6_measurable, v7_measurable⟩
+
+-- ============================================================
+-- Derived theorems: Observable conjunction + system health
+-- ============================================================
+
+/-- Observable の conjunction closure。2 つの Observable 性質の conjunction も Observable。-/
+theorem observable_and {P Q : World → Prop} (hp : Observable P) (hq : Observable Q) :
+    Observable (fun w => P w ∧ Q w) := by
+  obtain ⟨fp, hfp⟩ := hp
+  obtain ⟨fq, hfq⟩ := hq
+  refine ⟨fun w => fp w && fq w, fun w => ?_⟩
+  simp [Bool.and_eq_true]
+  exact ⟨fun ⟨a, b⟩ => ⟨(hfp w).mp a, (hfq w).mp b⟩,
+         fun ⟨a, b⟩ => ⟨(hfp w).mpr a, (hfq w).mpr b⟩⟩
+
+/-- 系の健全性は Observable（二値判定可能）。
+    各 Vi が Measurable であることから、閾値比較は決定可能。
+    measurable_threshold_observable + observable_and で証明。
+    （元は axiom だったが、Run 27 で theorem に降格） -/
+theorem system_health_observable :
+    ∀ (threshold : Nat), Observable (systemHealthy threshold) := by
+  intro t
+  unfold systemHealthy
+  apply observable_and (measurable_threshold_observable v1_measurable t)
+  apply observable_and (measurable_threshold_observable v2_measurable t)
+  apply observable_and (measurable_threshold_observable v3_measurable t)
+  apply observable_and (measurable_threshold_observable v4_measurable t)
+  apply observable_and (measurable_threshold_observable v5_measurable t)
+  apply observable_and (measurable_threshold_observable v6_measurable t)
+  exact measurable_threshold_observable v7_measurable t
 
 -- ============================================================
 -- Derived theorems: TradeoffExists aggregation lemmas

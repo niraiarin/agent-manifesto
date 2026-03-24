@@ -275,6 +275,10 @@ structure World where
   time        : Time
   deriving Repr
 
+/-- World は Inhabited。全 List フィールドは [] で、Epoch/Time は 0 で構成。
+    goodhart_no_perfect_proxy の証明で `default : World` として使用される。 -/
+instance : Inhabited World := ⟨⟨[], [], [], [], [], 0, 0⟩⟩
+
 -- ============================================================
 -- Agent — エージェントの統合定義
 -- ============================================================

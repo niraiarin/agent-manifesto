@@ -90,22 +90,22 @@ structure AxiomSystemProfile where
 def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 13   -- T1–T8 (Axioms.lean: 13 axioms)
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
-    observableCount  := 24   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 24 axioms)
+    observableCount  := 23   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 23 axioms)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 233  -- 全モジュール合計（225 + 8 Observable derived theorems）
+    theoremCount     := 238  -- 全モジュール合計（Run 27: +5 theorems, -1 axiom from Observable）
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
 def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
   p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount
 
-/-- 現在の公理系の総 axiom 数は 61。 -/
+/-- 現在の公理系の総 axiom 数は 60。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 61 := by rfl
+  currentProfile.totalAxioms = 60 := by rfl
 
-/-- 現在の公理系の定理数は 233。 -/
+/-- 現在の公理系の定理数は 238。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 233 := by rfl
+  currentProfile.theoremCount = 238 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
