@@ -725,4 +725,62 @@ instance : SelfGoverning CompatibilityClass where
   classificationExhaustive := by intro c; cases c <;> simp
   canClassifyUpdate _ _ := True
 
+-- ============================================================
+-- 構造的整合性 — Section 4 の階層構造の形式化
+-- ============================================================
+
+/-!
+## 構造的整合性（Structural Coherence）
+
+公理の体系、及びそれらに準拠した成果物は半順序関係にある。
+manifesto.md Section 4 の階層構造（最上位使命 > 進化方向層 > 現実制約層）を
+StructureKind の優先度として形式化する。
+
+D4（フェーズ順序）、D5（仕様→テスト→実装）、D6（境界→緩和策→変数）は
+全てこの半順序の個別インスタンスである。
+-/
+
+/-- StructureKind の優先度。manifesto Section 4 の階層構造を反映。
+    manifest > designConvention > skill > test > document。 -/
+def StructureKind.priority : StructureKind → Nat
+  | .manifest          => 5
+  | .designConvention  => 4
+  | .skill             => 3
+  | .test              => 2
+  | .document          => 1
+
+/-- 構造間の依存関係。構造 a が構造 b に依存する（b の方が高優先度）。
+    依存元の変更は依存先に影響する。 -/
+def structureDependsOn (a b : Structure) : Prop :=
+  a.kind.priority < b.kind.priority
+
+/-- 構造の整合性要件: 高優先度の構造が変更されたとき、
+    依存する低優先度の構造も見直し対象になる。
+    P3（学習の統治）の構造的根拠。 -/
+def coherenceRequirement (high low : Structure) : Prop :=
+  structureDependsOn low high →
+  high.lastModifiedAt > low.lastModifiedAt →
+  True  -- 見直しが必要（型レベルでは存在を表現）
+
+/-- manifest は最高優先度。 -/
+theorem manifest_highest_priority :
+  ∀ (k : StructureKind), k.priority ≤ StructureKind.manifest.priority := by
+  intro k; cases k <;> simp [StructureKind.priority]
+
+/-- document は最低優先度。 -/
+theorem document_lowest_priority :
+  ∀ (k : StructureKind), StructureKind.document.priority ≤ k.priority := by
+  intro k; cases k <;> simp [StructureKind.priority]
+
+/-- 優先度は単射（異なる kind は異なる priority）。 -/
+theorem priority_injective :
+  ∀ (k₁ k₂ : StructureKind),
+    k₁.priority = k₂.priority → k₁ = k₂ := by
+  intro k₁ k₂; cases k₁ <;> cases k₂ <;> simp [StructureKind.priority]
+
+/-- 依存関係の非反射性: 構造は自身に依存しない。 -/
+theorem no_self_dependency :
+  ∀ (s : Structure), ¬structureDependsOn s s := by
+  intro s; simp [structureDependsOn]
+
 end Manifest

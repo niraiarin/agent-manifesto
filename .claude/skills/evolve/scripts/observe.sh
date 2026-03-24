@@ -18,11 +18,33 @@ if [ -d "$LEAN_DIR/Manifest" ]; then
   THEOREM_COUNT=$(grep -r "^theorem " "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
   MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" 2>/dev/null | wc -l | tr -d ' ')
+  # warnings (lake build output)
+  WARNING_COUNT=$(cd "$LEAN_DIR" && lake build Manifest 2>&1 | grep -c "warning" || echo "0")
+  WARNING_COUNT=${WARNING_COUNT:-0}
+  # compression ratio (theorems * 100 / axioms, 100x scale)
+  if [ "${AXIOM_COUNT:-0}" -gt 0 ] 2>/dev/null; then
+    COMPRESSION_RATIO=$((THEOREM_COUNT * 100 / AXIOM_COUNT))
+  else
+    COMPRESSION_RATIO=0
+  fi
+  # De Bruijn factor (formal_lines * 100 / informal_lines, 100x scale)
+  FORMAL_LINES=$(find "$LEAN_DIR/Manifest" -name "*.lean" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
+  FORMAL_LINES=${FORMAL_LINES:-0}
+  INFORMAL_LINES=$(cat "$BASE/manifesto.md" "$BASE/docs/design-development-foundation.md" 2>/dev/null | wc -l | tr -d ' ')
+  INFORMAL_LINES=${INFORMAL_LINES:-0}
+  if [ "${INFORMAL_LINES:-0}" -gt 0 ] 2>/dev/null; then
+    DE_BRUIJN=$((FORMAL_LINES * 100 / INFORMAL_LINES))
+  else
+    DE_BRUIJN=0
+  fi
   echo "  \"lean\": {"
   echo "    \"axioms\": $AXIOM_COUNT,"
   echo "    \"theorems\": $THEOREM_COUNT,"
   echo "    \"sorry\": $SORRY_COUNT,"
-  echo "    \"modules\": $MODULE_COUNT"
+  echo "    \"modules\": $MODULE_COUNT,"
+  echo "    \"warnings\": $WARNING_COUNT,"
+  echo "    \"compression_ratio\": $COMPRESSION_RATIO,"
+  echo "    \"de_bruijn_factor\": $DE_BRUIJN"
   echo "  },"
 fi
 
