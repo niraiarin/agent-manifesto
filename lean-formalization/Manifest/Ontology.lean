@@ -792,6 +792,26 @@ theorem priority_injective :
     k₁.priority = k₂.priority → k₁ = k₂ := by
   intro k₁ k₂; cases k₁ <;> cases k₂ <;> simp [StructureKind.priority]
 
+/-- manifest は designConvention より高優先度（Section 8 半順序）。 -/
+theorem priority_manifest_gt_design :
+  StructureKind.designConvention.priority < StructureKind.manifest.priority := by
+  simp [StructureKind.priority]
+
+/-- designConvention は skill より高優先度（Section 8 半順序）。 -/
+theorem priority_design_gt_skill :
+  StructureKind.skill.priority < StructureKind.designConvention.priority := by
+  simp [StructureKind.priority]
+
+/-- skill は test より高優先度（Section 8 半順序）。 -/
+theorem priority_skill_gt_test :
+  StructureKind.test.priority < StructureKind.skill.priority := by
+  simp [StructureKind.priority]
+
+/-- test は document より高優先度（Section 8 半順序）。 -/
+theorem priority_test_gt_document :
+  StructureKind.document.priority < StructureKind.test.priority := by
+  simp [StructureKind.priority]
+
 /-- 依存関係の非反射性: 構造は自身に依存しない。 -/
 theorem no_self_dependency :
   ∀ (s : Structure), ¬structureDependsOn s s := by
