@@ -99,10 +99,10 @@ Observer が検出した退役候補を処理する:
   "lean": {"axioms": 0, "theorems": 0, "sorry": 0},
   "tests": {"passed": 0, "failed": 0},
   "phases": {
-    "observer": {"findings_count": 0},
-    "hypothesizer": {"proposals_count": 0},
-    "verifier": {"pass_count": 0, "fail_count": 0},
-    "integrator": {"commits_count": 0}
+    "observer": {"findings_count": 0, "model": "sonnet"},
+    "hypothesizer": {"proposals_count": 0, "model": "opus"},
+    "verifier": {"pass_count": 0, "fail_count": 0, "model": "sonnet"},
+    "integrator": {"commits_count": 0, "model": "sonnet"}
   },
   "v_changes": {},
   "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],

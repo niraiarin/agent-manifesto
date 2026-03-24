@@ -76,7 +76,9 @@ echo "  \"stale_files\": [$(echo "$STALE_FILES" | sed 's/, $//')],"
 # --- evolve 履歴 ---
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
-  EVOLVE_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
+  # Run 番号ベースのカウント（run=null の human_feedback/旧エントリを除外）
+  EVOLVE_RUNS=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | sort -n | tail -1)
+  EVOLVE_RUNS=${EVOLVE_RUNS:-0}
   LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | jq -r '.timestamp // empty' 2>/dev/null)
   LAST_RUN=${LAST_RUN:-never}
   # phases フィールド集計（標準スキーマ対応エントリのみ）
@@ -277,6 +279,21 @@ if [ -f "$HISTORY_FILE" ]; then
 fi
 echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT }"
-echo "  }"
+echo "  },"
+
+# --- T7: コスト計測（ccusage） ---
+if command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
+  CCUSAGE_CMD=""
+  if command -v bunx >/dev/null 2>&1; then
+    CCUSAGE_CMD="bunx ccusage"
+  else
+    CCUSAGE_CMD="npx ccusage@latest"
+  fi
+  CCUSAGE_JSON=$($CCUSAGE_CMD daily --json --offline --mode calculate 2>/dev/null || echo "[]")
+  CCUSAGE_TODAY=$(echo "$CCUSAGE_JSON" | jq -c 'if type == "array" then last // {} else {} end' 2>/dev/null || echo "{}")
+  echo "  \"ccusage\": $CCUSAGE_TODAY"
+else
+  echo "  \"ccusage\": {\"error\": \"ccusage not available\"}"
+fi
 
 echo "}"

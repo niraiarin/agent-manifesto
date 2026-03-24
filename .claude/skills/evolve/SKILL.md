@@ -173,8 +173,8 @@ description: >
 # 前回の実行記録があれば読み込む
 cat .claude/metrics/evolve-history.jsonl 2>/dev/null | tail -1
 
-# 未解決の deferred 項目を全エントリから収集
-jq -c 'select(.deferred != null) | .deferred[] | select(.status == "open")' \
+# 未解決の deferred 項目を全エントリから収集（重複排除・最新ステータス優先）
+jq -s '[.[].deferred[]?] | group_by(.id) | [.[] | sort_by(.opened_in_run // 0) | last | select(.status == "open")]' \
   .claude/metrics/evolve-history.jsonl 2>/dev/null
 ```
 
@@ -340,6 +340,7 @@ Integrator は以下を実行:
 | compression ratio | axiomCount の定義より | ↑ |
 | De Bruijn factor | AxiomQuality.lean より | → (4.0 前後が健全) |
 | V1-V7 | /metrics スキル | 各 V に応じた改善方向 |
+| ccusage (T7) | `bunx ccusage daily --json --offline` | 定量的コスト観測 |
 
 ## 終了条件
 
