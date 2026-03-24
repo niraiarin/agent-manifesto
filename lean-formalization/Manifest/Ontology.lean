@@ -620,6 +620,20 @@ inductive BoundaryId where
   | architecturalConvention -- L6: 設計規約境界（環境。協働で改善提案）
   deriving BEq, Repr
 
+/-- 拘束条件（T1-T8）の識別子。
+    Axioms.lean の T₀ を構成する各拘束条件の型レベル識別子。
+    constraintBoundary（Observable.lean）の定義域。 -/
+inductive ConstraintId where
+  | t1  -- セッションの一時性（session_bounded, no_cross_session_memory, session_no_shared_state）
+  | t2  -- 構造の永続性（structure_persists, structure_accumulates）
+  | t3  -- コンテキストの有限性（context_finite, context_bounds_action）
+  | t4  -- 出力の確率性（output_nondeterministic）
+  | t5  -- フィードバックなしに改善なし（no_improvement_without_feedback）
+  | t6  -- 人間はリソースの最終決定者（human_resource_authority, resource_revocable）
+  | t7  -- リソースは有限（resource_finite）
+  | t8  -- タスクには精度水準がある（task_has_precision）
+  deriving BEq, Repr
+
 /-- 各境界条件が属するレイヤー。 -/
 def boundaryLayer : BoundaryId → BoundaryLayer
   | .ethicsSafety            => .fixed

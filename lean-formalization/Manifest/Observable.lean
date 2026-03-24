@@ -568,7 +568,7 @@ structure HealthThresholds where
   v5_proposalAccuracy          : Nat
   v6_knowledgeStructureQuality : Nat
   v7_taskDesignEfficiency      : Nat
-  deriving BEq, Repr
+  deriving BEq, Repr, DecidableEq
 
 /-- 変数ごと閾値による系の健全性。
     `systemHealthy` の拡張版。 -/
@@ -599,6 +599,34 @@ theorem uniform_thresholds_equiv :
     systemHealthyPerVar (uniformThresholds t) w ↔ systemHealthy t w := by
   intro t w
   simp [systemHealthyPerVar, uniformThresholds, systemHealthy]
+
+/-- 運用閾値（observe.sh と対応する具体的な閾値設定）。
+    各フィールドの値はパーセント（observe.sh と同一スケール）。
+
+    運用対応表:
+    - v3_outputQuality = 20: observe.sh の fix_ratio <= 20% に対応
+      （根拠: run 12 commit 05653dc で設定。observe.sh V3_BASELINE_THRESHOLD=20）
+    - 他の変数は暫定値 50（50%）。運用データ蓄積後に個別調整
+
+    注: この定数は T6（人間がリソースの最終決定者）に基づく運用判断であり、
+    T₀ の一部ではない。値の変更は compatible change として扱う。 -/
+def operationalThresholds : HealthThresholds :=
+  { v1_skillQuality              := 50
+    v2_contextEfficiency         := 50
+    v3_outputQuality             := 20   -- observe.sh: fix_ratio <= 20%
+    v4_gatePassRate              := 50
+    v5_proposalAccuracy          := 50
+    v6_knowledgeStructureQuality := 50
+    v7_taskDesignEfficiency      := 50 }
+
+/-- 運用閾値の V3 は 20（fix_ratio 20%）。
+    observe.sh の V3_BASELINE_THRESHOLD=20 に対応。 -/
+theorem operational_v3_threshold :
+  operationalThresholds.v3_outputQuality = 20 := by rfl
+
+/-- 運用閾値は一律閾値の特殊化ではない（V3 が他と異なる）。 -/
+theorem operational_not_uniform :
+  operationalThresholds ≠ uniformThresholds 50 := by decide
 
 -- ============================================================
 -- Phase 5 拡張: Pareto フロンティア
@@ -897,6 +925,36 @@ theorem fixed_boundary_variables_mitigate_only :
   boundaryLayer (variableBoundary .v4) = .fixed ∧
   boundaryLayer (variableBoundary .v6) = .fixed := by
   simp [variableBoundary, boundaryLayer]
+
+/-- 各拘束条件（T1-T8）に対応する境界条件。
+    三段構造の「拘束条件→境界条件」の対応を関数として表現。
+    T→L マッピング: 拘束条件がどの境界条件カテゴリに位置するか。
+
+    マッピング根拠:
+    - T1 → L2: セッション一時性は存在論的事実（agent は session に束縛される）
+    - T2 → L2: 構造永続性は存在論的事実（構造は agent より長く生きる）
+    - T3 → L2, L3: コンテキスト有限性は存在論的制約かつリソース制約
+    - T4 → L2: 出力の確率性は LLM の存在論的性質
+    - T5 → L2: フィードバック要件は改善の存在論的前提条件
+    - T6 → L1, L4: 人間の権限は安全境界（L1）と行動空間境界（L4）に跨る
+    - T7 → L3: リソース有限性はリソース境界に直接対応
+    - T8 → L6: 精度水準はタスク設計規約（architecturalConvention）として定義 -/
+def constraintBoundary : ConstraintId → List BoundaryId
+  | .t1 => [.ontological]
+  | .t2 => [.ontological]
+  | .t3 => [.ontological, .resource]
+  | .t4 => [.ontological]
+  | .t5 => [.ontological]
+  | .t6 => [.ethicsSafety, .actionSpace]
+  | .t7 => [.resource]
+  | .t8 => [.architecturalConvention]
+
+/-- 全拘束条件は少なくとも 1 つの境界条件に対応する。
+    T→L マッピングの全射性（Surjectivity onto coverage）。 -/
+theorem constraint_has_boundary :
+  ∀ c : ConstraintId, (constraintBoundary c).length > 0 := by
+  intro c
+  cases c <;> simp [constraintBoundary]
 
 -- ============================================================
 -- 信頼の非対称性の統合的表現
