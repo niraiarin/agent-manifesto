@@ -246,6 +246,8 @@ if [ "$V3_TOTAL_TESTS" -gt 0 ] 2>/dev/null; then
 else
   V3_TEST_PASS_RATE=0
 fi
+# V3 baseline: fix_ratio <= 20% is healthy. Rationale: current ratio ~15% (10 fix / 66 total).
+# Threshold set at run 12 (commit 05653dc). If ratio exceeds 20%, structural quality is degrading.
 V3_BASELINE_THRESHOLD=20
 if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -eq 100 ] 2>/dev/null; then
   V3_BASELINE_MET="true"
