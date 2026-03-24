@@ -289,8 +289,8 @@ if command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
   else
     CCUSAGE_CMD="npx ccusage@latest"
   fi
-  CCUSAGE_JSON=$($CCUSAGE_CMD daily --json --offline --mode calculate 2>/dev/null || echo "[]")
-  CCUSAGE_TODAY=$(echo "$CCUSAGE_JSON" | jq -c 'if type == "array" then last // {} else {} end' 2>/dev/null || echo "{}")
+  CCUSAGE_JSON=$($CCUSAGE_CMD daily --json --offline --mode calculate 2>/dev/null || echo "{}")
+  CCUSAGE_TODAY=$(echo "$CCUSAGE_JSON" | jq -c '.daily | last // {}' 2>/dev/null || echo "{}")
   echo "  \"ccusage\": $CCUSAGE_TODAY"
 else
   echo "  \"ccusage\": {\"error\": \"ccusage not available\"}"
