@@ -1012,6 +1012,98 @@ def trustAsymmetry (agent : Agent) (w w' : World) : Prop :=
     trustLevel agent w' < trustLevel agent w)
 
 -- ============================================================
+-- Derived theorems: Measurable → Observable bridge
+-- ============================================================
+
+/-!
+## Measurable → Observable ブリッジ
+
+Measurable な指標の閾値比較は Observable であるという汎用定理。
+V1–V7 の Measurable axiom を集約する aggregation lemma。
+-/
+
+/-- Measurable な指標の閾値比較は Observable である（Measurable→Observable bridge）。
+    Measurable m から、m w ≥ t の判定手続きを構成する。 -/
+theorem measurable_threshold_observable {m : World → Nat} (hm : Measurable m) (t : Nat) :
+    Observable (fun w => m w ≥ t) := by
+  obtain ⟨f, hf⟩ := hm
+  exact ⟨fun w => decide (f w ≥ t), fun w => by simp [hf w]⟩
+
+/-- 全 7 変数が Measurable（aggregation lemma）。 -/
+theorem all_variables_measurable :
+    Measurable skillQuality ∧ Measurable contextEfficiency ∧
+    Measurable outputQuality ∧ Measurable gatePassRate ∧
+    Measurable proposalAccuracy ∧ Measurable knowledgeStructureQuality ∧
+    Measurable taskDesignEfficiency :=
+  ⟨v1_measurable, v2_measurable, v3_measurable, v4_measurable,
+   v5_measurable, v6_measurable, v7_measurable⟩
+
+-- ============================================================
+-- Derived theorems: TradeoffExists aggregation lemmas
+-- ============================================================
+
+/-!
+## TradeoffExists 集約定理
+
+トレードオフ構造の集約的な表現。V2 がハブ変数であること、
+双方向トレードオフの存在を aggregation lemma として表現する。
+-/
+
+/-- V2 (contextEfficiency) は 3 変数とトレードオフ関係を持つハブ変数（aggregation lemma）。 -/
+theorem tradeoff_context_is_hub :
+    TradeoffExists skillQuality contextEfficiency ∧
+    TradeoffExists knowledgeStructureQuality contextEfficiency ∧
+    TradeoffExists taskDesignEfficiency contextEfficiency :=
+  ⟨tradeoff_v1_v2, tradeoff_v6_v2, tradeoff_v7_v2⟩
+
+/-- V1-V2 間の双方向トレードオフ（aggregation lemma）。 -/
+theorem bidirectional_tradeoff_v1_v2 :
+    TradeoffExists skillQuality contextEfficiency ∧
+    TradeoffExists contextEfficiency skillQuality :=
+  ⟨tradeoff_v1_v2, tradeoff_v2_v1⟩
+
+/-- V6-V2 間の双方向トレードオフ（aggregation lemma）。 -/
+theorem bidirectional_tradeoff_v6_v2 :
+    TradeoffExists knowledgeStructureQuality contextEfficiency ∧
+    TradeoffExists contextEfficiency knowledgeStructureQuality :=
+  ⟨tradeoff_v6_v2, tradeoff_v2_v6⟩
+
+-- ============================================================
+-- Derived theorems: Investment cycle
+-- ============================================================
+
+/-!
+## 投資サイクル派生定理
+
+投資サイクルの正方向・負方向の両面を集約する aggregation lemma と、
+measurable_threshold_observable の適用による Observable 派生定理。
+-/
+
+/-- 投資サイクルは正方向（信頼→投資増）と負方向（リスク→投資減）の両方を持つ（aggregation lemma）。 -/
+theorem investment_cycle_complete :
+    (∀ (w w' : World),
+      (∃ t, systemHealthy t w ∧ systemHealthy t w' ∧
+        (skillQuality w < skillQuality w' ∨
+         contextEfficiency w < contextEfficiency w' ∨
+         outputQuality w < outputQuality w')) →
+      investmentLevel w ≤ investmentLevel w') ∧
+    (∀ (agent : Agent) (w w' : World),
+      riskMaterialized agent w' →
+      trustLevel agent w' < trustLevel agent w →
+      investmentLevel w' ≤ investmentLevel w) :=
+  ⟨trust_drives_investment, risk_reduces_investment⟩
+
+/-- trustLevel が Observable（measurable_threshold_observable の適用）。 -/
+theorem trust_threshold_observable (agent : Agent) (t : Nat) :
+    Observable (fun w => trustLevel agent w ≥ t) :=
+  measurable_threshold_observable (trust_measurable agent) t
+
+/-- degradationLevel が Observable（measurable_threshold_observable の適用）。 -/
+theorem degradation_threshold_observable (t : Nat) :
+    Observable (fun w => degradationLevel w ≥ t) :=
+  measurable_threshold_observable degradation_measurable t
+
+-- ============================================================
 -- Part IV: この分類自体のメンテナンス
 -- ============================================================
 
