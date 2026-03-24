@@ -19,7 +19,7 @@ if [ -d "$LEAN_DIR/Manifest" ]; then
   SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
   MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" 2>/dev/null | wc -l | tr -d ' ')
   # warnings (lake build output)
-  WARNING_COUNT=$(cd "$LEAN_DIR" && lake build Manifest 2>&1 | grep -c "warning" || echo "0")
+  WARNING_COUNT=$(cd "$LEAN_DIR" && lake build Manifest 2>&1 | grep -c "warning" || true)
   WARNING_COUNT=${WARNING_COUNT:-0}
   # compression ratio (theorems * 100 / axioms, 100x scale)
   if [ "${AXIOM_COUNT:-0}" -gt 0 ] 2>/dev/null; then
