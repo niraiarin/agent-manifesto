@@ -45,6 +45,17 @@ JSON で出力する。詳細な分析が必要な場合は以下の個別手順
 
 ## 観察対象
 
+### 0. 前回フィードバックの確認（最優先）
+
+```bash
+# 直近のエントリで type=human_feedback があるか確認
+tail -5 .claude/metrics/evolve-history.jsonl 2>/dev/null | jq -r 'select(.type=="human_feedback") | .notes' 2>/dev/null
+```
+
+human_feedback エントリが存在する場合:
+- その notes を観察報告の冒頭に「前回人間フィードバック」として記載
+- フィードバック内容を改善候補の優先度判断に反映
+
 ### 1. V1-V7 メトリクス（/metrics スキルで計測）
 
 ```bash

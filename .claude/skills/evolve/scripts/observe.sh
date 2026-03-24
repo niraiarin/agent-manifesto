@@ -57,13 +57,24 @@ if [ -f "$HISTORY_FILE" ]; then
   EVOLVE_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
   LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | jq -r '.timestamp // empty' 2>/dev/null)
   LAST_RUN=${LAST_RUN:-never}
+  # phases フィールド集計（標準スキーマ対応エントリのみ）
+  PHASES_OBSERVER_SUM=$(jq -r '.phases.observer.findings_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  PHASES_HYPO_SUM=$(jq -r '.phases.hypothesizer.proposals_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  PHASES_VERIFIER_PASS_SUM=$(jq -r '.phases.verifier.pass_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  PHASES_VERIFIER_FAIL_SUM=$(jq -r '.phases.verifier.fail_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
 else
   EVOLVE_RUNS=0
   LAST_RUN="never"
 fi
 echo "  \"evolve_history\": {"
 echo "    \"total_runs\": $EVOLVE_RUNS,"
-echo "    \"last_run\": \"$LAST_RUN\""
+echo "    \"last_run\": \"$LAST_RUN\","
+echo "    \"phases_totals\": {"
+echo "      \"observer_findings\": ${PHASES_OBSERVER_SUM:-0},"
+echo "      \"hypothesizer_proposals\": ${PHASES_HYPO_SUM:-0},"
+echo "      \"verifier_pass\": ${PHASES_VERIFIER_PASS_SUM:-0},"
+echo "      \"verifier_fail\": ${PHASES_VERIFIER_FAIL_SUM:-0}"
+echo "    }"
 echo "  },"
 
 # --- metrics ログ ---

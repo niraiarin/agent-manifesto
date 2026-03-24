@@ -85,13 +85,34 @@ Observer が検出した退役候補を処理する:
 2. breakingChange で無効化された知識の退役
 3. 退役を MEMORY.md から除去（またはアーカイブ）
 
-### Step 5: evolve 実行記録の保存（notes 必須）
+### Step 5: evolve 実行記録の保存（notes 必須、標準スキーマ準拠）
+
+以下の標準スキーマに従って記録する。**全フィールドが必須。値が不明な場合は 0 または null を記入。省略不可。**
+
+```json
+{
+  "timestamp": "ISO 8601 (UTC)",
+  "result": "success | partial | fail | observation",
+  "improvements": [{"title": "...", "compatibility": "conservative extension | compatible change | breaking change"}],
+  "rejected": [{"title": "...", "reason": "..."}],
+  "commits": ["hash", "..."],
+  "lean": {"axioms": 0, "theorems": 0, "sorry": 0},
+  "tests": {"passed": 0, "failed": 0},
+  "phases": {
+    "observer": {"findings_count": 0},
+    "hypothesizer": {"proposals_count": 0},
+    "verifier": {"pass_count": 0, "fail_count": 0},
+    "integrator": {"commits_count": 0}
+  },
+  "v_changes": {},
+  "notes": "次回への引き継ぎ事項（必須）"
+}
+```
 
 ```bash
 # 実行記録を保存（次回の Observer が参照）
-# notes フィールドは必須。次回 evolve への引き継ぎ事項を記載する。
 cat >> .claude/metrics/evolve-history.jsonl << EOF
-{"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "improvements": [...], "v_changes": {...}, "notes": "次回への引き継ぎ事項をここに書く"}
+{"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
 ```
 
