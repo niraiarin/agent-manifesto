@@ -181,10 +181,45 @@ fi
 echo "  \"v1_v7\": {"
 echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
 echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION, \"recent_avg\": $V2_RECENT_AVG },"
-echo "    \"v3_output_quality\": \"not_available\","
+V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
+V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -i "fix" || true; } | wc -l | tr -d ' ')
+V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
+V3_TOTAL_COMMITS=${V3_TOTAL_COMMITS:-0}
+if [ "$V3_TOTAL_COMMITS" -gt 0 ] 2>/dev/null; then
+  V3_FIX_RATIO=$((V3_FIX_COMMITS * 100 / V3_TOTAL_COMMITS))
+else
+  V3_FIX_RATIO=0
+fi
+V3_PASS=${PASS:-0}
+V3_FAIL=${FAIL:-0}
+V3_TOTAL_TESTS=$((V3_PASS + V3_FAIL))
+if [ "$V3_TOTAL_TESTS" -gt 0 ] 2>/dev/null; then
+  V3_TEST_PASS_RATE=$((V3_PASS * 100 / V3_TOTAL_TESTS))
+else
+  V3_TEST_PASS_RATE=0
+fi
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"note\": \"provisional_proxy: fix_ratio_by_keyword + test_pass_rate\" },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
-echo "    \"v6_knowledge_structure\": \"see_memory_and_lean_sections\","
+MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
+MEMORY_DIR="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory"
+V6_MEMORY_ENTRIES=$(grep -c "^- \[" "$MEMORY_MD" 2>/dev/null || echo "0")
+V6_MEMORY_FILES=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_MEMORY_ENTRIES=${V6_MEMORY_ENTRIES:-0}
+V6_MEMORY_FILES=${V6_MEMORY_FILES:-0}
+V6_LAST_COMMIT_TS=$(git -C "$BASE" log -1 --format=%at -- "$MEMORY_DIR" 2>/dev/null || echo "0")
+V6_LAST_COMMIT_TS=${V6_LAST_COMMIT_TS:-0}
+if [ "$V6_LAST_COMMIT_TS" -gt 0 ] 2>/dev/null; then
+  V6_LAST_UPDATE_DAYS=$(( ($(date +%s) - V6_LAST_COMMIT_TS) / 86400 ))
+else
+  V6_LAST_UPDATE_DAYS=-1
+fi
+V6_RETIRED_COUNT=0
+if [ -f "$HISTORY_FILE" ]; then
+  V6_RETIRED_COUNT=$({ grep '"retired"' "$HISTORY_FILE" 2>/dev/null || true; } | wc -l | tr -d ' ')
+  V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
+fi
+echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED }"
 echo "  }"
 
