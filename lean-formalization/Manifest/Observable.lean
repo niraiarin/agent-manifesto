@@ -938,7 +938,13 @@ theorem fixed_boundary_variables_mitigate_only :
     - T5 → L2: フィードバック要件は改善の存在論的前提条件
     - T6 → L1, L4: 人間の権限は安全境界（L1）と行動空間境界（L4）に跨る
     - T7 → L3: リソース有限性はリソース境界に直接対応
-    - T8 → L6: 精度水準はタスク設計規約（architecturalConvention）として定義 -/
+    - T8 → L6: 精度水準はタスク設計規約（architecturalConvention）として定義
+
+    注: L5 (platform) は意図的に除外されている。
+    L5 はプロバイダ固有の環境制約（Claude Code, Codex CLI 等）であり、
+    T1-T8 は技術非依存の拘束条件。L5 は T から導かれるのではなく、
+    プラットフォーム選択という人間の判断（T6 の上位）から生じる。
+    variableBoundary でも V1-V7 は L5 にマッピングされない。 -/
 def constraintBoundary : ConstraintId → List BoundaryId
   | .t1 => [.ontological]
   | .t2 => [.ontological]
@@ -955,6 +961,24 @@ theorem constraint_has_boundary :
   ∀ c : ConstraintId, (constraintBoundary c).length > 0 := by
   intro c
   cases c <;> simp [constraintBoundary]
+
+/-- L5 (platform) は T1-T8 のいずれの constraintBoundary にも含まれない。
+    L5 はプロバイダ固有の環境制約であり、技術非依存の拘束条件 T から導かれない。 -/
+theorem platform_not_in_constraint_boundary :
+  ∀ c : ConstraintId, BoundaryId.platform ∉ constraintBoundary c := by
+  intro c
+  cases c <;> simp [constraintBoundary]
+
+/-- L5 以外の全境界条件は、少なくとも 1 つの拘束条件の constraintBoundary に含まれる。
+    constraintBoundary は L5 を除いて L1-L6 を網羅する。 -/
+theorem constraint_boundary_covers_except_platform :
+  (∃ c, BoundaryId.ethicsSafety ∈ constraintBoundary c) ∧
+  (∃ c, BoundaryId.ontological ∈ constraintBoundary c) ∧
+  (∃ c, BoundaryId.resource ∈ constraintBoundary c) ∧
+  (∃ c, BoundaryId.actionSpace ∈ constraintBoundary c) ∧
+  (∃ c, BoundaryId.architecturalConvention ∈ constraintBoundary c) := by
+  refine ⟨⟨.t6, ?_⟩, ⟨.t1, ?_⟩, ⟨.t3, ?_⟩, ⟨.t6, ?_⟩, ⟨.t8, ?_⟩⟩ <;>
+    simp [constraintBoundary]
 
 -- ============================================================
 -- 信頼の非対称性の統合的表現

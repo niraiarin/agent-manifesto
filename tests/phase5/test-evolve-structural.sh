@@ -194,6 +194,36 @@ grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "L
 echo ""
 
 # ============================================================
+# Section 8: T→L マッピング形式化（constraintBoundary）
+# ============================================================
+echo "--- Section 8: T→L Mapping Formalization ---"
+
+ONTOLOGY="lean-formalization/Manifest/Ontology.lean"
+OBSERVABLE="lean-formalization/Manifest/Observable.lean"
+
+# ConstraintId が Ontology.lean に存在
+grep -q "^inductive ConstraintId" "$ONTOLOGY" && pass "ConstraintId defined in Ontology.lean" || fail "ConstraintId not found in Ontology.lean"
+
+# constraintBoundary が Observable.lean に存在
+grep -q "^def constraintBoundary" "$OBSERVABLE" && pass "constraintBoundary defined in Observable.lean" || fail "constraintBoundary not found in Observable.lean"
+
+# T1-T8 全ケースが定義されている
+for t in t1 t2 t3 t4 t5 t6 t7 t8; do
+  grep -q "\.$t =>" "$OBSERVABLE" && pass "constraintBoundary covers .$t" || fail "constraintBoundary missing .$t"
+done
+
+# constraint_has_boundary 定理が存在
+grep -q "^theorem constraint_has_boundary" "$OBSERVABLE" && pass "constraint_has_boundary theorem exists" || fail "constraint_has_boundary theorem not found"
+
+# platform_not_in_constraint_boundary 定理が存在（L5 除外の形式化）
+grep -q "^theorem platform_not_in_constraint_boundary" "$OBSERVABLE" && pass "platform_not_in_constraint_boundary theorem exists (L5 exclusion)" || fail "platform_not_in_constraint_boundary theorem not found"
+
+# constraint_boundary_covers_except_platform 定理が存在（L5 以外の網羅性）
+grep -q "^theorem constraint_boundary_covers_except_platform" "$OBSERVABLE" && pass "constraint_boundary_covers_except_platform theorem exists" || fail "constraint_boundary_covers_except_platform theorem not found"
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="
