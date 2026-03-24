@@ -207,8 +207,35 @@ high/critical リスクの改善案は人間レビューが必要（D2）。
 - **high**: 「人間レビュー推奨」を表示し、続行可否を確認
 - **moderate/low**: Verifier の PASS/FAIL に従う
 
-**ゲート判定:** PASS 判定が 0 件の場合、
-「改善案は検証に通過しなかった。理由: [FAIL の理由一覧]」と報告して終了。
+**ゲート判定:**
+
+PASS 判定が 1 件以上 → PASS 分を Phase 4 へ進める。
+
+FAIL 判定がある場合 → 以下の **FAIL 分析** を Phase 3 内で実行する:
+
+**FAIL 分析（Phase 3 内サブステップ）:**
+
+FAIL は公理系における反例であり、最も価値の高い学習データである。
+「次回に持ち越す」のではなく、同一 evolve 実行内で原因を特定し修正する。
+
+Step 1: 各 FAIL の根本原因を分類する:
+- **observation_error**: Observer の計測データが不正確（例: observe.sh のバグ）
+- **hypothesis_error**: Hypothesizer がデータを誤引用、または論理的誤り
+- **assumption_error**: 前提条件の誤り（互換性分類の誤り、行動空間外等）
+- **precondition_error**: 先行フェーズの成果物が不十分
+
+Step 2: ループバック判定:
+- observation_error → 計測バグを修正し、Phase 1 に戻って再観察
+- hypothesis_error → 正確なデータで Phase 2 に戻って再仮説化
+- assumption_error → 前提条件を修正し Phase 2 に戻って再設計
+- precondition_error → Phase 1 に戻って先行成果物を補完
+
+Step 3: ループバック制限（T7 リソース有限性）:
+- 同一改善案のループバックは最大 2 回まで
+- 2 回 FAIL → 失敗パターンとして記録し見送り
+
+PASS が 0 件かつループバック不可 →
+「改善案は検証に通過しなかった。理由: [FAIL 分析結果]」と報告して終了。
 
 ### Step 4: 人間の承認取得（T6）
 
@@ -301,6 +328,7 @@ YYYY-MM-DD HH:MM
 
 ## Phase 3: 検証
 [Verifier の要約 — PASS/FAIL の分布、リスクレベル]
+[FAIL 分析: 根本原因分類、ループバック回数、修正結果]
 
 ## Phase 4: 統合
 [Integrator の要約 — 統合した改善数、コミットハッシュ]
@@ -362,13 +390,13 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 |
-|------|----------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る |
-| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 |
+| 仮説 | 反証条件 | 現状評価（9回実行データ） |
+|------|----------|----------------------|
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。9回中8回 success（1件は human_feedback）。協調オーバーヘッドの定量評価は phases フィールド蓄積後に可能 |
+| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 未検証。エージェント別寄与の計測データ不足（phases フィールドは run 10 から記録開始） |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 部分的に支持。axioms=61 固定、theorems 209→210（run 1→2）。V4 blocked=0 に Goodhart 懸念あり |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。9回で24改善統合、breaking change 0件 |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未検証。ccusage daily データ取得済みだが evolve 単体のコスト分離が不可 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

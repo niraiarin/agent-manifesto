@@ -94,7 +94,7 @@ Observer が検出した退役候補を処理する:
   "timestamp": "ISO 8601 (UTC)",
   "result": "success | partial | fail | observation",
   "improvements": [{"title": "...", "compatibility": "conservative extension | compatible change | breaking change"}],
-  "rejected": [{"title": "...", "reason": "..."}],
+  "rejected": [{"title": "...", "reason": "...", "failure_type": "observation_error|hypothesis_error|assumption_error|precondition_error (optional)", "root_cause": "optional", "condition": "optional: この失敗が起きる条件", "prevention": "optional: 再発防止策", "loopback_count": 0, "resolved": false}],
   "commits": ["hash", "..."],
   "lean": {"axioms": 0, "theorems": 0, "sorry": 0},
   "tests": {"passed": 0, "failed": 0},

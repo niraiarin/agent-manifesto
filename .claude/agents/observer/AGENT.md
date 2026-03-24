@@ -114,6 +114,19 @@ MEMORY_DIR="$HOME/.claude/projects/$ESCAPED_PATH/memory"
 cat "$MEMORY_DIR/MEMORY.md" 2>/dev/null || echo "No MEMORY.md found"
 ```
 
+### 6. 過去の失敗パターン
+
+evolve-history.jsonl の rejected エントリから失敗パターンを抽出する:
+
+```bash
+# 失敗パターンの取得（resolved でないもの。旧エントリは resolved 未定義なので除外）
+jq -r '.rejected[]? | select(.failure_type != null) | select((.resolved // false) != true) | "\(.failure_type): \(.condition // .reason // "no condition")"' .claude/metrics/evolve-history.jsonl 2>/dev/null | sort | uniq -c | sort -rn
+```
+
+失敗パターンが存在する場合:
+- 同一条件に該当する改善候補を観察報告に警告として含める
+- 繰り返し発生するパターンは「高優先度の改善候補」として報告
+
 ## 出力フォーマット
 
 観察結果を以下の構造で出力する:

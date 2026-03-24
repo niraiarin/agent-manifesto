@@ -188,7 +188,9 @@ SKILL_COUNT=$(find "$BASE/.claude/skills" -name "SKILL.md" 2>/dev/null | wc -l |
 EVOLVE_SUCCESS=0
 EVOLVE_TOTAL_RUNS=0
 if [ -f "$HISTORY_FILE" ]; then
-  EVOLVE_TOTAL_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
+  # human_feedback/observation エントリを除外し、実際の evolve 実行のみをカウント
+  EVOLVE_TOTAL_RUNS=$(jq -r 'select(.result != "observation") | .result' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  EVOLVE_TOTAL_RUNS=${EVOLVE_TOTAL_RUNS:-0}
   EVOLVE_SUCCESS=$(jq -r 'select(.result=="success") | .result' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
   EVOLVE_SUCCESS=${EVOLVE_SUCCESS:-0}
 fi
