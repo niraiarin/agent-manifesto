@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 146 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 159 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -177,9 +177,8 @@ cat .claude/metrics/evolve-history.jsonl 2>/dev/null | tail -1
 jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' \
   .claude/metrics/deferred-status.json 2>/dev/null
 
-# （正規化テーブルがない場合のフォールバック: JSONL から収集）
-# jq -s '[.[].deferred[]?] | group_by(.id) | [.[] | sort_by(.opened_in_run // 0) | last | select(.status == "open")]' \
-#   .claude/metrics/evolve-history.jsonl 2>/dev/null
+# Note: deferred-status.json が唯一の正規ソース（run 18 で導入）。
+# JSONL フォールバックは legacy ノイズの原因（run 17 observation_error）のため廃止。
 ```
 
 前回の結果がある場合、Observer にコンテキストとして渡す。
@@ -241,9 +240,9 @@ Hypothesizer の改善案を**独立コンテキスト**で検証する。
 - Verifier は自らの基準で判断する
 
 **P2 の限界（透明性のための注記）:**
-この検証は moderate レベル（2/4 条件充足）。同一モデルの Subagent を使用するため
+この検証は low レベル（1/4 条件充足）。同一モデルの Subagent を使用するため
 evaluatorIndependent は満たされない。また、Worker（orchestrator）が Verifier への
-プロンプトを構成するため、framingIndependent は PARTIAL。
+プロンプトを構成するため、framingIndependent は false。
 high/critical リスクの改善案は人間レビューが必要（D2）。
 
 **Verifier への入力:**
