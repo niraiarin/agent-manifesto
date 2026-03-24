@@ -173,9 +173,13 @@ description: >
 # 前回の実行記録があれば読み込む
 cat .claude/metrics/evolve-history.jsonl 2>/dev/null | tail -1
 
-# 未解決の deferred 項目を全エントリから収集（重複排除・最新ステータス優先）
-jq -s '[.[].deferred[]?] | group_by(.id) | [.[] | sort_by(.opened_in_run // 0) | last | select(.status == "open")]' \
-  .claude/metrics/evolve-history.jsonl 2>/dev/null
+# 未解決の deferred 項目を正規化テーブルから取得
+jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' \
+  .claude/metrics/deferred-status.json 2>/dev/null
+
+# （正規化テーブルがない場合のフォールバック: JSONL から収集）
+# jq -s '[.[].deferred[]?] | group_by(.id) | [.[] | sort_by(.opened_in_run // 0) | last | select(.status == "open")]' \
+#   .claude/metrics/evolve-history.jsonl 2>/dev/null
 ```
 
 前回の結果がある場合、Observer にコンテキストとして渡す。

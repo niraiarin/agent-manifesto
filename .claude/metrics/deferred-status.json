@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "last_updated_run": 17,
+  "items": {
+    "v4-goodhart-hook": {
+      "status": "abandoned",
+      "abandoned_in_run": 13,
+      "reason": "actionSpaceExceeded",
+      "opened_in_run": 7,
+      "note": "hook変更が必要でL4外。7 runs未解決で解消見込みなし"
+    },
+    "v7-teamwork-concept-redesign": {
+      "status": "abandoned",
+      "abandoned_in_run": 14,
+      "reason": "resourceExhaustion",
+      "opened_in_run": 10,
+      "note": "単一エージェント環境でteamwork指標は根本的に不適合。V7 unique_subjectsが代替proxy"
+    },
+    "v7-teamwork-redesign": {
+      "status": "split",
+      "split_in_run": 12,
+      "children": ["v7-teamwork-concept-redesign"],
+      "note": "hook部分はabandoned (actionSpaceExceeded)、concept部分はrun 14でabandoned"
+    },
+    "history-completion-flags": {
+      "status": "resolved",
+      "resolved_in_run": 12,
+      "note": "過去エントリのdeferred構造化完了"
+    },
+    "resolve-legacy-open-tasks": {
+      "status": "resolved",
+      "resolved_in_run": 12,
+      "note": "manifesto.md Section 8追加で主タスク解決"
+    },
+    "skill-md-reverse-lookup": {
+      "status": "resolved",
+      "resolved_in_run": 13,
+      "note": "SKILL.md逆引きチェックリスト統合 (commit 3710740)"
+    },
+    "observe-sh-json-bug": {
+      "status": "resolved",
+      "resolved_in_run": 15,
+      "note": "commit f8c6ca9で || echo → || trueに修正"
+    },
+    "ccusage-investigation": {
+      "status": "split",
+      "split_in_run": 14,
+      "children": ["ccusage-step0b", "ccusage-observe-integration"]
+    },
+    "ccusage-step0b": {
+      "status": "resolved",
+      "resolved_in_run": 15,
+      "note": "Investigation complete. ccusage viable."
+    },
+    "ccusage-observe-integration": {
+      "status": "resolved",
+      "resolved_in_run": 16,
+      "note": "observe.shにccusageセクション追加"
+    },
+    "agent-contribution-schema": {
+      "status": "split",
+      "split_in_run": 14,
+      "children": ["agent-contribution-schema-design", "agent-contribution-backfill"]
+    },
+    "agent-contribution-schema-design": {
+      "status": "resolved",
+      "resolved_in_run": 16,
+      "note": "AGENT.mdにphases.modelフィールド追加"
+    },
+    "agent-contribution-backfill": {
+      "status": "resolved",
+      "resolved_in_run": 17,
+      "note": "run 10-15にSKILL.md設計値でバックフィル"
+    },
+    "tl-environment-mapping": {
+      "status": "split",
+      "split_in_run": 14,
+      "children": ["tl-mapping-survey", "tl-mapping-completion"]
+    },
+    "tl-mapping-survey": {
+      "status": "open",
+      "reason": "resourceExhaustion",
+      "opened_in_run": 14
+    },
+    "tl-mapping-completion": {
+      "status": "open",
+      "reason": "dependencyBlocked",
+      "blocked_by": "tl-mapping-survey",
+      "opened_in_run": 14
+    },
+    "v3-baseline-lean-formalization": {
+      "status": "open",
+      "reason": "resourceExhaustion",
+      "opened_in_run": 14
+    },
+    "deferred-query-redesign": {
+      "status": "resolved",
+      "resolved_in_run": 16,
+      "note": "SKILL.md Step 0クエリをgroup_by(.id)|lastに改善"
+    },
+    "agent-consolidation-4to2": {
+      "status": "abandoned",
+      "abandoned_in_run": 15,
+      "note": "Verifier+Integrator統合はP2違反で棄却。Observer+Hypothesizer統合もコストデータ不足で見送り"
+    },
+    "h2h5-data-annotations-resubmit": {
+      "status": "resolved",
+      "resolved_in_run": 11,
+      "note": "H1-H5 data annotations with verified numbersとして統合"
+    },
+    "v3-fix-ratio-baseline": {
+      "status": "resolved",
+      "resolved_in_run": 12,
+      "note": "observe.shにv3_baseline_met実装"
+    }
+  }
+}

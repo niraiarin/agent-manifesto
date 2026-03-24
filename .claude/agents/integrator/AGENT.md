@@ -117,6 +117,20 @@ cat >> .claude/metrics/evolve-history.jsonl << EOF
 EOF
 ```
 
+### Step 5b: deferred-status.json の更新
+
+`.claude/metrics/deferred-status.json` が存在する場合、以下を更新:
+- resolved した deferred: `status` を `"resolved"` に、`resolved_in_run` を設定
+- abandoned した deferred: `status` を `"abandoned"` に、`abandoned_in_run` を設定
+- 新規 open の deferred: `items` に追加
+- `last_updated_run` を現在の run 番号に更新
+
+```bash
+# 正規化テーブルの open 件数確認
+jq '[.items | to_entries[] | select(.value.status == "open")] | length' \
+  .claude/metrics/deferred-status.json
+```
+
 **deferred フィールドのルール（EvolveSkill.lean φ₁₁ 準拠）:**
 - deferral は例外。/evolve は 1 サイクル完結が基本
 - reason は 3 値のいずれか: `resourceExhaustion`（T7）/ `dependencyBlocked`（半順序）/ `actionSpaceExceeded`（L4）
