@@ -45,16 +45,26 @@ JSON で出力する。詳細な分析が必要な場合は以下の個別手順
 
 ## 観察対象
 
-### 0. 前回フィードバックの確認（最優先）
+### 0. 前回フィードバック・未解決 deferred の確認（最優先）
 
 ```bash
 # 直近のエントリで type=human_feedback があるか確認
 tail -5 .claude/metrics/evolve-history.jsonl 2>/dev/null | jq -r 'select(.type=="human_feedback") | .notes' 2>/dev/null
+
+# 未解決の deferred 項目を全エントリから収集
+jq -c 'select(.deferred != null) | .deferred[] | select(.status == "open")' \
+  .claude/metrics/evolve-history.jsonl 2>/dev/null
 ```
 
 human_feedback エントリが存在する場合:
 - その notes を観察報告の冒頭に「前回人間フィードバック」として記載
 - フィードバック内容を改善候補の優先度判断に反映
+
+未解決 deferred（status=open）が存在する場合:
+- 観察報告に「未解決 deferred 一覧」セクションとして記載
+- deferred 項目は改善候補一覧の**先頭**に含める（通常の観察項目より優先）
+- 各項目の reason（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）を確認し、
+  解決可能になっているかを評価する
 
 ### 1. V1-V7 メトリクス（/metrics スキルで計測）
 

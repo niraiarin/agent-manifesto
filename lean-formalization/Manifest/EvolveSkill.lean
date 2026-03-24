@@ -327,6 +327,48 @@ theorem hypothesis_count :
    .h4_conservative_first, .h5_one_per_session].length = 5 := by rfl
 
 -- ============================================================
+-- φ₁₁: Deferral の正当性条件
+-- ============================================================
+
+/-!
+## Deferral（引き継ぎ）の正当性
+
+/evolve は 1 サイクルで完結するのが基本設計。
+deferral は例外であり、以下の 3 条件のいずれかに該当する場合のみ正当。
+条件に該当しない deferral は stasisUnhealthy（Evolution.lean）のインスタンス。
+-/
+
+/-- deferral の正当な理由。3 条件のいずれかに該当する場合のみ。 -/
+inductive DeferralReason where
+  | resourceExhaustion   -- T7: サイクル予算超過（globalResourceBound）
+  | dependencyBlocked    -- 半順序: 先行改善が未完了（structureDependsOn）
+  | actionSpaceExceeded  -- L4: 行動空間外（人間による拡張が必要）
+  deriving BEq, Repr, DecidableEq
+
+/-- deferral の状態。 -/
+inductive DeferralStatus where
+  | open       -- 未解決（次サイクルで優先的に扱う）
+  | resolved   -- 次サイクルで解決済み
+  | abandoned  -- 実装不可能と判断（2 回 defer → 放棄または分割）
+  deriving BEq, Repr, DecidableEq
+
+/-- [目標命題 φ₁₁]
+    正当な理由なき deferral は不正。
+    3 条件のいずれかに該当しなければ deferral できない。 -/
+theorem deferral_requires_justification :
+  ∀ (r : DeferralReason),
+    r = .resourceExhaustion ∨
+    r = .dependencyBlocked ∨
+    r = .actionSpaceExceeded := by
+  intro r; cases r <;> simp
+
+/-- deferral 状態は 3 値のいずれか。 -/
+theorem deferral_status_exhaustive :
+  ∀ (s : DeferralStatus),
+    s = .open ∨ s = .resolved ∨ s = .abandoned := by
+  intro s; cases s <;> simp
+
+-- ============================================================
 -- 合成命題 φ: 全性質の合取
 -- ============================================================
 

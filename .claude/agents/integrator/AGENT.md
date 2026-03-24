@@ -105,6 +105,7 @@ Observer が検出した退役候補を処理する:
     "integrator": {"commits_count": 0}
   },
   "v_changes": {},
+  "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],
   "notes": "次回への引き継ぎ事項（必須）"
 }
 ```
@@ -115,6 +116,13 @@ cat >> .claude/metrics/evolve-history.jsonl << EOF
 {"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
 ```
+
+**deferred フィールドのルール（EvolveSkill.lean φ₁₁ 準拠）:**
+- deferral は例外。/evolve は 1 サイクル完結が基本
+- reason は 3 値のいずれか: `resourceExhaustion`（T7）/ `dependencyBlocked`（半順序）/ `actionSpaceExceeded`（L4）
+- 3 条件に該当しない項目は defer できない（stasisUnhealthy）
+- 同一 id の deferral は最大 1 回。2 回目は `abandoned` にするか項目を分割
+- 前回の open deferred を解決した場合: `"status": "resolved", "resolved_in_run": N` に更新
 
 **notes フィールドのルール:**
 - 必須。省略不可
