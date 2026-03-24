@@ -55,7 +55,8 @@ echo "  \"stale_files\": [$(echo "$STALE_FILES" | sed 's/, $//')],"
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
   EVOLVE_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
-  LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | grep -o '"timestamp":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "never")
+  LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | jq -r '.timestamp // empty' 2>/dev/null)
+  LAST_RUN=${LAST_RUN:-never}
 else
   EVOLVE_RUNS=0
   LAST_RUN="never"
@@ -96,11 +97,23 @@ else
   V5_RATE=0
 fi
 
-# V7: Task Design (completed tasks)
+# V7: Task Design (completed tasks + quality indicators)
 if [ -f "$V7_FILE" ]; then
   V7_COMPLETED=$(wc -l < "$V7_FILE" | tr -d ' ')
+  V7_UNIQUE_SUBJECTS=$(jq -r '.subject // empty' "$V7_FILE" 2>/dev/null | sort -u | wc -l | tr -d ' ')
+  V7_UNIQUE_SUBJECTS=${V7_UNIQUE_SUBJECTS:-0}
+  V7_TEAMWORK=$(jq -r 'select(.teammate != null and .teammate != "") | .teammate' "$V7_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  V7_TEAMWORK=${V7_TEAMWORK:-0}
+  if [ "$V7_COMPLETED" -gt 0 ] 2>/dev/null; then
+    V7_TEAMWORK_PERCENT=$((V7_TEAMWORK * 100 / V7_COMPLETED))
+  else
+    V7_TEAMWORK_PERCENT=0
+  fi
 else
   V7_COMPLETED=0
+  V7_UNIQUE_SUBJECTS=0
+  V7_TEAMWORK=0
+  V7_TEAMWORK_PERCENT=0
 fi
 
 # V2: Context Efficiency (tool calls / sessions) with delta-based recent average
@@ -165,7 +178,7 @@ EVOLVE_SUCCESS=0
 EVOLVE_TOTAL_RUNS=0
 if [ -f "$HISTORY_FILE" ]; then
   EVOLVE_TOTAL_RUNS=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
-  EVOLVE_SUCCESS=$(grep -c '"result":"success"' "$HISTORY_FILE" 2>/dev/null || true)
+  EVOLVE_SUCCESS=$(jq -r 'select(.result=="success") | .result' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
   EVOLVE_SUCCESS=${EVOLVE_SUCCESS:-0}
 fi
 if [ "$EVOLVE_TOTAL_RUNS" -gt 0 ] 2>/dev/null; then
@@ -207,10 +220,10 @@ V6_MEMORY_ENTRIES=$(grep -c "^- \[" "$MEMORY_MD" 2>/dev/null || echo "0")
 V6_MEMORY_FILES=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null | wc -l | tr -d ' ' || echo "0")
 V6_MEMORY_ENTRIES=${V6_MEMORY_ENTRIES:-0}
 V6_MEMORY_FILES=${V6_MEMORY_FILES:-0}
-V6_LAST_COMMIT_TS=$(git -C "$BASE" log -1 --format=%at -- "$MEMORY_DIR" 2>/dev/null || echo "0")
-V6_LAST_COMMIT_TS=${V6_LAST_COMMIT_TS:-0}
-if [ "$V6_LAST_COMMIT_TS" -gt 0 ] 2>/dev/null; then
-  V6_LAST_UPDATE_DAYS=$(( ($(date +%s) - V6_LAST_COMMIT_TS) / 86400 ))
+V6_MTIME=$(stat -f "%m" "$MEMORY_MD" 2>/dev/null || stat -c "%Y" "$MEMORY_MD" 2>/dev/null || echo "0")
+V6_MTIME=${V6_MTIME:-0}
+if [ "$V6_MTIME" -gt 0 ] 2>/dev/null; then
+  V6_LAST_UPDATE_DAYS=$(( ($(date +%s) - V6_MTIME) / 86400 ))
 else
   V6_LAST_UPDATE_DAYS=-1
 fi
@@ -220,7 +233,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
 echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
-echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED }"
+echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT }"
 echo "  }"
 
 echo "}"
