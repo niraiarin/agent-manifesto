@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 140 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 146 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -61,6 +61,27 @@ description: >
 | 修正の安全性順序 | Procedure.lean | `modification_safety_chain` |
 | D2 検証の 4 条件 | DesignFoundation.lean | `VerificationIndependence` |
 | D8 過剰拡大リスク | DesignFoundation.lean | `d8_overexpansion_risk` |
+
+#### validPhaseTransition 逆引きチェックリスト
+
+各 Lean ケースが、対応するテストと SKILL.md の実行手順に展開されていることを確認するための逆引き表。
+（Section 7 テストは `tests/test-evolve-structural.sh` 内の記述名称）
+
+| Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ |
+|--------------------------------------------------|-------------------|-----------------|
+| observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 |
+| hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 |
+| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 |
+| integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 |
+| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） |
+| retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） |
+
+#### その他の Lean 定義 — テスト対応追加行
+
+| スキルの概念 | テスト（Section 3 / Step） | 備考 |
+|------------|--------------------------|------|
+| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 |
+| `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 |
 
 ## Progressive Disclosure（D11 コンテキスト経済）
 
