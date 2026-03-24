@@ -85,14 +85,20 @@ Observer が検出した退役候補を処理する:
 2. breakingChange で無効化された知識の退役
 3. 退役を MEMORY.md から除去（またはアーカイブ）
 
-### Step 5: evolve 実行記録の保存
+### Step 5: evolve 実行記録の保存（notes 必須）
 
 ```bash
 # 実行記録を保存（次回の Observer が参照）
+# notes フィールドは必須。次回 evolve への引き継ぎ事項を記載する。
 cat >> .claude/metrics/evolve-history.jsonl << EOF
-{"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "improvements": [...], "v_changes": {...}}
+{"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "improvements": [...], "v_changes": {...}, "notes": "次回への引き継ぎ事項をここに書く"}
 EOF
 ```
+
+**notes フィールドのルール:**
+- 必須。省略不可
+- 次回 evolve で Observer が最初に読む引き継ぎ情報
+- 含めるべき内容: Verifier FAIL で再提出が必要な案、未解決の観察、行動空間外で人間介入が必要な事項
 
 ## 出力フォーマット
 
