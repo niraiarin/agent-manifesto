@@ -585,13 +585,13 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（39回実行データ） |
+| 仮説 | 反証条件 | 現状評価（40回実行データ） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。39回中39回 success。phases run 8-39 の 32 データポイント蓄積。Verifier pass rate 全期間 73.8%（90/122）、直近5回 80%（20/25） |
-| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-39 の 32 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62（run 27 で theorem 降格、run 37 で +2）、theorems 209→243（+34）。compression 391。V4 blocked=0 の Goodhart 懸念は継続。V2 中央値化で外れ値ロバスト性改善（run 39） |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。39回で123改善統合（73 conservative extension, 50 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。Run 39 で session_id を evolve-history.jsonl に記録開始。ccusage session コマンドとの突き合わせにより per-evolve コスト計測が可能に。ただし遡及不可（Run 1-38）、最適頻度の決定には対照群データが必要 |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。40回中40回 success。phases run 8-40 の 33 データポイント蓄積。Verifier pass rate 全期間 74.0%（95/127）、直近5回 84%（25/30） |
+| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-40 の 33 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=243（安定）。compression 391。V4 blocked=0 の Goodhart 懸念は継続。Run 40 で compressionRatio コメント不整合を修正（405→391） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。40回で128改善統合（78 conservative extension, 50 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。Run 39 で session_id 記録開始、Run 40 で 2 データポイント目。ccusage session 分離は未実装（obs-7）。最適頻度の決定には対照群データが必要 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 
