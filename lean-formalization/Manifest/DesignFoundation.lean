@@ -7,7 +7,7 @@ import Manifest.Principles
 /-!
 # Layer 8: Design Foundation — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
 
-design-development-foundation.md の D1–D9 がマニフェストの
+design-development-foundation.md の D1–D12 がマニフェストの
 T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）
 されることを型検査する。
 
@@ -34,8 +34,8 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 
 | Lean の概念 | 用語リファレンス | §参照 |
 |------------|----------------|-------|
-| D1–D9 の theorem | 定理（公理から導出された命題）| §4.2 |
-| D1–D9 の def/structure | 定義的拡大（新記号を既存記号で定義）| §5.5 |
+| D1–D12 の theorem | 定理（公理から導出された命題）| §4.2 |
+| D1–D12 の def/structure | 定義的拡大（新記号を既存記号で定義）| §5.5 |
 | SelfGoverning | 型クラス（型に対するインタフェース）| §9.4 |
 | DesignPrinciple | 論議領域（§3.2）の構成要素 | §3.2 |
 | DesignPrincipleUpdate | AGM の修正操作の構造化 | §9.2 |
@@ -46,7 +46,7 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 
 ## design-development-foundation.md との対応
 
-本ファイルは D1–D9 を形式化する。D10–D12 は未形式化。
+本ファイルは D1–D12 を形式化する。
 
 | D | 根拠 | 形式化の深度 |
 |---|------|------------|
@@ -59,6 +59,9 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 | D7 | Section 6 + P1 | 2 定理（蓄積 bounded + 毀損 unbounded）|
 | D8 | Section 6 + E2 | 2 定理（過剰拡大 + 能力-リスク）|
 | D9 | Observable + P3 + Section 7 | SelfGoverning + 4 定理 |
+| D10 | T1 + T2 | 2 定理（構造永続性 + エポック単調増加）|
+| D11 | T3 + D1 | 定義 + 3 定理（逆相関 + 最小化 + 有限性）|
+| D12 | P6 + T3 + T7 + T8 | 2 定理（CSP + 確率的出力）|
 -/
 
 namespace Manifest
@@ -814,7 +817,7 @@ sorry なし。新規非論理的公理（§4.1）なし。
 全定理（§4.2）は既存の公理（T/E/P/V）の直接適用、
 または帰納型（§7.2）の cases 解析で証明完了。
 
-D1–D9 の各原理は、マニフェストの公理系から
+D1–D12 の各原理は、マニフェストの公理系から
 **導出可能**（§2.4 導出可能性）であることが型検査で保証されている。
 本ファイルは定義的拡大（§5.5）のみで構成され、
 Terminology.lean が証明した `definitional_implies_conservative` により
@@ -831,7 +834,7 @@ Terminology.lean が証明した `definitional_implies_conservative` により
 ### Section 7（自己適用）の構造的強制
 
 `SelfGoverning` 型クラス（§9.4, Ontology.lean）により、
-D1–D9 を定義する `DesignPrinciple` 型は以下を満たす:
+D1–D12 を定義する `DesignPrinciple` 型は以下を満たす:
 - 互換性分類の適用可能性（`canClassifyUpdate`）
 - 分類の網羅性（`classificationExhaustive`）
 

@@ -92,7 +92,7 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 23   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 23 axioms)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 238  -- 全モジュール合計（Run 27: +5 theorems, -1 axiom from Observable）
+    theoremCount     := 239  -- 全モジュール合計（Run 30: +1 theorem_distribution_consistent）
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -103,13 +103,66 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 60 := by rfl
 
-/-- 現在の公理系の定理数は 238。 -/
+/-- 現在の公理系の定理数は 239。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 238 := by rfl
+  currentProfile.theoremCount = 239 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
   currentProfile.sorryCount = 0 := by rfl
+
+-- ============================================================
+-- モジュール別定理分布
+-- ============================================================
+
+/-- 各 Lean モジュールの定理数。totalAxioms の補完として、
+    定理がどのモジュールに分布しているかを型レベルで記録する。 -/
+structure TheoremDistribution where
+  ontologyM              : Nat  -- Ontology.lean
+  axiomsM                : Nat  -- Axioms.lean
+  empiricalPostulatesM   : Nat  -- EmpiricalPostulates.lean
+  observableM            : Nat  -- Observable.lean
+  principlesM            : Nat  -- Principles.lean
+  metaM                  : Nat  -- Meta.lean（本ファイル）
+  terminologyM           : Nat  -- Terminology.lean
+  formalDerivationSkillM : Nat  -- FormalDerivationSkill.lean
+  conformanceVerificationM : Nat -- ConformanceVerification.lean
+  designFoundationM      : Nat  -- DesignFoundation.lean
+  procedureM             : Nat  -- Procedure.lean
+  evolutionM             : Nat  -- Evolution.lean
+  evolveSkillM           : Nat  -- EvolveSkill.lean
+  workflowM              : Nat  -- Workflow.lean
+  axiomQualityM          : Nat  -- AxiomQuality.lean
+  deriving BEq, Repr
+
+/-- モジュール別定理数の合計。 -/
+def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
+  d.ontologyM + d.axiomsM + d.empiricalPostulatesM + d.observableM +
+  d.principlesM + d.metaM + d.terminologyM + d.formalDerivationSkillM +
+  d.conformanceVerificationM + d.designFoundationM + d.procedureM +
+  d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM
+
+/-- 現在のモジュール別定理分布。 -/
+def currentTheoremDistribution : TheoremDistribution :=
+  { ontologyM              := 9
+    axiomsM                := 0
+    empiricalPostulatesM   := 0
+    observableM            := 23
+    principlesM            := 14
+    metaM                  := 12  -- theorem_distribution_consistent を含む
+    terminologyM           := 23
+    formalDerivationSkillM := 35
+    conformanceVerificationM := 17
+    designFoundationM      := 33
+    procedureM             := 19
+    evolutionM             := 16
+    evolveSkillM           := 22
+    workflowM              := 5
+    axiomQualityM          := 11 }
+
+/-- モジュール別定理数の合計が currentProfile.theoremCount と一致する。 -/
+theorem theorem_distribution_consistent :
+  currentTheoremDistribution.total = currentProfile.theoremCount := by rfl
 
 -- ============================================================
 -- 層の独立性
