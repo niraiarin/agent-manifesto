@@ -112,8 +112,10 @@ Observer が検出した退役候補を処理する:
 
 ```bash
 # 実行記録を保存（次回の Observer が参照）
+# session_id: 現在セッションの UUID（H5 per-evolve コスト追跡用）
+SESSION_ID=$(tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // empty' 2>/dev/null)
 cat >> .claude/metrics/evolve-history.jsonl << EOF
-{"timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
+{"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
 ```
 

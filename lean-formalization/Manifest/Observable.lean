@@ -133,9 +133,9 @@ opaque skillQuality : World → Nat
 /-- V2: コンテキスト効率。有限コンテキストの活用度。
     測定方法: タスク完了率 / 消費トークン数。
     関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。
-    observe.sh proxy: calls_per_session = recent_avg（直近10セッションデルタ平均、primary）,
+    observe.sh proxy: recent_avg（直近10セッションデルタ中央値、primary）,
     cumulative_avg（累積平均、baseline）。
-    primary_metric: recent_avg（セッション間のデルタベース計算）。
+    primary_metric: recent_median（中央値ベース、外れ値にロバスト）。
     運用注記: recent_avg が cumulative_avg の ±20% 以上乖離した場合にトレンド変化と判定。 -/
 opaque contextEfficiency : World → Nat
 

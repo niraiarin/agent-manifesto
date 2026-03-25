@@ -85,6 +85,33 @@ description: >
 | `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 |
 | `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 |
 
+#### EvolveSkill.lean 全定理 逆引きチェックリスト（Run 39 追加）
+
+| Lean 定理（EvolveSkill.lean） | φ | SKILL.md ステップ | テスト（Section 9） |
+|-------------------------------|---|-------------------|---------------------|
+| `phase_order_aligns_with_workflow` | φ₁ | Step 1→5 のフェーズ順序 | "φ₁: phase order" |
+| `evolve_full_cycle_matches_workflow` | φ₁ | Step 6 → Step 1（サイクル） | "φ₁: full cycle" |
+| `all_phases_have_agents` | φ₂ | アーキテクチャ図 | "φ₂: all phases have agents" |
+| `all_agents_used` | φ₂ | アーキテクチャ図（4 エージェント） | "φ₂: all agents used" |
+| `evolve_verifier_sufficient_for_low` | φ₃ | Step 3: P2 の限界（low レベル） | "φ₃: verifier sufficient for low" |
+| `evolve_verifier_insufficient_for_moderate` | φ₃ | Step 3: P2 の限界（moderate 不十分） | "φ₃: verifier insufficient moderate" |
+| `evolve_verifier_insufficient_for_high` | φ₃ | Step 3: リスク判定（high は人間レビュー推奨） | "φ₃: verifier insufficient high" |
+| `evolve_verifier_insufficient_for_critical` | φ₃ | Step 3: リスク判定（critical は自動停止） | "φ₃: verifier insufficient critical" |
+| `integration_gate_structure` | φ₄ | Step 4: 人間承認 + Step 5: 統合 | "φ₄: integration gate" |
+| `evolve_no_verification_bypass` | φ₅ | Step 2-3: 検証なしの統合禁止 | "φ₅: no verification bypass" |
+| `conservative_strategy_safe` | φ₆ | H4 仮説（conservative extension 優先） | "φ₆: conservative strategy safe" |
+| `breaking_change_propagates` | φ₆ | Step 5: 互換性分類付きコミット | "φ₆: breaking change propagates" |
+| `retirement_criteria_dual` | φ₇ | Step 6: 基準 A / 基準 B | "φ₇: retirement criteria dual" |
+| `formal_retirement_matches_workflow` | φ₇ | Step 6: 基準 A（breakingChange） | "φ₇: formal retirement" |
+| `all_components_enumerated` | φ₈ | D9 セクション: 構成要素リスト | "φ₈: all components enumerated" |
+| `observability_first` | φ₉ | Step 1: Observer が最初のフェーズ | "φ₉: observability first" |
+| `verification_precedes_integration` | φ₉ | Step 3 → Step 5 の順序 | "φ₉: verification precedes integration" |
+| `all_hypotheses_enumerated` | φ₁₀ | 仮説テーブル（H1-H5） | "φ₁₀: all hypotheses enumerated" |
+| `hypothesis_count` | φ₁₀ | 仮説数 = 5 | "φ₁₀: hypothesis count" |
+| `deferral_requires_justification` | φ₁₁ | Step 0: 引き継ぎ条件（3 条件） | "φ₁₁: deferral requires justification" |
+| `deferral_status_exhaustive` | φ₁₁ | Step 0: DeferralStatus（open/resolved/abandoned） | "φ₁₁: deferral status exhaustive" |
+| `evolve_skill_compliant` | φ合成 | 全体の準拠性（φ₁∧φ₂∧φ₃∧φ₅∧φ₉） | "evolve_skill_compliant" |
+
 ## Progressive Disclosure（D11 コンテキスト経済）
 
 本スキルは Agent Skills Spec に準拠し、3 層の progressive disclosure を使用:
@@ -504,7 +531,7 @@ compatible change または breaking change に該当しうる。
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-37 の 30 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62（run 27 で theorem 降格、run 37 で +2）、theorems 209→243（+34）。compression 342→391（run 37 で axiom +2 により低下）。V4 blocked=0 の Goodhart 懸念は継続。coveragePercent: run 25 で正直化済み、coverage 100% 達成（run 27） |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。37回で117改善統合（70 conservative extension, 47 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未検証。ccusage daily データ取得済みだが evolve 単体のコスト分離が不可 |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。Run 39 で session_id を evolve-history.jsonl に記録開始。ccusage session コマンドとの突き合わせにより per-evolve コスト計測が可能に。ただし遡及不可（Run 1-38）、最適頻度の決定には対照群データが必要 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

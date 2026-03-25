@@ -175,25 +175,37 @@ if [ -f "$SESSIONS_FILE" ]; then
     V2_CALLS_PER_SESSION=0
   fi
   # Compute per-session deltas from consecutive total_tool_calls values
+  # V2 uses MEDIAN of recent deltas (robust to outliers like evolve sessions).
+  # V2_RECENT_AVG = median of last 10 session deltas (primary metric).
+  # V2_CALLS_PER_SESSION = total_tool_calls / session_count (cumulative baseline).
+  # These are DIFFERENT values. Do not confuse them.
   V2_RECENT_AVG=0
   if [ "$SESSION_COUNT" -gt 1 ] 2>/dev/null; then
     # Extract last 11 total_tool_calls to compute 10 deltas
     TOTALS=$(tail -11 "$SESSIONS_FILE" | jq -r '.total_tool_calls // empty' 2>/dev/null)
     PREV=""
-    DELTA_SUM=0
-    DELTA_COUNT=0
+    DELTAS=()
     for T in $TOTALS; do
       if [ -n "$PREV" ] 2>/dev/null; then
         D=$((T - PREV))
         if [ "$D" -ge 0 ] 2>/dev/null; then
-          DELTA_SUM=$((DELTA_SUM + D))
-          DELTA_COUNT=$((DELTA_COUNT + 1))
+          DELTAS+=("$D")
         fi
       fi
       PREV=$T
     done
+    DELTA_COUNT=${#DELTAS[@]}
     if [ "$DELTA_COUNT" -gt 0 ] 2>/dev/null; then
-      V2_RECENT_AVG=$((DELTA_SUM / DELTA_COUNT))
+      # Sort deltas and take median (robust to outliers)
+      SORTED=($(printf '%s\n' "${DELTAS[@]}" | sort -n))
+      MID=$((DELTA_COUNT / 2))
+      if [ $((DELTA_COUNT % 2)) -eq 0 ] 2>/dev/null; then
+        # Even count: average of two middle values
+        V2_RECENT_AVG=$(( (SORTED[MID-1] + SORTED[MID]) / 2 ))
+      else
+        # Odd count: middle value
+        V2_RECENT_AVG=${SORTED[$MID]}
+      fi
     fi
   fi
 else
@@ -245,13 +257,15 @@ fi
 
 echo "  \"v1_v7\": {"
 echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
-# V2 trend semantics: compare recent_avg against cumulative_avg baseline
+# V2 trend semantics: compare recent_avg (median of last 10 session deltas)
+# against cumulative_avg (total_tool_calls / session_count) as baseline.
+# divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
 V2_TREND="stable"
 V2_DIVERGENCE=0
 if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
-  # increasing: recent_avg > calls_per_session * 120/100
+  # increasing: recent_avg (median) > cumulative_avg * 120/100
   THRESHOLD_UP=$((V2_CALLS_PER_SESSION * 120 / 100))
-  # decreasing: recent_avg < calls_per_session * 80/100
+  # decreasing: recent_avg (median) < cumulative_avg * 80/100
   THRESHOLD_DOWN=$((V2_CALLS_PER_SESSION * 80 / 100))
   if [ "$V2_RECENT_AVG" -gt "$THRESHOLD_UP" ] 2>/dev/null; then
     V2_TREND="increasing"
@@ -260,7 +274,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
   fi
   V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
 fi
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_avg\" },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\" },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -iE "^\[?(fix|bugfix|hotfix)\]?[: ]" || true; } | wc -l | tr -d ' ')
 V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
