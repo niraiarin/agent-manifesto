@@ -120,7 +120,7 @@ SESSIONS_FILE="$METRICS_DIR/sessions.jsonl"
 
 # V5: Proposal Accuracy (approved / total)
 if [ -f "$V5_FILE" ]; then
-  V5_APPROVED=$(grep -c '"type":"approved"' "$V5_FILE" 2>/dev/null || echo "0")
+  V5_APPROVED=$(grep -c '"result":"approved"' "$V5_FILE" 2>/dev/null || echo "0")
   V5_TOTAL=$(wc -l < "$V5_FILE" | tr -d ' ')
   if [ "$V5_TOTAL" -gt 0 ] 2>/dev/null; then
     V5_RATE=$((V5_APPROVED * 100 / V5_TOTAL))
@@ -131,6 +131,20 @@ else
   V5_APPROVED=0
   V5_TOTAL=0
   V5_RATE=0
+fi
+
+# V5 jq crosscheck (detect schema drift)
+if [ -f "$V5_FILE" ]; then
+  V5_JQ_APPROVED=$(jq -r 'select(.result == "approved") | .result' "$V5_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  V5_JQ_APPROVED=${V5_JQ_APPROVED:-0}
+  if [ "$V5_APPROVED" -ne "$V5_JQ_APPROVED" ] 2>/dev/null; then
+    V5_SCHEMA_DRIFT="true"
+  else
+    V5_SCHEMA_DRIFT="false"
+  fi
+else
+  V5_JQ_APPROVED=0
+  V5_SCHEMA_DRIFT="false"
 fi
 
 # V7: Task Design (completed tasks + quality indicators)
@@ -152,7 +166,7 @@ else
   V7_TEAMWORK_PERCENT=0
 fi
 
-# V2: Context Efficiency (tool calls / sessions) with delta-based recent average
+# V2: Context Efficiency — primary: recent_avg (delta-based), baseline: cumulative_avg
 if [ -f "$SESSIONS_FILE" ]; then
   SESSION_COUNT=$(wc -l < "$SESSIONS_FILE" | tr -d ' ')
   if [ "$SESSION_COUNT" -gt 0 ] 2>/dev/null && [ "$TOOL_CALLS" -gt 0 ] 2>/dev/null; then
@@ -231,7 +245,7 @@ fi
 
 echo "  \"v1_v7\": {"
 echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
-# V2 trend semantics: compare recent_avg against calls_per_session baseline
+# V2 trend semantics: compare recent_avg against cumulative_avg baseline
 V2_TREND="stable"
 V2_DIVERGENCE=0
 if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
@@ -246,7 +260,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
   fi
   V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
 fi
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION, \"recent_avg\": $V2_RECENT_AVG, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_avg\" },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_avg\" },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -iE "^\[?(fix|bugfix|hotfix)\]?[: ]" || true; } | wc -l | tr -d ' ')
 V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
@@ -274,7 +288,7 @@ else
 fi
 echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\" },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
-echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
+echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"jq_crosscheck\": $V5_JQ_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
 MEMORY_DIR="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory"
 V6_MEMORY_ENTRIES=$(grep -c "^- \[" "$MEMORY_MD" 2>/dev/null || echo "0")
