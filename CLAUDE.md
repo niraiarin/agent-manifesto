@@ -16,7 +16,7 @@
 - `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
-- `lean-formalization/` — Lean 4 形式検証（60 axioms, 243 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（62 axioms, 243 theorems, 0 sorry）
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
 ## Compact Instructions

@@ -90,7 +90,7 @@ structure AxiomSystemProfile where
 def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 13   -- T1–T8 (Axioms.lean: 13 axioms)
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
-    observableCount  := 23   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 23 axioms)
+    observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
     theoremCount     := 243  -- 全モジュール合計（Run 33: +2 Ontology.lean 半順序性質）
     sorryCount       := 0 }
@@ -99,9 +99,9 @@ def currentProfile : AxiomSystemProfile :=
 def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
   p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount
 
-/-- 現在の公理系の総 axiom 数は 60。 -/
+/-- 現在の公理系の総 axiom 数は 62。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 60 := by rfl
+  currentProfile.totalAxioms = 62 := by rfl
 
 /-- 現在の公理系の定理数は 243。 -/
 theorem current_theorem_count :

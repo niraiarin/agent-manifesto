@@ -59,7 +59,9 @@ V1–V7 は独立に最適化できない。ある変数の改善が別の変数
 | 改善 | 潜在的な副作用 |
 |------|--------------|
 | V1（スキル品質）↑ | V2（コンテキスト効率）↓ — スキルがコンテキストを消費 |
+| V3（出力品質）↑ | V2↓ — 品質向上のための追加検証がコンテキストを消費 |
 | V4（ゲート通過率）↑ | Goodhart's Lawのリスク — ゲートが通りやすいタスクに偏る |
+| V5（提案精度）↑ | V2↓ — 精度向上のための詳細な分析がコンテキストを消費 |
 | V6（知識構造の質）↑ | V2↓ — 詳細な知識ほどコンテキストを占有 |
 | V2（コンテキスト効率）↑ | V1, V6↓ — 効率追求で必要な知識を圧縮しすぎる |
 | V7（タスク設計効率）↑ | V2↓のリスク — 高度な分散設計がコンテキストを消費 |
@@ -123,28 +125,38 @@ def Measurable (m : World → Nat) : Prop :=
 
 /-- V1: スキル品質。スキル定義の精度と効果。
     測定方法: benchmark.json (with/without 比較)。
-    関連境界条件: L2（学習データ断絶の緩和）, L5（スキルシステム）。 -/
+    関連境界条件: L2（学習データ断絶の緩和）, L5（スキルシステム）。
+    observe.sh proxy: evolve_success_rate（成功run比率）, lean_health（sorry=0判定）,
+    skill_count（スキルファイル数）。分類: provisional_proxy（benchmark.json 未実装）。 -/
 opaque skillQuality : World → Nat
 
 /-- V2: コンテキスト効率。有限コンテキストの活用度。
     測定方法: タスク完了率 / 消費トークン数。
-    関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。 -/
+    関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。
+    observe.sh proxy: calls_per_session（累積平均）, recent_avg（直近10セッションデルタ平均）。
+    primary_metric: recent_avg（セッション間のデルタベース計算）。
+    運用注記: recent_avg が calls_per_session の ±20% 以上乖離した場合にトレンド変化と判定。 -/
 opaque contextEfficiency : World → Nat
 
 /-- V3: 出力品質。コード・設計・文書の品質。
     測定方法: ゲート合格率、レビュー指摘数。
-    関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。 -/
+    関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。
+    observe.sh proxy: fix_ratio_percent（プレフィクスパターン fix/bugfix/hotfix のコミット比率）+
+    test_pass_rate（テスト全通過率）。分類: provisional_proxy（ゲート合格率未実装）。 -/
 opaque outputQuality : World → Nat
 
 /-- V4: ゲート通過率。各フェーズのゲートを一発で通過する率。
     P2（認知的役割分離）がゲートの信頼性を保証する。
     測定方法: pass/fail 統計。
-    関連境界条件: L6（ゲート定義の粒度）, L4（auto-merge 判断）。 -/
+    関連境界条件: L6（ゲート定義の粒度）, L4（auto-merge 判断）。
+    observe.sh proxy: Bash passed / (passed + blocked)。
+    tool-usage.jsonl の "tool":"Bash" イベント数 / (Bash + gate_blocked イベント数)。 -/
 opaque gatePassRate : World → Nat
 
 /-- V5: 提案精度。設計提案・スコープ提案の的中率。
     測定方法: 人間の承認/却下率。
-    関連境界条件: L4（行動空間調整の根拠）, L6（設計規約改善）。 -/
+    関連境界条件: L4（行動空間調整の根拠）, L6（設計規約改善）。
+    observe.sh proxy: v5-approvals.jsonl の approved / total エントリ比率。 -/
 opaque proposalAccuracy : World → Nat
 
 /-- V6: 知識構造の質。永続的知識の構造化度。
@@ -152,7 +164,9 @@ opaque proposalAccuracy : World → Nat
     （観察→仮説化→検証→統合→退役）を規定する。
     退役されない知識は蓄積して V2 を劣化させる。
     測定方法: 次セッションでの文脈復元速度、退役対象検出率。
-    関連境界条件: L2（記憶喪失の緩和）。 -/
+    関連境界条件: L2（記憶喪失の緩和）。
+    observe.sh proxy: memory_entries（MEMORY.md エントリ数）, memory_files（記憶ファイル数）,
+    last_update_days_ago（最終更新からの経過日数）, retired_count（退役済みエントリ数）。 -/
 opaque knowledgeStructureQuality : World → Nat
 
 /-- V7: タスク設計効率。P6（制約充足としてのタスク設計）の品質。
@@ -160,7 +174,11 @@ opaque knowledgeStructureQuality : World → Nat
     (1) 外部知見: 公開ベンチマーク、モデル性能特性
     (2) 内部知見: 実行ログ、リソース消費実績、成果対コスト比
     測定方法: タスク完了率/消費リソース比、再設計頻度。
-    関連境界条件: L3（リソース上限）, L6（設計規約）。 -/
+    関連境界条件: L3（リソース上限）, L6（設計規約）。
+    observe.sh proxy: completed（v7-tasks.jsonl タスク完了数）, unique_subjects（ユニーク主題数）,
+    teamwork_percent（teammate フィールドあり比率）。
+    運用注記: teamwork_percent は single-agent 運用時は常に 0。マルチエージェント/人間協働が
+    必要なフィールドのため、現在は参考値。 -/
 opaque taskDesignEfficiency : World → Nat
 
 -- ============================================================
@@ -310,6 +328,26 @@ axiom tradeoff_v2_v6 : TradeoffExists contextEfficiency knowledgeStructureQualit
     ソース: V7/V2 の相互依存性分析
     反証条件: タスク設計の複雑性がコンテキスト消費と無相関になった場合 -/
 axiom tradeoff_v7_v2 : TradeoffExists taskDesignEfficiency contextEfficiency
+
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V3↑ → V2↓ のトレードオフ。
+          品質向上のための追加検証（レビュー、テスト実行、ゲート確認）は
+          コンテキストを消費するため、出力品質の向上はコンテキスト効率を圧迫しうる
+    根拠: T3（コンテキスト有限性）の帰結。品質検証プロセスは有限のリソースを消費する
+    ソース: V3/V2 の相互依存性分析
+    反証条件: 品質検証がコンテキストを消費しない（ゼロコスト検証が実現する）場合 -/
+axiom tradeoff_v3_v2 : TradeoffExists outputQuality contextEfficiency
+
+/-- [公理カード]
+    所属: Γ \ T₀（設計由来）
+    内容: V5↑ → V2↓ のトレードオフ。
+          提案精度の向上には詳細な要求分析とコンテキスト把握が必要であり、
+          精度の高い提案ほど多くのコンテキストを消費しうる
+    根拠: T3（コンテキスト有限性）の帰結。詳細分析はコンテキストを消費する
+    ソース: V5/V2 の相互依存性分析
+    反証条件: 提案精度の向上がコンテキスト消費を増やさないことが示された場合 -/
+axiom tradeoff_v5_v2 : TradeoffExists proposalAccuracy contextEfficiency
 
 -- ============================================================
 -- Goodhart's Law への構造的防御
@@ -1096,12 +1134,16 @@ theorem system_health_observable :
 双方向トレードオフの存在を aggregation lemma として表現する。
 -/
 
-/-- V2 (contextEfficiency) は 3 変数とトレードオフ関係を持つハブ変数（aggregation lemma）。 -/
+/-- V2 (contextEfficiency) は 5 変数とトレードオフ関係を持つハブ変数（aggregation lemma）。
+    V1（スキル品質）, V3（出力品質）, V5（提案精度）, V6（知識構造の質）,
+    V7（タスク設計効率）がいずれもコンテキスト効率とトレードオフ関係を持つ。 -/
 theorem tradeoff_context_is_hub :
     TradeoffExists skillQuality contextEfficiency ∧
+    TradeoffExists outputQuality contextEfficiency ∧
+    TradeoffExists proposalAccuracy contextEfficiency ∧
     TradeoffExists knowledgeStructureQuality contextEfficiency ∧
     TradeoffExists taskDesignEfficiency contextEfficiency :=
-  ⟨tradeoff_v1_v2, tradeoff_v6_v2, tradeoff_v7_v2⟩
+  ⟨tradeoff_v1_v2, tradeoff_v3_v2, tradeoff_v5_v2, tradeoff_v6_v2, tradeoff_v7_v2⟩
 
 /-- V1-V2 間の双方向トレードオフ（aggregation lemma）。 -/
 theorem bidirectional_tradeoff_v1_v2 :
