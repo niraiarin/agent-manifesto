@@ -816,9 +816,28 @@ theorem priority_test_gt_document :
   StructureKind.document.priority < StructureKind.test.priority := by
   simp [StructureKind.priority]
 
-/-- 依存関係の非反射性: 構造は自身に依存しない。 -/
+/-- 依存関係の非反射性: 構造は自身に依存しない。
+    狭義半順序（strict partial order）の性質 1/3。 -/
 theorem no_self_dependency :
   ∀ (s : Structure), ¬structureDependsOn s s := by
   intro s; simp [structureDependsOn]
+
+/-- 依存関係の推移律: a が b に依存し、b が c に依存するなら、a は c に依存する。
+    狭義半順序の性質 2/3。Nat.lt_trans から導出。 -/
+theorem structureDependsOn_transitive :
+  ∀ (a b c : Structure),
+    structureDependsOn a b → structureDependsOn b c → structureDependsOn a c := by
+  intro a b c hab hbc
+  unfold structureDependsOn at *
+  exact Nat.lt_trans hab hbc
+
+/-- 依存関係の非対称律: a が b に依存するなら、b は a に依存しない。
+    狭義半順序の性質 3/3。Nat.lt_asymm から導出。 -/
+theorem structureDependsOn_asymmetric :
+  ∀ (a b : Structure),
+    structureDependsOn a b → ¬structureDependsOn b a := by
+  intro a b hab hba
+  unfold structureDependsOn at *
+  exact absurd (Nat.lt_trans hab hba) (Nat.lt_irrefl _)
 
 end Manifest
