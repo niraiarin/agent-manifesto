@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 36,
+  "last_updated_run": 41,
   "items": {
     "v4-goodhart-hook": {
       "status": "abandoned",
@@ -162,6 +162,13 @@
       "opened_in_run": 35,
       "resolved_in_run": 36,
       "note": "T4（出力の非決定性）が全ての計算エージェントに成り立つかの検討。temperature=0 + 決定論的推論エンジンでの反例可能性。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 35 で公理カード根拠を精緻化済み（temperature=0 でも浮動小数点非決定性は残存）。Lean 形式化は ∃ 量化で全エージェント普遍性を主張しておらず安全。manifesto.md 自然言語との乖離は manifesto-scope-declaration の Scope テーブルに含まれる。"
+    },
+    "h5-ccusage-cost-analysis": {
+      "status": "open",
+      "reason": "dependencyBlocked",
+      "blocked_by": "session_id データ 3 件以上の蓄積（Run 41 で UUID バリデーション追加済み、Run 42 以降で蓄積開始）",
+      "opened_in_run": 41,
+      "note": "H5 仮説（1セッション1evolve実行が適切な頻度か）の実証データ分析。ccusage session --json と session_id の照合による per-evolve コスト算出。Run 24 から notes に繰り返し言及されていたが deferred 未登録だった。Run 41 で前提条件（session_id 信頼性）を整備"
     },
     "t3-llm-terminology": {
       "status": "resolved",
