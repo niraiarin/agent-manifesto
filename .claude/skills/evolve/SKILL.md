@@ -496,13 +496,13 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（43回実行データ、Run 44 で更新。全JSONLエントリ集計、Run 41 ループバック含む） |
+| 仮説 | 反証条件 | 現状評価（44回実行データ、Run 45 で更新。全JSONLエントリ集計、Run 41 ループバック含む） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。43回中43回 success。37 verifier entries 蓄積。Verifier pass rate 全期間 74.5%（114/153）、直近5 entries 72.0%（18/25）。直近の低下はループバック機構導入による計測精度向上の影響 |
-| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。37 verifier entries 蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=251。compression 4.04x（404%）。V4 blocked=0 の Goodhart 懸念は継続 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。43回で154改善統合（95 conservative extension, 57 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 3 件（run 39, 41, 42）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上の有効データ蓄積後に H5 評価を実施予定 |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。44回中44回 success。Verifier pass rate 全期間 74.5%（120/161）、直近5 entries 75.0%（6/8）。直近の低下はループバック機構導入による計測精度向上の影響 |
+| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=66、theorems=251。compression 4.4x（440%）。V4 blocked=0 の Goodhart 懸念は継続 |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。44回で160改善統合（101 conservative extension, 57 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 4 件（run 39, 41, 42, 45）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上の有効データ蓄積後に H5 評価を実施予定 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 
