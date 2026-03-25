@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 166 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 172 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
