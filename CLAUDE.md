@@ -84,7 +84,7 @@
 - `import` must precede `/-!` doc comments (Lean 4 requirement)
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
-- Current stats: 60 axioms, 243 theorems, 0 sorry
+- Current stats: 62 axioms, 243 theorems, 0 sorry
 
 ## Hook Development Patterns
 
