@@ -120,6 +120,8 @@ cat >> .claude/metrics/evolve-history.jsonl << EOF
 EOF
 ```
 
+**notes/deferred 整合性制約**: notes に前方参照（「次回」「蓄積待ち」「可能になる」等）を書く場合、対応する deferred エントリを必ず登録すること。notes だけに未完了タスクを書いて deferred を空にすると、テスト（Section 10）が FAIL する。
+
 ### Step 5b: deferred-status.json の更新
 
 `.claude/metrics/deferred-status.json` が存在する場合、以下を更新:

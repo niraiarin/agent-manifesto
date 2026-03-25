@@ -250,6 +250,41 @@ grep -q "conservative_strategy_safe" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: E
 
 echo ""
 
+# --- Section 10: evolve-history.jsonl notes/deferred 整合性 ---
+echo "--- Section 10: Notes-Deferred Consistency ---"
+
+HISTORY="$BASE/.claude/metrics/evolve-history.jsonl"
+# 前方参照キーワードを含む notes が deferred=[] のエントリを検出
+# Run 41 で制約を導入。それ以降の新規エントリのみ検証対象。
+# 過去エントリの遡及修正は append-only 規約に反するため除外。
+ORPHAN_COUNT=$(python3 -c "
+import json, sys
+FORWARD_KEYWORDS = ['次回', '次の evolve', 'next run', 'next evolve', '蓄積待ち', '蓄積され次第', '可能になる', 'が必要', 'TODO', 'remaining']
+ENFORCEMENT_START = 41
+count = 0
+for line in open('$HISTORY'):
+    try:
+        rec = json.loads(line.strip())
+        run = rec.get('run')
+        if run is None or run < ENFORCEMENT_START:
+            continue
+        notes = rec.get('notes', '')
+        deferred = rec.get('deferred', [])
+        if not notes or not isinstance(deferred, list):
+            continue
+        has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
+        has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
+        if has_forward_ref and not has_resolution_marker and len(deferred) == 0:
+            count += 1
+    except:
+        pass
+print(count)
+" 2>/dev/null)
+echo -n "  No orphan forward-references in notes... "
+if [ "${ORPHAN_COUNT:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($ORPHAN_COUNT orphans)"; FAIL=$((FAIL+1)); fi
+
+echo ""
+
 # ============================================================
 # 結果サマリ
 # ============================================================
