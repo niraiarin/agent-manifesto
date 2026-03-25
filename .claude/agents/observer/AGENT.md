@@ -61,6 +61,7 @@ human_feedback エントリが存在する場合:
 - フィードバック内容を改善候補の優先度判断に反映
 
 未解決 deferred（status=open）が存在する場合:
+- deferred 項目を報告する前に deferred-status.json の当該 ID の status が "open" であることを確認する。status が "resolved" または "abandoned" の項目は報告しない。
 - 観察報告に「未解決 deferred 一覧」セクションとして記載
 - deferred 項目は改善候補一覧の**先頭**に含める（通常の観察項目より優先）
 - 各項目の reason（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）を確認し、

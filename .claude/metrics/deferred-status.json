@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 35,
+  "last_updated_run": 36,
   "items": {
     "v4-goodhart-hook": {
       "status": "abandoned",
@@ -150,22 +150,25 @@
       "note": "SKILL.md L244 claims moderate but EvolveSkill.lean theorem proves only low (1/4 conditions). D5 violation. Resolved: low + false correction applied in run 21."
     },
     "manifesto-scope-declaration": {
-      "status": "open",
+      "status": "resolved",
       "reason": "triagePrioritized",
       "opened_in_run": 35,
-      "note": "manifesto.md に T1-T8 の射程（LLM 以外のエージェントへの適用可能性）を明示する記述がない。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
+      "resolved_in_run": 36,
+      "note": "manifesto.md に T1-T8 の射程（LLM 以外のエージェントへの適用可能性）を明示する記述がない。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 36 で Section 2 に Scope テーブル追加。T4 の射程問題（決定論的エージェントでは成立しない場合がある）も同テーブルに明示。"
     },
     "t4-universality-review": {
-      "status": "open",
+      "status": "resolved",
       "reason": "triagePrioritized",
       "opened_in_run": 35,
-      "note": "T4（出力の非決定性）が全ての計算エージェントに成り立つかの検討。temperature=0 + 決定論的推論エンジンでの反例可能性。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
+      "resolved_in_run": 36,
+      "note": "T4（出力の非決定性）が全ての計算エージェントに成り立つかの検討。temperature=0 + 決定論的推論エンジンでの反例可能性。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 35 で公理カード根拠を精緻化済み（temperature=0 でも浮動小数点非決定性は残存）。Lean 形式化は ∃ 量化で全エージェント普遍性を主張しておらず安全。manifesto.md 自然言語との乖離は manifesto-scope-declaration の Scope テーブルに含まれる。"
     },
     "t3-llm-terminology": {
-      "status": "open",
+      "status": "resolved",
       "reason": "triagePrioritized",
       "opened_in_run": 35,
-      "note": "manifesto.md T3 の「コンテキストウィンドウ」は LLM 由来用語。技術非依存を宣言するなら「作業メモリ」等への置き換えを検討。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
+      "resolved_in_run": 36,
+      "note": "manifesto.md T3 の「コンテキストウィンドウ」は LLM 由来用語。技術非依存を宣言するなら「作業メモリ」等への置き換えを検討。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 36 で T3 見出しを「一度に処理できる情報量は有限である」に変更。Lean 型名 ContextWindow は維持（後方互換）。コメント・docstring を更新。"
     }
   }
 }
