@@ -142,3 +142,9 @@ YYYY-MM-DD HH:MM
 - **T₀ 縮小禁止**: 基底理論に反する改善は提案しない（Procedure.lean `t0_contraction_forbidden`）
 - **φ の弱化は最終手段**: 目標の弱化は他の選択肢を全て試した後のみ
 - **既知の失敗パターンの回避**: Observer の観察報告に失敗パターンが含まれている場合、同一条件に該当する改善案は失敗パターンを回避する設計にする。回避が不可能な場合、リスク評価を 1 段階上げる。過去の failure_type を参照し、同一タイプの誤りを繰り返さない
+- **trivially-true 定理の回避**: 以下のいずれかに該当する Lean 定理は提案しない:
+  - `rfl` のみで証明できる（定義の展開だけで成立する）
+  - 結論が前提の直接的な言い換えである（definitional unfolding）
+  - 既存の定理と実質的に同一（名前やパラメータ順序の違いのみ）
+  過去の failure_type 分布: hypothesis_error 10件中 trivially-true 4件（Run 32, 34）。
+  Observer の failure_patterns 出力を参照し、同一パターンを繰り返さないこと。
