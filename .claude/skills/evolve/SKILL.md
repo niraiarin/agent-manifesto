@@ -85,6 +85,66 @@ description: >
 | `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 |
 | `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 |
 
+#### Workflow.lean 追加定理 逆引きチェックリスト（Run 40 追加）
+
+| Lean 定理（Workflow.lean） | SKILL.md での運用化 | 備考 |
+|---------------------------|---------------------|------|
+| `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない |
+| `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル |
+| `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 |
+| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 |
+| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 |
+| `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 |
+| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 |
+
+#### Evolution.lean 逆引きチェックリスト（Run 40 追加）
+
+##### 互換性分類の代数的性質
+
+| Lean 定理/定義（Evolution.lean） | SKILL.md での運用化 | 備考 |
+|--------------------------------|---------------------|------|
+| `CompatibilityClass` (inductive) | Step 5: 互換性分類の 3 値 | conservative / compatible / breaking |
+| `CompatibilityClass.join` (def) | Step 5: 複数改善のコミット時に互換性分類を合成 | 最悪の分類が支配する |
+| `CompatibilityClass.le` (def) | 互換性の順序: conservative < compatible < breaking | H4 仮説の形式的根拠 |
+| `conservativeExtension_le` | H4: conservative extension が最小（最も安全） | H4 の形式的正当化 |
+| `breakingChange_ge` | breaking change が最大（最も制限的） | P3 hook での検証根拠 |
+| `compatibility_join_comm` | 合成順序に依存しない（改善 A+B = B+A） | 統合順序の自由度を保証 |
+| `compatibility_join_assoc` | 3 件以上の改善の合成は結合的 | バッチ統合の正当性 |
+| `compatibility_join_idem` | 同一分類の合成は冪等 | 重複分類の安全性 |
+| `conservative_extension_transitive` | conservative の連鎖は conservative | H4: conservative 優先戦略の安全性根拠 |
+| `compatible_change_closed` | compatible 以下の合成は compatible 以下 | compatible change の安全な合成 |
+| `breaking_change_dominates` | 1 つでも breaking があれば全体が breaking | Step 5: 互換性分類付きコミット |
+
+##### バージョン履歴
+
+| Lean 定理/定義（Evolution.lean） | SKILL.md での運用化 | 備考 |
+|--------------------------------|---------------------|------|
+| `ManifestVersion` (structure) | evolve-history.jsonl の run 番号 | バージョン構造体 |
+| `VersionTransition` (structure) | 各 Run の改善遷移 | from→to + compatibility |
+| `validVersionTransition` (def) | evolve-history.jsonl のバージョン記録（単調増加） | バージョン番号の単調増加 |
+| `breakingChangeRequiresEpochBump` (def) | breaking change 時のエポック増加要件 | Step 5: breaking → epoch bump |
+| `VersionHistory` (def) | evolve-history.jsonl の遷移列 | 型エイリアス |
+| `historyCompatibility` (def) | evolve-history.jsonl の互換性フィールド | 遷移列全体の互換性計算 |
+| `empty_history_conservative` | 初回 evolve は conservative（恒等元） | Run 1 の初期状態 |
+| `two_conservative_compose` | 2 つの conservative 遷移の合成は conservative | 複数 conservative 改善の安全性 |
+
+##### マニフェスト自己適用
+
+| Lean 定理/定義（Evolution.lean） | SKILL.md での運用化 | マニフェスト概念 |
+|--------------------------------|---------------------|-----------------|
+| `isManifestStructure` (def) | D9: SKILL.md 自体が構造の一種 | manifest は Structure |
+| `governedTransition` (def) | 全バージョン遷移は P3 統治下 | governed = true |
+| `stasisUnhealthy` (def) | 引き継ぎ条件: 不正な deferral は stasisUnhealthy | 静止は不健全 |
+| `ReviewSignal` (inductive) | D9: 分類見直しのシグナル種別 | empirical / formal / external |
+| `ClassificationReview` (structure) | D9: 互換性分類の見直し構造体 | review_within_framework の前提 |
+| `safeVersionTransition` (def) | P5: 安全性制約の遷移前後保持 | robustStructure の Evolution 適用 |
+| `manifest_persists_as_structure` | T2: /evolve の構造はセッションを超えて永続 | T2 自己適用 |
+| `ungoverned_manifest_change_irreversible` | P3c: 統治なき破壊的変更は不可逆 | 引き継ぎ条件の理論的根拠 |
+| `review_within_framework` | D9: 分類の見直しは framework 内で対処可能 | 自己硬直化防止 |
+| `manifesto_probabilistically_interpreted` | T4: 各 evolve 実行は非決定的（P2 の限界の根拠） | T4 自己適用 |
+| `manifesto_evaluation_requires_independence` | P2: 検証分離（Verifier は独立コンテキスト） | E1 自己適用 |
+| `manifesto_scope_risk_coscaling` | P1/E2: 適用範囲拡大 → リスク拡大 | E2 自己適用 |
+
 #### EvolveSkill.lean 全定理 逆引きチェックリスト（Run 39 追加）
 
 | Lean 定理（EvolveSkill.lean） | φ | SKILL.md ステップ | テスト（Section 9） |

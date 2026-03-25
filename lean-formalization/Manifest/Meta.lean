@@ -92,7 +92,7 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 243  -- 全モジュール合計（Run 33: +2 Ontology.lean 半順序性質）
+    theoremCount     := 243  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/

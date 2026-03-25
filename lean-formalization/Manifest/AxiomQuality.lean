@@ -346,7 +346,7 @@ inductive QualitySignal where
 /-- 現在の公理系の静的品質プロファイル（axiom count ベース）。
     fan-in/fan-out/coverage は動的計測が必要なため含まない。 -/
 def currentQuality : QualityProfile :=
-  { compressionRatio := compressionRatio currentProfile  -- 405
+  { compressionRatio := compressionRatio currentProfile  -- 391 (= 3.91x)
     coveragePercent  := 100  -- grep 近似: 60/60 axioms referenced (Run 27: v4/v7_goodhart now used by goodhart_no_perfect_proxy)
     axiomFreePercent := 0    -- 動的計測で確定すべき値（暫定 0）
     sorryCount       := currentProfile.sorryCount }       -- 0
