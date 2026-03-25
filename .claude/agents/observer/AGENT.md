@@ -51,9 +51,9 @@ JSON で出力する。詳細な分析が必要な場合は以下の個別手順
 # 直近のエントリで type=human_feedback があるか確認
 tail -5 .claude/metrics/evolve-history.jsonl 2>/dev/null | jq -r 'select(.type=="human_feedback") | .notes' 2>/dev/null
 
-# 未解決の deferred 項目を全エントリから収集
-jq -c 'select(.deferred != null) | .deferred[] | select(.status == "open")' \
-  .claude/metrics/evolve-history.jsonl 2>/dev/null
+# 未解決の deferred 項目を正規ソースから取得（SKILL.md Step 0 と同一クエリ）
+jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' \
+  .claude/metrics/deferred-status.json 2>/dev/null
 ```
 
 human_feedback エントリが存在する場合:
@@ -61,7 +61,7 @@ human_feedback エントリが存在する場合:
 - フィードバック内容を改善候補の優先度判断に反映
 
 未解決 deferred（status=open）が存在する場合:
-- deferred 項目を報告する前に deferred-status.json の当該 ID の status が "open" であることを確認する。status が "resolved" または "abandoned" の項目は報告しない。
+- deferred-status.json が唯一の正規ソース（run 18 で導入）。evolve-history.jsonl の .deferred[] は各 run 時点のスナップショットであり、現在の状態を反映しないため直接クエリしない。
 - 観察報告に「未解決 deferred 一覧」セクションとして記載
 - deferred 項目は改善候補一覧の**先頭**に含める（通常の観察項目より優先）
 - 各項目の reason（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）を確認し、
