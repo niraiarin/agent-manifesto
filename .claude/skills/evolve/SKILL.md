@@ -498,12 +498,12 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（30回実行データ） |
+| 仮説 | 反証条件 | 現状評価（37回実行データ） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。30回中30回 success。phases run 8-30 の 23 データポイント蓄積。Verifier pass rate 全期間 77.0%（67/87）、直近5回 77.3%（17/22） |
-| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-30 の 23 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=60（run 27 で theorem 降格）、theorems 209→239（+30）。compression 342→398。V4 blocked=0 の Goodhart 懸念は継続。coveragePercent: run 25 で正直化済み、coverage 100% 達成（run 27） |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。30回で97改善統合（60 conservative extension, 37 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。37回中37回 success。phases run 8-37 の 30 データポイント蓄積。Verifier pass rate 全期間 74.3%（84/113）、直近5回 87.5%（14/16） |
+| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-37 の 30 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62（run 27 で theorem 降格、run 37 で +2）、theorems 209→243（+34）。compression 342→391（run 37 で axiom +2 により低下）。V4 blocked=0 の Goodhart 懸念は継続。coveragePercent: run 25 で正直化済み、coverage 100% 達成（run 27） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。37回で117改善統合（70 conservative extension, 47 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未検証。ccusage daily データ取得済みだが evolve 単体のコスト分離が不可 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
