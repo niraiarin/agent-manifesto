@@ -166,9 +166,9 @@
     "h5-ccusage-cost-analysis": {
       "status": "open",
       "reason": "dependencyBlocked",
-      "blocked_by": "session_id データ 3 件以上の蓄積（Run 41 で UUID バリデーション追加済み、Run 42 以降で蓄積開始）",
+      "blocked_by": "有効 session_id データ 10 件以上の蓄積（現在 3 件: run 39, 41, 42。統計的傾向確認の最小サンプル数）",
       "opened_in_run": 41,
-      "note": "H5 仮説（1セッション1evolve実行が適切な頻度か）の実証データ分析。ccusage session --json と session_id の照合による per-evolve コスト算出。Run 24 から notes に繰り返し言及されていたが deferred 未登録だった。Run 41 で前提条件（session_id 信頼性）を整備"
+      "note": "H5 仮説の実証データ分析。ccusage session の projectPath 末尾 UUID で session_id と照合可能（Run 44 で実証）。予備データ: サブエージェントコスト $3.13-$5.90/run（3 データポイント）。run 40,43 は session_id=unknown で照合不可。"
     },
     "t3-llm-terminology": {
       "status": "resolved",
