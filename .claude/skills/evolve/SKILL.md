@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 165 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 166 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -589,7 +589,7 @@ compatible change または breaking change に該当しうる。
 |------|----------|----------------------|
 | H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。41回中41回 success。phases run 8-41 の 34 データポイント蓄積。Verifier pass rate 全期間 76.5%（104/136）、直近5回 84%（25/30） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-41 の 34 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=243（安定）。compression 391。V4 blocked=0 の Goodhart 懸念は継続 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=245（安定）。compression 395。V4 blocked=0 の Goodhart 懸念は継続 |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。41回で139改善統合（83 conservative extension, 54 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。Run 39 で session_id 記録開始。Run 40-41 は session_id=unknown のため有効データポイントは 1 件。Run 41 で取得ロジックを修正（UUID バリデーション追加）。ccusage session --json の sessionId はプロジェクトパス形式（"-Users-nirarin-work-agent-manifesto"）であり、evolve の session_id（UUID 形式）との直接照合は不可。per-evolve コスト分析には時間帯ベースの間接照合が必要。有効 UUID は 2 件（run 39, 41） |
 

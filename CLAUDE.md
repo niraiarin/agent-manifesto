@@ -75,7 +75,7 @@
 ## Build & Test Commands
 
 - `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
-- `bash tests/test-all.sh` — run all 165 acceptance tests (Phase 1–5)
+- `bash tests/test-all.sh` — run all 166 acceptance tests (Phase 1–5)
 - `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l` — count axioms
 - `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
 
@@ -84,7 +84,7 @@
 - `import` must precede `/-!` doc comments (Lean 4 requirement)
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
-- Current stats: 62 axioms, 243 theorems, 0 sorry
+- Current stats: 62 axioms, 245 theorems, 0 sorry
 
 ## Hook Development Patterns
 

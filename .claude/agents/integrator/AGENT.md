@@ -63,6 +63,10 @@ cd /path/to/agent-manifesto && bash tests/test-all.sh
 
 P3 hook が互換性分類の存在を強制する。
 
+**メトリクスファイルの未コミットチェック:**
+コミット前に `git status --short .claude/metrics/v5-approvals.jsonl .claude/metrics/v7-tasks.jsonl` を実行し、
+変更があれば同一コミットに含める（PostToolUse hook が書き込んだ運用データの永続化）。
+
 ```bash
 git add [specific files]
 git commit -m "$(cat <<'EOF'
