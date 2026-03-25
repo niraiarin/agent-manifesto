@@ -109,6 +109,28 @@ description: >
 - `scripts/observe.sh` — 構造の現在状態を JSON で出力（Observer が使用）
 - `references/claude-code-features.md` — Claude Code 高度機能の詳細リファレンス
 
+## Orchestrator の制約（Issue #6）
+
+/evolve の orchestrator（SKILL.md を読んでパイプラインを実行する主エージェント）は
+Observer / Hypothesizer / Verifier / Integrator のいずれでもない第五の存在である。
+orchestrator の判断が P2（検証）・P4（可観測性）の射程外にならないよう、
+以下の構造的制約を課す。
+
+### 禁止事項
+
+- **公理から導出されていない制約をエージェントへのプロンプトに注入しない。**
+  T7（リソース有限性）は「リソースは有限である」という一般命題であり、
+  「改善案は N 件まで」等の具体的数値を導出しない。
+  案数の上限を設ける場合は、その導出過程を明示すること。
+- **SKILL.md に定義されていないパラメータでパイプラインを制御しない。**
+  構造に定義されていない制約には overflow 処理も存在しないため、情報が消失する。
+
+### 可観測性（P4）
+
+orchestrator が各エージェントに渡したプロンプトのパラメータ（案数制限、
+スコープ限定等）は evolve-history.jsonl の `orchestrator_params` フィールドに
+記録し、次回の Observer の観察対象とする。
+
 ## アーキテクチャ: Agent Teams
 
 ```
@@ -223,10 +245,40 @@ Agent tool を使用:
 **ゲート判定:** 観察報告に改善候補が 0 件の場合、
 「構造は健全。改善候補なし。」と報告して終了。
 
+### Step 1.5: Observer 観察結果の永続化
+
+Observer の観察報告に含まれる**全ての改善候補**を evolve-history.jsonl の
+`observations` フィールドに記録する。これにより Phase 2 で採用されなかった
+観察項目も構造に永続し、次回の Observer が参照できる（T2, T5）。
+
+```json
+"observations": [
+  {"id": "obs-1", "title": "...", "priority": "high"},
+  {"id": "obs-2", "title": "...", "priority": "medium"},
+  ...
+]
+```
+
 ### Step 2: Hypothesizer エージェントの起動
 
 Hypothesizer エージェント（`.claude/agents/hypothesizer/AGENT.md`）を起動する。
 Observer の観察報告を入力として渡す。
+
+**Hypothesizer は全ての観察項目に対して採否を出力する。**
+採用しない項目には理由を付与し、evolve-history.jsonl の `not_selected` フィールドに
+記録する。これにより Phase 2 のトリアージで落ちた項目の行き先が定義される。
+
+```json
+"not_selected": [
+  {"id": "obs-3", "title": "...", "reason": "既存構造で十分にカバー済み"},
+  {"id": "obs-4", "title": "...", "reason": "resourceExhaustion", "deferred": true},
+  ...
+]
+```
+
+`not_selected` のうち deferral 条件（resourceExhaustion / dependencyBlocked /
+actionSpaceExceeded）に該当するものは `"deferred": true` を付与し、
+deferred-status.json にも登録する。該当しないものは「見送り」として記録のみ。
 
 **ゲート判定:** 実行可能な改善案が 0 件の場合、
 「改善候補は確認されたが、現在の行動空間では実行不可。」と報告して終了。
@@ -379,6 +431,7 @@ YYYY-MM-DD HH:MM
 
 ## Phase 2: 仮説化
 [Hypothesizer の要約 — 改善案数、互換性分類の分布]
+[不採用項目: 件数と主な理由]
 
 ## Phase 3: 検証
 [Verifier の要約 — PASS/FAIL の分布、リスクレベル]

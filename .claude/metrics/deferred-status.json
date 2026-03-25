@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 23,
+  "last_updated_run": 35,
   "items": {
     "v4-goodhart-hook": {
       "status": "abandoned",
@@ -148,6 +148,24 @@
       "reason": "resourceExhaustion",
       "opened_in_run": 2,
       "note": "SKILL.md L244 claims moderate but EvolveSkill.lean theorem proves only low (1/4 conditions). D5 violation. Resolved: low + false correction applied in run 21."
+    },
+    "manifesto-scope-declaration": {
+      "status": "open",
+      "reason": "triagePrioritized",
+      "opened_in_run": 35,
+      "note": "manifesto.md に T1-T8 の射程（LLM 以外のエージェントへの適用可能性）を明示する記述がない。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
+    },
+    "t4-universality-review": {
+      "status": "open",
+      "reason": "triagePrioritized",
+      "opened_in_run": 35,
+      "note": "T4（出力の非決定性）が全ての計算エージェントに成り立つかの検討。temperature=0 + 決定論的推論エンジンでの反例可能性。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
+    },
+    "t3-llm-terminology": {
+      "status": "open",
+      "reason": "triagePrioritized",
+      "opened_in_run": 35,
+      "note": "manifesto.md T3 の「コンテキストウィンドウ」は LLM 由来用語。技術非依存を宣言するなら「作業メモリ」等への置き換えを検討。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）"
     }
   }
 }
