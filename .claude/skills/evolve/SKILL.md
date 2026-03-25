@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 159 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 165 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -444,12 +444,12 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（24回実行データ） |
+| 仮説 | 反証条件 | 現状評価（28回実行データ） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。24回中24回 success。phases run 10-23 の 14 データポイント蓄積。Verifier pass rate 全期間 74.6%、直近5回 93.3% と改善傾向 |
-| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 10-21 の 12 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=61 固定、theorems 209→225（+16）。compression 342→368。V4 blocked=0 の Goodhart 懸念は継続。coveragePercent 定義の不一致は未解決 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。24回で74改善統合（47 conservative extension, 25 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。28回中28回 success。phases run 8-28 の 21 データポイント蓄積。Verifier pass rate 全期間 76.8%（63/82）、直近5回 82.6%（19/23） |
+| H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。phases run 8-28 の 21 データポイント蓄積。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=60（run 27 で theorem 降格）、theorems 209→238（+29）。compression 342→396。V4 blocked=0 の Goodhart 懸念は継続。coveragePercent: run 25 で正直化済み、coverage 100% 達成（run 27） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。28回で91改善統合（57 conservative extension, 34 compatible change, 0 breaking change）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未検証。ccusage daily データ取得済みだが evolve 単体のコスト分離が不可 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
