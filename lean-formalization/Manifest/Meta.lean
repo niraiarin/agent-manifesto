@@ -92,7 +92,7 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 23   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 23 axioms)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 239  -- 全モジュール合計（Run 30: +1 theorem_distribution_consistent）
+    theoremCount     := 241  -- 全モジュール合計（Run 32: +2 Workflow.lean KnowledgeStatus theorems）
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -103,9 +103,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 60 := by rfl
 
-/-- 現在の公理系の定理数は 239。 -/
+/-- 現在の公理系の定理数は 241。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 239 := by rfl
+  currentProfile.theoremCount = 241 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -157,7 +157,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     procedureM             := 19
     evolutionM             := 16
     evolveSkillM           := 22
-    workflowM              := 5
+    workflowM              := 7   -- +2: no_self_knowledge_transition, knowledge_full_cycle_exists
     axiomQualityM          := 11 }
 
 /-- モジュール別定理数の合計が currentProfile.theoremCount と一致する。 -/

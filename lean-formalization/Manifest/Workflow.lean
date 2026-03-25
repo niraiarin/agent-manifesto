@@ -227,6 +227,27 @@ def retirementContributesToV6 (ki : KnowledgeItem) : Prop :=
   retirementCandidate ki → ki.status = .retired
 
 -- ============================================================
+-- KnowledgeStatus 遷移の構造的性質
+-- ============================================================
+
+/-- KnowledgeStatus の遷移に反射性はない（同一状態への遷移は無効）。
+    no_self_phase_transition の KnowledgeStatus 版。 -/
+theorem no_self_knowledge_transition :
+  ∀ (s : KnowledgeStatus), ¬validKnowledgeTransition s s := by
+  intro s
+  cases s <;> simp [validKnowledgeTransition]
+
+/-- KnowledgeStatus の完全な前進サイクルが存在する:
+    observed → hypothesized → verified → integrated → retired。
+    full_cycle_exists の KnowledgeStatus 版。 -/
+theorem knowledge_full_cycle_exists :
+  validKnowledgeTransition .observed .hypothesized ∧
+  validKnowledgeTransition .hypothesized .verified ∧
+  validKnowledgeTransition .verified .integrated ∧
+  validKnowledgeTransition .integrated .retired := by
+  constructor <;> trivial
+
+-- ============================================================
 -- Sorry Inventory
 -- ============================================================
 
