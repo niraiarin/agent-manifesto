@@ -62,6 +62,8 @@ human_feedback エントリが存在する場合:
 
 未解決 deferred（status=open）が存在する場合:
 - deferred-status.json が唯一の正規ソース（run 18 で導入）。evolve-history.jsonl の .deferred[] は各 run 時点のスナップショットであり、現在の状態を反映しないため直接クエリしない。
+- **禁止クエリパターン**: `jq '.deferred[] | select(.status == "open")' evolve-history.jsonl` は使用禁止。JSONL は append-only のスナップショット履歴であり、status="open" は記録時点のスナップショットに過ぎない（例: 59件ヒット vs 実際1件の乖離が発生する）。
+- **正しいクエリ**: `jq '[.items | to_entries[] | select(.value.status == "open")]' .claude/metrics/deferred-status.json`
 - 観察報告に「未解決 deferred 一覧」セクションとして記載
 - deferred 項目は改善候補一覧の**先頭**に含める（通常の観察項目より優先）
 - 各項目の reason（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）を確認し、

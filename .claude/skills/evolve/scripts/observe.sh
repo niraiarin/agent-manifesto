@@ -276,6 +276,9 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
 fi
 echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\" },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
+# V3 fix_ratio proxy の制限: このパターンは "[fix]:" や "fix:" で始まるコミットのみにマッチする。
+# "[evolve] Fix ..." のようにプレフィックスが異なる形式はマッチしない。
+# そのため、実際のバグ修正コミット数はこの proxy 値より多い可能性がある。
 V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -iE "^\[?(fix|bugfix|hotfix)\]?[: ]" || true; } | wc -l | tr -d ' ')
 V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
 V3_TOTAL_COMMITS=${V3_TOTAL_COMMITS:-0}
@@ -335,9 +338,18 @@ if command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
   fi
   CCUSAGE_JSON=$($CCUSAGE_CMD daily --json --offline --mode calculate 2>/dev/null || echo "{}")
   CCUSAGE_TODAY=$(echo "$CCUSAGE_JSON" | jq -c '.daily | last // {}' 2>/dev/null || echo "{}")
-  echo "  \"ccusage\": $CCUSAGE_TODAY"
+  echo "  \"ccusage\": $CCUSAGE_TODAY,"
 else
-  echo "  \"ccusage\": {\"error\": \"ccusage not available\"}"
+  echo "  \"ccusage\": {\"error\": \"ccusage not available\"},"
 fi
+
+# --- Deferred 正規クエリ（deferred-status.json から open 項目を取得） ---
+DEFERRED_FILE="$METRICS_DIR/deferred-status.json"
+if [ -f "$DEFERRED_FILE" ]; then
+  DEFERRED_OPEN=$(jq -c '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' "$DEFERRED_FILE" 2>/dev/null || echo "[]")
+else
+  DEFERRED_OPEN="[]"
+fi
+echo "  \"deferred_open\": $DEFERRED_OPEN"
 
 echo "}"
