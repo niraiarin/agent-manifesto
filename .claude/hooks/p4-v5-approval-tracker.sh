@@ -17,8 +17,8 @@ elif echo "$PROMPT" | grep -qiE "$REJECTION_PATTERN"; then TYPE="rejected"
 fi
 
 if [ -n "$TYPE" ]; then
-  jq -nc --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg type "$TYPE" --arg session "$SESSION" \
-    '{timestamp: $ts, event: "v5_approval", type: $type, session: $session}' >> "$METRICS_DIR/v5-approvals.jsonl"
+  jq -nc --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg result "$TYPE" --arg session "$SESSION" \
+    '{timestamp: $ts, event: "v5_approval", result: $result, session: $session}' >> "$METRICS_DIR/v5-approvals.jsonl"
 fi
 
 exit 0
