@@ -12,7 +12,8 @@ SESSION=$(echo "$INPUT" | jq -r '.session_id // ""' 2>/dev/null)
 METRICS_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo .)/.claude/metrics"
 mkdir -p "$METRICS_DIR"
 
-# JSONL 形式でログ
-echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"event\":\"tool_use\",\"tool\":\"$TOOL\",\"tool_id\":\"$TOOL_ID\",\"session\":\"$SESSION\"}" >> "$METRICS_DIR/tool-usage.jsonl"
+# JSONL 形式でログ（METRICS_LOG が設定済みならそちらに書き込む — テスト隔離用）
+LOG_FILE="${METRICS_LOG:-$METRICS_DIR/tool-usage.jsonl}"
+echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"event\":\"tool_use\",\"tool\":\"$TOOL\",\"tool_id\":\"$TOOL_ID\",\"session\":\"$SESSION\"}" >> "$LOG_FILE"
 
 exit 0

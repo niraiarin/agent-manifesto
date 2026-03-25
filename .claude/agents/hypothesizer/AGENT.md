@@ -146,5 +146,6 @@ YYYY-MM-DD HH:MM
   - `rfl` のみで証明できる（定義の展開だけで成立する）
   - 結論が前提の直接的な言い換えである（definitional unfolding）
   - 既存の定理と実質的に同一（名前やパラメータ順序の違いのみ）
+  - 数値リテラルの大小比較（例: `4 > 2 ∧ 2 > 1`）
   過去の failure_type 分布: hypothesis_error 10件中 trivially-true 4件（Run 32, 34）。
   Observer の failure_patterns 出力を参照し、同一パターンを繰り返さないこと。

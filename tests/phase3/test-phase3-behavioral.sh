@@ -8,9 +8,10 @@ echo "=== Phase 3: P4 Behavioral Tests ==="
 
 # B3.1: メトリクスコレクターがログを書き込む
 echo -n "B3.1 Metrics collector writes JSONL... "
-TMPLOG="$BASE/.claude/metrics/tool-usage.jsonl"
-BEFORE=$(wc -l < "$TMPLOG" 2>/dev/null | tr -d ' ' || echo 0)
-echo '{"tool_name":"Bash","tool_use_id":"test123","session_id":"s1"}' | bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
+TMPLOG=$(mktemp /tmp/test-metrics-XXXXXX.jsonl)
+trap 'rm -f "$TMPLOG"' EXIT
+BEFORE=0
+echo '{"tool_name":"Bash","tool_use_id":"test123","session_id":"s1"}' | METRICS_LOG="$TMPLOG" bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
 AFTER=$(wc -l < "$TMPLOG" 2>/dev/null | tr -d ' ')
 if [ "$AFTER" -gt "$BEFORE" ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL"; FAIL=$((FAIL+1)); fi
 
@@ -34,8 +35,8 @@ if [ -f "$BASE/.claude/metrics/sessions.jsonl" ]; then echo "PASS"; PASS=$((PASS
 
 # B3.6: 複数エントリの蓄積
 echo -n "B3.6 Multiple entries accumulate... "
-echo '{"tool_name":"Edit","tool_use_id":"test456","session_id":"s1"}' | bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
-echo '{"tool_name":"Read","tool_use_id":"test789","session_id":"s1"}' | bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
+echo '{"tool_name":"Edit","tool_use_id":"test456","session_id":"s1"}' | METRICS_LOG="$TMPLOG" bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
+echo '{"tool_name":"Read","tool_use_id":"test789","session_id":"s1"}' | METRICS_LOG="$TMPLOG" bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null
 COUNT=$(wc -l < "$TMPLOG" | tr -d ' ')
 if [ "$COUNT" -ge 3 ]; then echo "PASS ($COUNT entries)"; PASS=$((PASS+1)); else echo "FAIL ($COUNT entries)"; FAIL=$((FAIL+1)); fi
 
