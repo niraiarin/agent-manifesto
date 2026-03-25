@@ -231,9 +231,24 @@ fi
 
 echo "  \"v1_v7\": {"
 echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION, \"recent_avg\": $V2_RECENT_AVG },"
+# V2 trend semantics: compare recent_avg against calls_per_session baseline
+V2_TREND="stable"
+V2_DIVERGENCE=0
+if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
+  # increasing: recent_avg > calls_per_session * 120/100
+  THRESHOLD_UP=$((V2_CALLS_PER_SESSION * 120 / 100))
+  # decreasing: recent_avg < calls_per_session * 80/100
+  THRESHOLD_DOWN=$((V2_CALLS_PER_SESSION * 80 / 100))
+  if [ "$V2_RECENT_AVG" -gt "$THRESHOLD_UP" ] 2>/dev/null; then
+    V2_TREND="increasing"
+  elif [ "$V2_RECENT_AVG" -lt "$THRESHOLD_DOWN" ] 2>/dev/null; then
+    V2_TREND="decreasing"
+  fi
+  V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
+fi
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"calls_per_session\": $V2_CALLS_PER_SESSION, \"recent_avg\": $V2_RECENT_AVG, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_avg\" },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
-V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -i "fix" || true; } | wc -l | tr -d ' ')
+V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -iE "^\[?(fix|bugfix|hotfix)\]?[: ]" || true; } | wc -l | tr -d ' ')
 V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
 V3_TOTAL_COMMITS=${V3_TOTAL_COMMITS:-0}
 if [ "$V3_TOTAL_COMMITS" -gt 0 ] 2>/dev/null; then
@@ -257,7 +272,7 @@ if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -e
 else
   V3_BASELINE_MET="false"
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_keyword + test_pass_rate\" },"
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\" },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
@@ -279,7 +294,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
 echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
-echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT }"
+echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_note\": \"single_agent_operation: teammate field requires multi-agent or human collaboration\" }"
 echo "  },"
 
 # --- T7: コスト計測（ccusage） ---
