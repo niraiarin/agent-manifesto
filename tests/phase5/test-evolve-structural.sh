@@ -250,6 +250,43 @@ grep -q "conservative_strategy_safe" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: E
 
 echo ""
 
+# --- Loopback Redesign (Issue #7, #8, #9) ---
+echo "--- Section 9b: Loopback Redesign (Issue #7, #8, #9) ---"
+
+WORKFLOW_LEAN="lean-formalization/Manifest/Workflow.lean"
+
+# φ₁₂: loopback target valid transition
+grep -q "loopback_target_valid_transition" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₂: loopback target valid transition" || \
+  fail "φ₁₂: loopback_target_valid_transition not found"
+
+# Lean trace: verification -> observation (observation_error loopback)
+grep -q "verification.*observation.*True\|verification.*observation.*FAIL" "$WORKFLOW_LEAN" && \
+  pass "Lean trace: verification -> observation (observation_error loopback)" || \
+  fail "Missing verification -> observation transition in Workflow.lean"
+
+# φ₁₃: loopback agent determined
+grep -q "loopback_agent_determined" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₃: loopback agent determined" || \
+  fail "φ₁₃: loopback_agent_determined not found"
+
+# φ₁₄: observation_error loops to observer
+grep -q "observation_error_loops_to_observer" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₄: observation_error loops to observer" || \
+  fail "φ₁₄: observation_error_loops_to_observer not found"
+
+# Issue #7: No hard-coded loopback limit without derivation
+grep -q "LoopbackBudget\|ループバック予算" "$SKILL" && \
+  pass "Issue #7: loopback budget parameterized (T6)" || \
+  fail "Issue #7: loopback budget not parameterized"
+
+# Issue #9: Loopback agent delegation documented
+grep -q "loopbackTarget.*phaseAgent\|phaseAgent.*loopbackTarget\|loopback.*Observer.*observation_error\|observation_error.*Observer.*再起動\|observation_error.*Phase 1" "$SKILL" && \
+  pass "Issue #9: loopback agent delegation documented" || \
+  fail "Issue #9: loopback agent delegation not documented"
+
+echo ""
+
 # --- Section 10: evolve-history.jsonl notes/deferred 整合性 ---
 echo "--- Section 10: Notes-Deferred Consistency ---"
 

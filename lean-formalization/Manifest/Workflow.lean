@@ -62,6 +62,8 @@ def validPhaseTransition : LearningPhase → LearningPhase → Prop
   | .integration,   .retirement    => True
   -- 検証の失敗 → 仮説に戻る（再検討）
   | .verification,  .hypothesizing => True
+  -- 検証の失敗 → 観察に戻る（observation_error ループバック）
+  | .verification,  .observation   => True
   -- 退役 → 新たな観察を誘発しうる
   | .retirement,    .observation   => True
   | _,              _              => False
@@ -141,6 +143,8 @@ def validKnowledgeTransition (from_ to : KnowledgeStatus) : Prop :=
   | .integrated,   .retired      => True
   -- 検証失敗 → 再仮説化
   | .verified,     .hypothesized => True
+  -- 検証失敗 → 再観察（observation_error ループバック）
+  | .verified,     .observed     => True
   | _,             _             => False
 
 -- ============================================================

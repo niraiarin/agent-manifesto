@@ -377,6 +377,74 @@ theorem deferral_status_exhaustive :
   intro s; cases s <;> simp
 
 -- ============================================================
+-- ループバック設計（Issue #7, #8, #9）
+-- ============================================================
+
+/-- FAIL 分析の根本原因分類。SKILL.md Step 3 FAIL 分析に対応。 -/
+inductive FailRootCause where
+  | observationError   -- Observer の計測データが不正確
+  | hypothesisError    -- Hypothesizer の論理的誤り
+  | assumptionError    -- 前提条件の誤り
+  | preconditionError  -- 先行フェーズの成果物不十分
+  deriving BEq, Repr
+
+/-- ループバックの対象フェーズ。根本原因に応じて異なるフェーズに戻る（Issue #8）。
+    observation_error は Phase 1（Observer）に、hypothesis/assumption_error は Phase 2（Hypothesizer）に。
+    precondition_error はループバックなし。 -/
+def loopbackTarget : FailRootCause → Option EvolvePhase
+  | .observationError  => some .observe
+  | .hypothesisError   => some .hypothesize
+  | .assumptionError   => some .hypothesize
+  | .preconditionError => none
+
+/-- ループバック予算。T6（人間が設定）+ T7（リソース有限性）（Issue #7）。
+    globalResourceBound は opaque であり具体値を導出できないため、
+    予算は人間が設定するパラメータとする。 -/
+structure LoopbackBudget where
+  maxRetries : Nat
+  deriving BEq, Repr
+
+/-- φ₁₂: ループバック対象の有効性。
+    loopbackTarget が返すフェーズへの遷移が validPhaseTransition で正当化される。 -/
+theorem loopback_target_valid_transition :
+  ∀ (cause : FailRootCause) (phase : EvolvePhase),
+    loopbackTarget cause = some phase →
+    validPhaseTransition (toWorkflowPhase .verify) (toWorkflowPhase phase) := by
+  intro cause phase h
+  cases cause <;> simp [loopbackTarget] at h <;> subst h <;> simp [toWorkflowPhase, validPhaseTransition]
+
+/-- φ₁₃: ループバック実行エージェントの一意性（Issue #9）。
+    loopbackTarget で決まるフェーズには phaseAgent で一意のエージェントが対応する。 -/
+theorem loopback_agent_determined :
+  ∀ (cause : FailRootCause) (phase : EvolvePhase),
+    loopbackTarget cause = some phase →
+    ∃ (a : EvolveAgent), phaseAgent phase = a := by
+  intro cause phase h
+  cases cause <;> simp [loopbackTarget] at h <;> subst h <;> exact ⟨_, rfl⟩
+
+/-- φ₁₄: observation_error は Observer にループバックする。 -/
+theorem observation_error_loops_to_observer :
+  loopbackTarget .observationError = some .observe ∧
+  phaseAgent .observe = .observer := by
+  constructor <;> rfl
+
+/-- φ₁₅: hypothesis_error は Hypothesizer にループバックする。 -/
+theorem hypothesis_error_loops_to_hypothesizer :
+  loopbackTarget .hypothesisError = some .hypothesize ∧
+  phaseAgent .hypothesize = .hypothesizer := by
+  constructor <;> rfl
+
+/-- φ₁₆: preconditionError はループバックしない。 -/
+theorem precondition_error_no_loopback :
+  loopbackTarget .preconditionError = none := by rfl
+
+/-- φ₁₇: ループバック予算は任意の自然数を受け入れるパラメータ。
+    globalResourceBound は opaque であり具体値を導出できない（Issue #7 の核心）。 -/
+theorem loopback_budget_is_parameter :
+  ∀ (n : Nat), (⟨n⟩ : LoopbackBudget).maxRetries = n := by
+  intro n; rfl
+
+-- ============================================================
 -- 合成命題 φ: 全性質の合取
 -- ============================================================
 
