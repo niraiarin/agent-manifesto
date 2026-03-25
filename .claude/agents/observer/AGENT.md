@@ -79,6 +79,12 @@ human_feedback エントリが存在する場合:
 .claude/metrics/v7-tasks.jsonl
 ```
 
+**v7-tasks.jsonl スキーマ（注意）:**
+- 正確なフィールド: `{timestamp, event, task_id, subject, teammate}`
+- `task_id` を使用（`id` ではない）
+- `completed` フィールドは存在しない（event フィールドで完了を判断）
+- クエリ例: `jq -r '.task_id' .claude/metrics/v7-tasks.jsonl | head -5`
+
 ### 2. Lean 形式化の品質指標
 
 ```bash
@@ -187,6 +193,24 @@ YYYY-MM-DD HH:MM
 - [6ヶ月以上更新のない MEMORY エントリ]
 - [breakingChange により無効化された可能性のある知識]
 ```
+
+### 7. deferred 解決済み項目の除外（改善候補列挙前）
+
+改善候補を挙げる前に、deferred-status.json の各項目の status を確認し、
+`resolved` または `abandoned` のものは改善候補に含めない:
+
+```bash
+# 特定 id の status を確認
+jq -r '.items["<item-id>"].status' .claude/metrics/deferred-status.json
+
+# resolved/abandoned を除外した open 項目のみ取得
+jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' \
+  .claude/metrics/deferred-status.json 2>/dev/null
+```
+
+- `status = "open"` の項目: 改善候補に含め優先度を上げる
+- `status = "resolved"` の項目: 既に解決済み。改善候補に含めない
+- `status = "abandoned"` の項目: 放棄済み。改善候補に含めない
 
 ## 制約
 

@@ -65,6 +65,19 @@ Observer の改善候補を以下の基準で評価する:
 ### 互換性分類
 conservative extension / compatible change / breaking change
 
+**判定基準:**
+
+| 分類 | 定義 | 例 |
+|------|------|-----|
+| conservative extension | 既存が全てそのまま有効。追加のみ | AGENT.md にセクション追加、新ファイル作成 |
+| compatible change | 既存ワークフローは継続可能。一部前提が変化 | 既存スクリプトにロジック追加、既存定義の拡張 |
+| breaking change | 既存ワークフローの一部が無効。移行パスが必要 | 既存 JSONL の既存行変更、既存インターフェースの変更 |
+
+**よくある誤分類パターン（注意）:**
+- 既存スクリプトにロジック追加 = **compatible change**（conservative ではない。動作が変わるため）
+- 既存 AGENT.md にセクション追加のみ = **conservative extension**（既存内容は無変更）
+- JSONL の既存行変更 = **breaking change**（append-only 規約違反。過去データの意味が変わる）
+
 ### 影響する V
 - V[n]: [期待される変化方向と根拠]
 
@@ -149,3 +162,12 @@ YYYY-MM-DD HH:MM
   - 数値リテラルの大小比較（例: `4 > 2 ∧ 2 > 1`）
   過去の failure_type 分布: hypothesis_error 10件中 trivially-true 4件（Run 32, 34）。
   Observer の failure_patterns 出力を参照し、同一パターンを繰り返さないこと。
+
+### L1 行動空間制約（改善対象外ファイル）
+
+以下のファイルは Hook 自己保護または設定保護により変更不可（L1 構造的強制）。
+これらを直接変更対象とする改善案は「人間手動編集が必要」と明記するか、別アプローチを設計すること:
+
+- `.claude/hooks/*.sh` — Hook 自己保護（PreToolUse ファイルガード）により変更不可
+- `.claude/settings.json` — 設定保護により変更不可
+- 既存テストの削除・無効化 — テスト改竄禁止（L1）

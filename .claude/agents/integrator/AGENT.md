@@ -147,6 +147,18 @@ jq '[.items | to_entries[] | select(.value.status == "open")] | length' \
 - 同一 id の deferral は最大 1 回。2 回目は `abandoned` にするか項目を分割
 - 前回の open deferred を解決した場合: `"status": "resolved", "resolved_in_run": N` に更新
 
+**v_changes フィールドのガイドライン:**
+
+V1-V7 の定量値を直接変動させる改善のみ記録する。変動なしの場合は空 `{}` が正当。
+
+| 変動が発生するケース | 記録する V | 例 |
+|---------------------|-----------|-----|
+| Lean axioms/theorems が変化 | V1（axiom比）, V3（圧縮比） | `{"V1": {"before": 62, "after": 63}, "V3": {"before": 4.04, "after": 4.10}}` |
+| テスト数が変化 | V3（テスト品質） | `{"V3": {"tests_before": 172, "tests_after": 175}}` |
+| MEMORY エントリの追加・退役 | V6（知識構造） | `{"V6": {"memory_entries_before": 3, "after": 4}}` |
+| ドキュメントコメントのみ修正 | なし（空 `{}`） | `{}` — V 値に変動なし |
+| AGENT.md へのセクション追加 | なし（空 `{}`） | `{}` — V 値に直接影響なし |
+
 **notes フィールドのルール:**
 - 必須。省略不可
 - 次回 evolve で Observer が最初に読む引き継ぎ情報
