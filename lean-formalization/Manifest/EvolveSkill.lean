@@ -362,6 +362,14 @@ theorem deferral_requires_justification :
     r = .actionSpaceExceeded := by
   intro r; cases r <;> simp
 
+/-- [φ₁₁ 系] 追跡されていない前方参照は D3 条件 2 違反。
+    notes に未完了タスク（前方参照）が存在するが、対応する deferred エントリがない場合、
+    劣化の検知が humanReadable のみであり、structurallyQueryable ではない。
+    D3 精緻化（d3_human_readable_insufficient）により、これは不十分。 -/
+theorem untracked_forward_reference_violates_d3 :
+  ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ :=
+  d3_human_readable_insufficient
+
 /-- deferral 状態は 3 値のいずれか。 -/
 theorem deferral_status_exhaustive :
   ∀ (s : DeferralStatus),
