@@ -258,6 +258,15 @@ theorem d3_observability_precedes_improvement :
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
   no_improvement_without_feedback
 
+/-- 検知手段の区別（Run 41 で導入）。
+    「検知可能」の定義を精緻化: 人間可読（humanReadable）と
+    プログラムでクエリ可能（structurallyQueryable）を区別する。
+    D3 条件 2 は structurallyQueryable を要求する。 -/
+inductive DetectionMode where
+  | humanReadable         : DetectionMode  -- 人間が読めば分かる（自由テキスト等）
+  | structurallyQueryable : DetectionMode  -- プログラムでクエリ可能（構造化フィールド等）
+  deriving BEq, Repr
+
 /-- D3 の可観測性 3 条件（design-development-foundation.md §D3）。
     各変数 V に対して 3 条件すべてが成立する場合にのみ、
     V は実効的な最適化対象となる。 -/
@@ -266,24 +275,34 @@ structure ObservabilityConditions where
   measurable            : Bool
   /-- 劣化が検知可能か（品質崩壊の前に検知できるか） -/
   degradationDetectable : Bool
+  /-- 劣化検知の手段（structurallyQueryable でなければ実効性がない） -/
+  detectionMode         : DetectionMode := .structurallyQueryable
   /-- 改善が検証可能か（介入の前後で値の変化を比較できるか） -/
   improvementVerifiable : Bool
   deriving BEq, Repr
 
-/-- 変数が実効的な最適化対象であるかの判定。3 条件すべてが必要。 -/
+/-- 変数が実効的な最適化対象であるかの判定。3 条件すべてが必要。
+    かつ、劣化検知は構造的クエリ可能な形式でなければならない。 -/
 def effectivelyOptimizable (c : ObservabilityConditions) : Prop :=
-  c.measurable = true ∧ c.degradationDetectable = true ∧ c.improvementVerifiable = true
+  c.measurable = true ∧ c.degradationDetectable = true ∧
+  c.detectionMode = .structurallyQueryable ∧ c.improvementVerifiable = true
 
 /-- D3: 3 条件のいずれかが欠如した変数は名目上の最適化対象に過ぎない。 -/
 theorem d3_partial_observability_insufficient :
-  ¬effectivelyOptimizable ⟨true, true, false⟩ ∧
-  ¬effectivelyOptimizable ⟨true, false, true⟩ ∧
-  ¬effectivelyOptimizable ⟨false, true, true⟩ := by
+  ¬effectivelyOptimizable ⟨true, true, .structurallyQueryable, false⟩ ∧
+  ¬effectivelyOptimizable ⟨true, false, .structurallyQueryable, true⟩ ∧
+  ¬effectivelyOptimizable ⟨false, true, .structurallyQueryable, true⟩ := by
   refine ⟨?_, ?_, ?_⟩ <;> simp [effectivelyOptimizable]
 
-/-- D3: 3 条件すべてが成立する場合のみ実効的。 -/
+/-- D3: 3 条件すべてが成立し、検知が構造的クエリ可能な場合のみ実効的。 -/
 theorem d3_full_observability_sufficient :
-  effectivelyOptimizable ⟨true, true, true⟩ := by
+  effectivelyOptimizable ⟨true, true, .structurallyQueryable, true⟩ := by
+  simp [effectivelyOptimizable]
+
+/-- D3 精緻化（Run 41）: 人間可読だが構造的にクエリ不可能な検知は不十分。
+    notes に書いただけでは degradationDetectable = true でも実効性がない。 -/
+theorem d3_human_readable_insufficient :
+  ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ := by
   simp [effectivelyOptimizable]
 
 -- ============================================================
