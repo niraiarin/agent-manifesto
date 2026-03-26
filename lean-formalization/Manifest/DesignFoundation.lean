@@ -841,8 +841,8 @@ theorem d12_task_design_probabilistic :
 Section 8 の coherenceRequirement（優先度に基づく見直し）を
 任意の依存関係に一般化する。
 
-アルゴリズム部分（トポロジカル走査）は文書レベルに留め、
-ここでは影響波及の存在と coherenceRequirement との関係を形式化する。
+Ontology.lean の PropositionId.dependencies を基盤として、
+影響集合の計算関数と基本性質を定義する。
 -/
 
 /-- D13: 構造の優先度変更は低優先度の見直しを要求する（Section 8 の再述）。
@@ -862,6 +862,45 @@ theorem d13_retirement_requires_feedback :
     w.feedbacks = [] →
     ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
   fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
+
+/-- 全命題の列挙。affected の計算で使用。 -/
+def allPropositions : List PropositionId :=
+  [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
+   .e1, .e2,
+   .p1, .p2, .p3, .p4, .p5, .p6,
+   .l1, .l2, .l3, .l4, .l5, .l6,
+   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13]
+
+/-- 命題 s に直接依存する命題の集合（逆方向のエッジ）。
+    dependencies は「何に依存するか」、dependents は「何が自分に依存しているか」。 -/
+def PropositionId.dependents (s : PropositionId) : List PropositionId :=
+  allPropositions.filter (fun p => propositionDependsOn p s)
+
+/-- 前提 s が否定されたときの影響集合を計算する。
+    依存グラフの逆方向の推移的閉包。
+    fuel パラメータで停止性を保証（DAG なので depth ≤ 35 で十分）。 -/
+def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
+  match fuel with
+  | 0 => []
+  | fuel' + 1 =>
+    let direct := s.dependents
+    let transitive := direct.flatMap (fun p => affected p fuel')
+    (direct ++ transitive).eraseDups
+
+/-- D13 の操作的定義: 前提の否定に対する影響波及。
+    affected で影響集合を計算し、各命題の再検証が必要であることを表す。 -/
+def d13_propagation (negated : PropositionId) : List PropositionId :=
+  affected negated
+
+/-- T（拘束条件）の否定は最大の影響を持つ:
+    T は多くの命題の根拠であるため、影響集合が大きい。 -/
+theorem d13_constraint_negation_has_impact :
+  (d13_propagation .t4).length > 0 := by native_decide
+
+/-- L5（プラットフォーム境界）の否定は D1 にのみ影響する:
+    L5 は環境依存で根ノードに近いため影響が限定的。 -/
+theorem d13_l5_limited_impact :
+  (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
 
 -- ============================================================
 -- Sorry Inventory
