@@ -878,7 +878,11 @@ def PropositionId.dependents (s : PropositionId) : List PropositionId :=
 
 /-- 前提 s が否定されたときの影響集合を計算する。
     依存グラフの逆方向の推移的閉包。
-    fuel パラメータで停止性を保証（DAG なので depth ≤ 35 で十分）。 -/
+    fuel パラメータで停止性を保証（DAG なので depth ≤ 35 で十分）。
+
+    **不完全性の限界**: 本関数は PropositionId に列挙された名前付き命題間の
+    波及のみを追跡する。ゲーデルの第一不完全性定理により、名前のない
+    導出的帰結への影響は検出できない（Ontology.lean §6.2 注記参照）。 -/
 def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
   match fuel with
   | 0 => []

@@ -285,6 +285,45 @@ grep -q "loopbackTarget.*phaseAgent\|phaseAgent.*loopbackTarget\|loopback.*Obser
   pass "Issue #9: loopback agent delegation documented" || \
   fail "Issue #9: loopback agent delegation not documented"
 
+# φ₁₅: hypothesis_error loops to hypothesizer
+grep -q "hypothesis_error_loops_to_hypothesizer" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₅: hypothesis_error loops to hypothesizer" || \
+  fail "φ₁₅: hypothesis_error_loops_to_hypothesizer not found"
+
+# φ₁₆: precondition_error no loopback
+grep -q "precondition_error_no_loopback" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₆: precondition_error no loopback" || \
+  fail "φ₁₆: precondition_error_no_loopback not found"
+
+# φ₁₇: loopback_budget_is_parameter
+grep -q "loopback_budget_is_parameter" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₇: loopback budget is parameter" || \
+  fail "φ₁₇: loopback_budget_is_parameter not found"
+
+# Root cause classification completeness: all 4 types documented in SKILL.md
+for rc in observation_error hypothesis_error assumption_error precondition_error; do
+  echo -n "  Root cause '$rc' documented in SKILL.md... "
+  grep -q "$rc" "$SKILL" && \
+    pass "root cause $rc" || \
+    fail "root cause $rc missing from SKILL.md"
+done
+
+# Loopback target mapping: each root cause maps to correct phase
+echo -n "  observation_error -> Phase 1 mapping... "
+grep -q "observation_error.*Phase 1\|observation_error.*Observer.*再起動" "$SKILL" && \
+  pass "observation_error -> Phase 1" || \
+  fail "observation_error -> Phase 1 mapping missing"
+
+echo -n "  hypothesis_error -> Phase 2 mapping... "
+grep -q "hypothesis_error.*Phase 2\|hypothesis_error.*Hypothesizer.*再起動\|hypothesis_error.*再設計" "$SKILL" && \
+  pass "hypothesis_error -> Phase 2" || \
+  fail "hypothesis_error -> Phase 2 mapping missing"
+
+echo -n "  precondition_error -> no loopback mapping... "
+grep -q "precondition_error.*ループバックなし\|precondition_error.*次の項目" "$SKILL" && \
+  pass "precondition_error -> no loopback" || \
+  fail "precondition_error -> no loopback mapping missing"
+
 echo ""
 
 # --- Section 10: evolve-history.jsonl notes/deferred 整合性 ---
@@ -319,6 +358,90 @@ print(count)
 " 2>/dev/null)
 echo -n "  No orphan forward-references in notes... "
 if [ "${ORPHAN_COUNT:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($ORPHAN_COUNT orphans)"; FAIL=$((FAIL+1)); fi
+
+echo ""
+
+# ============================================================
+# Section 11: Structural Coherence (Half-Order) — Section 8 対応
+# ============================================================
+echo "--- Section 11: Structural Coherence (Half-Order) ---"
+
+ONTOLOGY="$BASE/lean-formalization/Manifest/Ontology.lean"
+DESIGN_FOUNDATION="$BASE/lean-formalization/Manifest/DesignFoundation.lean"
+MANIFESTO="$BASE/manifesto.md"
+
+# StructureKind inductive 存在
+echo -n "  StructureKind inductive exists... "
+grep -q "^inductive StructureKind" "$ONTOLOGY" && \
+  pass "StructureKind inductive" || \
+  fail "StructureKind inductive missing"
+
+# StructureKind.priority 定義
+echo -n "  StructureKind.priority defined... "
+grep -q "def StructureKind.priority" "$ONTOLOGY" && \
+  pass "StructureKind.priority" || \
+  fail "StructureKind.priority missing"
+
+# structureDependsOn 定義
+echo -n "  structureDependsOn defined... "
+grep -q "def structureDependsOn" "$ONTOLOGY" && \
+  pass "structureDependsOn" || \
+  fail "structureDependsOn missing"
+
+# coherenceRequirement 定義
+echo -n "  coherenceRequirement defined... "
+grep -q "def coherenceRequirement" "$ONTOLOGY" && \
+  pass "coherenceRequirement" || \
+  fail "coherenceRequirement missing"
+
+# 狭義半順序 3 性質
+echo -n "  no_self_dependency theorem... "
+grep -q "^theorem no_self_dependency" "$ONTOLOGY" && \
+  pass "no_self_dependency" || \
+  fail "no_self_dependency missing"
+
+echo -n "  structureDependsOn_transitive theorem... "
+grep -q "^theorem structureDependsOn_transitive" "$ONTOLOGY" && \
+  pass "structureDependsOn_transitive" || \
+  fail "structureDependsOn_transitive missing"
+
+echo -n "  structureDependsOn_asymmetric theorem... "
+grep -q "^theorem structureDependsOn_asymmetric" "$ONTOLOGY" && \
+  pass "structureDependsOn_asymmetric" || \
+  fail "structureDependsOn_asymmetric missing"
+
+# 隣接優先度 4 定理
+for thm in priority_manifest_gt_design priority_design_gt_skill priority_skill_gt_test priority_test_gt_document; do
+  echo -n "  $thm theorem... "
+  grep -q "^theorem $thm" "$ONTOLOGY" && \
+    pass "$thm" || \
+    fail "$thm missing"
+done
+
+# 極値 3 定理
+for thm in manifest_highest_priority document_lowest_priority priority_injective; do
+  echo -n "  $thm theorem... "
+  grep -q "^theorem $thm" "$ONTOLOGY" && \
+    pass "$thm" || \
+    fail "$thm missing"
+done
+
+# D13 定理 2 件
+echo -n "  d13_coherence_implies_propagation theorem... "
+grep -q "^theorem d13_coherence_implies_propagation" "$DESIGN_FOUNDATION" && \
+  pass "d13_coherence_implies_propagation" || \
+  fail "d13_coherence_implies_propagation missing"
+
+echo -n "  d13_retirement_requires_feedback theorem... "
+grep -q "^theorem d13_retirement_requires_feedback" "$DESIGN_FOUNDATION" && \
+  pass "d13_retirement_requires_feedback" || \
+  fail "d13_retirement_requires_feedback missing"
+
+# manifesto.md Section 8 存在
+echo -n "  manifesto.md Section 8 (Structural Coherence) exists... "
+grep -q "構造的整合性\|Structural Coherence" "$MANIFESTO" && \
+  pass "Section 8 exists" || \
+  fail "Section 8 missing"
 
 echo ""
 
