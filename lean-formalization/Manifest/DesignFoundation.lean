@@ -1,9 +1,9 @@
 import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
+import Manifest.Principles
 import Manifest.Observable
 import Manifest.ObservableDesign
-import Manifest.Principles
 
 /-!
 # Epistemic Layer: designTheorem (strength 1) — 設計開発基礎論の形式化（Γ ⊢ φ の応用）

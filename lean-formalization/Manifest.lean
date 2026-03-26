@@ -1,20 +1,23 @@
+-- Tier A: 定義的基盤
 import Manifest.Ontology
-import Manifest.Axioms
-import Manifest.EmpiricalPostulates
-import Manifest.Principles
-import Manifest.Workflow
-import Manifest.Observable
-import Manifest.ObservableDesign
+-- Tier B: 命題層（strength 降順）
+import Manifest.Axioms              -- strength 5: constraint
+import Manifest.EmpiricalPostulates -- strength 4: empiricalPostulate
+import Manifest.Principles          -- strength 3: principle
+import Manifest.Observable          -- strength 2: boundary
+import Manifest.ObservableDesign    -- strength 1: designTheorem
+import Manifest.DesignFoundation    -- strength 1: designTheorem
+-- Tier C: メタ理論・応用
 import Manifest.Meta
+import Manifest.EpistemicLayer
 import Manifest.Evolution
-import Manifest.DesignFoundation
-import Manifest.FormalDerivationSkill
+import Manifest.Workflow
 import Manifest.Terminology
 import Manifest.Procedure
+import Manifest.FormalDerivationSkill
 import Manifest.ConformanceVerification
 import Manifest.AxiomQuality
 import Manifest.EvolveSkill
-import Manifest.EpistemicLayer
 
 /-!
 # Agent Manifest — Formal Specification
