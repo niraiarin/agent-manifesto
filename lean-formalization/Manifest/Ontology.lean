@@ -801,6 +801,49 @@ theorem priority_injective :
     k₁.priority = k₂.priority → k₁ = k₂ := by
   intro k₁ k₂; cases k₁ <;> cases k₂ <;> simp [StructureKind.priority]
 
+-- ============================================================
+-- StructureKind 半順序型クラスインスタンス（Run 55 追加）
+-- ============================================================
+
+/-!
+## StructureKind の Lean 標準型クラス半順序インスタンス
+
+priority（Nat）を基底として LE/LT を定義し、
+広義半順序の 4 性質（反射律・推移律・反対称律・lt との整合性）を定理として導出する。
+
+注記: Lean 4.25.0 標準 Prelude には Preorder/PartialOrder 型クラスがないため、
+LE/LT インスタンス + 半順序性質定理群として実装する。
+
+structureDependsOn（狭義半順序 `<`）とは区別する:
+- `k₁ ≤ k₂` ← `k₁.priority ≤ k₂.priority`（広義半順序、型クラス用）
+- `structureDependsOn a b` ← `a.kind.priority < b.kind.priority`（狭義、依存追跡用）
+-/
+
+/-- LE インスタンス: priority の Nat 順序から導出。 -/
+instance : LE StructureKind := ⟨fun a b => a.priority ≤ b.priority⟩
+
+/-- LT インスタンス: priority の Nat 順序から導出。 -/
+instance : LT StructureKind := ⟨fun a b => a.priority < b.priority⟩
+
+/-- 半順序の反射律: k ≤ k。 -/
+theorem structureKind_le_refl : ∀ (k : StructureKind), k ≤ k :=
+  fun k => Nat.le_refl k.priority
+
+/-- 半順序の推移律: k₁ ≤ k₂ かつ k₂ ≤ k₃ ならば k₁ ≤ k₃。 -/
+theorem structureKind_le_trans :
+    ∀ (k₁ k₂ k₃ : StructureKind), k₁ ≤ k₂ → k₂ ≤ k₃ → k₁ ≤ k₃ := by
+  intro _k₁ _k₂ _k₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
+
+/-- 半順序の反対称律: k₁ ≤ k₂ かつ k₂ ≤ k₁ ならば k₁ = k₂。priority_injective から導出。 -/
+theorem structureKind_le_antisymm :
+    ∀ (k₁ k₂ : StructureKind), k₁ ≤ k₂ → k₂ ≤ k₁ → k₁ = k₂ :=
+  fun k₁ k₂ h₁₂ h₂₁ => priority_injective k₁ k₂ (Nat.le_antisymm h₁₂ h₂₁)
+
+/-- LT と LE の整合性: k₁ < k₂ ↔ k₁ ≤ k₂ かつ ¬(k₂ ≤ k₁)。 -/
+theorem structureKind_lt_iff_le_not_le :
+    ∀ (k₁ k₂ : StructureKind), k₁ < k₂ ↔ k₁ ≤ k₂ ∧ ¬(k₂ ≤ k₁) := by
+  intro _k₁ _k₂; exact Nat.lt_iff_le_not_le
+
 /-- manifest は designConvention より高優先度（Section 8 半順序）。 -/
 theorem priority_manifest_gt_design :
   StructureKind.designConvention.priority < StructureKind.manifest.priority := by

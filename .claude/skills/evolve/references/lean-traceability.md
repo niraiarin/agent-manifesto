@@ -8,34 +8,34 @@
 各 Lean ケースが、対応するテストと SKILL.md の実行手順に展開されていることを確認するための逆引き表。
 （Section 7 テストは `tests/test-evolve-structural.sh` 内の記述名称）
 
-| Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ |
-|--------------------------------------------------|-------------------|-----------------|
-| observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 |
-| hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 |
-| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 |
-| integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 |
-| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） |
-| verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） |
-| retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） |
+| Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ | Gap |
+|--------------------------------------------------|-------------------|-----------------|-----|
+| observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 | なし |
+| hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 | なし |
+| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 | なし |
+| integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 | なし |
+| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） | なし |
+| verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） | なし |
+| retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） | なし |
 
 ## その他の Lean 定義 — テスト対応追加行
 
-| スキルの概念 | テスト（Section 3 / Step） | 備考 |
-|------------|--------------------------|------|
-| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 |
-| `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 |
+| スキルの概念 | テスト（Section 3 / Step） | 備考 | Gap |
+|------------|--------------------------|------|-----|
+| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 | なし |
+| `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 | なし |
 
 ## Workflow.lean 追加定理 逆引きチェックリスト（Run 40 追加）
 
-| Lean 定理（Workflow.lean） | SKILL.md での運用化 | 備考 |
-|---------------------------|---------------------|------|
-| `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない |
-| `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル |
-| `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 |
-| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 |
-| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 |
-| `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 |
-| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 |
+| Lean 定理（Workflow.lean） | SKILL.md での運用化 | 備考 | Gap |
+|---------------------------|---------------------|------|-----|
+| `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない | なし |
+| `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル | なし |
+| `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 | なし |
+| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 | テスト欠如: Section 7 に "no_self_knowledge_transition" テストなし |
+| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 | テスト欠如: Section 7 に "knowledge_full_cycle_exists" テストなし |
+| `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 | なし |
+| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 | テスト欠如: Section 7 に "feedback_precedes_improvement" テストなし |
 
 ## Evolution.lean 逆引きチェックリスト（Run 40 追加）
 
@@ -116,4 +116,16 @@
 | `hypothesis_error_loops_to_hypothesizer` | φ₁₅ | Step 3: hypothesis_error → Hypothesizer（Phase 2） | "φ₁₅: hypothesis_error loops to hypothesizer" |
 | `precondition_error_no_loopback` | φ₁₆ | Step 3: precondition_error → ループバックなし | "φ₁₆: precondition_error no loopback" |
 | `loopback_budget_is_parameter` | φ₁₇ | Step 3: ループバック予算は T6 パラメータ（公理的導出なし） | "φ₁₇: loopback budget is parameter" |
+| `untracked_forward_reference_violates_d3` | — | Step 7: notes/deferred 整合性（D3 前提引用追跡） | テスト欠如: Section 9 に専用テストなし（Section 10 で間接的に確認） |
 | `evolve_skill_compliant` | φ合成 | 全体の準拠性（φ₁∧φ₂∧φ₃∧φ₅∧φ₉） | "evolve_skill_compliant" |
+
+## Procedure.lean Structure-AGM Bridge 定理 逆引きチェックリスト（Run 55 追加）
+
+| Lean 定理（Procedure.lean） | SKILL.md での運用化 | 備考 | Gap |
+|---------------------------|---------------------|------|-----|
+| `manifest_contraction_forbidden'` | P3: manifest への縮小は禁止（L1 境界の形式的根拠） | structurePartition .manifest = .baseTheory → contraction 禁止 | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `manifest_revision_forbidden` | P3: manifest への revision も禁止（T₀ 変更禁止の Structure 版） | contraction と同様に permittedOp = false | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `non_manifest_all_ops_permitted` | P3: 非 manifest 構造（skill/test/document 等）は全 AGM 操作が許可 | StructureKind ≠ .manifest → 全 op = true | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `empty_world_no_contraction_affected` | P3: 空の構造セットでは contraction の影響集合は空 | World.structures = [] → contractionAffected 発生なし | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `manifest_no_contraction_affected` | P3: manifest は contraction が禁止されているため影響集合は発生しない | manifest 縮小禁止 → 影響波及なし | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `contraction_affected_trans` | P3: contraction 影響の推移性（reachableVia の推移性から導出） | s → mid → t の波及は s → t に集約 | テスト欠如: test-evolve-structural.sh に専用テストなし |

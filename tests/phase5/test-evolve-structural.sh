@@ -444,6 +444,49 @@ grep -q "構造的整合性\|Structural Coherence" "$MANIFESTO" && \
   fail "Section 8 missing"
 
 # ============================================================
+# Section 12: StructureKind LE/LT インスタンスと半順序性質定理
+# ============================================================
+echo "--- Section 12: StructureKind LE/LT Instances ---"
+
+# LE インスタンスの存在
+echo -n "  StructureKind LE instance exists... "
+grep -q "^instance : LE StructureKind" "$ONTOLOGY" && \
+  pass "StructureKind LE instance" || \
+  fail "StructureKind LE instance missing"
+
+# LT インスタンスの存在
+echo -n "  StructureKind LT instance exists... "
+grep -q "^instance : LT StructureKind" "$ONTOLOGY" && \
+  pass "StructureKind LT instance" || \
+  fail "StructureKind LT instance missing"
+
+# 半順序性質: 反射律
+echo -n "  structureKind_le_refl theorem exists... "
+grep -q "^theorem structureKind_le_refl" "$ONTOLOGY" && \
+  pass "structureKind_le_refl" || \
+  fail "structureKind_le_refl missing"
+
+# 半順序性質: 推移律
+echo -n "  structureKind_le_trans theorem exists... "
+grep -q "^theorem structureKind_le_trans" "$ONTOLOGY" && \
+  pass "structureKind_le_trans" || \
+  fail "structureKind_le_trans missing"
+
+# 半順序性質: 反対称律（priority_injective から導出）
+echo -n "  structureKind_le_antisymm theorem exists... "
+grep -q "^theorem structureKind_le_antisymm" "$ONTOLOGY" && \
+  pass "structureKind_le_antisymm" || \
+  fail "structureKind_le_antisymm missing"
+
+# LT と LE の整合性
+echo -n "  structureKind_lt_iff_le_not_le theorem exists... "
+grep -q "^theorem structureKind_lt_iff_le_not_le" "$ONTOLOGY" && \
+  pass "structureKind_lt_iff_le_not_le" || \
+  fail "structureKind_lt_iff_le_not_le missing"
+
+echo ""
+
+# ============================================================
 # スキル変数展開の安全性（全 SKILL.md 対象）
 # ============================================================
 echo "--- Skill variable expansion safety ---"
