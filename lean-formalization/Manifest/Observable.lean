@@ -120,6 +120,26 @@ def Measurable (m : World → Nat) : Prop :=
   ∃ f : World → Nat, ∀ w, f w = m w
 
 -- ============================================================
+-- Proxy 成熟度分類
+-- ============================================================
+
+/-- Proxy 成熟度段階。observe.sh の各 V proxy に分類を付与する。
+    - provisional: 暫定代理指標。正式測定方法が未実装。
+    - established: 安定代理指標。運用上の十分性が確認済み（T6 判断）。
+    - formal: 正式測定方法が実装済み。-/
+inductive ProxyMaturityLevel where
+  | provisional : ProxyMaturityLevel
+  | established : ProxyMaturityLevel
+  | formal : ProxyMaturityLevel
+  deriving BEq, Repr, DecidableEq
+
+/-- V1 の現在の proxy 成熟度。benchmark.json 未実装のため provisional。 -/
+def v1ProxyMaturity : ProxyMaturityLevel := .provisional
+
+/-- V3 の現在の proxy 成熟度。ゲート合格率未実装のため provisional。 -/
+def v3ProxyMaturity : ProxyMaturityLevel := .provisional
+
+-- ============================================================
 -- V1–V7: 最適化変数
 -- ============================================================
 
@@ -127,7 +147,12 @@ def Measurable (m : World → Nat) : Prop :=
     測定方法: benchmark.json (with/without 比較)。
     関連境界条件: L2（学習データ断絶の緩和）, L5（スキルシステム）。
     observe.sh proxy: evolve_success_rate（成功run比率）, lean_health（sorry=0判定）,
-    skill_count（スキルファイル数）。分類: provisional_proxy（benchmark.json 未実装）。 -/
+    skill_count（スキルファイル数）。
+    proxy 成熟度分類:
+    - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
+    - established_proxy: 安定代理指標。運用上十分と判断。
+    - formal_measurement: 正式測定方法が実装済み。
+    現在の V1 proxy は provisional_proxy。卒業条件: benchmark.json 実装 OR 運用的相関証拠（T6 判断）。 -/
 opaque skillQuality : World → Nat
 
 /-- V2: コンテキスト効率。有限コンテキストの活用度。
@@ -143,7 +168,12 @@ opaque contextEfficiency : World → Nat
     測定方法: ゲート合格率、レビュー指摘数。
     関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。
     observe.sh proxy: fix_ratio_percent（プレフィクスパターン fix/bugfix/hotfix のコミット比率）+
-    test_pass_rate（テスト全通過率）。分類: provisional_proxy（ゲート合格率未実装）。 -/
+    test_pass_rate（テスト全通過率）。
+    proxy 成熟度分類:
+    - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
+    - established_proxy: 安定代理指標。運用上十分と判断。
+    - formal_measurement: 正式測定方法が実装済み。
+    現在の V3 proxy は provisional_proxy。卒業条件: ゲート合格率の実装 OR 運用的相関証拠（T6 判断）。 -/
 opaque outputQuality : World → Nat
 
 /-- V4: ゲート通過率。各フェーズのゲートを一発で通過する率。
@@ -178,8 +208,8 @@ opaque knowledgeStructureQuality : World → Nat
     関連境界条件: L3（リソース上限）, L6（設計規約）。
     observe.sh proxy: completed（v7-tasks.jsonl タスク完了数）, unique_subjects（ユニーク主題数）,
     teamwork_percent（teammate フィールドあり比率）。
-    運用注記: teamwork_percent は single-agent 運用時は常に 0。マルチエージェント/人間協働が
-    必要なフィールドのため、現在は参考値。 -/
+    運用注記: teamwork_percent は single-agent 運用では suppressed（teamwork_status="suppressed_single_agent"）。
+    マルチエージェント/人間協働が必要なフィールドのため、single-agent 環境では観察報告に含めない。 -/
 opaque taskDesignEfficiency : World → Nat
 
 -- ============================================================
