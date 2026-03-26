@@ -1,0 +1,181 @@
+{
+  "namespace": "TestScenario.S267",
+  "description": "海洋プラスチック回収最適化 AI",
+  "layers": [
+    {
+      "name": "environmental_law",
+      "ordValue": 5,
+      "definition": "海洋環境保護の国際法規。MARPOL条約・生態系保全義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "oceanographic_model",
+      "ordValue": 4,
+      "definition": "海流・波浪の物理モデル。Ekman輸送・Stokes漂流",
+      "derivedFrom": [
+        "H1",
+        "C3"
+      ]
+    },
+    {
+      "name": "debris_dynamics",
+      "ordValue": 3,
+      "definition": "プラスチック漂流・分解モデル。マイクロプラスチック拡散",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "collection_strategy",
+      "ordValue": 2,
+      "definition": "回収船配置・回収装置の運用戦略",
+      "derivedFrom": [
+        "H4",
+        "C4"
+      ]
+    },
+    {
+      "name": "route_planning",
+      "ordValue": 1,
+      "definition": "回収ルート最適化。燃料効率・回収量最大化",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "impact_hypothesis",
+      "ordValue": 0,
+      "definition": "回収効果・生態系影響の未検証仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "el1",
+      "layerName": "environmental_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "el2",
+      "layerName": "environmental_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "om1",
+      "layerName": "oceanographic_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".el1"
+      ]
+    },
+    {
+      "id": "om2",
+      "layerName": "oceanographic_model",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dd1",
+      "layerName": "debris_dynamics",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".om1",
+        ".om2"
+      ]
+    },
+    {
+      "id": "dd2",
+      "layerName": "debris_dynamics",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".om2"
+      ]
+    },
+    {
+      "id": "cs1",
+      "layerName": "collection_strategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dd1",
+        ".el1"
+      ]
+    },
+    {
+      "id": "cs2",
+      "layerName": "collection_strategy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".dd2",
+        ".el2"
+      ]
+    },
+    {
+      "id": "rp1",
+      "layerName": "route_planning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".cs1",
+        ".om1"
+      ]
+    },
+    {
+      "id": "rp2",
+      "layerName": "route_planning",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".cs2",
+        ".dd1"
+      ]
+    },
+    {
+      "id": "ih1",
+      "layerName": "impact_hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".rp1",
+        ".rp2"
+      ]
+    },
+    {
+      "id": "ih2",
+      "layerName": "impact_hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".dd2"
+      ]
+    }
+  ]
+}

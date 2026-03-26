@@ -1,0 +1,217 @@
+{
+  "namespace": "Scenario212",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "タービン構造安全に関する不変条件。物理的制約。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "検査規制・記録保存義務。法的強制。",
+      "derivedFrom": [
+        "C5",
+        "C1"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "現場の運用ルール。環境条件で変動。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "analysis",
+      "ordValue": 1,
+      "definition": "AI解析アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実地データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "regn1",
+      "layerName": "regulation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "regn2",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf3"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operational",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".saf2"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operational",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operational",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".regn1"
+      ]
+    },
+    {
+      "id": "anl1",
+      "layerName": "analysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "anl2",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ops1",
+        ".ops2"
+      ]
+    },
+    {
+      "id": "anl3",
+      "layerName": "analysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".regn1",
+        ".regn2"
+      ]
+    },
+    {
+      "id": "anl4",
+      "layerName": "analysis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".regn2"
+      ]
+    },
+    {
+      "id": "anl5",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ops3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".anl1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".anl1",
+        ".anl4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4",
+        "H1"
+      ],
+      "dependencies": [
+        ".anl2"
+      ]
+    }
+  ]
+}

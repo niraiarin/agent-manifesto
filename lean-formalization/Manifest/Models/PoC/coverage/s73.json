@@ -1,0 +1,152 @@
+{
+  "layers": [
+    {
+      "name": "safety_constraint",
+      "definition": "人体安全・環境汚染防止の不変制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "recognition_postulate",
+      "definition": "画像認識・素材判定の前提となる仮定",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "sorting_principle",
+      "definition": "分別ルールの原則（自治体基準・汚染度判定）",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "operation_design",
+      "definition": "ロボット動作・ライン制御の設計判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_864d79",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_8102a4",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_06e30c",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_dc9d15",
+      "layerName": "recognition_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_4fedcf",
+      "layerName": "recognition_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_aa746c",
+      "layerName": "recognition_postulate",
+      "justification": [
+        "H1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_2cd30c",
+      "layerName": "sorting_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_dcfbc9",
+      "layerName": "sorting_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_b64e6a",
+      "layerName": "sorting_principle",
+      "justification": [
+        "H2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_991650",
+      "layerName": "operation_design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_0ca9a0",
+      "layerName": "operation_design",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_c30e66",
+      "layerName": "operation_design",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_ecaf66",
+      "layerName": "operation_design",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

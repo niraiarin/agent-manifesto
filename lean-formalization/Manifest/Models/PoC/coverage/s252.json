@@ -1,0 +1,133 @@
+{
+  "namespace": "Scenario252",
+  "layers": [
+    {
+      "name": "craft",
+      "ordValue": 2,
+      "definition": "職人の権威と工房の伝統に関わる不可侵の前提。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "engineering",
+      "ordValue": 1,
+      "definition": "科学的手法に基づく支援技術。精度向上に応じて改善可能。",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "効果が未検証の仮説。実験で確認が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "cra1",
+      "layerName": "craft",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cra2",
+      "layerName": "craft",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cra3",
+      "layerName": "craft",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eng1",
+      "layerName": "engineering",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cra1"
+      ]
+    },
+    {
+      "id": "eng2",
+      "layerName": "engineering",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".cra2"
+      ]
+    },
+    {
+      "id": "eng3",
+      "layerName": "engineering",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".cra1",
+        ".cra2"
+      ]
+    },
+    {
+      "id": "eng4",
+      "layerName": "engineering",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".eng1",
+        ".eng2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".cra3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".eng1",
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".eng4"
+      ]
+    }
+  ]
+}

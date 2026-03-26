@@ -1,0 +1,149 @@
+{
+  "namespace": "RobotArmCalibration",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "作業者安全・衝突防止の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "physics",
+      "ordValue": 2,
+      "definition": "物理モデル・運動学制約",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "calibration",
+      "ordValue": 1,
+      "definition": "校正手順・精度ポリシー",
+      "derivedFrom": [
+        "C3",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys1",
+      "layerName": "physics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys2",
+      "layerName": "physics",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phys1"
+      ]
+    },
+    {
+      "id": "phys3",
+      "layerName": "physics",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "cal1",
+      "layerName": "calibration",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe2",
+        ".phys1"
+      ]
+    },
+    {
+      "id": "cal2",
+      "layerName": "calibration",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".phys2",
+        ".phys3"
+      ]
+    },
+    {
+      "id": "cal3",
+      "layerName": "calibration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".safe3"
+      ]
+    },
+    {
+      "id": "cal4",
+      "layerName": "calibration",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        ".cal1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".cal2"
+      ]
+    }
+  ]
+}

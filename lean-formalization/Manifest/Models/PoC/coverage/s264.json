@@ -1,0 +1,130 @@
+{
+  "namespace": "TestScenario.S264",
+  "description": "点字プリンタ制御 AI",
+  "layers": [
+    {
+      "name": "braille_standard",
+      "ordValue": 3,
+      "definition": "点字表記規則（日本点字表記法・UEB等）。文字体系の不変規則",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "mechanical_spec",
+      "ordValue": 2,
+      "definition": "プリンタ機構の物理仕様。ピン配置・用紙サイズ・打刻力",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "translation",
+      "ordValue": 1,
+      "definition": "墨字→点字変換ロジック。略字・分かち書き・数式処理",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 0,
+      "definition": "印刷速度・品質の最適化仮説",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "bs1",
+      "layerName": "braille_standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bs2",
+      "layerName": "braille_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bs3",
+      "layerName": "braille_standard",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ms1",
+      "layerName": "mechanical_spec",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ms2",
+      "layerName": "mechanical_spec",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".bs1"
+      ]
+    },
+    {
+      "id": "tr1",
+      "layerName": "translation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".bs1",
+        ".bs2"
+      ]
+    },
+    {
+      "id": "tr2",
+      "layerName": "translation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".bs3",
+        ".ms1"
+      ]
+    },
+    {
+      "id": "tr3",
+      "layerName": "translation",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".ms2"
+      ]
+    },
+    {
+      "id": "ot1",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".tr1",
+        ".ms1"
+      ]
+    }
+  ]
+}

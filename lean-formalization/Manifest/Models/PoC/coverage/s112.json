@@ -1,0 +1,210 @@
+{
+  "namespace": "RiverEcosystem",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "環境法規・水質基準。法的拘束力を持つ不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ecological_model",
+      "ordValue": 2,
+      "definition": "生態学の確立モデル。種間関係・水質指標の科学的知見",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "monitoring",
+      "ordValue": 1,
+      "definition": "センサー配置・サンプリング頻度・アラート閾値の運用方針",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H5"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 0,
+      "definition": "AI による生態系変動予測。未検証の時系列推論",
+      "derivedFrom": [
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg_water_quality",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg_species_protect",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg_reporting",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eco_food_web",
+      "layerName": "ecological_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eco_indicator_sp",
+      "layerName": "ecological_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".eco_food_web"
+      ]
+    },
+    {
+      "id": "eco_seasonal",
+      "layerName": "ecological_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eco_pollutant",
+      "layerName": "ecological_model",
+      "justification": [
+        "H1",
+        "C4"
+      ],
+      "dependencies": [
+        ".reg_water_quality"
+      ]
+    },
+    {
+      "id": "mon_sensor_net",
+      "layerName": "monitoring",
+      "justification": [
+        "C3",
+        "H5"
+      ],
+      "dependencies": [
+        ".reg_water_quality"
+      ]
+    },
+    {
+      "id": "mon_sampling",
+      "layerName": "monitoring",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".eco_seasonal",
+        ".eco_indicator_sp"
+      ]
+    },
+    {
+      "id": "mon_alert",
+      "layerName": "monitoring",
+      "justification": [
+        "C3",
+        "H5"
+      ],
+      "dependencies": [
+        ".reg_water_quality",
+        ".eco_pollutant"
+      ]
+    },
+    {
+      "id": "mon_biodiversity",
+      "layerName": "monitoring",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".reg_species_protect",
+        ".eco_food_web"
+      ]
+    },
+    {
+      "id": "pred_population",
+      "layerName": "prediction",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".eco_food_web",
+        ".mon_sampling"
+      ]
+    },
+    {
+      "id": "pred_water_trend",
+      "layerName": "prediction",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".mon_sensor_net",
+        ".eco_pollutant"
+      ]
+    },
+    {
+      "id": "pred_invasion",
+      "layerName": "prediction",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".eco_indicator_sp",
+        ".mon_biodiversity"
+      ]
+    },
+    {
+      "id": "pred_restoration",
+      "layerName": "prediction",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".pred_population",
+        ".pred_water_trend",
+        ".reg_reporting"
+      ]
+    },
+    {
+      "id": "pred_climate",
+      "layerName": "prediction",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".eco_seasonal",
+        ".pred_water_trend"
+      ]
+    }
+  ]
+}

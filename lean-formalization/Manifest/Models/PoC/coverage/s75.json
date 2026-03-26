@@ -1,0 +1,188 @@
+{
+  "layers": [
+    {
+      "name": "safety_constraint",
+      "definition": "人命・環境に関わる安全上の不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulatory_postulate",
+      "definition": "法規制・基準への準拠前提",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "detection_principle",
+      "definition": "漏洩検知アルゴリズムの原則（感度・特異度・応答時間）",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "monitoring_boundary",
+      "definition": "センサー網・通信インフラの制約条件",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "alert_design",
+      "definition": "アラート通知・対応フローの設計判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "_monotonicity_feedback": {
+    "initial_violations": [
+      {
+        "violation": "誤報率KPIの自動チューニング (alert_design, ord=1) が 検知感度最優先 (safety_constraint, ord=5) に影響を与える依存",
+        "detail": "H6 の自動チューニングが C2 由来の安全制約を間接的に変更する可能性",
+        "resolution": "H6 に安全制約の感度下限を侵食しない条件を追加。refutation を更新し、自動チューニング範囲を安全マージン外に限定する制約を alert_design 層内で明記",
+        "type": "H_only",
+        "action": "H6 の反証条件を厳格化。命題「誤報率のKPIを月次で追跡し閾値を自動チューニングする」に「ただし安全制約の感度下限は維持」を追記"
+      }
+    ],
+    "post_fix_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "prop_c5b707",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_18d100",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_cf7447",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_5b5940",
+      "layerName": "regulatory_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "API_99d60b",
+      "layerName": "regulatory_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3f6911",
+      "layerName": "detection_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_21dca5",
+      "layerName": "detection_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_c98b18",
+      "layerName": "detection_principle",
+      "justification": [
+        "H2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ms_f0fb3d",
+      "layerName": "monitoring_boundary",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_4f76c1",
+      "layerName": "monitoring_boundary",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "DTS_aabe30",
+      "layerName": "monitoring_boundary",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d3bbc6",
+      "layerName": "alert_design",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "KPI_da254c",
+      "layerName": "alert_design",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_442e2b",
+      "layerName": "alert_design",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d1092f",
+      "layerName": "alert_design",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    }
+  ]
+}

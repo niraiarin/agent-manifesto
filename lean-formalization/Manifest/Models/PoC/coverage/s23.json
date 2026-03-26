@@ -1,0 +1,167 @@
+{
+  "layers": [
+    {
+      "name": "grid_safety_constraint",
+      "definition": "電力系統の安全制約。停電防止・周波数維持は絶対",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "physical_postulate",
+      "definition": "物理法則・電力工学の前提",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "regulatory_principle",
+      "definition": "電力市場規制と運用ルール",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "forecast_boundary",
+      "definition": "予測モデルの境界条件",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C6",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "tuning_hypothesis",
+      "definition": "パラメータ調整の仮説。実運用データで検証",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "_monotonicity_violations": [
+    {
+      "violation": "renewable_priority_dispatch (regulatory_principle, ord=3) depends on solar_forecast_accuracy (tuning_hypothesis, ord=0)",
+      "explanation": "再エネ優先給電ルール（規制層 ord=3）が太陽光発電予測精度（仮説層 ord=0）に依存。依存先の ord が依存元より低いため単調性違反",
+      "resolution": "H4由来のため LLM が自律修正: solar_forecast_accuracy を forecast_boundary (ord=2) に昇格。ただし regulatory_principle (ord=3) への依存であるため ord=3 以上が必要 → regulatory_principle に昇格",
+      "fix_applied": true,
+      "fixed_assignment": {
+        "proposition": "solar_forecast_accuracy",
+        "layerName": "regulatory_principle",
+        "justification": [
+          "H4",
+          "C5"
+        ]
+      }
+    }
+  ],
+  "propositions": [
+    {
+      "id": "frequency_stability",
+      "layerName": "grid_safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "blackout_prevention",
+      "layerName": "grid_safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "kirchhoff_laws",
+      "layerName": "physical_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "thermal_limits",
+      "layerName": "physical_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "market_clearing_rules",
+      "layerName": "regulatory_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "renewable_priority_dispatch",
+      "layerName": "regulatory_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "weather_dependency",
+      "layerName": "forecast_boundary",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "demand_seasonality",
+      "layerName": "forecast_boundary",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "solar_forecast_accuracy",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "wind_ramp_prediction",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ev_charging_impact",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reserve_margin_calculation",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "namespace": "TestCoverage.S109",
+  "layers": [
+    {
+      "name": "SpeciesProtectionLaw",
+      "ordValue": 5,
+      "definition": "種の保存法・ワシントン条約。法的に不変の保護義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EcologicalPrinciple",
+      "ordValue": 4,
+      "definition": "生態学の確立された原則。学術的合意に基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "HabitatManagement",
+      "ordValue": 3,
+      "definition": "生息地管理の運用方針。環境条件に応じて調整",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "MonitoringMethod",
+      "ordValue": 2,
+      "definition": "監視手法・センサー配置の技術的選択",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "PopulationHypothesis",
+      "ordValue": 1,
+      "definition": "個体数推定・行動予測の未検証仮説",
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s109_p01",
+      "layerName": "SpeciesProtectionLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s109_p02",
+      "layerName": "SpeciesProtectionLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s109_p03",
+      "layerName": "EcologicalPrinciple",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s109_p01"
+      ]
+    },
+    {
+      "id": "s109_p04",
+      "layerName": "EcologicalPrinciple",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s109_p01",
+        ".s109_p02"
+      ]
+    },
+    {
+      "id": "s109_p05",
+      "layerName": "HabitatManagement",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s109_p03"
+      ]
+    },
+    {
+      "id": "s109_p06",
+      "layerName": "HabitatManagement",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s109_p03",
+        ".s109_p04"
+      ]
+    },
+    {
+      "id": "s109_p07",
+      "layerName": "MonitoringMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s109_p05"
+      ]
+    },
+    {
+      "id": "s109_p08",
+      "layerName": "MonitoringMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s109_p05",
+        ".s109_p06"
+      ]
+    },
+    {
+      "id": "s109_p09",
+      "layerName": "PopulationHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s109_p07"
+      ]
+    },
+    {
+      "id": "s109_p10",
+      "layerName": "PopulationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s109_p08"
+      ]
+    },
+    {
+      "id": "s109_p11",
+      "layerName": "PopulationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s109_p07",
+        ".s109_p08"
+      ]
+    },
+    {
+      "id": "s109_p12",
+      "layerName": "EcologicalPrinciple",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s109_p09"
+      ]
+    },
+    {
+      "id": "s109_p13",
+      "layerName": "PopulationHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s109_p09",
+        ".s109_p10"
+      ]
+    },
+    {
+      "id": "s109_p14",
+      "layerName": "PopulationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s109_p11",
+        ".s109_p13"
+      ]
+    }
+  ]
+}

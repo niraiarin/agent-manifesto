@@ -1,0 +1,178 @@
+{
+  "namespace": "TestScenario.S261",
+  "description": "遠隔手術通信品質保証 AI",
+  "layers": [
+    {
+      "name": "safety_invariant",
+      "ordValue": 5,
+      "definition": "患者の生命に直結する不変安全条件。通信途絶時の即時フェイルセーフ",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulatory",
+      "ordValue": 4,
+      "definition": "医療機器通信の法規制・認証要件",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "physical_constraint",
+      "ordValue": 3,
+      "definition": "通信物理層の特性。遅延・帯域・ジッタの物理的限界",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "protocol",
+      "ordValue": 2,
+      "definition": "QoS保証プロトコル。冗長経路・優先制御",
+      "derivedFrom": [
+        "C4",
+        "H4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "帯域最適化・圧縮戦略",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の通信品質仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "sf1",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sf2",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sf3",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rg1",
+      "layerName": "regulatory",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".sf1"
+      ]
+    },
+    {
+      "id": "rg2",
+      "layerName": "regulatory",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".sf2"
+      ]
+    },
+    {
+      "id": "ph1",
+      "layerName": "physical_constraint",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ph2",
+      "layerName": "physical_constraint",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rg1"
+      ]
+    },
+    {
+      "id": "pr1",
+      "layerName": "protocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".sf1",
+        ".ph1"
+      ]
+    },
+    {
+      "id": "pr2",
+      "layerName": "protocol",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".rg2",
+        ".ph2"
+      ]
+    },
+    {
+      "id": "op1",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".pr1"
+      ]
+    },
+    {
+      "id": "op2",
+      "layerName": "optimization",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".ph1",
+        ".pr2"
+      ]
+    },
+    {
+      "id": "hy1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".op1"
+      ]
+    }
+  ],
+  "_fix_log": "Phase 2.5: pr3 (protocol, ord=2) depended on hy1 (hypothesis, ord=0) — monotonicity violation. Both H-justified. Fix: removed pr3. Protocol cannot depend on unverified hypothesis."
+}

@@ -1,0 +1,236 @@
+{
+  "layers": [
+    {
+      "name": "AudioFundamental",
+      "definition": "音響工学の物理的制約と品質基準",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "SeparationArchitecture",
+      "definition": "音源分離アーキテクチャの設計選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "TrainingStrategy",
+      "definition": "学習戦略の仮説。実験で検証が必要",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s128_p01",
+      "layerName": "AudioFundamental",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s128_p02",
+      "layerName": "AudioFundamental",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s128_p03",
+      "layerName": "AudioFundamental",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s128_p04",
+      "layerName": "SeparationArchitecture",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s128_p01"
+      ]
+    },
+    {
+      "id": "s128_p05",
+      "layerName": "SeparationArchitecture",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s128_p02",
+        ".s128_p03"
+      ]
+    },
+    {
+      "id": "s128_p06",
+      "layerName": "SeparationArchitecture",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s128_p01",
+        ".s128_p02"
+      ]
+    },
+    {
+      "id": "s128_p07",
+      "layerName": "TrainingStrategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s128_p04"
+      ]
+    },
+    {
+      "id": "s128_p08",
+      "layerName": "TrainingStrategy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s128_p05",
+        ".s128_p06"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "入力は44.1kHz/16bitのステレオ音源"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "分離後の音質はSDR（Signal-to-Distortion Ratio）8dB以上を目標"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "対象楽器はボーカル・ドラム・ベース・その他の4トラック"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "リアルタイム処理は不要。バッチ処理で可"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "GPUリソースは推論時にV100相当1枚を想定"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "低レイテンシが要求されるライブ用途の場合"
+        }
+      },
+      "content": "U-Netベースのスペクトログラムマスキングが品質と計算量のバランスに優れる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C3"
+          ],
+          "refutation": "4トラック以上の細分化が必要な場合"
+        }
+      },
+      "content": "楽器ごとの専用デコーダが共有デコーダより分離品質が高い"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "モデルサイズがGPUメモリを超過する場合"
+        }
+      },
+      "content": "時間-周波数のマルチスケール処理が低周波楽器の分離に有効"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "H1"
+          ],
+          "refutation": "合成データの品質が実データと乖離している場合"
+        }
+      },
+      "content": "マルチトラック録音データからの教師あり学習が最も効率的"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H2",
+            "H3"
+          ],
+          "refutation": "ジャンル間の汎化性能が十分な場合"
+        }
+      },
+      "content": "ジャンル別のファインチューニングが分離品質を向上させる"
+    }
+  ]
+}

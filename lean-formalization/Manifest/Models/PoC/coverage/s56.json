@@ -1,0 +1,304 @@
+{
+  "namespace": "MedicalImaging",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "最終診断は必ず医師が行う。AIは支援ツールである"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "患者データはHIPAA/個人情報保護法に準拠して管理する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "偽陰性（がん見逃し）を最小化することが最優先"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "AIの判断根拠を医師に説明可能にする（XAI）"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "FDA/PMDA承認の取得・維持が必要"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "学習データに人種・性別のバイアスを含めない"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "システム障害時は従来のマニュアル読影に切り替える"
+      },
+      {
+        "id": "C8",
+        "source": "humanDecision",
+        "content": "診断結果は電子カルテシステムと連携する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C3",
+        "refutation": "画像以外の診断手法が主流になった場合",
+        "content": "CT/MRI画像の解像度向上によりAI精度は改善し続ける"
+      },
+      {
+        "id": "H2",
+        "basis": "C4",
+        "refutation": "XAI技術が根本的に限界に達した場合",
+        "content": "Grad-CAM等のアテンションマップで説明性を確保できる"
+      },
+      {
+        "id": "H3",
+        "basis": "C6",
+        "refutation": "完全に公平なデータセットが構築された場合",
+        "content": "学習データの偏りは定期的な監査で検出・補正が必要"
+      },
+      {
+        "id": "H4",
+        "basis": "C5",
+        "refutation": "規制フレームワークが根本的に変わった場合",
+        "content": "モデル更新時は再承認プロセスが必要"
+      },
+      {
+        "id": "H5",
+        "basis": "C8",
+        "refutation": "電子カルテの統一規格が変わった場合",
+        "content": "HL7 FHIR標準でカルテ連携が可能"
+      },
+      {
+        "id": "H6",
+        "basis": "H1",
+        "refutation": "転移学習の限界が判明した場合",
+        "content": "事前学習済みモデルのファインチューニングで少量データでも高精度を達成"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "patientSafety",
+      "ordValue": 4,
+      "definition": "患者生命・安全に直結する不変条件",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "C7"
+      ]
+    },
+    {
+      "name": "regulatory",
+      "ordValue": 3,
+      "definition": "法規制・承認に関する制約",
+      "derivedFrom": [
+        "C2",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床運用に関する方針",
+      "derivedFrom": [
+        "C4",
+        "C8",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "modelStrategy",
+      "ordValue": 1,
+      "definition": "AIモデルの学習・推論戦略",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "ps1",
+      "layerName": "patientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ps2",
+      "layerName": "patientSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ps3",
+      "layerName": "patientSafety",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        "ps1"
+      ]
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulatory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "ps2"
+      ]
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulatory",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "ps1"
+      ]
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulatory",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "ps2"
+      ]
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        "ps1",
+        "reg2"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "C8",
+        "H5"
+      ],
+      "dependencies": [
+        "reg1"
+      ]
+    },
+    {
+      "id": "clin3",
+      "layerName": "clinical",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "ps2",
+        "reg3"
+      ]
+    },
+    {
+      "id": "clin4",
+      "layerName": "clinical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        "ps3"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "modelStrategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "clin1",
+        "reg2"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "modelStrategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "reg3",
+        "clin3"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "modelStrategy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "mod1"
+      ]
+    },
+    {
+      "id": "mod4",
+      "layerName": "modelStrategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "clin1",
+        "clin2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "reg2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ],
+  "_monotonicity_violation": {
+    "description": "シナリオ56: 意図的単調性違反を含む初版。医療AIでは安全層と規制層の境界が曖昧になりやすい。",
+    "initial_violation": "reg2(regulatory,ord=3)をmodelStrategy(ord=1)に誤分類した場合、clin1(clinical,ord=2)がreg2(modelStrategy,ord=1)に依存し、ord(依存先)=1 < ord(依存元)=2 で違反。また、mod1がreg2に依存しているためmod1(ord=1)→reg2(ord=1)は等価で合法だが、ps1→reg2の関係でps1(ord=4)がreg2(ord=1)に依存する形になり構造的に不整合。",
+    "resolution": "reg2はFDA/PMDA承認という法規制制約であり、modelStrategyではなくregulatory(ord=3)が正しい。C5由来のためH由来の分類誤りとして修正。上記の最終版では修正済み。"
+  }
+}

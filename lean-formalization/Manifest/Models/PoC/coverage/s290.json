@@ -1,0 +1,257 @@
+{
+  "namespace": "Scenario290",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "乗客安全に関する不可侵の基準。法的・社会的要件。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "operations",
+      "ordValue": 3,
+      "definition": "運行判断の権限構造と意思決定プロセス。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "maintenance",
+      "ordValue": 2,
+      "definition": "車両基地の保守手順と点検基準。メーカー推奨に準拠。",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "AI予測モデルの設計判断。運用データで改善可能。",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。フィールドデータで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "opr1",
+      "layerName": "operations",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operations",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf2"
+      ]
+    },
+    {
+      "id": "mnt1",
+      "layerName": "maintenance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".opr1"
+      ]
+    },
+    {
+      "id": "mnt2",
+      "layerName": "maintenance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".opr2"
+      ]
+    },
+    {
+      "id": "mnt3",
+      "layerName": "maintenance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".mnt1"
+      ]
+    },
+    {
+      "id": "mnt4",
+      "layerName": "maintenance",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".mnt1",
+        ".mnt2"
+      ]
+    },
+    {
+      "id": "prd1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".mnt2",
+        ".mnt4"
+      ]
+    },
+    {
+      "id": "prd2",
+      "layerName": "prediction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".mnt1",
+        ".mnt4"
+      ]
+    },
+    {
+      "id": "prd3",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".mnt2"
+      ]
+    },
+    {
+      "id": "prd4",
+      "layerName": "prediction",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".mnt3"
+      ]
+    },
+    {
+      "id": "prd5",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".prd1",
+        ".prd2"
+      ]
+    },
+    {
+      "id": "prd6",
+      "layerName": "prediction",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".prd2",
+        ".prd3"
+      ]
+    },
+    {
+      "id": "prd7",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".prd1",
+        ".prd3",
+        ".prd4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".prd5",
+        ".prd6"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".prd7"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".mnt3",
+        ".prd4"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2",
+        ".hyp3"
+      ]
+    }
+  ]
+}

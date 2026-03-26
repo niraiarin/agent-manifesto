@@ -1,0 +1,257 @@
+{
+  "namespace": "DeliveryRoute",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "ドライバーの連続運転時間は法定上限を超えない"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "冷凍・冷蔵品の温度管理を維持する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "配送時間帯の約束を守ることが顧客満足の基本"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "交通規制・通行止め情報をリアルタイムに反映する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "燃料コストの最小化は長期的目標"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "配送員の安全を最優先する"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "災害時はルート最適化より安全確保を優先する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "自動運転が完全普及した場合",
+        "content": "交通渋滞パターンは曜日・時間帯で統計的に予測可能"
+      },
+      {
+        "id": "H2",
+        "basis": "C5",
+        "refutation": "EVの完全普及で燃料コスト構造が変化した場合",
+        "content": "ルート距離と燃料コストは概ね線形関係"
+      },
+      {
+        "id": "H3",
+        "basis": "C3",
+        "refutation": "即時配送が不要になった場合",
+        "content": "配送順序の最適化でコスト20%削減が可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C2",
+        "refutation": "常温保存可能な新技術が登場した場合",
+        "content": "冷凍車は専用ルートで効率化できる"
+      },
+      {
+        "id": "H5",
+        "basis": "C4,H1",
+        "refutation": "通信インフラが根本的に変化した場合",
+        "content": "GPSとセルラー通信でリアルタイム位置追跡が可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "ドライバー安全・法規制の不変条件",
+      "derivedFrom": [
+        "C1",
+        "C6",
+        "C7"
+      ]
+    },
+    {
+      "name": "constraint",
+      "ordValue": 2,
+      "definition": "品質・時間に関する外部依存制約",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "コスト・効率に関する運用方針",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化するルート戦略",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "safety",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "con1",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "con2",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "con3",
+      "layerName": "constraint",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "con4",
+      "layerName": "constraint",
+      "justification": [
+        "C2",
+        "H4"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "con2"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "con2",
+        "con1"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "con4"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "con3",
+        "pol1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "pol1"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "con3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        "pol2",
+        "opt1"
+      ]
+    }
+  ]
+}

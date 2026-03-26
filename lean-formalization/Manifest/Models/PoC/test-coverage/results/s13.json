@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S13",
+  "layers": [
+    {
+      "name": "physical_safety",
+      "ordValue": 5,
+      "definition": "人身安全・衝突回避の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "hardware",
+      "ordValue": 4,
+      "definition": "ロボットハードウェアの物理制約",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "warehouse_layout",
+      "ordValue": 3,
+      "definition": "倉庫レイアウト・棚配置への依存",
+      "derivedFrom": [
+        "H3",
+        "C3"
+      ]
+    },
+    {
+      "name": "dispatch_policy",
+      "ordValue": 2,
+      "definition": "管理者が設定するタスク割当方針",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "path_optimization",
+      "ordValue": 1,
+      "definition": "AIが最適化する経路・動作計画",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "ps1",
+      "layerName": "physical_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ps2",
+      "layerName": "physical_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hw1",
+      "layerName": "hardware",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hw2",
+      "layerName": "hardware",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "ps1"
+      ]
+    },
+    {
+      "id": "wl1",
+      "layerName": "warehouse_layout",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "wl2",
+      "layerName": "warehouse_layout",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "hw1"
+      ]
+    },
+    {
+      "id": "dp1",
+      "layerName": "dispatch_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "ps1",
+        "wl1"
+      ]
+    },
+    {
+      "id": "dp2",
+      "layerName": "dispatch_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "ps2",
+        "hw2"
+      ]
+    },
+    {
+      "id": "dp3",
+      "layerName": "dispatch_policy",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        "wl2"
+      ]
+    },
+    {
+      "id": "po1",
+      "layerName": "path_optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "dp1",
+        "hw1"
+      ]
+    },
+    {
+      "id": "po2",
+      "layerName": "path_optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "dp2",
+        "wl1"
+      ]
+    },
+    {
+      "id": "po3",
+      "layerName": "path_optimization",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "dp3"
+      ]
+    },
+    {
+      "id": "po4",
+      "layerName": "path_optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "po1",
+        "po2"
+      ]
+    },
+    {
+      "id": "po5",
+      "layerName": "path_optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "dp1"
+      ]
+    }
+  ]
+}

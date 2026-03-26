@@ -1,0 +1,1357 @@
+[
+  {
+    "scenario_id": 91,
+    "project": "養殖魚健康監視 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "プロジェクトの不変前提。人間が覆さない限り変わらない。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "データに基づく経験則。新データで更新されうる。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "設計上の選択。トレードオフに応じて変更可能。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "未検証の仮説。運用を通じて検証が必要。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_d37842",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0057e4",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0e9581",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_242a52",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_952f33",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_7b261f",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_42d964",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e2cddd",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3941a0",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 92,
+    "project": "空調フィルター交換予測 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "建物・設備の物理的制約。変更不可。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "運用データから導かれる経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "システム設計上の選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_586bdc",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_60fffd",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_2b754a",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_31f8f7",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_2ae0fc",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e8d190",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3dac29",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4c2540",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AI_5a7f45",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 93,
+    "project": "特許侵害分析 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "法的・制度的に不変の前提。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "判例・実務から得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "分析システムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証が必要な技術的仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_fa4c44",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_930910",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_071241",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_eb7c6a",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "PDF_fccc29",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AI_699d34",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_6b60b9",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "LLM_312b22",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f6e7f3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 94,
+    "project": "避雷針設置最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "法規・物理法則に基づく不変前提。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "落雷データ・設置実績から得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "最適化アルゴリズムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの最適化仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "JISA_6d68d3",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_49da32",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0a29be",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "D_0bad48",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "CAD_7a2f0f",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_5494bb",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_36f27d",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3a8ed2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_6c1a7d",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 95,
+    "project": "盲導犬訓練支援 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "動物福祉・訓練基準の不変前提。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "訓練データ・行動科学の経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "AIシステムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「ストレスサインの自動検出で訓練強度を調整」(empirical, ord=2) が「センサーデータの精度は訓練判断に十分」(design, ord=1) に依存するが、依存先(design, ord=1) < 依存元(empirical, ord=2) で単調性違反",
+        "violating_edge": {
+          "from": "ストレスサインの自動検出で訓練強度を調整",
+          "from_layer": "empirical",
+          "from_ord": 2,
+          "to": "センサーデータの精度は訓練判断に十分",
+          "to_layer": "design",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "promote",
+          "detail": "H3由来（LLM推論のみ）のため、LLMが自律的に修正。「センサーデータの精度は訓練判断に十分」をdesign(ord=1)からempirical(ord=2)に昇格。根拠: センサー精度は経験的に検証可能な事実であり、設計選択ではなく経験的前提として扱うのが適切。",
+          "updated_assignment": {
+            "proposition": "センサーデータの精度は訓練判断に十分",
+            "layerName": "empirical",
+            "justification": [
+              "H3",
+              "C5"
+            ]
+          }
+        },
+        "post_resolution_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "prop_4dd613",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_715752",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "IGDF_1f4518",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1a98cd",
+          "layerName": "empirical",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_bab487",
+          "layerName": "empirical",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9a3a66",
+          "layerName": "design",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d403ff",
+          "layerName": "design",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_26b812",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AI_6a3450",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_7fe0ca",
+          "layerName": "design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_70ef5f",
+          "layerName": "constraint",
+          "justification": [
+            "C1",
+            "H2"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 96,
+    "project": "コンクリート強度予測 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "建築基準法・JIS規格に基づく不変前提。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "配合・養生データから得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "予測モデルの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "JISA_e88377",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b29279",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_106776",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_83e151",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9e3711",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_56c679",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_71ef35",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_bf79fd",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AIAbrams_56e217",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 97,
+    "project": "選手移籍市場分析 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "リーグ規則・契約法に基づく不変前提。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "過去の移籍データ・市場動向から得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "分析モデルの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの市場分析仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_c100e3",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "FFPFinancialFairP_2ca400",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9642b9",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b1ee3a",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_541c09",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_bccf7c",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1ad63b",
+          "layerName": "empirical",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "SNS_7d9620",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a233ed",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 98,
+    "project": "自動倉庫ピッキング最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "物理的・安全上の不変制約。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "出荷データ・作業実績から得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "最適化アルゴリズムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの最適化仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_383651",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_547460",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ABC_e43e78",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_930668",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "WMS_5e855b",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_cd4d99",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_423c68",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1a6673",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_776ccc",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 99,
+    "project": "海底ケーブル障害検知 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "通信インフラの物理的・規制的制約。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "障害データ・海洋環境から得られた経験則。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "検知システムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの技術仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "OTDR_87ace6",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e5cf8e",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3e1519",
+          "layerName": "empirical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "OTDR_9e8f4c",
+          "layerName": "design",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "GIS_5a6507",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_84b0a6",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AIS_8244f9",
+          "layerName": "design",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "DAS_5c4b74",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ce817b",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 100,
+    "project": "宇宙デブリ回避 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "constraint",
+          "definition": "軌道力学・宇宙法の不変前提。",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "empirical",
+          "definition": "追跡データ・衝突統計から得られた経験則。",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "principle",
+          "definition": "運用ポリシー・意思決定基準。",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "design",
+          "definition": "回避アルゴリズムの設計選択。",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "definition": "検証待ちの技術仮説。",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「モンテカルロ法で衝突確率を評価」(design, ord=1) が「衝突確率10^-4を回避マヌーバのトリガー閾値とする」(principle, ord=2) に依存するが、依存先の衝突確率閾値（principle, ord=2）は依存元（design, ord=1）より高い強度を持つため単調性は満たされる。一方、「衝突確率の閾値は国際的コンセンサスに基づく」(principle, ord=2) が「AI自律回避が地上管制より迅速な判断を下せる」(hypothesis, ord=0) に依存する形で設計されていた場合に違反が発生。実際の違反: 「燃料消費を最小化する回避軌道を選択」(principle, ord=2) が「ランバート問題の解法で回避軌道を計算」(design, ord=1) に依存。依存先(design, ord=1) < 依存元(principle, ord=2) で単調性違反。",
+        "violating_edge": {
+          "from": "燃料消費を最小化する回避軌道を選択",
+          "from_layer": "principle",
+          "from_ord": 2,
+          "to": "ランバート問題の解法で回避軌道を計算",
+          "to_layer": "design",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "demote",
+          "detail": "H4由来（LLM推論のみ、C関与なし）のため、LLMが自律的に修正。「燃料消費を最小化する回避軌道を選択」の依存先をランバート問題の解法ではなく、軌道力学(constraint)に直接依存させる形にリモデル。あるいは、「燃料消費を最小化する回避軌道を選択」をprinciple(ord=2)からdesign(ord=1)に降格。運用ポリシーとしての燃料最小化原則は、実装手段（ランバート解法）に依存するため、設計選択として扱うのが適切。",
+          "updated_assignment": {
+            "proposition": "燃料消費を最小化する回避軌道を選択",
+            "layerName": "design",
+            "justification": [
+              "C6",
+              "H4"
+            ]
+          }
+        },
+        "post_resolution_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "prop_504ed7",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f5d4b6",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "OST_837bea",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "TLE_58e965",
+          "layerName": "empirical",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b75fc4",
+          "layerName": "empirical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f67d42",
+          "layerName": "principle",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ae58dc",
+          "layerName": "principle",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_2780aa",
+          "layerName": "design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0cce41",
+          "layerName": "design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AI_b6b1d9",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_65502e",
+          "layerName": "principle",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

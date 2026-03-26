@@ -1,0 +1,163 @@
+{
+  "namespace": "DialysisMonitoring",
+  "layers": [
+    {
+      "name": "clinical_evidence",
+      "ordValue": 5,
+      "definition": "臨床エビデンスに基づく医学的知見",
+      "derivedFrom": [
+        "H1"
+      ]
+    },
+    {
+      "name": "patient_safety",
+      "ordValue": 4,
+      "definition": "患者安全に関する不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulatory_compliance",
+      "ordValue": 3,
+      "definition": "PMDA規制・装置仕様への適合",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "clinical_protocol",
+      "ordValue": 2,
+      "definition": "個別化モニタリングの臨床プロトコル",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "prediction_model",
+      "ordValue": 1,
+      "definition": "予測アルゴリズム・特徴量選択の仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "no_miss_acute",
+      "layerName": "patient_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "alert_only",
+      "layerName": "patient_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bp_trend_model",
+      "layerName": "clinical_evidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".no_miss_acute"
+      ]
+    },
+    {
+      "id": "pmda_class2",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".no_miss_acute",
+        ".alert_only"
+      ]
+    },
+    {
+      "id": "device_spec_limit",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".pmda_class2"
+      ]
+    },
+    {
+      "id": "patient_history",
+      "layerName": "clinical_protocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".no_miss_acute",
+        ".device_spec_limit"
+      ]
+    },
+    {
+      "id": "session_baseline",
+      "layerName": "clinical_protocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".patient_history"
+      ]
+    },
+    {
+      "id": "pattern_learner",
+      "layerName": "prediction_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".patient_history",
+        ".session_baseline"
+      ]
+    },
+    {
+      "id": "hrv_analysis",
+      "layerName": "prediction_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".device_spec_limit"
+      ]
+    },
+    {
+      "id": "existing_sensor_ok",
+      "layerName": "prediction_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".device_spec_limit"
+      ]
+    },
+    {
+      "id": "ensemble_alert",
+      "layerName": "prediction_model",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".pattern_learner",
+        ".hrv_analysis",
+        ".bp_trend_model"
+      ]
+    }
+  ]
+}

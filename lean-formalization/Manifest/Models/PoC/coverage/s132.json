@@ -1,0 +1,298 @@
+{
+  "namespace": "TestCoverage.S132",
+  "layers": [
+    {
+      "name": "RacingRegulation",
+      "ordValue": 4,
+      "definition": "競馬法・JRAルールに基づく不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PerformanceEvidence",
+      "ordValue": 3,
+      "definition": "過去レースデータから導かれる経験則",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictionStrategy",
+      "ordValue": 2,
+      "definition": "予測モデルの設計選択。手法変更可能",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "BettingHeuristic",
+      "ordValue": 1,
+      "definition": "投票戦略の仮説。実績データで検証",
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s132_p01",
+      "layerName": "RacingRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s132_p02",
+      "layerName": "RacingRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s132_p03",
+      "layerName": "PerformanceEvidence",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s132_p01"
+      ]
+    },
+    {
+      "id": "s132_p04",
+      "layerName": "PerformanceEvidence",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s132_p01",
+        ".s132_p02"
+      ]
+    },
+    {
+      "id": "s132_p05",
+      "layerName": "PerformanceEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s132_p02"
+      ]
+    },
+    {
+      "id": "s132_p06",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s132_p03"
+      ]
+    },
+    {
+      "id": "s132_p07",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s132_p04"
+      ]
+    },
+    {
+      "id": "s132_p08",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s132_p03",
+        ".s132_p05"
+      ]
+    },
+    {
+      "id": "s132_p09",
+      "layerName": "BettingHeuristic",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s132_p06"
+      ]
+    },
+    {
+      "id": "s132_p10",
+      "layerName": "BettingHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s132_p07"
+      ]
+    },
+    {
+      "id": "s132_p11",
+      "layerName": "BettingHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s132_p08"
+      ]
+    },
+    {
+      "id": "s132_p12",
+      "layerName": "BettingHeuristic",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s132_p09",
+        ".s132_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "競馬法により公正な競走が保証されており、八百長は存在しない前提で予測する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "JRAが公開する出馬表・成績データが唯一の公式データソースである"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "過去5年分のレースデータで十分な統計的有意性が得られる"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "馬場状態（良・稍重・重・不良）はレース結果に大きく影響する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "勾配ブースティング系のモデルを主力として使いたい"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "投票額は1レースあたり上限を設け、資金管理を厳格にする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "コース改修やルール変更で過去データの有効性が低下する場合"
+        }
+      },
+      "content": "馬場状態別にモデルを分割することで予測精度が向上する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "特徴量間の非線形相互作用が弱く、線形モデルで十分な場合"
+        }
+      },
+      "content": "LightGBMが計算効率と精度のバランスで最適である"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "血統データの系統的な収集が困難な場合"
+        }
+      },
+      "content": "血統情報をカテゴリ特徴量として組み込むことで予測精度が向上する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "的中率が十分高く、均一投票でも利益が出る場合"
+        }
+      },
+      "content": "ケリー基準に基づく投票額最適化が長期的な回収率を最大化する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "C3"
+          ],
+          "refutation": "オッズの歪みが市場効率の向上により縮小した場合"
+        }
+      },
+      "content": "期待値が1を超えるレースのみに投票するフィルタリングが有効"
+    }
+  ]
+}

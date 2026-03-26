@@ -1,0 +1,117 @@
+{
+  "layers": [
+    {
+      "name": "constraint",
+      "definition": "プロジェクトの不変前提。人間が覆さない限り変わらない。",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "empirical",
+      "definition": "データに基づく経験則。新データで更新されうる。",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "design",
+      "definition": "設計上の選択。トレードオフに応じて変更可能。",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "definition": "未検証の仮説。運用を通じて検証が必要。",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_d37842",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_0057e4",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_0e9581",
+      "layerName": "empirical",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_242a52",
+      "layerName": "design",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_952f33",
+      "layerName": "empirical",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_7b261f",
+      "layerName": "design",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_42d964",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_e2cddd",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3941a0",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

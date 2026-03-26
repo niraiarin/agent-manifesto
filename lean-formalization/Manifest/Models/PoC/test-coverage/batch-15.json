@@ -1,0 +1,3133 @@
+[
+  {
+    "scenario_id": 141,
+    "project": "火山噴火予測 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 18,
+    "has_violation": true,
+    "violation_description": "s141_p12 (ObservationProtocol, ord=2) depends on s141_p14 (ExploratoryModel, ord=0): dependency target has lower strength than source",
+    "model_spec": {
+      "namespace": "TestCoverage.S141",
+      "layers": [
+        {
+          "name": "SafetyMandate",
+          "ordValue": 5,
+          "definition": "住民の生命に関わる避難判断の安全制約。絶対に違反不可",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "GeophysicalLaw",
+          "ordValue": 4,
+          "definition": "地球物理学的に確立された法則・知見",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "ObservationProtocol",
+          "ordValue": 2,
+          "definition": "観測網の運用手順と閾値設定",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "PredictionPolicy",
+          "ordValue": 1,
+          "definition": "噴火予測モデルの運用方針。データに基づき更新可能",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "ExploratoryModel",
+          "ordValue": 0,
+          "definition": "未検証の予測仮説。研究段階のモデル",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s141_p01",
+          "layerName": "SafetyMandate",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s141_p02",
+          "layerName": "SafetyMandate",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s141_p03",
+          "layerName": "SafetyMandate",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s141_p04",
+          "layerName": "GeophysicalLaw",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s141_p01"
+          ]
+        },
+        {
+          "id": "s141_p05",
+          "layerName": "GeophysicalLaw",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s141_p02"
+          ]
+        },
+        {
+          "id": "s141_p06",
+          "layerName": "GeophysicalLaw",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s141_p01",
+            ".s141_p03"
+          ]
+        },
+        {
+          "id": "s141_p07",
+          "layerName": "ObservationProtocol",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s141_p04"
+          ]
+        },
+        {
+          "id": "s141_p08",
+          "layerName": "ObservationProtocol",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s141_p05"
+          ]
+        },
+        {
+          "id": "s141_p09",
+          "layerName": "ObservationProtocol",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s141_p04",
+            ".s141_p06"
+          ]
+        },
+        {
+          "id": "s141_p10",
+          "layerName": "PredictionPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s141_p07"
+          ]
+        },
+        {
+          "id": "s141_p11",
+          "layerName": "PredictionPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s141_p08",
+            ".s141_p09"
+          ]
+        },
+        {
+          "id": "s141_p12",
+          "layerName": "ObservationProtocol",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s141_p14"
+          ]
+        },
+        {
+          "id": "s141_p13",
+          "layerName": "PredictionPolicy",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s141_p07",
+            ".s141_p10"
+          ]
+        },
+        {
+          "id": "s141_p14",
+          "layerName": "ExploratoryModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s141_p10"
+          ]
+        },
+        {
+          "id": "s141_p15",
+          "layerName": "ExploratoryModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s141_p11",
+            ".s141_p13"
+          ]
+        },
+        {
+          "id": "s141_p16",
+          "layerName": "ExploratoryModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s141_p14"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "噴火警報発令時には住民避難を最優先し、AIの予測が不確実でも安全側に判断する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "避難指示の最終判断は自治体の防災担当者が行う。AIは支援情報の提供のみ"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "マグマの上昇は地震活動・地殻変動・火山ガス放出の3指標で捉えられる"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "気象庁の観測網データをリアルタイムで受信できる"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "GPSによる地殻変動データは1分間隔で取得する"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "過去の噴火データは気象庁のデータベースから取得可能"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "水蒸気爆発など前兆なしの噴火パターンが存在する場合"
+            }
+          },
+          "content": "3指標の統合解析により噴火の数時間前に前兆を検出できる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "通信障害や機器故障でデータ欠損が頻発する場合"
+            }
+          },
+          "content": "リアルタイムデータの欠損率は5%以下に抑えられる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C6"
+              ],
+              "refutation": "過去の噴火パターンが将来の噴火に適用できない場合"
+            }
+          },
+          "content": "過去データに基づく統計モデルが噴火確率の推定に有用"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "センサー配置の最適化が不可能な地形条件がある場合"
+            }
+          },
+          "content": "観測点の空間配置を最適化することで予測精度が向上する"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C6"
+              ],
+              "refutation": "深層学習モデルが物理モデルを超える精度を達成できない場合"
+            }
+          },
+          "content": "深層学習による時系列解析が統計モデルより高精度な予測を実現する"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 142,
+    "project": "オンライン試験不正検知 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S142",
+      "layers": [
+        {
+          "name": "LegalCompliance",
+          "ordValue": 4,
+          "definition": "個人情報保護法・プライバシー権に関する法的義務",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "FairnessStandard",
+          "ordValue": 3,
+          "definition": "公平性・透明性に関する試験運営基準",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "DetectionPolicy",
+          "ordValue": 2,
+          "definition": "不正検知の方針・閾値設定。運用実績に基づき調整",
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "TechnicalChoice",
+          "ordValue": 1,
+          "definition": "実装技術の選択。代替手段に応じて変更可能",
+          "derivedFrom": [
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "ExperimentalRule",
+          "ordValue": 0,
+          "definition": "試行段階のルール。パイロット運用で検証",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s142_p01",
+          "layerName": "LegalCompliance",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s142_p02",
+          "layerName": "LegalCompliance",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s142_p03",
+          "layerName": "FairnessStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s142_p01"
+          ]
+        },
+        {
+          "id": "s142_p04",
+          "layerName": "FairnessStandard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s142_p01",
+            ".s142_p02"
+          ]
+        },
+        {
+          "id": "s142_p05",
+          "layerName": "FairnessStandard",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s142_p02"
+          ]
+        },
+        {
+          "id": "s142_p06",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s142_p03"
+          ]
+        },
+        {
+          "id": "s142_p07",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s142_p04"
+          ]
+        },
+        {
+          "id": "s142_p08",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".s142_p03",
+            ".s142_p05"
+          ]
+        },
+        {
+          "id": "s142_p09",
+          "layerName": "TechnicalChoice",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s142_p06"
+          ]
+        },
+        {
+          "id": "s142_p10",
+          "layerName": "TechnicalChoice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s142_p07"
+          ]
+        },
+        {
+          "id": "s142_p11",
+          "layerName": "TechnicalChoice",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s142_p06",
+            ".s142_p08"
+          ]
+        },
+        {
+          "id": "s142_p12",
+          "layerName": "ExperimentalRule",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s142_p09"
+          ]
+        },
+        {
+          "id": "s142_p13",
+          "layerName": "ExperimentalRule",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s142_p10",
+            ".s142_p11"
+          ]
+        },
+        {
+          "id": "s142_p14",
+          "layerName": "ExperimentalRule",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s142_p12"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "受験者の顔画像・音声データの取得には本人の同意が必要。GDPR・個人情報保護法を遵守する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "不正と判定された受験者には異議申し立ての権利を保障する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "不正検知の誤検知率は1%以下を目標とし、偽陽性による不利益を最小化する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "最終的な不正判定は人間の試験監督者が行い、AIは疑わしい行動のフラグ付けのみ"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "Webカメラとブラウザのロックダウン機能を前提とする"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "文化的背景により不正とみなす行動の基準が地域で大きく異なる場合"
+            }
+          },
+          "content": "視線追跡と顔向き検知の組合せで不正行動の多くを捕捉できる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "試験監督者の人数が受験者数に対して不足する場合"
+            }
+          },
+          "content": "AIがフラグ付けした行動を監督者が確認するワークフローで運用可能"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "受験者のPC環境が多様すぎて統一的なロックダウンが不可能な場合"
+            }
+          },
+          "content": "ブラウザロックダウンにより画面共有・タブ切替を技術的に防止できる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "音声認識の精度がノイズ環境で著しく低下する場合"
+            }
+          },
+          "content": "マイク入力の解析により第三者からの口頭指示を検知できる"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "バーチャル背景やディープフェイクで検知を回避できる場合"
+            }
+          },
+          "content": "複数の行動シグナルの統合スコアリングが単一指標より高精度"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 143,
+    "project": "造船設計最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S143",
+      "layers": [
+        {
+          "name": "StructuralSafety",
+          "ordValue": 3,
+          "definition": "船体構造の安全基準。IMO規則・船級協会規格に準拠",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "HydrodynamicLaw",
+          "ordValue": 2,
+          "definition": "流体力学に基づく設計原則。物理法則として不変",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "DesignTradeoff",
+          "ordValue": 1,
+          "definition": "コスト・性能・製造性のトレードオフ判断",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "OptimizationHypothesis",
+          "ordValue": 0,
+          "definition": "最適化アルゴリズムの有効性に関する仮説",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s143_p01",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s143_p02",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s143_p03",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s143_p04",
+          "layerName": "HydrodynamicLaw",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s143_p01"
+          ]
+        },
+        {
+          "id": "s143_p05",
+          "layerName": "HydrodynamicLaw",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s143_p02"
+          ]
+        },
+        {
+          "id": "s143_p06",
+          "layerName": "HydrodynamicLaw",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s143_p01",
+            ".s143_p03"
+          ]
+        },
+        {
+          "id": "s143_p07",
+          "layerName": "DesignTradeoff",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s143_p04"
+          ]
+        },
+        {
+          "id": "s143_p08",
+          "layerName": "DesignTradeoff",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s143_p05"
+          ]
+        },
+        {
+          "id": "s143_p09",
+          "layerName": "DesignTradeoff",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s143_p04",
+            ".s143_p06"
+          ]
+        },
+        {
+          "id": "s143_p10",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s143_p07"
+          ]
+        },
+        {
+          "id": "s143_p11",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s143_p08",
+            ".s143_p09"
+          ]
+        },
+        {
+          "id": "s143_p12",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s143_p07",
+            ".s143_p10"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "船体構造はIMO(国際海事機関)の安全基準および船級協会の規格を満たさなければならない"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "設計変更の最終承認は主任設計技師が行う"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "船体の抵抗・推進性能はCFD(数値流体力学)シミュレーションで評価する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "建造コストは鋼材使用量と溶接工数で大部分が決まる"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "燃費性能は船主の最優先要件である"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "CFDの解像度が不十分で乱流モデルが実験と乖離する場合"
+            }
+          },
+          "content": "CFDシミュレーションの精度は模型試験と5%以内の誤差で一致する"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "新素材(FRP等)の採用で鋼材使用量とコストの関係が変わる場合"
+            }
+          },
+          "content": "船体形状の最適化により鋼材使用量を削減しつつ燃費を改善できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "多目的最適化の探索空間が広すぎて実用的な計算時間内に収束しない場合"
+            }
+          },
+          "content": "遺伝的アルゴリズムによる多目的最適化がパレート最適解を効率的に探索できる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "代替モデルの近似誤差が大きく最適解が実際には劣解である場合"
+            }
+          },
+          "content": "サロゲートモデルによりCFDの計算コストを1/100に削減できる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 144,
+    "project": "植物成分分析 AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S144",
+      "layers": [
+        {
+          "name": "AnalyticalStandard",
+          "ordValue": 3,
+          "definition": "分析化学の基準。計量トレーサビリティ・標準試料に基づく",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "BiologicalKnowledge",
+          "ordValue": 2,
+          "definition": "植物生理学・生化学の確立された知見",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "MethodSelection",
+          "ordValue": 1,
+          "definition": "分析手法の選択。機器・コスト・目的に応じて変更可能",
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "PredictiveModel",
+          "ordValue": 0,
+          "definition": "成分予測モデルの仮説。サンプルデータで検証が必要",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s144_p01",
+          "layerName": "AnalyticalStandard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s144_p02",
+          "layerName": "AnalyticalStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s144_p03",
+          "layerName": "BiologicalKnowledge",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s144_p01"
+          ]
+        },
+        {
+          "id": "s144_p04",
+          "layerName": "BiologicalKnowledge",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s144_p01",
+            ".s144_p02"
+          ]
+        },
+        {
+          "id": "s144_p05",
+          "layerName": "MethodSelection",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s144_p03"
+          ]
+        },
+        {
+          "id": "s144_p06",
+          "layerName": "MethodSelection",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s144_p04"
+          ]
+        },
+        {
+          "id": "s144_p07",
+          "layerName": "MethodSelection",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s144_p03",
+            ".s144_p04"
+          ]
+        },
+        {
+          "id": "s144_p08",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s144_p05"
+          ]
+        },
+        {
+          "id": "s144_p09",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s144_p06"
+          ]
+        },
+        {
+          "id": "s144_p10",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s144_p05",
+            ".s144_p07"
+          ]
+        },
+        {
+          "id": "s144_p11",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s144_p08",
+            ".s144_p09"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "成分定量はISO/IEC 17025認定に準拠した手順で行う"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "標準試料との比較による校正を毎回実施する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "ポリフェノール・テルペン・アルカロイドが主要分析対象"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "近赤外分光法(NIR)による非破壊分析を一次スクリーニングに使用する"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "未知の二次代謝産物が主要成分と干渉する場合"
+            }
+          },
+          "content": "主要3成分群の定量で植物の機能性評価の80%をカバーできる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "NIRの波長分解能が不十分で類似成分の識別ができない場合"
+            }
+          },
+          "content": "NIRスペクトルからPLS回帰で主要成分を同時定量できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "水分含量の変動がNIR測定に大きな影響を与える場合"
+            }
+          },
+          "content": "前処理(乾燥・粉砕)の標準化によりNIR測定の再現性が向上する"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "品種間の化学的多様性が大きすぎてモデルの汎化が困難な場合"
+            }
+          },
+          "content": "深層学習によるスペクトル解析がPLS回帰より高い予測精度を達成する"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "サンプル前処理のばらつきが転移学習の精度を低下させる場合"
+            }
+          },
+          "content": "異なる植物種間での転移学習が少量サンプルでの予測を可能にする"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 145,
+    "project": "信号機故障予測 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S145",
+      "layers": [
+        {
+          "name": "TrafficSafety",
+          "ordValue": 2,
+          "definition": "道路交通の安全に直結する制約。故障時の安全確保が最優先",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "MaintenancePolicy",
+          "ordValue": 1,
+          "definition": "保守運用のポリシー。予算・人員に応じて調整可能",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "PredictiveHypothesis",
+          "ordValue": 0,
+          "definition": "故障予測モデルの仮説。実運用データで検証が必要",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s145_p01",
+          "layerName": "TrafficSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s145_p02",
+          "layerName": "TrafficSafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s145_p03",
+          "layerName": "TrafficSafety",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s145_p04",
+          "layerName": "MaintenancePolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s145_p01"
+          ]
+        },
+        {
+          "id": "s145_p05",
+          "layerName": "MaintenancePolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s145_p02"
+          ]
+        },
+        {
+          "id": "s145_p06",
+          "layerName": "MaintenancePolicy",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s145_p01",
+            ".s145_p03"
+          ]
+        },
+        {
+          "id": "s145_p07",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s145_p04"
+          ]
+        },
+        {
+          "id": "s145_p08",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s145_p05"
+          ]
+        },
+        {
+          "id": "s145_p09",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s145_p04",
+            ".s145_p06"
+          ]
+        },
+        {
+          "id": "s145_p10",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s145_p07",
+            ".s145_p08"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "信号機故障時は全方向赤点滅に切り替えるフェイルセーフ機構が必須"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "故障検知から現場対応までの目標時間は30分以内"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "LED信号機と従来型電球信号機の両方が対象"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "保守作業員の人数は固定。予防保守の優先順位付けが必要"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "信号制御器のログデータは過去5年分が蓄積されている"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2",
+                "C4"
+              ],
+              "refutation": "地方部では移動距離が長く30分以内の対応が物理的に不可能な場合"
+            }
+          },
+          "content": "故障確率の高い信号機を事前に特定し巡回ルートに組み込むことで対応時間を短縮できる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "旧型信号機のログフォーマットが統一されておらずデータ統合が困難な場合"
+            }
+          },
+          "content": "LED信号機と電球型で異なる故障パターンを別モデルで学習すべき"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "過去データに含まれない新型故障モードが出現する場合"
+            }
+          },
+          "content": "制御器ログの電圧変動パターンから故障の72時間前予測が可能"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "気象データと故障の相関が地域ごとに大きく異なる場合"
+            }
+          },
+          "content": "気温・湿度・日照時間の気象データと故障率に有意な相関がある"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 146,
+    "project": "ネット炎上早期検知 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 21,
+    "has_violation": true,
+    "violation_description": "s146_p11 (ResponseGuideline, ord=2) depends on s146_p16 (ExperimentalSignal, ord=0): dependency target has lower strength than source",
+    "model_spec": {
+      "namespace": "TestCoverage.S146",
+      "layers": [
+        {
+          "name": "EthicalBoundary",
+          "ordValue": 5,
+          "definition": "表現の自由・名誉毀損に関する法的・倫理的限界",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "PrivacyObligation",
+          "ordValue": 4,
+          "definition": "個人情報・プライバシー保護の義務",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "DetectionCriteria",
+          "ordValue": 3,
+          "definition": "炎上判定の基準。批判と炎上の区別に関する方針",
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "ResponseGuideline",
+          "ordValue": 2,
+          "definition": "検知後の対応手順・エスカレーションルール",
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "SentimentAnalysis",
+          "ordValue": 1,
+          "definition": "感情分析・トレンド検出の技術的手法",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "ExperimentalSignal",
+          "ordValue": 0,
+          "definition": "未検証の炎上兆候シグナル。試験的に監視",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s146_p01",
+          "layerName": "EthicalBoundary",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s146_p02",
+          "layerName": "PrivacyObligation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s146_p01"
+          ]
+        },
+        {
+          "id": "s146_p03",
+          "layerName": "PrivacyObligation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s146_p01"
+          ]
+        },
+        {
+          "id": "s146_p04",
+          "layerName": "PrivacyObligation",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s146_p05",
+          "layerName": "DetectionCriteria",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s146_p02"
+          ]
+        },
+        {
+          "id": "s146_p06",
+          "layerName": "DetectionCriteria",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s146_p03"
+          ]
+        },
+        {
+          "id": "s146_p07",
+          "layerName": "DetectionCriteria",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s146_p02",
+            ".s146_p04"
+          ]
+        },
+        {
+          "id": "s146_p08",
+          "layerName": "ResponseGuideline",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s146_p05"
+          ]
+        },
+        {
+          "id": "s146_p09",
+          "layerName": "ResponseGuideline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s146_p06"
+          ]
+        },
+        {
+          "id": "s146_p10",
+          "layerName": "ResponseGuideline",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s146_p05",
+            ".s146_p07"
+          ]
+        },
+        {
+          "id": "s146_p11",
+          "layerName": "ResponseGuideline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s146_p16"
+          ]
+        },
+        {
+          "id": "s146_p12",
+          "layerName": "SentimentAnalysis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s146_p08"
+          ]
+        },
+        {
+          "id": "s146_p13",
+          "layerName": "SentimentAnalysis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s146_p09"
+          ]
+        },
+        {
+          "id": "s146_p14",
+          "layerName": "SentimentAnalysis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s146_p08",
+            ".s146_p10"
+          ]
+        },
+        {
+          "id": "s146_p15",
+          "layerName": "ExperimentalSignal",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s146_p12"
+          ]
+        },
+        {
+          "id": "s146_p16",
+          "layerName": "ExperimentalSignal",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s146_p13"
+          ]
+        },
+        {
+          "id": "s146_p17",
+          "layerName": "ExperimentalSignal",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s146_p14",
+            ".s146_p15"
+          ]
+        },
+        {
+          "id": "s146_p18",
+          "layerName": "ExperimentalSignal",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s146_p16"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "正当な批判・意見表明と炎上は区別し、表現の自由を侵害しない"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "個人を特定する情報の収集は行わない。投稿の匿名性を保持する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "監視対象はクライアント企業に関連するキーワードのみに限定する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "炎上の定義は投稿量の急増とネガティブ感情の組合せとする"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "検知から広報チームへの通知は15分以内を目標とする"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "ポジティブな話題の急増(バズ)と炎上を投稿量だけでは区別できない場合"
+            }
+          },
+          "content": "投稿量の時系列異常検知とネガティブ感情比率の組合せで炎上を検知できる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "深夜・休日に広報担当者が不在で15分以内の対応が困難な場合"
+            }
+          },
+          "content": "炎上レベルに応じた段階的エスカレーション(自動通知→電話→緊急会議)が有効"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "皮肉・比喩表現が感情分析の精度を著しく低下させる場合"
+            }
+          },
+          "content": "BERTベースの感情分析が日本語SNS投稿のネガティブ検出に有効"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "リツイート数の急増が炎上でなくポジティブなバイラルである場合"
+            }
+          },
+          "content": "投稿のリツイート・引用リツイートの連鎖パターンが炎上拡散の予測に有用"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "画像・動画のOCR精度が低くテキスト抽出が不十分な場合"
+            }
+          },
+          "content": "画像内テキストのOCR解析が文字のみの監視では見逃すコンテンツを補完する"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "まとめサイトの炎上増幅効果が一時的なトレンドにすぎない場合"
+            }
+          },
+          "content": "まとめサイトへの転載を検知することで炎上の二次拡散を早期に捕捉できる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 147,
+    "project": "溶接品質検査 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S147",
+      "layers": [
+        {
+          "name": "WeldStandard",
+          "ordValue": 3,
+          "definition": "溶接品質基準。JIS・AWS規格に基づく合否判定基準",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "InspectionProtocol",
+          "ordValue": 2,
+          "definition": "検査手順の確立された方法論。NDT(非破壊検査)の原理",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "SystemDesign",
+          "ordValue": 1,
+          "definition": "検査システムの設計選択。機器構成・処理方式",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "DetectionModel",
+          "ordValue": 0,
+          "definition": "欠陥検出モデルの仮説。実溶接データで検証が必要",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s147_p01",
+          "layerName": "WeldStandard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s147_p02",
+          "layerName": "WeldStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s147_p03",
+          "layerName": "WeldStandard",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s147_p04",
+          "layerName": "InspectionProtocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s147_p01"
+          ]
+        },
+        {
+          "id": "s147_p05",
+          "layerName": "InspectionProtocol",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s147_p02"
+          ]
+        },
+        {
+          "id": "s147_p06",
+          "layerName": "InspectionProtocol",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s147_p01",
+            ".s147_p03"
+          ]
+        },
+        {
+          "id": "s147_p07",
+          "layerName": "SystemDesign",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s147_p04"
+          ]
+        },
+        {
+          "id": "s147_p08",
+          "layerName": "SystemDesign",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s147_p05"
+          ]
+        },
+        {
+          "id": "s147_p09",
+          "layerName": "SystemDesign",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s147_p04",
+            ".s147_p06"
+          ]
+        },
+        {
+          "id": "s147_p10",
+          "layerName": "DetectionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s147_p07"
+          ]
+        },
+        {
+          "id": "s147_p11",
+          "layerName": "DetectionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s147_p08"
+          ]
+        },
+        {
+          "id": "s147_p12",
+          "layerName": "DetectionModel",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s147_p07",
+            ".s147_p09"
+          ]
+        },
+        {
+          "id": "s147_p13",
+          "layerName": "DetectionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s147_p10",
+            ".s147_p11"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "溶接部の品質はJIS Z 3104(放射線透過試験)の判定基準に準拠する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "AIの判定は参考情報であり、最終合否判定は資格保有の検査技術者が行う"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "X線画像による放射線透過試験を主要な検査手法とする"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "検査画像はDR(デジタルラジオグラフィ)パネルで取得する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "検査ラインのタクトタイムは1枚あたり30秒以内"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "肉厚が大きい溶接部ではX線の透過力が不足する場合"
+            }
+          },
+          "content": "X線画像のコントラスト調整により微小欠陥(0.5mm以下)の検出が可能"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "高解像度撮影と30秒タクトタイムが両立しない場合"
+            }
+          },
+          "content": "DRパネルの解像度とフレームレートのバランスで品質と速度を両立できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "欠陥の種類(ブローホール・割れ・融合不良)ごとに別モデルが必要な場合"
+            }
+          },
+          "content": "CNNベースの物体検出モデル(YOLOv8等)で溶接欠陥を一括検出できる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "欠陥種類の分布が偏っており少数クラスの認識精度が不十分な場合"
+            }
+          },
+          "content": "データ拡張(回転・ノイズ付加)により限られた欠陥画像からロバストなモデルを学習できる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 148,
+    "project": "動物園来園者行動分析 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S148",
+      "layers": [
+        {
+          "name": "VisitorPrivacy",
+          "ordValue": 4,
+          "definition": "来園者のプライバシー保護。個人識別データの取扱い制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "AnimalWelfare",
+          "ordValue": 3,
+          "definition": "動物福祉に関する運営方針。動物へのストレス最小化",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "動物園の運営ポリシー。人員配置・混雑管理",
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "AnalyticsMethod",
+          "ordValue": 1,
+          "definition": "行動分析の技術的手法。センサー・アルゴリズム選択",
+          "derivedFrom": [
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "InsightHypothesis",
+          "ordValue": 0,
+          "definition": "来園者行動に関する洞察仮説。データで検証が必要",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s148_p01",
+          "layerName": "VisitorPrivacy",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s148_p02",
+          "layerName": "VisitorPrivacy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s148_p03",
+          "layerName": "VisitorPrivacy",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s148_p04",
+          "layerName": "AnimalWelfare",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s148_p01"
+          ]
+        },
+        {
+          "id": "s148_p05",
+          "layerName": "AnimalWelfare",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s148_p02"
+          ]
+        },
+        {
+          "id": "s148_p06",
+          "layerName": "AnimalWelfare",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s148_p01",
+            ".s148_p03"
+          ]
+        },
+        {
+          "id": "s148_p07",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s148_p04"
+          ]
+        },
+        {
+          "id": "s148_p08",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s148_p05"
+          ]
+        },
+        {
+          "id": "s148_p09",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".s148_p04",
+            ".s148_p06"
+          ]
+        },
+        {
+          "id": "s148_p10",
+          "layerName": "AnalyticsMethod",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s148_p07"
+          ]
+        },
+        {
+          "id": "s148_p11",
+          "layerName": "AnalyticsMethod",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s148_p08"
+          ]
+        },
+        {
+          "id": "s148_p12",
+          "layerName": "AnalyticsMethod",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s148_p07",
+            ".s148_p09"
+          ]
+        },
+        {
+          "id": "s148_p13",
+          "layerName": "InsightHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s148_p10"
+          ]
+        },
+        {
+          "id": "s148_p14",
+          "layerName": "InsightHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s148_p11"
+          ]
+        },
+        {
+          "id": "s148_p15",
+          "layerName": "InsightHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s148_p12",
+            ".s148_p13"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "来園者の顔画像は保存せず、統計的な人数カウントと動線分析のみ行う"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "カメラの設置場所と目的を園内に掲示し、来園者に告知する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "動物の展示エリアの混雑が動物にストレスを与えるため、滞留人数に上限を設ける"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "混雑時はスタッフを動的に再配置して安全を確保する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "既設の防犯カメラ映像を流用し、追加設備投資は最小限にする"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "動物の種類によってストレス反応の閾値が大きく異なる場合"
+            }
+          },
+          "content": "滞留人数が一定値を超えると動物の行動パターンにストレス反応が現れる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "スタッフの再配置が来園者の不満を招く場合"
+            }
+          },
+          "content": "リアルタイムの混雑度マップにより最適なスタッフ配置を算出できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "既設カメラの画角・解像度が人数カウントに不十分な場合"
+            }
+          },
+          "content": "既設防犯カメラの映像からYOLOv8による人物検出で十分な精度の人数カウントが可能"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "天候・イベントなど外部要因の影響が大きく予測困難な場合"
+            }
+          },
+          "content": "曜日・時間帯・天候に基づく混雑予測モデルが翌日の来園者数を予測できる"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "動線データの解像度が粗く展示ごとの滞在時間を正確に計測できない場合"
+            }
+          },
+          "content": "来園者の動線パターンから人気展示と回遊経路を特定し、展示レイアウト改善に活用できる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 149,
+    "project": "海洋酸性化監視 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 7,
+    "num_props": 20,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "TestCoverage.S149",
+      "layers": [
+        {
+          "name": "ScientificPrinciple",
+          "ordValue": 6,
+          "definition": "海洋化学の基本原理。CO2溶解平衡・pH測定の物理化学的基礎",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "MeasurementStandard",
+          "ordValue": 5,
+          "definition": "国際的な海洋観測の計測標準。GOOS/IOC準拠",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "DataQuality",
+          "ordValue": 4,
+          "definition": "データ品質管理の基準。較正・バリデーション手順",
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "MonitoringProtocol",
+          "ordValue": 3,
+          "definition": "監視運用の手順。観測頻度・地点配置",
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "AnalysisPipeline",
+          "ordValue": 2,
+          "definition": "データ解析パイプラインの設計。前処理・統合方法",
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        },
+        {
+          "name": "PredictionModel",
+          "ordValue": 1,
+          "definition": "酸性化予測モデルの手法選択。シナリオに応じて変更可能",
+          "derivedFrom": [
+            "H4"
+          ]
+        },
+        {
+          "name": "EcologicalImpact",
+          "ordValue": 0,
+          "definition": "生態系影響に関する仮説。長期観測で検証が必要",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s149_p01",
+          "layerName": "ScientificPrinciple",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s149_p02",
+          "layerName": "MeasurementStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s149_p01"
+          ]
+        },
+        {
+          "id": "s149_p03",
+          "layerName": "MeasurementStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s149_p01"
+          ]
+        },
+        {
+          "id": "s149_p04",
+          "layerName": "MeasurementStandard",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s149_p01"
+          ]
+        },
+        {
+          "id": "s149_p05",
+          "layerName": "DataQuality",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s149_p02"
+          ]
+        },
+        {
+          "id": "s149_p06",
+          "layerName": "DataQuality",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s149_p03"
+          ]
+        },
+        {
+          "id": "s149_p07",
+          "layerName": "DataQuality",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s149_p02",
+            ".s149_p04"
+          ]
+        },
+        {
+          "id": "s149_p08",
+          "layerName": "MonitoringProtocol",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s149_p05"
+          ]
+        },
+        {
+          "id": "s149_p09",
+          "layerName": "MonitoringProtocol",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s149_p06"
+          ]
+        },
+        {
+          "id": "s149_p10",
+          "layerName": "MonitoringProtocol",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s149_p05",
+            ".s149_p07"
+          ]
+        },
+        {
+          "id": "s149_p11",
+          "layerName": "AnalysisPipeline",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s149_p08"
+          ]
+        },
+        {
+          "id": "s149_p12",
+          "layerName": "AnalysisPipeline",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s149_p09"
+          ]
+        },
+        {
+          "id": "s149_p13",
+          "layerName": "AnalysisPipeline",
+          "justification": [
+            "C6",
+            "H3"
+          ],
+          "dependencies": [
+            ".s149_p08",
+            ".s149_p10"
+          ]
+        },
+        {
+          "id": "s149_p14",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s149_p11"
+          ]
+        },
+        {
+          "id": "s149_p15",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s149_p12"
+          ]
+        },
+        {
+          "id": "s149_p16",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s149_p11",
+            ".s149_p13"
+          ]
+        },
+        {
+          "id": "s149_p17",
+          "layerName": "EcologicalImpact",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s149_p14"
+          ]
+        },
+        {
+          "id": "s149_p18",
+          "layerName": "EcologicalImpact",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s149_p15"
+          ]
+        },
+        {
+          "id": "s149_p19",
+          "layerName": "EcologicalImpact",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s149_p14",
+            ".s149_p16"
+          ]
+        },
+        {
+          "id": "s149_p20",
+          "layerName": "EcologicalImpact",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s149_p17",
+            ".s149_p18"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "海洋の酸性化はCO2の溶解による炭酸系平衡の変化で生じる。この化学過程は十分に理解されている"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "pH測定はスペクトルpH法(m-cresol purple指示薬)を使用し、精度±0.001 pHを確保する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "全炭酸(DIC)と全アルカリ度(TA)の同時測定により炭酸系パラメータを完全に決定する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "認証標準物質(CRM)による定期較正を実施する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "沿岸域と外洋の両方を対象とし、ブイ型自動観測と調査船観測を併用する"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "データはGOOS(全球海洋観測システム)の標準フォーマットで公開する"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "海洋環境でのセンサードリフトが較正間隔より速い場合"
+            }
+          },
+          "content": "分光pH計のドリフト補正により無人ブイでも3ヶ月間の連続計測が可能"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "沿岸域の局所的変動が大きすぎて代表的な測点選定が困難な場合"
+            }
+          },
+          "content": "衛星海面水温データとの統合により観測空白域のpHを推定できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5",
+                "C6"
+              ],
+              "refutation": "異なるプラットフォーム間のデータ品質の不均一性が統合を妨げる場合"
+            }
+          },
+          "content": "ブイ・調査船・衛星データの統合により高解像度の酸性化マップを構築できる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C5"
+              ],
+              "refutation": "気候モデルの不確実性が酸性化予測の信頼区間を実用的な範囲を超えて広げる場合"
+            }
+          },
+          "content": "地球システムモデル(ESM)のダウンスケーリングにより地域スケールの酸性化予測が可能"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1"
+              ],
+              "refutation": "種ごとの酸性化耐性の変異が大きく生態系レベルの影響予測が困難な場合"
+            }
+          },
+          "content": "サンゴ礁の石灰化率低下と酸性化の進行度に定量的な関係がある"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 150,
+    "project": "自動販売機補充最適化 AI",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S150",
+      "layers": [
+        {
+          "name": "BusinessConstraint",
+          "ordValue": 2,
+          "definition": "事業運営の不変制約。法規制・契約条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "OperationalRule",
+          "ordValue": 1,
+          "definition": "補充オペレーションの運用ルール。効率に応じて調整可能",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "DemandForecast",
+          "ordValue": 0,
+          "definition": "需要予測に関する仮説。販売データで継続的に検証",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s150_p01",
+          "layerName": "BusinessConstraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s150_p02",
+          "layerName": "BusinessConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s150_p03",
+          "layerName": "OperationalRule",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s150_p01"
+          ]
+        },
+        {
+          "id": "s150_p04",
+          "layerName": "OperationalRule",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s150_p01",
+            ".s150_p02"
+          ]
+        },
+        {
+          "id": "s150_p05",
+          "layerName": "OperationalRule",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s150_p02"
+          ]
+        },
+        {
+          "id": "s150_p06",
+          "layerName": "DemandForecast",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s150_p03"
+          ]
+        },
+        {
+          "id": "s150_p07",
+          "layerName": "DemandForecast",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s150_p04"
+          ]
+        },
+        {
+          "id": "s150_p08",
+          "layerName": "DemandForecast",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s150_p03",
+            ".s150_p05"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "食品衛生法に基づく賞味期限管理を遵守し、期限切れ商品の販売を防止する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "補充ルートドライバーの1日の稼働時間は8時間以内とする"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "欠品による機会損失を最小化することが最優先KPI"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "IoTセンサーにより各自販機の在庫量をリアルタイムで把握できる"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "通信障害でIoTデータが欠損し在庫把握ができない場合"
+            }
+          },
+          "content": "在庫量のリアルタイム監視により補充タイミングの最適化が可能"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2"
+              ],
+              "refutation": "交通渋滞により最適ルートが実行不可能な場合"
+            }
+          },
+          "content": "巡回セールスマン問題の近似解法で補充ルートを最適化できる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "イベント・天候などの外部要因による需要急変が頻発する場合"
+            }
+          },
+          "content": "過去の販売データから曜日・時間帯別の需要パターンを学習できる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "商品入替えが頻繁で過去データの有効期間が短い場合"
+            }
+          },
+          "content": "気温と飲料カテゴリ別需要の相関モデルが季節変動の予測に有効"
+        }
+      ]
+    }
+  }
+]

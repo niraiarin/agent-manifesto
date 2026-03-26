@@ -1,0 +1,159 @@
+{
+  "namespace": "TestCoverage.S11",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "人命・設備安全に関わる不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 3,
+      "definition": "外部環境（気象・電力網）への依存",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 2,
+      "definition": "ユーザが設定する運用方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIが自律的に最適化する省エネ戦略",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "saf1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "saf2",
+        "env1"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        "saf3"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "pol1",
+        "env1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "pol2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "pol3",
+        "env2"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "opt1"
+      ]
+    }
+  ]
+}

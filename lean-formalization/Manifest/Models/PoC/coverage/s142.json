@@ -1,0 +1,315 @@
+{
+  "namespace": "TestCoverage.S142",
+  "layers": [
+    {
+      "name": "LegalCompliance",
+      "ordValue": 4,
+      "definition": "個人情報保護法・プライバシー権に関する法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "FairnessStandard",
+      "ordValue": 3,
+      "definition": "公平性・透明性に関する試験運営基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DetectionPolicy",
+      "ordValue": 2,
+      "definition": "不正検知の方針・閾値設定。運用実績に基づき調整",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "TechnicalChoice",
+      "ordValue": 1,
+      "definition": "実装技術の選択。代替手段に応じて変更可能",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "ExperimentalRule",
+      "ordValue": 0,
+      "definition": "試行段階のルール。パイロット運用で検証",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s142_p01",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s142_p02",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s142_p03",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s142_p01"
+      ]
+    },
+    {
+      "id": "s142_p04",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s142_p01",
+        ".s142_p02"
+      ]
+    },
+    {
+      "id": "s142_p05",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s142_p02"
+      ]
+    },
+    {
+      "id": "s142_p06",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s142_p03"
+      ]
+    },
+    {
+      "id": "s142_p07",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s142_p04"
+      ]
+    },
+    {
+      "id": "s142_p08",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s142_p03",
+        ".s142_p05"
+      ]
+    },
+    {
+      "id": "s142_p09",
+      "layerName": "TechnicalChoice",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s142_p06"
+      ]
+    },
+    {
+      "id": "s142_p10",
+      "layerName": "TechnicalChoice",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s142_p07"
+      ]
+    },
+    {
+      "id": "s142_p11",
+      "layerName": "TechnicalChoice",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s142_p06",
+        ".s142_p08"
+      ]
+    },
+    {
+      "id": "s142_p12",
+      "layerName": "ExperimentalRule",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s142_p09"
+      ]
+    },
+    {
+      "id": "s142_p13",
+      "layerName": "ExperimentalRule",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s142_p10",
+        ".s142_p11"
+      ]
+    },
+    {
+      "id": "s142_p14",
+      "layerName": "ExperimentalRule",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s142_p12"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "受験者の顔画像・音声データの取得には本人の同意が必要。GDPR・個人情報保護法を遵守する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "不正と判定された受験者には異議申し立ての権利を保障する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "不正検知の誤検知率は1%以下を目標とし、偽陽性による不利益を最小化する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "最終的な不正判定は人間の試験監督者が行い、AIは疑わしい行動のフラグ付けのみ"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "Webカメラとブラウザのロックダウン機能を前提とする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "文化的背景により不正とみなす行動の基準が地域で大きく異なる場合"
+        }
+      },
+      "content": "視線追跡と顔向き検知の組合せで不正行動の多くを捕捉できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "試験監督者の人数が受験者数に対して不足する場合"
+        }
+      },
+      "content": "AIがフラグ付けした行動を監督者が確認するワークフローで運用可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "受験者のPC環境が多様すぎて統一的なロックダウンが不可能な場合"
+        }
+      },
+      "content": "ブラウザロックダウンにより画面共有・タブ切替を技術的に防止できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "音声認識の精度がノイズ環境で著しく低下する場合"
+        }
+      },
+      "content": "マイク入力の解析により第三者からの口頭指示を検知できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "バーチャル背景やディープフェイクで検知を回避できる場合"
+        }
+      },
+      "content": "複数の行動シグナルの統合スコアリングが単一指標より高精度"
+    }
+  ]
+}

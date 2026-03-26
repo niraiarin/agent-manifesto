@@ -1,0 +1,283 @@
+{
+  "namespace": "TestCoverage.S154",
+  "layers": [
+    {
+      "name": "ArchivalIntegrity",
+      "ordValue": 4,
+      "definition": "原資料の情報保全。修復で歴史的記録を改変してはならない",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RestorationScience",
+      "ordValue": 3,
+      "definition": "写真劣化の科学的知見に基づく修復方針",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AlgorithmDesign",
+      "ordValue": 2,
+      "definition": "画像処理・生成AIのアルゴリズム選択",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "PresentationStyle",
+      "ordValue": 1,
+      "definition": "修復結果の表示・出力形式の好み",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s154_p01",
+      "layerName": "ArchivalIntegrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s154_p02",
+      "layerName": "ArchivalIntegrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s154_p03",
+      "layerName": "ArchivalIntegrity",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s154_p04",
+      "layerName": "RestorationScience",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s154_p01"
+      ]
+    },
+    {
+      "id": "s154_p05",
+      "layerName": "RestorationScience",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s154_p02"
+      ]
+    },
+    {
+      "id": "s154_p06",
+      "layerName": "RestorationScience",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s154_p01",
+        ".s154_p03"
+      ]
+    },
+    {
+      "id": "s154_p07",
+      "layerName": "AlgorithmDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s154_p04"
+      ]
+    },
+    {
+      "id": "s154_p08",
+      "layerName": "AlgorithmDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s154_p05",
+        ".s154_p06"
+      ]
+    },
+    {
+      "id": "s154_p09",
+      "layerName": "AlgorithmDesign",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s154_p04"
+      ]
+    },
+    {
+      "id": "s154_p10",
+      "layerName": "PresentationStyle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s154_p07"
+      ]
+    },
+    {
+      "id": "s154_p11",
+      "layerName": "PresentationStyle",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s154_p08"
+      ]
+    },
+    {
+      "id": "s154_p12",
+      "layerName": "PresentationStyle",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s154_p09",
+        ".s154_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "修復後の画像には修復箇所を明示するメタデータを付与し、原本との区別を保証する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "修復で存在しない人物・建物・文字を追加してはならない。欠損部分は推定として明示する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "銀塩写真の経年劣化（褪色・銀鏡・カビ）の種類ごとに修復手法を分ける"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "修復前の原画像を常に保持し、修復処理は非破壊で行う"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "修復結果は原画像との比較スライダーで表示し、修復度合いを調整可能にする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "全劣化タイプに対して単一の修復アルゴリズムが有効な場合"
+        }
+      },
+      "content": "褪色修復にはチャンネル別ヒストグラム補正、銀鏡にはinpaintingが適切"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "AIによる補完が歴史考証的に検証不可能な場合"
+        }
+      },
+      "content": "大規模欠損部分の補完には拡散モデルが有効だが、推定であることの確信度を出力すべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "リアルタイム処理が不要な場合"
+        }
+      },
+      "content": "高解像度スキャン画像の処理にはタイル分割とGPU並列化が必要"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "ユーザが技術的パラメータに関心がない場合"
+        }
+      },
+      "content": "修復パラメータ（ノイズ除去強度・色温度補正量）の詳細表示オプションが上級ユーザに有用"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C1"
+          ],
+          "refutation": "カラー化の需要がない場合"
+        }
+      },
+      "content": "モノクロ写真のカラー化は修復とは別機能として提供し、推定であることを明示すべき"
+    }
+  ]
+}

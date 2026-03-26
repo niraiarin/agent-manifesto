@@ -1,0 +1,243 @@
+{
+  "namespace": "Scenario260",
+  "layers": [
+    {
+      "name": "regulatory",
+      "ordValue": 4,
+      "definition": "GMP・薬事規制に基づく法的制約。違反は製品回収と行政処分。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "quality",
+      "ordValue": 3,
+      "definition": "品質管理部門の承認とバリデーション要件。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "traceability",
+      "ordValue": 2,
+      "definition": "データ完全性と監査対応の記録要件。",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIによる工程最適化の手法。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。パイロットプラントで検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulatory",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulatory",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulatory",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "qua1",
+      "layerName": "quality",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "qua2",
+      "layerName": "quality",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg2"
+      ]
+    },
+    {
+      "id": "qua3",
+      "layerName": "quality",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".qua1",
+        ".qua2"
+      ]
+    },
+    {
+      "id": "trc1",
+      "layerName": "traceability",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".qua1"
+      ]
+    },
+    {
+      "id": "trc2",
+      "layerName": "traceability",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".qua2"
+      ]
+    },
+    {
+      "id": "trc3",
+      "layerName": "traceability",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".trc1",
+        ".trc2"
+      ]
+    },
+    {
+      "id": "trc4",
+      "layerName": "traceability",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".qua3",
+        ".trc1"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".reg2",
+        ".qua1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".qua3",
+        ".trc2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".qua2",
+        ".trc1"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt3",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".trc1",
+        ".trc3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".opt4",
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".opt5",
+        ".trc4"
+      ]
+    }
+  ]
+}

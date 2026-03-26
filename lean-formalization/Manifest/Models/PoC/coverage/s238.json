@@ -1,0 +1,208 @@
+{
+  "namespace": "Scenario238",
+  "layers": [
+    {
+      "name": "medical",
+      "ordValue": 4,
+      "definition": "医療制度上の制約。医師の判断権限とアナフィラキシー対応。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "privacyHealth",
+      "ordValue": 3,
+      "definition": "健康データのプライバシー保護。本人同意原則。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床エビデンスに基づく知見。症状と環境因子の相関。",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "AIによる症状予測と服薬推奨の戦略。",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証のアレルギー学的・統計的仮説。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med3",
+      "layerName": "medical",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phlt1",
+      "layerName": "privacyHealth",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "phlt2",
+      "layerName": "privacyHealth",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".med1",
+        ".med2"
+      ]
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".med2",
+        ".med3"
+      ]
+    },
+    {
+      "id": "clin3",
+      "layerName": "clinical",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".clin1"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".med1",
+        ".clin1",
+        ".clin2"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".clin2",
+        ".clin3"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".clin3",
+        ".pred1"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".phlt1",
+        ".clin2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".phlt2",
+        ".pred1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".pred3",
+        ".pred4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".pred2"
+      ]
+    }
+  ]
+}

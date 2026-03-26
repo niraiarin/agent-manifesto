@@ -1,0 +1,170 @@
+{
+  "namespace": "SwordForgingTempControl",
+  "layers": [
+    {
+      "name": "master_authority",
+      "ordValue": 6,
+      "definition": "刀匠の判断・経験が最上位である不変原則",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "cultural_boundary",
+      "ordValue": 5,
+      "definition": "流派尊重・データ権限の文化的制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "workspace_rule",
+      "ordValue": 4,
+      "definition": "作業環境への非干渉ルール",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "measurement_method",
+      "ordValue": 3,
+      "definition": "計測方式・ノイズ処理の設計",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    },
+    {
+      "name": "analysis_model",
+      "ordValue": 2,
+      "definition": "温度解析・プロファイルモデル",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "material_hypothesis",
+      "ordValue": 1,
+      "definition": "玉鋼特性に関する仮説",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "smith_overrides",
+      "layerName": "master_authority",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_single_optimum",
+      "layerName": "cultural_boundary",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".smith_overrides"
+      ]
+    },
+    {
+      "id": "data_confidential",
+      "layerName": "cultural_boundary",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".smith_overrides"
+      ]
+    },
+    {
+      "id": "non_interference",
+      "layerName": "workspace_rule",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".smith_overrides"
+      ]
+    },
+    {
+      "id": "smoke_tolerance",
+      "layerName": "workspace_rule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".non_interference"
+      ]
+    },
+    {
+      "id": "ir_thermography",
+      "layerName": "measurement_method",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".non_interference",
+        ".smoke_tolerance"
+      ]
+    },
+    {
+      "id": "noise_filter",
+      "layerName": "measurement_method",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".smoke_tolerance"
+      ]
+    },
+    {
+      "id": "school_profile",
+      "layerName": "analysis_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".no_single_optimum",
+        ".ir_thermography"
+      ]
+    },
+    {
+      "id": "quench_temp_est",
+      "layerName": "analysis_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ir_thermography"
+      ]
+    },
+    {
+      "id": "tamahagane_model",
+      "layerName": "material_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".quench_temp_est"
+      ]
+    },
+    {
+      "id": "carbon_variance",
+      "layerName": "material_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".tamahagane_model",
+        ".school_profile"
+      ]
+    }
+  ]
+}

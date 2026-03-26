@@ -1,0 +1,2727 @@
+[
+  {
+    "scenario_id": 191,
+    "project": "核融合プラズマ制御 AI",
+    "phase0_vision": "核融合炉のプラズマを安定制御し、ディスラプション（急激な崩壊）を未然に防ぐAI。トカマク型装置の磁場コイルをリアルタイムで調整し、プラズマの温度・密度・形状を安定範囲内に保つ。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "プラズマ崩壊は数ミリ秒で進行し、人間の介入では間に合わない。AIの自律判断が不可欠"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "炉壁損傷を防ぐため、プラズマ電流のハードリミットは物理的に設定されており、AIは超過できない"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "磁場コイル制御のアクチュエータ応答は1ms以内"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "運転パラメータの変更（出力目標など）は物理学者チームが決定する"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "実験データは全て記録し、再現可能でなければならない"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "ディスラプション予兆が十分早く検出でき、人間が間に合う場合",
+        "content": "ディスラプション予測には過去のショットデータに基づく機械学習モデルが必要"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3"
+        ],
+        "refutation": "コイル応答が非線形で1ms保証が崩れる場合",
+        "content": "フィードバック制御は線形MHDモデルベースで十分な精度が得られる"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C2"
+        ],
+        "refutation": "新型プラズマモードで既存の不安定性分類が無効になる場合",
+        "content": "不安定性モードは有限個に分類でき、各モードに対応する制御則が定義可能"
+      },
+      "H4": {
+        "source": "llmInference",
+        "basis": [
+          "C5"
+        ],
+        "refutation": "リアルタイム制約でログ記録が遅延する場合",
+        "content": "制御判断のログは事後解析可能なフォーマットで保存すべき"
+      }
+    },
+    "phase2_internal": {
+      "layer_derivation": "5層: physics(物理的制約) > safety(安全限界) > operational(運転方針) > control(制御戦略) > hypothesis(未検証)",
+      "monotonicity_violations_initial": [
+        {
+          "violation": "ctrl3 (control, ord=1) depends on hyp1 (hypothesis, ord=0)",
+          "cause": "H由来: ctrl3の制御応答モデルがhyp1の未検証モデル精度仮説に依存",
+          "resolution": "hyp1をcontrol層に昇格（H1由来のため自律修正可能）",
+          "resolved_in": "Phase 2.5 自律修正"
+        }
+      ],
+      "monotonicity_violations_final": 0
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "Scenario191",
+      "layers": [
+        {
+          "name": "physics",
+          "ordValue": 4,
+          "definition": "核融合の物理法則に基づく不変条件。覆すには物理学の革新が必要。",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "safety",
+          "ordValue": 3,
+          "definition": "炉壁・機器保護のための安全境界。ハードウェアで強制。",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "operational",
+          "ordValue": 2,
+          "definition": "物理学者チームが設定する運転パラメータ。実験ごとに変更可能。",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "control",
+          "ordValue": 1,
+          "definition": "AIが自律的に調整する制御戦略。物理モデルに基づく。",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hyp",
+          "ordValue": 0,
+          "definition": "未検証の仮説。実験データで検証が必要。",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "phys1",
+          "layerName": "physics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys2",
+          "layerName": "physics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys3",
+          "layerName": "physics",
+          "justification": [
+            "C2",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe1",
+          "layerName": "safety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".phys1"
+          ]
+        },
+        {
+          "id": "safe2",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": [
+            ".phys1",
+            ".phys2"
+          ]
+        },
+        {
+          "id": "safe3",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".phys3"
+          ]
+        },
+        {
+          "id": "ops1",
+          "layerName": "operational",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".safe1"
+          ]
+        },
+        {
+          "id": "ops2",
+          "layerName": "operational",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".safe2"
+          ]
+        },
+        {
+          "id": "ops3",
+          "layerName": "operational",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".safe1",
+            ".safe3"
+          ]
+        },
+        {
+          "id": "ctrl1",
+          "layerName": "control",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".safe1",
+            ".safe2",
+            ".ops1"
+          ]
+        },
+        {
+          "id": "ctrl2",
+          "layerName": "control",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".phys2",
+            ".ops1"
+          ]
+        },
+        {
+          "id": "ctrl3",
+          "layerName": "control",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".safe3",
+            ".ctrl1"
+          ]
+        },
+        {
+          "id": "ctrl4",
+          "layerName": "control",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".phys3",
+            ".ops3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hyp",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".ctrl1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hyp",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".ops2",
+            ".ctrl3"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 192,
+    "project": "盲ろう者コミュニケーション支援 AI",
+    "phase0_vision": "視覚と聴覚の両方に障害がある方の意思疎通を支援するAI。触覚デバイスを通じて情報を伝達し、指点字や手書き文字の入力を認識して会話を仲介する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "利用者の自己決定権が最優先。AIは選択肢を提示するが、判断を代行しない"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "通信手段は利用者ごとに異なる（指点字・触手話・手書き等）。個別対応が必須"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "誤訳は重大な結果を招く。信頼度の低い変換は必ず確認プロセスを経る"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "デバイスの応答遅延は500ms以内に抑える"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C2"
+        ],
+        "refutation": "触覚パターンが標準化されている場合",
+        "content": "触覚フィードバックの解像度は利用者の感覚閾値に応じて調整が必要"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3"
+        ],
+        "refutation": "文脈推論の精度が十分高い場合",
+        "content": "指点字認識は文脈情報を組み合わせた曖昧性解消が必要"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C2"
+        ],
+        "refutation": "標準プロファイルで全利用者をカバーできる場合",
+        "content": "利用者プロファイルの学習には数週間の適応期間が必要"
+      }
+    },
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "Scenario192",
+      "layers": [
+        {
+          "name": "ethics",
+          "ordValue": 3,
+          "definition": "利用者の権利と尊厳に関わる不可侵の原則。",
+          "derivedFrom": [
+            "C1",
+            "C3"
+          ]
+        },
+        {
+          "name": "accessibility",
+          "ordValue": 2,
+          "definition": "障害特性に応じたアクセシビリティ要件。利用者に依存。",
+          "derivedFrom": [
+            "C2",
+            "C4"
+          ]
+        },
+        {
+          "name": "adaptation",
+          "ordValue": 1,
+          "definition": "個別適応のための設計判断。運用を通じて調整可能。",
+          "derivedFrom": [
+            "C2",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説。利用者テストで検証が必要。",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "eth1",
+          "layerName": "ethics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eth2",
+          "layerName": "ethics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eth3",
+          "layerName": "ethics",
+          "justification": [
+            "C1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "acc1",
+          "layerName": "accessibility",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".eth1"
+          ]
+        },
+        {
+          "id": "acc2",
+          "layerName": "accessibility",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".eth2"
+          ]
+        },
+        {
+          "id": "acc3",
+          "layerName": "accessibility",
+          "justification": [
+            "C2",
+            "C4"
+          ],
+          "dependencies": [
+            ".eth1",
+            ".eth3"
+          ]
+        },
+        {
+          "id": "adp1",
+          "layerName": "adaptation",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".acc1",
+            ".acc3"
+          ]
+        },
+        {
+          "id": "adp2",
+          "layerName": "adaptation",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".eth2",
+            ".acc2"
+          ]
+        },
+        {
+          "id": "adp3",
+          "layerName": "adaptation",
+          "justification": [
+            "C2",
+            "H1"
+          ],
+          "dependencies": [
+            ".acc1"
+          ]
+        },
+        {
+          "id": "adp4",
+          "layerName": "adaptation",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".adp2",
+            ".adp3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".adp1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".adp1",
+            ".adp4"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 193,
+    "project": "深海採掘ロボット AI",
+    "phase0_vision": "水深3000m以上の深海底でレアアース鉱物を採掘する自律ロボットのAI。通信遅延が大きく、自律判断が求められる。海底地形の認識、採掘対象の選別、環境負荷の最小化を両立する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "通信遅延は最大30秒。緊急時はロボットが自律判断で安全停止する"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "熱水噴出孔の周囲500mは採掘禁止区域"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "採掘量の日次上限は母船のオペレーターが設定する"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "ロボットのバッテリーは12時間で交換が必要"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "海底生態系への不可逆的影響を避けることが最優先"
+      },
+      "C6": {
+        "source": "humanDecision",
+        "content": "採掘対象はマンガン団塊とレアアース泥に限定する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "中継ブイで遅延を1秒以下に短縮できる場合",
+        "content": "30秒の通信遅延下では、障害物回避を含む経路計画はオンボードで完結すべき"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C2",
+          "C5"
+        ],
+        "refutation": "生態系調査で影響が無視できると判明した場合",
+        "content": "採掘中の堆積物巻き上げの拡散範囲をリアルタイムで推定する必要がある"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C4"
+        ],
+        "refutation": "次世代バッテリーで24時間以上の稼働が可能になった場合",
+        "content": "残バッテリーに基づく帰還判断は安全マージン20%で設定すべき"
+      },
+      "H4": {
+        "source": "llmInference",
+        "basis": [
+          "C6"
+        ],
+        "refutation": "視覚のみで鉱物同定が可能な場合",
+        "content": "鉱物選別にはマルチスペクトルセンサーと化学分析の組み合わせが必要"
+      }
+    },
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 20,
+    "model_spec": {
+      "namespace": "Scenario193",
+      "layers": [
+        {
+          "name": "environment",
+          "ordValue": 4,
+          "definition": "深海環境の物理的制約。人間が変更できない。",
+          "derivedFrom": [
+            "C1",
+            "C4"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 3,
+          "definition": "環境保護と安全に関する規制的制約。",
+          "derivedFrom": [
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "mission",
+          "ordValue": 2,
+          "definition": "オペレーターが設定するミッションパラメータ。",
+          "derivedFrom": [
+            "C3",
+            "C6"
+          ]
+        },
+        {
+          "name": "autonomy",
+          "ordValue": 1,
+          "definition": "ロボットが自律的に最適化する行動戦略。",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "運用データで検証が必要な仮説。",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg3",
+          "layerName": "regulation",
+          "justification": [
+            "C2",
+            "C5"
+          ],
+          "dependencies": [
+            ".reg1"
+          ]
+        },
+        {
+          "id": "mis1",
+          "layerName": "mission",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".reg2"
+          ]
+        },
+        {
+          "id": "mis2",
+          "layerName": "mission",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".reg1"
+          ]
+        },
+        {
+          "id": "mis3",
+          "layerName": "mission",
+          "justification": [
+            "C3",
+            "C6"
+          ],
+          "dependencies": [
+            ".mis1",
+            ".mis2"
+          ]
+        },
+        {
+          "id": "aut1",
+          "layerName": "autonomy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".env1",
+            ".reg3"
+          ]
+        },
+        {
+          "id": "aut2",
+          "layerName": "autonomy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".reg2",
+            ".reg3"
+          ]
+        },
+        {
+          "id": "aut3",
+          "layerName": "autonomy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".env2",
+            ".mis1"
+          ]
+        },
+        {
+          "id": "aut4",
+          "layerName": "autonomy",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".env1",
+            ".env2",
+            ".aut1"
+          ]
+        },
+        {
+          "id": "aut5",
+          "layerName": "autonomy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".mis3",
+            ".aut2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".mis2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".aut5",
+            ".hyp1"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".aut1",
+            ".aut3"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 194,
+    "project": "伝統工芸技術継承 AI",
+    "phase0_vision": "熟練職人の手仕事（漆器、陶芸、染織など）の暗黙知を記録・分析し、若手職人の技能習得を支援するAI。動作のセンシング、品質評価の形式化、個別指導を行う。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "職人の感覚的判断（手の感触、音、色の微妙な違い）がAIに完全に置き換わることはない"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "技法の公開範囲は各工房の師匠が決定する。プライバシーと秘伝を尊重する"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "AIの評価は参考情報であり、合否判断は師匠が行う"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "記録対象は動作・圧力・温度など定量化可能な要素に限定する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C4"
+        ],
+        "refutation": "センサー精度が人間の感覚を超える場合",
+        "content": "暗黙知の一部は力覚センサーと3Dモーションキャプチャで近似可能"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3"
+        ],
+        "refutation": "品質基準が完全に定量化できる場合",
+        "content": "品質評価には定量指標と師匠の主観評価の両方が必要"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "VRが触覚を完全に再現できる場合",
+        "content": "動作の再現にはVRシミュレーションよりも実素材での反復練習が不可欠"
+      }
+    },
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "Scenario194",
+      "layers": [
+        {
+          "name": "tradition",
+          "ordValue": 2,
+          "definition": "伝統技法と師匠の権限に関わる不可侵の前提。",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "method",
+          "ordValue": 1,
+          "definition": "技術記録・支援の手法。技術進歩に応じて改善可能。",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "効果が未検証の仮説。実地テストで確認が必要。",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "trad1",
+          "layerName": "tradition",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "trad2",
+          "layerName": "tradition",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "trad3",
+          "layerName": "tradition",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "trad4",
+          "layerName": "tradition",
+          "justification": [
+            "C1",
+            "C3"
+          ],
+          "dependencies": [
+            ".trad1"
+          ]
+        },
+        {
+          "id": "meth1",
+          "layerName": "method",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".trad1",
+            ".trad2"
+          ]
+        },
+        {
+          "id": "meth2",
+          "layerName": "method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".trad3",
+            ".trad4"
+          ]
+        },
+        {
+          "id": "meth3",
+          "layerName": "method",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".trad2"
+          ]
+        },
+        {
+          "id": "meth4",
+          "layerName": "method",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".meth1",
+            ".meth2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".trad1",
+            ".meth1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".meth2",
+            ".meth4"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 195,
+    "project": "宇宙ステーション環境制御 AI",
+    "phase0_vision": "国際宇宙ステーション（ISS）の生命維持システムを管理するAI。酸素生成、CO2除去、温湿度制御、水再生を統合的に最適化し、クルーの健康と安全を守る。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "クルーの生命に関わる閾値（酸素分圧、CO2濃度）を超えた場合は即座にアラートを発し、自動的に安全モードに移行する"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "地上管制との通信は最大20分の遅延がある。緊急時はオンボード判断が必須"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "消耗品（フィルター、触媒等）の在庫は厳密に管理され、補給は数ヶ月単位"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "クルーの作業スケジュールとの調整は地上管制が最終決定する"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "全システムは冗長系を持ち、単一障害点を許容しない"
+      },
+      "C6": {
+        "source": "humanDecision",
+        "content": "電力は太陽電池パネルに依存し、軌道位置で変動する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C5"
+        ],
+        "refutation": "全冗長系が同時に故障する極端な事態",
+        "content": "冗長系の自動切替は100ms以内に完了すべき"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3",
+          "C6"
+        ],
+        "refutation": "補給頻度が大幅に増加した場合",
+        "content": "消耗品の使用量を電力状況に応じて動的に最適化すべき"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "クルー全員が宇宙医学の専門家である場合",
+        "content": "環境パラメータの異常パターンからクルーの健康状態を推定可能"
+      },
+      "H4": {
+        "source": "llmInference",
+        "basis": [
+          "C2",
+          "C4"
+        ],
+        "refutation": "低遅延通信技術が実用化された場合",
+        "content": "地上管制への状況報告は要約と優先度付きで送信すべき"
+      }
+    },
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "Scenario195",
+      "layers": [
+        {
+          "name": "lifeCritical",
+          "ordValue": 5,
+          "definition": "クルーの生命に直結する不変条件。違反はミッション中止。",
+          "derivedFrom": [
+            "C1",
+            "C5"
+          ]
+        },
+        {
+          "name": "physics",
+          "ordValue": 4,
+          "definition": "宇宙環境の物理的制約。変更不可能。",
+          "derivedFrom": [
+            "C2",
+            "C6"
+          ]
+        },
+        {
+          "name": "logistics",
+          "ordValue": 3,
+          "definition": "補給・在庫に関するリソース制約。補給サイクルに依存。",
+          "derivedFrom": [
+            "C3"
+          ]
+        },
+        {
+          "name": "operations",
+          "ordValue": 2,
+          "definition": "地上管制が設定する運用方針。ミッションフェーズで変動。",
+          "derivedFrom": [
+            "C4"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "AIが自律的に調整する最適化戦略。",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "運用データで検証が必要な仮説。",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "life1",
+          "layerName": "lifeCritical",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "life2",
+          "layerName": "lifeCritical",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "life3",
+          "layerName": "lifeCritical",
+          "justification": [
+            "C1",
+            "C5"
+          ],
+          "dependencies": [
+            ".life1"
+          ]
+        },
+        {
+          "id": "phy1",
+          "layerName": "physics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phy2",
+          "layerName": "physics",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "log1",
+          "layerName": "logistics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".life2"
+          ]
+        },
+        {
+          "id": "log2",
+          "layerName": "logistics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".phy2"
+          ]
+        },
+        {
+          "id": "opr1",
+          "layerName": "operations",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".life1",
+            ".phy1"
+          ]
+        },
+        {
+          "id": "opr2",
+          "layerName": "operations",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".log1",
+            ".log2"
+          ]
+        },
+        {
+          "id": "opr3",
+          "layerName": "operations",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".life3",
+            ".phy1"
+          ]
+        },
+        {
+          "id": "opt1",
+          "layerName": "optimization",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".life2",
+            ".life3"
+          ]
+        },
+        {
+          "id": "opt2",
+          "layerName": "optimization",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".log1",
+            ".log2",
+            ".phy2"
+          ]
+        },
+        {
+          "id": "opt3",
+          "layerName": "optimization",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".life1",
+            ".opr1"
+          ]
+        },
+        {
+          "id": "opt4",
+          "layerName": "optimization",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".opt1",
+            ".opt2"
+          ]
+        },
+        {
+          "id": "opt5",
+          "layerName": "optimization",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".opr2",
+            ".opt3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".phy1",
+            ".opr1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".opt3",
+            ".opt4"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".opr3",
+            ".opt5"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 196,
+    "project": "絶滅危惧種繁殖支援 AI",
+    "phase0_vision": "動物園・保護施設で飼育されている絶滅危惧種の繁殖成功率を向上させるAI。遺伝的多様性の管理、繁殖適期の予測、飼育環境の最適化を行う。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "動物の福祉が最優先。繁殖目的であっても動物にストレスを与える行為は禁止"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "遺伝的多様性の維持が個体数増加より重要"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "投薬・処置の判断は獣医師が行う。AIは推奨のみ"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "施設間の個体移動は国際種保存計画（SSP）の承認が必要"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "行動データの収集は非侵襲的な方法に限定する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C5"
+        ],
+        "refutation": "動物が装着型センサーに適応し、ストレスが検出されない場合",
+        "content": "カメラベースの行動分析が非侵襲性を満たす最適な手法"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C2"
+        ],
+        "refutation": "遺伝的ボトルネックが既に深刻で多様性維持が不可能な場合",
+        "content": "ペアリング推奨は遺伝的距離を最大化するアルゴリズムで決定すべき"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "ホルモン変動パターンが種ごとに大きく異なり一般化できない場合",
+        "content": "繁殖適期の予測にはホルモン変動と行動パターンの相関分析が有効"
+      },
+      "H4": {
+        "source": "llmInference",
+        "basis": [
+          "C4"
+        ],
+        "refutation": "国際規制が変更され手続きが簡素化された場合",
+        "content": "SSP承認プロセスのデジタル化により移動計画の最適化が可能"
+      }
+    },
+    "phase2_internal": {
+      "layer_derivation": "7層: welfare > genetics > veterinary > regulation > monitoring > algorithm > hypothesis",
+      "monotonicity_violations_initial": [
+        {
+          "violation": "algo2 (algorithm, ord=1) depends on hyp1 (hypothesis, ord=0)",
+          "cause": "H由来: algo2の行動分析パイプラインがhyp1の未検証カメラ精度仮説に依存",
+          "resolution": "hyp1をalgorithm層に昇格（H1由来のため自律修正可能）",
+          "resolved_in": "Phase 2.5 自律修正"
+        }
+      ],
+      "monotonicity_violations_final": 0
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 7,
+    "num_props": 21,
+    "num_deps": 28,
+    "model_spec": {
+      "namespace": "Scenario196",
+      "layers": [
+        {
+          "name": "welfare",
+          "ordValue": 6,
+          "definition": "動物福祉の絶対原則。全ての活動はこの制約下にある。",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "genetics",
+          "ordValue": 5,
+          "definition": "遺伝的多様性の維持に関する生物学的制約。",
+          "derivedFrom": [
+            "C2"
+          ]
+        },
+        {
+          "name": "veterinary",
+          "ordValue": 4,
+          "definition": "獣医学的判断の権限と安全基準。",
+          "derivedFrom": [
+            "C3"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 3,
+          "definition": "国際的な種保存規制。外部依存。",
+          "derivedFrom": [
+            "C4"
+          ]
+        },
+        {
+          "name": "monitoring",
+          "ordValue": 2,
+          "definition": "データ収集の方法論的制約。非侵襲性が前提。",
+          "derivedFrom": [
+            "C5",
+            "H1"
+          ]
+        },
+        {
+          "name": "algorithm",
+          "ordValue": 1,
+          "definition": "AIが最適化する分析・推奨アルゴリズム。",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "運用データで検証が必要な仮説。",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "wel1",
+          "layerName": "welfare",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "wel2",
+          "layerName": "welfare",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "gen1",
+          "layerName": "genetics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".wel1"
+          ]
+        },
+        {
+          "id": "gen2",
+          "layerName": "genetics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".wel1",
+            ".wel2"
+          ]
+        },
+        {
+          "id": "vet1",
+          "layerName": "veterinary",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".wel1"
+          ]
+        },
+        {
+          "id": "vet2",
+          "layerName": "veterinary",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".gen1",
+            ".wel2"
+          ]
+        },
+        {
+          "id": "vet3",
+          "layerName": "veterinary",
+          "justification": [
+            "C1",
+            "C3"
+          ],
+          "dependencies": [
+            ".vet1"
+          ]
+        },
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".gen1",
+            ".gen2"
+          ]
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".vet2"
+          ]
+        },
+        {
+          "id": "mon1",
+          "layerName": "monitoring",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".wel1",
+            ".wel2"
+          ]
+        },
+        {
+          "id": "mon2",
+          "layerName": "monitoring",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".mon1"
+          ]
+        },
+        {
+          "id": "mon3",
+          "layerName": "monitoring",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".vet3",
+            ".mon1"
+          ]
+        },
+        {
+          "id": "algo1",
+          "layerName": "algorithm",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".gen1",
+            ".gen2",
+            ".reg1"
+          ]
+        },
+        {
+          "id": "algo2",
+          "layerName": "algorithm",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".mon2",
+            ".mon3"
+          ]
+        },
+        {
+          "id": "algo3",
+          "layerName": "algorithm",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".vet1",
+            ".mon2"
+          ]
+        },
+        {
+          "id": "algo4",
+          "layerName": "algorithm",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".algo1",
+            ".algo2"
+          ]
+        },
+        {
+          "id": "algo5",
+          "layerName": "algorithm",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".reg1",
+            ".reg2",
+            ".algo1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".reg1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".algo4",
+            ".algo5"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".algo3"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".hyp1",
+            ".hyp2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 197,
+    "project": "極地観測ドローン AI",
+    "phase0_vision": "南極・北極の極地で気象・氷床データを収集する自律ドローンのAI。極寒環境での長時間飛行、ブリザード回避、データの効率的な伝送を実現する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "気温マイナス40度以下ではバッテリー出力が50%以下に低下する。飛行計画はこれを前提とする"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "野生動物（ペンギン、アザラシ等）への接近制限を厳守する。高度100m以上を維持"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "基地からの通信は衛星経由で、帯域は限られる。データは優先度順に送信"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "ブリザード警報発令時は即座に帰還する"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "観測計画は研究チームが毎週策定する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C4"
+        ],
+        "refutation": "気象予測精度が十分高く突発的ブリザードが予測可能な場合",
+        "content": "飛行中の気象変化を検知するオンボード気象センサーが必要"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3"
+        ],
+        "refutation": "広帯域衛星通信が利用可能になった場合",
+        "content": "データ圧縮とエッジ処理により帯域使用を最小化すべき"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "全固体電池等の耐寒バッテリーが実用化された場合",
+        "content": "低温環境では機体の保温システムとバッテリー管理の統合制御が必要"
+      }
+    },
+    "num_c": 5,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "Scenario197",
+      "layers": [
+        {
+          "name": "environmental",
+          "ordValue": 3,
+          "definition": "極地環境の物理的制約と野生動物保護規制。変更不可。",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C4"
+          ]
+        },
+        {
+          "name": "communication",
+          "ordValue": 2,
+          "definition": "通信・帯域に関する制約。インフラ依存。",
+          "derivedFrom": [
+            "C3"
+          ]
+        },
+        {
+          "name": "planning",
+          "ordValue": 1,
+          "definition": "研究チームとAIが協調する飛行・観測計画。",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "検証が必要な技術的仮説。",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "env1",
+          "layerName": "environmental",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environmental",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env3",
+          "layerName": "environmental",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env4",
+          "layerName": "environmental",
+          "justification": [
+            "C1",
+            "C4"
+          ],
+          "dependencies": [
+            ".env1"
+          ]
+        },
+        {
+          "id": "com1",
+          "layerName": "communication",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "com2",
+          "layerName": "communication",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".env3"
+          ]
+        },
+        {
+          "id": "pln1",
+          "layerName": "planning",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".env1",
+            ".env3"
+          ]
+        },
+        {
+          "id": "pln2",
+          "layerName": "planning",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".env4",
+            ".com2"
+          ]
+        },
+        {
+          "id": "pln3",
+          "layerName": "planning",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".com1",
+            ".com2"
+          ]
+        },
+        {
+          "id": "pln4",
+          "layerName": "planning",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".env2",
+            ".pln1"
+          ]
+        },
+        {
+          "id": "pln5",
+          "layerName": "planning",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".pln2",
+            ".pln3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".env1",
+            ".pln1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".pln2",
+            ".pln5"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 198,
+    "project": "災害廃棄物分別 AI",
+    "phase0_vision": "地震・水害後の災害廃棄物を自動分別するAI搭載ロボット。がれき、家財、有害物質を識別し、リサイクル可能な素材を分類する。作業者の安全を守りながら効率的に処理する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "アスベスト等の有害物質が検出された場合は即座に作業を停止し、専門チームに引き継ぐ"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "作業者が半径5m以内にいる場合、ロボットは低速モードで動作する"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "分別カテゴリは自治体の基準に従う。基準は被災地域ごとに異なる"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "個人の所有物（写真・貴重品等）は分別せず保管区域に移動する"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "処理速度より正確性を優先する"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1"
+        ],
+        "refutation": "事前の環境スキャンで有害物質の存在を排除できる場合",
+        "content": "マルチスペクトルカメラと化学センサーの組み合わせでアスベスト検出が可能"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C3"
+        ],
+        "refutation": "全国統一基準が制定された場合",
+        "content": "分別ルールをパラメータ化し、地域ごとの設定切替で対応すべき"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C4"
+        ],
+        "refutation": "全ての個人所有物がデジタル化され物理的な保全が不要な場合",
+        "content": "物体認識で個人所有物を高精度に識別するには被災前の街並みデータとの照合が有効"
+      }
+    },
+    "num_c": 5,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "Scenario198",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 3,
+          "definition": "人命と健康に関わる安全基準。違反は作業停止。",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 2,
+          "definition": "自治体基準と所有権に関する法的・倫理的制約。",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "design",
+          "ordValue": 1,
+          "definition": "分別・識別の技術的設計判断。改善可能。",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "実証が必要な技術的仮説。",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "saf1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf3",
+          "layerName": "safety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".saf1"
+          ]
+        },
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg3",
+          "layerName": "regulation",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".saf1",
+            ".reg1"
+          ]
+        },
+        {
+          "id": "des1",
+          "layerName": "design",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".saf1",
+            ".saf3"
+          ]
+        },
+        {
+          "id": "des2",
+          "layerName": "design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".reg1",
+            ".reg3"
+          ]
+        },
+        {
+          "id": "des3",
+          "layerName": "design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".saf2",
+            ".reg1"
+          ]
+        },
+        {
+          "id": "des4",
+          "layerName": "design",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".des1",
+            ".des3"
+          ]
+        },
+        {
+          "id": "des5",
+          "layerName": "design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".reg3",
+            ".des2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".reg2",
+            ".des3"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".des4",
+            ".des5"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".hyp1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 199,
+    "project": "月面基地建設計画 AI",
+    "phase0_vision": "月面有人基地の建設プロセスを計画・監督するAI。レゴリス（月面土壌）を利用した3Dプリント建築、資材搬入スケジュール、ロボット施工隊の管理を統合する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "宇宙放射線からの遮蔽が最低基準を満たさない構造物は建設不可"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "建設ロボットは無人で作業する。有人活動は完成後のみ"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "地球からの資材搬入コストは1kgあたり約100万ドル。現地資源の活用を最大化する"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "通信遅延は片道1.3秒。リアルタイム遠隔操作は困難"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "建設スケジュールの最終承認は地上の計画チームが行う"
+      },
+      "C6": {
+        "source": "humanDecision",
+        "content": "月面の温度差（昼+127度、夜-173度）に耐える構造が必須"
+      },
+      "C7": {
+        "source": "humanDecision",
+        "content": "微小隕石の衝突リスクを考慮した構造強度が必要"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C3",
+          "C6"
+        ],
+        "refutation": "レゴリスの結合強度が不足し、3Dプリントが実用化できない場合",
+        "content": "レゴリスベースの3Dプリント技術でシェルター構造を構築可能"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C2",
+          "C4"
+        ],
+        "refutation": "量子通信で遅延がゼロになった場合",
+        "content": "建設ロボットは完全自律で施工判断を行い、地上には進捗報告のみ"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C7"
+        ],
+        "refutation": "磁気シールド技術で放射線防護が可能になった場合",
+        "content": "レゴリス被覆厚2m以上で放射線と微小隕石の両方を防護可能"
+      }
+    },
+    "num_c": 7,
+    "num_h": 3,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "Scenario199",
+      "layers": [
+        {
+          "name": "lunarPhysics",
+          "ordValue": 4,
+          "definition": "月面環境の物理法則。変更不可能。",
+          "derivedFrom": [
+            "C1",
+            "C6",
+            "C7"
+          ]
+        },
+        {
+          "name": "structural",
+          "ordValue": 3,
+          "definition": "構造安全性の工学的要件。物理法則から導出。",
+          "derivedFrom": [
+            "C1",
+            "C6",
+            "C7",
+            "H3"
+          ]
+        },
+        {
+          "name": "logistics",
+          "ordValue": 2,
+          "definition": "資材・通信のリソース制約。技術進歩で変動しうる。",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "construction",
+          "ordValue": 1,
+          "definition": "建設手法と自律ロボットの運用方針。",
+          "derivedFrom": [
+            "C2",
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "実証が必要な技術的仮説。",
+          "derivedFrom": [
+            "H1",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "lph1",
+          "layerName": "lunarPhysics",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lph2",
+          "layerName": "lunarPhysics",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lph3",
+          "layerName": "lunarPhysics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "str1",
+          "layerName": "structural",
+          "justification": [
+            "C1",
+            "H3"
+          ],
+          "dependencies": [
+            ".lph3"
+          ]
+        },
+        {
+          "id": "str2",
+          "layerName": "structural",
+          "justification": [
+            "C6",
+            "C7"
+          ],
+          "dependencies": [
+            ".lph1",
+            ".lph2"
+          ]
+        },
+        {
+          "id": "str3",
+          "layerName": "structural",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".lph2",
+            ".lph3",
+            ".str1"
+          ]
+        },
+        {
+          "id": "lgs1",
+          "layerName": "logistics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lgs2",
+          "layerName": "logistics",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lgs3",
+          "layerName": "logistics",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".str2",
+            ".lgs1"
+          ]
+        },
+        {
+          "id": "con1",
+          "layerName": "construction",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".lgs2"
+          ]
+        },
+        {
+          "id": "con2",
+          "layerName": "construction",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".str1",
+            ".str2",
+            ".lgs1"
+          ]
+        },
+        {
+          "id": "con3",
+          "layerName": "construction",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".lgs2",
+            ".con1"
+          ]
+        },
+        {
+          "id": "con4",
+          "layerName": "construction",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".lgs2",
+            ".con2"
+          ]
+        },
+        {
+          "id": "con5",
+          "layerName": "construction",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".str3",
+            ".con2",
+            ".con3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".lgs1",
+            ".con2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".str1",
+            ".str3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".con5",
+            ".hyp1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 200,
+    "project": "人工臓器適合性評価 AI",
+    "phase0_vision": "人工臓器（人工心臓、人工腎臓等）の患者適合性を事前評価するAI。患者の体格・病歴・免疫プロファイルから最適なデバイスを推奨し、術後合併症のリスクを予測する。",
+    "phase1_assumptions": {
+      "C1": {
+        "source": "humanDecision",
+        "content": "最終的な手術判断は執刀医と患者の合意による。AIは情報提供のみ"
+      },
+      "C2": {
+        "source": "humanDecision",
+        "content": "患者データの取り扱いは医療情報保護法に準拠する"
+      },
+      "C3": {
+        "source": "humanDecision",
+        "content": "推奨結果には根拠（使用したデータと推論過程）を必ず提示する"
+      },
+      "C4": {
+        "source": "humanDecision",
+        "content": "FDAおよびPMDA承認済みのデバイスのみを推奨候補とする"
+      },
+      "C5": {
+        "source": "humanDecision",
+        "content": "緊急時には不完全なデータでも暫定評価を出力可能にする"
+      },
+      "C6": {
+        "source": "humanDecision",
+        "content": "評価アルゴリズムの更新は医療機器審査を経る必要がある"
+      },
+      "H1": {
+        "source": "llmInference",
+        "basis": [
+          "C1",
+          "C3"
+        ],
+        "refutation": "医師がAIの推論過程を理解する必要がない場合",
+        "content": "説明可能AI（XAI）手法を用いて推奨根拠を医師に提示すべき"
+      },
+      "H2": {
+        "source": "llmInference",
+        "basis": [
+          "C2"
+        ],
+        "refutation": "合成データで十分な精度が得られる場合",
+        "content": "連合学習により患者データを施設外に出さずにモデル改善が可能"
+      },
+      "H3": {
+        "source": "llmInference",
+        "basis": [
+          "C5"
+        ],
+        "refutation": "緊急時でも完全データが即座に取得可能な場合",
+        "content": "不完全データ時のリスク評価にはベイズ推論による不確実性の明示が必要"
+      },
+      "H4": {
+        "source": "llmInference",
+        "basis": [
+          "C4",
+          "C6"
+        ],
+        "refutation": "規制当局がAIモデルのリアルタイム更新を許可した場合",
+        "content": "モデル更新は承認済みバージョンとの差分比較を含む検証プロセスが必要"
+      }
+    },
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 20,
+    "model_spec": {
+      "namespace": "Scenario200",
+      "layers": [
+        {
+          "name": "medical",
+          "ordValue": 4,
+          "definition": "医療安全と患者権利の不可侵原則。",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "regulatory",
+          "ordValue": 3,
+          "definition": "医療機器規制とデータ保護法。外部依存。",
+          "derivedFrom": [
+            "C2",
+            "C4",
+            "C6"
+          ]
+        },
+        {
+          "name": "clinical",
+          "ordValue": 2,
+          "definition": "臨床運用の方針。施設ごとに設定可能。",
+          "derivedFrom": [
+            "C3",
+            "C5"
+          ]
+        },
+        {
+          "name": "algorithmic",
+          "ordValue": 1,
+          "definition": "AI推奨アルゴリズムの設計判断。改善可能。",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "臨床データで検証が必要な仮説。",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "med1",
+          "layerName": "medical",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "med2",
+          "layerName": "medical",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rgl1",
+          "layerName": "regulatory",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".med1"
+          ]
+        },
+        {
+          "id": "rgl2",
+          "layerName": "regulatory",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rgl3",
+          "layerName": "regulatory",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".rgl2"
+          ]
+        },
+        {
+          "id": "cln1",
+          "layerName": "clinical",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".med1",
+            ".med2"
+          ]
+        },
+        {
+          "id": "cln2",
+          "layerName": "clinical",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".med2"
+          ]
+        },
+        {
+          "id": "cln3",
+          "layerName": "clinical",
+          "justification": [
+            "C3",
+            "C5"
+          ],
+          "dependencies": [
+            ".rgl1",
+            ".cln1"
+          ]
+        },
+        {
+          "id": "alg1",
+          "layerName": "algorithmic",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".cln1",
+            ".cln3"
+          ]
+        },
+        {
+          "id": "alg2",
+          "layerName": "algorithmic",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".rgl1"
+          ]
+        },
+        {
+          "id": "alg3",
+          "layerName": "algorithmic",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".cln2",
+            ".cln3"
+          ]
+        },
+        {
+          "id": "alg4",
+          "layerName": "algorithmic",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".alg1",
+            ".alg3"
+          ]
+        },
+        {
+          "id": "alg5",
+          "layerName": "algorithmic",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".rgl1",
+            ".rgl3",
+            ".alg2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".rgl3",
+            ".alg5"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".alg4"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".alg1",
+            ".alg5",
+            ".hyp1"
+          ]
+        }
+      ]
+    }
+  }
+]

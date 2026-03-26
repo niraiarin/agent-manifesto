@@ -1,0 +1,283 @@
+{
+  "namespace": "TestCoverage.S171",
+  "layers": [
+    {
+      "name": "AccessibilityRight",
+      "ordValue": 4,
+      "definition": "情報アクセス権に関わる不変制約。障害者権利条約に基づく",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LinguisticRule",
+      "ordValue": 3,
+      "definition": "点字表記の言語学的規則。標準化団体の規定に準拠",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "TranslationDesign",
+      "ordValue": 2,
+      "definition": "翻訳エンジンの設計選択。精度と速度のトレードオフ",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "OutputHypothesis",
+      "ordValue": 1,
+      "definition": "出力品質に関する未検証の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s171_p01",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s171_p02",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s171_p03",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s171_p04",
+      "layerName": "LinguisticRule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s171_p01"
+      ]
+    },
+    {
+      "id": "s171_p05",
+      "layerName": "LinguisticRule",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s171_p02"
+      ]
+    },
+    {
+      "id": "s171_p06",
+      "layerName": "LinguisticRule",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s171_p01",
+        ".s171_p03"
+      ]
+    },
+    {
+      "id": "s171_p07",
+      "layerName": "TranslationDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s171_p04"
+      ]
+    },
+    {
+      "id": "s171_p08",
+      "layerName": "TranslationDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s171_p05"
+      ]
+    },
+    {
+      "id": "s171_p09",
+      "layerName": "TranslationDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s171_p04",
+        ".s171_p06"
+      ]
+    },
+    {
+      "id": "s171_p10",
+      "layerName": "OutputHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s171_p07"
+      ]
+    },
+    {
+      "id": "s171_p11",
+      "layerName": "OutputHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s171_p08",
+        ".s171_p09"
+      ]
+    },
+    {
+      "id": "s171_p12",
+      "layerName": "OutputHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s171_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "視覚障害者が文書にアクセスする権利は法的に保障されており、翻訳精度の下限を設けなければならない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "翻訳結果の最終確認は点字校正者が行う。AIは下訳を提供するのみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "日本語点字は日本点字委員会の表記法に準拠する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "リアルタイム翻訳と高精度バッチ翻訳の両モードを提供したい"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "点字ディスプレイとエンボッサーの両方に出力対応したい"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "外国語点字も対象とする場合、各言語固有の規則が必要"
+        }
+      },
+      "content": "分かち書き規則はルールベースで高精度に実装可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "リアルタイム処理の遅延が許容範囲を超える場合"
+        }
+      },
+      "content": "リアルタイムモードではルールベース、バッチモードではニューラル翻訳を使い分けるのが効率的"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "数式・化学式などの特殊記号が多い文書では専用パーサーが必要"
+        }
+      },
+      "content": "一般的な文書では形態素解析と点字変換規則の組み合わせで90%以上の精度が達成可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "点字ディスプレイの仕様が機種ごとに大きく異なる場合"
+        }
+      },
+      "content": "BRFフォーマットが点字ディスプレイの標準出力形式として最適"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C5"
+          ],
+          "refutation": "ユーザーが触読に慣れておらず別の出力形式を好む場合"
+        }
+      },
+      "content": "エンボッサー出力では用紙サイズに応じた自動レイアウト調整が必要"
+    }
+  ]
+}

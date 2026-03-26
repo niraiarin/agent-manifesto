@@ -1,0 +1,220 @@
+{
+  "namespace": "TestScenario.S161",
+  "description": "手術ロボット制御 AI — 意図的単調性違反あり（incisionDepthFromAdaptive→tissueAdaptation: medicalProtocol(5)→adaptiveParam(0)）",
+  "layers": [
+    {
+      "name": "safetyInvariant",
+      "ordValue": 6,
+      "definition": "患者の生命安全に関する不変条件。いかなる状況でも覆らない",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "medicalProtocol",
+      "ordValue": 5,
+      "definition": "確立された医学的手順・エビデンスに基づく制約",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "regulatoryReq",
+      "ordValue": 4,
+      "definition": "医療機器規制・認証要件",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "surgeonAuthority",
+      "ordValue": 3,
+      "definition": "執刀医の判断権限と介入ポリシー",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "sensorFusion",
+      "ordValue": 2,
+      "definition": "術中センサーデータの統合と解釈",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "motionPlanning",
+      "ordValue": 1,
+      "definition": "アーム軌道計画・力覚フィードバック制御",
+      "derivedFrom": [
+        "H6"
+      ]
+    },
+    {
+      "name": "adaptiveParam",
+      "ordValue": 0,
+      "definition": "患者固有の組織特性に応じた動的パラメータ調整",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "patientLifePriority",
+      "layerName": "safetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "immediateHalt",
+      "layerName": "safetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "noAutonomousIncision",
+      "layerName": "safetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "evidenceBasedProcedure",
+      "layerName": "medicalProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".patientLifePriority"
+      ]
+    },
+    {
+      "id": "sterileFieldMaint",
+      "layerName": "medicalProtocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".patientLifePriority"
+      ]
+    },
+    {
+      "id": "fdaClearance",
+      "layerName": "regulatoryReq",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".evidenceBasedProcedure"
+      ]
+    },
+    {
+      "id": "auditTrailReq",
+      "layerName": "regulatoryReq",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".fdaClearance"
+      ]
+    },
+    {
+      "id": "surgeonOverride",
+      "layerName": "surgeonAuthority",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".patientLifePriority",
+        ".evidenceBasedProcedure"
+      ]
+    },
+    {
+      "id": "hapticFeedback",
+      "layerName": "sensorFusion",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".surgeonOverride"
+      ]
+    },
+    {
+      "id": "tissueBoundaryDetect",
+      "layerName": "sensorFusion",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".sterileFieldMaint",
+        ".hapticFeedback"
+      ]
+    },
+    {
+      "id": "armTrajectory",
+      "layerName": "motionPlanning",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".tissueBoundaryDetect",
+        ".hapticFeedback"
+      ]
+    },
+    {
+      "id": "forceLimit",
+      "layerName": "motionPlanning",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".patientLifePriority",
+        ".armTrajectory"
+      ]
+    },
+    {
+      "id": "tissueAdaptation",
+      "layerName": "adaptiveParam",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".tissueBoundaryDetect",
+        ".armTrajectory"
+      ]
+    },
+    {
+      "id": "emergencyProtocol",
+      "layerName": "adaptiveParam",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".immediateHalt",
+        ".surgeonOverride"
+      ]
+    },
+    {
+      "id": "incisionDepthFromAdaptive",
+      "layerName": "medicalProtocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".tissueAdaptation"
+      ]
+    }
+  ]
+}

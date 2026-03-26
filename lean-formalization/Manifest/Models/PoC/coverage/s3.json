@@ -1,0 +1,163 @@
+{
+  "namespace": "TestCoverage.S3",
+  "layers": [
+    {
+      "name": "FlightSafety",
+      "ordValue": 4,
+      "definition": "飛行安全・航空法遵守。違反不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "EnvironmentalRegulation",
+      "ordValue": 3,
+      "definition": "環境保護規制・農薬使用基準",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "AgronomicPractice",
+      "ordValue": 2,
+      "definition": "農学的知見に基づく散布計画",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "OperationalEfficiency",
+      "ordValue": 1,
+      "definition": "運用効率・コスト最適化",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s3_p01",
+      "layerName": "FlightSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s3_p02",
+      "layerName": "FlightSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s3_p03",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s3_p01"
+      ]
+    },
+    {
+      "id": "s3_p04",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s3_p02"
+      ]
+    },
+    {
+      "id": "s3_p05",
+      "layerName": "AgronomicPractice",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s3_p03"
+      ]
+    },
+    {
+      "id": "s3_p06",
+      "layerName": "AgronomicPractice",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s3_p04"
+      ]
+    },
+    {
+      "id": "s3_p07",
+      "layerName": "OperationalEfficiency",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s3_p05"
+      ]
+    },
+    {
+      "id": "s3_p08",
+      "layerName": "OperationalEfficiency",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s3_p06"
+      ]
+    },
+    {
+      "id": "s3_p09",
+      "layerName": "AgronomicPractice",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s3_p07"
+      ]
+    },
+    {
+      "id": "s3_p10",
+      "layerName": "OperationalEfficiency",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        "s3_p05",
+        "s3_p08"
+      ]
+    },
+    {
+      "id": "s3_p11",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s3_p01",
+        "s3_p02"
+      ]
+    },
+    {
+      "id": "s3_p12",
+      "layerName": "FlightSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        "s3_p03"
+      ]
+    }
+  ]
+}

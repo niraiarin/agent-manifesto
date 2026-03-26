@@ -1,0 +1,249 @@
+{
+  "namespace": "Scenario235",
+  "layers": [
+    {
+      "name": "observation",
+      "ordValue": 5,
+      "definition": "衛星観測システムの物理的制約と仕様。外部データ提供元に依存。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "climate",
+      "ordValue": 4,
+      "definition": "気候科学の理論的枠組み。IPCCシナリオとの整合性。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 3,
+      "definition": "政策立案・航路利用者への情報提供に関する制度的要件。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "不確実性定量化と出力品質の運用基準。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "forecast",
+      "ordValue": 1,
+      "definition": "AIによる海氷面積予測の手法と戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の気候科学的・統計的仮説。",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "obs1",
+      "layerName": "observation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "obs2",
+      "layerName": "observation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "clim1",
+      "layerName": "climate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".obs1"
+      ]
+    },
+    {
+      "id": "clim2",
+      "layerName": "climate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".obs1",
+        ".obs2"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".clim1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".clim2"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operational",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".pol1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operational",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".pol1",
+        ".pol2"
+      ]
+    },
+    {
+      "id": "opr3",
+      "layerName": "operational",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".clim1",
+        ".pol2"
+      ]
+    },
+    {
+      "id": "fcst1",
+      "layerName": "forecast",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".obs1",
+        ".obs2",
+        ".opr1"
+      ]
+    },
+    {
+      "id": "fcst2",
+      "layerName": "forecast",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".clim1",
+        ".clim2",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "fcst3",
+      "layerName": "forecast",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "fcst4",
+      "layerName": "forecast",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".pol1",
+        ".opr3"
+      ]
+    },
+    {
+      "id": "fcst5",
+      "layerName": "forecast",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".fcst1",
+        ".fcst4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".fcst2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".fcst3"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".fcst2",
+        ".fcst3"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".fcst5"
+      ]
+    }
+  ]
+}

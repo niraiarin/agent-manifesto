@@ -1,0 +1,488 @@
+{
+  "namespace": "TestCoverage.S190",
+  "layers": [
+    {
+      "name": "SafetyRegulation",
+      "ordValue": 6,
+      "definition": "鉄道営業法・車両検査規程に基づく安全義務。変更不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "InspectionStandard",
+      "ordValue": 5,
+      "definition": "国交省通達・JIS規格に基づく検査基準",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "MaintenancePolicy",
+      "ordValue": 4,
+      "definition": "鉄道事業者の保全方針。経営判断で調整可能",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "DiagnosticDesign",
+      "ordValue": 3,
+      "definition": "診断システムの設計選択。技術進歩で更新",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "SensorIntegration",
+      "ordValue": 2,
+      "definition": "センサーデータ統合の設計",
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "AlgorithmChoice",
+      "ordValue": 1,
+      "definition": "異常検知アルゴリズムの選択。比較評価で更新",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "EfficiencyHypothesis",
+      "ordValue": 0,
+      "definition": "効率改善に関する未検証仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s190_p01",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s190_p02",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s190_p03",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s190_p01"
+      ]
+    },
+    {
+      "id": "s190_p04",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s190_p01",
+        ".s190_p02"
+      ]
+    },
+    {
+      "id": "s190_p05",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".s190_p02"
+      ]
+    },
+    {
+      "id": "s190_p06",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s190_p03"
+      ]
+    },
+    {
+      "id": "s190_p07",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s190_p03",
+        ".s190_p04"
+      ]
+    },
+    {
+      "id": "s190_p08",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s190_p04",
+        ".s190_p05"
+      ]
+    },
+    {
+      "id": "s190_p09",
+      "layerName": "DiagnosticDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s190_p06"
+      ]
+    },
+    {
+      "id": "s190_p10",
+      "layerName": "DiagnosticDesign",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s190_p06",
+        ".s190_p07"
+      ]
+    },
+    {
+      "id": "s190_p11",
+      "layerName": "DiagnosticDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s190_p07"
+      ]
+    },
+    {
+      "id": "s190_p12",
+      "layerName": "DiagnosticDesign",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s190_p08"
+      ]
+    },
+    {
+      "id": "s190_p13",
+      "layerName": "SensorIntegration",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s190_p09"
+      ]
+    },
+    {
+      "id": "s190_p14",
+      "layerName": "SensorIntegration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s190_p09",
+        ".s190_p10"
+      ]
+    },
+    {
+      "id": "s190_p15",
+      "layerName": "SensorIntegration",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s190_p11"
+      ]
+    },
+    {
+      "id": "s190_p16",
+      "layerName": "SensorIntegration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s190_p12"
+      ]
+    },
+    {
+      "id": "s190_p17",
+      "layerName": "AlgorithmChoice",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s190_p13"
+      ]
+    },
+    {
+      "id": "s190_p18",
+      "layerName": "AlgorithmChoice",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s190_p14"
+      ]
+    },
+    {
+      "id": "s190_p19",
+      "layerName": "AlgorithmChoice",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s190_p13",
+        ".s190_p15"
+      ]
+    },
+    {
+      "id": "s190_p20",
+      "layerName": "AlgorithmChoice",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s190_p15",
+        ".s190_p16"
+      ]
+    },
+    {
+      "id": "s190_p21",
+      "layerName": "EfficiencyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s190_p17"
+      ]
+    },
+    {
+      "id": "s190_p22",
+      "layerName": "EfficiencyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s190_p18"
+      ]
+    },
+    {
+      "id": "s190_p23",
+      "layerName": "EfficiencyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s190_p19",
+        ".s190_p20"
+      ]
+    },
+    {
+      "id": "s190_p24",
+      "layerName": "EfficiencyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s190_p17",
+        ".s190_p20"
+      ]
+    },
+    {
+      "id": "s190_p25",
+      "layerName": "EfficiencyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s190_p18",
+        ".s190_p19"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "鉄道営業法に基づく定期検査（全般検査・重要部検査・交番検査）の実施は法的義務"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検査項目と合否基準は国交省通達およびJIS規格に準拠する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "状態基準保全（CBM）への移行を段階的に進めるが、法定検査は維持する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "台車・車輪・ブレーキ等の主要部品の劣化診断を対象とする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "走行中の振動データをリアルタイムで取得し、異常を早期検知する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "既存の検査装置（車輪旋削データ・超音波探傷データ等）との統合が必要"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "検査基準が数値的に完全に定義されており解釈の余地がない場合"
+        }
+      },
+      "content": "目視検査の暗黙知をAIで形式化することで検査の再現性が向上する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "部品の劣化が突発的で傾向管理が困難な場合"
+        }
+      },
+      "content": "ワイブル分布に基づく残存寿命予測が部品交換の計画最適化に有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "振動特性が走行条件（速度・曲線等）に強く依存し正規化が困難な場合"
+        }
+      },
+      "content": "振動の周波数解析により台車の亀裂・摩耗を非接触で検知可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6"
+          ],
+          "refutation": "センサーデータのサンプリングレートが異なりデータ融合が困難な場合"
+        }
+      },
+      "content": "走行データと検査装置データのデータフュージョンにより劣化傾向の精度が向上する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "H3"
+          ],
+          "refutation": "教師なし学習が正常データの変動を異常と誤検知する場合"
+        }
+      },
+      "content": "オートエンコーダによる異常検知が教師なし学習として有効"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H4"
+          ],
+          "refutation": "部品間の相互作用が独立した劣化モデルを無効にする場合"
+        }
+      },
+      "content": "Graph Neural Networkにより部品間の劣化伝播パターンを学習できる"
+    },
+    {
+      "id": "H7",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H5",
+            "H6"
+          ],
+          "refutation": "AI診断の信頼性が人間の検査員の判断と乖離し採用されない場合"
+        }
+      },
+      "content": "AI支援検査により検査工数を30%削減しつつ検出率を維持できる"
+    }
+  ]
+}

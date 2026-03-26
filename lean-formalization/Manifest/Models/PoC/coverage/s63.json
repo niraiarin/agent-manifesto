@@ -1,0 +1,131 @@
+{
+  "layers": [
+    {
+      "name": "physical_law",
+      "definition": "物理法則・化学法則に基づく不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "safety_constraint",
+      "definition": "安全に関する絶対的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "accuracy_requirement",
+      "definition": "精度・信頼性に関する要件",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "domain_rule",
+      "definition": "対象領域の運用ルール",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "implementation_choice",
+      "definition": "実装手法の選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_7f6630",
+      "layerName": "physical_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_94524a",
+      "layerName": "physical_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_104185",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d07ffe",
+      "layerName": "accuracy_requirement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_90d1e0",
+      "layerName": "accuracy_requirement",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "GHS_d4f7d4",
+      "layerName": "domain_rule",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3d827d",
+      "layerName": "domain_rule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "DFTBLYPG_d80a1f",
+      "layerName": "implementation_choice",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "NEB_bce94a",
+      "layerName": "implementation_choice",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ML_a2085f",
+      "layerName": "implementation_choice",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

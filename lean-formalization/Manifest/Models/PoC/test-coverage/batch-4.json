@@ -1,0 +1,1463 @@
+[
+  {
+    "scenario_id": 31,
+    "project": "宇宙衛星画像解析 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "physical_law",
+          "definition": "物理法則・軌道力学に基づく不変の制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "sensor_calibration",
+          "definition": "センサーの較正基準と精度保証",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "analysis_policy",
+          "definition": "画像解析アルゴリズムの選定・パラメータ方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "operational_config",
+          "definition": "運用上の設定・閾値・レポート形式",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "orbital_mechanics_invariant",
+          "layerName": "physical_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "spectral_band_definition",
+          "layerName": "physical_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "radiometric_calibration",
+          "layerName": "sensor_calibration",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "atmospheric_correction_model",
+          "layerName": "sensor_calibration",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "change_detection_algorithm",
+          "layerName": "analysis_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "classification_taxonomy",
+          "layerName": "analysis_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "minimum_resolution_threshold",
+          "layerName": "analysis_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cloud_masking_strategy",
+          "layerName": "operational_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "revisit_frequency_target",
+          "layerName": "operational_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "alert_threshold_config",
+          "layerName": "operational_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "report_format_standard",
+          "layerName": "operational_config",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 32,
+    "project": "採用面接支援 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "legal_compliance",
+          "definition": "労働法・個人情報保護法・差別禁止法への準拠",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "fairness_standard",
+          "definition": "公平性基準と評価指標の定義",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "evaluation_method",
+          "definition": "面接評価手法・スコアリングモデル",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "ux_config",
+          "definition": "UI/UX設定・レポート形式・通知方法",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "gdpr_compliance",
+          "layerName": "legal_compliance",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "anti_discrimination_law",
+          "layerName": "legal_compliance",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "demographic_parity_target",
+          "layerName": "fairness_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bias_audit_requirement",
+          "layerName": "fairness_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "structured_interview_format",
+          "layerName": "evaluation_method",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "scoring_rubric_definition",
+          "layerName": "evaluation_method",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "llm_evaluation_boundary",
+          "layerName": "evaluation_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "candidate_feedback_format",
+          "layerName": "ux_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "interviewer_dashboard_layout",
+          "layerName": "ux_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "notification_timing",
+          "layerName": "ux_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "report_retention_period",
+          "layerName": "ux_config",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 33,
+    "project": "食品アレルゲン検出 AI",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "food_safety_law",
+          "definition": "食品衛生法・アレルゲン表示義務に基づく法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "detection_standard",
+          "definition": "検出精度・感度基準と検証プロトコル",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "operational_protocol",
+          "definition": "検査運用手順・サンプリング方法・判定フロー",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "reporting_config",
+          "definition": "レポート形式・通知設定・ログ管理",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C7",
+            "H3"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "recall_trigger_threshold (reporting_config, ord=1) depends on false_negative_tolerance (detection_standard, ord=3)",
+          "detail": "リコールトリガー閾値(ord=1)が偽陰性許容率(ord=3)に依存しているが、依存先の方がordが高い。依存元のordが依存先以上でなければならないが、1 < 3 で単調性違反。",
+          "involved_assumptions": [
+            "H4",
+            "C4"
+          ],
+          "resolution": "H4はC4に根拠を持つため人間確認が必要。選択肢: (a) recall_trigger_thresholdをdetection_standard(ord=3)に昇格、(b) 依存関係を削除しリコール閾値を独立パラメータとする",
+          "status": "unresolved_requires_phase3"
+        }
+      ],
+      "propositions": [
+        {
+          "id": "mandatory_allergen_list",
+          "layerName": "food_safety_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "labeling_obligation",
+          "layerName": "food_safety_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "detection_sensitivity_threshold",
+          "layerName": "detection_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "false_negative_tolerance",
+          "layerName": "detection_standard",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cross_contamination_model",
+          "layerName": "detection_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sampling_frequency",
+          "layerName": "operational_protocol",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "human_review_gate",
+          "layerName": "operational_protocol",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sensor_calibration_schedule",
+          "layerName": "operational_protocol",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "alert_escalation_rule",
+          "layerName": "reporting_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "batch_traceability_log",
+          "layerName": "reporting_config",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "recall_trigger_threshold",
+          "layerName": "reporting_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "regulatory_report_format",
+          "layerName": "reporting_config",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 34,
+    "project": "交通信号最適化 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "traffic_regulation",
+          "definition": "道路交通法・信号制御の法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "safety_constraint",
+          "definition": "安全性の数値基準と緊急車両対応",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "optimization_model",
+          "definition": "信号タイミング最適化アルゴリズムとパラメータ",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "operational_tuning",
+          "definition": "時間帯別調整・天候対応・モニタリング設定",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "minimum_green_duration",
+          "layerName": "traffic_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pedestrian_phase_requirement",
+          "layerName": "traffic_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "emergency_vehicle_preemption",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "collision_avoidance_clearance",
+          "layerName": "safety_constraint",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "flow_optimization_objective",
+          "layerName": "optimization_model",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cycle_length_bounds",
+          "layerName": "optimization_model",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "adaptive_algorithm_selection",
+          "layerName": "optimization_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "peak_hour_profile",
+          "layerName": "operational_tuning",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "weather_adjustment_factor",
+          "layerName": "operational_tuning",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sensor_health_monitoring",
+          "layerName": "operational_tuning",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dashboard_refresh_rate",
+          "layerName": "operational_tuning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 35,
+    "project": "論文査読支援 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "academic_integrity",
+          "definition": "学術倫理・盗用検出・利益相反の原則",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "review_standard",
+          "definition": "査読品質基準・評価フレームワーク",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "analysis_method",
+          "definition": "論文分析手法・スコアリングモデル",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "workflow_config",
+          "definition": "ワークフロー設定・通知・レポート形式",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "plagiarism_detection_mandatory",
+          "layerName": "academic_integrity",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "conflict_of_interest_check",
+          "layerName": "academic_integrity",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "double_blind_protocol",
+          "layerName": "review_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "review_criteria_framework",
+          "layerName": "review_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "statistical_rigor_check",
+          "layerName": "review_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "novelty_assessment_model",
+          "layerName": "analysis_method",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "citation_network_analysis",
+          "layerName": "analysis_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reviewer_matching_algorithm",
+          "layerName": "analysis_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "deadline_management",
+          "layerName": "workflow_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "notification_template",
+          "layerName": "workflow_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "review_progress_dashboard",
+          "layerName": "workflow_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 36,
+    "project": "ドラッグデリバリー最適化 AI",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "pharmacological_law",
+          "definition": "薬事法・臨床試験規制・安全性基準",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "therapeutic_constraint",
+          "definition": "治療域・毒性閾値・薬物動態パラメータ",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "delivery_design",
+          "definition": "デリバリーシステム設計・製剤パラメータ",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "manufacturing_config",
+          "definition": "製造条件・品質管理パラメータ・ログ設定",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C7",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "regulatory_approval_pathway",
+          "layerName": "pharmacological_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "gmp_compliance",
+          "layerName": "pharmacological_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "therapeutic_window_definition",
+          "layerName": "therapeutic_constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "maximum_toxicity_threshold",
+          "layerName": "therapeutic_constraint",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pharmacokinetic_model",
+          "layerName": "therapeutic_constraint",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "nanoparticle_size_range",
+          "layerName": "delivery_design",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "release_profile_target",
+          "layerName": "delivery_design",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "targeting_ligand_selection",
+          "layerName": "delivery_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "batch_size_specification",
+          "layerName": "manufacturing_config",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "temperature_control_range",
+          "layerName": "manufacturing_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "quality_control_sampling",
+          "layerName": "manufacturing_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "stability_test_protocol",
+          "layerName": "manufacturing_config",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 37,
+    "project": "選挙世論分析 AI",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "electoral_law",
+          "definition": "選挙法・政治資金規正法・報道規制に基づく法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "methodological_rigor",
+          "definition": "統計的手法の厳密性・サンプリング基準・バイアス補正",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "analysis_framework",
+          "definition": "分析フレームワーク・可視化方針・予測モデル",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "presentation_config",
+          "definition": "表示設定・更新頻度・レポート形式",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C7",
+            "H3"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "media_embargo_compliance_check (presentation_config, ord=1) depends on election_silence_period (electoral_law, ord=4)",
+          "detail": "メディアエンバーゴ遵守チェック(ord=1)が選挙沈黙期間(ord=4)に依存しているが、依存先の方がordが高い。依存元のordが依存先以上でなければならないが、1 < 4 で単調性違反。",
+          "involved_assumptions": [
+            "H4",
+            "C1"
+          ],
+          "resolution": "H4はC1に根拠を持つため人間確認が必要。選択肢: (a) media_embargo_compliance_checkをelectoral_law(ord=4)に昇格、(b) 依存関係を間接化し中間層を経由させる",
+          "status": "unresolved_requires_phase3"
+        }
+      ],
+      "propositions": [
+        {
+          "id": "election_silence_period",
+          "layerName": "electoral_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "political_neutrality_obligation",
+          "layerName": "electoral_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sampling_methodology",
+          "layerName": "methodological_rigor",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "margin_of_error_standard",
+          "layerName": "methodological_rigor",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "demographic_weighting_model",
+          "layerName": "methodological_rigor",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sentiment_analysis_framework",
+          "layerName": "analysis_framework",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prediction_model_selection",
+          "layerName": "analysis_framework",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "geographic_breakdown_method",
+          "layerName": "analysis_framework",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "confidence_interval_display",
+          "layerName": "presentation_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "update_frequency_setting",
+          "layerName": "presentation_config",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "media_embargo_compliance_check",
+          "layerName": "presentation_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "historical_comparison_view",
+          "layerName": "presentation_config",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 38,
+    "project": "音声感情認識 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "privacy_ethics",
+          "definition": "プライバシー保護・同意取得・倫理ガイドラインの法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "recognition_standard",
+          "definition": "感情認識精度基準・文化的バイアス補正",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "model_design",
+          "definition": "認識モデル設計・特徴量抽出・分類手法",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "deployment_config",
+          "definition": "デプロイ設定・閾値調整・ログ管理",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "informed_consent_requirement",
+          "layerName": "privacy_ethics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data_anonymization_standard",
+          "layerName": "privacy_ethics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "recognition_accuracy_baseline",
+          "layerName": "recognition_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cultural_bias_mitigation",
+          "layerName": "recognition_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "valence_arousal_model",
+          "layerName": "recognition_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "feature_extraction_pipeline",
+          "layerName": "model_design",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "classifier_architecture",
+          "layerName": "model_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "real_time_latency_target",
+          "layerName": "model_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "confidence_threshold_setting",
+          "layerName": "deployment_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "audio_retention_policy",
+          "layerName": "deployment_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fallback_behavior_config",
+          "layerName": "deployment_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 39,
+    "project": "海洋汚染監視 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "environmental_regulation",
+          "definition": "海洋汚染防止法・国際海事条約に基づく法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "monitoring_standard",
+          "definition": "汚染物質検出基準・測定精度・校正要件",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "detection_method",
+          "definition": "検出アルゴリズム・データフュージョン・空間分析",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "operational_config",
+          "definition": "運用設定・アラート・レポート・ログ管理",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "marpol_compliance",
+          "layerName": "environmental_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pollution_reporting_obligation",
+          "layerName": "environmental_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "contaminant_detection_limit",
+          "layerName": "monitoring_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sensor_accuracy_requirement",
+          "layerName": "monitoring_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "baseline_water_quality_model",
+          "layerName": "monitoring_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "oil_spill_detection_algorithm",
+          "layerName": "detection_method",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "multi_sensor_fusion_method",
+          "layerName": "detection_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "spatial_interpolation_model",
+          "layerName": "detection_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "alert_priority_classification",
+          "layerName": "operational_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "buoy_maintenance_schedule",
+          "layerName": "operational_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data_archive_retention",
+          "layerName": "operational_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 40,
+    "project": "自動車保険テレマティクス AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "insurance_regulation",
+          "definition": "保険業法・個人情報保護法・料率算定基準の法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "actuarial_standard",
+          "definition": "アクチュアリー基準・リスク評価手法・公平性要件",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "scoring_model",
+          "definition": "運転スコアリングモデル・特徴量設計・閾値設定",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "product_config",
+          "definition": "商品設定・割引率・通知・レポート形式",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "rate_filing_compliance",
+          "layerName": "insurance_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "driver_data_privacy",
+          "layerName": "insurance_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "loss_ratio_target",
+          "layerName": "actuarial_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "risk_factor_fairness",
+          "layerName": "actuarial_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "credibility_weighting_model",
+          "layerName": "actuarial_standard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "driving_behavior_score",
+          "layerName": "scoring_model",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "trip_segmentation_algorithm",
+          "layerName": "scoring_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "harsh_event_detection",
+          "layerName": "scoring_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "premium_discount_schedule",
+          "layerName": "product_config",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "driver_feedback_frequency",
+          "layerName": "product_config",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "renewal_pricing_algorithm",
+          "layerName": "product_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,218 @@
+{
+  "namespace": "Scenario232",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "利用者の身体的安全を保証する不変条件。衝突回避・緊急停止。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "legal",
+      "ordValue": 3,
+      "definition": "道路交通法その他の法規制への準拠。外部制度で固定。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "autonomy",
+      "ordValue": 2,
+      "definition": "利用者の自己決定権と意思の尊重。行き先・ペースの決定権。",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "navigation",
+      "ordValue": 1,
+      "definition": "AIが行う経路計画・障害物回避の戦略。環境に応じて動的調整。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実地運用データで検証が必要。",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "leg1",
+      "layerName": "legal",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "leg2",
+      "layerName": "legal",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".saf2"
+      ]
+    },
+    {
+      "id": "aut1",
+      "layerName": "autonomy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".leg1"
+      ]
+    },
+    {
+      "id": "aut2",
+      "layerName": "autonomy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf3"
+      ]
+    },
+    {
+      "id": "aut3",
+      "layerName": "autonomy",
+      "justification": [
+        "C2",
+        "C5"
+      ],
+      "dependencies": [
+        ".leg1",
+        ".aut1"
+      ]
+    },
+    {
+      "id": "nav1",
+      "layerName": "navigation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf3",
+        ".leg1"
+      ]
+    },
+    {
+      "id": "nav2",
+      "layerName": "navigation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".leg1",
+        ".nav1"
+      ]
+    },
+    {
+      "id": "nav3",
+      "layerName": "navigation",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".aut1",
+        ".aut2"
+      ]
+    },
+    {
+      "id": "nav4",
+      "layerName": "navigation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".aut3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".nav3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".nav1",
+        ".nav4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".aut2",
+        ".nav3"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".nav2"
+      ]
+    }
+  ]
+}

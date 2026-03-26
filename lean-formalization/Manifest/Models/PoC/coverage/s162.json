@@ -1,0 +1,183 @@
+{
+  "namespace": "TestScenario.S162",
+  "description": "降雹予測 AI",
+  "layers": [
+    {
+      "name": "physicsLaw",
+      "ordValue": 4,
+      "definition": "大気物理学の基本法則。熱力学・流体力学の原理",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "observationalBasis",
+      "ordValue": 3,
+      "definition": "気象観測ネットワークとデータ品質基準",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "forecastModel",
+      "ordValue": 2,
+      "definition": "雹形成メカニズムに基づく予測モデル構造",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "warningPolicy",
+      "ordValue": 1,
+      "definition": "警報発令基準と伝達プロトコル",
+      "derivedFrom": [
+        "C3",
+        "H4"
+      ]
+    },
+    {
+      "name": "localCalibration",
+      "ordValue": 0,
+      "definition": "地域特性に応じたモデルパラメータ較正",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "thermodynamicConstraint",
+      "layerName": "physicsLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "updraftDynamics",
+      "layerName": "physicsLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "radarReliability",
+      "layerName": "observationalBasis",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".thermodynamicConstraint"
+      ]
+    },
+    {
+      "id": "soundingDataQuality",
+      "layerName": "observationalBasis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".thermodynamicConstraint"
+      ]
+    },
+    {
+      "id": "satelliteIntegration",
+      "layerName": "observationalBasis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".updraftDynamics"
+      ]
+    },
+    {
+      "id": "hailNucleation",
+      "layerName": "forecastModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".thermodynamicConstraint",
+        ".updraftDynamics"
+      ]
+    },
+    {
+      "id": "stormCellTracking",
+      "layerName": "forecastModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".radarReliability",
+        ".satelliteIntegration"
+      ]
+    },
+    {
+      "id": "hailSizeEstimation",
+      "layerName": "forecastModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".hailNucleation",
+        ".soundingDataQuality"
+      ]
+    },
+    {
+      "id": "falseAlarmTolerance",
+      "layerName": "warningPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".hailSizeEstimation"
+      ]
+    },
+    {
+      "id": "leadTimeTarget",
+      "layerName": "warningPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".stormCellTracking",
+        ".falseAlarmTolerance"
+      ]
+    },
+    {
+      "id": "disseminationChannel",
+      "layerName": "warningPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".falseAlarmTolerance"
+      ]
+    },
+    {
+      "id": "terrainAdjustment",
+      "layerName": "localCalibration",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".hailNucleation",
+        ".stormCellTracking"
+      ]
+    },
+    {
+      "id": "cropVulnerability",
+      "layerName": "localCalibration",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".hailSizeEstimation",
+        ".terrainAdjustment"
+      ]
+    }
+  ]
+}

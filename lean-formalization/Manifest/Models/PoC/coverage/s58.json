@@ -1,0 +1,240 @@
+{
+  "namespace": "AuctionBidding",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "入札上限金額はユーザーが事前に設定する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "不正入札（サクラ入札、談合）に加担しない"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "落札後のキャンセルは原則不可"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "複数オークション間での予算配分はユーザーが決定する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "オークション終了30秒前の自動入札を許可する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "過去の落札データを学習に使用する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C6",
+        "refutation": "オークション形式が根本的に変化した場合",
+        "content": "過去の落札価格分布は将来の予測に有効"
+      },
+      {
+        "id": "H2",
+        "basis": "C5",
+        "refutation": "オークション規約で自動入札が禁止された場合",
+        "content": "スナイピング戦略は競合入札を抑制できる"
+      },
+      {
+        "id": "H3",
+        "basis": "C1,C4",
+        "refutation": "予算制約が不要になった場合",
+        "content": "複数オークションの並行入札で期待値を最大化できる"
+      },
+      {
+        "id": "H4",
+        "basis": "C6",
+        "refutation": "出品者の行動パターンが急変した場合",
+        "content": "出品者の価格設定パターンは統計的に安定"
+      },
+      {
+        "id": "H5",
+        "basis": "C3",
+        "refutation": "キャンセルポリシーが緩和された場合",
+        "content": "落札リスクを考慮した保守的な入札が安全"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "compliance",
+      "ordValue": 3,
+      "definition": "法規制・プラットフォーム規約の不変条件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "budget",
+      "ordValue": 2,
+      "definition": "ユーザーが設定する予算・上限制約",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "tactic",
+      "ordValue": 1,
+      "definition": "入札タイミング・方式の運用方針",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化する価格予測",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "comp1",
+      "layerName": "compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "comp2",
+      "layerName": "compliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bud1",
+      "layerName": "budget",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        "comp2"
+      ]
+    },
+    {
+      "id": "bud2",
+      "layerName": "budget",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "comp1"
+      ]
+    },
+    {
+      "id": "bud3",
+      "layerName": "budget",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tac1",
+      "layerName": "tactic",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        "comp1",
+        "bud1"
+      ]
+    },
+    {
+      "id": "tac2",
+      "layerName": "tactic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "comp2",
+        "bud1"
+      ]
+    },
+    {
+      "id": "tac3",
+      "layerName": "tactic",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "bud3"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "tac1"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "bud2",
+        "tac1"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "tac2"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        "tac3"
+      ]
+    },
+    {
+      "id": "pred5",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "bud2"
+      ]
+    }
+  ]
+}

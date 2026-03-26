@@ -1,0 +1,195 @@
+{
+  "namespace": "TestCoverage.S4",
+  "layers": [
+    {
+      "name": "ChildProtection",
+      "ordValue": 5,
+      "definition": "児童保護・プライバシー。法的義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "EducationalStandard",
+      "ordValue": 4,
+      "definition": "教育課程基準。文科省指導要領準拠",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "PedagogicalPrinciple",
+      "ordValue": 3,
+      "definition": "教育学的原則。学習理論に基づく",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "AdaptiveAlgorithm",
+      "ordValue": 2,
+      "definition": "適応的学習アルゴリズムのパラメータ",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "LearnerPreference",
+      "ordValue": 1,
+      "definition": "学習者個人の好み・ペース設定",
+      "derivedFrom": [
+        "C5",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s4_p01",
+      "layerName": "ChildProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s4_p02",
+      "layerName": "ChildProtection",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s4_p03",
+      "layerName": "EducationalStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s4_p01"
+      ]
+    },
+    {
+      "id": "s4_p04",
+      "layerName": "EducationalStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s4_p02"
+      ]
+    },
+    {
+      "id": "s4_p05",
+      "layerName": "PedagogicalPrinciple",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s4_p03"
+      ]
+    },
+    {
+      "id": "s4_p06",
+      "layerName": "PedagogicalPrinciple",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s4_p04"
+      ]
+    },
+    {
+      "id": "s4_p07",
+      "layerName": "PedagogicalPrinciple",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        "s4_p03",
+        "s4_p04"
+      ]
+    },
+    {
+      "id": "s4_p08",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s4_p05"
+      ]
+    },
+    {
+      "id": "s4_p09",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s4_p06"
+      ]
+    },
+    {
+      "id": "s4_p10",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s4_p05",
+        "s4_p07"
+      ]
+    },
+    {
+      "id": "s4_p11",
+      "layerName": "LearnerPreference",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s4_p08"
+      ]
+    },
+    {
+      "id": "s4_p12",
+      "layerName": "LearnerPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s4_p09"
+      ]
+    },
+    {
+      "id": "s4_p13",
+      "layerName": "LearnerPreference",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "s4_p10"
+      ]
+    },
+    {
+      "id": "s4_p14",
+      "layerName": "LearnerPreference",
+      "justification": [
+        "C5",
+        "H6"
+      ],
+      "dependencies": [
+        "s4_p11",
+        "s4_p12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "namespace": "BirdMigrationPrediction",
+  "layers": [
+    {
+      "name": "ecology",
+      "ordValue": 5,
+      "definition": "生態学的基本法則・保全制約",
+      "derivedFrom": [
+        "C1",
+        "H1"
+      ]
+    },
+    {
+      "name": "geography",
+      "ordValue": 4,
+      "definition": "地理・地形的制約",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "climate",
+      "ordValue": 3,
+      "definition": "気象・気候の外部依存",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "migration",
+      "ordValue": 2,
+      "definition": "渡り経路予測モデル",
+      "derivedFrom": [
+        "C2",
+        "H6"
+      ]
+    },
+    {
+      "name": "alert",
+      "ordValue": 1,
+      "definition": "警報・通知ポリシー",
+      "derivedFrom": [
+        "C3",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "eco1",
+      "layerName": "ecology",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eco2",
+      "layerName": "ecology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo1",
+      "layerName": "geography",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo2",
+      "layerName": "geography",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".eco1"
+      ]
+    },
+    {
+      "id": "clm1",
+      "layerName": "climate",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "clm2",
+      "layerName": "climate",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".geo1"
+      ]
+    },
+    {
+      "id": "clm3",
+      "layerName": "climate",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "route1",
+      "layerName": "migration",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eco1",
+        ".geo2",
+        ".clm1"
+      ]
+    },
+    {
+      "id": "route2",
+      "layerName": "migration",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".clm3"
+      ]
+    },
+    {
+      "id": "alt1",
+      "layerName": "alert",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".route1"
+      ]
+    },
+    {
+      "id": "alt2",
+      "layerName": "alert",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".route1",
+        ".clm2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": []
+    }
+  ]
+}

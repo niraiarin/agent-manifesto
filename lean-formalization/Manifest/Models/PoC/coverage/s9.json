@@ -1,0 +1,165 @@
+{
+  "namespace": "TestCoverage.S9",
+  "layers": [
+    {
+      "name": "AnimalWelfare",
+      "ordValue": 4,
+      "definition": "動物福祉。緊急時の即時通報義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "VeterinaryGuideline",
+      "ordValue": 3,
+      "definition": "獣医学的ガイドライン。正常値範囲の定義",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "MonitoringPolicy",
+      "ordValue": 2,
+      "definition": "モニタリング頻度・閾値の設定ポリシー",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "OwnerCustomization",
+      "ordValue": 1,
+      "definition": "飼い主の好みに応じた通知・表示設定",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s9_p01",
+      "layerName": "AnimalWelfare",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s9_p02",
+      "layerName": "AnimalWelfare",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s9_p03",
+      "layerName": "VeterinaryGuideline",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s9_p01"
+      ]
+    },
+    {
+      "id": "s9_p04",
+      "layerName": "VeterinaryGuideline",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s9_p02"
+      ]
+    },
+    {
+      "id": "s9_p05",
+      "layerName": "VeterinaryGuideline",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s9_p01",
+        "s9_p02"
+      ]
+    },
+    {
+      "id": "s9_p06",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s9_p03"
+      ]
+    },
+    {
+      "id": "s9_p07",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s9_p04"
+      ]
+    },
+    {
+      "id": "s9_p08",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "s9_p03",
+        "s9_p05"
+      ]
+    },
+    {
+      "id": "s9_p09",
+      "layerName": "OwnerCustomization",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s9_p06"
+      ]
+    },
+    {
+      "id": "s9_p10",
+      "layerName": "OwnerCustomization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s9_p07"
+      ]
+    },
+    {
+      "id": "s9_p11",
+      "layerName": "OwnerCustomization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s9_p08"
+      ]
+    },
+    {
+      "id": "s9_p12",
+      "layerName": "OwnerCustomization",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        "s9_p09",
+        "s9_p10"
+      ]
+    }
+  ]
+}

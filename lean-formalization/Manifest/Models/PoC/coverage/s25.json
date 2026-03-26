@@ -1,0 +1,136 @@
+{
+  "layers": [
+    {
+      "name": "child_safety_constraint",
+      "definition": "子どもの安全と権利の保護。絶対的制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "developmental_postulate",
+      "definition": "発達心理学・小児医学の科学的知見",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "parenting_principle",
+      "definition": "育児方針の原則。家庭の価値観を尊重",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "advice_hypothesis",
+      "definition": "具体的アドバイスの仮説。エビデンスで更新",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "emergency_escalation",
+      "layerName": "child_safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_medical_diagnosis",
+      "layerName": "child_safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "age_appropriate_milestones",
+      "layerName": "developmental_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "attachment_theory_basis",
+      "layerName": "developmental_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "respect_cultural_diversity",
+      "layerName": "parenting_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "parent_autonomy",
+      "layerName": "parenting_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "evidence_based_only",
+      "layerName": "parenting_principle",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sleep_training_method",
+      "layerName": "advice_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "screen_time_recommendation",
+      "layerName": "advice_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "feeding_schedule_suggestion",
+      "layerName": "advice_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "developmental_delay_alert",
+      "layerName": "child_safety_constraint",
+      "justification": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "dependencies": []
+    }
+  ]
+}

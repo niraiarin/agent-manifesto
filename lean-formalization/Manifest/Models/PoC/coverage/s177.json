@@ -1,0 +1,304 @@
+{
+  "namespace": "TestCoverage.S177",
+  "layers": [
+    {
+      "name": "EnvironmentalLaw",
+      "ordValue": 5,
+      "definition": "海洋汚染防止法・国際条約に基づく法的義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "OceanPhysics",
+      "ordValue": 4,
+      "definition": "海洋物理学の確立された知見",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "ResponseProtocol",
+      "ordValue": 3,
+      "definition": "油防除の対応手順。海上保安庁の指針に基づく",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "ModelDesign",
+      "ordValue": 2,
+      "definition": "拡散予測モデルの設計選択",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "OperationalHypothesis",
+      "ordValue": 1,
+      "definition": "運用効率に関する未検証の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s177_p01",
+      "layerName": "EnvironmentalLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s177_p02",
+      "layerName": "OceanPhysics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s177_p01"
+      ]
+    },
+    {
+      "id": "s177_p03",
+      "layerName": "OceanPhysics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s177_p01"
+      ]
+    },
+    {
+      "id": "s177_p04",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s177_p02"
+      ]
+    },
+    {
+      "id": "s177_p05",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s177_p02",
+        ".s177_p03"
+      ]
+    },
+    {
+      "id": "s177_p06",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s177_p03"
+      ]
+    },
+    {
+      "id": "s177_p07",
+      "layerName": "ModelDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s177_p04"
+      ]
+    },
+    {
+      "id": "s177_p08",
+      "layerName": "ModelDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s177_p05"
+      ]
+    },
+    {
+      "id": "s177_p09",
+      "layerName": "ModelDesign",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s177_p04",
+        ".s177_p06"
+      ]
+    },
+    {
+      "id": "s177_p10",
+      "layerName": "OperationalHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s177_p07"
+      ]
+    },
+    {
+      "id": "s177_p11",
+      "layerName": "OperationalHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s177_p08"
+      ]
+    },
+    {
+      "id": "s177_p12",
+      "layerName": "OperationalHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s177_p09"
+      ]
+    },
+    {
+      "id": "s177_p13",
+      "layerName": "OperationalHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s177_p07",
+        ".s177_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "油流出事故の通報と対応は海洋汚染防止法に基づく法的義務である"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "油の拡散は潮流・風・波浪の影響を受ける流体力学的現象である"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "油防除作業の優先順位は海上保安庁の指針に従う"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "予測モデルは72時間先までの拡散を予測する必要がある"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "予測結果は海上保安庁と自治体にリアルタイムで共有する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "沿岸域の複雑な地形で潮流モデルの精度が不十分な場合"
+        }
+      },
+      "content": "FVCOM（有限体積法海洋モデル）で潮流場を高精度に再現可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "重油と軽油で風化過程が大きく異なる場合、油種別の対応が必要"
+        }
+      },
+      "content": "油の風化過程（蒸発・乳化・分散）をパラメトリックにモデル化可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "気象予報の精度が低い海域では72時間予測の信頼性が低下する"
+        }
+      },
+      "content": "粒子追跡法（ラグランジュ法）で油の拡散経路を確率的に予測可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "通信インフラが不十分な離島・遠洋での運用が困難な場合"
+        }
+      },
+      "content": "WebGISベースの可視化で関係機関との情報共有が効率化される"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "アンサンブル予測の計算コストがリアルタイム運用に耐えない場合"
+        }
+      },
+      "content": "アンサンブル予測（複数シナリオ）で予測の不確実性を定量化可能"
+    }
+  ]
+}

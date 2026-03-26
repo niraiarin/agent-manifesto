@@ -26,35 +26,13 @@ fi
 
 JSON=$(cat "$INPUT_FILE")
 
-# Ontology.lean から依存関係を取得
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ONTOLOGY="$SCRIPT_DIR/../Ontology.lean"
-
-if [ ! -f "$ONTOLOGY" ]; then
-  echo "Error: $ONTOLOGY not found" >&2
-  exit 1
-fi
-
 # ============================================================
-# 依存グラフの抽出
+# モード判定 + 依存グラフ・分類の抽出
 # ============================================================
 
-declare -A DEPS
-while IFS= read -r line; do
-  if [[ "$line" =~ \|[[:space:]]\.([a-z0-9]+).*'=>'.*\[([^\]]*)\] ]]; then
-    prop="${BASH_REMATCH[1]}"
-    deps_raw="${BASH_REMATCH[2]}"
-    deps_clean=$(echo "$deps_raw" | sed 's/\.//g' | sed 's/,/ /g' | xargs)
-    DEPS[$prop]="$deps_clean"
-  fi
-done < <(sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | grep '=>')
+HAS_PROPOSITIONS=$(echo "$JSON" | jq 'has("propositions")')
 
-# ============================================================
-# ModelSpec から分類を取得
-# ============================================================
-
-declare -A CLASSIFY  # proposition → layerName
-declare -A ORD_MAP   # layerName → ordValue
+declare -A DEPS CLASSIFY ORD_MAP
 
 NUM_LAYERS=$(echo "$JSON" | jq '.layers | length')
 for i in $(seq 0 $((NUM_LAYERS - 1))); do
@@ -63,12 +41,42 @@ for i in $(seq 0 $((NUM_LAYERS - 1))); do
   ORD_MAP[$name]=$ord
 done
 
-NUM_ASSIGNMENTS=$(echo "$JSON" | jq '.assignments | length')
-for i in $(seq 0 $((NUM_ASSIGNMENTS - 1))); do
-  prop=$(echo "$JSON" | jq -r ".assignments[$i].proposition")
-  layer=$(echo "$JSON" | jq -r ".assignments[$i].layerName")
-  CLASSIFY[$prop]=$layer
-done
+if [ "$HAS_PROPOSITIONS" = "true" ]; then
+  # スタンドアロンモード: JSON の propositions から依存関係と分類を取得
+  NUM_PROPS=$(echo "$JSON" | jq '.propositions | length')
+  for i in $(seq 0 $((NUM_PROPS - 1))); do
+    prop=$(echo "$JSON" | jq -r ".propositions[$i].id")
+    layer=$(echo "$JSON" | jq -r ".propositions[$i].layerName")
+    deps=$(echo "$JSON" | jq -r ".propositions[$i].dependencies | map(ltrimstr(\".\")) | join(\" \")")
+    CLASSIFY[$prop]=$layer
+    DEPS[$prop]="$deps"
+  done
+else
+  # 統合モード: Ontology.lean から依存関係、assignments から分類を取得
+  SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+  ONTOLOGY="$SCRIPT_DIR/../Ontology.lean"
+
+  if [ ! -f "$ONTOLOGY" ]; then
+    echo "Error: $ONTOLOGY not found" >&2
+    exit 1
+  fi
+
+  while IFS= read -r line; do
+    if [[ "$line" =~ \|[[:space:]]\.([a-z0-9]+).*'=>'.*\[([^\]]*)\] ]]; then
+      prop="${BASH_REMATCH[1]}"
+      deps_raw="${BASH_REMATCH[2]}"
+      deps_clean=$(echo "$deps_raw" | sed 's/\.//g' | sed 's/,/ /g' | xargs)
+      DEPS[$prop]="$deps_clean"
+    fi
+  done < <(sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | grep '=>')
+
+  NUM_ASSIGNMENTS=$(echo "$JSON" | jq '.assignments | length')
+  for i in $(seq 0 $((NUM_ASSIGNMENTS - 1))); do
+    prop=$(echo "$JSON" | jq -r ".assignments[$i].proposition")
+    layer=$(echo "$JSON" | jq -r ".assignments[$i].layerName")
+    CLASSIFY[$prop]=$layer
+  done
+fi
 
 # ============================================================
 # 単調性チェック

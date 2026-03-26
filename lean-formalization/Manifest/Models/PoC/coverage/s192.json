@@ -1,0 +1,165 @@
+{
+  "namespace": "Scenario192",
+  "layers": [
+    {
+      "name": "ethics",
+      "ordValue": 3,
+      "definition": "利用者の権利と尊厳に関わる不可侵の原則。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "accessibility",
+      "ordValue": 2,
+      "definition": "障害特性に応じたアクセシビリティ要件。利用者に依存。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "adaptation",
+      "ordValue": 1,
+      "definition": "個別適応のための設計判断。運用を通じて調整可能。",
+      "derivedFrom": [
+        "C2",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。利用者テストで検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth3",
+      "layerName": "ethics",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "acc1",
+      "layerName": "accessibility",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "acc2",
+      "layerName": "accessibility",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".eth2"
+      ]
+    },
+    {
+      "id": "acc3",
+      "layerName": "accessibility",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".eth3"
+      ]
+    },
+    {
+      "id": "adp1",
+      "layerName": "adaptation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".acc1",
+        ".acc3"
+      ]
+    },
+    {
+      "id": "adp2",
+      "layerName": "adaptation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".eth2",
+        ".acc2"
+      ]
+    },
+    {
+      "id": "adp3",
+      "layerName": "adaptation",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".acc1"
+      ]
+    },
+    {
+      "id": "adp4",
+      "layerName": "adaptation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".adp2",
+        ".adp3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".adp1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".adp1",
+        ".adp4"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "namespace": "ArtAuthentication",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 4,
+      "definition": "鑑定結果の法的・倫理的に不可侵な前提。誤鑑定による損害責任の根拠",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "domain_knowledge",
+      "ordValue": 3,
+      "definition": "美術史・材料科学・様式分析の確立された知見。反例は極めて稀",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "methodology",
+      "ordValue": 2,
+      "definition": "鑑定プロセスの手順・基準。人間の専門家が設定・更新する",
+      "derivedFrom": [
+        "C3",
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "inference",
+      "ordValue": 1,
+      "definition": "AI が画像・データから推論する真贋判定。確信度付き",
+      "derivedFrom": [
+        "C7",
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。新発見の作家・技法に関する推定",
+      "derivedFrom": [
+        "H8",
+        "H9"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "auth_legal1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "auth_legal2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "auth_provenance",
+      "layerName": "constraint",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dk_material",
+      "layerName": "domain_knowledge",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dk_style",
+      "layerName": "domain_knowledge",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dk_period",
+      "layerName": "domain_knowledge",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dk_pigment",
+      "layerName": "domain_knowledge",
+      "justification": [
+        "H1",
+        "C4"
+      ],
+      "dependencies": [
+        ".dk_material"
+      ]
+    },
+    {
+      "id": "meth_workflow",
+      "layerName": "methodology",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".auth_legal1"
+      ]
+    },
+    {
+      "id": "meth_xray",
+      "layerName": "methodology",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".dk_material"
+      ]
+    },
+    {
+      "id": "meth_multistage",
+      "layerName": "methodology",
+      "justification": [
+        "C3",
+        "H4"
+      ],
+      "dependencies": [
+        ".auth_legal2",
+        ".dk_style"
+      ]
+    },
+    {
+      "id": "meth_human_final",
+      "layerName": "methodology",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".auth_legal1"
+      ]
+    },
+    {
+      "id": "inf_image_cls",
+      "layerName": "inference",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".dk_style",
+        ".meth_xray"
+      ]
+    },
+    {
+      "id": "inf_age_est",
+      "layerName": "inference",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".dk_pigment",
+        ".dk_period"
+      ]
+    },
+    {
+      "id": "inf_ensemble",
+      "layerName": "inference",
+      "justification": [
+        "C7",
+        "H6"
+      ],
+      "dependencies": [
+        ".inf_image_cls",
+        ".inf_age_est",
+        ".meth_multistage"
+      ]
+    },
+    {
+      "id": "inf_confidence",
+      "layerName": "inference",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".inf_ensemble"
+      ]
+    },
+    {
+      "id": "inf_report",
+      "layerName": "inference",
+      "justification": [
+        "H6",
+        "C7"
+      ],
+      "dependencies": [
+        ".inf_confidence",
+        ".meth_human_final",
+        ".auth_provenance"
+      ]
+    },
+    {
+      "id": "hyp_new_artist",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".inf_image_cls"
+      ]
+    },
+    {
+      "id": "hyp_forgery_net",
+      "layerName": "hypothesis",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".inf_ensemble",
+        ".dk_period"
+      ]
+    }
+  ]
+}

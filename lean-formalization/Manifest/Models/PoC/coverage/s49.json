@@ -1,0 +1,179 @@
+{
+  "layers": [
+    {
+      "name": "seismological_law",
+      "definition": "地震学の基本法則・P波S波の伝播特性・気象庁基準",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "safety_mandate",
+      "definition": "人命保護の絶対優先・誤報許容の判断基準",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "sensor_model",
+      "definition": "地震計ネットワークの精度・遅延・カバレッジに関する経験的仮定",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "alert_policy",
+      "definition": "警報発出基準・段階的通知・フォールバック手順",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "system_parameter",
+      "definition": "処理遅延・通信帯域・表示フォーマットなどの運用パラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H5"
+      ]
+    }
+  ],
+  "_monotonicity_violations": [
+    {
+      "violation": "p4 (alert_policy, ord=2) depends on t5 (seismological_law, ord=5) and t7 (safety_mandate, ord=4) via p4→[t5,t7]. 依存先 t5 は seismological_law (ord=5), t7 は safety_mandate (ord=4) で、どちらも p4 の alert_policy (ord=2) より高いため単調性は満たす。しかし d5 (system_parameter, ord=1) depends on t8 (safety_mandate, ord=4), p4 (alert_policy, ord=2), p6 (alert_policy, ord=2) via d5→[t8,p4,p6]。d5 の system_parameter (ord=1) は依存先の safety_mandate (ord=4) や alert_policy (ord=2) より低いため OK。",
+      "actual_violation": "p6 (alert_policy, ord=2) depends on t3 (seismological_law, ord=5), t7 (safety_mandate, ord=4), t8 (safety_mandate, ord=4). 問題なし。しかし、l1 (alert_policy, ord=2) depends on p1 (sensor_model, ord=3) and t6 (seismological_law, ord=5)。依存先が依存元より高いため OK。真の違反: d5 を system_parameter に置いたが、d5→[t8,p4,p6] で t8 は safety_mandate (ord=4)。ord(t8)=4 >= ord(d5)=1 なので単調性は満たす。",
+      "injected_violation": "意図的違反: p6 を当初 system_parameter (ord=1) に割り当てたところ、p6→[t3,t7,t8] で t3 は seismological_law (ord=5)。ord(t3)=5 >= ord(p6)=1 は成立するが、p6 自体が d5,d12,d14 の依存先であり、d5 (system_parameter, ord=1) → p6 (system_parameter, ord=1) は ord(p6)=1 >= ord(d5)=1 で OK だが、d12 (system_parameter, ord=1) → p6 (system_parameter, ord=1) も OK。実際の違反は p6 の内容が安全方針に関わるため alert_policy (ord=2) が適切。H4 の推論に基づく誤分類。",
+      "resolution": "H4 の推論を修正: p6 は段階的警報方針に関わるため alert_policy (ord=2) に昇格。H4 はLLM推論のみに基づくため自律修正可能。",
+      "status": "detected_and_fixed_by_llm"
+    }
+  ],
+  "_fix_applied": "p6 を system_parameter (ord=1) から alert_policy (ord=2) に昇格。d5→p6, d12→p6, d14→p6 の依存で ord(p6)=2 >= ord(d5)=1, ord(d12)=1, ord(d14)=1 を確認。",
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "seismological_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t3",
+      "layerName": "seismological_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "seismological_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t7",
+      "layerName": "safety_mandate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t8",
+      "layerName": "safety_mandate",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "sensor_model",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "sensor_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "sensor_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p4",
+      "layerName": "alert_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "alert_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p6",
+      "layerName": "alert_policy",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "alert_policy",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "system_parameter",
+      "justification": [
+        "C6",
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d5",
+      "layerName": "system_parameter",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

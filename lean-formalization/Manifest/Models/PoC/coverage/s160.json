@@ -1,0 +1,275 @@
+{
+  "namespace": "TestCoverage.S160",
+  "layers": [
+    {
+      "name": "PhysicalLaw",
+      "ordValue": 4,
+      "definition": "流体力学の基礎法則（ナビエ-ストークス方程式等）。不変",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ExperimentalProtocol",
+      "ordValue": 3,
+      "definition": "風洞試験の手順・計測精度の制約",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "AnalysisMethod",
+      "ordValue": 2,
+      "definition": "データ解析・補正アルゴリズムの選択",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "Visualization",
+      "ordValue": 1,
+      "definition": "結果の可視化・レポート形式",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s160_p01",
+      "layerName": "PhysicalLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s160_p02",
+      "layerName": "PhysicalLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s160_p03",
+      "layerName": "ExperimentalProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s160_p01"
+      ]
+    },
+    {
+      "id": "s160_p04",
+      "layerName": "ExperimentalProtocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s160_p01",
+        ".s160_p02"
+      ]
+    },
+    {
+      "id": "s160_p05",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s160_p03"
+      ]
+    },
+    {
+      "id": "s160_p06",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s160_p03",
+        ".s160_p04"
+      ]
+    },
+    {
+      "id": "s160_p07",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s160_p04"
+      ]
+    },
+    {
+      "id": "s160_p08",
+      "layerName": "Visualization",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s160_p05"
+      ]
+    },
+    {
+      "id": "s160_p09",
+      "layerName": "Visualization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s160_p06"
+      ]
+    },
+    {
+      "id": "s160_p10",
+      "layerName": "Visualization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s160_p07"
+      ]
+    },
+    {
+      "id": "s160_p11",
+      "layerName": "Visualization",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s160_p08",
+        ".s160_p09"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "レイノルズ数の相似則を満たす試験条件で実験する。実機との相似性を保証する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "風洞壁面の干渉効果（ブロッケージ効果）を補正する。補正なしのデータは使用しない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "6分力天秤の校正は試験前に毎回実施し、校正証明書を付与する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "データ取得はナショナルインスツルメンツのDAQで10kHzサンプリングする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "空力係数（CL, CD, CM）の迎角依存性をプロットし、CFD結果と比較表示する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "天秤のヒステリシスが無視できるほど小さい場合"
+        }
+      },
+      "content": "天秤のヒステリシス補正には迎角の昇降両方向のスイープデータが必要"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C4"
+          ],
+          "refutation": "ブロッケージ比が5%未満で補正が不要な場合"
+        }
+      },
+      "content": "Maskellの補正法が閉断面風洞でのブロッケージ補正に適しているが、大迎角では限界がある"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "ノイズレベルが十分低くフィルタリング不要な場合"
+        }
+      },
+      "content": "高周波ノイズの除去にはバターワースフィルタ（カットオフ500Hz）が適切"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "風洞データとCFDデータの形式が統一されている場合"
+        }
+      },
+      "content": "風洞データとCFDデータのアライメント（迎角・レイノルズ数の一致）が比較精度の鍵"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C4"
+          ],
+          "refutation": "不確かさ解析が規格で要求されない場合"
+        }
+      },
+      "content": "GUM（計測の不確かさ表現のガイド）に基づく不確かさバーの表示が学術的信頼性に必要"
+    }
+  ]
+}

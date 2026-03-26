@@ -1,0 +1,160 @@
+{
+  "namespace": "ProstheticTactileFeedback",
+  "layers": [
+    {
+      "name": "neuro_safety",
+      "ordValue": 5,
+      "definition": "神経刺激の安全上限に関する不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "medical_governance",
+      "ordValue": 4,
+      "definition": "医師の処方・監督に関する制度的要件",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "calibration_protocol",
+      "ordValue": 3,
+      "definition": "個人キャリブレーションの手順・基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "stimulation_design",
+      "ordValue": 2,
+      "definition": "刺激パターン生成の設計判断",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "learning_hypothesis",
+      "ordValue": 1,
+      "definition": "感覚マップ学習の仮説",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "pain_ceiling",
+      "layerName": "neuro_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "emergency_stop",
+      "layerName": "neuro_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_param_override",
+      "layerName": "medical_governance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".pain_ceiling"
+      ]
+    },
+    {
+      "id": "physician_approval",
+      "layerName": "medical_governance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".pain_ceiling",
+        ".emergency_stop"
+      ]
+    },
+    {
+      "id": "individual_calib",
+      "layerName": "calibration_protocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".pain_ceiling",
+        ".physician_approval"
+      ]
+    },
+    {
+      "id": "adaptation_monitor",
+      "layerName": "calibration_protocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".individual_calib"
+      ]
+    },
+    {
+      "id": "recalib_trigger",
+      "layerName": "calibration_protocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".adaptation_monitor",
+        ".no_param_override"
+      ]
+    },
+    {
+      "id": "vibrotactile_pref",
+      "layerName": "stimulation_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".individual_calib"
+      ]
+    },
+    {
+      "id": "pattern_encoding",
+      "layerName": "stimulation_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".vibrotactile_pref",
+        ".pain_ceiling"
+      ]
+    },
+    {
+      "id": "sensory_map_ml",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".individual_calib",
+        ".pattern_encoding"
+      ]
+    },
+    {
+      "id": "transfer_learning",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".sensory_map_ml"
+      ]
+    }
+  ]
+}

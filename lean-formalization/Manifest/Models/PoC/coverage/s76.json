@@ -1,0 +1,152 @@
+{
+  "layers": [
+    {
+      "name": "safety_constraint",
+      "definition": "食品安全・アレルギー・宗教的食事制限の不変制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "nutrition_postulate",
+      "definition": "栄養学的な前提（推奨摂取量・栄養バランス）",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "recipe_principle",
+      "definition": "レシピ生成の原則（実現可能性・味の整合性・季節性）",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "presentation_design",
+      "definition": "レシピの表示・手順説明の設計判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_98e98c",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_6cd4be",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d8ae0a",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "PFC_593d24",
+      "layerName": "nutrition_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3f74f5",
+      "layerName": "nutrition_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_069bf0",
+      "layerName": "nutrition_postulate",
+      "justification": [
+        "H1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_c3fc9b",
+      "layerName": "recipe_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_a32ea3",
+      "layerName": "recipe_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_729537",
+      "layerName": "recipe_principle",
+      "justification": [
+        "H2",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_121b78",
+      "layerName": "presentation_design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_b174b3",
+      "layerName": "presentation_design",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_e076af",
+      "layerName": "presentation_design",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "AI_f777cc",
+      "layerName": "presentation_design",
+      "justification": [
+        "H5",
+        "C4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "namespace": "TestCoverage.S18",
+  "layers": [
+    {
+      "name": "product_standard",
+      "ordValue": 5,
+      "definition": "JIS/ISO品質規格の法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "equipment",
+      "ordValue": 4,
+      "definition": "検査装置の物理的制約・精度限界",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "production_line",
+      "ordValue": 3,
+      "definition": "製造ラインの工程依存",
+      "derivedFrom": [
+        "H3",
+        "C3"
+      ]
+    },
+    {
+      "name": "inspection_rule",
+      "ordValue": 2,
+      "definition": "品質管理者が設定する検査基準",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "calibration",
+      "ordValue": 1,
+      "definition": "AIが自動調整する検査パラメータ",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "std1",
+      "layerName": "product_standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "product_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eq1",
+      "layerName": "equipment",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eq2",
+      "layerName": "equipment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "std1"
+      ]
+    },
+    {
+      "id": "line1",
+      "layerName": "production_line",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "eq1"
+      ]
+    },
+    {
+      "id": "line2",
+      "layerName": "production_line",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "cal1"
+      ]
+    },
+    {
+      "id": "line3",
+      "layerName": "production_line",
+      "justification": [
+        "H3",
+        "C3"
+      ],
+      "dependencies": [
+        "eq2"
+      ]
+    },
+    {
+      "id": "ir1",
+      "layerName": "inspection_rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "std1",
+        "line1"
+      ]
+    },
+    {
+      "id": "ir2",
+      "layerName": "inspection_rule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "std2",
+        "eq2"
+      ]
+    },
+    {
+      "id": "ir3",
+      "layerName": "inspection_rule",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        "line3"
+      ]
+    },
+    {
+      "id": "cal1",
+      "layerName": "calibration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "ir1",
+        "eq1"
+      ]
+    },
+    {
+      "id": "cal2",
+      "layerName": "calibration",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "ir2"
+      ]
+    },
+    {
+      "id": "cal3",
+      "layerName": "calibration",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "ir3",
+        "line1"
+      ]
+    },
+    {
+      "id": "cal4",
+      "layerName": "calibration",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "cal1"
+      ]
+    },
+    {
+      "id": "cal5",
+      "layerName": "calibration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "ir1"
+      ]
+    }
+  ]
+}

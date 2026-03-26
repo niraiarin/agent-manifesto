@@ -1,0 +1,303 @@
+{
+  "namespace": "Scenario237",
+  "layers": [
+    {
+      "name": "geomech",
+      "ordValue": 6,
+      "definition": "地盤力学の物理法則。土圧・水圧の基本原理。不変。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "structural",
+      "ordValue": 5,
+      "definition": "トンネル構造の安全性。切羽崩壊防止の絶対条件。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "surfaceProtect",
+      "ordValue": 4,
+      "definition": "地上構造物の保護。沈下量管理基準。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "designLimit",
+      "ordValue": 3,
+      "definition": "設計段階で決定されたパラメータ上限値。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "operation",
+      "ordValue": 2,
+      "definition": "技術者の判断による運用方針。地質急変時の停止ルール。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "control",
+      "ordValue": 1,
+      "definition": "AIによる掘進パラメータの動的制御戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の地質工学的仮説。施工データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "geo1",
+      "layerName": "geomech",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo2",
+      "layerName": "geomech",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "str1",
+      "layerName": "structural",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".geo1"
+      ]
+    },
+    {
+      "id": "str2",
+      "layerName": "structural",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".geo1",
+        ".geo2"
+      ]
+    },
+    {
+      "id": "str3",
+      "layerName": "structural",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".geo2"
+      ]
+    },
+    {
+      "id": "surf1",
+      "layerName": "surfaceProtect",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".str1"
+      ]
+    },
+    {
+      "id": "surf2",
+      "layerName": "surfaceProtect",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".str1",
+        ".str2"
+      ]
+    },
+    {
+      "id": "surf3",
+      "layerName": "surfaceProtect",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".str3"
+      ]
+    },
+    {
+      "id": "dlim1",
+      "layerName": "designLimit",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".str2",
+        ".surf1"
+      ]
+    },
+    {
+      "id": "dlim2",
+      "layerName": "designLimit",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".surf2"
+      ]
+    },
+    {
+      "id": "dlim3",
+      "layerName": "designLimit",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".surf3"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".str1",
+        ".dlim1"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".dlim2"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operation",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".dlim1",
+        ".dlim3"
+      ]
+    },
+    {
+      "id": "ctrl1",
+      "layerName": "control",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".geo1",
+        ".str1",
+        ".dlim1",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "ctrl2",
+      "layerName": "control",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".surf1",
+        ".surf2",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "ctrl3",
+      "layerName": "control",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".str3",
+        ".ops3"
+      ]
+    },
+    {
+      "id": "ctrl4",
+      "layerName": "control",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".ctrl1",
+        ".ctrl3"
+      ]
+    },
+    {
+      "id": "ctrl5",
+      "layerName": "control",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".surf3",
+        ".dlim3",
+        ".ops2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops2",
+        ".ctrl1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ctrl4",
+        ".ctrl5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".ctrl3"
+      ]
+    }
+  ]
+}

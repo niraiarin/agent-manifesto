@@ -1,0 +1,183 @@
+{
+  "namespace": "TestCoverage.S15",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 5,
+      "definition": "保険業法・金融規制の法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "actuarial",
+      "ordValue": 4,
+      "definition": "保険数理の前提・リスクモデル",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "product_design",
+      "ordValue": 3,
+      "definition": "保険商品設計の構造的制約",
+      "derivedFrom": [
+        "C3",
+        "H3"
+      ]
+    },
+    {
+      "name": "underwriting",
+      "ordValue": 2,
+      "definition": "査定担当者が設定する引受基準",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "scoring",
+      "ordValue": 1,
+      "definition": "AIが算出するリスクスコア・査定推奨",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "act1",
+      "layerName": "actuarial",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "act2",
+      "layerName": "actuarial",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "reg1"
+      ]
+    },
+    {
+      "id": "pd1",
+      "layerName": "product_design",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "reg1",
+        "act1"
+      ]
+    },
+    {
+      "id": "pd2",
+      "layerName": "product_design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "reg2",
+        "act2"
+      ]
+    },
+    {
+      "id": "uw1",
+      "layerName": "underwriting",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "pd1"
+      ]
+    },
+    {
+      "id": "uw2",
+      "layerName": "underwriting",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "pd2",
+        "act1"
+      ]
+    },
+    {
+      "id": "uw3",
+      "layerName": "underwriting",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        "reg2"
+      ]
+    },
+    {
+      "id": "sc1",
+      "layerName": "scoring",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "uw1",
+        "act1"
+      ]
+    },
+    {
+      "id": "sc2",
+      "layerName": "scoring",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "uw2"
+      ]
+    },
+    {
+      "id": "sc3",
+      "layerName": "scoring",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "uw3",
+        "pd1"
+      ]
+    },
+    {
+      "id": "sc4",
+      "layerName": "scoring",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "sc1"
+      ]
+    }
+  ]
+}

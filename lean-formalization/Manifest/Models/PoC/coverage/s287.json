@@ -1,0 +1,219 @@
+{
+  "namespace": "Scenario287",
+  "layers": [
+    {
+      "name": "environmental",
+      "ordValue": 4,
+      "definition": "海洋環境の物理的制約と法的規制。行政が設定。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulatory",
+      "ordValue": 3,
+      "definition": "食品安全と公益に関する法的要件。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "施設管理者の運用方針と電力需要。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AI最適化アルゴリズムの設計判断。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。運用データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "env1",
+      "layerName": "environmental",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environmental",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env3",
+      "layerName": "environmental",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rgl1",
+      "layerName": "regulatory",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".env1"
+      ]
+    },
+    {
+      "id": "rgl2",
+      "layerName": "regulatory",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".env2",
+        ".env3"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operational",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".env1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".rgl1",
+        ".rgl2"
+      ]
+    },
+    {
+      "id": "opr3",
+      "layerName": "operational",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".env2",
+        ".rgl1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".env2",
+        ".opr1"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rgl2",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".opr3",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".env3",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2"
+      ]
+    }
+  ]
+}

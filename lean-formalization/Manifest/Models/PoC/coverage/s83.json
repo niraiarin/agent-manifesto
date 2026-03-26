@@ -1,0 +1,367 @@
+{
+  "namespace": "BloodTestAnomaly",
+  "layers": [
+    {
+      "name": "regulatory",
+      "ordValue": 4,
+      "definition": "医療法・薬機法・IVD規制に基づく絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 3,
+      "definition": "臨床ガイドラインに基づく医学的前提",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "検査機関の運用方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "model",
+      "ordValue": 1,
+      "definition": "異常検知モデルの設計判断",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の検出性能仮説",
+      "derivedFrom": [
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulatory",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulatory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulatory",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        "reg1"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "reg2"
+      ]
+    },
+    {
+      "id": "clin3",
+      "layerName": "clinical",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "op1",
+      "layerName": "operational",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "reg1",
+        "clin1"
+      ]
+    },
+    {
+      "id": "op2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "reg3"
+      ]
+    },
+    {
+      "id": "op3",
+      "layerName": "operational",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "clin2"
+      ]
+    },
+    {
+      "id": "op4",
+      "layerName": "operational",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        "reg2",
+        "clin3"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "clin1",
+        "op1"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "op2",
+        "op3"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "model",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "clin2",
+        "op4"
+      ]
+    },
+    {
+      "id": "mod4",
+      "layerName": "model",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "mod1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "mod1",
+        "mod2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "mod3",
+        "mod4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        "hyp1"
+      ]
+    },
+    {
+      "id": "viol1",
+      "layerName": "model",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "hyp1"
+      ]
+    },
+    {
+      "id": "viol2",
+      "layerName": "clinical",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "op3"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "hyp2",
+        "hyp3"
+      ]
+    }
+  ],
+  "monotonicity_violations": [
+    {
+      "from": "viol1",
+      "to": "hyp1",
+      "from_layer": "model",
+      "from_ord": 1,
+      "to_layer": "hypothesis",
+      "to_ord": 0,
+      "description": "model層(ord=1)の命題viol1がhypothesis層(ord=0)の命題hyp1に依存: 依存先のordが依存元より低い",
+      "resolution": "viol1をhypothesis層に降格するか、hyp1をmodel層に昇格"
+    },
+    {
+      "from": "viol2",
+      "to": "op3",
+      "from_layer": "clinical",
+      "from_ord": 3,
+      "to_layer": "operational",
+      "to_ord": 2,
+      "description": "clinical層(ord=3)の命題viol2がoperational層(ord=2)の命題op3に依存: 依存先のordが依存元より低い",
+      "resolution": "viol2をoperational層に降格するか、op3をclinical層に昇格"
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "異常検知結果は医師の最終判断なしに患者に通知しない"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "偽陰性率を1%未満に維持する（見逃し防止優先）"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "異常値の定義は国際臨床ガイドラインに準拠する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "24時間以内に全検体の結果を返す"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "個人の検査履歴は5年間保持し比較可能とする"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "患者データの匿名化なしの二次利用を禁止する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C3,外部知識",
+        "refutation": "ガイドラインが大幅改定された場合",
+        "content": "基準値範囲は年齢・性別で十分に層別化されている"
+      },
+      {
+        "id": "H2",
+        "basis": "C2,外部知識",
+        "refutation": "新規バイオマーカーの発見で既存指標が陳腐化",
+        "content": "既存の血液検査項目で主要疾患の早期検出が可能"
+      },
+      {
+        "id": "H3",
+        "basis": "C4",
+        "refutation": "検査機器の故障率が想定を超過",
+        "content": "自動分析装置のスループットは処理要件を満たす"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H2",
+        "refutation": "訓練データにバイアスが存在",
+        "content": "過去の検査データで訓練した異常検知モデルは汎化する"
+      },
+      {
+        "id": "H5",
+        "basis": "C5,H3",
+        "refutation": "データ形式の非互換が蓄積",
+        "content": "時系列比較により個人の経年変化を検出可能"
+      },
+      {
+        "id": "H6",
+        "basis": "H2,H4",
+        "refutation": "多変量解析の次元の呪いで精度劣化",
+        "content": "複数項目の組合せ異常は単項目より検出感度が高い"
+      },
+      {
+        "id": "H7",
+        "basis": "H4,H6",
+        "refutation": "実臨床でのモデル精度が検証環境を大幅に下回る",
+        "content": "深層学習ベースの異常検知は従来統計手法を上回る"
+      },
+      {
+        "id": "H8",
+        "basis": "H5,H6",
+        "refutation": "季節変動等の交絡因子で偽陽性が増大",
+        "content": "経年変化と急性変化の区別は自動化可能"
+      }
+    ]
+  }
+}

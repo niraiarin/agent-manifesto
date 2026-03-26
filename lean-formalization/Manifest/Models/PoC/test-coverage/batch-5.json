@@ -1,0 +1,1551 @@
+[
+  {
+    "scenario_id": 41,
+    "project": "ブロックチェーン異常検知 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "immutable_protocol",
+          "definition": "ブロックチェーンプロトコル仕様・暗号学的保証など不変の前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "network_assumption",
+          "definition": "ネットワーク状態・コンセンサスの健全性に関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "detection_policy",
+          "definition": "異常検知の閾値・分類方針・アラート基準",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "tuning_parameter",
+          "definition": "感度パラメータ・学習率・ウィンドウサイズなどの運用調整値",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "immutable_protocol",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "immutable_protocol",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "immutable_protocol",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "network_assumption",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "network_assumption",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "network_assumption",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "detection_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "detection_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "detection_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "detection_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "tuning_parameter",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "tuning_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 42,
+    "project": "顔認証入退室管理 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "legal_constraint",
+          "definition": "個人情報保護法・生体情報規制など法的に不変の制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "biometric_assumption",
+          "definition": "顔認証精度・生体情報の特性に関する経験的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "access_policy",
+          "definition": "入退室ポリシー・認証フロー・フォールバック手順",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "operational_param",
+          "definition": "認証閾値・カメラ設定・照合速度などの運用パラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "l3 (operational_param, ord=1) depends on t6 (legal_constraint, ord=4) via l3→[t6,t7]",
+          "detail": "l3 は t6, t7 に依存するが、l3 を operational_param (ord=1) に割り当てている。依存先 t6 は legal_constraint (ord=4) であり ord(dep)=4 >= ord(src)=1 なのでこれは OK。しかし l3 の本来の boundary (ord=2) より低い operational_param (ord=1) に割り当てたため、d1→l3 の依存で d1 (operational_param, ord=1) → l3 (operational_param, ord=1) は成立するが、意味論的に l3 を過小評価している。",
+          "resolution": "H5 の推論を修正: l3 を access_policy (ord=2) に昇格。H5 はLLM推論のみに基づくため自律修正可能。",
+          "status": "detected_and_fixed_by_llm"
+        }
+      ],
+      "_fix_applied": "l3 を operational_param (ord=1) から access_policy (ord=2) に昇格。d8 の依存先 e2 (biometric_assumption, ord=3) >= d8 (access_policy, ord=2) で単調性維持。",
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t7",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "biometric_assumption",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "biometric_assumption",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "biometric_assumption",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "access_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "access_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "access_policy",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "access_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l3",
+          "layerName": "operational_param",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "operational_param",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "access_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 43,
+    "project": "農産物等級判定 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 12,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "grading_standard",
+          "definition": "JAS規格・等級基準など公的に定められた判定基準",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "visual_model",
+          "definition": "画像認識モデルの精度仮定・学習データの品質前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "sorting_policy",
+          "definition": "判定フロー・人間レビュー基準・ライン制御方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "line_parameter",
+          "definition": "ベルトコンベア速度・カメラ位置・照明条件などの現場パラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "grading_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "grading_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "grading_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "visual_model",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "visual_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "visual_model",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "sorting_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "sorting_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "sorting_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "line_parameter",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "line_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 44,
+    "project": "映画レコメンデーション AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 13,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "content_regulation",
+          "definition": "年齢制限・著作権・コンテンツポリシーなど法的・倫理的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "user_behavior",
+          "definition": "ユーザーの視聴パターン・嗜好モデルに関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "recommendation_policy",
+          "definition": "推薦アルゴリズム選択・多様性バランス・フィルタリング方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "display_parameter",
+          "definition": "表示件数・ランキング重み・A/Bテストパラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "content_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "content_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "content_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "user_behavior",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "user_behavior",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "user_behavior",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "recommendation_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "recommendation_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "recommendation_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "display_parameter",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "display_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 45,
+    "project": "防犯カメラ映像解析 AI",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 15,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "privacy_law",
+          "definition": "プライバシー保護法・肖像権・監視カメラ設置基準など法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "detection_capability",
+          "definition": "物体検出・行動認識モデルの精度と限界に関する経験的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "alert_policy",
+          "definition": "異常行動の定義・通報基準・人間確認フロー",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "camera_parameter",
+          "definition": "カメラ配置・解像度・録画保持期間などの運用パラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "privacy_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "privacy_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "privacy_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "detection_capability",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "detection_capability",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "detection_capability",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "alert_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "alert_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "alert_policy",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "alert_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "camera_parameter",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "camera_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 46,
+    "project": "税務申告支援 AI",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "tax_law",
+          "definition": "税法・国税通則法・会計基準など法的に不変の制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "accounting_practice",
+          "definition": "一般的な経理実務・帳簿慣行に関する経験的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "advisory_policy",
+          "definition": "提案の出し方・免責事項・税理士連携の方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "ui_parameter",
+          "definition": "入力フォーム設計・計算精度・表示フォーマット",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "tax_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "tax_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "tax_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "accounting_practice",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "accounting_practice",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "accounting_practice",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "advisory_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "advisory_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "advisory_policy",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "advisory_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "ui_parameter",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "ui_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 47,
+    "project": "植物工場環境制御 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "biological_constraint",
+          "definition": "植物の生理学的限界・安全基準・食品衛生法の制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "growth_model",
+          "definition": "光合成効率・成長曲線・環境応答に関する経験的モデル",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "control_policy",
+          "definition": "環境制御アルゴリズム・収穫タイミング・異常時対応方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "actuator_parameter",
+          "definition": "LED照度・温湿度設定値・養液濃度など直接制御パラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "biological_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "biological_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t7",
+          "layerName": "biological_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "growth_model",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "growth_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "growth_model",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p4",
+          "layerName": "control_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "control_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "control_policy",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l3",
+          "layerName": "control_policy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "actuator_parameter",
+          "justification": [
+            "C5",
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d3",
+          "layerName": "actuator_parameter",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 48,
+    "project": "チャット接客 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 13,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "brand_identity",
+          "definition": "ブランドガイドライン・禁止表現・法的コンプライアンスなど不変の制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "customer_model",
+          "definition": "顧客セグメント・購買行動パターンに関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "conversation_policy",
+          "definition": "応答トーン・エスカレーション基準・提案範囲の方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "response_parameter",
+          "definition": "応答速度・テンプレート選択・A/Bテスト設定",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "brand_identity",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "brand_identity",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "brand_identity",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "customer_model",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "customer_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "customer_model",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "conversation_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "conversation_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l2",
+          "layerName": "conversation_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "response_parameter",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "response_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 49,
+    "project": "地震早期警報 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 17,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "seismological_law",
+          "definition": "地震学の基本法則・P波S波の伝播特性・気象庁基準",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "safety_mandate",
+          "definition": "人命保護の絶対優先・誤報許容の判断基準",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "sensor_model",
+          "definition": "地震計ネットワークの精度・遅延・カバレッジに関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "alert_policy",
+          "definition": "警報発出基準・段階的通知・フォールバック手順",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "system_parameter",
+          "definition": "処理遅延・通信帯域・表示フォーマットなどの運用パラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H5"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "p4 (alert_policy, ord=2) depends on t5 (seismological_law, ord=5) and t7 (safety_mandate, ord=4) via p4→[t5,t7]. 依存先 t5 は seismological_law (ord=5), t7 は safety_mandate (ord=4) で、どちらも p4 の alert_policy (ord=2) より高いため単調性は満たす。しかし d5 (system_parameter, ord=1) depends on t8 (safety_mandate, ord=4), p4 (alert_policy, ord=2), p6 (alert_policy, ord=2) via d5→[t8,p4,p6]。d5 の system_parameter (ord=1) は依存先の safety_mandate (ord=4) や alert_policy (ord=2) より低いため OK。",
+          "actual_violation": "p6 (alert_policy, ord=2) depends on t3 (seismological_law, ord=5), t7 (safety_mandate, ord=4), t8 (safety_mandate, ord=4). 問題なし。しかし、l1 (alert_policy, ord=2) depends on p1 (sensor_model, ord=3) and t6 (seismological_law, ord=5)。依存先が依存元より高いため OK。真の違反: d5 を system_parameter に置いたが、d5→[t8,p4,p6] で t8 は safety_mandate (ord=4)。ord(t8)=4 >= ord(d5)=1 なので単調性は満たす。",
+          "injected_violation": "意図的違反: p6 を当初 system_parameter (ord=1) に割り当てたところ、p6→[t3,t7,t8] で t3 は seismological_law (ord=5)。ord(t3)=5 >= ord(p6)=1 は成立するが、p6 自体が d5,d12,d14 の依存先であり、d5 (system_parameter, ord=1) → p6 (system_parameter, ord=1) は ord(p6)=1 >= ord(d5)=1 で OK だが、d12 (system_parameter, ord=1) → p6 (system_parameter, ord=1) も OK。実際の違反は p6 の内容が安全方針に関わるため alert_policy (ord=2) が適切。H4 の推論に基づく誤分類。",
+          "resolution": "H4 の推論を修正: p6 は段階的警報方針に関わるため alert_policy (ord=2) に昇格。H4 はLLM推論のみに基づくため自律修正可能。",
+          "status": "detected_and_fixed_by_llm"
+        }
+      ],
+      "_fix_applied": "p6 を system_parameter (ord=1) から alert_policy (ord=2) に昇格。d5→p6, d12→p6, d14→p6 の依存で ord(p6)=2 >= ord(d5)=1, ord(d12)=1, ord(d14)=1 を確認。",
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "seismological_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t3",
+          "layerName": "seismological_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "seismological_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t7",
+          "layerName": "safety_mandate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t8",
+          "layerName": "safety_mandate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "sensor_model",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "sensor_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "sensor_model",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p4",
+          "layerName": "alert_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "alert_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p6",
+          "layerName": "alert_policy",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "alert_policy",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "system_parameter",
+          "justification": [
+            "C6",
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d5",
+          "layerName": "system_parameter",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 50,
+    "project": "ファッションコーディネート AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 13,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "brand_ethics",
+          "definition": "ボディポジティブ・多様性配慮・著作権など倫理的・法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "fashion_knowledge",
+          "definition": "色彩理論・体型別スタイリング・トレンド分析の経験的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "styling_policy",
+          "definition": "提案ロジック・パーソナライズ方針・在庫連携ルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "display_parameter",
+          "definition": "提案表示数・画像サイズ・ソート順などのUIパラメータ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "t1",
+          "layerName": "brand_ethics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t4",
+          "layerName": "brand_ethics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "t6",
+          "layerName": "brand_ethics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e1",
+          "layerName": "fashion_knowledge",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "e2",
+          "layerName": "fashion_knowledge",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p1",
+          "layerName": "fashion_knowledge",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p2",
+          "layerName": "styling_policy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "p5",
+          "layerName": "styling_policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "l1",
+          "layerName": "styling_policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d1",
+          "layerName": "display_parameter",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "d8",
+          "layerName": "display_parameter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

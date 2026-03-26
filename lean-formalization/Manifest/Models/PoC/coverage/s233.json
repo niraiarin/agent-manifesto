@@ -1,0 +1,156 @@
+{
+  "namespace": "Scenario233",
+  "layers": [
+    {
+      "name": "standard",
+      "ordValue": 3,
+      "definition": "JIS等の規格で定められた安全基準。法的拘束力あり。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "inspection",
+      "ordValue": 2,
+      "definition": "検査員による判定体制とデータ保持義務。",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "AIによる劣化予測モデルと交換推奨ロジック。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証が必要な材料科学的仮説。",
+      "derivedFrom": [
+        "H1"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "insp1",
+      "layerName": "inspection",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".std1"
+      ]
+    },
+    {
+      "id": "insp2",
+      "layerName": "inspection",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".std1",
+        ".std2"
+      ]
+    },
+    {
+      "id": "insp3",
+      "layerName": "inspection",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".std2"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".std1",
+        ".insp1"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".insp2"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".insp1",
+        ".insp3"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".pred1",
+        ".pred2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".pred1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".pred3",
+        ".pred4"
+      ]
+    }
+  ]
+}

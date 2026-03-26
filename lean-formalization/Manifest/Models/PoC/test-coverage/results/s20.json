@@ -1,0 +1,193 @@
+{
+  "namespace": "TestCoverage.S20",
+  "layers": [
+    {
+      "name": "legal_regulation",
+      "ordValue": 5,
+      "definition": "不動産取引法・宅建業法の法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "macro_economy",
+      "ordValue": 4,
+      "definition": "金利・人口動態等のマクロ経済環境依存",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "area_attribute",
+      "ordValue": 3,
+      "definition": "地域属性・インフラ等の構造的要因",
+      "derivedFrom": [
+        "H3",
+        "C3"
+      ]
+    },
+    {
+      "name": "valuation_policy",
+      "ordValue": 2,
+      "definition": "鑑定士が設定する評価方針",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "price_estimate",
+      "ordValue": 1,
+      "definition": "AIが算出する価格予測・推奨値",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "lr1",
+      "layerName": "legal_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lr2",
+      "layerName": "legal_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "me1",
+      "layerName": "macro_economy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "me2",
+      "layerName": "macro_economy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "lr1"
+      ]
+    },
+    {
+      "id": "aa1",
+      "layerName": "area_attribute",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "me1"
+      ]
+    },
+    {
+      "id": "aa2",
+      "layerName": "area_attribute",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "lr2"
+      ]
+    },
+    {
+      "id": "vp1",
+      "layerName": "valuation_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "lr1",
+        "aa1"
+      ]
+    },
+    {
+      "id": "vp2",
+      "layerName": "valuation_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "lr2",
+        "me2"
+      ]
+    },
+    {
+      "id": "vp3",
+      "layerName": "valuation_policy",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        "aa2"
+      ]
+    },
+    {
+      "id": "pe1",
+      "layerName": "price_estimate",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "vp1",
+        "me1"
+      ]
+    },
+    {
+      "id": "pe2",
+      "layerName": "price_estimate",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "vp2",
+        "aa1"
+      ]
+    },
+    {
+      "id": "pe3",
+      "layerName": "price_estimate",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "vp3",
+        "aa2"
+      ]
+    },
+    {
+      "id": "pe4",
+      "layerName": "price_estimate",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "pe1"
+      ]
+    },
+    {
+      "id": "pe5",
+      "layerName": "price_estimate",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "vp1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+[
+  {
+    "scenario_id": 181,
+    "project": "地雷除去ロボット AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 18,
+    "monotonicity_violation": {
+      "description": "s181_p11 (FieldProtocol, ord=2) depends on s181_p14 (Hypothesis, ord=0). Lower-layer hypothesis cannot support higher-layer protocol.",
+      "fix": "Promote s181_p14 from Hypothesis to FieldProtocol or demote s181_p11 to Hypothesis."
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S181",
+      "layers": [
+        {"name": "SafetyAbsolute", "ordValue": 4, "definition": "人命に直結する安全不変条件。地雷探知の偽陰性は許容不可", "derivedFrom": ["C1","C2"]},
+        {"name": "RegulatoryMandate", "ordValue": 3, "definition": "国際人道法・オタワ条約に基づく法的義務", "derivedFrom": ["C3","H1"]},
+        {"name": "FieldProtocol", "ordValue": 2, "definition": "現場運用の手順規則。地形や気象条件に応じて調整可能", "derivedFrom": ["C4","C5","H2"]},
+        {"name": "TacticalDesign", "ordValue": 1, "definition": "ロボットの制御・探知アルゴリズム設計。技術進歩で更新", "derivedFrom": ["H3","H4","H5"]},
+        {"name": "Hypothesis", "ordValue": 0, "definition": "未検証の技術的仮説。フィールドテストで検証が必要", "derivedFrom": ["H6","H7"]}
+      ],
+      "propositions": [
+        {"id": "s181_p01", "layerName": "SafetyAbsolute", "justification": ["C1"], "dependencies": []},
+        {"id": "s181_p02", "layerName": "SafetyAbsolute", "justification": ["C2"], "dependencies": []},
+        {"id": "s181_p03", "layerName": "SafetyAbsolute", "justification": ["C1","C2"], "dependencies": []},
+        {"id": "s181_p04", "layerName": "RegulatoryMandate", "justification": ["C3"], "dependencies": [".s181_p01"]},
+        {"id": "s181_p05", "layerName": "RegulatoryMandate", "justification": ["H1"], "dependencies": [".s181_p02"]},
+        {"id": "s181_p06", "layerName": "RegulatoryMandate", "justification": ["C3","H1"], "dependencies": [".s181_p01",".s181_p03"]},
+        {"id": "s181_p07", "layerName": "FieldProtocol", "justification": ["C4"], "dependencies": [".s181_p04"]},
+        {"id": "s181_p08", "layerName": "FieldProtocol", "justification": ["C5"], "dependencies": [".s181_p05"]},
+        {"id": "s181_p09", "layerName": "FieldProtocol", "justification": ["H2"], "dependencies": [".s181_p04",".s181_p06"]},
+        {"id": "s181_p10", "layerName": "TacticalDesign", "justification": ["H3"], "dependencies": [".s181_p07"]},
+        {"id": "s181_p11", "layerName": "FieldProtocol", "justification": ["H4"], "dependencies": [".s181_p14"]},
+        {"id": "s181_p12", "layerName": "TacticalDesign", "justification": ["H4","H5"], "dependencies": [".s181_p08",".s181_p09"]},
+        {"id": "s181_p13", "layerName": "TacticalDesign", "justification": ["H5"], "dependencies": [".s181_p07"]},
+        {"id": "s181_p14", "layerName": "Hypothesis", "justification": ["H6"], "dependencies": [".s181_p10"]},
+        {"id": "s181_p15", "layerName": "Hypothesis", "justification": ["H7"], "dependencies": [".s181_p12"]},
+        {"id": "s181_p16", "layerName": "Hypothesis", "justification": ["H6","H7"], "dependencies": [".s181_p13",".s181_p14"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "地雷探知の偽陰性率はゼロでなければならない。人間の安全が最優先"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "ロボットが除去を行う前に、人間のオペレーターが最終確認を行う"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "オタワ条約および国際人道法の規定に準拠する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "探知・除去作業は定められた安全距離を確保した上で実施する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "通信途絶時はロボットを即座に停止させる（フェイルセーフ）"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "地雷原の地形データは事前に衛星・ドローンで取得済み"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "国際法の改正により除去手順の要件が変更された場合"}}, "content": "除去作業の記録・報告義務は条約上の法的要件として遵守すべき"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4","C6"], "refutation": "事前地形データの精度が現場実態と大きく乖離する場合"}}, "content": "事前地形データに基づくルートプランニングにより安全距離を最適化できる"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C1","C6"], "refutation": "金属探知以外のセンサー（GPR等）が主要探知手段になる場合"}}, "content": "マルチセンサー融合（金属探知+GPR+赤外線）が単一センサーより検出率を向上させる"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4","C5"], "refutation": "ロボットの自律制御が人間の遠隔操作より安全な場合"}}, "content": "遠隔操作モードと自律モードの切り替えを動的に行うことで柔軟性を確保できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C6"], "refutation": "LiDARが砂漠環境で十分な精度を出せない場合"}}, "content": "リアルタイムLiDARマッピングが事前データの補正に有効"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C1","H3"], "refutation": "強化学習がシミュレーション環境と実環境の差異で失敗する場合"}}, "content": "強化学習により探知パターンを地雷タイプごとに最適化できる"},
+        {"id": "H7", "source": {"llmInference": {"basis": ["H4","H5"], "refutation": "群制御の通信オーバーヘッドが許容範囲を超える場合"}}, "content": "複数ロボットの協調作業（スウォーム）により除去効率が線形以上に向上する"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 182,
+    "project": "花火大会群衆管理 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S182",
+      "layers": [
+        {"name": "PublicSafety", "ordValue": 3, "definition": "来場者の安全確保に関する不変制約。群衆事故防止が最優先", "derivedFrom": ["C1","C2"]},
+        {"name": "EventRegulation", "ordValue": 2, "definition": "消防法・条例に基づく規制。主催者判断で細部は調整可能", "derivedFrom": ["C3","H1"]},
+        {"name": "OperationalDesign", "ordValue": 1, "definition": "運営上の設計選択。会場レイアウトや動線に依存", "derivedFrom": ["C4","C5","H2","H3"]},
+        {"name": "PredictiveHypothesis", "ordValue": 0, "definition": "予測精度に関する未検証の仮説。実地データで検証が必要", "derivedFrom": ["H4","H5"]}
+      ],
+      "propositions": [
+        {"id": "s182_p01", "layerName": "PublicSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s182_p02", "layerName": "PublicSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s182_p03", "layerName": "EventRegulation", "justification": ["C3"], "dependencies": [".s182_p01"]},
+        {"id": "s182_p04", "layerName": "EventRegulation", "justification": ["H1"], "dependencies": [".s182_p01",".s182_p02"]},
+        {"id": "s182_p05", "layerName": "EventRegulation", "justification": ["C3","H1"], "dependencies": [".s182_p02"]},
+        {"id": "s182_p06", "layerName": "OperationalDesign", "justification": ["C4"], "dependencies": [".s182_p03"]},
+        {"id": "s182_p07", "layerName": "OperationalDesign", "justification": ["C5","H2"], "dependencies": [".s182_p04"]},
+        {"id": "s182_p08", "layerName": "OperationalDesign", "justification": ["H3"], "dependencies": [".s182_p03",".s182_p05"]},
+        {"id": "s182_p09", "layerName": "PredictiveHypothesis", "justification": ["H4"], "dependencies": [".s182_p06"]},
+        {"id": "s182_p10", "layerName": "PredictiveHypothesis", "justification": ["H5"], "dependencies": [".s182_p07",".s182_p08"]},
+        {"id": "s182_p11", "layerName": "PredictiveHypothesis", "justification": ["H4","H5"], "dependencies": [".s182_p06"]},
+        {"id": "s182_p12", "layerName": "PredictiveHypothesis", "justification": ["H5"], "dependencies": [".s182_p08"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "群衆密度が危険水準を超えた場合、即座にアラートを発する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "避難経路の確保と誘導判断は人間のスタッフが最終決定する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "消防法に基づく最大収容人数を超えないよう管理する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "監視カメラとLiDARセンサーを併用して群衆密度を計測する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "来場者数の予測には過去5年分の実績データを使用する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1","C3"], "refutation": "会場が屋内で風の影響を受けない場合"}}, "content": "風向きの変化により群衆の移動パターンが急変するため、気象データとの連携が必要"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "LiDARが夜間の花火煙で計測精度が低下する場合"}}, "content": "カメラとLiDARのセンサーフュージョンにより夜間でも高精度な密度推定が可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4","C5"], "refutation": "会場レイアウトが毎年大幅に変更される場合"}}, "content": "過去の動線データから渋滞ポイントを事前予測し、スタッフ配置を最適化できる"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5","H1"], "refutation": "天候急変時の来場者行動が過去パターンと乖離する場合"}}, "content": "時系列モデルによるリアルタイム来場者数予測の精度が80%以上に達する"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["H2","H3"], "refutation": "花火終了後の一斉退場パターンが予測不能な場合"}}, "content": "退場時の群衆流を分散させるための段階的退場誘導アルゴリズムが有効"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 183,
+    "project": "海藻養殖最適化 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S183",
+      "layers": [
+        {"name": "EnvironmentalConstraint", "ordValue": 3, "definition": "海洋環境・漁業規制に関する不変前提", "derivedFrom": ["C1","C2"]},
+        {"name": "BiologicalEvidence", "ordValue": 2, "definition": "海藻の生育に関する科学的知見。新データで更新されうる", "derivedFrom": ["C3","H1","H2"]},
+        {"name": "CultivationDesign", "ordValue": 1, "definition": "養殖手法・設備の設計選択。コスト・効率のトレードオフ", "derivedFrom": ["C4","C5","H3","H4"]},
+        {"name": "GrowthHypothesis", "ordValue": 0, "definition": "収穫量・品質に関する未検証仮説。実地試験で確認が必要", "derivedFrom": ["H5","H6"]}
+      ],
+      "propositions": [
+        {"id": "s183_p01", "layerName": "EnvironmentalConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s183_p02", "layerName": "EnvironmentalConstraint", "justification": ["C2"], "dependencies": []},
+        {"id": "s183_p03", "layerName": "BiologicalEvidence", "justification": ["C3"], "dependencies": [".s183_p01"]},
+        {"id": "s183_p04", "layerName": "BiologicalEvidence", "justification": ["H1"], "dependencies": [".s183_p01"]},
+        {"id": "s183_p05", "layerName": "BiologicalEvidence", "justification": ["H2"], "dependencies": [".s183_p01",".s183_p02"]},
+        {"id": "s183_p06", "layerName": "CultivationDesign", "justification": ["C4"], "dependencies": [".s183_p03"]},
+        {"id": "s183_p07", "layerName": "CultivationDesign", "justification": ["C5","H3"], "dependencies": [".s183_p04"]},
+        {"id": "s183_p08", "layerName": "CultivationDesign", "justification": ["H4"], "dependencies": [".s183_p03",".s183_p05"]},
+        {"id": "s183_p09", "layerName": "CultivationDesign", "justification": ["H3"], "dependencies": [".s183_p04"]},
+        {"id": "s183_p10", "layerName": "GrowthHypothesis", "justification": ["H5"], "dependencies": [".s183_p06"]},
+        {"id": "s183_p11", "layerName": "GrowthHypothesis", "justification": ["H5","H6"], "dependencies": [".s183_p07",".s183_p08"]},
+        {"id": "s183_p12", "layerName": "GrowthHypothesis", "justification": ["H6"], "dependencies": [".s183_p09"]},
+        {"id": "s183_p13", "layerName": "GrowthHypothesis", "justification": ["H6"], "dependencies": [".s183_p08"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "養殖海域の水温・塩分濃度・日照量はセンサーでリアルタイム計測可能"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "漁業権の範囲内で養殖を行い、環境アセスメント基準を遵守する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "ワカメ・コンブ等の対象海藻の適正水温帯は既知の科学知見に基づく"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "養殖ロープの配置間隔と深度は調整可能な設計パラメータ"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "収穫時期の最終判断は養殖業者が行う"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1","C3"], "refutation": "海流パターンが年間で安定しており栄養塩供給が一定の場合"}}, "content": "海流の季節変動が栄養塩の供給量を変化させ、生育速度に影響する"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1","C2"], "refutation": "養殖海域に競合する海洋生物がいない場合"}}, "content": "付着生物（フジツボ等）の繁殖が養殖海藻の成長を阻害する可能性がある"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "養殖設備が強い潮流に耐えられず物理的制約が支配的な場合"}}, "content": "ロープ間隔の最適化により単位面積あたりの収穫量を最大化できる"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C3","C4"], "refutation": "深度による水温差が小さい海域の場合"}}, "content": "養殖深度を水温層に合わせて動的調整することで品質が向上する"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C1","H1"], "refutation": "気候変動により過去データの予測力が低下する場合"}}, "content": "過去の環境データから最適収穫タイミングを予測するモデルが構築可能"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["H3","H4"], "refutation": "海藻種間の相互作用が単一種モデルを無効にする場合"}}, "content": "多品種の混合養殖が単一品種より全体収穫量を向上させる"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 184,
+    "project": "盗難美術品追跡 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S184",
+      "layers": [
+        {"name": "LegalFramework", "ordValue": 4, "definition": "国際法・文化財保護法に基づく法的義務。変更不可", "derivedFrom": ["C1","C2"]},
+        {"name": "ProvenanceStandard", "ordValue": 3, "definition": "来歴調査の業界標準。学術的合意に基づく", "derivedFrom": ["C3","H1"]},
+        {"name": "InvestigativeMethod", "ordValue": 2, "definition": "調査手法の設計選択。技術の進歩で更新可能", "derivedFrom": ["C4","C5","H2"]},
+        {"name": "DetectionAlgorithm", "ordValue": 1, "definition": "画像照合・パターン認識のアルゴリズム設計", "derivedFrom": ["C6","H3","H4"]},
+        {"name": "MatchHypothesis", "ordValue": 0, "definition": "照合精度に関する未検証仮説", "derivedFrom": ["H5"]}
+      ],
+      "propositions": [
+        {"id": "s184_p01", "layerName": "LegalFramework", "justification": ["C1"], "dependencies": []},
+        {"id": "s184_p02", "layerName": "LegalFramework", "justification": ["C2"], "dependencies": []},
+        {"id": "s184_p03", "layerName": "ProvenanceStandard", "justification": ["C3"], "dependencies": [".s184_p01"]},
+        {"id": "s184_p04", "layerName": "ProvenanceStandard", "justification": ["H1"], "dependencies": [".s184_p01",".s184_p02"]},
+        {"id": "s184_p05", "layerName": "InvestigativeMethod", "justification": ["C4"], "dependencies": [".s184_p03"]},
+        {"id": "s184_p06", "layerName": "InvestigativeMethod", "justification": ["C5"], "dependencies": [".s184_p03"]},
+        {"id": "s184_p07", "layerName": "InvestigativeMethod", "justification": ["H2"], "dependencies": [".s184_p03",".s184_p04"]},
+        {"id": "s184_p08", "layerName": "DetectionAlgorithm", "justification": ["C6"], "dependencies": [".s184_p05"]},
+        {"id": "s184_p09", "layerName": "DetectionAlgorithm", "justification": ["H3"], "dependencies": [".s184_p06"]},
+        {"id": "s184_p10", "layerName": "DetectionAlgorithm", "justification": ["H4"], "dependencies": [".s184_p05",".s184_p07"]},
+        {"id": "s184_p11", "layerName": "DetectionAlgorithm", "justification": ["H3","H4"], "dependencies": [".s184_p06"]},
+        {"id": "s184_p12", "layerName": "MatchHypothesis", "justification": ["H5"], "dependencies": [".s184_p08"]},
+        {"id": "s184_p13", "layerName": "MatchHypothesis", "justification": ["H5"], "dependencies": [".s184_p09",".s184_p10"]},
+        {"id": "s184_p14", "layerName": "MatchHypothesis", "justification": ["H5"], "dependencies": [".s184_p11"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "INTERPOL盗難美術品データベースとの照合は法的に必須"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "文化財の返還請求は関係国の法的手続きに従う"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "来歴（プロヴナンス）調査は売買記録・展示記録を時系列で追跡する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "オンラインオークション・ギャラリーサイトを自動クロールして監視する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "ダークウェブ上の取引も監視対象に含める"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "画像の類似度照合にはディープラーニングベースの手法を使用する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1","C3"], "refutation": "デジタル来歴管理が未普及で紙ベースが主流の地域がある場合"}}, "content": "ブロックチェーンによる来歴管理が改竄防止に有効"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4","C5"], "refutation": "匿名化技術により画像の照合が困難になる場合"}}, "content": "ウェブクロールと画像照合の組み合わせにより盗難品の流通を早期検知可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C6"], "refutation": "修復・改変された美術品でCNNの精度が著しく低下する場合"}}, "content": "CNNベースの特徴抽出により部分的な修復や角度変化に対しても堅牢な照合が可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4","C6"], "refutation": "低解像度画像が大半を占めるサイトでの精度が不十分な場合"}}, "content": "超解像技術を前処理に適用することで低解像度画像からの照合精度が向上する"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["H3","H4"], "refutation": "訓練データが西洋美術に偏り、非西洋美術で精度が低下する場合"}}, "content": "転移学習により少量の盗難美術品画像から高精度な識別モデルを構築できる"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 185,
+    "project": "地下水位予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S185",
+      "layers": [
+        {"name": "HydrologicalConstraint", "ordValue": 2, "definition": "水文学的に確立された不変条件。物理法則と規制に基づく", "derivedFrom": ["C1","C2","C3"]},
+        {"name": "ModelDesign", "ordValue": 1, "definition": "予測モデルの設計選択。データ量や計算資源に応じて変更可能", "derivedFrom": ["C4","C5","H1","H2","H3"]},
+        {"name": "PredictionHypothesis", "ordValue": 0, "definition": "予測精度に関する未検証の仮説", "derivedFrom": ["H4","H5"]}
+      ],
+      "propositions": [
+        {"id": "s185_p01", "layerName": "HydrologicalConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s185_p02", "layerName": "HydrologicalConstraint", "justification": ["C2"], "dependencies": []},
+        {"id": "s185_p03", "layerName": "HydrologicalConstraint", "justification": ["C3"], "dependencies": []},
+        {"id": "s185_p04", "layerName": "ModelDesign", "justification": ["C4","H1"], "dependencies": [".s185_p01"]},
+        {"id": "s185_p05", "layerName": "ModelDesign", "justification": ["H2"], "dependencies": [".s185_p01",".s185_p02"]},
+        {"id": "s185_p06", "layerName": "ModelDesign", "justification": ["C5"], "dependencies": [".s185_p02"]},
+        {"id": "s185_p07", "layerName": "ModelDesign", "justification": ["H3"], "dependencies": [".s185_p03"]},
+        {"id": "s185_p08", "layerName": "PredictionHypothesis", "justification": ["H4"], "dependencies": [".s185_p04",".s185_p05"]},
+        {"id": "s185_p09", "layerName": "PredictionHypothesis", "justification": ["H5"], "dependencies": [".s185_p06"]},
+        {"id": "s185_p10", "layerName": "PredictionHypothesis", "justification": ["H4","H5"], "dependencies": [".s185_p07"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "観測井戸の水位データは10分間隔で自動計測されている"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "降水量データは気象庁のアメダスから取得可能"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "地下水の取水量は水利権の範囲内で管理される"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "予測対象期間は1週間先まで。それ以上は精度保証しない"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "予測結果は自治体の水資源管理部門に提供する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1","C4"], "refutation": "地質構造が均質で応答時間が一定の場合"}}, "content": "降雨から水位応答までの遅延時間は地層構造に依存し、サイトごとにキャリブレーションが必要"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1","C2"], "refutation": "帯水層が深く表層の影響を受けにくい場合"}}, "content": "土壌水分量を中間変数として組み込むことで予測精度が向上する"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3"], "refutation": "取水量が一定で変動しない場合"}}, "content": "農業用取水パターンの季節変動を考慮する必要がある"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4","H1"], "refutation": "物理モデルがデータ駆動モデルより精度が高い場合"}}, "content": "LSTMベースの時系列予測が水文学的物理モデルより短期予測に有利"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5","H2"], "refutation": "自治体が独自の予測手法を持ち外部モデルを受け入れない場合"}}, "content": "予測の不確実性を区間推定で表示することで意思決定者の信頼が向上する"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 186,
+    "project": "AI 家庭教師（数学）",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S186",
+      "layers": [
+        {"name": "ChildSafety", "ordValue": 4, "definition": "児童の安全・プライバシーに関する絶対制約", "derivedFrom": ["C1","C2"]},
+        {"name": "PedagogicalPrinciple", "ordValue": 3, "definition": "教育学に基づく指導原則。研究知見で更新されうる", "derivedFrom": ["C3","H1"]},
+        {"name": "CurriculumDesign", "ordValue": 2, "definition": "カリキュラム・難易度設計。学習指導要領に準拠", "derivedFrom": ["C4","C5","H2"]},
+        {"name": "AdaptiveAlgorithm", "ordValue": 1, "definition": "適応的学習アルゴリズムの設計選択", "derivedFrom": ["H3","H4","H5"]},
+        {"name": "LearningHypothesis", "ordValue": 0, "definition": "学習効果に関する未検証仮説", "derivedFrom": ["C6","H6"]}
+      ],
+      "propositions": [
+        {"id": "s186_p01", "layerName": "ChildSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s186_p02", "layerName": "ChildSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s186_p03", "layerName": "PedagogicalPrinciple", "justification": ["C3"], "dependencies": [".s186_p01"]},
+        {"id": "s186_p04", "layerName": "PedagogicalPrinciple", "justification": ["H1"], "dependencies": [".s186_p01",".s186_p02"]},
+        {"id": "s186_p05", "layerName": "CurriculumDesign", "justification": ["C4"], "dependencies": [".s186_p03"]},
+        {"id": "s186_p06", "layerName": "CurriculumDesign", "justification": ["C5","H2"], "dependencies": [".s186_p03",".s186_p04"]},
+        {"id": "s186_p07", "layerName": "CurriculumDesign", "justification": ["H2"], "dependencies": [".s186_p04"]},
+        {"id": "s186_p08", "layerName": "AdaptiveAlgorithm", "justification": ["H3"], "dependencies": [".s186_p05"]},
+        {"id": "s186_p09", "layerName": "AdaptiveAlgorithm", "justification": ["H4"], "dependencies": [".s186_p06"]},
+        {"id": "s186_p10", "layerName": "AdaptiveAlgorithm", "justification": ["H5"], "dependencies": [".s186_p05",".s186_p07"]},
+        {"id": "s186_p11", "layerName": "AdaptiveAlgorithm", "justification": ["H3","H4"], "dependencies": [".s186_p06"]},
+        {"id": "s186_p12", "layerName": "LearningHypothesis", "justification": ["C6"], "dependencies": [".s186_p08"]},
+        {"id": "s186_p13", "layerName": "LearningHypothesis", "justification": ["H6"], "dependencies": [".s186_p09",".s186_p10"]},
+        {"id": "s186_p14", "layerName": "LearningHypothesis", "justification": ["H6"], "dependencies": [".s186_p11"]},
+        {"id": "s186_p15", "layerName": "LearningHypothesis", "justification": ["C6","H6"], "dependencies": [".s186_p08",".s186_p11"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "児童の個人情報は厳格に保護し、第三者に提供しない（COPPA準拠）"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "AIは答えを直接教えず、ヒントを段階的に提示して自力解決を促す"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "スモールステップの原理に基づき、理解度に応じて問題の難易度を調整する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "対象は小学4年〜中学3年の算数・数学。学習指導要領に準拠する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "保護者が学習進捗をダッシュボードで確認できる"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "1回の学習セッションは15〜30分を想定する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2","C3"], "refutation": "ゲーミフィケーションが学習動機を外的報酬に依存させてしまう場合"}}, "content": "ゲーミフィケーション要素（バッジ・レベルアップ）が学習継続率を向上させる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3","C4"], "refutation": "前提知識のギャップが大きすぎてスモールステップが機能しない場合"}}, "content": "知識グラフベースの前提条件チェックにより、つまずきの原因を特定できる"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3"], "refutation": "忘却曲線モデルが個人差が大きすぎて汎用化できない場合"}}, "content": "忘却曲線に基づく間隔反復（spaced repetition）が定着率を改善する"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4","H2"], "refutation": "多腕バンディットの探索コストが児童のモチベーションを低下させる場合"}}, "content": "多腕バンディットアルゴリズムにより最適な問題難易度をリアルタイムで選択できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C2"], "refutation": "自然言語でのヒント生成がLLMの幻覚（hallucination）により不正確になる場合"}}, "content": "LLMを用いた自然言語ヒント生成が固定テンプレートより理解を促進する"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C6","H3"], "refutation": "短時間セッションでは適応学習の効果が統計的に有意でない場合"}}, "content": "15分の集中学習が30分の漫然学習より定着率が高い"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 187,
+    "project": "送電線着雪予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "TestCoverage.S187",
+      "layers": [
+        {"name": "InfrastructureConstraint", "ordValue": 2, "definition": "送電設備の物理的制約と電力供給義務。変更不可", "derivedFrom": ["C1","C2","C3"]},
+        {"name": "PredictionModel", "ordValue": 1, "definition": "着雪予測モデルの設計選択。気象データと運用実績に基づく", "derivedFrom": ["C4","C5","H1","H2","H3"]},
+        {"name": "OperationalHypothesis", "ordValue": 0, "definition": "運用効率に関する未検証仮説", "derivedFrom": ["H4","H5"]}
+      ],
+      "propositions": [
+        {"id": "s187_p01", "layerName": "InfrastructureConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s187_p02", "layerName": "InfrastructureConstraint", "justification": ["C2"], "dependencies": []},
+        {"id": "s187_p03", "layerName": "PredictionModel", "justification": ["C4","H1"], "dependencies": [".s187_p01"]},
+        {"id": "s187_p04", "layerName": "PredictionModel", "justification": ["H2"], "dependencies": [".s187_p01",".s187_p02"]},
+        {"id": "s187_p05", "layerName": "PredictionModel", "justification": ["C5","H3"], "dependencies": [".s187_p02"]},
+        {"id": "s187_p06", "layerName": "OperationalHypothesis", "justification": ["H4"], "dependencies": [".s187_p03"]},
+        {"id": "s187_p07", "layerName": "OperationalHypothesis", "justification": ["H5"], "dependencies": [".s187_p04",".s187_p05"]},
+        {"id": "s187_p08", "layerName": "OperationalHypothesis", "justification": ["H4","H5"], "dependencies": [".s187_p03",".s187_p05"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "送電線の設計荷重（着雪荷重を含む）は電力会社の設備基準で定義済み"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "着雪による送電線断線・鉄塔倒壊は電力供給の重大リスクであり、未然防止が義務"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "融雪電流の投入判断は運用者が最終決定する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "気象庁の数値予報データ（GPV）を入力に使用する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "過去10年分の着雪事故・融雪電流投入記録が利用可能"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1","C4"], "refutation": "送電線の標高・地形が着雪パターンに与える影響が微小な場合"}}, "content": "標高・地形データを組み合わせたメソスケール気象モデルが着雪量の予測精度を向上させる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1","C2"], "refutation": "湿雪と乾雪の付着メカニズムが同一モデルで記述可能な場合"}}, "content": "湿雪と乾雪で異なる着雪モデルを使い分ける必要がある"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C5"], "refutation": "融雪電流の投入タイミングが着雪量だけでなく電力需給に依存する場合"}}, "content": "過去の融雪電流投入パターンから最適な投入タイミングを学習できる"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4","H1"], "refutation": "GPV予報の空間解像度が送電線単位の予測に不十分な場合"}}, "content": "送電線区間ごとの着雪リスクスコアリングにより融雪優先順位を自動化できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5","H3"], "refutation": "気候変動により過去パターンの再現性が低下する場合"}}, "content": "予防的融雪電流投入により事後対応比でコストが40%削減可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 188,
+    "project": "食品偽装検知 AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 6,
+    "num_props": 17,
+    "num_deps": 20,
+    "monotonicity_violation": {
+      "description": "s188_p09 (SupplyChainDesign, ord=3) depends on s188_p15 (DetectionHypothesis, ord=0). Unverified hypothesis cannot support mid-layer supply chain design.",
+      "fix": "Promote s188_p15 from DetectionHypothesis to SupplyChainDesign or higher, or remove the dependency."
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S188",
+      "layers": [
+        {"name": "FoodSafetyLaw", "ordValue": 5, "definition": "食品衛生法・JAS法に基づく法的義務。違反は刑事罰の対象", "derivedFrom": ["C1","C2"]},
+        {"name": "RegulatoryStandard", "ordValue": 4, "definition": "公的検査基準・認証制度。行政の改定に従う", "derivedFrom": ["C3","H1"]},
+        {"name": "SupplyChainDesign", "ordValue": 3, "definition": "サプライチェーン監視の設計。取引構造に応じて調整可能", "derivedFrom": ["C4","H2"]},
+        {"name": "AnalyticalMethod", "ordValue": 2, "definition": "分析手法の選択。技術の進歩で更新される", "derivedFrom": ["C5","C6","H3","H4"]},
+        {"name": "DataIntegration", "ordValue": 1, "definition": "データ統合・前処理の設計", "derivedFrom": ["H5","H6"]},
+        {"name": "DetectionHypothesis", "ordValue": 0, "definition": "検知精度に関する未検証仮説", "derivedFrom": ["H7"]}
+      ],
+      "propositions": [
+        {"id": "s188_p01", "layerName": "FoodSafetyLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s188_p02", "layerName": "FoodSafetyLaw", "justification": ["C2"], "dependencies": []},
+        {"id": "s188_p03", "layerName": "RegulatoryStandard", "justification": ["C3"], "dependencies": [".s188_p01"]},
+        {"id": "s188_p04", "layerName": "RegulatoryStandard", "justification": ["H1"], "dependencies": [".s188_p01",".s188_p02"]},
+        {"id": "s188_p05", "layerName": "RegulatoryStandard", "justification": ["C3","H1"], "dependencies": [".s188_p02"]},
+        {"id": "s188_p06", "layerName": "SupplyChainDesign", "justification": ["C4"], "dependencies": [".s188_p03"]},
+        {"id": "s188_p07", "layerName": "SupplyChainDesign", "justification": ["H2"], "dependencies": [".s188_p03",".s188_p04"]},
+        {"id": "s188_p08", "layerName": "AnalyticalMethod", "justification": ["C5"], "dependencies": [".s188_p06"]},
+        {"id": "s188_p09", "layerName": "SupplyChainDesign", "justification": ["H2"], "dependencies": [".s188_p15"]},
+        {"id": "s188_p10", "layerName": "AnalyticalMethod", "justification": ["C6","H3"], "dependencies": [".s188_p06",".s188_p07"]},
+        {"id": "s188_p11", "layerName": "AnalyticalMethod", "justification": ["H4"], "dependencies": [".s188_p07"]},
+        {"id": "s188_p12", "layerName": "DataIntegration", "justification": ["H5"], "dependencies": [".s188_p08"]},
+        {"id": "s188_p13", "layerName": "DataIntegration", "justification": ["H6"], "dependencies": [".s188_p10",".s188_p11"]},
+        {"id": "s188_p14", "layerName": "DataIntegration", "justification": ["H5","H6"], "dependencies": [".s188_p08"]},
+        {"id": "s188_p15", "layerName": "DetectionHypothesis", "justification": ["H7"], "dependencies": [".s188_p12"]},
+        {"id": "s188_p16", "layerName": "DetectionHypothesis", "justification": ["H7"], "dependencies": [".s188_p13",".s188_p14"]},
+        {"id": "s188_p17", "layerName": "DetectionHypothesis", "justification": ["H7"], "dependencies": [".s188_p12"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "食品偽装は食品衛生法・不正競争防止法の違反であり、検知は法的義務"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "産地偽装・品種偽装の最終判定は公的検査機関が行う"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "DNA鑑定・安定同位体比分析が公的に認められた検査手法"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "流通経路の追跡にはトレーサビリティシステムのデータを使用する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "近赤外分光法（NIR）による非破壊スクリーニングを一次検査に使用する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "検知結果はリスクスコアとして流通業者に提供する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "公的検査基準が国際的に統一される場合"}}, "content": "国ごとの検査基準の差異を考慮したマルチ基準対応が必要"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "トレーサビリティデータが完全に信頼できる場合"}}, "content": "流通経路の異常パターン検知がサプライチェーンの脆弱点特定に有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C5","C6"], "refutation": "NIRスペクトルの品目間差異が小さすぎて判別不能な場合"}}, "content": "NIRスペクトルの機械学習分類により迅速なスクリーニングが可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "近赤外分光法のデータが環境条件（温度・湿度）に強く依存する場合"}}, "content": "分光データの前処理（MSC, SNV）により装置間差異を補正できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C4","C6"], "refutation": "データソース間のフォーマット不統一が解消されない場合"}}, "content": "流通データと分析データのデータレイク統合により横断的な検知が可能"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C6","H3"], "refutation": "異なる食品カテゴリ間でリスクスコアの比較が意味をなさない場合"}}, "content": "品目ごとのベイジアンリスクスコアリングが偽装確率の定量化に有効"},
+        {"id": "H7", "source": {"llmInference": {"basis": ["H5","H6"], "refutation": "多次元データの統合が過学習を引き起こし汎化性能が低下する場合"}}, "content": "マルチモーダルデータ融合（分光+流通+画像）がアンサンブル的に精度を向上させる"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 189,
+    "project": "サンゴ礁白化予測 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S189",
+      "layers": [
+        {"name": "EcologicalConstraint", "ordValue": 3, "definition": "海洋生態学の確立された知見と国際条約に基づく制約", "derivedFrom": ["C1","C2"]},
+        {"name": "MonitoringEvidence", "ordValue": 2, "definition": "観測データから得られた経験的知見。新データで更新", "derivedFrom": ["C3","C4","H1","H2"]},
+        {"name": "ModelDesign", "ordValue": 1, "definition": "予測モデルの設計選択。計算手法に依存", "derivedFrom": ["C5","H3","H4"]},
+        {"name": "BleachingHypothesis", "ordValue": 0, "definition": "白化メカニズムに関する未検証の仮説", "derivedFrom": ["H5","H6"]}
+      ],
+      "propositions": [
+        {"id": "s189_p01", "layerName": "EcologicalConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s189_p02", "layerName": "EcologicalConstraint", "justification": ["C2"], "dependencies": []},
+        {"id": "s189_p03", "layerName": "MonitoringEvidence", "justification": ["C3"], "dependencies": [".s189_p01"]},
+        {"id": "s189_p04", "layerName": "MonitoringEvidence", "justification": ["C4","H1"], "dependencies": [".s189_p01"]},
+        {"id": "s189_p05", "layerName": "MonitoringEvidence", "justification": ["H2"], "dependencies": [".s189_p01",".s189_p02"]},
+        {"id": "s189_p06", "layerName": "ModelDesign", "justification": ["C5"], "dependencies": [".s189_p03"]},
+        {"id": "s189_p07", "layerName": "ModelDesign", "justification": ["H3"], "dependencies": [".s189_p03",".s189_p04"]},
+        {"id": "s189_p08", "layerName": "ModelDesign", "justification": ["H4"], "dependencies": [".s189_p04",".s189_p05"]},
+        {"id": "s189_p09", "layerName": "ModelDesign", "justification": ["H3","H4"], "dependencies": [".s189_p05"]},
+        {"id": "s189_p10", "layerName": "BleachingHypothesis", "justification": ["H5"], "dependencies": [".s189_p06"]},
+        {"id": "s189_p11", "layerName": "BleachingHypothesis", "justification": ["H5","H6"], "dependencies": [".s189_p07",".s189_p08"]},
+        {"id": "s189_p12", "layerName": "BleachingHypothesis", "justification": ["H6"], "dependencies": [".s189_p09"]},
+        {"id": "s189_p13", "layerName": "BleachingHypothesis", "justification": ["H6"], "dependencies": [".s189_p06",".s189_p09"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "サンゴの白化は海水温上昇が主要因であり、1度の上昇で白化リスクが急増する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "予測結果は環境省・地方自治体の保全活動の判断材料に使用する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "NOAA衛星のSST（海面水温）データを主要入力として使用する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "現地ダイバーによる定点観測データを地上検証（ground truth）に使用する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "予測対象は日本近海のサンゴ礁域（沖縄・奄美・小笠原）"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3","C4"], "refutation": "衛星SSTと水中温度の乖離が無視できないほど大きい場合"}}, "content": "衛星SSTと水中温度計のキャリブレーションにより精度を担保できる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1","C2"], "refutation": "海水温以外のストレス要因（酸性化等）が支配的な場合"}}, "content": "Degree Heating Weeks (DHW)が白化リスクの最良の予測指標"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3"], "refutation": "GCMの空間解像度がサンゴ礁スケールに不十分な場合"}}, "content": "全球気候モデル（GCM）のダウンスケーリングにより地域レベルの予測が可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4"], "refutation": "種ごとの耐熱性の差異がモデルの汎用性を損なう場合"}}, "content": "サンゴの種組成データを組み込むことで白化感受性の差異を反映できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5","H3"], "refutation": "黒潮の蛇行パターンが予測不能で水温予測を撹乱する場合"}}, "content": "海流モデル（黒潮の影響）の統合により日本近海固有の予測精度が向上する"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["H2","H4"], "refutation": "白化からの回復メカニズムが種・環境で大きく異なる場合"}}, "content": "白化後の回復過程をモデルに組み込むことで長期的な保全戦略の評価が可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 190,
+    "project": "鉄道車両検査 AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 7,
+    "num_props": 25,
+    "num_deps": 30,
+    "model_spec": {
+      "namespace": "TestCoverage.S190",
+      "layers": [
+        {"name": "SafetyRegulation", "ordValue": 6, "definition": "鉄道営業法・車両検査規程に基づく安全義務。変更不可", "derivedFrom": ["C1"]},
+        {"name": "InspectionStandard", "ordValue": 5, "definition": "国交省通達・JIS規格に基づく検査基準", "derivedFrom": ["C2","H1"]},
+        {"name": "MaintenancePolicy", "ordValue": 4, "definition": "鉄道事業者の保全方針。経営判断で調整可能", "derivedFrom": ["C3","H2"]},
+        {"name": "DiagnosticDesign", "ordValue": 3, "definition": "診断システムの設計選択。技術進歩で更新", "derivedFrom": ["C4","C5","H3"]},
+        {"name": "SensorIntegration", "ordValue": 2, "definition": "センサーデータ統合の設計", "derivedFrom": ["C6","H4"]},
+        {"name": "AlgorithmChoice", "ordValue": 1, "definition": "異常検知アルゴリズムの選択。比較評価で更新", "derivedFrom": ["H5","H6"]},
+        {"name": "EfficiencyHypothesis", "ordValue": 0, "definition": "効率改善に関する未検証仮説", "derivedFrom": ["H7"]}
+      ],
+      "propositions": [
+        {"id": "s190_p01", "layerName": "SafetyRegulation", "justification": ["C1"], "dependencies": []},
+        {"id": "s190_p02", "layerName": "SafetyRegulation", "justification": ["C1"], "dependencies": []},
+        {"id": "s190_p03", "layerName": "InspectionStandard", "justification": ["C2"], "dependencies": [".s190_p01"]},
+        {"id": "s190_p04", "layerName": "InspectionStandard", "justification": ["H1"], "dependencies": [".s190_p01",".s190_p02"]},
+        {"id": "s190_p05", "layerName": "InspectionStandard", "justification": ["C2","H1"], "dependencies": [".s190_p02"]},
+        {"id": "s190_p06", "layerName": "MaintenancePolicy", "justification": ["C3"], "dependencies": [".s190_p03"]},
+        {"id": "s190_p07", "layerName": "MaintenancePolicy", "justification": ["H2"], "dependencies": [".s190_p03",".s190_p04"]},
+        {"id": "s190_p08", "layerName": "MaintenancePolicy", "justification": ["C3","H2"], "dependencies": [".s190_p04",".s190_p05"]},
+        {"id": "s190_p09", "layerName": "DiagnosticDesign", "justification": ["C4"], "dependencies": [".s190_p06"]},
+        {"id": "s190_p10", "layerName": "DiagnosticDesign", "justification": ["C5","H3"], "dependencies": [".s190_p06",".s190_p07"]},
+        {"id": "s190_p11", "layerName": "DiagnosticDesign", "justification": ["H3"], "dependencies": [".s190_p07"]},
+        {"id": "s190_p12", "layerName": "DiagnosticDesign", "justification": ["C4","C5"], "dependencies": [".s190_p08"]},
+        {"id": "s190_p13", "layerName": "SensorIntegration", "justification": ["C6"], "dependencies": [".s190_p09"]},
+        {"id": "s190_p14", "layerName": "SensorIntegration", "justification": ["H4"], "dependencies": [".s190_p09",".s190_p10"]},
+        {"id": "s190_p15", "layerName": "SensorIntegration", "justification": ["C6","H4"], "dependencies": [".s190_p11"]},
+        {"id": "s190_p16", "layerName": "SensorIntegration", "justification": ["H4"], "dependencies": [".s190_p12"]},
+        {"id": "s190_p17", "layerName": "AlgorithmChoice", "justification": ["H5"], "dependencies": [".s190_p13"]},
+        {"id": "s190_p18", "layerName": "AlgorithmChoice", "justification": ["H6"], "dependencies": [".s190_p14"]},
+        {"id": "s190_p19", "layerName": "AlgorithmChoice", "justification": ["H5","H6"], "dependencies": [".s190_p13",".s190_p15"]},
+        {"id": "s190_p20", "layerName": "AlgorithmChoice", "justification": ["H6"], "dependencies": [".s190_p15",".s190_p16"]},
+        {"id": "s190_p21", "layerName": "EfficiencyHypothesis", "justification": ["H7"], "dependencies": [".s190_p17"]},
+        {"id": "s190_p22", "layerName": "EfficiencyHypothesis", "justification": ["H7"], "dependencies": [".s190_p18"]},
+        {"id": "s190_p23", "layerName": "EfficiencyHypothesis", "justification": ["H7"], "dependencies": [".s190_p19",".s190_p20"]},
+        {"id": "s190_p24", "layerName": "EfficiencyHypothesis", "justification": ["H7"], "dependencies": [".s190_p17",".s190_p20"]},
+        {"id": "s190_p25", "layerName": "EfficiencyHypothesis", "justification": ["H7"], "dependencies": [".s190_p18",".s190_p19"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "鉄道営業法に基づく定期検査（全般検査・重要部検査・交番検査）の実施は法的義務"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "検査項目と合否基準は国交省通達およびJIS規格に準拠する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "状態基準保全（CBM）への移行を段階的に進めるが、法定検査は維持する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "台車・車輪・ブレーキ等の主要部品の劣化診断を対象とする"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "走行中の振動データをリアルタイムで取得し、異常を早期検知する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "既存の検査装置（車輪旋削データ・超音波探傷データ等）との統合が必要"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "検査基準が数値的に完全に定義されており解釈の余地がない場合"}}, "content": "目視検査の暗黙知をAIで形式化することで検査の再現性が向上する"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3"], "refutation": "部品の劣化が突発的で傾向管理が困難な場合"}}, "content": "ワイブル分布に基づく残存寿命予測が部品交換の計画最適化に有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4","C5"], "refutation": "振動特性が走行条件（速度・曲線等）に強く依存し正規化が困難な場合"}}, "content": "振動の周波数解析により台車の亀裂・摩耗を非接触で検知可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5","C6"], "refutation": "センサーデータのサンプリングレートが異なりデータ融合が困難な場合"}}, "content": "走行データと検査装置データのデータフュージョンにより劣化傾向の精度が向上する"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5","H3"], "refutation": "教師なし学習が正常データの変動を異常と誤検知する場合"}}, "content": "オートエンコーダによる異常検知が教師なし学習として有効"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C4","H4"], "refutation": "部品間の相互作用が独立した劣化モデルを無効にする場合"}}, "content": "Graph Neural Networkにより部品間の劣化伝播パターンを学習できる"},
+        {"id": "H7", "source": {"llmInference": {"basis": ["H5","H6"], "refutation": "AI診断の信頼性が人間の検査員の判断と乖離し採用されない場合"}}, "content": "AI支援検査により検査工数を30%削減しつつ検出率を維持できる"}
+      ]
+    }
+  }
+]

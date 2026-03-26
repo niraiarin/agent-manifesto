@@ -1,0 +1,294 @@
+{
+  "namespace": "TestCoverage.S156",
+  "layers": [
+    {
+      "name": "TransportRegulation",
+      "ordValue": 4,
+      "definition": "道路運送法・労基法等の法的制約。変更不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DemandAnalysis",
+      "ordValue": 3,
+      "definition": "乗客需要の分析に基づく運行方針",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ScheduleDesign",
+      "ordValue": 2,
+      "definition": "時刻表・車両配置の設計最適化",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "RealTimeAdjustment",
+      "ordValue": 1,
+      "definition": "リアルタイムの遅延対応・運行調整",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s156_p01",
+      "layerName": "TransportRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s156_p02",
+      "layerName": "TransportRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s156_p03",
+      "layerName": "TransportRegulation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s156_p04",
+      "layerName": "DemandAnalysis",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s156_p01"
+      ]
+    },
+    {
+      "id": "s156_p05",
+      "layerName": "DemandAnalysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s156_p02"
+      ]
+    },
+    {
+      "id": "s156_p06",
+      "layerName": "DemandAnalysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s156_p01",
+        ".s156_p03"
+      ]
+    },
+    {
+      "id": "s156_p07",
+      "layerName": "ScheduleDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s156_p04"
+      ]
+    },
+    {
+      "id": "s156_p08",
+      "layerName": "ScheduleDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s156_p05",
+        ".s156_p06"
+      ]
+    },
+    {
+      "id": "s156_p09",
+      "layerName": "ScheduleDesign",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s156_p04"
+      ]
+    },
+    {
+      "id": "s156_p10",
+      "layerName": "RealTimeAdjustment",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s156_p07"
+      ]
+    },
+    {
+      "id": "s156_p11",
+      "layerName": "RealTimeAdjustment",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s156_p08"
+      ]
+    },
+    {
+      "id": "s156_p12",
+      "layerName": "RealTimeAdjustment",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s156_p09"
+      ]
+    },
+    {
+      "id": "s156_p13",
+      "layerName": "RealTimeAdjustment",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s156_p10",
+        ".s156_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "運転手の連続運転時間は4時間以内、1日の拘束時間は13時間以内（労基法・改善基準告示）"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "路線認可されたルート・停留所は変更不可。ダイヤのみ最適化対象"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ICカードの乗降データ（OD データ）を需要分析に使用する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "保有車両数は30台で固定。車両配置を最適化する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "バスロケーションシステムでリアルタイム位置を把握し、遅延を乗客に通知する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "ICカード以外の乗車手段（現金）の利用者が多数を占める場合"
+        }
+      },
+      "content": "ICカードデータに携帯電話の人流データを加えることで潜在需要を推定できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C1"
+          ],
+          "refutation": "需要が時間帯・曜日でほぼ均一な場合"
+        }
+      },
+      "content": "朝夕ラッシュと日中の需要差が大きく、変動ダイヤ（時間帯別運行間隔）が有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "全路線が独立で車両共有が不要な場合"
+        }
+      },
+      "content": "複数路線間での車両共有（インターライニング）により車両稼働率を向上できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "遅延がほとんど発生しない場合"
+        }
+      },
+      "content": "連鎖遅延を防ぐため、遅延バスの後続便を増発する動的制御が有効"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C3"
+          ],
+          "refutation": "乗客がリアルタイム情報に反応して行動を変えない場合"
+        }
+      },
+      "content": "遅延情報と代替経路の提示により乗客の分散が促進される"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "namespace": "Scenario215",
+  "layers": [
+    {
+      "name": "security",
+      "ordValue": 3,
+      "definition": "物理的セキュリティの不変条件。ハードウェアで強制。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "privacy",
+      "ordValue": 2,
+      "definition": "プライバシー保護要件。法規制と利用者合意で固定。",
+      "derivedFrom": [
+        "C4",
+        "C2"
+      ]
+    },
+    {
+      "name": "detection",
+      "ordValue": 1,
+      "definition": "異常検知アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実運用データで検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "sec1",
+      "layerName": "security",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sec2",
+      "layerName": "security",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sec3",
+      "layerName": "security",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prv1",
+      "layerName": "privacy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".sec1"
+      ]
+    },
+    {
+      "id": "prv2",
+      "layerName": "privacy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".sec2"
+      ]
+    },
+    {
+      "id": "prv3",
+      "layerName": "privacy",
+      "justification": [
+        "C4",
+        "C2"
+      ],
+      "dependencies": [
+        ".sec1",
+        ".sec3"
+      ]
+    },
+    {
+      "id": "dtc1",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".sec2",
+        ".prv1"
+      ]
+    },
+    {
+      "id": "dtc2",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".prv2"
+      ]
+    },
+    {
+      "id": "dtc3",
+      "layerName": "detection",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".sec3",
+        ".prv3"
+      ]
+    },
+    {
+      "id": "dtc4",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".prv1",
+        ".prv2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".dtc1",
+        ".dtc3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".dtc4"
+      ]
+    }
+  ]
+}

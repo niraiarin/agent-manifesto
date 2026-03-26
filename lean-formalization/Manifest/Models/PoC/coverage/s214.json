@@ -1,0 +1,271 @@
+{
+  "namespace": "Scenario214",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 5,
+      "definition": "地質学・水文学の物理法則。覆すには科学的発見が必要。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "人命に関わる安全要件。見逃し禁止。",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "governance",
+      "ordValue": 3,
+      "definition": "行政の意思決定権限。法的枠組みで固定。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "external",
+      "ordValue": 2,
+      "definition": "外部データソースへの依存。自律制御できない。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "予測アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実地データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phy1",
+      "layerName": "physics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy2"
+      ]
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phy2"
+      ]
+    },
+    {
+      "id": "gov1",
+      "layerName": "governance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "gov2",
+      "layerName": "governance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf2"
+      ]
+    },
+    {
+      "id": "gov3",
+      "layerName": "governance",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".saf3"
+      ]
+    },
+    {
+      "id": "ext1",
+      "layerName": "external",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".gov1"
+      ]
+    },
+    {
+      "id": "ext2",
+      "layerName": "external",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".saf2"
+      ]
+    },
+    {
+      "id": "ext3",
+      "layerName": "external",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".gov2"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".ext1",
+        ".ext2"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".gov2",
+        ".ext3"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ext1",
+        ".ext2"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".gov3",
+        ".pred1"
+      ]
+    },
+    {
+      "id": "pred5",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".ext2",
+        ".pred3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".pred1",
+        ".pred2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".gov1",
+        ".pred4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4",
+        "H1"
+      ],
+      "dependencies": [
+        ".pred5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".pred3",
+        ".pred4"
+      ]
+    }
+  ]
+}

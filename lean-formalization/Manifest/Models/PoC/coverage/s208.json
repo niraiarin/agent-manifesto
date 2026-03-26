@@ -1,0 +1,187 @@
+{
+  "namespace": "UndergroundPipeDegradation",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 5,
+      "definition": "公共安全・災害防止の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 4,
+      "definition": "法規制・検査基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "geotechnical",
+      "ordValue": 3,
+      "definition": "地質・土壌条件の外部依存",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "diagnosis",
+      "ordValue": 2,
+      "definition": "劣化診断モデル・検査手法",
+      "derivedFrom": [
+        "C4",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "maintenance",
+      "ordValue": 1,
+      "definition": "保全計画・優先順位付け",
+      "derivedFrom": [
+        "C5",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "regu1",
+      "layerName": "regulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "regu2",
+      "layerName": "regulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".safe2"
+      ]
+    },
+    {
+      "id": "geo1",
+      "layerName": "geotechnical",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo2",
+      "layerName": "geotechnical",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".geo1"
+      ]
+    },
+    {
+      "id": "diag1",
+      "layerName": "diagnosis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".regu1",
+        ".geo1"
+      ]
+    },
+    {
+      "id": "diag2",
+      "layerName": "diagnosis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".geo2"
+      ]
+    },
+    {
+      "id": "diag3",
+      "layerName": "diagnosis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".regu2",
+        ".diag1"
+      ]
+    },
+    {
+      "id": "mnt1",
+      "layerName": "maintenance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".safe1",
+        ".diag1"
+      ]
+    },
+    {
+      "id": "mnt2",
+      "layerName": "maintenance",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".diag2",
+        ".diag3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".mnt1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": []
+    }
+  ]
+}

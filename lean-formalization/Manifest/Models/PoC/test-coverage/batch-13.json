@@ -1,0 +1,3491 @@
+[
+  {
+    "scenario_id": 121,
+    "project": "ドローン配送経路計画 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 17,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "AirspaceSafety",
+          "definition": "航空法・飛行禁止区域の安全制約。違反は法的責任を伴う",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "definition": "自治体規制・騒音制限。外部権威による制約",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "OperationalPolicy",
+          "definition": "運用ポリシー。天候・バッテリー残量に基づく判断基準",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "RouteOptimization",
+          "definition": "配送効率の最適化。コスト・時間のトレードオフ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "AdaptiveHeuristic",
+          "definition": "運用データから学習する経験的ヒューリスティック",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s121_p01",
+          "layerName": "AirspaceSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s121_p02",
+          "layerName": "AirspaceSafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s121_p03",
+          "layerName": "AirspaceSafety",
+          "justification": [
+            "C1",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s121_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s121_p01"
+          ]
+        },
+        {
+          "id": "s121_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s121_p02"
+          ]
+        },
+        {
+          "id": "s121_p06",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s121_p01",
+            ".s121_p03"
+          ]
+        },
+        {
+          "id": "s121_p07",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s121_p04"
+          ]
+        },
+        {
+          "id": "s121_p08",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s121_p05"
+          ]
+        },
+        {
+          "id": "s121_p09",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".s121_p04",
+            ".s121_p06"
+          ]
+        },
+        {
+          "id": "s121_p10",
+          "layerName": "RouteOptimization",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s121_p07"
+          ]
+        },
+        {
+          "id": "s121_p11",
+          "layerName": "RouteOptimization",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s121_p08",
+            ".s121_p09"
+          ]
+        },
+        {
+          "id": "s121_p12",
+          "layerName": "RouteOptimization",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s121_p07"
+          ]
+        },
+        {
+          "id": "s121_p13",
+          "layerName": "AdaptiveHeuristic",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s121_p10"
+          ]
+        },
+        {
+          "id": "s121_p14",
+          "layerName": "AdaptiveHeuristic",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s121_p11"
+          ]
+        },
+        {
+          "id": "s121_p15",
+          "layerName": "AdaptiveHeuristic",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s121_p12",
+            ".s121_p13"
+          ]
+        },
+        {
+          "id": "s121_p16",
+          "layerName": "OperationalPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s121_p02"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "航空法の飛行禁止区域を絶対に通過しない"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "ドローンの最大飛行高度は150m以下（航空法準拠）"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "住宅地上空では騒音レベルを60dB以下に制限"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "風速15m/s以上では飛行を中断する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "バッテリー残量20%で自動帰還する"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "緊急着陸地点を経路上に常時確保する"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "騒音規制が統一されている地域では不要"
+            }
+          },
+          "content": "自治体ごとに異なる騒音規制を経路計画に反映すべき"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "C5"
+              ],
+              "refutation": "気象データの精度が十分でない場合"
+            }
+          },
+          "content": "気象予報APIを用いたリアルタイム経路再計算が有効"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "配送時間より安全が常に優先される運用方針の場合"
+            }
+          },
+          "content": "風況を考慮したエネルギー最適経路がコスト削減につながる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "固定経路で十分な配送エリアの場合"
+            }
+          },
+          "content": "動的経路計画がバッテリー効率を15%改善できる"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "H3"
+              ],
+              "refutation": "十分な運用データが蓄積されていない初期段階"
+            }
+          },
+          "content": "過去の飛行データから地域ごとの風況パターンを学習可能"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 122,
+    "project": "言語発達障害スクリーニング AI",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 20,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "ChildProtection",
+          "definition": "児童の権利・福祉に関する不可侵の安全制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ClinicalStandard",
+          "definition": "医学的根拠に基づく臨床基準",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "EthicalGuideline",
+          "definition": "スクリーニングの倫理的ガイドライン",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "AssessmentDesign",
+          "definition": "評価手法の設計選択",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "DataPipeline",
+          "definition": "データ処理・分析パイプラインの技術選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "ExploratoryHypothesis",
+          "definition": "検証待ちの探索的仮説",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「音声サンプルの自動分析で発話遅延を検出」(DataPipeline, ord=1) が「標準化された言語発達マイルストーンとの比較」(ClinicalStandard, ord=4) に依存するのは単調性を満たす。しかし、「保護者へのフィードバックは専門家が解釈して伝える」(EthicalGuideline, ord=3) が「自然言語処理による発話パターン分類」(DataPipeline, ord=1) に依存する形で設計されており、依存先(ord=1) < 依存元(ord=3) で単調性違反。H3由来のため LLM が自律修正。",
+        "violating_edge": {
+          "from": "s122_p11",
+          "from_layer": "EthicalGuideline",
+          "from_ord": 3,
+          "to": "s122_p14",
+          "to_layer": "DataPipeline",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "promote",
+          "detail": "H3由来（LLM推論のみ）。「自然言語処理による発話パターン分類」をDataPipeline(ord=1)からAssessmentDesign(ord=2)に昇格。さらにEthicalGuidelineの依存先をAssessmentDesignに変更。しかしord=2 < ord=3 でまだ違反。最終的にClinicalStandard(ord=4)に昇格して解消。",
+          "updated_assignment": {
+            "proposition": "s122_p14",
+            "layerName": "EthicalGuideline",
+            "justification": [
+              "H3",
+              "C4"
+            ]
+          }
+        },
+        "post_resolution_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "s122_p01",
+          "layerName": "ChildProtection",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s122_p02",
+          "layerName": "ChildProtection",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s122_p03",
+          "layerName": "ChildProtection",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s122_p04",
+          "layerName": "ClinicalStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s122_p01"
+          ]
+        },
+        {
+          "id": "s122_p05",
+          "layerName": "ClinicalStandard",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s122_p01",
+            ".s122_p02"
+          ]
+        },
+        {
+          "id": "s122_p06",
+          "layerName": "EthicalGuideline",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s122_p04"
+          ]
+        },
+        {
+          "id": "s122_p07",
+          "layerName": "EthicalGuideline",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s122_p01"
+          ]
+        },
+        {
+          "id": "s122_p08",
+          "layerName": "EthicalGuideline",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".s122_p04",
+            ".s122_p05"
+          ]
+        },
+        {
+          "id": "s122_p09",
+          "layerName": "AssessmentDesign",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s122_p06"
+          ]
+        },
+        {
+          "id": "s122_p10",
+          "layerName": "AssessmentDesign",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s122_p07"
+          ]
+        },
+        {
+          "id": "s122_p11",
+          "layerName": "EthicalGuideline",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            ".s122_p14"
+          ]
+        },
+        {
+          "id": "s122_p12",
+          "layerName": "AssessmentDesign",
+          "justification": [
+            "C6",
+            "H3"
+          ],
+          "dependencies": [
+            ".s122_p06",
+            ".s122_p08"
+          ]
+        },
+        {
+          "id": "s122_p13",
+          "layerName": "DataPipeline",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s122_p09"
+          ]
+        },
+        {
+          "id": "s122_p14",
+          "layerName": "EthicalGuideline",
+          "justification": [
+            "H3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s122_p05"
+          ]
+        },
+        {
+          "id": "s122_p15",
+          "layerName": "DataPipeline",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s122_p10",
+            ".s122_p12"
+          ]
+        },
+        {
+          "id": "s122_p16",
+          "layerName": "ExploratoryHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s122_p13"
+          ]
+        },
+        {
+          "id": "s122_p17",
+          "layerName": "ExploratoryHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s122_p14",
+            ".s122_p15"
+          ]
+        },
+        {
+          "id": "s122_p18",
+          "layerName": "ExploratoryHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s122_p16"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "スクリーニング結果の最終判断は必ず言語聴覚士が行う"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "児童の音声データは保護者の同意なく収集・保存しない"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "言語発達マイルストーンは小児科学会の基準に従う"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "保護者への結果報告は専門家が直接行う"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "偽陰性を最小化する（見逃しより過検出を許容）"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "年齢・性別を考慮した評価基準を使用する"
+        },
+        {
+          "id": "C7",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q7",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "多言語家庭の児童に対する配慮が必要"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3"
+              ],
+              "refutation": "マイルストーンが文化圏で大きく異なる場合"
+            }
+          },
+          "content": "月齢別の発話語彙数の統計的基準が利用可能"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6",
+                "C7"
+              ],
+              "refutation": "単一言語環境のみを対象とする場合"
+            }
+          },
+          "content": "多言語児童の評価には言語ごとの語彙を合算すべき"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C6"
+              ],
+              "refutation": "手動評価で十分な精度が得られる場合"
+            }
+          },
+          "content": "自然言語処理による発話パターンの自動分類が有効"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6",
+                "H1"
+              ],
+              "refutation": "音声認識の精度が幼児発話に対して不十分な場合"
+            }
+          },
+          "content": "音声サンプルの自動分析で発話遅延を検出可能"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C7",
+                "H2"
+              ],
+              "refutation": "標準化テストが多言語に対応している場合"
+            }
+          },
+          "content": "家庭内言語環境アンケートが評価精度を向上させる"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H3",
+                "H4"
+              ],
+              "refutation": "縦断データが十分に蓄積されていない場合"
+            }
+          },
+          "content": "経時的な発話データの変化パターンが発達障害の早期指標になる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 123,
+    "project": "地熱発電最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "GeologicalConstraint",
+          "definition": "地質学的・物理的制約。地下構造に依存し変更不可",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "OperationalBoundary",
+          "definition": "プラント運用の安全・効率基準",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "OptimizationStrategy",
+          "definition": "発電効率の最適化戦略。データに基づき調整",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "PredictiveModel",
+          "definition": "予測モデルの仮説。運用データで検証が必要",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s123_p01",
+          "layerName": "GeologicalConstraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s123_p02",
+          "layerName": "GeologicalConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s123_p03",
+          "layerName": "OperationalBoundary",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s123_p01"
+          ]
+        },
+        {
+          "id": "s123_p04",
+          "layerName": "OperationalBoundary",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s123_p01",
+            ".s123_p02"
+          ]
+        },
+        {
+          "id": "s123_p05",
+          "layerName": "OperationalBoundary",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s123_p02"
+          ]
+        },
+        {
+          "id": "s123_p06",
+          "layerName": "OptimizationStrategy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s123_p03"
+          ]
+        },
+        {
+          "id": "s123_p07",
+          "layerName": "OptimizationStrategy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s123_p04"
+          ]
+        },
+        {
+          "id": "s123_p08",
+          "layerName": "OptimizationStrategy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s123_p03",
+            ".s123_p05"
+          ]
+        },
+        {
+          "id": "s123_p09",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s123_p06"
+          ]
+        },
+        {
+          "id": "s123_p10",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s123_p07"
+          ]
+        },
+        {
+          "id": "s123_p11",
+          "layerName": "PredictiveModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s123_p08",
+            ".s123_p09"
+          ]
+        },
+        {
+          "id": "s123_p12",
+          "layerName": "OptimizationStrategy",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s123_p04"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "貯留層の温度・圧力は地質構造によって決まり人為的に変更できない"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "還元井への注水量は貯留層の持続可能性を損なわない範囲に制限する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "蒸気タービンの入口温度・圧力は安全基準内に維持する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "スケール（鉱物沈着）の除去サイクルは定期的に実施する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "発電効率の最適化は貯留層の寿命を短縮しない範囲で行う"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2",
+                "C4"
+              ],
+              "refutation": "スケール生成速度が注水条件に依存しない場合"
+            }
+          },
+          "content": "注水温度と注水量の最適化がスケール生成を抑制できる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C5"
+              ],
+              "refutation": "貯留層の不均質性が大きくモデル化困難な場合"
+            }
+          },
+          "content": "貯留層シミュレーションに基づく最適注水スケジュールが有効"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "季節変動が発電需要に影響しない場合"
+            }
+          },
+          "content": "季節別の需要予測と連動した発電量制御が全体効率を向上させる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H1",
+                "H2"
+              ],
+              "refutation": "地下水流動の長期変化が予測不能な場合"
+            }
+          },
+          "content": "貯留層の温度・圧力の経年変化を機械学習で予測可能"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 124,
+    "project": "フードデリバリー需要予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "BusinessConstraint",
+          "definition": "事業運営上の不変前提。経営判断で設定された制約",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "DemandModel",
+          "definition": "需要予測モデルの設計選択。データに基づき更新",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "OperationalTuning",
+          "definition": "運用パラメータの微調整。日常的に変動する",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s124_p01",
+          "layerName": "BusinessConstraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s124_p02",
+          "layerName": "BusinessConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s124_p03",
+          "layerName": "BusinessConstraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s124_p04",
+          "layerName": "DemandModel",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s124_p01"
+          ]
+        },
+        {
+          "id": "s124_p05",
+          "layerName": "DemandModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s124_p02"
+          ]
+        },
+        {
+          "id": "s124_p06",
+          "layerName": "DemandModel",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s124_p01",
+            ".s124_p03"
+          ]
+        },
+        {
+          "id": "s124_p07",
+          "layerName": "DemandModel",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s124_p02",
+            ".s124_p03"
+          ]
+        },
+        {
+          "id": "s124_p08",
+          "layerName": "OperationalTuning",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s124_p04"
+          ]
+        },
+        {
+          "id": "s124_p09",
+          "layerName": "OperationalTuning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s124_p05",
+            ".s124_p06"
+          ]
+        },
+        {
+          "id": "s124_p10",
+          "layerName": "OperationalTuning",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s124_p07"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "配達員の稼働可能人数には上限がある"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "注文から配達完了まで30分以内を目標とする"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "加盟店の営業時間外の注文は受け付けない"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "天候データを需要予測の入力として使用したい"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "週末・祝日の需要パターンは平日と異なる"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "天候と注文数の相関が弱い地域の場合"
+            }
+          },
+          "content": "雨天時は注文数が30-50%増加する傾向がある"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2"
+              ],
+              "refutation": "配達エリアが狭く移動時間が一定の場合"
+            }
+          },
+          "content": "エリア別の需要予測が配達員の事前配置に有効"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "イベント情報が事前に入手できない場合"
+            }
+          },
+          "content": "地域イベント情報を外部データとして取り込むことで予測精度向上"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "H1"
+              ],
+              "refutation": "需要変動がリアルタイム調整不要なほど緩やかな場合"
+            }
+          },
+          "content": "30分単位のリアルタイム需要更新が配達員配置の最適化に寄与"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H2",
+                "H3"
+              ],
+              "refutation": "固定的なエリア割り当てで十分な場合"
+            }
+          },
+          "content": "動的エリア分割がピーク時の配達効率を改善する"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 125,
+    "project": "考古学遺物分類 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 16,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "AcademicStandard",
+          "definition": "考古学の学術的基準・分類体系。学界の合意に基づく",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ProvenanceIntegrity",
+          "definition": "出土記録・来歴の完全性要件",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ClassificationMethod",
+          "definition": "分類手法の設計選択。技術的妥当性に基づく",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "FeatureExtraction",
+          "definition": "特徴抽出の技術的選択。精度と効率のトレードオフ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "InterpretiveHypothesis",
+          "definition": "解釈的仮説。専門家による検証が必要",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s125_p01",
+          "layerName": "AcademicStandard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s125_p02",
+          "layerName": "AcademicStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s125_p03",
+          "layerName": "ProvenanceIntegrity",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s125_p01"
+          ]
+        },
+        {
+          "id": "s125_p04",
+          "layerName": "ProvenanceIntegrity",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s125_p01",
+            ".s125_p02"
+          ]
+        },
+        {
+          "id": "s125_p05",
+          "layerName": "ClassificationMethod",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s125_p03"
+          ]
+        },
+        {
+          "id": "s125_p06",
+          "layerName": "ClassificationMethod",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s125_p04"
+          ]
+        },
+        {
+          "id": "s125_p07",
+          "layerName": "ClassificationMethod",
+          "justification": [
+            "C5",
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s125_p03",
+            ".s125_p04"
+          ]
+        },
+        {
+          "id": "s125_p08",
+          "layerName": "FeatureExtraction",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s125_p05"
+          ]
+        },
+        {
+          "id": "s125_p09",
+          "layerName": "FeatureExtraction",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s125_p06"
+          ]
+        },
+        {
+          "id": "s125_p10",
+          "layerName": "FeatureExtraction",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s125_p05",
+            ".s125_p07"
+          ]
+        },
+        {
+          "id": "s125_p11",
+          "layerName": "InterpretiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s125_p08"
+          ]
+        },
+        {
+          "id": "s125_p12",
+          "layerName": "InterpretiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s125_p09"
+          ]
+        },
+        {
+          "id": "s125_p13",
+          "layerName": "InterpretiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s125_p10",
+            ".s125_p11"
+          ]
+        },
+        {
+          "id": "s125_p14",
+          "layerName": "ProvenanceIntegrity",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s125_p02"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "遺物の分類は既存の考古学的型式学に準拠する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "最終的な分類判定は考古学者が行う。AIは候補提示のみ"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "出土コンテキスト（層位・遺構との関係）は分類の必須情報"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "遺物のデジタル記録は原資料と紐づけて管理する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "土器の分類を最優先対象とする（石器・金属器は第2段階）"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "3Dスキャンデータを特徴抽出の入力とする"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C5"
+              ],
+              "refutation": "型式学の基準が地域で大きく異なる場合"
+            }
+          },
+          "content": "土器の形態的特徴（器形・口縁部・底部）がCNN分類の有効な特徴量"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C4"
+              ],
+              "refutation": "出土コンテキストのデータ化が不十分な場合"
+            }
+          },
+          "content": "出土層位データと形態的特徴の組み合わせが分類精度を向上させる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6"
+              ],
+              "refutation": "3Dスキャンの解像度が不十分な場合"
+            }
+          },
+          "content": "点群データからの曲率分析が器形分類に有効"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5",
+                "C6",
+                "H1"
+              ],
+              "refutation": "土器片が小さく全体形状の復元が困難な場合"
+            }
+          },
+          "content": "破片からの全体形状推定にGANベースの復元が利用可能"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H1",
+                "H2"
+              ],
+              "refutation": "十分な教師データが蓄積されていない場合"
+            }
+          },
+          "content": "類似遺物の時空間分布パターンから交易ネットワークを推定可能"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 126,
+    "project": "空気質モニタリング AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "HealthSafetyThreshold",
+          "definition": "健康影響に関する法定基準値。WHO/環境省の基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "SensorInfrastructure",
+          "definition": "センサーネットワークの物理的・技術的制約",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "PredictionModel",
+          "definition": "予測モデルの設計選択。精度と速度のトレードオフ",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "AlertTuning",
+          "definition": "警報パラメータの調整。運用経験で最適化",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s126_p01",
+          "layerName": "HealthSafetyThreshold",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s126_p02",
+          "layerName": "HealthSafetyThreshold",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s126_p03",
+          "layerName": "SensorInfrastructure",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s126_p01"
+          ]
+        },
+        {
+          "id": "s126_p04",
+          "layerName": "SensorInfrastructure",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s126_p01",
+            ".s126_p02"
+          ]
+        },
+        {
+          "id": "s126_p05",
+          "layerName": "SensorInfrastructure",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s126_p02"
+          ]
+        },
+        {
+          "id": "s126_p06",
+          "layerName": "PredictionModel",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s126_p03"
+          ]
+        },
+        {
+          "id": "s126_p07",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s126_p04"
+          ]
+        },
+        {
+          "id": "s126_p08",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s126_p03",
+            ".s126_p05"
+          ]
+        },
+        {
+          "id": "s126_p09",
+          "layerName": "PredictionModel",
+          "justification": [
+            "C5",
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s126_p04"
+          ]
+        },
+        {
+          "id": "s126_p10",
+          "layerName": "AlertTuning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s126_p06"
+          ]
+        },
+        {
+          "id": "s126_p11",
+          "layerName": "AlertTuning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s126_p07"
+          ]
+        },
+        {
+          "id": "s126_p12",
+          "layerName": "AlertTuning",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s126_p08",
+            ".s126_p09"
+          ]
+        },
+        {
+          "id": "s126_p13",
+          "layerName": "AlertTuning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s126_p10",
+            ".s126_p11"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "PM2.5の環境基準値（年平均15μg/m³、日平均35μg/m³）を超過した場合に警報を発する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "AQI（大気質指数）の計算方法はEPA基準に準拠する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "既存の公設モニタリングステーションのデータを活用する"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "低コストセンサーで補完的にメッシュ密度を上げる"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "予測は6時間先まで、1時間刻みで提供する"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "低コストセンサーの精度がキャリブレーション不能なほど低い場合"
+            }
+          },
+          "content": "低コストセンサーは公設局データでキャリブレーション可能"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "気象データの精度が予測に不十分な場合"
+            }
+          },
+          "content": "気象予報データと組み合わせたLSTMモデルが6時間予測に有効"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "交通量データが利用不可な場合"
+            }
+          },
+          "content": "交通量データが局所的なPM2.5予測の精度を向上させる"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "H1"
+              ],
+              "refutation": "センサー配置が均一で空間補間が不要な場合"
+            }
+          },
+          "content": "クリギング法によるセンサー間の空間補間が有効"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "H2"
+              ],
+              "refutation": "固定閾値で十分な運用精度が得られる場合"
+            }
+          },
+          "content": "季節・曜日による基準値の動的調整が誤報を減少させる"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C5"
+              ],
+              "refutation": "利用者が全員同じ情報粒度を求める場合"
+            }
+          },
+          "content": "利用者属性（喘息患者等）に応じた個別警報閾値が有効"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 127,
+    "project": "eコマース不正注文検知 AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 7,
+    "num_props": 25,
+    "num_deps": 31,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "LegalObligation",
+          "definition": "法令遵守義務。個人情報保護法・特商法等",
+          "ordValue": 6,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "FraudPolicy",
+          "definition": "不正対策ポリシー。経営レベルで設定",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "RiskFramework",
+          "definition": "リスク評価フレームワーク。業界基準に基づく",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "DetectionRule",
+          "definition": "検知ルールの設計。精度と再現率のバランス",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "FeatureEngineering",
+          "definition": "特徴量エンジニアリング。データに基づく技術選択",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "ModelSelection",
+          "definition": "モデル選択。性能評価に基づく技術判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H6"
+          ]
+        },
+        {
+          "name": "ThresholdTuning",
+          "definition": "閾値の微調整。運用データで継続的に最適化",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「取引速度の異常検知ルール」(DetectionRule, ord=3) が「デバイスフィンガープリントの特徴量」(FeatureEngineering, ord=2) に依存するのは単調性を満たす。しかし、「不正パターンのグラフ分析」(RiskFramework, ord=4) が「GNNベースのアカウント関連性モデル」(ModelSelection, ord=1) に依存する形で設計されており、依存先(ord=1) < 依存元(ord=4) で単調性違反。H6由来のためLLMが自律修正。",
+        "violating_edge": {
+          "from": "s127_p10",
+          "from_layer": "RiskFramework",
+          "from_ord": 4,
+          "to": "s127_p20",
+          "to_layer": "ModelSelection",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "promote",
+          "detail": "H6由来（LLM推論のみ、C関与なし）。「GNNベースのアカウント関連性モデル」をModelSelection(ord=1)からRiskFramework(ord=4)に昇格。グラフ分析は不正パターンのリスク評価の一部であり、技術選択ではなくリスクフレームワークの構成要素として扱うのが適切。",
+          "updated_assignment": {
+            "proposition": "s127_p20",
+            "layerName": "RiskFramework",
+            "justification": [
+              "H6",
+              "C4"
+            ]
+          }
+        },
+        "post_resolution_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "s127_p01",
+          "layerName": "LegalObligation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s127_p02",
+          "layerName": "LegalObligation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s127_p03",
+          "layerName": "FraudPolicy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s127_p01"
+          ]
+        },
+        {
+          "id": "s127_p04",
+          "layerName": "FraudPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s127_p01"
+          ]
+        },
+        {
+          "id": "s127_p05",
+          "layerName": "FraudPolicy",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s127_p01",
+            ".s127_p02"
+          ]
+        },
+        {
+          "id": "s127_p06",
+          "layerName": "RiskFramework",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s127_p03"
+          ]
+        },
+        {
+          "id": "s127_p07",
+          "layerName": "RiskFramework",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s127_p04"
+          ]
+        },
+        {
+          "id": "s127_p08",
+          "layerName": "RiskFramework",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s127_p03",
+            ".s127_p05"
+          ]
+        },
+        {
+          "id": "s127_p09",
+          "layerName": "DetectionRule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s127_p06"
+          ]
+        },
+        {
+          "id": "s127_p10",
+          "layerName": "RiskFramework",
+          "justification": [
+            "H1",
+            "H6"
+          ],
+          "dependencies": [
+            ".s127_p04",
+            ".s127_p20"
+          ]
+        },
+        {
+          "id": "s127_p11",
+          "layerName": "DetectionRule",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s127_p07"
+          ]
+        },
+        {
+          "id": "s127_p12",
+          "layerName": "DetectionRule",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s127_p06",
+            ".s127_p08"
+          ]
+        },
+        {
+          "id": "s127_p13",
+          "layerName": "DetectionRule",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s127_p07"
+          ]
+        },
+        {
+          "id": "s127_p14",
+          "layerName": "FeatureEngineering",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s127_p09"
+          ]
+        },
+        {
+          "id": "s127_p15",
+          "layerName": "FeatureEngineering",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s127_p11"
+          ]
+        },
+        {
+          "id": "s127_p16",
+          "layerName": "FeatureEngineering",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s127_p09",
+            ".s127_p12"
+          ]
+        },
+        {
+          "id": "s127_p17",
+          "layerName": "FeatureEngineering",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": [
+            ".s127_p13"
+          ]
+        },
+        {
+          "id": "s127_p18",
+          "layerName": "ModelSelection",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s127_p14"
+          ]
+        },
+        {
+          "id": "s127_p19",
+          "layerName": "ModelSelection",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s127_p15",
+            ".s127_p16"
+          ]
+        },
+        {
+          "id": "s127_p20",
+          "layerName": "RiskFramework",
+          "justification": [
+            "H6",
+            "C4"
+          ],
+          "dependencies": [
+            ".s127_p04"
+          ]
+        },
+        {
+          "id": "s127_p21",
+          "layerName": "ThresholdTuning",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s127_p18"
+          ]
+        },
+        {
+          "id": "s127_p22",
+          "layerName": "ThresholdTuning",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s127_p19"
+          ]
+        },
+        {
+          "id": "s127_p23",
+          "layerName": "ThresholdTuning",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s127_p20",
+            ".s127_p21"
+          ]
+        },
+        {
+          "id": "s127_p24",
+          "layerName": "ThresholdTuning",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s127_p17"
+          ]
+        },
+        {
+          "id": "s127_p25",
+          "layerName": "ThresholdTuning",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s127_p22",
+            ".s127_p24"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "個人情報の取り扱いは個人情報保護法に準拠する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "不正検知による注文ブロックは売上損失より優先する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "正規顧客の誤ブロック率は0.1%以下に抑える"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "リスクスコアリングは注文受付から3秒以内に完了する"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "高額注文（5万円以上）は追加認証を要求する"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "IPアドレス・デバイス情報を不正検知に使用する"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "バッチ処理で十分なレイテンシが許容される場合"
+            }
+          },
+          "content": "リアルタイムスコアリングにはストリーミング処理基盤が必要"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "高額注文の不正率が低額と同程度の場合"
+            }
+          },
+          "content": "金額帯別のリスク重み付けが検知精度を向上させる"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C5"
+              ],
+              "refutation": "速度ベースの検知が誤検知を増加させる場合"
+            }
+          },
+          "content": "短時間での連続注文パターンが不正の有力な指標"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6"
+              ],
+              "refutation": "VPN/プロキシ使用が一般化しIPの信頼性が低い場合"
+            }
+          },
+          "content": "デバイスフィンガープリントがIP以上の識別精度を持つ"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6",
+                "H4"
+              ],
+              "refutation": "住所・氏名の表記揺れが大きく正規化困難な場合"
+            }
+          },
+          "content": "配送先住所の類似性分析が組織的不正の検出に有効"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "H1"
+              ],
+              "refutation": "アカウント間の関連性データが不十分な場合"
+            }
+          },
+          "content": "GNNベースのアカウント関連性分析が組織的不正を検出可能"
+        },
+        {
+          "id": "H7",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "H2",
+                "H3"
+              ],
+              "refutation": "不正パターンの変化速度が閾値調整より速い場合"
+            }
+          },
+          "content": "閾値の自動調整が不正パターンの変化に追従可能"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 128,
+    "project": "楽器音分離 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "AudioFundamental",
+          "definition": "音響工学の物理的制約と品質基準",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "SeparationArchitecture",
+          "definition": "音源分離アーキテクチャの設計選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "TrainingStrategy",
+          "definition": "学習戦略の仮説。実験で検証が必要",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s128_p01",
+          "layerName": "AudioFundamental",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s128_p02",
+          "layerName": "AudioFundamental",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s128_p03",
+          "layerName": "AudioFundamental",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s128_p04",
+          "layerName": "SeparationArchitecture",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s128_p01"
+          ]
+        },
+        {
+          "id": "s128_p05",
+          "layerName": "SeparationArchitecture",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s128_p02",
+            ".s128_p03"
+          ]
+        },
+        {
+          "id": "s128_p06",
+          "layerName": "SeparationArchitecture",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s128_p01",
+            ".s128_p02"
+          ]
+        },
+        {
+          "id": "s128_p07",
+          "layerName": "TrainingStrategy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s128_p04"
+          ]
+        },
+        {
+          "id": "s128_p08",
+          "layerName": "TrainingStrategy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s128_p05",
+            ".s128_p06"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "入力は44.1kHz/16bitのステレオ音源"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "分離後の音質はSDR（Signal-to-Distortion Ratio）8dB以上を目標"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "対象楽器はボーカル・ドラム・ベース・その他の4トラック"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "リアルタイム処理は不要。バッチ処理で可"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "GPUリソースは推論時にV100相当1枚を想定"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4"
+              ],
+              "refutation": "低レイテンシが要求されるライブ用途の場合"
+            }
+          },
+          "content": "U-Netベースのスペクトログラムマスキングが品質と計算量のバランスに優れる"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2",
+                "C3"
+              ],
+              "refutation": "4トラック以上の細分化が必要な場合"
+            }
+          },
+          "content": "楽器ごとの専用デコーダが共有デコーダより分離品質が高い"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "モデルサイズがGPUメモリを超過する場合"
+            }
+          },
+          "content": "時間-周波数のマルチスケール処理が低周波楽器の分離に有効"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "H1"
+              ],
+              "refutation": "合成データの品質が実データと乖離している場合"
+            }
+          },
+          "content": "マルチトラック録音データからの教師あり学習が最も効率的"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H2",
+                "H3"
+              ],
+              "refutation": "ジャンル間の汎化性能が十分な場合"
+            }
+          },
+          "content": "ジャンル別のファインチューニングが分離品質を向上させる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 129,
+    "project": "橋梁振動モニタリング AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 18,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "StructuralSafety",
+          "definition": "構造力学的安全基準。橋梁の健全性に直結する不可侵制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "InspectionStandard",
+          "definition": "点検基準・規格。国土交通省の定期点検要領に基づく",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "MonitoringDesign",
+          "definition": "モニタリングシステムの設計選択",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "AnalysisMethod",
+          "definition": "振動解析手法の技術選択。精度と実装の難易度",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C6",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "DeteriorationModel",
+          "definition": "劣化予測モデルの仮説。長期データで検証が必要",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s129_p01",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s129_p02",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s129_p03",
+          "layerName": "StructuralSafety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s129_p04",
+          "layerName": "InspectionStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s129_p01"
+          ]
+        },
+        {
+          "id": "s129_p05",
+          "layerName": "InspectionStandard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s129_p01",
+            ".s129_p02"
+          ]
+        },
+        {
+          "id": "s129_p06",
+          "layerName": "InspectionStandard",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s129_p03"
+          ]
+        },
+        {
+          "id": "s129_p07",
+          "layerName": "MonitoringDesign",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s129_p04"
+          ]
+        },
+        {
+          "id": "s129_p08",
+          "layerName": "MonitoringDesign",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s129_p05"
+          ]
+        },
+        {
+          "id": "s129_p09",
+          "layerName": "MonitoringDesign",
+          "justification": [
+            "C5",
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s129_p04",
+            ".s129_p06"
+          ]
+        },
+        {
+          "id": "s129_p10",
+          "layerName": "AnalysisMethod",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s129_p07"
+          ]
+        },
+        {
+          "id": "s129_p11",
+          "layerName": "AnalysisMethod",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s129_p08"
+          ]
+        },
+        {
+          "id": "s129_p12",
+          "layerName": "AnalysisMethod",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s129_p07",
+            ".s129_p09"
+          ]
+        },
+        {
+          "id": "s129_p13",
+          "layerName": "DeteriorationModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s129_p10"
+          ]
+        },
+        {
+          "id": "s129_p14",
+          "layerName": "DeteriorationModel",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s129_p11"
+          ]
+        },
+        {
+          "id": "s129_p15",
+          "layerName": "DeteriorationModel",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s129_p12",
+            ".s129_p13"
+          ]
+        },
+        {
+          "id": "s129_p16",
+          "layerName": "AnalysisMethod",
+          "justification": [
+            "C6",
+            "H3"
+          ],
+          "dependencies": [
+            ".s129_p09"
+          ]
+        },
+        {
+          "id": "s129_p17",
+          "layerName": "DeteriorationModel",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s129_p16"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "固有振動数の変化が一定閾値を超えた場合は通行制限を検討する"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "橋梁の健全性判定の最終判断は橋梁技術者が行う"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "5年ごとの定期点検（目視・打音）を補完する位置づけ"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "損傷度評価はI～IVの4段階（国交省基準）"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "加速度センサーを橋梁の主要部材に設置する"
+        },
+        {
+          "id": "C6",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q6",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "振動データは100Hzサンプリングで24時間連続取得"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "MEMSセンサーの精度が構造ヘルスモニタリングに不十分な場合"
+            }
+          },
+          "content": "MEMS加速度センサーが橋梁モニタリングにコスト効果的"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5",
+                "C6"
+              ],
+              "refutation": "通信インフラが整備されていない山間部の場合"
+            }
+          },
+          "content": "エッジ処理でデータ量を削減し、異常時のみクラウドに送信"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C6"
+              ],
+              "refutation": "車両通行による振動が支配的で環境振動の分離が困難な場合"
+            }
+          },
+          "content": "操作モーダル解析（OMA）で車両荷重なしに固有振動数を同定可能"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5",
+                "C6",
+                "H1"
+              ],
+              "refutation": "センサー数が不足しモード形状の推定が困難な場合"
+            }
+          },
+          "content": "複数センサーの相関分析で損傷位置の推定が可能"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "H3"
+              ],
+              "refutation": "固有振動数の変化と劣化の相関が非線形で予測困難な場合"
+            }
+          },
+          "content": "固有振動数の経年変化トレンドから次回点検までの劣化進行を予測可能"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C4",
+                "H4"
+              ],
+              "refutation": "気温・湿度の影響が劣化の影響より大きい場合"
+            }
+          },
+          "content": "温度補正を行った振動特性の変化が損傷度IIIへの遷移を予測できる"
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 130,
+    "project": "自動字幕翻訳品質評価 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 16,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "LinguisticPrinciple",
+          "definition": "翻訳品質の言語学的原則。意味的等価性・自然さの基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "SubtitleConstraint",
+          "definition": "字幕固有の制約。時間・文字数・可読性",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "EvaluationMetric",
+          "definition": "品質評価指標の設計選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "CorpusHypothesis",
+          "definition": "コーパス・学習データに関する仮説",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s130_p01",
+          "layerName": "LinguisticPrinciple",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s130_p02",
+          "layerName": "LinguisticPrinciple",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s130_p03",
+          "layerName": "LinguisticPrinciple",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s130_p04",
+          "layerName": "SubtitleConstraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s130_p01"
+          ]
+        },
+        {
+          "id": "s130_p05",
+          "layerName": "SubtitleConstraint",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s130_p01",
+            ".s130_p02"
+          ]
+        },
+        {
+          "id": "s130_p06",
+          "layerName": "SubtitleConstraint",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s130_p03"
+          ]
+        },
+        {
+          "id": "s130_p07",
+          "layerName": "EvaluationMetric",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s130_p04"
+          ]
+        },
+        {
+          "id": "s130_p08",
+          "layerName": "EvaluationMetric",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s130_p05"
+          ]
+        },
+        {
+          "id": "s130_p09",
+          "layerName": "EvaluationMetric",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s130_p04",
+            ".s130_p06"
+          ]
+        },
+        {
+          "id": "s130_p10",
+          "layerName": "EvaluationMetric",
+          "justification": [
+            "C5",
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s130_p05"
+          ]
+        },
+        {
+          "id": "s130_p11",
+          "layerName": "CorpusHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s130_p07"
+          ]
+        },
+        {
+          "id": "s130_p12",
+          "layerName": "CorpusHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s130_p08"
+          ]
+        },
+        {
+          "id": "s130_p13",
+          "layerName": "CorpusHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s130_p09",
+            ".s130_p10"
+          ]
+        },
+        {
+          "id": "s130_p14",
+          "layerName": "CorpusHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s130_p11"
+          ]
+        },
+        {
+          "id": "s130_p15",
+          "layerName": "CorpusHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s130_p12",
+            ".s130_p13"
+          ]
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "C1",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q1",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "翻訳の意味的等価性が最優先の品質基準"
+        },
+        {
+          "id": "C2",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q2",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "翻訳は原語の文体・ニュアンスをできるだけ保持する"
+        },
+        {
+          "id": "C3",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q3",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "字幕は1行あたり最大13文字（日本語）/ 42文字（英語）"
+        },
+        {
+          "id": "C4",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q4",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "字幕の表示時間は音声と同期し、最低1秒・最大7秒"
+        },
+        {
+          "id": "C5",
+          "source": {
+            "humanDecision": {
+              "phase": 1,
+              "question": "Q5",
+              "date": "2026-03-26"
+            }
+          },
+          "content": "品質評価は人間の主観評価（MOS）との相関0.8以上を目標"
+        },
+        {
+          "id": "H1",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C3",
+                "C4"
+              ],
+              "refutation": "ストリーミング字幕でフレーム単位の同期が不要な場合"
+            }
+          },
+          "content": "字幕の表示速度（文字/秒）が可読性の重要な指標"
+        },
+        {
+          "id": "H2",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5"
+              ],
+              "refutation": "BLEUスコアが人間評価と十分に相関する場合"
+            }
+          },
+          "content": "BERTScoreが字幕翻訳の意味的等価性の自動評価に適している"
+        },
+        {
+          "id": "H3",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C1",
+                "C3"
+              ],
+              "refutation": "圧縮による情報損失が許容範囲内の場合"
+            }
+          },
+          "content": "字幕特有の文圧縮による意味変容の検出が品質評価に不可欠"
+        },
+        {
+          "id": "H4",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C2",
+                "C4"
+              ],
+              "refutation": "感情表現の評価が不要なドキュメンタリー等の場合"
+            }
+          },
+          "content": "感情的ニュアンスの保持度を別指標で評価すべき"
+        },
+        {
+          "id": "H5",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "C5",
+                "H2"
+              ],
+              "refutation": "大規模並行コーパスが既に利用可能な場合"
+            }
+          },
+          "content": "映画・ドラマの字幕並行コーパスの構築が評価モデルの精度向上に必要"
+        },
+        {
+          "id": "H6",
+          "source": {
+            "llmInference": {
+              "basis": [
+                "H3",
+                "H4"
+              ],
+              "refutation": "ジャンル間の品質基準が統一されている場合"
+            }
+          },
+          "content": "ジャンル別（映画/アニメ/ニュース）の評価基準の差異を考慮すべき"
+        }
+      ]
+    }
+  }
+]

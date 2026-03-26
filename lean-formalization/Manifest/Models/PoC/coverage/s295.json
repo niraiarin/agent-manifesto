@@ -1,0 +1,120 @@
+{
+  "namespace": "CMEPrediction",
+  "layers": [
+    {
+      "name": "detection_invariant",
+      "ordValue": 4,
+      "definition": "CME見逃し防止の不変制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "coordination_rule",
+      "ordValue": 3,
+      "definition": "NICT連携・多分野配信の制度ルール",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "forecast_spec",
+      "ordValue": 2,
+      "definition": "予測精度・不確実性表示の品質基準",
+      "derivedFrom": [
+        "C3",
+        "H3"
+      ]
+    },
+    {
+      "name": "model_choice",
+      "ordValue": 1,
+      "definition": "検知・伝搬モデルの選択仮説",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "no_miss_cme",
+      "layerName": "detection_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sensitivity_max",
+      "layerName": "detection_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "nict_alignment",
+      "layerName": "coordination_rule",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".no_miss_cme"
+      ]
+    },
+    {
+      "id": "multi_sector_push",
+      "layerName": "coordination_rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".no_miss_cme"
+      ]
+    },
+    {
+      "id": "arrival_uncertainty",
+      "layerName": "forecast_spec",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        ".nict_alignment"
+      ]
+    },
+    {
+      "id": "historical_stats",
+      "layerName": "forecast_spec",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".arrival_uncertainty"
+      ]
+    },
+    {
+      "id": "sdo_soho_pipeline",
+      "layerName": "model_choice",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".sensitivity_max"
+      ]
+    },
+    {
+      "id": "drag_based_model",
+      "layerName": "model_choice",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".arrival_uncertainty",
+        ".sdo_soho_pipeline"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "namespace": "TestCoverage.S134",
+  "layers": [
+    {
+      "name": "EnvironmentalSafety",
+      "ordValue": 4,
+      "definition": "有害物質の取扱いに関する安全制約。法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RecyclingStandard",
+      "ordValue": 3,
+      "definition": "リサイクル基準・分別ルール。業界標準に基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "SortingDesign",
+      "ordValue": 2,
+      "definition": "分別システムの設計選択。技術更新可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "EfficiencyHeuristic",
+      "ordValue": 1,
+      "definition": "処理効率の仮説。運用実績で検証",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s134_p01",
+      "layerName": "EnvironmentalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s134_p02",
+      "layerName": "EnvironmentalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s134_p03",
+      "layerName": "RecyclingStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s134_p01"
+      ]
+    },
+    {
+      "id": "s134_p04",
+      "layerName": "RecyclingStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s134_p01",
+        ".s134_p02"
+      ]
+    },
+    {
+      "id": "s134_p05",
+      "layerName": "SortingDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s134_p03"
+      ]
+    },
+    {
+      "id": "s134_p06",
+      "layerName": "SortingDesign",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s134_p03"
+      ]
+    },
+    {
+      "id": "s134_p07",
+      "layerName": "SortingDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s134_p04"
+      ]
+    },
+    {
+      "id": "s134_p08",
+      "layerName": "SortingDesign",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s134_p03",
+        ".s134_p04"
+      ]
+    },
+    {
+      "id": "s134_p09",
+      "layerName": "EfficiencyHeuristic",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s134_p05"
+      ]
+    },
+    {
+      "id": "s134_p10",
+      "layerName": "EfficiencyHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s134_p06",
+        ".s134_p07"
+      ]
+    },
+    {
+      "id": "s134_p11",
+      "layerName": "EfficiencyHeuristic",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s134_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "鉛・水銀・カドミウム等の有害物質を含む部品は専用ラインで処理する法的義務がある"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "バッテリー（リチウムイオン等）は発火リスクがあり、最初に分離する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "家電リサイクル法に基づく4品目の分別基準を遵守する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "画像認識による自動分別とロボットアームのピックアンドプレースを組合せる"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "X線透視による内部構造の非破壊検査を導入する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "新しい電子機器カテゴリ（ウェアラブル等）が既存分別基準に該当しない場合"
+        }
+      },
+      "content": "既存の4品目分別基準をベースに小型電子機器も同様のフローで処理可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "X線透視のスループットがライン速度に追いつかない場合"
+        }
+      },
+      "content": "画像認識とX線透視の二段階判定で分別精度99%以上を達成可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "製品の外観バリエーションが多すぎてモデルの汎化性能が不足する場合"
+        }
+      },
+      "content": "転移学習により新製品への対応を少量データで実現できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "レアメタル含有量の事前推定精度が低い場合"
+        }
+      },
+      "content": "レアメタル回収価値の推定により分別の経済的優先度を最適化できる"
+    }
+  ]
+}

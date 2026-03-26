@@ -1,0 +1,273 @@
+{
+  "namespace": "TestCoverage.S143",
+  "layers": [
+    {
+      "name": "StructuralSafety",
+      "ordValue": 3,
+      "definition": "船体構造の安全基準。IMO規則・船級協会規格に準拠",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "HydrodynamicLaw",
+      "ordValue": 2,
+      "definition": "流体力学に基づく設計原則。物理法則として不変",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DesignTradeoff",
+      "ordValue": 1,
+      "definition": "コスト・性能・製造性のトレードオフ判断",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 0,
+      "definition": "最適化アルゴリズムの有効性に関する仮説",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s143_p01",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s143_p02",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s143_p03",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s143_p04",
+      "layerName": "HydrodynamicLaw",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s143_p01"
+      ]
+    },
+    {
+      "id": "s143_p05",
+      "layerName": "HydrodynamicLaw",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s143_p02"
+      ]
+    },
+    {
+      "id": "s143_p06",
+      "layerName": "HydrodynamicLaw",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s143_p01",
+        ".s143_p03"
+      ]
+    },
+    {
+      "id": "s143_p07",
+      "layerName": "DesignTradeoff",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s143_p04"
+      ]
+    },
+    {
+      "id": "s143_p08",
+      "layerName": "DesignTradeoff",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s143_p05"
+      ]
+    },
+    {
+      "id": "s143_p09",
+      "layerName": "DesignTradeoff",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s143_p04",
+        ".s143_p06"
+      ]
+    },
+    {
+      "id": "s143_p10",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s143_p07"
+      ]
+    },
+    {
+      "id": "s143_p11",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s143_p08",
+        ".s143_p09"
+      ]
+    },
+    {
+      "id": "s143_p12",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s143_p07",
+        ".s143_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "船体構造はIMO(国際海事機関)の安全基準および船級協会の規格を満たさなければならない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "設計変更の最終承認は主任設計技師が行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "船体の抵抗・推進性能はCFD(数値流体力学)シミュレーションで評価する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "建造コストは鋼材使用量と溶接工数で大部分が決まる"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "燃費性能は船主の最優先要件である"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "CFDの解像度が不十分で乱流モデルが実験と乖離する場合"
+        }
+      },
+      "content": "CFDシミュレーションの精度は模型試験と5%以内の誤差で一致する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "新素材(FRP等)の採用で鋼材使用量とコストの関係が変わる場合"
+        }
+      },
+      "content": "船体形状の最適化により鋼材使用量を削減しつつ燃費を改善できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "多目的最適化の探索空間が広すぎて実用的な計算時間内に収束しない場合"
+        }
+      },
+      "content": "遺伝的アルゴリズムによる多目的最適化がパレート最適解を効率的に探索できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "代替モデルの近似誤差が大きく最適解が実際には劣解である場合"
+        }
+      },
+      "content": "サロゲートモデルによりCFDの計算コストを1/100に削減できる"
+    }
+  ]
+}

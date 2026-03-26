@@ -1,0 +1,21 @@
+{
+  "namespace": "TestScenario.S268",
+  "description": "聴覚検査自動化 AI",
+  "layers": [
+    {"name": "medical_standard", "ordValue": 3, "definition": "聴覚検査の医学的基準。ISO 8253・JIS規格準拠", "derivedFrom": ["C1","C2"]},
+    {"name": "audiometric_model", "ordValue": 2, "definition": "聴力測定のモデル。純音・語音・ABR検査パラメータ", "derivedFrom": ["H1","C3"]},
+    {"name": "adaptive_algorithm", "ordValue": 1, "definition": "適応型検査アルゴリズム。閾値追跡・被検者応答解析", "derivedFrom": ["H2","H3"]},
+    {"name": "calibration_hypothesis", "ordValue": 0, "definition": "環境騒音補正・機器校正の仮説", "derivedFrom": ["H4"]}
+  ],
+  "propositions": [
+    {"id": "ms1", "layerName": "medical_standard", "justification": ["C1"], "dependencies": []},
+    {"id": "ms2", "layerName": "medical_standard", "justification": ["C2"], "dependencies": []},
+    {"id": "ms3", "layerName": "medical_standard", "justification": ["C1","C2"], "dependencies": []},
+    {"id": "am1", "layerName": "audiometric_model", "justification": ["H1"], "dependencies": [".ms1"]},
+    {"id": "am2", "layerName": "audiometric_model", "justification": ["C3"], "dependencies": [".ms2",".ms3"]},
+    {"id": "am3", "layerName": "audiometric_model", "justification": ["H1"], "dependencies": [".ms1"]},
+    {"id": "aa1", "layerName": "adaptive_algorithm", "justification": ["H2"], "dependencies": [".am1",".am2"]},
+    {"id": "aa2", "layerName": "adaptive_algorithm", "justification": ["H3"], "dependencies": [".am3"]},
+    {"id": "ch1", "layerName": "calibration_hypothesis", "justification": ["H4"], "dependencies": [".aa1",".aa2"]}
+  ]
+}

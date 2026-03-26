@@ -1,0 +1,274 @@
+{
+  "layers": [
+    {
+      "name": "GeologicalConstraint",
+      "definition": "地質学的・物理的制約。地下構造に依存し変更不可",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "OperationalBoundary",
+      "definition": "プラント運用の安全・効率基準",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "OptimizationStrategy",
+      "definition": "発電効率の最適化戦略。データに基づき調整",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictiveModel",
+      "definition": "予測モデルの仮説。運用データで検証が必要",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s123_p01",
+      "layerName": "GeologicalConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s123_p02",
+      "layerName": "GeologicalConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s123_p03",
+      "layerName": "OperationalBoundary",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s123_p01"
+      ]
+    },
+    {
+      "id": "s123_p04",
+      "layerName": "OperationalBoundary",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s123_p01",
+        ".s123_p02"
+      ]
+    },
+    {
+      "id": "s123_p05",
+      "layerName": "OperationalBoundary",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s123_p02"
+      ]
+    },
+    {
+      "id": "s123_p06",
+      "layerName": "OptimizationStrategy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s123_p03"
+      ]
+    },
+    {
+      "id": "s123_p07",
+      "layerName": "OptimizationStrategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s123_p04"
+      ]
+    },
+    {
+      "id": "s123_p08",
+      "layerName": "OptimizationStrategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s123_p03",
+        ".s123_p05"
+      ]
+    },
+    {
+      "id": "s123_p09",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s123_p06"
+      ]
+    },
+    {
+      "id": "s123_p10",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s123_p07"
+      ]
+    },
+    {
+      "id": "s123_p11",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s123_p08",
+        ".s123_p09"
+      ]
+    },
+    {
+      "id": "s123_p12",
+      "layerName": "OptimizationStrategy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s123_p04"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "貯留層の温度・圧力は地質構造によって決まり人為的に変更できない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "還元井への注水量は貯留層の持続可能性を損なわない範囲に制限する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "蒸気タービンの入口温度・圧力は安全基準内に維持する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "スケール（鉱物沈着）の除去サイクルは定期的に実施する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "発電効率の最適化は貯留層の寿命を短縮しない範囲で行う"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C4"
+          ],
+          "refutation": "スケール生成速度が注水条件に依存しない場合"
+        }
+      },
+      "content": "注水温度と注水量の最適化がスケール生成を抑制できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C5"
+          ],
+          "refutation": "貯留層の不均質性が大きくモデル化困難な場合"
+        }
+      },
+      "content": "貯留層シミュレーションに基づく最適注水スケジュールが有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "季節変動が発電需要に影響しない場合"
+        }
+      },
+      "content": "季節別の需要予測と連動した発電量制御が全体効率を向上させる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H1",
+            "H2"
+          ],
+          "refutation": "地下水流動の長期変化が予測不能な場合"
+        }
+      },
+      "content": "貯留層の温度・圧力の経年変化を機械学習で予測可能"
+    }
+  ]
+}

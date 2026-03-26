@@ -1,0 +1,188 @@
+{
+  "namespace": "Scenario256",
+  "layers": [
+    {
+      "name": "tradition",
+      "ordValue": 3,
+      "definition": "蔵の伝統と杜氏の権威に関わる不可侵の前提。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "compliance",
+      "ordValue": 2,
+      "definition": "酒税法と食品安全基準に基づく法的制約。",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "fermentation",
+      "ordValue": 1,
+      "definition": "発酵管理と分析手法の設計判断。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。醸造実験で検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "tra1",
+      "layerName": "tradition",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tra2",
+      "layerName": "tradition",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tra3",
+      "layerName": "tradition",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "com1",
+      "layerName": "compliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".tra1"
+      ]
+    },
+    {
+      "id": "com2",
+      "layerName": "compliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".tra1",
+        ".tra2"
+      ]
+    },
+    {
+      "id": "com3",
+      "layerName": "compliance",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".com1",
+        ".com2"
+      ]
+    },
+    {
+      "id": "fer1",
+      "layerName": "fermentation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".tra3",
+        ".com1"
+      ]
+    },
+    {
+      "id": "fer2",
+      "layerName": "fermentation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".tra2"
+      ]
+    },
+    {
+      "id": "fer3",
+      "layerName": "fermentation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".com1",
+        ".fer1"
+      ]
+    },
+    {
+      "id": "fer4",
+      "layerName": "fermentation",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".fer1",
+        ".fer2"
+      ]
+    },
+    {
+      "id": "fer5",
+      "layerName": "fermentation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".com3",
+        ".fer4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".com2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".fer4",
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".fer3",
+        ".fer5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2414 @@
+[
+  {
+    "scenario_id": 111,
+    "project": "美術品真贋鑑定 AI",
+    "num_c": 7,
+    "num_h": 9,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 30,
+    "model_spec": {
+      "namespace": "ArtAuthentication",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 4,
+          "definition": "鑑定結果の法的・倫理的に不可侵な前提。誤鑑定による損害責任の根拠",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "domain_knowledge",
+          "ordValue": 3,
+          "definition": "美術史・材料科学・様式分析の確立された知見。反例は極めて稀",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "methodology",
+          "ordValue": 2,
+          "definition": "鑑定プロセスの手順・基準。人間の専門家が設定・更新する",
+          "derivedFrom": [
+            "C3",
+            "C6",
+            "H4"
+          ]
+        },
+        {
+          "name": "inference",
+          "ordValue": 1,
+          "definition": "AI が画像・データから推論する真贋判定。確信度付き",
+          "derivedFrom": [
+            "C7",
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説。新発見の作家・技法に関する推定",
+          "derivedFrom": [
+            "H8",
+            "H9"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "auth_legal1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "auth_legal2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "auth_provenance",
+          "layerName": "constraint",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dk_material",
+          "layerName": "domain_knowledge",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dk_style",
+          "layerName": "domain_knowledge",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dk_period",
+          "layerName": "domain_knowledge",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dk_pigment",
+          "layerName": "domain_knowledge",
+          "justification": [
+            "H1",
+            "C4"
+          ],
+          "dependencies": [
+            ".dk_material"
+          ]
+        },
+        {
+          "id": "meth_workflow",
+          "layerName": "methodology",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".auth_legal1"
+          ]
+        },
+        {
+          "id": "meth_xray",
+          "layerName": "methodology",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": [
+            ".dk_material"
+          ]
+        },
+        {
+          "id": "meth_multistage",
+          "layerName": "methodology",
+          "justification": [
+            "C3",
+            "H4"
+          ],
+          "dependencies": [
+            ".auth_legal2",
+            ".dk_style"
+          ]
+        },
+        {
+          "id": "meth_human_final",
+          "layerName": "methodology",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".auth_legal1"
+          ]
+        },
+        {
+          "id": "inf_image_cls",
+          "layerName": "inference",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".dk_style",
+            ".meth_xray"
+          ]
+        },
+        {
+          "id": "inf_age_est",
+          "layerName": "inference",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".dk_pigment",
+            ".dk_period"
+          ]
+        },
+        {
+          "id": "inf_ensemble",
+          "layerName": "inference",
+          "justification": [
+            "C7",
+            "H6"
+          ],
+          "dependencies": [
+            ".inf_image_cls",
+            ".inf_age_est",
+            ".meth_multistage"
+          ]
+        },
+        {
+          "id": "inf_confidence",
+          "layerName": "inference",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".inf_ensemble"
+          ]
+        },
+        {
+          "id": "inf_report",
+          "layerName": "inference",
+          "justification": [
+            "H6",
+            "C7"
+          ],
+          "dependencies": [
+            ".inf_confidence",
+            ".meth_human_final",
+            ".auth_provenance"
+          ]
+        },
+        {
+          "id": "hyp_new_artist",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".inf_image_cls"
+          ]
+        },
+        {
+          "id": "hyp_forgery_net",
+          "layerName": "hypothesis",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".inf_ensemble",
+            ".dk_period"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 112,
+    "project": "河川生態系モニタリング AI",
+    "num_c": 6,
+    "num_h": 8,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "RiverEcosystem",
+      "layers": [
+        {
+          "name": "regulation",
+          "ordValue": 3,
+          "definition": "環境法規・水質基準。法的拘束力を持つ不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ecological_model",
+          "ordValue": 2,
+          "definition": "生態学の確立モデル。種間関係・水質指標の科学的知見",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "monitoring",
+          "ordValue": 1,
+          "definition": "センサー配置・サンプリング頻度・アラート閾値の運用方針",
+          "derivedFrom": [
+            "C3",
+            "C5",
+            "H5"
+          ]
+        },
+        {
+          "name": "prediction",
+          "ordValue": 0,
+          "definition": "AI による生態系変動予測。未検証の時系列推論",
+          "derivedFrom": [
+            "H6",
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "reg_water_quality",
+          "layerName": "regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg_species_protect",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg_reporting",
+          "layerName": "regulation",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eco_food_web",
+          "layerName": "ecological_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eco_indicator_sp",
+          "layerName": "ecological_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".eco_food_web"
+          ]
+        },
+        {
+          "id": "eco_seasonal",
+          "layerName": "ecological_model",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eco_pollutant",
+          "layerName": "ecological_model",
+          "justification": [
+            "H1",
+            "C4"
+          ],
+          "dependencies": [
+            ".reg_water_quality"
+          ]
+        },
+        {
+          "id": "mon_sensor_net",
+          "layerName": "monitoring",
+          "justification": [
+            "C3",
+            "H5"
+          ],
+          "dependencies": [
+            ".reg_water_quality"
+          ]
+        },
+        {
+          "id": "mon_sampling",
+          "layerName": "monitoring",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".eco_seasonal",
+            ".eco_indicator_sp"
+          ]
+        },
+        {
+          "id": "mon_alert",
+          "layerName": "monitoring",
+          "justification": [
+            "C3",
+            "H5"
+          ],
+          "dependencies": [
+            ".reg_water_quality",
+            ".eco_pollutant"
+          ]
+        },
+        {
+          "id": "mon_biodiversity",
+          "layerName": "monitoring",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".reg_species_protect",
+            ".eco_food_web"
+          ]
+        },
+        {
+          "id": "pred_population",
+          "layerName": "prediction",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".eco_food_web",
+            ".mon_sampling"
+          ]
+        },
+        {
+          "id": "pred_water_trend",
+          "layerName": "prediction",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".mon_sensor_net",
+            ".eco_pollutant"
+          ]
+        },
+        {
+          "id": "pred_invasion",
+          "layerName": "prediction",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".eco_indicator_sp",
+            ".mon_biodiversity"
+          ]
+        },
+        {
+          "id": "pred_restoration",
+          "layerName": "prediction",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            ".pred_population",
+            ".pred_water_trend",
+            ".reg_reporting"
+          ]
+        },
+        {
+          "id": "pred_climate",
+          "layerName": "prediction",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".eco_seasonal",
+            ".pred_water_trend"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 113,
+    "project": "電気自動車充電ステーション最適配置 AI (単調性違反あり)",
+    "num_c": 7,
+    "num_h": 9,
+    "num_layers": 5,
+    "num_props": 19,
+    "num_deps": 29,
+    "model_spec": {
+      "namespace": "EVChargingPlacement",
+      "layers": [
+        {
+          "name": "regulation",
+          "ordValue": 4,
+          "definition": "電力法規・都市計画法・建築基準。法的に不変な制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "infrastructure",
+          "ordValue": 3,
+          "definition": "送電網容量・変電所位置など既存インフラの物理的制約",
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "demand_model",
+          "ordValue": 2,
+          "definition": "EV 普及率・充電パターンの需要モデル。データに基づく推定",
+          "derivedFrom": [
+            "C5",
+            "H3",
+            "H5"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "配置最適化アルゴリズムの戦略パラメータ",
+          "derivedFrom": [
+            "C6",
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の需要予測・技術トレンド仮説",
+          "derivedFrom": [
+            "H8",
+            "H9"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "reg_grid_code",
+          "layerName": "regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg_zoning",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg_safety",
+          "layerName": "regulation",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "infra_grid_cap",
+          "layerName": "infrastructure",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".reg_grid_code"
+          ]
+        },
+        {
+          "id": "infra_land",
+          "layerName": "infrastructure",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".reg_zoning"
+          ]
+        },
+        {
+          "id": "infra_substation",
+          "layerName": "infrastructure",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dem_ev_adoption",
+          "layerName": "demand_model",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dem_charge_pattern",
+          "layerName": "demand_model",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".dem_ev_adoption"
+          ]
+        },
+        {
+          "id": "dem_peak_load",
+          "layerName": "demand_model",
+          "justification": [
+            "H3",
+            "H5"
+          ],
+          "dependencies": [
+            ".infra_grid_cap",
+            ".dem_charge_pattern"
+          ]
+        },
+        {
+          "id": "dem_spatial",
+          "layerName": "demand_model",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".infra_land"
+          ]
+        },
+        {
+          "id": "opt_coverage",
+          "layerName": "optimization",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".dem_spatial",
+            ".reg_zoning"
+          ]
+        },
+        {
+          "id": "opt_cost",
+          "layerName": "optimization",
+          "justification": [
+            "C6",
+            "H7"
+          ],
+          "dependencies": [
+            ".infra_substation",
+            ".dem_peak_load"
+          ]
+        },
+        {
+          "id": "opt_queue",
+          "layerName": "optimization",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".dem_charge_pattern"
+          ]
+        },
+        {
+          "id": "opt_equity",
+          "layerName": "optimization",
+          "justification": [
+            "C7",
+            "H7"
+          ],
+          "dependencies": [
+            ".dem_spatial",
+            ".opt_coverage"
+          ]
+        },
+        {
+          "id": "opt_phasing",
+          "layerName": "optimization",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            ".opt_cost",
+            ".opt_coverage",
+            ".dem_ev_adoption"
+          ]
+        },
+        {
+          "id": "hyp_v2g",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".infra_grid_cap",
+            ".opt_cost"
+          ]
+        },
+        {
+          "id": "hyp_wireless",
+          "layerName": "hypothesis",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".opt_coverage"
+          ]
+        },
+        {
+          "id": "hyp_fast_charge",
+          "layerName": "regulation",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".hyp_wireless"
+          ]
+        },
+        {
+          "id": "hyp_autonomous",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".dem_charge_pattern",
+            ".opt_queue"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 114,
+    "project": "手書き数式認識 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 20,
+    "model_spec": {
+      "namespace": "HandwrittenMathOCR",
+      "layers": [
+        {
+          "name": "math_syntax",
+          "ordValue": 3,
+          "definition": "数学記法の構文規則。LaTeX/MathML 仕様に基づく不変制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "recognition_model",
+          "ordValue": 2,
+          "definition": "ストローク認識・記号分類の学習済みモデル知見",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "pipeline",
+          "ordValue": 1,
+          "definition": "前処理・セグメンテーション・後処理のパイプライン構成",
+          "derivedFrom": [
+            "C3",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の認識改善仮説",
+          "derivedFrom": [
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "syn_latex_valid",
+          "layerName": "math_syntax",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "syn_operator_prec",
+          "layerName": "math_syntax",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "syn_structure",
+          "layerName": "math_syntax",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rec_cnn_base",
+          "layerName": "recognition_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rec_spatial",
+          "layerName": "recognition_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".rec_cnn_base"
+          ]
+        },
+        {
+          "id": "rec_context",
+          "layerName": "recognition_model",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            ".syn_operator_prec"
+          ]
+        },
+        {
+          "id": "rec_augment",
+          "layerName": "recognition_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".rec_cnn_base"
+          ]
+        },
+        {
+          "id": "pip_segment",
+          "layerName": "pipeline",
+          "justification": [
+            "C3",
+            "H4"
+          ],
+          "dependencies": [
+            ".rec_spatial"
+          ]
+        },
+        {
+          "id": "pip_postproc",
+          "layerName": "pipeline",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".syn_latex_valid",
+            ".rec_context"
+          ]
+        },
+        {
+          "id": "pip_feedback",
+          "layerName": "pipeline",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".pip_segment",
+            ".pip_postproc"
+          ]
+        },
+        {
+          "id": "pip_realtime",
+          "layerName": "pipeline",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": [
+            ".rec_cnn_base"
+          ]
+        },
+        {
+          "id": "pip_batch",
+          "layerName": "pipeline",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".pip_segment",
+            ".syn_structure"
+          ]
+        },
+        {
+          "id": "hyp_transformer",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".rec_cnn_base",
+            ".rec_spatial"
+          ]
+        },
+        {
+          "id": "hyp_few_shot",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".rec_augment",
+            ".pip_feedback"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 115,
+    "project": "騒音公害測定・分析 AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "NoisePollution",
+      "layers": [
+        {
+          "name": "legal_standard",
+          "ordValue": 3,
+          "definition": "環境基準法・騒音規制法に基づく測定基準。法的拘束力あり",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "acoustic_model",
+          "ordValue": 2,
+          "definition": "音響伝搬モデル・周波数分析の物理的知見",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "measurement",
+          "ordValue": 1,
+          "definition": "センサー設置・キャリブレーション・レポート生成の運用方針",
+          "derivedFrom": [
+            "C3",
+            "C5",
+            "H5"
+          ]
+        },
+        {
+          "name": "prediction",
+          "ordValue": 0,
+          "definition": "騒音源特定・影響範囲予測の未検証推論",
+          "derivedFrom": [
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "law_db_limit",
+          "layerName": "legal_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "law_time_zone",
+          "layerName": "legal_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "law_report_fmt",
+          "layerName": "legal_standard",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "acou_propagation",
+          "layerName": "acoustic_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "acou_freq_weight",
+          "layerName": "acoustic_model",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            ".law_db_limit"
+          ]
+        },
+        {
+          "id": "acou_reflection",
+          "layerName": "acoustic_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".acou_propagation"
+          ]
+        },
+        {
+          "id": "acou_source_sep",
+          "layerName": "acoustic_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".acou_propagation",
+            ".acou_freq_weight"
+          ]
+        },
+        {
+          "id": "meas_sensor_place",
+          "layerName": "measurement",
+          "justification": [
+            "C3",
+            "H5"
+          ],
+          "dependencies": [
+            ".law_db_limit",
+            ".acou_propagation"
+          ]
+        },
+        {
+          "id": "meas_calibration",
+          "layerName": "measurement",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".law_report_fmt"
+          ]
+        },
+        {
+          "id": "meas_continuous",
+          "layerName": "measurement",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".law_time_zone",
+            ".meas_sensor_place"
+          ]
+        },
+        {
+          "id": "meas_alert",
+          "layerName": "measurement",
+          "justification": [
+            "C5",
+            "H5"
+          ],
+          "dependencies": [
+            ".law_db_limit",
+            ".acou_freq_weight"
+          ]
+        },
+        {
+          "id": "pred_source_id",
+          "layerName": "prediction",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".acou_source_sep",
+            ".meas_continuous"
+          ]
+        },
+        {
+          "id": "pred_impact_map",
+          "layerName": "prediction",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".acou_reflection",
+            ".meas_sensor_place"
+          ]
+        },
+        {
+          "id": "pred_trend",
+          "layerName": "prediction",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            ".pred_source_id",
+            ".pred_impact_map"
+          ]
+        },
+        {
+          "id": "pred_mitigation",
+          "layerName": "prediction",
+          "justification": [
+            "H7",
+            "C6"
+          ],
+          "dependencies": [
+            ".pred_impact_map",
+            ".law_db_limit"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 116,
+    "project": "農作物病害診断 AI",
+    "num_c": 7,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 25,
+    "model_spec": {
+      "namespace": "CropDiseaseDiagnosis",
+      "layers": [
+        {
+          "name": "biosafety",
+          "ordValue": 4,
+          "definition": "農薬使用規制・検疫法規・食品安全基準。法的不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "pathology",
+          "ordValue": 3,
+          "definition": "植物病理学の確立知見。病原体同定・感染メカニズム",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "diagnosis",
+          "ordValue": 2,
+          "definition": "画像診断モデル・症状分類の方法論",
+          "derivedFrom": [
+            "C5",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "treatment",
+          "ordValue": 1,
+          "definition": "防除推奨・薬剤選択のアルゴリズム的判断",
+          "derivedFrom": [
+            "C6",
+            "C7",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "新規病害・耐性変異に関する未検証仮説",
+          "derivedFrom": [
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "bio_pesticide_reg",
+          "layerName": "biosafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bio_quarantine",
+          "layerName": "biosafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bio_food_safety",
+          "layerName": "biosafety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "path_taxonomy",
+          "layerName": "pathology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "path_lifecycle",
+          "layerName": "pathology",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".path_taxonomy"
+          ]
+        },
+        {
+          "id": "path_env_factor",
+          "layerName": "pathology",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "path_resistance",
+          "layerName": "pathology",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".path_taxonomy",
+            ".path_lifecycle"
+          ]
+        },
+        {
+          "id": "diag_image_cls",
+          "layerName": "diagnosis",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": [
+            ".path_taxonomy"
+          ]
+        },
+        {
+          "id": "diag_symptom_map",
+          "layerName": "diagnosis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".path_lifecycle",
+            ".path_env_factor"
+          ]
+        },
+        {
+          "id": "diag_severity",
+          "layerName": "diagnosis",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": [
+            ".diag_image_cls",
+            ".diag_symptom_map"
+          ]
+        },
+        {
+          "id": "diag_multi_crop",
+          "layerName": "diagnosis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".diag_image_cls"
+          ]
+        },
+        {
+          "id": "treat_recommend",
+          "layerName": "treatment",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".bio_pesticide_reg",
+            ".diag_severity"
+          ]
+        },
+        {
+          "id": "treat_organic",
+          "layerName": "treatment",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".bio_food_safety",
+            ".treat_recommend"
+          ]
+        },
+        {
+          "id": "treat_schedule",
+          "layerName": "treatment",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".path_env_factor",
+            ".diag_severity"
+          ]
+        },
+        {
+          "id": "treat_rotation",
+          "layerName": "treatment",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".path_resistance",
+            ".treat_recommend"
+          ]
+        },
+        {
+          "id": "hyp_new_strain",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".diag_image_cls",
+            ".path_taxonomy"
+          ]
+        },
+        {
+          "id": "hyp_climate_shift",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".path_env_factor",
+            ".diag_symptom_map"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 117,
+    "project": "議会投票予測 AI (単調性違反あり)",
+    "num_c": 6,
+    "num_h": 10,
+    "num_layers": 5,
+    "num_props": 20,
+    "num_deps": 32,
+    "model_spec": {
+      "namespace": "ParliamentaryVotePrediction",
+      "layers": [
+        {
+          "name": "constitutional",
+          "ordValue": 4,
+          "definition": "憲法・議会法規に基づく制度的制約。改正なしに変更不可",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "political_science",
+          "ordValue": 3,
+          "definition": "政治学の確立理論。政党行動・連立理論の学術的知見",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "behavioral_model",
+          "ordValue": 2,
+          "definition": "議員の投票行動モデル。過去データに基づく統計的知見",
+          "derivedFrom": [
+            "C5",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "prediction",
+          "ordValue": 1,
+          "definition": "個別法案の投票結果予測。リアルタイム推論",
+          "derivedFrom": [
+            "C6",
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "政治変動・新党結成等の未検証仮説",
+          "derivedFrom": [
+            "H8",
+            "H9",
+            "H10"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "const_procedure",
+          "layerName": "constitutional",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "const_quorum",
+          "layerName": "constitutional",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "const_bicameral",
+          "layerName": "constitutional",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "polsci_party_disc",
+          "layerName": "political_science",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".const_procedure"
+          ]
+        },
+        {
+          "id": "polsci_coalition",
+          "layerName": "political_science",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".const_quorum"
+          ]
+        },
+        {
+          "id": "polsci_ideology",
+          "layerName": "political_science",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "polsci_lobby",
+          "layerName": "political_science",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".polsci_ideology"
+          ]
+        },
+        {
+          "id": "beh_voting_hist",
+          "layerName": "behavioral_model",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": [
+            ".polsci_party_disc"
+          ]
+        },
+        {
+          "id": "beh_issue_salience",
+          "layerName": "behavioral_model",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".polsci_ideology",
+            ".polsci_lobby"
+          ]
+        },
+        {
+          "id": "beh_whip_effect",
+          "layerName": "behavioral_model",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".polsci_party_disc",
+            ".polsci_coalition"
+          ]
+        },
+        {
+          "id": "beh_constituency",
+          "layerName": "behavioral_model",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".polsci_ideology"
+          ]
+        },
+        {
+          "id": "beh_media_impact",
+          "layerName": "behavioral_model",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".beh_issue_salience"
+          ]
+        },
+        {
+          "id": "pred_bill_outcome",
+          "layerName": "prediction",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".beh_voting_hist",
+            ".beh_whip_effect",
+            ".const_quorum"
+          ]
+        },
+        {
+          "id": "pred_swing_vote",
+          "layerName": "prediction",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".beh_constituency",
+            ".beh_media_impact"
+          ]
+        },
+        {
+          "id": "pred_amendment",
+          "layerName": "prediction",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".pred_bill_outcome",
+            ".beh_issue_salience"
+          ]
+        },
+        {
+          "id": "pred_timeline",
+          "layerName": "prediction",
+          "justification": [
+            "C6",
+            "H7"
+          ],
+          "dependencies": [
+            ".const_procedure",
+            ".pred_bill_outcome"
+          ]
+        },
+        {
+          "id": "pred_cross_party",
+          "layerName": "constitutional",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".hyp_realignment"
+          ]
+        },
+        {
+          "id": "hyp_realignment",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".polsci_party_disc",
+            ".beh_voting_hist"
+          ]
+        },
+        {
+          "id": "hyp_new_party",
+          "layerName": "hypothesis",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".polsci_coalition",
+            ".beh_constituency"
+          ]
+        },
+        {
+          "id": "hyp_digital_vote",
+          "layerName": "hypothesis",
+          "justification": [
+            "H10"
+          ],
+          "dependencies": [
+            ".const_procedure",
+            ".pred_timeline"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 118,
+    "project": "建物エネルギー性能評価 AI",
+    "num_c": 6,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "BuildingEnergyPerformance",
+      "layers": [
+        {
+          "name": "building_code",
+          "ordValue": 4,
+          "definition": "建築基準法・省エネ法に基づく法的要件。改正まで不変",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "physics",
+          "ordValue": 3,
+          "definition": "熱力学・流体力学の物理法則。変わらない自然法則",
+          "derivedFrom": [
+            "H1",
+            "H3"
+          ]
+        },
+        {
+          "name": "simulation",
+          "ordValue": 2,
+          "definition": "BEM シミュレーションモデルの構成・パラメータ",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H4"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "省エネ改修・HVAC 制御の最適化推奨",
+          "derivedFrom": [
+            "C6",
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "新素材・新技術による性能改善の未検証仮説",
+          "derivedFrom": [
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "code_insulation",
+          "layerName": "building_code",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "code_hvac_std",
+          "layerName": "building_code",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "code_certification",
+          "layerName": "building_code",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys_heat_transfer",
+          "layerName": "physics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys_ventilation",
+          "layerName": "physics",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".phys_heat_transfer"
+          ]
+        },
+        {
+          "id": "phys_solar_gain",
+          "layerName": "physics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sim_envelope",
+          "layerName": "simulation",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            ".code_insulation",
+            ".phys_heat_transfer"
+          ]
+        },
+        {
+          "id": "sim_hvac",
+          "layerName": "simulation",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": [
+            ".code_hvac_std",
+            ".phys_ventilation"
+          ]
+        },
+        {
+          "id": "sim_occupancy",
+          "layerName": "simulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".sim_envelope"
+          ]
+        },
+        {
+          "id": "sim_weather",
+          "layerName": "simulation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".phys_solar_gain"
+          ]
+        },
+        {
+          "id": "opt_retrofit",
+          "layerName": "optimization",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".sim_envelope",
+            ".sim_hvac",
+            ".code_certification"
+          ]
+        },
+        {
+          "id": "opt_control",
+          "layerName": "optimization",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".sim_hvac",
+            ".sim_occupancy"
+          ]
+        },
+        {
+          "id": "opt_renewable",
+          "layerName": "optimization",
+          "justification": [
+            "C6",
+            "H6"
+          ],
+          "dependencies": [
+            ".sim_weather",
+            ".phys_solar_gain"
+          ]
+        },
+        {
+          "id": "opt_cost_benefit",
+          "layerName": "optimization",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".opt_retrofit",
+            ".opt_renewable"
+          ]
+        },
+        {
+          "id": "hyp_phase_change",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".sim_envelope",
+            ".phys_heat_transfer"
+          ]
+        },
+        {
+          "id": "hyp_ai_hvac",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".opt_control",
+            ".sim_occupancy"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 119,
+    "project": "ペットフード配合最適化 AI",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "PetFoodFormulation",
+      "layers": [
+        {
+          "name": "safety_regulation",
+          "ordValue": 3,
+          "definition": "飼料安全法・ペットフード安全法の法的基準。不変",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "nutrition_science",
+          "ordValue": 2,
+          "definition": "動物栄養学の確立知見。AAFCO/FEDIAF 基準",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H1"
+          ]
+        },
+        {
+          "name": "formulation",
+          "ordValue": 1,
+          "definition": "原材料配合・コスト最適化のアルゴリズム的判断",
+          "derivedFrom": [
+            "C6",
+            "C7",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "新素材・機能性成分の効果に関する未検証仮説",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe_ingredient",
+          "layerName": "safety_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe_contaminant",
+          "layerName": "safety_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe_labeling",
+          "layerName": "safety_regulation",
+          "justification": [
+            "C1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "nutr_protein",
+          "layerName": "nutrition_science",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".safe_ingredient"
+          ]
+        },
+        {
+          "id": "nutr_mineral",
+          "layerName": "nutrition_science",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".safe_contaminant"
+          ]
+        },
+        {
+          "id": "nutr_calorie",
+          "layerName": "nutrition_science",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "nutr_life_stage",
+          "layerName": "nutrition_science",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".nutr_protein",
+            ".nutr_calorie"
+          ]
+        },
+        {
+          "id": "form_ingredient_mix",
+          "layerName": "formulation",
+          "justification": [
+            "C6",
+            "H4"
+          ],
+          "dependencies": [
+            ".nutr_protein",
+            ".nutr_mineral"
+          ]
+        },
+        {
+          "id": "form_cost_opt",
+          "layerName": "formulation",
+          "justification": [
+            "C7",
+            "H5"
+          ],
+          "dependencies": [
+            ".form_ingredient_mix"
+          ]
+        },
+        {
+          "id": "form_palatability",
+          "layerName": "formulation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".nutr_life_stage"
+          ]
+        },
+        {
+          "id": "form_shelf_life",
+          "layerName": "formulation",
+          "justification": [
+            "H4",
+            "C6"
+          ],
+          "dependencies": [
+            ".safe_contaminant",
+            ".form_ingredient_mix"
+          ]
+        },
+        {
+          "id": "form_label_gen",
+          "layerName": "formulation",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".safe_labeling",
+            ".form_ingredient_mix"
+          ]
+        },
+        {
+          "id": "hyp_insect_protein",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".nutr_protein"
+          ]
+        },
+        {
+          "id": "hyp_probiotic",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".nutr_life_stage",
+            ".form_palatability"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 120,
+    "project": "量子コンピュータエラー訂正 AI",
+    "num_c": 5,
+    "num_h": 9,
+    "num_layers": 7,
+    "num_props": 25,
+    "num_deps": 42,
+    "model_spec": {
+      "namespace": "QuantumErrorCorrection",
+      "layers": [
+        {
+          "name": "quantum_axiom",
+          "ordValue": 6,
+          "definition": "量子力学の基本公理。ユニタリ発展・測定公理・重ね合わせ原理",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "error_theory",
+          "ordValue": 5,
+          "definition": "量子エラーの数学的理論。Knill-Laflamme 条件・閾値定理",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "code_family",
+          "ordValue": 4,
+          "definition": "エラー訂正符号族。Surface code/Steane code 等の確立された構成",
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "decoder",
+          "ordValue": 3,
+          "definition": "デコーダアルゴリズム。MWPM/Union-Find/ML デコーダ",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "hardware_model",
+          "ordValue": 2,
+          "definition": "物理キュビット特性。ノイズモデル・接続性・ゲート忠実度",
+          "derivedFrom": [
+            "C3",
+            "H6"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "リアルタイム訂正最適化。レイテンシ・リソース割当",
+          "derivedFrom": [
+            "C5",
+            "H7",
+            "H8"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "次世代符号・量子 LDPC・フォールトトレランス閾値改善の仮説",
+          "derivedFrom": [
+            "H9"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "qax_unitary",
+          "layerName": "quantum_axiom",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "qax_measurement",
+          "layerName": "quantum_axiom",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "qax_no_cloning",
+          "layerName": "quantum_axiom",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "err_knill_laflamme",
+          "layerName": "error_theory",
+          "justification": [
+            "C2",
+            "H1"
+          ],
+          "dependencies": [
+            ".qax_unitary",
+            ".qax_measurement"
+          ]
+        },
+        {
+          "id": "err_threshold",
+          "layerName": "error_theory",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".err_knill_laflamme"
+          ]
+        },
+        {
+          "id": "err_pauli_channel",
+          "layerName": "error_theory",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".qax_unitary"
+          ]
+        },
+        {
+          "id": "code_surface",
+          "layerName": "code_family",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".err_knill_laflamme",
+            ".qax_no_cloning"
+          ]
+        },
+        {
+          "id": "code_steane",
+          "layerName": "code_family",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".err_knill_laflamme"
+          ]
+        },
+        {
+          "id": "code_distance",
+          "layerName": "code_family",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".err_threshold",
+            ".code_surface"
+          ]
+        },
+        {
+          "id": "code_logical_op",
+          "layerName": "code_family",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".code_surface",
+            ".code_steane"
+          ]
+        },
+        {
+          "id": "dec_mwpm",
+          "layerName": "decoder",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".code_surface",
+            ".err_pauli_channel"
+          ]
+        },
+        {
+          "id": "dec_union_find",
+          "layerName": "decoder",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".code_surface"
+          ]
+        },
+        {
+          "id": "dec_ml",
+          "layerName": "decoder",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".dec_mwpm",
+            ".err_pauli_channel"
+          ]
+        },
+        {
+          "id": "dec_belief_prop",
+          "layerName": "decoder",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".code_steane",
+            ".err_pauli_channel"
+          ]
+        },
+        {
+          "id": "hw_noise_model",
+          "layerName": "hardware_model",
+          "justification": [
+            "C3",
+            "H6"
+          ],
+          "dependencies": [
+            ".err_pauli_channel"
+          ]
+        },
+        {
+          "id": "hw_connectivity",
+          "layerName": "hardware_model",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".code_surface"
+          ]
+        },
+        {
+          "id": "hw_gate_fidelity",
+          "layerName": "hardware_model",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".err_threshold",
+            ".hw_noise_model"
+          ]
+        },
+        {
+          "id": "hw_readout",
+          "layerName": "hardware_model",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".qax_measurement",
+            ".hw_noise_model"
+          ]
+        },
+        {
+          "id": "opt_latency",
+          "layerName": "optimization",
+          "justification": [
+            "C5",
+            "H7"
+          ],
+          "dependencies": [
+            ".dec_mwpm",
+            ".dec_union_find",
+            ".hw_connectivity"
+          ]
+        },
+        {
+          "id": "opt_resource",
+          "layerName": "optimization",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".code_distance",
+            ".hw_gate_fidelity"
+          ]
+        },
+        {
+          "id": "opt_adaptive",
+          "layerName": "optimization",
+          "justification": [
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".dec_ml",
+            ".hw_noise_model",
+            ".opt_latency"
+          ]
+        },
+        {
+          "id": "opt_schedule",
+          "layerName": "optimization",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".opt_resource",
+            ".opt_latency"
+          ]
+        },
+        {
+          "id": "opt_calibration",
+          "layerName": "optimization",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".hw_gate_fidelity",
+            ".hw_readout"
+          ]
+        },
+        {
+          "id": "hyp_qldpc",
+          "layerName": "hypothesis",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".code_distance",
+            ".err_threshold"
+          ]
+        },
+        {
+          "id": "hyp_ft_threshold",
+          "layerName": "hypothesis",
+          "justification": [
+            "H9"
+          ],
+          "dependencies": [
+            ".err_threshold",
+            ".opt_adaptive",
+            ".hw_gate_fidelity"
+          ]
+        }
+      ]
+    }
+  }
+]

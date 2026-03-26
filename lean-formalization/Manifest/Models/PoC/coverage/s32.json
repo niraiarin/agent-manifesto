@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "legal_compliance",
+      "definition": "労働法・個人情報保護法・差別禁止法への準拠",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "fairness_standard",
+      "definition": "公平性基準と評価指標の定義",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "evaluation_method",
+      "definition": "面接評価手法・スコアリングモデル",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "ux_config",
+      "definition": "UI/UX設定・レポート形式・通知方法",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "gdpr_compliance",
+      "layerName": "legal_compliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "anti_discrimination_law",
+      "layerName": "legal_compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "demographic_parity_target",
+      "layerName": "fairness_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bias_audit_requirement",
+      "layerName": "fairness_standard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "structured_interview_format",
+      "layerName": "evaluation_method",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "scoring_rubric_definition",
+      "layerName": "evaluation_method",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "llm_evaluation_boundary",
+      "layerName": "evaluation_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "candidate_feedback_format",
+      "layerName": "ux_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "interviewer_dashboard_layout",
+      "layerName": "ux_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "notification_timing",
+      "layerName": "ux_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "report_retention_period",
+      "layerName": "ux_config",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

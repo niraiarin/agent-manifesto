@@ -158,7 +158,7 @@ if [ "$MODE" = "standalone" ]; then
 
   for j in $(seq 0 $((NUM_PROPS - 1))); do
     prop_id=$(echo "$JSON" | jq -r ".propositions[$j].id")
-    deps=$(echo "$JSON" | jq -r ".propositions[$j].dependencies | map(\".\" + .) | join(\", \")")
+    deps=$(echo "$JSON" | jq -r ".propositions[$j].dependencies | map(if startswith(\".\") then . else \".\" + . end) | join(\", \")")
     if [ -z "$deps" ] || [ "$deps" = "" ]; then
       echo "  | .${prop_id} => []"
     else

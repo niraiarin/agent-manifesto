@@ -1,0 +1,197 @@
+{
+  "layers": [
+    {
+      "name": "ethical_constraint",
+      "definition": "公衆衛生倫理・プライバシー・差別防止の不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "epidemiological_postulate",
+      "definition": "疫学モデルの前提（感染力・潜伏期間・免疫動態）",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "simulation_principle",
+      "definition": "シミュレーションの原則（不確実性表現・シナリオ比較・検証可能性）",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "data_boundary",
+      "definition": "データソース・粒度・更新頻度の制約条件",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "visualization_design",
+      "definition": "可視化・レポート・意思決定支援の設計判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "_monotonicity_feedback": {
+    "initial_violations": [
+      {
+        "violation": "移動データのモバイル位置情報利用 (data_boundary, ord=2) が 個人情報匿名化の制約 (ethical_constraint, ord=5) に依存",
+        "detail": "H4 は C1（匿名化必須）に依存するが、data_boundary (ord=2) から ethical_constraint (ord=5) への依存は単調性を満たす（依存先が依存元以上）ため正常。ただし、H4 の匿名集計が C2（差別防止）の要件も満たすかが未検証",
+        "resolution": "再検証の結果、data_boundary → ethical_constraint の依存方向は単調性を満たしている。実際の違反は visualization_design の地理的ヒートマップ (ord=1) が差別防止 (ethical_constraint, ord=5) に直接関わるにもかかわらず、visualization_design 層に配置されている点。H5 の命題に C2 への準拠条件を追記し、表示粒度を市区町村レベル以上に限定する制約を追加",
+        "type": "H_only",
+        "action": "H5 の反証条件と命題内容を更新。地理的ヒートマップの表示粒度を市区町村レベル以上に限定し、小地域の特定を防止する条件を明記"
+      }
+    ],
+    "post_fix_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "prop_b7342f",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_8ccb9a",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_6c10c0",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "R_9867a5",
+      "layerName": "epidemiological_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_7a64f4",
+      "layerName": "epidemiological_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_7d1c75",
+      "layerName": "epidemiological_postulate",
+      "justification": [
+        "H1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_dc2b1b",
+      "layerName": "simulation_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_8e78db",
+      "layerName": "simulation_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_48a3ca",
+      "layerName": "simulation_principle",
+      "justification": [
+        "H2",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reportingd_f1e209",
+      "layerName": "data_boundary",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_878c8f",
+      "layerName": "data_boundary",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_132910",
+      "layerName": "data_boundary",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_ca9ce4",
+      "layerName": "visualization_design",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "beforeafter_89a941",
+      "layerName": "visualization_design",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_63b546",
+      "layerName": "visualization_design",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f2003e",
+      "layerName": "visualization_design",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    }
+  ]
+}

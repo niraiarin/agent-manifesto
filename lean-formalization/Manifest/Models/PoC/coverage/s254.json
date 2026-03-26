@@ -1,0 +1,135 @@
+{
+  "namespace": "Scenario254",
+  "layers": [
+    {
+      "name": "aesthetics",
+      "ordValue": 2,
+      "definition": "師範と流派の美的権威に基づく不可侵の前提。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "pedagogy",
+      "ordValue": 1,
+      "definition": "教育手法と評価指標の設計。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "効果が未検証の仮説。実践データで確認が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "aes1",
+      "layerName": "aesthetics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aes2",
+      "layerName": "aesthetics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aes3",
+      "layerName": "aesthetics",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ped1",
+      "layerName": "pedagogy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".aes1",
+        ".aes2"
+      ]
+    },
+    {
+      "id": "ped2",
+      "layerName": "pedagogy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".aes2",
+        ".aes3"
+      ]
+    },
+    {
+      "id": "ped3",
+      "layerName": "pedagogy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".aes1"
+      ]
+    },
+    {
+      "id": "ped4",
+      "layerName": "pedagogy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".ped1",
+        ".ped2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ped3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ped1",
+        ".ped4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ped2",
+        ".hyp1"
+      ]
+    }
+  ]
+}

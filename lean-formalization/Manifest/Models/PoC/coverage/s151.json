@@ -1,0 +1,325 @@
+{
+  "namespace": "TestCoverage.S151",
+  "layers": [
+    {
+      "name": "BiologicalSafety",
+      "ordValue": 5,
+      "definition": "人体への直接的安全制約。神経損傷・誤動作による傷害を防止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "NeuralInterface",
+      "ordValue": 4,
+      "definition": "筋電信号・神経インターフェースの生理学的制約",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "MotorControl",
+      "ordValue": 3,
+      "definition": "運動制御アルゴリズムの設計方針",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "Adaptation",
+      "ordValue": 2,
+      "definition": "ユーザ適応・学習に基づく調整ルール",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ComfortPreference",
+      "ordValue": 1,
+      "definition": "装着感・操作感の個人的好み",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s151_p01",
+      "layerName": "BiologicalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s151_p02",
+      "layerName": "BiologicalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s151_p03",
+      "layerName": "BiologicalSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s151_p04",
+      "layerName": "NeuralInterface",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s151_p01"
+      ]
+    },
+    {
+      "id": "s151_p05",
+      "layerName": "NeuralInterface",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s151_p02"
+      ]
+    },
+    {
+      "id": "s151_p06",
+      "layerName": "NeuralInterface",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s151_p01",
+        ".s151_p03"
+      ]
+    },
+    {
+      "id": "s151_p07",
+      "layerName": "MotorControl",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s151_p04"
+      ]
+    },
+    {
+      "id": "s151_p08",
+      "layerName": "MotorControl",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s151_p05"
+      ]
+    },
+    {
+      "id": "s151_p09",
+      "layerName": "MotorControl",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s151_p04",
+        ".s151_p06"
+      ]
+    },
+    {
+      "id": "s151_p10",
+      "layerName": "Adaptation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s151_p07"
+      ]
+    },
+    {
+      "id": "s151_p11",
+      "layerName": "Adaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s151_p08",
+        ".s151_p09"
+      ]
+    },
+    {
+      "id": "s151_p12",
+      "layerName": "ComfortPreference",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s151_p10"
+      ]
+    },
+    {
+      "id": "s151_p13",
+      "layerName": "ComfortPreference",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s151_p11"
+      ]
+    },
+    {
+      "id": "s151_p14",
+      "layerName": "ComfortPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s151_p12",
+        ".s151_p13"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "義肢の誤動作が装着者の身体を傷つけてはならない。緊急停止機構を必ず搭載する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "筋電信号の取得電極は生体適合性材料を使用し、皮膚炎症を起こさない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "表面筋電図（sEMG）を主要な制御入力とし、8チャンネル以上のセンサーで取得する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "把持・ピンチ・回内回外の3自由度を制御対象とする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "義肢の重量は500g以下に抑え、長時間装着の疲労を軽減する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "把持力のフィードバックは振動触覚で装着者に伝える"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "侵襲型インターフェース（筋内電極等）が安全に使用可能になった場合"
+        }
+      },
+      "content": "sEMGは皮膚表面のノイズに影響されやすく、信号前処理が制御精度の鍵"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "6自由度以上の制御が実用的に可能になった場合"
+        }
+      },
+      "content": "3自由度の逐次切替制御が初期段階として妥当。同時制御は学習コスト大"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "ユーザの筋電パターンが時間経過で安定し適応不要な場合"
+        }
+      },
+      "content": "装着者の筋電パターンは日内変動があり、オンライン適応が必要"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H2"
+          ],
+          "refutation": "事前キャリブレーションだけで十分な精度が得られる場合"
+        }
+      },
+      "content": "各把持モードの遷移タイミングは個人差が大きく、強化学習による最適化が有効"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6"
+          ],
+          "refutation": "触覚フィードバックが不要と判断される場合"
+        }
+      },
+      "content": "振動触覚の強度・パターンは個人ごとの感覚閾値に合わせてカスタマイズすべき"
+    }
+  ]
+}

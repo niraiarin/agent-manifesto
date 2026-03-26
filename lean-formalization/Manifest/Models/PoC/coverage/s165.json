@@ -1,0 +1,150 @@
+{
+  "namespace": "TestScenario.S165",
+  "description": "照明制御省エネ AI",
+  "layers": [
+    {
+      "name": "buildingCode",
+      "ordValue": 3,
+      "definition": "建築基準法・労働安全衛生法の最低照度要件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "occupantWellbeing",
+      "ordValue": 2,
+      "definition": "在室者の健康・快適性に関する照明要件",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "energyOptimization",
+      "ordValue": 1,
+      "definition": "電力消費最小化のための制御戦略",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ambientAdaptation",
+      "ordValue": 0,
+      "definition": "外光・天候に応じた動的調光",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "minLuxStandard",
+      "layerName": "buildingCode",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "emergencyLighting",
+      "layerName": "buildingCode",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "exitSignVisibility",
+      "layerName": "buildingCode",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "circadianRhythm",
+      "layerName": "occupantWellbeing",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".minLuxStandard"
+      ]
+    },
+    {
+      "id": "glarePrevention",
+      "layerName": "occupantWellbeing",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".minLuxStandard"
+      ]
+    },
+    {
+      "id": "colorTempRange",
+      "layerName": "occupantWellbeing",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".circadianRhythm"
+      ]
+    },
+    {
+      "id": "occupancySensing",
+      "layerName": "energyOptimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".minLuxStandard",
+        ".circadianRhythm"
+      ]
+    },
+    {
+      "id": "zoneDimming",
+      "layerName": "energyOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".occupancySensing",
+        ".glarePrevention"
+      ]
+    },
+    {
+      "id": "peakShaving",
+      "layerName": "energyOptimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".zoneDimming"
+      ]
+    },
+    {
+      "id": "daylightHarvest",
+      "layerName": "ambientAdaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".occupancySensing",
+        ".zoneDimming"
+      ]
+    },
+    {
+      "id": "cloudTransientSmooth",
+      "layerName": "ambientAdaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".daylightHarvest",
+        ".glarePrevention"
+      ]
+    }
+  ]
+}

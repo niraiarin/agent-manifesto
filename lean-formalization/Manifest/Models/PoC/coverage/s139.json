@@ -1,0 +1,335 @@
+{
+  "namespace": "TestCoverage.S139",
+  "layers": [
+    {
+      "name": "CopyrightLaw",
+      "ordValue": 5,
+      "definition": "著作権法に基づく法的制約。改正以外では不変",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LicensingFramework",
+      "ordValue": 4,
+      "definition": "JASRAC等の管理団体のライセンス体系",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DetectionAlgorithm",
+      "ordValue": 3,
+      "definition": "侵害検知アルゴリズムの設計。技術更新可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "EnforcementPolicy",
+      "ordValue": 2,
+      "definition": "侵害対応の運用方針。プラットフォーム判断で調整",
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    },
+    {
+      "name": "FalsePositiveHeuristic",
+      "ordValue": 1,
+      "definition": "誤検知低減の仮説。実運用データで検証",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s139_p01",
+      "layerName": "CopyrightLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s139_p02",
+      "layerName": "CopyrightLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s139_p03",
+      "layerName": "CopyrightLaw",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s139_p04",
+      "layerName": "LicensingFramework",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s139_p01"
+      ]
+    },
+    {
+      "id": "s139_p05",
+      "layerName": "LicensingFramework",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s139_p01",
+        ".s139_p02"
+      ]
+    },
+    {
+      "id": "s139_p06",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s139_p04"
+      ]
+    },
+    {
+      "id": "s139_p07",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s139_p04",
+        ".s139_p13"
+      ]
+    },
+    {
+      "id": "s139_p08",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s139_p05"
+      ]
+    },
+    {
+      "id": "s139_p09",
+      "layerName": "EnforcementPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s139_p06"
+      ]
+    },
+    {
+      "id": "s139_p10",
+      "layerName": "EnforcementPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s139_p06",
+        ".s139_p08"
+      ]
+    },
+    {
+      "id": "s139_p11",
+      "layerName": "EnforcementPolicy",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s139_p03"
+      ]
+    },
+    {
+      "id": "s139_p12",
+      "layerName": "FalsePositiveHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s139_p09"
+      ]
+    },
+    {
+      "id": "s139_p13",
+      "layerName": "FalsePositiveHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s139_p10"
+      ]
+    },
+    {
+      "id": "s139_p14",
+      "layerName": "FalsePositiveHeuristic",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s139_p09",
+        ".s139_p10"
+      ]
+    },
+    {
+      "id": "s139_p15",
+      "layerName": "FalsePositiveHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s139_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "著作権法に基づき、楽曲の無断利用は侵害に該当する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "私的利用・引用・パロディ等の権利制限規定（フェアユース）を正しく除外する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "JASRAC・NexTone等の管理楽曲データベースとの照合を基本とする"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "音声フィンガープリント技術（Chromaprint等）を検知エンジンの核とする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "メロディの類似度判定にはピッチシーケンスの動的時間伸縮法を使用する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "侵害検知時はまず通知を送り、一定期間の異議申立て猶予を設ける"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "管理団体に登録されていないインディーズ楽曲が大量に存在する場合"
+        }
+      },
+      "content": "管理楽曲データベースのカバー率は商業音楽の95%以上である"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "楽曲のリミックスやマッシュアップがフィンガープリントの照合を困難にする場合"
+        }
+      },
+      "content": "フィンガープリントとメロディ類似度の二段階判定で検知精度を向上できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "異議申立て件数が多すぎて対応コストが運用を圧迫する場合"
+        }
+      },
+      "content": "段階的エスカレーション（通知→警告→削除）が法的リスクを最小化する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "環境音やノイズが多い録音で誤検知率が許容範囲を超える場合"
+        }
+      },
+      "content": "SNR（信号対雑音比）に基づく前処理で誤検知を大幅に低減できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6"
+          ],
+          "refutation": "ジャンルごとのメロディパターンの類似性が高く閾値設定が困難な場合"
+        }
+      },
+      "content": "ジャンル別の類似度閾値の動的調整が誤検知と見逃しのトレードオフを最適化する"
+    }
+  ]
+}

@@ -1,0 +1,282 @@
+{
+  "namespace": "TestCoverage.S147",
+  "layers": [
+    {
+      "name": "WeldStandard",
+      "ordValue": 3,
+      "definition": "溶接品質基準。JIS・AWS規格に基づく合否判定基準",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InspectionProtocol",
+      "ordValue": 2,
+      "definition": "検査手順の確立された方法論。NDT(非破壊検査)の原理",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "SystemDesign",
+      "ordValue": 1,
+      "definition": "検査システムの設計選択。機器構成・処理方式",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "DetectionModel",
+      "ordValue": 0,
+      "definition": "欠陥検出モデルの仮説。実溶接データで検証が必要",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s147_p01",
+      "layerName": "WeldStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s147_p02",
+      "layerName": "WeldStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s147_p03",
+      "layerName": "WeldStandard",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s147_p04",
+      "layerName": "InspectionProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s147_p01"
+      ]
+    },
+    {
+      "id": "s147_p05",
+      "layerName": "InspectionProtocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s147_p02"
+      ]
+    },
+    {
+      "id": "s147_p06",
+      "layerName": "InspectionProtocol",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s147_p01",
+        ".s147_p03"
+      ]
+    },
+    {
+      "id": "s147_p07",
+      "layerName": "SystemDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s147_p04"
+      ]
+    },
+    {
+      "id": "s147_p08",
+      "layerName": "SystemDesign",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s147_p05"
+      ]
+    },
+    {
+      "id": "s147_p09",
+      "layerName": "SystemDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s147_p04",
+        ".s147_p06"
+      ]
+    },
+    {
+      "id": "s147_p10",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s147_p07"
+      ]
+    },
+    {
+      "id": "s147_p11",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s147_p08"
+      ]
+    },
+    {
+      "id": "s147_p12",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s147_p07",
+        ".s147_p09"
+      ]
+    },
+    {
+      "id": "s147_p13",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s147_p10",
+        ".s147_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "溶接部の品質はJIS Z 3104(放射線透過試験)の判定基準に準拠する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "AIの判定は参考情報であり、最終合否判定は資格保有の検査技術者が行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "X線画像による放射線透過試験を主要な検査手法とする"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検査画像はDR(デジタルラジオグラフィ)パネルで取得する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検査ラインのタクトタイムは1枚あたり30秒以内"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "肉厚が大きい溶接部ではX線の透過力が不足する場合"
+        }
+      },
+      "content": "X線画像のコントラスト調整により微小欠陥(0.5mm以下)の検出が可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "高解像度撮影と30秒タクトタイムが両立しない場合"
+        }
+      },
+      "content": "DRパネルの解像度とフレームレートのバランスで品質と速度を両立できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "欠陥の種類(ブローホール・割れ・融合不良)ごとに別モデルが必要な場合"
+        }
+      },
+      "content": "CNNベースの物体検出モデル(YOLOv8等)で溶接欠陥を一括検出できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "欠陥種類の分布が偏っており少数クラスの認識精度が不十分な場合"
+        }
+      },
+      "content": "データ拡張(回転・ノイズ付加)により限られた欠陥画像からロバストなモデルを学習できる"
+    }
+  ]
+}

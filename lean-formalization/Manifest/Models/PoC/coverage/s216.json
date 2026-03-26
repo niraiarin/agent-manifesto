@@ -1,0 +1,155 @@
+{
+  "namespace": "Scenario216",
+  "layers": [
+    {
+      "name": "taxonomy",
+      "ordValue": 3,
+      "definition": "生物学的分類体系。学術的に確立された知識。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "requirement",
+      "ordValue": 2,
+      "definition": "精度・動作要件。プロジェクト目標で固定。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "design",
+      "ordValue": 1,
+      "definition": "分類アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。フィールドテストで検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "tax1",
+      "layerName": "taxonomy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tax2",
+      "layerName": "taxonomy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "req1",
+      "layerName": "requirement",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".tax1"
+      ]
+    },
+    {
+      "id": "req2",
+      "layerName": "requirement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".tax1"
+      ]
+    },
+    {
+      "id": "req3",
+      "layerName": "requirement",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".tax2"
+      ]
+    },
+    {
+      "id": "des1",
+      "layerName": "design",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".tax1",
+        ".req1"
+      ]
+    },
+    {
+      "id": "des2",
+      "layerName": "design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".req2",
+        ".req3"
+      ]
+    },
+    {
+      "id": "des3",
+      "layerName": "design",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".req1",
+        ".req2"
+      ]
+    },
+    {
+      "id": "des4",
+      "layerName": "design",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".tax2",
+        ".req3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".des1",
+        ".des3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".des2",
+        ".des4"
+      ]
+    }
+  ]
+}

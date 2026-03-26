@@ -1,0 +1,175 @@
+{
+  "namespace": "Scenario211",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "医療機器規制・放射線防護に関する不変条件。法規制で強制。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床的な診断品質基準。エビデンスに基づく。",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "detection",
+      "ordValue": 1,
+      "definition": "AI検出アルゴリズムの設計方針。モデル改良で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。臨床データで検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "clin3",
+      "layerName": "clinical",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".reg2"
+      ]
+    },
+    {
+      "id": "clin4",
+      "layerName": "clinical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "det1",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".clin1"
+      ]
+    },
+    {
+      "id": "det2",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".clin1",
+        ".clin3"
+      ]
+    },
+    {
+      "id": "det3",
+      "layerName": "detection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".clin2",
+        ".clin4"
+      ]
+    },
+    {
+      "id": "det4",
+      "layerName": "detection",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".clin2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".det3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".det1",
+        ".det4"
+      ]
+    }
+  ]
+}
