@@ -80,6 +80,8 @@ structure AxiomSystemProfile where
   observableCount       : Nat
   /-- Γ \ T₀: 応用層（FormalDerivationSkill, ConformanceVerification）の axiom 数 -/
   applicationCount      : Nat
+  /-- 構造的 axiom（Ontology.lean: dependency_respects_strength 等）の axiom 数 -/
+  structuralCount       : Nat
   /-- theorem 数（全モジュール合計）-/
   theoremCount          : Nat
   /-- sorry の数 -/
@@ -92,20 +94,21 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 268  -- 全モジュール合計 (+7: affected_contains_dependency_chain, AGM Structure拡張6定理)
+    structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
+    theoremCount     := 269  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
 def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
-  p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount
+  p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount + p.structuralCount
 
-/-- 現在の公理系の総 axiom 数は 62。 -/
+/-- 現在の公理系の総 axiom 数は 63。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 62 := by rfl
+  currentProfile.totalAxioms = 63 := by rfl
 
-/-- 現在の公理系の定理数は 268。 -/
+/-- 現在の公理系の定理数は 269。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 268 := by rfl
+  currentProfile.theoremCount = 269 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -153,7 +156,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 40  -- +4: StructureKind-PropositionIdブリッジ (manifest_has_widest_impact, design_convention_has_impact) + /research
+    designFoundationM      := 41  -- +4: StructureKind-PropositionIdブリッジ (manifest_has_widest_impact, design_convention_has_impact) + /research + D14
     procedureM             := 25  -- +6: AGM Structure拡張 (manifest_contraction_forbidden' etc.)
     evolutionM             := 16
     evolveSkillM           := 29  -- +6: φ₁₂-φ₁₇ ループバック再設計 (Issue #7, #8, #9)
