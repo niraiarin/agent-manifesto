@@ -4,7 +4,7 @@ import Manifest.EmpiricalPostulates
 import Manifest.Observable
 
 /-!
-# Layer 7: Meta — 公理系のメタ性質（メタ理論, 用語リファレンス §5.6）
+# Meta-theoretic: Meta — 公理系のメタ性質（メタ理論, 用語リファレンス §5.6）
 
 公理系自体の構造的性質を検証する。
 本ファイルの定理はメタ定理（§5.6）であり、対象理論の性質を論じる。

@@ -4,7 +4,7 @@ import Manifest.EmpiricalPostulates
 import Manifest.Observable
 
 /-!
-# Layer 3: Foundational Principles (P1–P6) — 定理の導出（手順書 Phase 2）
+# Epistemic Layer: principle (strength 3) — P1–P6 定理の導出（手順書 Phase 2）
 
 前提集合 Γ（T₀ = T1–T8, Γ \ T₀ = E1–E2）から導出される設計原理を
 Lean の定理（用語リファレンス §4.2）として記述する。
