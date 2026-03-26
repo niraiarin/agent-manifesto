@@ -353,6 +353,37 @@ else
   echo "  \"ccusage\": {\"error\": \"ccusage not available\"},"
 fi
 
+# --- evolve コスト効率サマリ（evolve-history.jsonl から集計） ---
+EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
+if [ -f "$EVOLVE_HISTORY" ]; then
+  COST_STATS=$(python3 -c "
+import json, sys
+runs_with_cost = []
+total_improvements = 0
+for line in open('$EVOLVE_HISTORY'):
+    try:
+        rec = json.loads(line.strip())
+        cost = rec.get('cost', {})
+        if cost and cost.get('session_cost_usd') is not None:
+            runs_with_cost.append(cost)
+        imps = rec.get('improvements', [])
+        if isinstance(imps, list):
+            total_improvements += len(imps)
+    except: pass
+if runs_with_cost:
+    costs = [c['session_cost_usd'] for c in runs_with_cost]
+    mean_cost = sum(costs) / len(costs)
+    cpi_vals = [c['cost_per_improvement_usd'] for c in runs_with_cost if c.get('cost_per_improvement_usd') is not None]
+    mean_cpi = sum(cpi_vals) / len(cpi_vals) if cpi_vals else None
+    print(json.dumps({'data_points': len(runs_with_cost), 'mean_session_cost_usd': round(mean_cost, 2), 'mean_cost_per_improvement_usd': round(mean_cpi, 2) if mean_cpi else None, 'total_improvements': total_improvements}))
+else:
+    print(json.dumps({'data_points': 0, 'mean_session_cost_usd': None, 'mean_cost_per_improvement_usd': None, 'total_improvements': total_improvements, 'note': 'no cost data yet in evolve-history'}))
+" 2>/dev/null || echo '{"error": "cost stats computation failed"}')
+  echo "  \"evolve_cost_efficiency\": $COST_STATS,"
+else
+  echo "  \"evolve_cost_efficiency\": {\"error\": \"evolve-history.jsonl not found\"},"
+fi
+
 # --- Deferred 正規クエリ（deferred-status.json から open 項目を取得） ---
 DEFERRED_FILE="$METRICS_DIR/deferred-status.json"
 if [ -f "$DEFERRED_FILE" ]; then

@@ -310,6 +310,7 @@ inductive EvolveHypothesis where
   | h3_metrics_adequate  -- AxiomQuality の指標で改善を計測可能
   | h4_conservative_first -- conservative extension 優先が最適戦略
   | h5_one_per_session   -- 1 セッション 1 evolve が適切な頻度
+  | h6_cost_efficiency   -- /evolve のコスト効率は経時的に改善する
   deriving BEq, Repr, DecidableEq
 
 /-- 全仮説が列挙されている。 -/
@@ -317,14 +318,15 @@ theorem all_hypotheses_enumerated :
   ∀ (h : EvolveHypothesis),
     h = .h1_teams_natural ∨ h = .h2_four_agents ∨
     h = .h3_metrics_adequate ∨ h = .h4_conservative_first ∨
-    h = .h5_one_per_session := by
+    h = .h5_one_per_session ∨ h = .h6_cost_efficiency := by
   intro h; cases h <;> simp
 
-/-- 仮説の数は 5 つ。 -/
+/-- 仮説の数は 6 つ。 -/
 theorem hypothesis_count :
   [EvolveHypothesis.h1_teams_natural,
    .h2_four_agents, .h3_metrics_adequate,
-   .h4_conservative_first, .h5_one_per_session].length = 5 := by rfl
+   .h4_conservative_first, .h5_one_per_session,
+   .h6_cost_efficiency].length = 6 := by rfl
 
 -- ============================================================
 -- φ₁₁: Deferral の正当性条件

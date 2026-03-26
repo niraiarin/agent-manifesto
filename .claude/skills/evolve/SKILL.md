@@ -371,7 +371,21 @@ Integrator は以下を実行:
 2. `lake build Manifest` で Lean ビルド成功を確認
 3. `bash tests/test-all.sh` でテスト全通過を確認
 4. git commit（互換性分類付き）
-5. evolve-history.jsonl に記録
+5. evolve-history.jsonl に記録（以下の `cost` フィールドを含む）
+
+**コスト効率記録フォーマット（T7 可観測性）:**
+evolve-history.jsonl の各エントリに以下のフィールドを追加:
+```json
+"cost": {
+  "session_cost_usd": null,
+  "improvements_count": <N>,
+  "cost_per_improvement_usd": null,
+  "source": "ccusage_session"
+}
+```
+`session_cost_usd` と `cost_per_improvement_usd` は、session_id を ccusage session の
+projectPath 末尾 UUID と照合して後から補完する（H5 データ蓄積プロセスと共有）。
+Integrator 実行時点では null を記録し、データ照合は observe.sh が担当する。
 
 ### Step 6: 退役処理
 
@@ -401,6 +415,7 @@ Integrator は以下を実行:
 | V1-V7 | /metrics スキル | 各 V に応じた改善方向 |
 | V5（注記） | v5-approvals.jsonl（UserPromptSubmit hook）の承認率。H1 Verifier pass rate とは異なる指標。計測単位: UserPromptSubmit hook が承認パターンに一致した応答数 | ↑ |
 | ccusage (T7) | `bunx ccusage daily --json --offline` | 定量的コスト観測 |
+| cost/improvement (T7) | evolve-history.jsonl `cost.cost_per_improvement_usd` | ↓（効率向上） |
 
 ## 終了条件
 
@@ -500,13 +515,14 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（50回実行データ、Run 50 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（51回実行データ、Run 51 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
 | H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。51回 success / 3回 observation。Verifier pass rate 全期間 73.0%（138/189）、直近5 entries 75.9%（22/29）。Run 50 は 3/3 PASS（全項目通過） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=253。compression 4.08x（408%）。V4 blocked=0 の Goodhart 懸念は継続 |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間178改善統合（113 conservative extension, 63 compatible change, 0 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 7 件（run 39, 41, 42, 45, 46, 47, 49）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 8 件（run 39, 41, 42, 45, 46, 47, 49, 50）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 評価準備中。7 データポイント: mean $1.07/improvement (range $0.64-$3.94)。Run 46 外れ値 ($3.94) は findings:improvements 比率 12:1 に起因。evolve-history.jsonl に cost フィールド追加済み（Run 51）。10 件以上で傾向評価実施予定 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 
