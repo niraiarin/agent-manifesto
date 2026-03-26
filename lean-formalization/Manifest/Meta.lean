@@ -92,7 +92,7 @@ def currentProfile : AxiomSystemProfile :=
     empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    theoremCount     := 261  -- 全モジュール合計 (+8: Structure依存追跡3, StructureKind-PropositionIdブリッジ2, /research追加3)
+    theoremCount     := 268  -- 全モジュール合計 (+7: affected_contains_dependency_chain, AGM Structure拡張6定理)
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -103,9 +103,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 62 := by rfl
 
-/-- 現在の公理系の定理数は 261。 -/
+/-- 現在の公理系の定理数は 268。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 261 := by rfl
+  currentProfile.theoremCount = 268 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -144,7 +144,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
 
 /-- 現在のモジュール別定理分布。 -/
 def currentTheoremDistribution : TheoremDistribution :=
-  { ontologyM              := 15  -- +4: Structure依存追跡 (empty_world_no_reach, no_dependencies_no_direct_dependent, reachableVia_trans) + /research
+  { ontologyM              := 16  -- +1: affected_contains_dependency_chain (Section 8 性質3)
     axiomsM                := 0
     empiricalPostulatesM   := 0
     observableM            := 23
@@ -154,7 +154,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
     designFoundationM      := 40  -- +4: StructureKind-PropositionIdブリッジ (manifest_has_widest_impact, design_convention_has_impact) + /research
-    procedureM             := 19
+    procedureM             := 25  -- +6: AGM Structure拡張 (manifest_contraction_forbidden' etc.)
     evolutionM             := 16
     evolveSkillM           := 29  -- +6: φ₁₂-φ₁₇ ループバック再設計 (Issue #7, #8, #9)
     workflowM              := 7   -- +2: no_self_knowledge_transition, knowledge_full_cycle_exists

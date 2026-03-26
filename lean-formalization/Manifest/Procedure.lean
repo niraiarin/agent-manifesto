@@ -314,4 +314,71 @@ theorem all_rule_categories_enumerated :
     r = .terminationSemantics := by
   intro r; cases r <;> simp
 
+-- ============================================================
+-- Structure-AGM Bridge — 依存追跡と AGM 操作の接続
+-- ============================================================
+
+/-!
+## Structure レベルの AGM 安全条件
+
+Ontology.lean の reachableVia（Structure レベル影響波及）と
+本ファイルの permittedOp（AGM 操作許可）を接続する。
+-/
+
+/-- StructureKind から PremisePartition へのマッピング。
+    manifest（T1-T8, E1-E2, P1-P6 を包含）は baseTheory（T₀）。
+    他は extension（Γ \ T₀）。 -/
+def structurePartition : StructureKind → PremisePartition
+  | .manifest         => .baseTheory
+  | .designConvention => .extension
+  | .skill            => .extension
+  | .test             => .extension
+  | .document         => .extension
+
+/-- manifest への contraction は許可されない（T₀ 縮小禁止の Structure 版）。 -/
+theorem manifest_contraction_forbidden' :
+  permittedOp (structurePartition .manifest) .contraction = false := by rfl
+
+/-- manifest への revision も許可されない。 -/
+theorem manifest_revision_forbidden :
+  permittedOp (structurePartition .manifest) .revision = false := by rfl
+
+/-- 非 manifest 構造は全 AGM 操作が許可される。 -/
+theorem non_manifest_all_ops_permitted (k : StructureKind) (hk : k ≠ .manifest) :
+  ∀ (op : BeliefRevisionOp), permittedOp (structurePartition k) op = true := by
+  intro op
+  cases k with
+  | manifest => exact absurd rfl hk
+  | designConvention => cases op <;> rfl
+  | skill => cases op <;> rfl
+  | test => cases op <;> rfl
+  | document => cases op <;> rfl
+
+/-- AGM contraction の影響集合: Structure s の contraction が許可される場合、
+    reachableVia で到達可能な全 Structure が見直し対象。 -/
+def contractionAffected (w : World) (s : Structure) (t : Structure) : Prop :=
+  permittedOp (structurePartition s.kind) .contraction = true ∧
+  reachableVia w s t
+
+/-- 空の World では contraction の影響集合は空。 -/
+theorem empty_world_no_contraction_affected :
+  ∀ (s t : Structure),
+    ¬contractionAffected ⟨[], [], [], [], [], 0, 0⟩ s t := by
+  intro s t ⟨_, hreach⟩
+  exact empty_world_no_reach s t hreach
+
+/-- manifest の contraction は許可されないため影響集合は発生しない。 -/
+theorem manifest_no_contraction_affected (w : World) (s : Structure)
+    (hk : s.kind = .manifest) :
+    ∀ t, ¬contractionAffected w s t := by
+  intro t ⟨hperm, _⟩
+  simp [structurePartition, hk, permittedOp] at hperm
+
+/-- contraction 影響は推移的。 -/
+theorem contraction_affected_trans (w : World) (s mid t : Structure)
+    (hsm : contractionAffected w s mid)
+    (hmt : reachableVia w mid t) :
+    contractionAffected w s t :=
+  ⟨hsm.1, reachableVia_trans w s mid t hsm.2 hmt⟩
+
 end Manifest.Procedure
