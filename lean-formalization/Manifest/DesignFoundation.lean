@@ -907,6 +907,53 @@ theorem d13_l5_limited_impact :
   (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
 
 -- ============================================================
+-- Structure-PropositionId Bridge — 二層依存追跡の統合
+-- ============================================================
+
+/-!
+## StructureKind と PropositionId の対応
+
+Structure レベルの半順序（Ontology.lean §構造的整合性）と
+PropositionId レベルの依存グラフ（本ファイル §D13）を接続する。
+「この Structure（ファイル）はどの公理（PropositionId）に依存しているか」
+の問いに答えることで、末端エラーから公理レベルへの遡行を精密化する。
+
+リサーチ文書の ATMS ラベル付けに対応。
+-/
+
+/-- StructureKind に対応する PropositionId の集合。
+    manifest.md は T1-T8, E1-E2, P1-P6 の全 axioms/postulates/principles を包含する。
+    designConvention は D1-D13 の設計定理を包含する。
+    skill/test/document は個別定義のため空集合（将来の拡張余地）。 -/
+def structurePropositions : StructureKind → List PropositionId
+  | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
+                           .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
+  | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
+                           .d9, .d10, .d11, .d12, .d13]
+  | .skill            => []
+  | .test             => []
+  | .document         => []
+
+/-- StructureKind の変更が PropositionId レベルで影響する命題の集合。
+    Structure の変更 → 包含する PropositionId → affected で波及先を計算。
+    二層の依存追跡を一つのパイプラインに統合する。 -/
+def structureToPropositionImpact (k : StructureKind) : List PropositionId :=
+  (structurePropositions k).flatMap (fun p => affected p)
+
+/-- manifest の変更は最大の命題レベル影響を持つ。
+    T1-T8, E1-E2, P1-P6 の全ての依存先に波及する。 -/
+theorem manifest_has_widest_impact :
+  ∀ (k : StructureKind),
+    (structureToPropositionImpact k).length ≤
+    (structureToPropositionImpact .manifest).length := by
+  intro k; cases k <;> native_decide
+
+/-- designConvention の変更は命題レベルで非空の影響を持つ。
+    D1-D13 の依存先が存在することの証明。 -/
+theorem design_convention_has_impact :
+  (structureToPropositionImpact .designConvention).length > 0 := by native_decide
+
+-- ============================================================
 -- Sorry Inventory
 -- ============================================================
 

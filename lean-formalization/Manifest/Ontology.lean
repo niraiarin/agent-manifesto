@@ -101,12 +101,16 @@ inductive StructureKind where
     T2 により、改善が蓄積する場所。
 
     - `createdAt` / `lastModifiedAt` は Epoch（セッション世代）で管理
-    - `content` は opaque — 形式化の対象は構造の**存在と関係性**であり内容ではない -/
+    - `content` は opaque — 形式化の対象は構造の**存在と関係性**であり内容ではない
+    - `dependencies` は ATMS（Assumption-Based Truth Maintenance System）の
+      依存追跡に対応する。各 Structure が直接依存する Structure の ID リスト。
+      manifesto.md Section 8（構造的整合性）性質 2「順序情報の自己内包」の実装。 -/
 structure Structure where
   id             : StructureId
   kind           : StructureKind
   createdAt      : Epoch
   lastModifiedAt : Epoch
+  dependencies   : List StructureId  -- Section 8 性質 2: 順序情報の自己内包
   deriving Repr
 
 -- ============================================================
@@ -840,6 +844,72 @@ theorem structureDependsOn_asymmetric :
   intro a b hab hba
   unfold structureDependsOn at *
   exact absurd (Nat.lt_trans hab hba) (Nat.lt_irrefl _)
+
+-- ============================================================
+-- Structure-Level Dependency Tracking — Section 8 性質 2/3
+-- ============================================================
+
+/-!
+## Structure レベルの依存追跡（ATMS 対応）
+
+manifesto.md Section 8 性質 2「順序情報の自己内包」と
+性質 3「末端エラーからの遡及検証」を形式化する。
+
+リサーチ文書 `docs/research/items/design-specification-thoery.md` の
+ATMS（Assumption-Based Truth Maintenance System）に対応し、
+各 Structure が自身の依存先を保持することで、
+末端エラー時に半順序を遡って公理レベルまで検証可能にする。
+-/
+
+/-- Structure レベルの依存整合性: 依存先は依存元以上の kind 優先度を持つ。
+    StructureKind の半順序を Structure インスタンスの依存関係に持ち上げる。
+    （ATMS の仮定-信念整合性に対応） -/
+def dependencyConsistent (w : World) (s : Structure) : Prop :=
+  ∀ depId, depId ∈ s.dependencies →
+    ∃ dep, dep ∈ w.structures ∧ dep.id = depId ∧
+      s.kind.priority ≤ dep.kind.priority
+
+/-- Structure s' が Structure s に直接依存する（逆方向エッジ）。
+    s.id が s'.dependencies に含まれる = s' は s の変更の影響を受ける。
+    PropositionId.dependents の Structure 版（Prop ベース）。 -/
+def isDirectDependent (s' s : Structure) : Prop :=
+  s.id ∈ s'.dependencies
+
+/-- 影響波及の到達可能性: s の変更が target に到達する。
+    推移閉包として帰納的に定義（fuel 不要、停止性は帰納法で保証）。
+    リサーチ文書 §4.3 の affected(s) = {s' | s ≤ s'} に対応。 -/
+inductive reachableVia (w : World) (s : Structure) : Structure → Prop where
+  | direct : ∀ t, t ∈ w.structures → isDirectDependent t s →
+             reachableVia w s t
+  | trans  : ∀ mid t, reachableVia w s mid → t ∈ w.structures →
+             isDirectDependent t mid → reachableVia w s t
+
+/-- 空の World では到達不可能（影響波及が発生しない）。 -/
+theorem empty_world_no_reach :
+  ∀ (s t : Structure),
+    ¬reachableVia ⟨[], [], [], [], [], 0, 0⟩ s t := by
+  intro s t h
+  cases h with
+  | direct _ hm _ => simp at hm
+  | trans _ _ _ hm _ => simp at hm
+
+/-- 依存なしの Structure（dependencies = []）は直接依存先を持たない。 -/
+theorem no_dependencies_no_direct_dependent :
+  ∀ (s' s : Structure),
+    s'.dependencies = [] → ¬isDirectDependent s' s := by
+  intro s' s hempty hdep
+  simp [isDirectDependent, hempty] at hdep
+
+/-- reachableVia は推移的: s → mid → t ならば s → t。 -/
+theorem reachableVia_trans :
+  ∀ (w : World) (s mid t : Structure),
+    reachableVia w s mid → reachableVia w mid t → reachableVia w s t := by
+  intro w s mid t hsm hmt
+  induction hmt with
+  | direct t' ht'mem ht'dep =>
+    exact reachableVia.trans mid t' hsm ht'mem ht'dep
+  | trans mid' t' _ ht'mem ht'dep ih =>
+    exact reachableVia.trans mid' t' ih ht'mem ht'dep
 
 -- ============================================================
 -- Proposition-Level Dependency Graph — D13 基盤
