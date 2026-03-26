@@ -95,7 +95,7 @@ def currentProfile : AxiomSystemProfile :=
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
     structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
-    theoremCount     := 269  -- 全モジュール合計
+    theoremCount     := 316  -- 全モジュール合計 (+47: EpistemicLayer.lean G1-G4)
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -108,7 +108,7 @@ theorem current_total_axioms :
 
 /-- 現在の公理系の定理数は 269。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 269 := by rfl
+  currentProfile.theoremCount = 316 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -136,6 +136,7 @@ structure TheoremDistribution where
   evolveSkillM           : Nat  -- EvolveSkill.lean
   workflowM              : Nat  -- Workflow.lean
   axiomQualityM          : Nat  -- AxiomQuality.lean
+  epistemicLayerM        : Nat  -- EpistemicLayer.lean
   deriving BEq, Repr
 
 /-- モジュール別定理数の合計。 -/
@@ -143,7 +144,8 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
   d.ontologyM + d.axiomsM + d.empiricalPostulatesM + d.observableM +
   d.principlesM + d.metaM + d.terminologyM + d.formalDerivationSkillM +
   d.conformanceVerificationM + d.designFoundationM + d.procedureM +
-  d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM
+  d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM +
+  d.epistemicLayerM
 
 /-- 現在のモジュール別定理分布。 -/
 def currentTheoremDistribution : TheoremDistribution :=
@@ -161,7 +163,8 @@ def currentTheoremDistribution : TheoremDistribution :=
     evolutionM             := 16
     evolveSkillM           := 29  -- +6: φ₁₂-φ₁₇ ループバック再設計 (Issue #7, #8, #9)
     workflowM              := 7   -- +2: no_self_knowledge_transition, knowledge_full_cycle_exists
-    axiomQualityM          := 11 }
+    axiomQualityM          := 11
+    epistemicLayerM        := 47 }  -- G1-G4: 6性質 + typeclass + LayerAssignment + 互換性 (Issues #35-#38)
 
 /-- モジュール別定理数の合計が currentProfile.theoremCount と一致する。 -/
 theorem theorem_distribution_consistent :
