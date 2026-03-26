@@ -415,6 +415,76 @@ else
   echo "  \"ccusage\": {\"error\": \"ccusage not available\"},"
 fi
 
+# --- ccusage backfill: session_cost_usd の遡及補完 ---
+# SKILL.md backfill 例外に基づく: null フィールドのみ補完、非 null は上書きしない
+EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
+BACKFILL_RESULT='{"backfilled": 0, "note": "skipped"}'
+if [ -f "$EVOLVE_HISTORY" ] && (command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1); then
+  CCUSAGE_CMD=""
+  if command -v bunx >/dev/null 2>&1; then
+    CCUSAGE_CMD="bunx ccusage"
+  else
+    CCUSAGE_CMD="npx ccusage@latest"
+  fi
+  CCUSAGE_SESSIONS=$($CCUSAGE_CMD session --json --offline --mode calculate 2>/dev/null || echo '{"sessions":[]}')
+  BACKFILL_RESULT=$(python3 -c "
+import json, sys, os, tempfile, re
+
+UUID_RE = re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')
+history_path = os.path.expandvars('$EVOLVE_HISTORY')
+sessions_raw = sys.stdin.read()
+
+# Build UUID -> totalCost map from ccusage sessions (projectPath contains UUID)
+uuid_cost = {}
+try:
+    data = json.loads(sessions_raw)
+    sessions = data.get('sessions', []) if isinstance(data, dict) else data
+    for s in sessions:
+        pp = s.get('projectPath', '')
+        if '/' in pp:
+            uuid = pp.split('/')[-1]
+            if UUID_RE.match(uuid):
+                uuid_cost[uuid] = uuid_cost.get(uuid, 0) + s.get('totalCost', 0)
+except: pass
+
+if not uuid_cost:
+    print(json.dumps({'backfilled': 0, 'note': 'no ccusage session data with UUID'}))
+    sys.exit(0)
+
+# Read and backfill
+lines = open(history_path).readlines()
+updated = 0
+new_lines = []
+for line in lines:
+    try:
+        rec = json.loads(line.strip())
+        cost = rec.get('cost') or {}
+        sid = rec.get('session_id', '')
+        if (cost.get('session_cost_usd') is None
+            and isinstance(sid, str) and UUID_RE.match(sid) and sid in uuid_cost):
+            cost['session_cost_usd'] = round(uuid_cost[sid], 2)
+            imps = cost.get('improvements_count') or len(rec.get('improvements', []))
+            if imps and imps > 0:
+                cost['cost_per_improvement_usd'] = round(uuid_cost[sid] / imps, 2)
+            rec['cost'] = cost
+            new_lines.append(json.dumps(rec, ensure_ascii=False) + '\n')
+            updated += 1
+        else:
+            new_lines.append(line)
+    except:
+        new_lines.append(line)
+
+if updated > 0:
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(history_path))
+    with os.fdopen(fd, 'w') as f:
+        f.writelines(new_lines)
+    os.replace(tmp, history_path)
+
+print(json.dumps({'backfilled': updated, 'uuid_matches_available': len(uuid_cost)}))
+" <<< "$CCUSAGE_SESSIONS" 2>/dev/null || echo '{"backfilled": 0, "error": "backfill script failed"}')
+fi
+echo "  \"backfill_result\": $BACKFILL_RESULT,"
+
 # --- evolve コスト効率サマリ（evolve-history.jsonl から集計） ---
 EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$EVOLVE_HISTORY" ]; then
@@ -503,10 +573,11 @@ if [ -f "$HISTORY_FILE" ]; then
   H4_OTHER=${H4_OTHER:-0}
   H4_TOTAL=$((H4_CONSERVATIVE + H4_COMPATIBLE + H4_BREAKING + H4_OTHER))
 
-  # H5: 有効 UUID session_id 件数（UUID v4 パターン: 8-4-4-4-12 の hex 文字列）
-  # POSIX 互換 grep（grep -oP 非対応の macOS 向け: -E で代替）
+  # H5: ユニーク有効 UUID session_id 件数（UUID v4 パターン: 8-4-4-4-12 の hex 文字列）
+  # sort -u で重複除外: 同一 session_id が複数エントリに出現するケースに対応
   H5_VALID_UUIDS=$({ jq -r '.session_id // empty' "$HISTORY_FILE" 2>/dev/null | \
-    grep -cE '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; } || true)
+    grep -E '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' | \
+    sort -u | wc -l | tr -d ' '; } || true)
   H5_VALID_UUIDS=${H5_VALID_UUIDS:-0}
 else
   MAX_RUN=0

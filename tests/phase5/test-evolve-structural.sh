@@ -558,6 +558,18 @@ grep -q "loopback\|FAIL.*ループバック\|ループバック.*FAIL" "$LEAN_TR
 echo -n "  /design-implementation-plan has D5 traceability checklist... "
 grep -q "D5.*トレーサビリティ\|traceability.*D5\|D5.*traceability\|逆引き可能\|三者間.*対応.*D5\|D5.*形式仕様.*テスト" "$DESIGN_IMPL_PLAN" 2>/dev/null && pass "D5 traceability checklist exists in design-implementation-plan" || fail "D5 traceability checklist missing in design-implementation-plan"
 
+# lean-traceability.md 逆方向マッピングセクション存在確認
+echo -n "  lean-traceability.md has reverse mapping section... "
+grep -q "逆方向マッピング" "$LEAN_TRACE" 2>/dev/null && pass "reverse mapping section exists" || fail "reverse mapping section missing in lean-traceability.md"
+
+# 主要 Lean 定義名が lean-traceability.md に参照されていることの確認
+echo -n "  lean-traceability.md references key Lean definitions... "
+MISSING_DEFS=0
+for def in validPhaseTransition integrationGateCondition evolve_skill_compliant breaking_change_dominates t0_contraction_forbidden; do
+  grep -q "$def" "$LEAN_TRACE" 2>/dev/null || MISSING_DEFS=$((MISSING_DEFS + 1))
+done
+[ "$MISSING_DEFS" -eq 0 ] && pass "all key definitions referenced" || fail "$MISSING_DEFS key definitions missing from lean-traceability.md"
+
 # /formal-derivation Step 4d 逆方向トレーサビリティ存在確認
 echo -n "  /formal-derivation has Step 4d reverse traceability... "
 grep -q "Step 4d\|逆方向トレーサビリティ\|reverse.*traceability\|traceability.*reverse" "$FORMAL_DERIV" 2>/dev/null && pass "Step 4d reverse traceability exists in formal-derivation" || fail "Step 4d reverse traceability missing in formal-derivation"

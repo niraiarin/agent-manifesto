@@ -387,11 +387,16 @@ Integrator は以下を実行:
 2. `lake build Manifest` で Lean ビルド成功を確認
 3. `bash tests/test-all.sh` でテスト全通過を確認
 4. git commit（互換性分類付き）
-5. evolve-history.jsonl に記録（以下の `cost` フィールドを含む）
+5. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
+6. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
 
 **evolve-history.jsonl 記録の不変条件:**
 - evolve-history.jsonl には 1 Run につき 1 エントリのみ追加する。暫定記録は行わない。
 - 記録は全フェーズ完了後（Phase 4: git commit 後）に 1 回のみ実行する。
+- **backfill 例外**: 既存エントリの null フィールドを事後補完する操作（例: observe.sh による session_cost_usd の ccusage 照合補完）は、エントリの追加ではなくフィールド更新であり、ファイルの行数は変わらない。上記の不変条件に該当しない。backfill は以下の条件を全て満たす場合にのみ許可される:
+  1. 対象フィールドの現在値が null であること（非 null フィールドの上書きは禁止）
+  2. 補完値の出典が検証可能であること（例: ccusage session の projectPath 末尾 UUID と session_id の照合）
+  3. backfill の実行記録が observe.sh の出力に含まれること（P4 可観測性）
 
 **コスト効率記録フォーマット（T7 可観測性）:**
 evolve-history.jsonl の各エントリに以下のフィールドを追加:

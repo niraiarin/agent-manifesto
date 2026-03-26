@@ -89,21 +89,12 @@ Observer が検出した退役候補を処理する:
 2. breakingChange で無効化された知識の退役
 3. 退役を MEMORY.md から除去（またはアーカイブ）
 
-### Step 5a: session_id の取得（H5 コスト追跡用）
-
-**以下のコマンドを Bash ツールで必ず先に実行し、出力された UUID をメモせよ。**
-この値を Step 5b の session_id フィールドに使用する。
-
-```bash
-tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // "unknown"'
-```
-
-取得した UUID が `^[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+$` 形式でない場合は `"unknown"` を使用する。
-
-### Step 5b: evolve 実行記録の保存（notes 必須、標準スキーマ準拠）
+### Step 5: evolve 実行記録の保存（session_id 取得 + notes 必須、標準スキーマ準拠）
 
 以下の標準スキーマに従って記録する。**全フィールドが必須。値が不明な場合は 0 または null を記入。省略不可。**
-`session_id` には Step 5a で取得した UUID を代入すること。
+
+**重要: session_id 取得と JSONL 記録は 1 つの Bash 呼び出しで実行する。**
+分離すると session_id 取得がスキップされる（Run 56-59 で発生済み）。
 
 ```json
 {
@@ -128,8 +119,8 @@ tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // "unkno
 ```
 
 ```bash
-# 実行記録を保存（次回の Observer が参照）
-# session_id: Step 5a で取得した UUID を $SESSION_ID に代入済みであること
+# session_id 取得と記録を 1 つの Bash 呼び出しで実行（分離禁止: Run 56-59 で欠落が発生）
+SESSION_ID=$(tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // "unknown"')
 cat >> .claude/metrics/evolve-history.jsonl << EOF
 {"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF

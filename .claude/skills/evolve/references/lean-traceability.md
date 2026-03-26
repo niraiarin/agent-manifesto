@@ -129,3 +129,24 @@
 | `empty_world_no_contraction_affected` | P3: 空の構造セットでは contraction の影響集合は空 | World.structures = [] → contractionAffected 発生なし | なし（Run 56 で Section 13 にテスト追加済み） |
 | `manifest_no_contraction_affected` | P3: manifest は contraction が禁止されているため影響集合は発生しない | manifest 縮小禁止 → 影響波及なし | なし（Run 56 で Section 13 にテスト追加済み） |
 | `contraction_affected_trans` | P3: contraction 影響の推移性（reachableVia の推移性から導出） | s → mid → t の波及は s → t に集約 | なし（Run 56 で Section 13 にテスト追加済み） |
+
+## 逆方向マッピング: SKILL.md ステップ → Lean 定義名
+
+SKILL.md の各ステップから、関連する Lean 定義・定理を逆引きするためのテーブル。
+SKILL.md 変更時に影響する Lean 定義を即座に特定するために使用する。
+
+| SKILL.md ステップ | 関連 Lean 定義名 | Lean ファイル |
+|-------------------|-----------------|--------------|
+| Step 0: 引き継ぎ条件 | `deferral_requires_justification`, `deferral_status_exhaustive`, `stasisUnhealthy` | EvolveSkill.lean, Evolution.lean |
+| Step 1: Observer 起動 | `observability_first`, `validPhaseTransition` (observation→hypothesizing) | EvolveSkill.lean, Workflow.lean |
+| Step 1.5: 観察結果永続化 | — (T2 永続性の運用化、直接対応する定理なし) | — |
+| Step 2-3: Hypothesizer/Verifier ループ | `integration_requires_verification`, `evolve_no_verification_bypass`, `loopback_target_valid_transition`, `loopback_agent_determined` | Workflow.lean, EvolveSkill.lean |
+| Step 2-3: FAIL 分析ループバック | `hypothesis_error_loops_to_hypothesizer`, `observation_error_loops_to_observer`, `precondition_error_no_loopback`, `loopback_budget_is_parameter` | EvolveSkill.lean |
+| Step 3: Verifier リスク判定 | `evolve_verifier_sufficient_for_low`, `evolve_verifier_insufficient_for_moderate`, `evolve_verifier_insufficient_for_high`, `evolve_verifier_insufficient_for_critical` | EvolveSkill.lean |
+| Step 4: 人間承認 + 統合ゲート | `integration_gate_structure`, `integrationGateCondition` | EvolveSkill.lean, Workflow.lean |
+| Step 5: 互換性分類付きコミット | `CompatibilityClass.join`, `breaking_change_dominates`, `conservative_strategy_safe`, `breaking_change_propagates`, `breakingChangeRequiresEpochBump` | Evolution.lean, EvolveSkill.lean |
+| Step 6: 退役処理 | `retirementCandidate`, `retirement_criteria_dual`, `formal_retirement_matches_workflow`, `retirement_only_after_integration` | Workflow.lean, EvolveSkill.lean |
+| アーキテクチャ全体 | `all_phases_have_agents`, `all_agents_used`, `all_components_enumerated`, `evolve_skill_compliant` | EvolveSkill.lean |
+| 仮説テーブル | `all_hypotheses_enumerated`, `hypothesis_count` | EvolveSkill.lean |
+| D9 自己適用 | `isManifestStructure`, `governedTransition`, `manifest_persists_as_structure` | Evolution.lean |
+| P3 基底理論保護 | `manifest_contraction_forbidden'`, `manifest_revision_forbidden`, `non_manifest_all_ops_permitted`, `t0_contraction_forbidden` | Procedure.lean |
