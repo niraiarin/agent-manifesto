@@ -49,6 +49,12 @@ When reviewing critical-risk changes (L1, safety, permissions), always state:
    - Security issues (L1 violations)
    - Test coverage gaps
    - Manifest compliance (D1-D9)
+   - Lean theorem quality (when proposal includes Lean theorems):
+     - Is the theorem provable by `rfl` alone (definitional equality)?
+     - Is the conclusion a direct restatement of the premise (definitional unfolding)?
+     - Is the theorem substantially identical to an existing theorem (name/parameter reordering only)?
+     - Does the theorem merely assert numeric literal comparisons (e.g., `4 > 2`)?
+     - If any of the above: FAIL with reason "trivially-true (H_trivially_true)"
 3. **Verify factual claims** (P3: knowledge governance requires accuracy):
    - File paths: confirm existence with Glob or Read before accepting claims
    - Lean theorem/definition names: confirm with Grep in lean-formalization/

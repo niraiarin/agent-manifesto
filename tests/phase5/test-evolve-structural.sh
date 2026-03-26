@@ -115,6 +115,17 @@ grep -q "繰り返し提案の段階的抑止\|1 回 reject 後\|2 回以上 rej
 grep -q "trivially-true.*回避\|trivially-true 定理の回避" "$HYP" && pass "Hypothesizer has trivially-true avoidance" || fail "Hypothesizer missing trivially-true avoidance"
 grep -q "L1 行動空間制約\|hooks.*変更不可\|settings.json.*変更不可" "$HYP" && pass "Hypothesizer has L1 action space constraint" || fail "Hypothesizer missing L1 action space constraint"
 
+# Verifier Lean quality gate (obs-3)
+VER=".claude/agents/verifier.md"
+grep -q "trivially-true\|trivial.*theorem\|rfl.*alone\|definitional.*unfolding" "$VER" && pass "Verifier has Lean trivially-true detection" || fail "Verifier missing Lean trivially-true detection"
+
+# failure_subtype definitions (obs-4)
+grep -q "H_wrong_premise" "$SKILL" && pass "SKILL.md has H_wrong_premise subtype" || fail "SKILL.md missing H_wrong_premise subtype"
+grep -q "H_technical_validation" "$SKILL" && pass "SKILL.md has H_technical_validation subtype" || fail "SKILL.md missing H_technical_validation subtype"
+# Hypothesizer checklist E, F (obs-4)
+grep -q "概念の妥当性検証" "$HYP" && pass "Hypothesizer has checklist E (concept validation)" || fail "Hypothesizer missing checklist E"
+grep -q "技術的実装の妥当性検証" "$HYP" && pass "Hypothesizer has checklist F (technical validation)" || fail "Hypothesizer missing checklist F"
+
 # Integrator
 INT=".claude/agents/integrator/AGENT.md"
 grep -q "^name: integrator" "$INT" && pass "Integrator has name" || fail "Integrator missing name"
