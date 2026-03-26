@@ -189,7 +189,12 @@ if [ -f "$SESSIONS_FILE" ]; then
   # V2_RECENT_AVG = median of last 10 session deltas (primary metric).
   # V2_CALLS_PER_SESSION = total_tool_calls / session_count (cumulative baseline).
   # These are DIFFERENT values. Do not confuse them.
+  # MIN_SESSION_DELTA: micro-sessions (e.g., single /metrics invocations) with <= this
+  # delta are excluded from V2 median to prevent downward bias.
+  MIN_SESSION_DELTA=3
   V2_RECENT_AVG=0
+  RAW_DELTA_COUNT=0
+  FILTERED_DELTA_COUNT=0
   if [ "$SESSION_COUNT" -gt 1 ] 2>/dev/null; then
     # Extract last 11 total_tool_calls to compute 10 deltas
     TOTALS=$(tail -11 "$SESSIONS_FILE" | jq -r '.total_tool_calls // empty' 2>/dev/null)
@@ -199,7 +204,12 @@ if [ -f "$SESSIONS_FILE" ]; then
       if [ -n "$PREV" ] 2>/dev/null; then
         D=$((T - PREV))
         if [ "$D" -ge 0 ] 2>/dev/null; then
-          DELTAS+=("$D")
+          RAW_DELTA_COUNT=$((RAW_DELTA_COUNT + 1))
+          # Skip micro-sessions (delta <= MIN_SESSION_DELTA)
+          if [ "$D" -gt "$MIN_SESSION_DELTA" ] 2>/dev/null; then
+            DELTAS+=("$D")
+            FILTERED_DELTA_COUNT=$((FILTERED_DELTA_COUNT + 1))
+          fi
         fi
       fi
       PREV=$T
@@ -217,6 +227,7 @@ if [ -f "$SESSIONS_FILE" ]; then
         V2_RECENT_AVG=${SORTED[$MID]}
       fi
     fi
+    # Edge case: all deltas filtered → V2_RECENT_AVG stays 0 (not an error)
   fi
 else
   SESSION_COUNT=0
@@ -266,7 +277,7 @@ if [ "${SORRY_COUNT:-0}" -gt 0 ] 2>/dev/null; then
 fi
 
 echo "  \"v1_v7\": {"
-echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
+echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"benchmark.json implementation OR operational correlation evidence (T6)\" },"
 # V2 trend semantics: compare recent_avg (median of last 10 session deltas)
 # against cumulative_avg (total_tool_calls / session_count) as baseline.
 # divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
@@ -284,7 +295,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
   fi
   V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
 fi
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\" },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 # V3 fix_ratio proxy の制限: このパターンは "[fix]:" や "fix:" で始まるコミットのみにマッチする。
 # "[evolve] Fix ..." のようにプレフィックスが異なる形式はマッチしない。
@@ -334,7 +345,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_LOOPBACK_TOTAL=$({ jq -r '.rejected[]?.loopback_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}'; } || echo 0)
   V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"gate pass rate implementation OR operational correlation evidence (T6)\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
@@ -356,7 +367,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
 echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
-echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_note\": \"single_agent_operation: teammate field requires multi-agent or human collaboration\" }"
+echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_status\": \"suppressed_single_agent\" }"
 echo "  },"
 
 # --- T7: コスト計測（ccusage） ---
