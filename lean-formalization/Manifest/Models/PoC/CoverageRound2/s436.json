@@ -1,0 +1,193 @@
+{
+  "namespace": "TestCoverage.S436",
+  "layers": [
+    {
+      "name": "ChemicalSafetyInvariant",
+      "ordValue": 4,
+      "definition": "農薬登録法・残留基準・作業者安全・環境毒性の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalCompliancePolicy",
+      "ordValue": 3,
+      "definition": "生態系保護区・益虫保護・水源汚染防止の規制方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ApplicationSchedulePolicy",
+      "ordValue": 2,
+      "definition": "散布タイミング・散布量・薬剤選択の作業方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PestPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "病害虫発生予測・抵抗性獲得確率の仮説モデル",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s436_p01",
+      "layerName": "ChemicalSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s436_p02",
+      "layerName": "ChemicalSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s436_p03",
+      "layerName": "ChemicalSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s436_p01",
+        ".s436_p02",
+        ".s436_p12"
+      ]
+    },
+    {
+      "id": "s436_p04",
+      "layerName": "EnvironmentalCompliancePolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s436_p01"
+      ]
+    },
+    {
+      "id": "s436_p05",
+      "layerName": "EnvironmentalCompliancePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s436_p02"
+      ]
+    },
+    {
+      "id": "s436_p06",
+      "layerName": "EnvironmentalCompliancePolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s436_p04",
+        ".s436_p05"
+      ]
+    },
+    {
+      "id": "s436_p07",
+      "layerName": "ApplicationSchedulePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s436_p01"
+      ]
+    },
+    {
+      "id": "s436_p08",
+      "layerName": "ApplicationSchedulePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s436_p04"
+      ]
+    },
+    {
+      "id": "s436_p09",
+      "layerName": "ApplicationSchedulePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s436_p06",
+        ".s436_p07"
+      ]
+    },
+    {
+      "id": "s436_p10",
+      "layerName": "ApplicationSchedulePolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s436_p08",
+        ".s436_p09"
+      ]
+    },
+    {
+      "id": "s436_p11",
+      "layerName": "PestPredictionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s436_p07"
+      ]
+    },
+    {
+      "id": "s436_p12",
+      "layerName": "PestPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s436_p08"
+      ]
+    },
+    {
+      "id": "s436_p13",
+      "layerName": "PestPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s436_p11",
+        ".s436_p12"
+      ]
+    },
+    {
+      "id": "s436_p14",
+      "layerName": "PestPredictionHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s436_p09",
+        ".s436_p13"
+      ]
+    }
+  ]
+}

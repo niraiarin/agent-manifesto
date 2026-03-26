@@ -1,0 +1,155 @@
+{
+  "namespace": "TestCoverage.S397",
+  "layers": [
+    {
+      "name": "SafetyOperationInvariant",
+      "ordValue": 3,
+      "definition": "過充電・過放電・熱暴走リスクに関する蓄電池安全運用の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DegradationModelPolicy",
+      "ordValue": 2,
+      "definition": "SOH（健全性指標）・容量劣化曲線に基づく予測モデルの方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "PredictionAccuracyHypothesis",
+      "ordValue": 1,
+      "definition": "充放電サイクル数・温度履歴・使用パターンからの残寿命予測精度仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s397_p01",
+      "layerName": "SafetyOperationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s397_p02",
+      "layerName": "SafetyOperationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s397_p03",
+      "layerName": "SafetyOperationInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s397_p01",
+        ".s397_p02"
+      ]
+    },
+    {
+      "id": "s397_p04",
+      "layerName": "DegradationModelPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s397_p01"
+      ]
+    },
+    {
+      "id": "s397_p05",
+      "layerName": "DegradationModelPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s397_p02"
+      ]
+    },
+    {
+      "id": "s397_p06",
+      "layerName": "DegradationModelPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s397_p04",
+        ".s397_p05"
+      ]
+    },
+    {
+      "id": "s397_p07",
+      "layerName": "PredictionAccuracyHypothesis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s397_p03"
+      ]
+    },
+    {
+      "id": "s397_p08",
+      "layerName": "PredictionAccuracyHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s397_p04"
+      ]
+    },
+    {
+      "id": "s397_p09",
+      "layerName": "PredictionAccuracyHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s397_p06"
+      ]
+    },
+    {
+      "id": "s397_p10",
+      "layerName": "PredictionAccuracyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s397_p07",
+        ".s397_p08"
+      ]
+    },
+    {
+      "id": "s397_p11",
+      "layerName": "PredictionAccuracyHypothesis",
+      "justification": [
+        "H1",
+        "H3",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s397_p09",
+        ".s397_p10"
+      ]
+    }
+  ]
+}

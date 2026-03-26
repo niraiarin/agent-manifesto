@@ -1,0 +1,178 @@
+{
+  "namespace": "TestCoverage.S409",
+  "layers": [
+    {
+      "name": "StructuralSafetyInvariant",
+      "ordValue": 4,
+      "definition": "橋梁・建物の崩壊リスク閾値超過時の即時警告・避難指示の不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EngineeringStandardsCompliance",
+      "ordValue": 3,
+      "definition": "建築基準法・ASCE規格・耐震基準への準拠。工学的安全基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "MaintenancePolicy",
+      "ordValue": 2,
+      "definition": "点検スケジュール・補修優先度・予算配分ポリシー。インフラ管理規則",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "SensorFusionHypothesis",
+      "ordValue": 1,
+      "definition": "多種センサーデータ融合・劣化モデル予測の仮説。機械学習で精度改善中",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s409_p01",
+      "layerName": "StructuralSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s409_p02",
+      "layerName": "StructuralSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s409_p03",
+      "layerName": "StructuralSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s409_p01",
+        ".s409_p02"
+      ]
+    },
+    {
+      "id": "s409_p04",
+      "layerName": "EngineeringStandardsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s409_p01"
+      ]
+    },
+    {
+      "id": "s409_p05",
+      "layerName": "EngineeringStandardsCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s409_p02"
+      ]
+    },
+    {
+      "id": "s409_p06",
+      "layerName": "EngineeringStandardsCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s409_p03"
+      ]
+    },
+    {
+      "id": "s409_p07",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s409_p04"
+      ]
+    },
+    {
+      "id": "s409_p08",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s409_p05"
+      ]
+    },
+    {
+      "id": "s409_p09",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s409_p06"
+      ]
+    },
+    {
+      "id": "s409_p10",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C4",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s409_p07",
+        ".s409_p08"
+      ]
+    },
+    {
+      "id": "s409_p11",
+      "layerName": "SensorFusionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s409_p07"
+      ]
+    },
+    {
+      "id": "s409_p12",
+      "layerName": "SensorFusionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s409_p08"
+      ]
+    },
+    {
+      "id": "s409_p13",
+      "layerName": "SensorFusionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s409_p09",
+        ".s409_p10"
+      ]
+    }
+  ]
+}

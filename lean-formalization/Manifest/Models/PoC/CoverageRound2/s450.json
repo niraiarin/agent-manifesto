@@ -1,0 +1,275 @@
+{
+  "namespace": "TestCoverage.S450",
+  "layers": [
+    {
+      "name": "ConstitutionalRightsInvariant",
+      "ordValue": 7,
+      "definition": "生存権・生活保護法・平等原則・人権保護の憲法的絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LegalComplianceInvariant",
+      "ordValue": 6,
+      "definition": "生活保護法施行規則・厚生労働省通知・審査基準への法的適合",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "BiasPreventionPolicy",
+      "ordValue": 5,
+      "definition": "アルゴリズム公平性・属性差別排除・説明責任確保の偏見防止方針",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "CaseworkerSupportPolicy",
+      "ordValue": 4,
+      "definition": "ケースワーカー判断補助・情報提示・最終決定権維持の支援方針",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "EligibilityAssessmentPolicy",
+      "ordValue": 3,
+      "definition": "申請者の資産・収入・扶養義務・就労能力評価の審査方針",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "SocialContextAnalysisPolicy",
+      "ordValue": 2,
+      "definition": "生活困窮背景・支援ニーズ・地域資源活用の社会的文脈分析方針",
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "OutcomePredictionHypothesis",
+      "ordValue": 1,
+      "definition": "自立支援効果・再申請リスク・支援期間予測に関する仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s450_p01",
+      "layerName": "ConstitutionalRightsInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s450_p02",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s450_p01"
+      ]
+    },
+    {
+      "id": "s450_p03",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s450_p01"
+      ]
+    },
+    {
+      "id": "s450_p04",
+      "layerName": "BiasPreventionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s450_p02"
+      ]
+    },
+    {
+      "id": "s450_p05",
+      "layerName": "BiasPreventionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s450_p03",
+        ".s450_p04"
+      ]
+    },
+    {
+      "id": "s450_p06",
+      "layerName": "CaseworkerSupportPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s450_p04"
+      ]
+    },
+    {
+      "id": "s450_p07",
+      "layerName": "CaseworkerSupportPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s450_p05",
+        ".s450_p06"
+      ]
+    },
+    {
+      "id": "s450_p08",
+      "layerName": "EligibilityAssessmentPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s450_p06"
+      ]
+    },
+    {
+      "id": "s450_p09",
+      "layerName": "EligibilityAssessmentPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s450_p07"
+      ]
+    },
+    {
+      "id": "s450_p10",
+      "layerName": "EligibilityAssessmentPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s450_p08",
+        ".s450_p09"
+      ]
+    },
+    {
+      "id": "s450_p11",
+      "layerName": "SocialContextAnalysisPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s450_p08"
+      ]
+    },
+    {
+      "id": "s450_p12",
+      "layerName": "SocialContextAnalysisPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s450_p09",
+        ".s450_p11"
+      ]
+    },
+    {
+      "id": "s450_p13",
+      "layerName": "SocialContextAnalysisPolicy",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s450_p11",
+        ".s450_p12"
+      ]
+    },
+    {
+      "id": "s450_p14",
+      "layerName": "OutcomePredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s450_p10"
+      ]
+    },
+    {
+      "id": "s450_p15",
+      "layerName": "OutcomePredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s450_p12",
+        ".s450_p14"
+      ]
+    },
+    {
+      "id": "s450_p16",
+      "layerName": "OutcomePredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s450_p13"
+      ]
+    },
+    {
+      "id": "s450_p17",
+      "layerName": "SocialContextAnalysisPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s450_p14"
+      ]
+    },
+    {
+      "id": "s450_p18",
+      "layerName": "OutcomePredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s450_p15",
+        ".s450_p16"
+      ]
+    },
+    {
+      "id": "s450_p19",
+      "layerName": "EligibilityAssessmentPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s450_p17"
+      ]
+    },
+    {
+      "id": "s450_p20",
+      "layerName": "OutcomePredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s450_p18",
+        ".s450_p19"
+      ]
+    }
+  ]
+}

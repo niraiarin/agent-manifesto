@@ -1,0 +1,157 @@
+{
+  "namespace": "TestCoverage.S332",
+  "layers": [
+    {
+      "name": "RiskInvariant",
+      "ordValue": 3,
+      "definition": "システミックリスクと規制遵守に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "取引執行・リスク監視の運用方針",
+      "derivedFrom": [
+        "C3",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "AnalysisHypothesis",
+      "ordValue": 1,
+      "definition": "市場モデル・リスク計算に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s332_p01",
+      "layerName": "RiskInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s332_p02",
+      "layerName": "RiskInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s332_p03",
+      "layerName": "RiskInvariant",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".s332_p01"
+      ]
+    },
+    {
+      "id": "s332_p04",
+      "layerName": "RiskInvariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s332_p05",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s332_p01",
+        ".s332_p02"
+      ]
+    },
+    {
+      "id": "s332_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s332_p04"
+      ]
+    },
+    {
+      "id": "s332_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s332_p02"
+      ]
+    },
+    {
+      "id": "s332_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s332_p03"
+      ]
+    },
+    {
+      "id": "s332_p09",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s332_p06"
+      ]
+    },
+    {
+      "id": "s332_p10",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s332_p03"
+      ]
+    },
+    {
+      "id": "s332_p11",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s332_p06",
+        ".s332_p07"
+      ]
+    },
+    {
+      "id": "s332_p12",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s332_p09",
+        ".s332_p11"
+      ]
+    }
+  ]
+}

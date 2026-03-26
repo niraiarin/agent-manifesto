@@ -1,0 +1,255 @@
+{
+  "namespace": "TestCoverage.S390",
+  "layers": [
+    {
+      "name": "AccuracyInvariant",
+      "ordValue": 5,
+      "definition": "量子化学計算の精度保証と理論的正確性に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "ReproducibilityRequirement",
+      "ordValue": 4,
+      "definition": "計算再現性と科学的誠実性に関する要件",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "ComputationalPolicy",
+      "ordValue": 3,
+      "definition": "リソース管理と計算手法選択のポリシー",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H6"
+      ]
+    },
+    {
+      "name": "MethodologyPolicy",
+      "ordValue": 2,
+      "definition": "具体的な計算手法設定と収束基準の運用方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "ImplementationHypothesis",
+      "ordValue": 1,
+      "definition": "ツール実装と来歴管理に関する技術的仮説",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s390_p01",
+      "layerName": "AccuracyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s390_p02",
+      "layerName": "AccuracyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s390_p01"
+      ]
+    },
+    {
+      "id": "s390_p03",
+      "layerName": "AccuracyInvariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s390_p01"
+      ]
+    },
+    {
+      "id": "s390_p04",
+      "layerName": "ReproducibilityRequirement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s390_p01"
+      ]
+    },
+    {
+      "id": "s390_p05",
+      "layerName": "ReproducibilityRequirement",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s390_p02",
+        ".s390_p04"
+      ]
+    },
+    {
+      "id": "s390_p06",
+      "layerName": "ComputationalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s390_p01",
+        ".s390_p03"
+      ]
+    },
+    {
+      "id": "s390_p07",
+      "layerName": "ComputationalPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s390_p06"
+      ]
+    },
+    {
+      "id": "s390_p08",
+      "layerName": "ComputationalPolicy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s390_p01"
+      ]
+    },
+    {
+      "id": "s390_p09",
+      "layerName": "MethodologyPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s390_p02"
+      ]
+    },
+    {
+      "id": "s390_p10",
+      "layerName": "MethodologyPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s390_p03"
+      ]
+    },
+    {
+      "id": "s390_p11",
+      "layerName": "MethodologyPolicy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s390_p05"
+      ]
+    },
+    {
+      "id": "s390_p12",
+      "layerName": "ImplementationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s390_p04"
+      ]
+    },
+    {
+      "id": "s390_p13",
+      "layerName": "MethodologyPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s390_p09",
+        ".s390_p10"
+      ]
+    },
+    {
+      "id": "s390_p14",
+      "layerName": "ComputationalPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s390_p07"
+      ]
+    },
+    {
+      "id": "s390_p15",
+      "layerName": "ReproducibilityRequirement",
+      "justification": [
+        "C6",
+        "H5"
+      ],
+      "dependencies": [
+        ".s390_p11"
+      ]
+    },
+    {
+      "id": "s390_p16",
+      "layerName": "ImplementationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s390_p12",
+        ".s390_p04"
+      ]
+    },
+    {
+      "id": "s390_p17",
+      "layerName": "MethodologyPolicy",
+      "justification": [
+        "H1",
+        "H6"
+      ],
+      "dependencies": [
+        ".s390_p08",
+        ".s390_p09"
+      ]
+    },
+    {
+      "id": "s390_p18",
+      "layerName": "AccuracyInvariant",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".s390_p02",
+        ".s390_p03"
+      ]
+    },
+    {
+      "id": "s390_p19",
+      "layerName": "ComputationalPolicy",
+      "justification": [
+        "H3",
+        "H6"
+      ],
+      "dependencies": [
+        ".s390_p07",
+        ".s390_p08"
+      ]
+    }
+  ]
+}

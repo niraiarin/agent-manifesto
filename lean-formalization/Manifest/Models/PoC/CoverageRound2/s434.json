@@ -1,0 +1,156 @@
+{
+  "namespace": "TestCoverage.S434",
+  "layers": [
+    {
+      "name": "BiologicalGrowthInvariant",
+      "ordValue": 4,
+      "definition": "作物の生育ステージ・積算温度・生物学的成熟限界",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "MarketQualityStandard",
+      "ordValue": 3,
+      "definition": "出荷品質基準・糖度・硬度・外観規格",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "HarvestSchedulingPolicy",
+      "ordValue": 2,
+      "definition": "収穫作業計画・労働力配分・機械使用スケジュール",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "WeatherForecastHypothesis",
+      "ordValue": 1,
+      "definition": "気象予報・降雨確率・気温変動の予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s434_p01",
+      "layerName": "BiologicalGrowthInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s434_p02",
+      "layerName": "BiologicalGrowthInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s434_p03",
+      "layerName": "MarketQualityStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s434_p01"
+      ]
+    },
+    {
+      "id": "s434_p04",
+      "layerName": "MarketQualityStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s434_p02"
+      ]
+    },
+    {
+      "id": "s434_p05",
+      "layerName": "MarketQualityStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s434_p03",
+        ".s434_p04"
+      ]
+    },
+    {
+      "id": "s434_p06",
+      "layerName": "HarvestSchedulingPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s434_p03"
+      ]
+    },
+    {
+      "id": "s434_p07",
+      "layerName": "HarvestSchedulingPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s434_p04"
+      ]
+    },
+    {
+      "id": "s434_p08",
+      "layerName": "HarvestSchedulingPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s434_p05",
+        ".s434_p06"
+      ]
+    },
+    {
+      "id": "s434_p09",
+      "layerName": "WeatherForecastHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s434_p06"
+      ]
+    },
+    {
+      "id": "s434_p10",
+      "layerName": "WeatherForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s434_p07",
+        ".s434_p09"
+      ]
+    },
+    {
+      "id": "s434_p11",
+      "layerName": "WeatherForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s434_p08",
+        ".s434_p10"
+      ]
+    }
+  ]
+}

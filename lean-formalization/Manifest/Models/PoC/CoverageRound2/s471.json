@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S471",
+  "layers": [
+    {
+      "name": "ComplianceInvariant",
+      "ordValue": 4,
+      "definition": "SOC2・ISO27001・PCI-DSS 等の規制要件への絶対的準拠条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ThreatDetectionPolicy",
+      "ordValue": 3,
+      "definition": "脅威インテリジェンス連携・異常検知ルールの強制ポリシー",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "RemediationWorkflow",
+      "ordValue": 2,
+      "definition": "脆弱性発見から修復完了までのエスカレーション・自動化方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PostureScoreHypothesis",
+      "ordValue": 1,
+      "definition": "セキュリティスコア計算モデルとリスク優先度付けに関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s471_p01",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s471_p02",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s471_p03",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s471_p01",
+        ".s471_p02"
+      ]
+    },
+    {
+      "id": "s471_p04",
+      "layerName": "ThreatDetectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s471_p01"
+      ]
+    },
+    {
+      "id": "s471_p05",
+      "layerName": "ThreatDetectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s471_p02"
+      ]
+    },
+    {
+      "id": "s471_p06",
+      "layerName": "ThreatDetectionPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s471_p04",
+        ".s471_p05"
+      ]
+    },
+    {
+      "id": "s471_p07",
+      "layerName": "RemediationWorkflow",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s471_p04"
+      ]
+    },
+    {
+      "id": "s471_p08",
+      "layerName": "RemediationWorkflow",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s471_p05"
+      ]
+    },
+    {
+      "id": "s471_p09",
+      "layerName": "RemediationWorkflow",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s471_p06",
+        ".s471_p07"
+      ]
+    },
+    {
+      "id": "s471_p10",
+      "layerName": "PostureScoreHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s471_p07"
+      ]
+    },
+    {
+      "id": "s471_p11",
+      "layerName": "PostureScoreHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s471_p08"
+      ]
+    },
+    {
+      "id": "s471_p12",
+      "layerName": "PostureScoreHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s471_p09",
+        ".s471_p10"
+      ]
+    },
+    {
+      "id": "s471_p13",
+      "layerName": "PostureScoreHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s471_p11",
+        ".s471_p12"
+      ]
+    },
+    {
+      "id": "s471_p14",
+      "layerName": "RemediationWorkflow",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s471_p08",
+        ".s471_p09"
+      ]
+    }
+  ]
+}

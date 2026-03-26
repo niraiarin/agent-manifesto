@@ -1,0 +1,200 @@
+{
+  "namespace": "TestCoverage.S406",
+  "layers": [
+    {
+      "name": "LearnerWelfareInvariant",
+      "ordValue": 4,
+      "definition": "学習者の精神的安全・適切な難易度保証。過度なストレスを与えない不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PedagogicalPolicy",
+      "ordValue": 3,
+      "definition": "教育的アプローチ・カリキュラム設計方針。教育学的根拠に基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "PersonalizationPolicy",
+      "ordValue": 2,
+      "definition": "個別学習パス・難易度調整ポリシー。学習履歴データに基づく運用ルール",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "EngagementHypothesis",
+      "ordValue": 1,
+      "definition": "学習エンゲージメント・定着率改善の仮説。A/Bテストで検証中",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s406_p01",
+      "layerName": "LearnerWelfareInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s406_p02",
+      "layerName": "LearnerWelfareInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s406_p03",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s406_p01"
+      ]
+    },
+    {
+      "id": "s406_p04",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s406_p02"
+      ]
+    },
+    {
+      "id": "s406_p05",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s406_p01",
+        ".s406_p02"
+      ]
+    },
+    {
+      "id": "s406_p06",
+      "layerName": "PersonalizationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s406_p03"
+      ]
+    },
+    {
+      "id": "s406_p07",
+      "layerName": "PersonalizationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s406_p04"
+      ]
+    },
+    {
+      "id": "s406_p08",
+      "layerName": "PersonalizationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s406_p05"
+      ]
+    },
+    {
+      "id": "s406_p09",
+      "layerName": "PersonalizationPolicy",
+      "justification": [
+        "C4",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s406_p06",
+        ".s406_p07"
+      ]
+    },
+    {
+      "id": "s406_p10",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s406_p06"
+      ]
+    },
+    {
+      "id": "s406_p11",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s406_p07"
+      ]
+    },
+    {
+      "id": "s406_p12",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s406_p08"
+      ]
+    },
+    {
+      "id": "s406_p13",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s406_p09"
+      ]
+    },
+    {
+      "id": "s406_p14",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s406_p10",
+        ".s406_p11"
+      ]
+    },
+    {
+      "id": "s406_p15",
+      "layerName": "PersonalizationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s406_p13",
+        ".s406_p14"
+      ]
+    }
+  ]
+}

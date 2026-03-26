@@ -1,0 +1,213 @@
+{
+  "namespace": "TestCoverage.S387",
+  "layers": [
+    {
+      "name": "ReservoirInvariant",
+      "ordValue": 4,
+      "definition": "貯留層の持続可能性と地盤安全に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "EnvironmentalCompliance",
+      "ordValue": 3,
+      "definition": "環境規制への遵守と排出基準管理",
+      "derivedFrom": [
+        "C6"
+      ]
+    },
+    {
+      "name": "OperationalOptimization",
+      "ordValue": 2,
+      "definition": "発電効率最大化と運用制御ポリシー",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "MonitoringHypothesis",
+      "ordValue": 1,
+      "definition": "貯留層モニタリングと予測モデルに関する科学的仮説",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s387_p01",
+      "layerName": "ReservoirInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s387_p02",
+      "layerName": "ReservoirInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s387_p03",
+      "layerName": "ReservoirInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s387_p01"
+      ]
+    },
+    {
+      "id": "s387_p04",
+      "layerName": "ReservoirInvariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s387_p01",
+        ".s387_p02"
+      ]
+    },
+    {
+      "id": "s387_p05",
+      "layerName": "EnvironmentalCompliance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s387_p04"
+      ]
+    },
+    {
+      "id": "s387_p06",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s387_p01",
+        ".s387_p04"
+      ]
+    },
+    {
+      "id": "s387_p07",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s387_p02"
+      ]
+    },
+    {
+      "id": "s387_p08",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s387_p06"
+      ]
+    },
+    {
+      "id": "s387_p09",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s387_p05"
+      ]
+    },
+    {
+      "id": "s387_p10",
+      "layerName": "MonitoringHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s387_p01",
+        ".s387_p04"
+      ]
+    },
+    {
+      "id": "s387_p11",
+      "layerName": "MonitoringHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s387_p03"
+      ]
+    },
+    {
+      "id": "s387_p12",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s387_p08"
+      ]
+    },
+    {
+      "id": "s387_p13",
+      "layerName": "ReservoirInvariant",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s387_p03",
+        ".s387_p07"
+      ]
+    },
+    {
+      "id": "s387_p14",
+      "layerName": "MonitoringHypothesis",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s387_p10",
+        ".s387_p11"
+      ]
+    },
+    {
+      "id": "s387_p15",
+      "layerName": "EnvironmentalCompliance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s387_p09",
+        ".s387_p05"
+      ]
+    },
+    {
+      "id": "s387_p16",
+      "layerName": "OperationalOptimization",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s387_p07",
+        ".s387_p09"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S315",
+  "layers": [
+    {
+      "name": "legal_invariant",
+      "ordValue": 4,
+      "definition": "法的責任・人間最終判断の絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "security_compliance",
+      "ordValue": 3,
+      "definition": "データ保護・法域対応の規制遵守要件",
+      "derivedFrom": [
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "review_model",
+      "ordValue": 2,
+      "definition": "契約書解析・リスク検出・説明生成のモデル",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "adoption_hypothesis",
+      "ordValue": 1,
+      "definition": "弁護士採用・ワークフロー統合の仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s315_p01",
+      "layerName": "legal_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s315_p02",
+      "layerName": "legal_invariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s315_p01"
+      ]
+    },
+    {
+      "id": "s315_p03",
+      "layerName": "security_compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s315_p04",
+      "layerName": "security_compliance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s315_p03"
+      ]
+    },
+    {
+      "id": "s315_p05",
+      "layerName": "review_model",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s315_p02",
+        ".s315_p04"
+      ]
+    },
+    {
+      "id": "s315_p06",
+      "layerName": "review_model",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s315_p05"
+      ]
+    },
+    {
+      "id": "s315_p07",
+      "layerName": "review_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s315_p05"
+      ]
+    },
+    {
+      "id": "s315_p08",
+      "layerName": "review_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s315_p06"
+      ]
+    },
+    {
+      "id": "s315_p09",
+      "layerName": "adoption_hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s315_p04",
+        ".s315_p08"
+      ]
+    },
+    {
+      "id": "s315_p10",
+      "layerName": "adoption_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s315_p06",
+        ".s315_p09"
+      ]
+    },
+    {
+      "id": "s315_p11",
+      "layerName": "adoption_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s315_p07",
+        ".s315_p10"
+      ]
+    },
+    {
+      "id": "s315_p12",
+      "layerName": "review_model",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s315_p02",
+        ".s315_p08"
+      ]
+    },
+    {
+      "id": "s315_p13",
+      "layerName": "adoption_hypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s315_p10",
+        ".s315_p11"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "namespace": "TestCoverage.S416",
+  "layers": [
+    {
+      "name": "FairnessEquityAbsolute",
+      "ordValue": 4,
+      "definition": "採点における公平性・無差別・バイアスゼロの絶対制約。属性による差別を排除",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "CurriculumAlignment",
+      "ordValue": 3,
+      "definition": "学習指導要領・評価基準・出題意図との整合性を保証する制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ScoringLogic",
+      "ordValue": 2,
+      "definition": "部分点配分・正誤判定・記述評価のルーブリックに基づく採点ロジック",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "LearnerAdaptation",
+      "ordValue": 1,
+      "definition": "学習者特性・誤答パターン・進捗に基づく採点フィードバック最適化仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s416_p01",
+      "layerName": "FairnessEquityAbsolute",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s416_p02",
+      "layerName": "FairnessEquityAbsolute",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s416_p03",
+      "layerName": "FairnessEquityAbsolute",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s416_p01",
+        ".s416_p02"
+      ]
+    },
+    {
+      "id": "s416_p04",
+      "layerName": "CurriculumAlignment",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s416_p01"
+      ]
+    },
+    {
+      "id": "s416_p05",
+      "layerName": "CurriculumAlignment",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s416_p02"
+      ]
+    },
+    {
+      "id": "s416_p06",
+      "layerName": "CurriculumAlignment",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s416_p03",
+        ".s416_p04",
+        ".s416_p05"
+      ]
+    },
+    {
+      "id": "s416_p07",
+      "layerName": "ScoringLogic",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s416_p04"
+      ]
+    },
+    {
+      "id": "s416_p08",
+      "layerName": "ScoringLogic",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s416_p05",
+        ".s416_p06"
+      ]
+    },
+    {
+      "id": "s416_p09",
+      "layerName": "ScoringLogic",
+      "justification": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s416_p07",
+        ".s416_p08"
+      ]
+    },
+    {
+      "id": "s416_p10",
+      "layerName": "LearnerAdaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s416_p07"
+      ]
+    },
+    {
+      "id": "s416_p11",
+      "layerName": "LearnerAdaptation",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s416_p08"
+      ]
+    },
+    {
+      "id": "s416_p12",
+      "layerName": "LearnerAdaptation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s416_p09"
+      ]
+    },
+    {
+      "id": "s416_p13",
+      "layerName": "LearnerAdaptation",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s416_p10",
+        ".s416_p11"
+      ]
+    },
+    {
+      "id": "s416_p14",
+      "layerName": "LearnerAdaptation",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s416_p12",
+        ".s416_p13"
+      ]
+    },
+    {
+      "id": "s416_p15",
+      "layerName": "ScoringLogic",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s416_p06"
+      ]
+    }
+  ]
+}

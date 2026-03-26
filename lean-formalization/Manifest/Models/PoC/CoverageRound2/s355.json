@@ -1,0 +1,207 @@
+{
+  "namespace": "TestCoverage.S355",
+  "layers": [
+    {
+      "name": "SecurityInvariant",
+      "ordValue": 5,
+      "definition": "機密情報保護・不正アクセス禁止の絶対セキュリティ制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ComplianceRequirement",
+      "ordValue": 4,
+      "definition": "SOC2・ISO 27001・個人情報保護法・GDPR への準拠要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OrganizationalPolicy",
+      "ordValue": 3,
+      "definition": "最小権限原則・職務分離・定期レビュー要件の組織方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "AccessControlRule",
+      "ordValue": 2,
+      "definition": "ロールベースアクセス制御・コンテキスト認証・時間制限の実装ルール",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "BehaviorHypothesis",
+      "ordValue": 1,
+      "definition": "ユーザー行動パターン・異常アクセス検知・リスクスコア推定の仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s355_p01",
+      "layerName": "SecurityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s355_p02",
+      "layerName": "SecurityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s355_p03",
+      "layerName": "ComplianceRequirement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s355_p01"
+      ]
+    },
+    {
+      "id": "s355_p04",
+      "layerName": "ComplianceRequirement",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s355_p02"
+      ]
+    },
+    {
+      "id": "s355_p05",
+      "layerName": "OrganizationalPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s355_p03"
+      ]
+    },
+    {
+      "id": "s355_p06",
+      "layerName": "OrganizationalPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s355_p04"
+      ]
+    },
+    {
+      "id": "s355_p07",
+      "layerName": "OrganizationalPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s355_p03",
+        ".s355_p04"
+      ]
+    },
+    {
+      "id": "s355_p08",
+      "layerName": "AccessControlRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s355_p05"
+      ]
+    },
+    {
+      "id": "s355_p09",
+      "layerName": "AccessControlRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s355_p06"
+      ]
+    },
+    {
+      "id": "s355_p10",
+      "layerName": "AccessControlRule",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s355_p07",
+        ".s355_p08"
+      ]
+    },
+    {
+      "id": "s355_p11",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s355_p08"
+      ]
+    },
+    {
+      "id": "s355_p12",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s355_p09"
+      ]
+    },
+    {
+      "id": "s355_p13",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s355_p10"
+      ]
+    },
+    {
+      "id": "s355_p14",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s355_p11",
+        ".s355_p12"
+      ]
+    },
+    {
+      "id": "s355_p15",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s355_p13",
+        ".s355_p14"
+      ]
+    }
+  ]
+}

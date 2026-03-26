@@ -1,0 +1,273 @@
+{
+  "namespace": "TestCoverage.S378",
+  "layers": [
+    {
+      "name": "EmployeePrivacyInvariant",
+      "ordValue": 6,
+      "definition": "個人情報・プライバシー保護の絶対不変条件（GDPR準拠）",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LaborLawCompliance",
+      "ordValue": 5,
+      "definition": "労働基準法・時間外上限規制・割増賃金計算の適合要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "FraudDetectionPolicy",
+      "ordValue": 4,
+      "definition": "打刻不正・代理打刻・タイムカード改竄検知の方針",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "AttendancePatternPolicy",
+      "ordValue": 3,
+      "definition": "欠勤パターン・遅刻頻度・残業偏在の管理方針",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "BehaviorAnalysisModel",
+      "ordValue": 2,
+      "definition": "位置情報・入退室ログ・PC操作ログの行動分析モデル",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "AnomalyScoreHypothesis",
+      "ordValue": 1,
+      "definition": "個人ベースライン・季節性・勤務形態を加味した異常スコア仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s378_p01",
+      "layerName": "EmployeePrivacyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s378_p02",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s378_p01"
+      ]
+    },
+    {
+      "id": "s378_p03",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s378_p01"
+      ]
+    },
+    {
+      "id": "s378_p04",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s378_p02",
+        ".s378_p03"
+      ]
+    },
+    {
+      "id": "s378_p05",
+      "layerName": "FraudDetectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s378_p02"
+      ]
+    },
+    {
+      "id": "s378_p06",
+      "layerName": "FraudDetectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s378_p04"
+      ]
+    },
+    {
+      "id": "s378_p07",
+      "layerName": "AttendancePatternPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s378_p05"
+      ]
+    },
+    {
+      "id": "s378_p08",
+      "layerName": "AttendancePatternPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s378_p06"
+      ]
+    },
+    {
+      "id": "s378_p09",
+      "layerName": "AttendancePatternPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s378_p07",
+        ".s378_p08"
+      ]
+    },
+    {
+      "id": "s378_p10",
+      "layerName": "BehaviorAnalysisModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s378_p07"
+      ]
+    },
+    {
+      "id": "s378_p11",
+      "layerName": "BehaviorAnalysisModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s378_p08"
+      ]
+    },
+    {
+      "id": "s378_p12",
+      "layerName": "BehaviorAnalysisModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s378_p09",
+        ".s378_p10"
+      ]
+    },
+    {
+      "id": "s378_p13",
+      "layerName": "BehaviorAnalysisModel",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s378_p10",
+        ".s378_p11"
+      ]
+    },
+    {
+      "id": "s378_p14",
+      "layerName": "BehaviorAnalysisModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s378_p11",
+        ".s378_p12"
+      ]
+    },
+    {
+      "id": "s378_p15",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s378_p10"
+      ]
+    },
+    {
+      "id": "s378_p16",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s378_p11"
+      ]
+    },
+    {
+      "id": "s378_p17",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s378_p12",
+        ".s378_p15"
+      ]
+    },
+    {
+      "id": "s378_p18",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s378_p13",
+        ".s378_p16"
+      ]
+    },
+    {
+      "id": "s378_p19",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s378_p14",
+        ".s378_p17"
+      ]
+    },
+    {
+      "id": "s378_p20",
+      "layerName": "AnomalyScoreHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s378_p18",
+        ".s378_p19"
+      ]
+    }
+  ]
+}

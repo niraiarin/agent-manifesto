@@ -1,0 +1,211 @@
+{
+  "namespace": "TestCoverage.S304",
+  "layers": [
+    {
+      "name": "ComplianceInvariant",
+      "ordValue": 4,
+      "definition": "マネーロンダリング防止法・金融規制への絶対適合要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DetectionPolicy",
+      "ordValue": 3,
+      "definition": "不正検知の閾値・エスカレーション・調査起動方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "RiskScoringModel",
+      "ordValue": 2,
+      "definition": "リスクスコア算出・取引パターン分類モデル",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "BehaviorHypothesis",
+      "ordValue": 1,
+      "definition": "顧客行動変化・新手口推定に関する仮説",
+      "derivedFrom": [
+        "C6",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s304_p01",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s304_p02",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s304_p03",
+      "layerName": "ComplianceInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s304_p01"
+      ]
+    },
+    {
+      "id": "s304_p04",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s304_p01"
+      ]
+    },
+    {
+      "id": "s304_p05",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s304_p02"
+      ]
+    },
+    {
+      "id": "s304_p06",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s304_p03",
+        ".s304_p04"
+      ]
+    },
+    {
+      "id": "s304_p07",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s304_p04"
+      ]
+    },
+    {
+      "id": "s304_p08",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s304_p05"
+      ]
+    },
+    {
+      "id": "s304_p09",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s304_p06"
+      ]
+    },
+    {
+      "id": "s304_p10",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s304_p07",
+        ".s304_p08"
+      ]
+    },
+    {
+      "id": "s304_p11",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s304_p07"
+      ]
+    },
+    {
+      "id": "s304_p12",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s304_p08",
+        ".s304_p09"
+      ]
+    },
+    {
+      "id": "s304_p13",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s304_p10"
+      ]
+    },
+    {
+      "id": "s304_p14",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s304_p11"
+      ]
+    },
+    {
+      "id": "s304_p15",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s304_p12",
+        ".s304_p13"
+      ]
+    },
+    {
+      "id": "s304_p16",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s304_p14",
+        ".s304_p15"
+      ]
+    }
+  ]
+}

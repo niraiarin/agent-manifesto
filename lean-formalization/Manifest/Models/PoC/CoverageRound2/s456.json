@@ -1,0 +1,100 @@
+{
+  "namespace": "TestCoverage.S456",
+  "layers": [
+    {
+      "name": "NoiseLegalStandardInvariant",
+      "ordValue": 2,
+      "definition": "騒音規制法・環境基本法に基づく地域別環境基準値の絶対遵守制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "AcousticMeasurementHypothesis",
+      "ordValue": 1,
+      "definition": "センサー配置・補間アルゴリズム・時系列変動モデルに関する測定仮説",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s456_p01",
+      "layerName": "NoiseLegalStandardInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s456_p02",
+      "layerName": "NoiseLegalStandardInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s456_p03",
+      "layerName": "AcousticMeasurementHypothesis",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s456_p01"
+      ]
+    },
+    {
+      "id": "s456_p04",
+      "layerName": "AcousticMeasurementHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s456_p02"
+      ]
+    },
+    {
+      "id": "s456_p05",
+      "layerName": "AcousticMeasurementHypothesis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s456_p03",
+        ".s456_p04"
+      ]
+    },
+    {
+      "id": "s456_p06",
+      "layerName": "AcousticMeasurementHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s456_p03"
+      ]
+    },
+    {
+      "id": "s456_p07",
+      "layerName": "AcousticMeasurementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s456_p05",
+        ".s456_p06"
+      ]
+    }
+  ]
+}

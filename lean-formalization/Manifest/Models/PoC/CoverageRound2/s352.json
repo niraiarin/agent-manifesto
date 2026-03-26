@@ -1,0 +1,219 @@
+{
+  "namespace": "TestCoverage.S352",
+  "layers": [
+    {
+      "name": "FairLendingInvariant",
+      "ordValue": 5,
+      "definition": "差別禁止・公正貸付法への絶対準拠。属性による不当差別の禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 4,
+      "definition": "金融庁ガイドライン・個人情報保護法・AI公正利用規制への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "CreditPolicy",
+      "ordValue": 3,
+      "definition": "融資基準・担保評価・信用スコア閾値の業務方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "RiskAssessment",
+      "ordValue": 2,
+      "definition": "デフォルト確率推定・金利算定・LTV評価に関するリスクモデル",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "MarketHypothesis",
+      "ordValue": 1,
+      "definition": "不動産市況・金利動向・経済指標に関する予測仮説",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s352_p01",
+      "layerName": "FairLendingInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s352_p02",
+      "layerName": "FairLendingInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s352_p03",
+      "layerName": "FairLendingInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s352_p01"
+      ]
+    },
+    {
+      "id": "s352_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s352_p01"
+      ]
+    },
+    {
+      "id": "s352_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s352_p02"
+      ]
+    },
+    {
+      "id": "s352_p06",
+      "layerName": "CreditPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s352_p04"
+      ]
+    },
+    {
+      "id": "s352_p07",
+      "layerName": "CreditPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s352_p05"
+      ]
+    },
+    {
+      "id": "s352_p08",
+      "layerName": "CreditPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s352_p03",
+        ".s352_p04"
+      ]
+    },
+    {
+      "id": "s352_p09",
+      "layerName": "RiskAssessment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s352_p06"
+      ]
+    },
+    {
+      "id": "s352_p10",
+      "layerName": "RiskAssessment",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s352_p07"
+      ]
+    },
+    {
+      "id": "s352_p11",
+      "layerName": "RiskAssessment",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s352_p08"
+      ]
+    },
+    {
+      "id": "s352_p12",
+      "layerName": "RiskAssessment",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s352_p09"
+      ]
+    },
+    {
+      "id": "s352_p13",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s352_p09"
+      ]
+    },
+    {
+      "id": "s352_p14",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s352_p10"
+      ]
+    },
+    {
+      "id": "s352_p15",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s352_p11",
+        ".s352_p12"
+      ]
+    },
+    {
+      "id": "s352_p16",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s352_p13",
+        ".s352_p14"
+      ]
+    }
+  ]
+}

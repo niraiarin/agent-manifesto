@@ -1,0 +1,182 @@
+{
+  "namespace": "TestCoverage.S497",
+  "layers": [
+    {
+      "name": "DataIntegrityInvariant",
+      "ordValue": 4,
+      "definition": "観測データの真正性・改ざん不可・科学的再現性に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InternationalStandard",
+      "ordValue": 3,
+      "definition": "UNCLOS・MARPOL・国際海洋データ共有プロトコルへの準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "TrackingPolicy",
+      "ordValue": 2,
+      "definition": "センサー配置・サンプリング頻度・アラート基準に関する追跡ポリシー",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictionModel",
+      "ordValue": 1,
+      "definition": "漂流シミュレーション・集積予測・清掃優先度決定に関する予測モデル仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s497_p01",
+      "layerName": "DataIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s497_p02",
+      "layerName": "DataIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s497_p01"
+      ]
+    },
+    {
+      "id": "s497_p03",
+      "layerName": "InternationalStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s497_p01"
+      ]
+    },
+    {
+      "id": "s497_p04",
+      "layerName": "InternationalStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s497_p02"
+      ]
+    },
+    {
+      "id": "s497_p05",
+      "layerName": "InternationalStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s497_p03",
+        ".s497_p04"
+      ]
+    },
+    {
+      "id": "s497_p06",
+      "layerName": "TrackingPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s497_p03"
+      ]
+    },
+    {
+      "id": "s497_p07",
+      "layerName": "TrackingPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s497_p04"
+      ]
+    },
+    {
+      "id": "s497_p08",
+      "layerName": "TrackingPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s497_p05",
+        ".s497_p06",
+        ".s497_p09"
+      ]
+    },
+    {
+      "id": "s497_p09",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s497_p06"
+      ]
+    },
+    {
+      "id": "s497_p10",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s497_p07"
+      ]
+    },
+    {
+      "id": "s497_p11",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s497_p08",
+        ".s497_p09"
+      ]
+    },
+    {
+      "id": "s497_p12",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s497_p10",
+        ".s497_p11"
+      ]
+    },
+    {
+      "id": "s497_p13",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s497_p11",
+        ".s497_p12"
+      ]
+    }
+  ]
+}

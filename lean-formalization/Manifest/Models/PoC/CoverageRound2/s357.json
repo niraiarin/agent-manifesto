@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S357",
+  "layers": [
+    {
+      "name": "PublicHealthProtection",
+      "ordValue": 4,
+      "definition": "住民の健康被害防止・緊急警報発令の絶対的公衆衛生制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalLaw",
+      "ordValue": 3,
+      "definition": "大気汚染防止法・環境基準値・自治体条例への法的準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "MonitoringPolicy",
+      "ordValue": 2,
+      "definition": "観測点配置・データ収集頻度・欠損補完の監視方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "DispersionHypothesis",
+      "ordValue": 1,
+      "definition": "大気拡散モデル・気象影響・汚染源推定に関する予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s357_p01",
+      "layerName": "PublicHealthProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s357_p02",
+      "layerName": "PublicHealthProtection",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s357_p01"
+      ]
+    },
+    {
+      "id": "s357_p03",
+      "layerName": "EnvironmentalLaw",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s357_p01"
+      ]
+    },
+    {
+      "id": "s357_p04",
+      "layerName": "EnvironmentalLaw",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s357_p02"
+      ]
+    },
+    {
+      "id": "s357_p05",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s357_p03"
+      ]
+    },
+    {
+      "id": "s357_p06",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s357_p04"
+      ]
+    },
+    {
+      "id": "s357_p07",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s357_p03",
+        ".s357_p04"
+      ]
+    },
+    {
+      "id": "s357_p08",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s357_p05"
+      ]
+    },
+    {
+      "id": "s357_p09",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s357_p06"
+      ]
+    },
+    {
+      "id": "s357_p10",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s357_p07"
+      ]
+    },
+    {
+      "id": "s357_p11",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s357_p08"
+      ]
+    },
+    {
+      "id": "s357_p12",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s357_p09",
+        ".s357_p10"
+      ]
+    },
+    {
+      "id": "s357_p13",
+      "layerName": "DispersionHypothesis",
+      "justification": [
+        "H3",
+        "H6"
+      ],
+      "dependencies": [
+        ".s357_p11",
+        ".s357_p12"
+      ]
+    }
+  ]
+}

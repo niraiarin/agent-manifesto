@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S465",
+  "layers": [
+    {
+      "name": "IPRightsInvariant",
+      "ordValue": 4,
+      "definition": "著作権・知的財産権の侵害防止絶対制約。誤検知による正当コンテンツ削除の最小化",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "CopyrightLawCompliance",
+      "ordValue": 3,
+      "definition": "著作権法・DMCA・フェアユース原則への準拠。法的根拠に基づく削除判断",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DetectionPolicy",
+      "ordValue": 2,
+      "definition": "フィンガープリント照合・メタデータ分析・類似度閾値設定方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "SimilarityInferenceHypothesis",
+      "ordValue": 1,
+      "definition": "音声・映像・テキストの特徴量類似度から侵害確率を推定する仮説層",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s465_p01",
+      "layerName": "IPRightsInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s465_p02",
+      "layerName": "IPRightsInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s465_p01"
+      ]
+    },
+    {
+      "id": "s465_p03",
+      "layerName": "CopyrightLawCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s465_p01"
+      ]
+    },
+    {
+      "id": "s465_p04",
+      "layerName": "CopyrightLawCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s465_p02"
+      ]
+    },
+    {
+      "id": "s465_p05",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s465_p03"
+      ]
+    },
+    {
+      "id": "s465_p06",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s465_p04"
+      ]
+    },
+    {
+      "id": "s465_p07",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s465_p05",
+        ".s465_p06"
+      ]
+    },
+    {
+      "id": "s465_p08",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s465_p05"
+      ]
+    },
+    {
+      "id": "s465_p09",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s465_p06"
+      ]
+    },
+    {
+      "id": "s465_p10",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s465_p07"
+      ]
+    },
+    {
+      "id": "s465_p11",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s465_p08"
+      ]
+    },
+    {
+      "id": "s465_p12",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s465_p09",
+        ".s465_p10"
+      ]
+    },
+    {
+      "id": "s465_p13",
+      "layerName": "SimilarityInferenceHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s465_p11",
+        ".s465_p12"
+      ]
+    }
+  ]
+}

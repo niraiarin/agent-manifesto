@@ -1,0 +1,185 @@
+{
+  "namespace": "TestCoverage.S370",
+  "layers": [
+    {
+      "name": "PublicSafetyObligation",
+      "ordValue": 4,
+      "definition": "気象業務法・防災情報提供義務・生命安全への不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DataQualityStandard",
+      "ordValue": 3,
+      "definition": "観測データ精度・欠損値処理・品質管理基準",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ForecastPolicy",
+      "ordValue": 2,
+      "definition": "予報発表基準・警報閾値・更新頻度の予報方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictionHypothesis",
+      "ordValue": 1,
+      "definition": "数値予報モデル・アンサンブル予測・ダウンスケーリングの推論仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s370_p01",
+      "layerName": "PublicSafetyObligation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s370_p02",
+      "layerName": "PublicSafetyObligation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s370_p01"
+      ]
+    },
+    {
+      "id": "s370_p03",
+      "layerName": "DataQualityStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s370_p01"
+      ]
+    },
+    {
+      "id": "s370_p04",
+      "layerName": "DataQualityStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s370_p02"
+      ]
+    },
+    {
+      "id": "s370_p05",
+      "layerName": "DataQualityStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s370_p03",
+        ".s370_p04"
+      ]
+    },
+    {
+      "id": "s370_p06",
+      "layerName": "ForecastPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s370_p03"
+      ]
+    },
+    {
+      "id": "s370_p07",
+      "layerName": "ForecastPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s370_p04"
+      ]
+    },
+    {
+      "id": "s370_p08",
+      "layerName": "ForecastPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s370_p05",
+        ".s370_p06"
+      ]
+    },
+    {
+      "id": "s370_p09",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s370_p06"
+      ]
+    },
+    {
+      "id": "s370_p10",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s370_p07"
+      ]
+    },
+    {
+      "id": "s370_p11",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s370_p08",
+        ".s370_p09"
+      ]
+    },
+    {
+      "id": "s370_p12",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s370_p10",
+        ".s370_p11"
+      ]
+    },
+    {
+      "id": "s370_p13",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H4",
+        "H8"
+      ],
+      "dependencies": [
+        ".s370_p01",
+        ".s370_p12"
+      ]
+    }
+  ]
+}

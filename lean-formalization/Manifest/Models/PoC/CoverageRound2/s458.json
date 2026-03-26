@@ -1,0 +1,234 @@
+{
+  "namespace": "TestCoverage.S458",
+  "layers": [
+    {
+      "name": "HousingRightInvariant",
+      "ordValue": 5,
+      "definition": "住宅確保要配慮者への支援義務・居住の安定確保の絶対的法的制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "AntiDiscriminationCompliance",
+      "ordValue": 4,
+      "definition": "住宅入居差別禁止・外国人・障害者・高齢者への平等取扱い義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AllocationFairnessPolicy",
+      "ordValue": 3,
+      "definition": "抽選・ポイント制・優先順位の透明性と公平性確保の行政方針",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "NeedAssessmentRule",
+      "ordValue": 2,
+      "definition": "所得・世帯構成・住宅困窮度・緊急性スコアリングの評価ルール",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "InventoryMatchingHypothesis",
+      "ordValue": 1,
+      "definition": "空き物件予測・世帯ニーズマッチング・長期待機最小化の仮説",
+      "derivedFrom": [
+        "C6",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s458_p01",
+      "layerName": "HousingRightInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s458_p02",
+      "layerName": "AntiDiscriminationCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s458_p01"
+      ]
+    },
+    {
+      "id": "s458_p03",
+      "layerName": "AntiDiscriminationCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s458_p01"
+      ]
+    },
+    {
+      "id": "s458_p04",
+      "layerName": "AntiDiscriminationCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s458_p02",
+        ".s458_p03"
+      ]
+    },
+    {
+      "id": "s458_p05",
+      "layerName": "AllocationFairnessPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s458_p02"
+      ]
+    },
+    {
+      "id": "s458_p06",
+      "layerName": "AllocationFairnessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s458_p03",
+        ".s458_p04"
+      ]
+    },
+    {
+      "id": "s458_p07",
+      "layerName": "AllocationFairnessPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s458_p05",
+        ".s458_p06"
+      ]
+    },
+    {
+      "id": "s458_p08",
+      "layerName": "AllocationFairnessPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s458_p05",
+        ".s458_p06"
+      ]
+    },
+    {
+      "id": "s458_p09",
+      "layerName": "NeedAssessmentRule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s458_p05"
+      ]
+    },
+    {
+      "id": "s458_p10",
+      "layerName": "NeedAssessmentRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s458_p07"
+      ]
+    },
+    {
+      "id": "s458_p11",
+      "layerName": "NeedAssessmentRule",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s458_p08",
+        ".s458_p09"
+      ]
+    },
+    {
+      "id": "s458_p12",
+      "layerName": "NeedAssessmentRule",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s458_p10",
+        ".s458_p11"
+      ]
+    },
+    {
+      "id": "s458_p13",
+      "layerName": "InventoryMatchingHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s458_p09"
+      ]
+    },
+    {
+      "id": "s458_p14",
+      "layerName": "InventoryMatchingHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s458_p10",
+        ".s458_p12"
+      ]
+    },
+    {
+      "id": "s458_p15",
+      "layerName": "InventoryMatchingHypothesis",
+      "justification": [
+        "C6",
+        "H5"
+      ],
+      "dependencies": [
+        ".s458_p13",
+        ".s458_p14"
+      ]
+    },
+    {
+      "id": "s458_p16",
+      "layerName": "InventoryMatchingHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s458_p11"
+      ]
+    },
+    {
+      "id": "s458_p17",
+      "layerName": "InventoryMatchingHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s458_p15",
+        ".s458_p16"
+      ]
+    }
+  ]
+}

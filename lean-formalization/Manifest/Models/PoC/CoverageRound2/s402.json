@@ -1,0 +1,240 @@
+{
+  "namespace": "TestCoverage.S402",
+  "layers": [
+    {
+      "name": "TransactionIntegrityInvariant",
+      "ordValue": 5,
+      "definition": "決済トランザクションの原子性・一貫性・永続性。資金消失を防ぐ不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "FinancialRegulatoryCompliance",
+      "ordValue": 4,
+      "definition": "金融規制・PCI-DSS・AML法令への準拠。外部権威に基づく義務",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "FraudPreventionPolicy",
+      "ordValue": 3,
+      "definition": "不正検知・防止ポリシー。リスク管理判断に基づく運用規則",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "PerformanceOptimization",
+      "ordValue": 2,
+      "definition": "レイテンシ・スループット最適化。SLA達成のための調整可能ルール",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PersonalizationHypothesis",
+      "ordValue": 1,
+      "definition": "ユーザー行動パターンに基づく個別化仮説。機械学習で継続的に更新",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s402_p01",
+      "layerName": "TransactionIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s402_p02",
+      "layerName": "TransactionIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s402_p03",
+      "layerName": "TransactionIntegrityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s402_p01",
+        ".s402_p02"
+      ]
+    },
+    {
+      "id": "s402_p04",
+      "layerName": "FinancialRegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s402_p01"
+      ]
+    },
+    {
+      "id": "s402_p05",
+      "layerName": "FinancialRegulatoryCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s402_p02"
+      ]
+    },
+    {
+      "id": "s402_p06",
+      "layerName": "FinancialRegulatoryCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s402_p03"
+      ]
+    },
+    {
+      "id": "s402_p07",
+      "layerName": "FraudPreventionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s402_p04"
+      ]
+    },
+    {
+      "id": "s402_p08",
+      "layerName": "FraudPreventionPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s402_p05"
+      ]
+    },
+    {
+      "id": "s402_p09",
+      "layerName": "FraudPreventionPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s402_p06"
+      ]
+    },
+    {
+      "id": "s402_p10",
+      "layerName": "PerformanceOptimization",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s402_p07"
+      ]
+    },
+    {
+      "id": "s402_p11",
+      "layerName": "PerformanceOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s402_p08"
+      ]
+    },
+    {
+      "id": "s402_p12",
+      "layerName": "PerformanceOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s402_p09"
+      ]
+    },
+    {
+      "id": "s402_p13",
+      "layerName": "PerformanceOptimization",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s402_p10",
+        ".s402_p11"
+      ]
+    },
+    {
+      "id": "s402_p14",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s402_p10"
+      ]
+    },
+    {
+      "id": "s402_p15",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s402_p11"
+      ]
+    },
+    {
+      "id": "s402_p16",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s402_p12"
+      ]
+    },
+    {
+      "id": "s402_p17",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s402_p13",
+        ".s402_p14"
+      ]
+    },
+    {
+      "id": "s402_p18",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s402_p15",
+        ".s402_p16"
+      ]
+    }
+  ]
+}

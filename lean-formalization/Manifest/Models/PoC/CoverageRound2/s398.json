@@ -1,0 +1,194 @@
+{
+  "namespace": "TestCoverage.S398",
+  "layers": [
+    {
+      "name": "LegalComplianceInvariant",
+      "ordValue": 4,
+      "definition": "労働基準法・男女雇用機会均等法・障害者差別解消法への完全適合",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "FairnessInvariant",
+      "ordValue": 3,
+      "definition": "性別・年齢・人種・障害に基づく評価差別の検出・是正の絶対義務",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "EvaluationTransparencyPolicy",
+      "ordValue": 2,
+      "definition": "評価基準の透明性確保・根拠説明可能性の維持方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "BiasDetectionHypothesis",
+      "ordValue": 1,
+      "definition": "統計的検定・反実仮想分析によるバイアス検出アルゴリズムの仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s398_p01",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s398_p02",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s398_p03",
+      "layerName": "FairnessInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s398_p01",
+        ".s398_p02"
+      ]
+    },
+    {
+      "id": "s398_p04",
+      "layerName": "EvaluationTransparencyPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s398_p02"
+      ]
+    },
+    {
+      "id": "s398_p05",
+      "layerName": "EvaluationTransparencyPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s398_p03"
+      ]
+    },
+    {
+      "id": "s398_p06",
+      "layerName": "EvaluationTransparencyPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s398_p04"
+      ]
+    },
+    {
+      "id": "s398_p07",
+      "layerName": "EvaluationTransparencyPolicy",
+      "justification": [
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s398_p05",
+        ".s398_p06"
+      ]
+    },
+    {
+      "id": "s398_p08",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s398_p03"
+      ]
+    },
+    {
+      "id": "s398_p09",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s398_p05"
+      ]
+    },
+    {
+      "id": "s398_p10",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s398_p07"
+      ]
+    },
+    {
+      "id": "s398_p11",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s398_p08"
+      ]
+    },
+    {
+      "id": "s398_p12",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s398_p09"
+      ]
+    },
+    {
+      "id": "s398_p13",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s398_p10",
+        ".s398_p11"
+      ]
+    },
+    {
+      "id": "s398_p14",
+      "layerName": "BiasDetectionHypothesis",
+      "justification": [
+        "H1",
+        "H3",
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s398_p12",
+        ".s398_p13"
+      ]
+    }
+  ]
+}

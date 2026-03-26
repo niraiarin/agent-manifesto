@@ -36,7 +36,7 @@ for i in $(seq 0 $((NUM - 1))); do
     start_ns=$(python3 -c 'import time; print(int(time.time()*1e9))')
 
     if bash "$MODELS_DIR/generate-conditional-axiom-system.sh" -f "$spec_file" -o "$lean_file" --no-verify > /dev/null 2>&1; then
-      LEAN_ROOT="$(cd "$MODELS_DIR/../.." && pwd)"
+      LEAN_ROOT="$(cd "$THIS_DIR/../../../.." && pwd)"
       ABS_OUT="$(cd "$(dirname "$lean_file")" && pwd)/$(basename "$lean_file")"
       REL="${ABS_OUT#${LEAN_ROOT}/}"
       MOD=$(echo "$REL" | sed 's|/|.|g; s|\.lean$||')

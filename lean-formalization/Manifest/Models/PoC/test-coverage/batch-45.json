@@ -1,0 +1,1272 @@
+[
+  {
+    "scenario_id": 441,
+    "project": "衛星通信スケジューリング",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S441",
+      "layers": [
+        {
+          "name": "OrbitalSafetyInvariant",
+          "ordValue": 4,
+          "definition": "衛星軌道の衝突回避・電波干渉防止に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RegulatoryCompliancePolicy",
+          "ordValue": 3,
+          "definition": "ITU周波数規制・国際条約・ライセンス条件への適合要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "SchedulingOptimizationPolicy",
+          "ordValue": 2,
+          "definition": "スループット最大化・優先度付きキュー・時間窓配分の方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "TrafficPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "通信需要パターン・障害予測・容量見積もりに関する推論仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s441_p01",
+          "layerName": "OrbitalSafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s441_p02",
+          "layerName": "OrbitalSafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s441_p03",
+          "layerName": "OrbitalSafetyInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s441_p01", ".s441_p02"]
+        },
+        {
+          "id": "s441_p04",
+          "layerName": "RegulatoryCompliancePolicy",
+          "justification": ["C3"],
+          "dependencies": [".s441_p01"]
+        },
+        {
+          "id": "s441_p05",
+          "layerName": "RegulatoryCompliancePolicy",
+          "justification": ["C4"],
+          "dependencies": [".s441_p02"]
+        },
+        {
+          "id": "s441_p06",
+          "layerName": "RegulatoryCompliancePolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s441_p04", ".s441_p05"]
+        },
+        {
+          "id": "s441_p07",
+          "layerName": "SchedulingOptimizationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s441_p04"]
+        },
+        {
+          "id": "s441_p08",
+          "layerName": "SchedulingOptimizationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s441_p05"]
+        },
+        {
+          "id": "s441_p09",
+          "layerName": "SchedulingOptimizationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s441_p06", ".s441_p07"]
+        },
+        {
+          "id": "s441_p10",
+          "layerName": "TrafficPredictionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s441_p07"]
+        },
+        {
+          "id": "s441_p11",
+          "layerName": "TrafficPredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s441_p08"]
+        },
+        {
+          "id": "s441_p12",
+          "layerName": "TrafficPredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s441_p09", ".s441_p10"]
+        },
+        {
+          "id": "s441_p13",
+          "layerName": "TrafficPredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s441_p11"]
+        },
+        {
+          "id": "s441_p14",
+          "layerName": "TrafficPredictionHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s441_p12", ".s441_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 442,
+    "project": "光ファイバー敷設計画",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S442",
+      "layers": [
+        {
+          "name": "InfrastructureSafetyInvariant",
+          "ordValue": 3,
+          "definition": "地下埋設物・電力線との離隔・工事安全に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RouteOptimizationPolicy",
+          "ordValue": 2,
+          "definition": "最短経路・コスト最小化・既存インフラ活用の敷設計画方針",
+          "derivedFrom": ["C3", "H1", "H2"]
+        },
+        {
+          "name": "DemandForecastHypothesis",
+          "ordValue": 1,
+          "definition": "通信需要分布・将来拡張・帯域利用率に関する予測仮説",
+          "derivedFrom": ["C4", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s442_p01",
+          "layerName": "InfrastructureSafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s442_p02",
+          "layerName": "InfrastructureSafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s442_p01"]
+        },
+        {
+          "id": "s442_p03",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s442_p01"]
+        },
+        {
+          "id": "s442_p04",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s442_p02", ".s442_p03"]
+        },
+        {
+          "id": "s442_p05",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s442_p03"]
+        },
+        {
+          "id": "s442_p06",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["C4"],
+          "dependencies": [".s442_p03"]
+        },
+        {
+          "id": "s442_p07",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s442_p04", ".s442_p06"]
+        },
+        {
+          "id": "s442_p08",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s442_p05"]
+        },
+        {
+          "id": "s442_p09",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s442_p07", ".s442_p08"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 443,
+    "project": "エッジコンピューティング配置",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S443",
+      "layers": [
+        {
+          "name": "PhysicalSecurityInvariant",
+          "ordValue": 5,
+          "definition": "エッジノードの物理的セキュリティ・耐障害性・電源冗長性の絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "DataSovereigntyPolicy",
+          "ordValue": 4,
+          "definition": "データ主権・プライバシー規制・国境越えデータ転送制約",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "LatencyQoSPolicy",
+          "ordValue": 3,
+          "definition": "レイテンシSLA・帯域保証・QoS優先度管理の運用方針",
+          "derivedFrom": ["C4", "H1"]
+        },
+        {
+          "name": "ResourceAllocationPolicy",
+          "ordValue": 2,
+          "definition": "CPU・メモリ・ストレージの動的割当・スケーリング戦略",
+          "derivedFrom": ["C5", "H2", "H3"]
+        },
+        {
+          "name": "WorkloadPlacementHypothesis",
+          "ordValue": 1,
+          "definition": "ワークロード配置最適化・キャッシュ効率・移行コストに関する仮説",
+          "derivedFrom": ["H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s443_p01",
+          "layerName": "PhysicalSecurityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s443_p02",
+          "layerName": "DataSovereigntyPolicy",
+          "justification": ["C2"],
+          "dependencies": [".s443_p01"]
+        },
+        {
+          "id": "s443_p03",
+          "layerName": "DataSovereigntyPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s443_p01"]
+        },
+        {
+          "id": "s443_p04",
+          "layerName": "DataSovereigntyPolicy",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s443_p02", ".s443_p03"]
+        },
+        {
+          "id": "s443_p05",
+          "layerName": "LatencyQoSPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s443_p02"]
+        },
+        {
+          "id": "s443_p06",
+          "layerName": "LatencyQoSPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s443_p04"]
+        },
+        {
+          "id": "s443_p07",
+          "layerName": "LatencyQoSPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s443_p05", ".s443_p06"]
+        },
+        {
+          "id": "s443_p08",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s443_p05"]
+        },
+        {
+          "id": "s443_p09",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s443_p06"]
+        },
+        {
+          "id": "s443_p10",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s443_p07", ".s443_p08"]
+        },
+        {
+          "id": "s443_p11",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s443_p09", ".s443_p10"]
+        },
+        {
+          "id": "s443_p12",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s443_p08"]
+        },
+        {
+          "id": "s443_p13",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s443_p09"]
+        },
+        {
+          "id": "s443_p14",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s443_p11", ".s443_p12"]
+        },
+        {
+          "id": "s443_p15",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s443_p13"]
+        },
+        {
+          "id": "s443_p16",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s443_p14", ".s443_p15"]
+        },
+        {
+          "id": "s443_p17",
+          "layerName": "WorkloadPlacementHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s443_p16"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 444,
+    "project": "通信品質モニタリング",
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 2,
+    "num_props": 7,
+    "num_deps": 5,
+    "model_spec": {
+      "namespace": "TestCoverage.S444",
+      "layers": [
+        {
+          "name": "ServiceAvailabilityInvariant",
+          "ordValue": 2,
+          "definition": "通信サービスの可用性・データ完全性・障害通知に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "QualityMetricsHypothesis",
+          "ordValue": 1,
+          "definition": "パケットロス率・遅延分散・スループット変動の品質推定仮説",
+          "derivedFrom": ["C4", "H1", "H2", "H3"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s444_p01",
+          "layerName": "ServiceAvailabilityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s444_p02",
+          "layerName": "ServiceAvailabilityInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s444_p01"]
+        },
+        {
+          "id": "s444_p03",
+          "layerName": "ServiceAvailabilityInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s444_p01"]
+        },
+        {
+          "id": "s444_p04",
+          "layerName": "QualityMetricsHypothesis",
+          "justification": ["C4"],
+          "dependencies": [".s444_p02"]
+        },
+        {
+          "id": "s444_p05",
+          "layerName": "QualityMetricsHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s444_p03", ".s444_p04"]
+        },
+        {
+          "id": "s444_p06",
+          "layerName": "QualityMetricsHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s444_p04"]
+        },
+        {
+          "id": "s444_p07",
+          "layerName": "QualityMetricsHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s444_p05", ".s444_p06"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 445,
+    "project": "SLA違反予測",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S445",
+      "layers": [
+        {
+          "name": "ContractualObligationInvariant",
+          "ordValue": 4,
+          "definition": "SLA契約条件・ペナルティ条項・最低保証水準の絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "MonitoringDetectionPolicy",
+          "ordValue": 3,
+          "definition": "リアルタイム監視・閾値アラート・エスカレーション手順の方針",
+          "derivedFrom": ["C3", "H1"]
+        },
+        {
+          "name": "PredictiveAnalyticsPolicy",
+          "ordValue": 2,
+          "definition": "機械学習による違反予測・異常検知・根本原因分析の運用方針",
+          "derivedFrom": ["C4", "H2", "H3"]
+        },
+        {
+          "name": "RemediationHypothesis",
+          "ordValue": 1,
+          "definition": "自動修復アクション・リソース再配分・フェイルオーバー効果の仮説",
+          "derivedFrom": ["C5", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s445_p01",
+          "layerName": "ContractualObligationInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s445_p02",
+          "layerName": "ContractualObligationInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s445_p01"]
+        },
+        {
+          "id": "s445_p03",
+          "layerName": "MonitoringDetectionPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s445_p01"]
+        },
+        {
+          "id": "s445_p04",
+          "layerName": "MonitoringDetectionPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s445_p02", ".s445_p03"]
+        },
+        {
+          "id": "s445_p05",
+          "layerName": "PredictiveAnalyticsPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s445_p03"]
+        },
+        {
+          "id": "s445_p06",
+          "layerName": "PredictiveAnalyticsPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s445_p04"]
+        },
+        {
+          "id": "s445_p07",
+          "layerName": "PredictiveAnalyticsPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s445_p05", ".s445_p06"]
+        },
+        {
+          "id": "s445_p08",
+          "layerName": "PredictiveAnalyticsPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s445_p06", ".s445_p07"]
+        },
+        {
+          "id": "s445_p09",
+          "layerName": "RemediationHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s445_p05"]
+        },
+        {
+          "id": "s445_p10",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s445_p06"]
+        },
+        {
+          "id": "s445_p11",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s445_p07", ".s445_p09"]
+        },
+        {
+          "id": "s445_p12",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s445_p10"]
+        },
+        {
+          "id": "s445_p13",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s445_p08", ".s445_p11"]
+        },
+        {
+          "id": "s445_p14",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H4", "H7"],
+          "dependencies": [".s445_p12", ".s445_p13"]
+        },
+        {
+          "id": "s445_p15",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s445_p11", ".s445_p12"]
+        },
+        {
+          "id": "s445_p16",
+          "layerName": "RemediationHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s445_p14", ".s445_p15"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 446,
+    "project": "周波数割当最適化",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S446",
+      "layers": [
+        {
+          "name": "SpectrumRegulationInvariant",
+          "ordValue": 3,
+          "definition": "総務省・ITU電波規則・免許条件・混信防止の絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "AllocationOptimizationPolicy",
+          "ordValue": 2,
+          "definition": "干渉最小化・スペクトル効率・動的周波数再使用の最適化方針",
+          "derivedFrom": ["C4", "C5", "H1", "H2"]
+        },
+        {
+          "name": "UsagePatternHypothesis",
+          "ordValue": 1,
+          "definition": "周波数利用パターン・需要予測・二次利用可能性に関する仮説",
+          "derivedFrom": ["C6", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s446_p01",
+          "layerName": "SpectrumRegulationInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s446_p02",
+          "layerName": "SpectrumRegulationInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s446_p01"]
+        },
+        {
+          "id": "s446_p03",
+          "layerName": "SpectrumRegulationInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s446_p01"]
+        },
+        {
+          "id": "s446_p04",
+          "layerName": "AllocationOptimizationPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s446_p02"]
+        },
+        {
+          "id": "s446_p05",
+          "layerName": "AllocationOptimizationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s446_p03"]
+        },
+        {
+          "id": "s446_p06",
+          "layerName": "AllocationOptimizationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s446_p04"]
+        },
+        {
+          "id": "s446_p07",
+          "layerName": "AllocationOptimizationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s446_p05", ".s446_p06"]
+        },
+        {
+          "id": "s446_p08",
+          "layerName": "UsagePatternHypothesis",
+          "justification": ["C6"],
+          "dependencies": [".s446_p04"]
+        },
+        {
+          "id": "s446_p09",
+          "layerName": "UsagePatternHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s446_p06", ".s446_p08"]
+        },
+        {
+          "id": "s446_p10",
+          "layerName": "UsagePatternHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s446_p07"]
+        },
+        {
+          "id": "s446_p11",
+          "layerName": "UsagePatternHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s446_p09", ".s446_p10"]
+        },
+        {
+          "id": "s446_p12",
+          "layerName": "UsagePatternHypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s446_p09", ".s446_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 447,
+    "project": "海底ケーブル保守",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S447",
+      "layers": [
+        {
+          "name": "EnvironmentalSafetyInvariant",
+          "ordValue": 6,
+          "definition": "海洋環境保護・船舶安全・潜水作業規制の絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "InternationalLegalInvariant",
+          "ordValue": 5,
+          "definition": "国連海洋法条約・各国EEZ・排他的経済水域の法的制約",
+          "derivedFrom": ["C2"]
+        },
+        {
+          "name": "CableIntegrityPolicy",
+          "ordValue": 4,
+          "definition": "ケーブル損傷検知・絶縁抵抗管理・光損失測定の監視方針",
+          "derivedFrom": ["C3", "H1"]
+        },
+        {
+          "name": "MaintenanceSchedulePolicy",
+          "ordValue": 3,
+          "definition": "予防保全周期・修理船運航・部品在庫管理の運用方針",
+          "derivedFrom": ["C4", "H2"]
+        },
+        {
+          "name": "RepairCostOptimizationPolicy",
+          "ordValue": 2,
+          "definition": "修理コスト最小化・リスク優先度・保険管理の最適化方針",
+          "derivedFrom": ["C5", "H3"]
+        },
+        {
+          "name": "LifecyclePredictionHypothesis",
+          "ordValue": 1,
+          "definition": "ケーブル寿命予測・劣化モデル・更新タイミングに関する仮説",
+          "derivedFrom": ["H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s447_p01",
+          "layerName": "EnvironmentalSafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s447_p02",
+          "layerName": "InternationalLegalInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s447_p01"]
+        },
+        {
+          "id": "s447_p03",
+          "layerName": "CableIntegrityPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s447_p01"]
+        },
+        {
+          "id": "s447_p04",
+          "layerName": "CableIntegrityPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s447_p02", ".s447_p03"]
+        },
+        {
+          "id": "s447_p05",
+          "layerName": "CableIntegrityPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s447_p03", ".s447_p04"]
+        },
+        {
+          "id": "s447_p06",
+          "layerName": "MaintenanceSchedulePolicy",
+          "justification": ["C4"],
+          "dependencies": [".s447_p03"]
+        },
+        {
+          "id": "s447_p07",
+          "layerName": "MaintenanceSchedulePolicy",
+          "justification": ["H2"],
+          "dependencies": [".s447_p04", ".s447_p06"]
+        },
+        {
+          "id": "s447_p08",
+          "layerName": "MaintenanceSchedulePolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s447_p06", ".s447_p07"]
+        },
+        {
+          "id": "s447_p09",
+          "layerName": "RepairCostOptimizationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s447_p06"]
+        },
+        {
+          "id": "s447_p10",
+          "layerName": "RepairCostOptimizationPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s447_p07", ".s447_p09"]
+        },
+        {
+          "id": "s447_p11",
+          "layerName": "RepairCostOptimizationPolicy",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s447_p09", ".s447_p10"]
+        },
+        {
+          "id": "s447_p12",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p05"]
+        },
+        {
+          "id": "s447_p13",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p08", ".s447_p12"]
+        },
+        {
+          "id": "s447_p14",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p11"]
+        },
+        {
+          "id": "s447_p15",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p13", ".s447_p14"]
+        },
+        {
+          "id": "s447_p16",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p15"]
+        },
+        {
+          "id": "s447_p17",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p16"]
+        },
+        {
+          "id": "s447_p18",
+          "layerName": "LifecyclePredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s447_p15", ".s447_p17"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 448,
+    "project": "選挙投票システム",
+    "num_c": 7,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 19,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S448",
+      "layers": [
+        {
+          "name": "DemocraticIntegrityInvariant",
+          "ordValue": 5,
+          "definition": "一人一票・無記名秘密投票・改竄不可能性の民主主義的絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "LegalFrameworkInvariant",
+          "ordValue": 4,
+          "definition": "公職選挙法・個人情報保護法・選挙管理委員会規則への適合",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "SecurityAuditPolicy",
+          "ordValue": 3,
+          "definition": "ペネトレーションテスト・監査ログ・改竄検知の不正防止方針",
+          "derivedFrom": ["C5", "H1"]
+        },
+        {
+          "name": "AccessibilityOperationPolicy",
+          "ordValue": 2,
+          "definition": "障害者対応・多言語サポート・操作性確保の運用方針",
+          "derivedFrom": ["C6", "H2"]
+        },
+        {
+          "name": "SystemReliabilityHypothesis",
+          "ordValue": 1,
+          "definition": "投票集計精度・システム可用性・障害復旧時間に関する仮説",
+          "derivedFrom": ["C7", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s448_p01",
+          "layerName": "DemocraticIntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s448_p02",
+          "layerName": "DemocraticIntegrityInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s448_p01"]
+        },
+        {
+          "id": "s448_p03",
+          "layerName": "DemocraticIntegrityInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s448_p01", ".s448_p02"]
+        },
+        {
+          "id": "s448_p04",
+          "layerName": "LegalFrameworkInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s448_p01"]
+        },
+        {
+          "id": "s448_p05",
+          "layerName": "LegalFrameworkInvariant",
+          "justification": ["C4"],
+          "dependencies": [".s448_p02"]
+        },
+        {
+          "id": "s448_p06",
+          "layerName": "LegalFrameworkInvariant",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s448_p04", ".s448_p05"]
+        },
+        {
+          "id": "s448_p07",
+          "layerName": "SecurityAuditPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s448_p03"]
+        },
+        {
+          "id": "s448_p08",
+          "layerName": "SecurityAuditPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s448_p06", ".s448_p07"]
+        },
+        {
+          "id": "s448_p09",
+          "layerName": "SecurityAuditPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s448_p07", ".s448_p08"]
+        },
+        {
+          "id": "s448_p10",
+          "layerName": "AccessibilityOperationPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s448_p04"]
+        },
+        {
+          "id": "s448_p11",
+          "layerName": "AccessibilityOperationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s448_p08", ".s448_p10"]
+        },
+        {
+          "id": "s448_p12",
+          "layerName": "AccessibilityOperationPolicy",
+          "justification": ["C6", "H2"],
+          "dependencies": [".s448_p10", ".s448_p11"]
+        },
+        {
+          "id": "s448_p13",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["C7"],
+          "dependencies": [".s448_p07"]
+        },
+        {
+          "id": "s448_p14",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s448_p09", ".s448_p13"]
+        },
+        {
+          "id": "s448_p15",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s448_p11"]
+        },
+        {
+          "id": "s448_p16",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s448_p14", ".s448_p15"]
+        },
+        {
+          "id": "s448_p17",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["C7"],
+          "dependencies": [".s448_p12"]
+        },
+        {
+          "id": "s448_p18",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s448_p16", ".s448_p17"]
+        },
+        {
+          "id": "s448_p19",
+          "layerName": "SystemReliabilityHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s448_p18"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 449,
+    "project": "公共施設予約AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S449",
+      "layers": [
+        {
+          "name": "PublicFairnessInvariant",
+          "ordValue": 3,
+          "definition": "公平なアクセス・差別禁止・情報公開義務の公共サービス絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "BookingManagementPolicy",
+          "ordValue": 2,
+          "definition": "予約競合解決・キャンセル規則・優先度ルール・空き最大化の運用方針",
+          "derivedFrom": ["C3", "H1", "H2"]
+        },
+        {
+          "name": "DemandPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "施設利用率予測・季節パターン・イベント需要に関する推定仮説",
+          "derivedFrom": ["C4", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s449_p01",
+          "layerName": "PublicFairnessInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s449_p02",
+          "layerName": "PublicFairnessInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s449_p01"]
+        },
+        {
+          "id": "s449_p03",
+          "layerName": "BookingManagementPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s449_p01"]
+        },
+        {
+          "id": "s449_p04",
+          "layerName": "BookingManagementPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s449_p02", ".s449_p03"]
+        },
+        {
+          "id": "s449_p05",
+          "layerName": "BookingManagementPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s449_p03"]
+        },
+        {
+          "id": "s449_p06",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["C4"],
+          "dependencies": [".s449_p03"]
+        },
+        {
+          "id": "s449_p07",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s449_p04", ".s449_p06"]
+        },
+        {
+          "id": "s449_p08",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s449_p05"]
+        },
+        {
+          "id": "s449_p09",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s449_p07", ".s449_p08"]
+        },
+        {
+          "id": "s449_p10",
+          "layerName": "BookingManagementPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s449_p09"]
+        },
+        {
+          "id": "s449_p11",
+          "layerName": "PublicFairnessInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s449_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 450,
+    "project": "生活保護審査支援",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 7,
+    "num_props": 20,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S450",
+      "layers": [
+        {
+          "name": "ConstitutionalRightsInvariant",
+          "ordValue": 7,
+          "definition": "生存権・生活保護法・平等原則・人権保護の憲法的絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "LegalComplianceInvariant",
+          "ordValue": 6,
+          "definition": "生活保護法施行規則・厚生労働省通知・審査基準への法的適合",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "BiasPreventionPolicy",
+          "ordValue": 5,
+          "definition": "アルゴリズム公平性・属性差別排除・説明責任確保の偏見防止方針",
+          "derivedFrom": ["C4"]
+        },
+        {
+          "name": "CaseworkerSupportPolicy",
+          "ordValue": 4,
+          "definition": "ケースワーカー判断補助・情報提示・最終決定権維持の支援方針",
+          "derivedFrom": ["C5", "H1"]
+        },
+        {
+          "name": "EligibilityAssessmentPolicy",
+          "ordValue": 3,
+          "definition": "申請者の資産・収入・扶養義務・就労能力評価の審査方針",
+          "derivedFrom": ["H2", "H3"]
+        },
+        {
+          "name": "SocialContextAnalysisPolicy",
+          "ordValue": 2,
+          "definition": "生活困窮背景・支援ニーズ・地域資源活用の社会的文脈分析方針",
+          "derivedFrom": ["C6", "H4"]
+        },
+        {
+          "name": "OutcomePredictionHypothesis",
+          "ordValue": 1,
+          "definition": "自立支援効果・再申請リスク・支援期間予測に関する仮説",
+          "derivedFrom": ["H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s450_p01",
+          "layerName": "ConstitutionalRightsInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s450_p02",
+          "layerName": "LegalComplianceInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s450_p01"]
+        },
+        {
+          "id": "s450_p03",
+          "layerName": "LegalComplianceInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s450_p01"]
+        },
+        {
+          "id": "s450_p04",
+          "layerName": "BiasPreventionPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s450_p02"]
+        },
+        {
+          "id": "s450_p05",
+          "layerName": "BiasPreventionPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s450_p03", ".s450_p04"]
+        },
+        {
+          "id": "s450_p06",
+          "layerName": "CaseworkerSupportPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s450_p04"]
+        },
+        {
+          "id": "s450_p07",
+          "layerName": "CaseworkerSupportPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s450_p05", ".s450_p06"]
+        },
+        {
+          "id": "s450_p08",
+          "layerName": "EligibilityAssessmentPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s450_p06"]
+        },
+        {
+          "id": "s450_p09",
+          "layerName": "EligibilityAssessmentPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s450_p07"]
+        },
+        {
+          "id": "s450_p10",
+          "layerName": "EligibilityAssessmentPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s450_p08", ".s450_p09"]
+        },
+        {
+          "id": "s450_p11",
+          "layerName": "SocialContextAnalysisPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s450_p08"]
+        },
+        {
+          "id": "s450_p12",
+          "layerName": "SocialContextAnalysisPolicy",
+          "justification": ["H4"],
+          "dependencies": [".s450_p09", ".s450_p11"]
+        },
+        {
+          "id": "s450_p13",
+          "layerName": "SocialContextAnalysisPolicy",
+          "justification": ["C6", "H4"],
+          "dependencies": [".s450_p11", ".s450_p12"]
+        },
+        {
+          "id": "s450_p14",
+          "layerName": "OutcomePredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s450_p10"]
+        },
+        {
+          "id": "s450_p15",
+          "layerName": "OutcomePredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s450_p12", ".s450_p14"]
+        },
+        {
+          "id": "s450_p16",
+          "layerName": "OutcomePredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s450_p13"]
+        },
+        {
+          "id": "s450_p17",
+          "layerName": "SocialContextAnalysisPolicy",
+          "justification": ["H4"],
+          "dependencies": [".s450_p14"]
+        },
+        {
+          "id": "s450_p18",
+          "layerName": "OutcomePredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s450_p15", ".s450_p16"]
+        },
+        {
+          "id": "s450_p19",
+          "layerName": "EligibilityAssessmentPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s450_p17"]
+        },
+        {
+          "id": "s450_p20",
+          "layerName": "OutcomePredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s450_p18", ".s450_p19"]
+        }
+      ]
+    }
+  }
+]

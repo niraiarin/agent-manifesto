@@ -1,0 +1,201 @@
+{
+  "namespace": "TestCoverage.S475",
+  "layers": [
+    {
+      "name": "BudgetAndSLAInvariant",
+      "ordValue": 4,
+      "definition": "予算上限・SLA保証・ガバナンス要件の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ResourceAllocationPolicy",
+      "ordValue": 3,
+      "definition": "リソース使用率・リザーブドインスタンス・スポット活用ポリシー",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OptimizationStrategyPolicy",
+      "ordValue": 2,
+      "definition": "ライトサイジング・アイドルリソース廃棄・タグ管理の方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "CostForecastHypothesis",
+      "ordValue": 1,
+      "definition": "使用量トレンドと季節変動を考慮したコスト予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s475_p01",
+      "layerName": "BudgetAndSLAInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s475_p02",
+      "layerName": "BudgetAndSLAInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s475_p03",
+      "layerName": "BudgetAndSLAInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s475_p01",
+        ".s475_p02"
+      ]
+    },
+    {
+      "id": "s475_p04",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s475_p01"
+      ]
+    },
+    {
+      "id": "s475_p05",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s475_p02"
+      ]
+    },
+    {
+      "id": "s475_p06",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s475_p04",
+        ".s475_p05"
+      ]
+    },
+    {
+      "id": "s475_p07",
+      "layerName": "OptimizationStrategyPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s475_p04"
+      ]
+    },
+    {
+      "id": "s475_p08",
+      "layerName": "OptimizationStrategyPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s475_p05"
+      ]
+    },
+    {
+      "id": "s475_p09",
+      "layerName": "OptimizationStrategyPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s475_p06",
+        ".s475_p07"
+      ]
+    },
+    {
+      "id": "s475_p10",
+      "layerName": "CostForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s475_p07"
+      ]
+    },
+    {
+      "id": "s475_p11",
+      "layerName": "CostForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s475_p08"
+      ]
+    },
+    {
+      "id": "s475_p12",
+      "layerName": "CostForecastHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s475_p09",
+        ".s475_p10"
+      ]
+    },
+    {
+      "id": "s475_p13",
+      "layerName": "CostForecastHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s475_p10",
+        ".s475_p11"
+      ]
+    },
+    {
+      "id": "s475_p14",
+      "layerName": "OptimizationStrategyPolicy",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s475_p07",
+        ".s475_p09"
+      ]
+    },
+    {
+      "id": "s475_p15",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s475_p06"
+      ]
+    }
+  ]
+}

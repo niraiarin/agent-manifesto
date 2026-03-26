@@ -1,0 +1,277 @@
+{
+  "namespace": "TestCoverage.S399",
+  "layers": [
+    {
+      "name": "LegalRegulatoryInvariant",
+      "ordValue": 6,
+      "definition": "都市計画法・建築基準法・環境アセスメント法への完全適合（絶対制約）",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ResidentRightsInvariant",
+      "ordValue": 5,
+      "definition": "既存住民の居住権・移転補償に関する絶対的権利保護",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalPolicy",
+      "ordValue": 4,
+      "definition": "緑地保全率・排水処理・CO2排出量に関する環境基準遵守方針",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "InfrastructurePolicy",
+      "ordValue": 3,
+      "definition": "交通・上下水道・電力インフラ容量に関する整備基準方針",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "EconomicViabilityPolicy",
+      "ordValue": 2,
+      "definition": "事業収支・民間投資誘致・地価変動に関する経済的実現可能性方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "SocioUrbanHypothesis",
+      "ordValue": 1,
+      "definition": "人口動態・産業集積・コミュニティ形成に関する都市社会学的仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s399_p01",
+      "layerName": "LegalRegulatoryInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s399_p02",
+      "layerName": "ResidentRightsInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s399_p01"
+      ]
+    },
+    {
+      "id": "s399_p03",
+      "layerName": "EnvironmentalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s399_p01"
+      ]
+    },
+    {
+      "id": "s399_p04",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s399_p02"
+      ]
+    },
+    {
+      "id": "s399_p05",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s399_p03"
+      ]
+    },
+    {
+      "id": "s399_p06",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s399_p04",
+        ".s399_p05"
+      ]
+    },
+    {
+      "id": "s399_p07",
+      "layerName": "EconomicViabilityPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s399_p02"
+      ]
+    },
+    {
+      "id": "s399_p08",
+      "layerName": "EconomicViabilityPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s399_p04"
+      ]
+    },
+    {
+      "id": "s399_p09",
+      "layerName": "EconomicViabilityPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s399_p05"
+      ]
+    },
+    {
+      "id": "s399_p10",
+      "layerName": "EconomicViabilityPolicy",
+      "justification": [
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s399_p07",
+        ".s399_p08",
+        ".s399_p09"
+      ]
+    },
+    {
+      "id": "s399_p11",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s399_p03"
+      ]
+    },
+    {
+      "id": "s399_p12",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s399_p06"
+      ]
+    },
+    {
+      "id": "s399_p13",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s399_p07"
+      ]
+    },
+    {
+      "id": "s399_p14",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s399_p08"
+      ]
+    },
+    {
+      "id": "s399_p15",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s399_p10"
+      ]
+    },
+    {
+      "id": "s399_p16",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s399_p11",
+        ".s399_p12"
+      ]
+    },
+    {
+      "id": "s399_p17",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s399_p13",
+        ".s399_p14"
+      ]
+    },
+    {
+      "id": "s399_p18",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s399_p15",
+        ".s399_p16"
+      ]
+    },
+    {
+      "id": "s399_p19",
+      "layerName": "EconomicViabilityPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s399_p09",
+        ".s399_p11"
+      ]
+    },
+    {
+      "id": "s399_p20",
+      "layerName": "SocioUrbanHypothesis",
+      "justification": [
+        "H4",
+        "H6",
+        "H8"
+      ],
+      "dependencies": [
+        ".s399_p17",
+        ".s399_p18",
+        ".s399_p19"
+      ]
+    }
+  ]
+}

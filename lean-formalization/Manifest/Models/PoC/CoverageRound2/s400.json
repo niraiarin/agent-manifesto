@@ -1,0 +1,140 @@
+{
+  "namespace": "TestCoverage.S400",
+  "layers": [
+    {
+      "name": "PreservationInvariant",
+      "ordValue": 3,
+      "definition": "原本文書の物理的保護・デジタル保存の不可逆損傷防止に関する絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TranscriptionAccuracyPolicy",
+      "ordValue": 2,
+      "definition": "文字認識精度・文脈整合性・校正プロセスに関する方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "HistoricalInterpretationHypothesis",
+      "ordValue": 1,
+      "definition": "変体仮名・くずし字・異体字認識モデルの精度向上に関する仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s400_p01",
+      "layerName": "PreservationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s400_p02",
+      "layerName": "PreservationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s400_p03",
+      "layerName": "TranscriptionAccuracyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s400_p01"
+      ]
+    },
+    {
+      "id": "s400_p04",
+      "layerName": "TranscriptionAccuracyPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s400_p02"
+      ]
+    },
+    {
+      "id": "s400_p05",
+      "layerName": "TranscriptionAccuracyPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s400_p03",
+        ".s400_p04"
+      ]
+    },
+    {
+      "id": "s400_p06",
+      "layerName": "HistoricalInterpretationHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s400_p03"
+      ]
+    },
+    {
+      "id": "s400_p07",
+      "layerName": "HistoricalInterpretationHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s400_p04"
+      ]
+    },
+    {
+      "id": "s400_p08",
+      "layerName": "HistoricalInterpretationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s400_p05"
+      ]
+    },
+    {
+      "id": "s400_p09",
+      "layerName": "HistoricalInterpretationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s400_p06"
+      ]
+    },
+    {
+      "id": "s400_p10",
+      "layerName": "HistoricalInterpretationHypothesis",
+      "justification": [
+        "H1",
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s400_p07",
+        ".s400_p08",
+        ".s400_p09"
+      ]
+    }
+  ]
+}

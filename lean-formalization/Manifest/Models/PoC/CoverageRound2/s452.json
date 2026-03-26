@@ -1,0 +1,143 @@
+{
+  "namespace": "TestCoverage.S452",
+  "layers": [
+    {
+      "name": "StatisticalIntegrityInvariant",
+      "ordValue": 3,
+      "definition": "国勢調査データの真正性・統計的不偏性の不変条件。データ改ざん・選択バイアス許容不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DemographicModelPolicy",
+      "ordValue": 2,
+      "definition": "出生率・死亡率・移動率モデルの選択方針。コーホート生命表・Leslie行列適用基準",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ProjectionUncertaintyHypothesis",
+      "ordValue": 1,
+      "definition": "長期予測誤差区間・感度分析・シナリオ分岐に関する不確実性仮説",
+      "derivedFrom": [
+        "C4",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s452_p01",
+      "layerName": "StatisticalIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s452_p02",
+      "layerName": "StatisticalIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s452_p03",
+      "layerName": "DemographicModelPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s452_p01"
+      ]
+    },
+    {
+      "id": "s452_p04",
+      "layerName": "DemographicModelPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s452_p01",
+        ".s452_p02"
+      ]
+    },
+    {
+      "id": "s452_p05",
+      "layerName": "DemographicModelPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s452_p03",
+        ".s452_p04"
+      ]
+    },
+    {
+      "id": "s452_p06",
+      "layerName": "ProjectionUncertaintyHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s452_p03"
+      ]
+    },
+    {
+      "id": "s452_p07",
+      "layerName": "ProjectionUncertaintyHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s452_p04",
+        ".s452_p05"
+      ]
+    },
+    {
+      "id": "s452_p08",
+      "layerName": "ProjectionUncertaintyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s452_p06"
+      ]
+    },
+    {
+      "id": "s452_p09",
+      "layerName": "ProjectionUncertaintyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s452_p07",
+        ".s452_p08"
+      ]
+    },
+    {
+      "id": "s452_p10",
+      "layerName": "ProjectionUncertaintyHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s452_p08",
+        ".s452_p09"
+      ]
+    }
+  ]
+}

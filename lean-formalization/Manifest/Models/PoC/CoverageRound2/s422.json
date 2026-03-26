@@ -1,0 +1,238 @@
+{
+  "namespace": "TestCoverage.S422",
+  "layers": [
+    {
+      "name": "BeneficiaryProtection",
+      "ordValue": 5,
+      "definition": "年金受給者の元本保全・最低給付保証に関する絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 4,
+      "definition": "年金法・金融商品取引法・受託者責任への法的準拠要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "RiskGovernance",
+      "ordValue": 3,
+      "definition": "VaR上限・分散投資制約・流動性バッファー維持に関するリスク統治",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "AllocationPolicy",
+      "ordValue": 2,
+      "definition": "国内外株式・債券・オルタナティブへの資産配分方針",
+      "derivedFrom": [
+        "C6",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "MarketHypothesis",
+      "ordValue": 1,
+      "definition": "金利サイクル・株式リスクプレミアム・為替トレンドに関する市場仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s422_p01",
+      "layerName": "BeneficiaryProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s422_p02",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s422_p01"
+      ]
+    },
+    {
+      "id": "s422_p03",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s422_p01"
+      ]
+    },
+    {
+      "id": "s422_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s422_p02",
+        ".s422_p03"
+      ]
+    },
+    {
+      "id": "s422_p05",
+      "layerName": "RiskGovernance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s422_p02"
+      ]
+    },
+    {
+      "id": "s422_p06",
+      "layerName": "RiskGovernance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s422_p03"
+      ]
+    },
+    {
+      "id": "s422_p07",
+      "layerName": "RiskGovernance",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s422_p05",
+        ".s422_p06"
+      ]
+    },
+    {
+      "id": "s422_p08",
+      "layerName": "AllocationPolicy",
+      "justification": [
+        "C6",
+        "H1"
+      ],
+      "dependencies": [
+        ".s422_p05"
+      ]
+    },
+    {
+      "id": "s422_p09",
+      "layerName": "AllocationPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s422_p06"
+      ]
+    },
+    {
+      "id": "s422_p10",
+      "layerName": "AllocationPolicy",
+      "justification": [
+        "C6",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s422_p08",
+        ".s422_p09"
+      ]
+    },
+    {
+      "id": "s422_p11",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s422_p08"
+      ]
+    },
+    {
+      "id": "s422_p12",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s422_p09"
+      ]
+    },
+    {
+      "id": "s422_p13",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s422_p11"
+      ]
+    },
+    {
+      "id": "s422_p14",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s422_p12"
+      ]
+    },
+    {
+      "id": "s422_p15",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s422_p13"
+      ]
+    },
+    {
+      "id": "s422_p16",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s422_p14"
+      ]
+    },
+    {
+      "id": "s422_p17",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s422_p15",
+        ".s422_p16"
+      ]
+    }
+  ]
+}

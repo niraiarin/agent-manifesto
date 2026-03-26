@@ -1,0 +1,212 @@
+{
+  "namespace": "TestCoverage.S453",
+  "layers": [
+    {
+      "name": "AccessibilityRightInvariant",
+      "ordValue": 5,
+      "definition": "障害者差別解消法・バリアフリー法による移動権保障の絶対制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "SafetyStandardCompliance",
+      "ordValue": 4,
+      "definition": "国土交通省バリアフリー整備ガイドライン・JIS規格への適合要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "UniversalDesignPolicy",
+      "ordValue": 3,
+      "definition": "視覚・聴覚・肢体障害・高齢者対応の設計方針。利用者代表との合意形成を含む",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "OperationalAdaptationRule",
+      "ordValue": 2,
+      "definition": "ラッシュ時・イベント時・緊急時の運用調整ルール。リソース制約下での優先順位",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "UserExperienceHypothesis",
+      "ordValue": 1,
+      "definition": "利用者満足度・利用頻度・介助負担に関する改善仮説",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s453_p01",
+      "layerName": "AccessibilityRightInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s453_p02",
+      "layerName": "SafetyStandardCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s453_p01"
+      ]
+    },
+    {
+      "id": "s453_p03",
+      "layerName": "SafetyStandardCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s453_p01"
+      ]
+    },
+    {
+      "id": "s453_p04",
+      "layerName": "SafetyStandardCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s453_p02",
+        ".s453_p03",
+        ".s453_p11"
+      ]
+    },
+    {
+      "id": "s453_p05",
+      "layerName": "UniversalDesignPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s453_p02"
+      ]
+    },
+    {
+      "id": "s453_p06",
+      "layerName": "UniversalDesignPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s453_p03",
+        ".s453_p04"
+      ]
+    },
+    {
+      "id": "s453_p07",
+      "layerName": "UniversalDesignPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s453_p05",
+        ".s453_p06"
+      ]
+    },
+    {
+      "id": "s453_p08",
+      "layerName": "OperationalAdaptationRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s453_p05",
+        ".s453_p06"
+      ]
+    },
+    {
+      "id": "s453_p09",
+      "layerName": "OperationalAdaptationRule",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s453_p07"
+      ]
+    },
+    {
+      "id": "s453_p10",
+      "layerName": "OperationalAdaptationRule",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s453_p08",
+        ".s453_p09"
+      ]
+    },
+    {
+      "id": "s453_p11",
+      "layerName": "UserExperienceHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s453_p08"
+      ]
+    },
+    {
+      "id": "s453_p12",
+      "layerName": "UserExperienceHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s453_p09"
+      ]
+    },
+    {
+      "id": "s453_p13",
+      "layerName": "UserExperienceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s453_p10",
+        ".s453_p11"
+      ]
+    },
+    {
+      "id": "s453_p14",
+      "layerName": "UserExperienceHypothesis",
+      "justification": [
+        "C5",
+        "H5"
+      ],
+      "dependencies": [
+        ".s453_p12",
+        ".s453_p13"
+      ]
+    },
+    {
+      "id": "s453_p15",
+      "layerName": "UserExperienceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s453_p14"
+      ]
+    }
+  ]
+}

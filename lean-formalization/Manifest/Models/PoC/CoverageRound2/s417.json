@@ -1,0 +1,239 @@
+{
+  "namespace": "TestCoverage.S417",
+  "layers": [
+    {
+      "name": "CertificationIntegrity",
+      "ordValue": 5,
+      "definition": "再エネ証書の発行・移転・無効化に関するダブルカウント防止の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryFramework",
+      "ordValue": 4,
+      "definition": "再生可能エネルギー特別措置法・ISO 15919・国際標準への適合制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "MarketTransparency",
+      "ordValue": 3,
+      "definition": "証書取引の透明性・公正価格形成・市場操作防止に関する方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "VerificationProtocol",
+      "ordValue": 2,
+      "definition": "発電実績検証・第三者監査・ブロックチェーン台帳整合性確認手順",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "MarketOptimization",
+      "ordValue": 1,
+      "definition": "需給マッチング・価格予測・証書流動性向上に関する最適化仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s417_p01",
+      "layerName": "CertificationIntegrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s417_p02",
+      "layerName": "CertificationIntegrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s417_p03",
+      "layerName": "CertificationIntegrity",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s417_p01",
+        ".s417_p02"
+      ]
+    },
+    {
+      "id": "s417_p04",
+      "layerName": "RegulatoryFramework",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s417_p01"
+      ]
+    },
+    {
+      "id": "s417_p05",
+      "layerName": "RegulatoryFramework",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s417_p02"
+      ]
+    },
+    {
+      "id": "s417_p06",
+      "layerName": "RegulatoryFramework",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s417_p03",
+        ".s417_p04",
+        ".s417_p05"
+      ]
+    },
+    {
+      "id": "s417_p07",
+      "layerName": "MarketTransparency",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s417_p04"
+      ]
+    },
+    {
+      "id": "s417_p08",
+      "layerName": "MarketTransparency",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s417_p05",
+        ".s417_p06"
+      ]
+    },
+    {
+      "id": "s417_p09",
+      "layerName": "MarketTransparency",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s417_p07",
+        ".s417_p08"
+      ]
+    },
+    {
+      "id": "s417_p10",
+      "layerName": "VerificationProtocol",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s417_p07"
+      ]
+    },
+    {
+      "id": "s417_p11",
+      "layerName": "VerificationProtocol",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s417_p08"
+      ]
+    },
+    {
+      "id": "s417_p12",
+      "layerName": "VerificationProtocol",
+      "justification": [
+        "C6",
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s417_p09",
+        ".s417_p10",
+        ".s417_p11"
+      ]
+    },
+    {
+      "id": "s417_p13",
+      "layerName": "MarketOptimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s417_p10"
+      ]
+    },
+    {
+      "id": "s417_p14",
+      "layerName": "MarketOptimization",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s417_p11"
+      ]
+    },
+    {
+      "id": "s417_p15",
+      "layerName": "MarketOptimization",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s417_p13",
+        ".s417_p14"
+      ]
+    },
+    {
+      "id": "s417_p16",
+      "layerName": "VerificationProtocol",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s417_p06"
+      ]
+    },
+    {
+      "id": "s417_p17",
+      "layerName": "MarketOptimization",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s417_p12",
+        ".s417_p15"
+      ]
+    }
+  ]
+}

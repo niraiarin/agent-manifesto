@@ -1,0 +1,143 @@
+{
+  "namespace": "TestCoverage.S423",
+  "layers": [
+    {
+      "name": "PlayerExperience",
+      "ordValue": 3,
+      "definition": "プレイヤーの公正性知覚・フラストレーション回避に関する絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "GameDesignPolicy",
+      "ordValue": 2,
+      "definition": "難易度曲線・スキルギャップ・報酬設計に関するゲームデザイン方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "BalanceHypothesis",
+      "ordValue": 1,
+      "definition": "キャラクター強度・マップ優位性・メタゲーム変化に関するバランス仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s423_p01",
+      "layerName": "PlayerExperience",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s423_p02",
+      "layerName": "PlayerExperience",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s423_p03",
+      "layerName": "GameDesignPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s423_p01"
+      ]
+    },
+    {
+      "id": "s423_p04",
+      "layerName": "GameDesignPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s423_p02"
+      ]
+    },
+    {
+      "id": "s423_p05",
+      "layerName": "GameDesignPolicy",
+      "justification": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s423_p03",
+        ".s423_p04"
+      ]
+    },
+    {
+      "id": "s423_p06",
+      "layerName": "BalanceHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s423_p03"
+      ]
+    },
+    {
+      "id": "s423_p07",
+      "layerName": "BalanceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s423_p04"
+      ]
+    },
+    {
+      "id": "s423_p08",
+      "layerName": "BalanceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s423_p06"
+      ]
+    },
+    {
+      "id": "s423_p09",
+      "layerName": "BalanceHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s423_p07"
+      ]
+    },
+    {
+      "id": "s423_p10",
+      "layerName": "BalanceHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s423_p08",
+        ".s423_p09"
+      ]
+    }
+  ]
+}

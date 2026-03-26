@@ -1,0 +1,104 @@
+{
+  "namespace": "TestCoverage.S365",
+  "layers": [
+    {
+      "name": "ServiceAvailability",
+      "ordValue": 2,
+      "definition": "サービス可用性・正規ユーザーアクセス保護の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "MitigationHypothesis",
+      "ordValue": 1,
+      "definition": "攻撃トラフィック識別・レート制限・トラフィック迂回の推論仮説",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s365_p01",
+      "layerName": "ServiceAvailability",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s365_p02",
+      "layerName": "ServiceAvailability",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s365_p01"
+      ]
+    },
+    {
+      "id": "s365_p03",
+      "layerName": "MitigationHypothesis",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s365_p01"
+      ]
+    },
+    {
+      "id": "s365_p04",
+      "layerName": "MitigationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s365_p02"
+      ]
+    },
+    {
+      "id": "s365_p05",
+      "layerName": "MitigationHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s365_p03"
+      ]
+    },
+    {
+      "id": "s365_p06",
+      "layerName": "MitigationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s365_p04",
+        ".s365_p05"
+      ]
+    },
+    {
+      "id": "s365_p07",
+      "layerName": "MitigationHypothesis",
+      "justification": [
+        "H1",
+        "H5"
+      ],
+      "dependencies": [
+        ".s365_p03",
+        ".s365_p06"
+      ]
+    }
+  ]
+}

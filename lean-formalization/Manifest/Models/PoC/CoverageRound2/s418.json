@@ -1,0 +1,199 @@
+{
+  "namespace": "TestCoverage.S418",
+  "layers": [
+    {
+      "name": "LegalComplianceAbsolute",
+      "ordValue": 4,
+      "definition": "特許法・PCT条約・各国知的財産権法への絶対準拠制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PriorArtStandard",
+      "ordValue": 3,
+      "definition": "先行技術調査・新規性・進歩性判断の客観的基準への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DraftingStrategy",
+      "ordValue": 2,
+      "definition": "クレーム作成・明細書構成・図面連携に関する出願戦略方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "StrategicOptimization",
+      "ordValue": 1,
+      "definition": "権利範囲最大化・審査官対応・分割出願タイミングに関する戦略仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s418_p01",
+      "layerName": "LegalComplianceAbsolute",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s418_p02",
+      "layerName": "LegalComplianceAbsolute",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s418_p03",
+      "layerName": "LegalComplianceAbsolute",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s418_p01",
+        ".s418_p02"
+      ]
+    },
+    {
+      "id": "s418_p04",
+      "layerName": "PriorArtStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s418_p01"
+      ]
+    },
+    {
+      "id": "s418_p05",
+      "layerName": "PriorArtStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s418_p02"
+      ]
+    },
+    {
+      "id": "s418_p06",
+      "layerName": "PriorArtStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s418_p03",
+        ".s418_p04",
+        ".s418_p05"
+      ]
+    },
+    {
+      "id": "s418_p07",
+      "layerName": "DraftingStrategy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s418_p04"
+      ]
+    },
+    {
+      "id": "s418_p08",
+      "layerName": "DraftingStrategy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s418_p05",
+        ".s418_p06"
+      ]
+    },
+    {
+      "id": "s418_p09",
+      "layerName": "DraftingStrategy",
+      "justification": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s418_p07",
+        ".s418_p08"
+      ]
+    },
+    {
+      "id": "s418_p10",
+      "layerName": "StrategicOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s418_p07"
+      ]
+    },
+    {
+      "id": "s418_p11",
+      "layerName": "StrategicOptimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s418_p08"
+      ]
+    },
+    {
+      "id": "s418_p12",
+      "layerName": "StrategicOptimization",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s418_p09"
+      ]
+    },
+    {
+      "id": "s418_p13",
+      "layerName": "StrategicOptimization",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s418_p10",
+        ".s418_p11"
+      ]
+    },
+    {
+      "id": "s418_p14",
+      "layerName": "StrategicOptimization",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s418_p12",
+        ".s418_p13"
+      ]
+    }
+  ]
+}

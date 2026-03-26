@@ -1,0 +1,159 @@
+{
+  "namespace": "TestCoverage.S336",
+  "layers": [
+    {
+      "name": "SecurityInvariant",
+      "ordValue": 3,
+      "definition": "マルウェア封じ込め・検知精度に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "AnalysisPolicy",
+      "ordValue": 2,
+      "definition": "脅威分析・分類・報告の運用方針",
+      "derivedFrom": [
+        "C2",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "DetectionHypothesis",
+      "ordValue": 1,
+      "definition": "検知アルゴリズム・特徴量設計に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s336_p01",
+      "layerName": "SecurityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s336_p02",
+      "layerName": "SecurityInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s336_p03",
+      "layerName": "SecurityInvariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s336_p01"
+      ]
+    },
+    {
+      "id": "s336_p04",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s336_p01"
+      ]
+    },
+    {
+      "id": "s336_p05",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s336_p01"
+      ]
+    },
+    {
+      "id": "s336_p06",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "C2",
+        "H2"
+      ],
+      "dependencies": [
+        ".s336_p04"
+      ]
+    },
+    {
+      "id": "s336_p07",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s336_p02"
+      ]
+    },
+    {
+      "id": "s336_p08",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s336_p02",
+        ".s336_p07"
+      ]
+    },
+    {
+      "id": "s336_p09",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s336_p05"
+      ]
+    },
+    {
+      "id": "s336_p10",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s336_p06",
+        ".s336_p07"
+      ]
+    },
+    {
+      "id": "s336_p11",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s336_p08"
+      ]
+    },
+    {
+      "id": "s336_p12",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s336_p09",
+        ".s336_p10"
+      ]
+    }
+  ]
+}

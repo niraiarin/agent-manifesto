@@ -1,0 +1,1359 @@
+[
+  {
+    "scenario_id": 331,
+    "project": "原子力安全監視システム",
+    "phase0": {
+      "vision": "原子力発電所の安全パラメータをリアルタイム監視し、異常兆候を早期検知・自動対応するシステム。緊急停炉判断を含む安全機能を担う。",
+      "stakeholders": "原子力規制委員会、発電所運転員、地域住民、電力会社",
+      "priority": "炉心損傷ゼロ。安全系の誤動作は許容するが安全機能の失敗は許容しない"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "緊急停炉（SCRAM）は炉心安全パラメータ逸脱時に自動起動しなければならない"},
+        {"id": "C2", "content": "安全系は多重・多様性の原則に基づき設計する"},
+        {"id": "C3", "content": "規制機関への自動報告は事象発生から15分以内に行う"},
+        {"id": "C4", "content": "運転員の判断は最終的に機械判断を上書きできる"},
+        {"id": "C5", "content": "共通原因故障を防ぐため物理的分離を維持する"},
+        {"id": "C6", "content": "安全解析コードによる炉心状態計算を毎秒実行する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C6", "content": "SCRAM閾値は保守的マージンを20%加算して設定すべき", "refutation": "過剰な停炉が発電信頼性に重大影響を与える場合"},
+        {"id": "H2", "basis": "C2", "content": "センサー系は最低4チャンネルの2-of-4論理で判断すべき", "refutation": "高信頼性センサーが実証された場合"},
+        {"id": "H3", "basis": "C5", "content": "デジタル制御系と計装は物理的に2m以上分離すべき", "refutation": "電磁シールド技術で分離要件を代替できる場合"},
+        {"id": "H4", "basis": "外部知識", "content": "過渡解析シミュレーションは12時間ごとに更新すべき", "refutation": "リアルタイム物理モデルが実用化された場合"},
+        {"id": "H5", "basis": "C4", "content": "運転員介入のタイムウィンドウは自動判断後30秒を確保すべき", "refutation": "過渡事象の進展が30秒を超えない場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S331",
+      "layers": [
+        {
+          "name": "SafetyInvariant",
+          "ordValue": 4,
+          "definition": "炉心安全に関する絶対不変条件。いかなる運転状況でも侵犯不可",
+          "derivedFrom": ["C1", "C2", "C5"]
+        },
+        {
+          "name": "RegulatoryRequirement",
+          "ordValue": 3,
+          "definition": "規制基準・法令への適合要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "通常運転・過渡対応の運用方針",
+          "derivedFrom": ["C4", "C6", "H1", "H5"]
+        },
+        {
+          "name": "AnalysisHypothesis",
+          "ordValue": 1,
+          "definition": "安全解析・シミュレーションに基づく推定仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s331_p01",
+          "layerName": "SafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s331_p02",
+          "layerName": "SafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s331_p03",
+          "layerName": "SafetyInvariant",
+          "justification": ["C5"],
+          "dependencies": [".s331_p02"]
+        },
+        {
+          "id": "s331_p04",
+          "layerName": "RegulatoryRequirement",
+          "justification": ["C3"],
+          "dependencies": [".s331_p01"]
+        },
+        {
+          "id": "s331_p05",
+          "layerName": "RegulatoryRequirement",
+          "justification": ["C4"],
+          "dependencies": [".s331_p01"]
+        },
+        {
+          "id": "s331_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["C6", "H1"],
+          "dependencies": [".s331_p01", ".s331_p04"]
+        },
+        {
+          "id": "s331_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["C4", "H5"],
+          "dependencies": [".s331_p05", ".s331_p06"]
+        },
+        {
+          "id": "s331_p08",
+          "layerName": "OperationalPolicy",
+          "justification": ["C2", "H1"],
+          "dependencies": [".s331_p02"]
+        },
+        {
+          "id": "s331_p09",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s331_p08"]
+        },
+        {
+          "id": "s331_p10",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s331_p03"]
+        },
+        {
+          "id": "s331_p11",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s331_p06"]
+        },
+        {
+          "id": "s331_p12",
+          "layerName": "OperationalPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s331_p09", ".s331_p11"]
+        },
+        {
+          "id": "s331_p13",
+          "layerName": "RegulatoryRequirement",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s331_p04", ".s331_p12"]
+        },
+        {
+          "id": "s331_p14",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s331_p07"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 332,
+    "project": "アルゴリズム取引プラットフォーム",
+    "phase0": {
+      "vision": "複数取引所で高頻度アルゴリズム取引を実行し、リスク管理とコンプライアンスを自動化するプラットフォーム。ミリ秒単位の判断で収益最大化を図る。",
+      "stakeholders": "機関投資家、コンプライアンス部門、取引所、金融規制当局",
+      "priority": "システミックリスクの防止と規制遵守が最優先。収益はその枠内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "1日あたりの最大損失額（VaR）を超えた場合は全ポジションを自動清算する"},
+        {"id": "C2", "content": "市場操作とみなされる取引パターンは禁止する"},
+        {"id": "C3", "content": "全取引履歴は規制当局への提出のため7年間保存する"},
+        {"id": "C4", "content": "フラッシュクラッシュ検知時は自動的に取引を停止する"},
+        {"id": "C5", "content": "リスクリミットは人間のリスク管理者のみが変更できる"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "VaR計算は99%信頼区間、10日保有期間で標準化すべき", "refutation": "テールリスクイベントでVaRが実損を著しく過小評価する場合"},
+        {"id": "H2", "basis": "C4", "content": "価格変動が過去1分間の標準偏差の5倍を超えた場合をフラッシュクラッシュと定義すべき", "refutation": "正常な急騰局面でも誤検知する場合"},
+        {"id": "H3", "basis": "C2", "content": "同一銘柄の両建て回転売買は3回連続で検知した場合に警告すべき", "refutation": "ヘッジ目的の正当な取引パターンと区別できない場合"},
+        {"id": "H4", "basis": "外部知識", "content": "取引アルゴリズムのパラメータ最適化は週次バックテストで評価すべき", "refutation": "市場レジーム変化が週次より速い頻度で発生する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: s332_p10(backtest_optimization)がs332_p03(var_limit)に依存するが、backtest_optimizationはAnalysisHypothesis(ord=1)、var_limitはRiskInvariant(ord=3)にあり逆方向",
+          "from": "s332_p10 (AnalysisHypothesis, ord=1)",
+          "to": "s332_p03 (RiskInvariant, ord=3)",
+          "fix": "H由来 — backtest_optimizationをOperationalPolicy(ord=2)に昇格"
+        }
+      ]
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S332",
+      "layers": [
+        {
+          "name": "RiskInvariant",
+          "ordValue": 3,
+          "definition": "システミックリスクと規制遵守に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C4", "C5"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "取引執行・リスク監視の運用方針",
+          "derivedFrom": ["C3", "H2", "H3"]
+        },
+        {
+          "name": "AnalysisHypothesis",
+          "ordValue": 1,
+          "definition": "市場モデル・リスク計算に関する推定仮説",
+          "derivedFrom": ["H1", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s332_p01",
+          "layerName": "RiskInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s332_p02",
+          "layerName": "RiskInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s332_p03",
+          "layerName": "RiskInvariant",
+          "justification": ["C1", "C5"],
+          "dependencies": [".s332_p01"]
+        },
+        {
+          "id": "s332_p04",
+          "layerName": "RiskInvariant",
+          "justification": ["C4"],
+          "dependencies": []
+        },
+        {
+          "id": "s332_p05",
+          "layerName": "OperationalPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s332_p01", ".s332_p02"]
+        },
+        {
+          "id": "s332_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s332_p04"]
+        },
+        {
+          "id": "s332_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s332_p02"]
+        },
+        {
+          "id": "s332_p08",
+          "layerName": "OperationalPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s332_p03"]
+        },
+        {
+          "id": "s332_p09",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s332_p06"]
+        },
+        {
+          "id": "s332_p10",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s332_p03"]
+        },
+        {
+          "id": "s332_p11",
+          "layerName": "OperationalPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s332_p06", ".s332_p07"]
+        },
+        {
+          "id": "s332_p12",
+          "layerName": "AnalysisHypothesis",
+          "justification": ["H1", "H4"],
+          "dependencies": [".s332_p09", ".s332_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 333,
+    "project": "手術ロボット制御システム",
+    "phase0": {
+      "vision": "外科医の動作を拡大・安定化し、遠隔手術・微細手術を可能にするロボット支援手術システム。リアルタイム力覚フィードバックと安全インターロックを備える。",
+      "stakeholders": "外科医、患者、病院、医療機器規制当局（FDA/PMDA）",
+      "priority": "患者安全が絶対最優先。機器故障は手術中断で対処し、患者傷害は許容しない"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "異常な力（設定値超過）を検知した場合はロボットアームを即時停止する"},
+        {"id": "C2", "content": "外科医は常にロボットの完全制御権を持ち、いつでも手動操作に切り替えられる"},
+        {"id": "C3", "content": "通信遅延が50ms超の場合は遠隔操作を自動中断する"},
+        {"id": "C4", "content": "手術記録（映像・センサーログ）は全て保存し、術後レビューに提供する"},
+        {"id": "C5", "content": "FDA 510(k)認証要件を全項目満たす"},
+        {"id": "C6", "content": "電源障害時は安全位置への自動退避を保証する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "力閾値は手術部位ごとに組織特性データベースから動的に設定すべき", "refutation": "個人差・病態差が大きく固定データベースでは対応できない場合"},
+        {"id": "H2", "basis": "C3", "content": "遅延補償予測制御は最大30ms先読みで安全性を維持できる", "refutation": "予測モデルが患者動態の急変に追従できない場合"},
+        {"id": "H3", "basis": "C2", "content": "手-目協調の補助フィルタはトレンブル周波数帯（8-12Hz）のみ除去すべき", "refutation": "意図的高速動作と振戦を区別できない場合"},
+        {"id": "H4", "basis": "外部知識", "content": "ロボットアームの疲労寿命は10,000手術サイクルで再評価すべき", "refutation": "材料疲労の進行が非線形で早期破断が発生する場合"},
+        {"id": "H5", "basis": "C6", "content": "緊急退避軌道は手術空間の凸包内に収まる解を事前計算して保持すべき", "refutation": "術中に手術空間が変化して事前計算が無効化される場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S333",
+      "layers": [
+        {
+          "name": "PatientSafety",
+          "ordValue": 4,
+          "definition": "患者傷害防止に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C6"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "医療機器規制（FDA/PMDA）への適合要件",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "手術中の操作・制御方針",
+          "derivedFrom": ["C2", "C3", "H3"]
+        },
+        {
+          "name": "EngineeringHypothesis",
+          "ordValue": 1,
+          "definition": "制御アルゴリズム・機械設計に関する推定仮説",
+          "derivedFrom": ["H1", "H2", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s333_p01",
+          "layerName": "PatientSafety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s333_p02",
+          "layerName": "PatientSafety",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s333_p03",
+          "layerName": "PatientSafety",
+          "justification": ["C6"],
+          "dependencies": [".s333_p01"]
+        },
+        {
+          "id": "s333_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C5"],
+          "dependencies": [".s333_p01", ".s333_p02"]
+        },
+        {
+          "id": "s333_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s333_p04"]
+        },
+        {
+          "id": "s333_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s333_p02"]
+        },
+        {
+          "id": "s333_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["C2", "H3"],
+          "dependencies": [".s333_p02", ".s333_p06"]
+        },
+        {
+          "id": "s333_p08",
+          "layerName": "OperationalPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s333_p03"]
+        },
+        {
+          "id": "s333_p09",
+          "layerName": "EngineeringHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s333_p01"]
+        },
+        {
+          "id": "s333_p10",
+          "layerName": "EngineeringHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s333_p06"]
+        },
+        {
+          "id": "s333_p11",
+          "layerName": "EngineeringHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s333_p07"]
+        },
+        {
+          "id": "s333_p12",
+          "layerName": "EngineeringHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s333_p09"]
+        },
+        {
+          "id": "s333_p13",
+          "layerName": "EngineeringHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s333_p08"]
+        },
+        {
+          "id": "s333_p14",
+          "layerName": "OperationalPolicy",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s333_p09", ".s333_p07"]
+        },
+        {
+          "id": "s333_p15",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C5"],
+          "dependencies": [".s333_p12", ".s333_p14"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 334,
+    "project": "5G基地局配置最適化システム",
+    "phase0": {
+      "vision": "都市・郊外の地形・建物データと需要予測を組み合わせて5G基地局の最適配置を計算するシステム。電波カバレッジ、コスト、設置難易度を多目的最適化する。",
+      "stakeholders": "通信事業者、自治体、建物オーナー、エンドユーザー",
+      "priority": "カバレッジ要件（人口カバー率95%以上）を満たすことが最優先。コスト最小化はその次"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "人口集中地区での5Gカバレッジ率は95%以上を達成する"},
+        {"id": "C2", "content": "電磁波強度は総務省の人体安全基準を超えない"},
+        {"id": "C3", "content": "既存4G基地局との干渉を最小化する"},
+        {"id": "C4", "content": "設置コストの予算制約（年間X億円）内で計画する"},
+        {"id": "C5", "content": "景観条例・高さ制限を遵守する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "都市部ではISD（基地局間距離）200m以下で95%カバレッジを達成できる", "refutation": "超高密集ビル街では回折・反射で200m以下でも不達成となる場合"},
+        {"id": "H2", "basis": "C3", "content": "5G/4G共存時はサブキャリア間隔30kHzの設定で干渉を許容範囲内に収められる", "refutation": "近接セルでの同期が取れない場合"},
+        {"id": "H3", "basis": "外部知識", "content": "需要予測は過去2年のトラフィックデータで将来3年間の予測精度80%を達成できる", "refutation": "新技術・イベントによる需要急変が発生する場合"},
+        {"id": "H4", "basis": "C4", "content": "建物屋上設置はポール設置より平均40%コストが低い", "refutation": "建物オーナーの交渉コストが技術コストを上回る場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S334",
+      "layers": [
+        {
+          "name": "CoverageRequirement",
+          "ordValue": 3,
+          "definition": "カバレッジ・安全・規制に関する必須達成条件",
+          "derivedFrom": ["C1", "C2", "C5"]
+        },
+        {
+          "name": "DeploymentPolicy",
+          "ordValue": 2,
+          "definition": "配置・干渉管理・予算管理の運用方針",
+          "derivedFrom": ["C3", "C4", "H2"]
+        },
+        {
+          "name": "OptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "カバレッジモデル・コスト推定に関する推定仮説",
+          "derivedFrom": ["H1", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s334_p01",
+          "layerName": "CoverageRequirement",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s334_p02",
+          "layerName": "CoverageRequirement",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s334_p03",
+          "layerName": "CoverageRequirement",
+          "justification": ["C5"],
+          "dependencies": [".s334_p02"]
+        },
+        {
+          "id": "s334_p04",
+          "layerName": "DeploymentPolicy",
+          "justification": ["C3", "H2"],
+          "dependencies": [".s334_p01"]
+        },
+        {
+          "id": "s334_p05",
+          "layerName": "DeploymentPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s334_p03"]
+        },
+        {
+          "id": "s334_p06",
+          "layerName": "DeploymentPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s334_p04"]
+        },
+        {
+          "id": "s334_p07",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s334_p01"]
+        },
+        {
+          "id": "s334_p08",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s334_p07"]
+        },
+        {
+          "id": "s334_p09",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s334_p05"]
+        },
+        {
+          "id": "s334_p10",
+          "layerName": "DeploymentPolicy",
+          "justification": ["C4", "H4"],
+          "dependencies": [".s334_p09", ".s334_p05"]
+        },
+        {
+          "id": "s334_p11",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H1", "H3"],
+          "dependencies": [".s334_p08", ".s334_p04"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 335,
+    "project": "地震波解析AIシステム",
+    "phase0": {
+      "vision": "地震計ネットワークからリアルタイムデータを収集し、震源決定・マグニチュード推定・津波警報を自動発令するシステム。早期警報の遅延を最小化する。",
+      "stakeholders": "気象庁、自治体防災部門、一般市民、鉄道・電力インフラ事業者",
+      "priority": "津波警報の見逃しゼロ。誤警報は社会コストが高いが見逃しよりは許容できる"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "M7.0以上かつ海底地震の場合は即時津波警報を発令する"},
+        {"id": "C2", "content": "初期警報は地震発生から3分以内に発令する"},
+        {"id": "C3", "content": "複数の地震計ステーションのデータが一致した場合のみ最終確定値を発表する"},
+        {"id": "C4", "content": "気象庁の地震情報フォーマットに準拠する"},
+        {"id": "C5", "content": "解析精度の不確かさ範囲を公開情報に含める"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C2", "content": "P波初動から10秒以内に震源深度を±5km精度で推定できる", "refutation": "深発地震（300km以深）では波形が複雑化し精度劣化する場合"},
+        {"id": "H2", "basis": "C1", "content": "海底断層走向と地表変位量からM7.5以上の場合は5分以内に津波高さを推定できる", "refutation": "プレート境界の複雑な形状でモデル誤差が大きくなる場合"},
+        {"id": "H3", "basis": "C3", "content": "最低5ステーション以上の一致で震源決定精度が実用レベルに達する", "refutation": "被害地域でステーションが機能停止する大規模地震の場合"},
+        {"id": "H4", "basis": "外部知識", "content": "機械学習による波形分類は人工地震と自然地震を95%精度で識別できる", "refutation": "新型の人工地震発生源（地下水注入等）では誤判定が増加する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S335",
+      "layers": [
+        {
+          "name": "WarningInvariant",
+          "ordValue": 3,
+          "definition": "生命保護に関する警報発令の絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "OperationalStandard",
+          "ordValue": 2,
+          "definition": "観測運用・情報発表の標準手順",
+          "derivedFrom": ["C3", "C4", "C5"]
+        },
+        {
+          "name": "SeismicHypothesis",
+          "ordValue": 1,
+          "definition": "地震・津波物理モデルに基づく推定仮説",
+          "derivedFrom": ["H1", "H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s335_p01",
+          "layerName": "WarningInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s335_p02",
+          "layerName": "WarningInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s335_p03",
+          "layerName": "OperationalStandard",
+          "justification": ["C3"],
+          "dependencies": [".s335_p01", ".s335_p02"]
+        },
+        {
+          "id": "s335_p04",
+          "layerName": "OperationalStandard",
+          "justification": ["C4"],
+          "dependencies": [".s335_p03"]
+        },
+        {
+          "id": "s335_p05",
+          "layerName": "OperationalStandard",
+          "justification": ["C5"],
+          "dependencies": [".s335_p04"]
+        },
+        {
+          "id": "s335_p06",
+          "layerName": "SeismicHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s335_p02"]
+        },
+        {
+          "id": "s335_p07",
+          "layerName": "SeismicHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s335_p01", ".s335_p06"]
+        },
+        {
+          "id": "s335_p08",
+          "layerName": "SeismicHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s335_p03"]
+        },
+        {
+          "id": "s335_p09",
+          "layerName": "SeismicHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s335_p06"]
+        },
+        {
+          "id": "s335_p10",
+          "layerName": "OperationalStandard",
+          "justification": ["C3", "H3"],
+          "dependencies": [".s335_p08"]
+        },
+        {
+          "id": "s335_p11",
+          "layerName": "SeismicHypothesis",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s335_p07", ".s335_p06"]
+        },
+        {
+          "id": "s335_p12",
+          "layerName": "OperationalStandard",
+          "justification": ["C5"],
+          "dependencies": [".s335_p09", ".s335_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 336,
+    "project": "マルウェア分類システム",
+    "phase0": {
+      "vision": "サンドボックス動的解析と静的特徴量を組み合わせてマルウェアを自動分類し、インシデントレスポンスを支援するシステム。未知マルウェアへの対応を重視する。",
+      "stakeholders": "セキュリティアナリスト、CSIRT、エンドポイント管理者、企業IT部門",
+      "priority": "ランサムウェア・APTの見逃しを最小化。誤検知は業務影響があるが優先度は低い"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "既知マルウェアファミリーの検知率は99%以上を維持する"},
+        {"id": "C2", "content": "分析結果にはMITRE ATT&CKフレームワークのTTP（戦術・技術・手順）マッピングを付与する"},
+        {"id": "C3", "content": "分析対象ファイルは隔離環境で実行し、本番環境への影響を与えない"},
+        {"id": "C4", "content": "高リスク判定は人間アナリストのレビューを経てから対応措置を実行する"},
+        {"id": "C5", "content": "分類モデルは月次で脅威インテリジェンスフィードで更新する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "APIコール順序パターンの埋め込みベクトルは亜種マルウェアの検知に有効", "refutation": "APIコール難読化技術で正規ソフトウェアに偽装する場合"},
+        {"id": "H2", "basis": "C2", "content": "MITRE ATT&CKへのマッピングは動的解析ログから80%以上の精度で自動化できる", "refutation": "APT特有のLotL（Living off the Land）攻撃は正規ツール使用で誤分類する場合"},
+        {"id": "H3", "basis": "外部知識", "content": "サンドボックス検知回避対策（Sleep命令スキップ等）で95%の検知回避を防げる", "refutation": "ハードウェアフィンガープリントを用いた高度な回避技術には対応できない場合"},
+        {"id": "H4", "basis": "C5", "content": "ゼロデイ検体は類似ファミリーへの分類で30%の精度向上が得られる", "refutation": "全く新しい攻撃カテゴリでは類似性ベースが機能しない場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S336",
+      "layers": [
+        {
+          "name": "SecurityInvariant",
+          "ordValue": 3,
+          "definition": "マルウェア封じ込め・検知精度に関する絶対不変条件",
+          "derivedFrom": ["C1", "C3", "C4"]
+        },
+        {
+          "name": "AnalysisPolicy",
+          "ordValue": 2,
+          "definition": "脅威分析・分類・報告の運用方針",
+          "derivedFrom": ["C2", "C5", "H2"]
+        },
+        {
+          "name": "DetectionHypothesis",
+          "ordValue": 1,
+          "definition": "検知アルゴリズム・特徴量設計に関する推定仮説",
+          "derivedFrom": ["H1", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s336_p01",
+          "layerName": "SecurityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s336_p02",
+          "layerName": "SecurityInvariant",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s336_p03",
+          "layerName": "SecurityInvariant",
+          "justification": ["C4"],
+          "dependencies": [".s336_p01"]
+        },
+        {
+          "id": "s336_p04",
+          "layerName": "AnalysisPolicy",
+          "justification": ["C2"],
+          "dependencies": [".s336_p01"]
+        },
+        {
+          "id": "s336_p05",
+          "layerName": "AnalysisPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s336_p01"]
+        },
+        {
+          "id": "s336_p06",
+          "layerName": "AnalysisPolicy",
+          "justification": ["C2", "H2"],
+          "dependencies": [".s336_p04"]
+        },
+        {
+          "id": "s336_p07",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s336_p02"]
+        },
+        {
+          "id": "s336_p08",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s336_p02", ".s336_p07"]
+        },
+        {
+          "id": "s336_p09",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s336_p05"]
+        },
+        {
+          "id": "s336_p10",
+          "layerName": "AnalysisPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s336_p06", ".s336_p07"]
+        },
+        {
+          "id": "s336_p11",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H1", "H3"],
+          "dependencies": [".s336_p08"]
+        },
+        {
+          "id": "s336_p12",
+          "layerName": "AnalysisPolicy",
+          "justification": ["C5", "H4"],
+          "dependencies": [".s336_p09", ".s336_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 337,
+    "project": "自転車シェアリング管理システム",
+    "phase0": {
+      "vision": "都市内の自転車シェアリングサービスを管理し、需要予測に基づいた自転車の再配置と稼働率最適化を行うシステム。利用者の利便性とオペレーションコストを両立する。",
+      "stakeholders": "利用者、運営事業者、自治体、自転車再配置スタッフ",
+      "priority": "利用者が必要な時に自転車を利用できること（ステーション空率3%以下）が最優先"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "全ステーションの空率は3%以下を維持する"},
+        {"id": "C2", "content": "電動自転車のバッテリー残量が20%以下の場合は利用可能リストから除外する"},
+        {"id": "C3", "content": "再配置コストは月次運営予算の30%以内に抑える"},
+        {"id": "C4", "content": "利用データは個人を特定できない形で集計・分析する"},
+        {"id": "C5", "content": "自転車のメンテナンス間隔は走行距離500kmまたは30日のいずれか早い方とする"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "朝夕ラッシュの需要は前週同曜日比で±15%の範囲で予測できる", "refutation": "天候・イベント・祝日が重なった場合に予測精度が大幅低下する場合"},
+        {"id": "H2", "basis": "C3", "content": "再配置最適化には遺伝的アルゴリズムが最小コストで解を得られる", "refutation": "リアルタイム需要変動が激しく、事前計算解が陳腐化する場合"},
+        {"id": "H3", "basis": "外部知識", "content": "気温10度以下では需要が平均40%低下する季節補正が有効", "refutation": "都市固有の文化・インフラ差で補正係数が大きく異なる場合"},
+        {"id": "H4", "basis": "C2", "content": "急速充電対応ステーションを全体の20%に配置すれば稼働率を維持できる", "refutation": "EVシェア率が急増しバッテリー切れ台数が想定を超える場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: s337_p10(seasonal_correction)がs337_p01(availability_guarantee)に依存するが、seasonal_correctionはOptimizationHypothesis(ord=1)、availability_guaranteeはServiceInvariant(ord=3)にあり逆方向",
+          "from": "s337_p10 (OptimizationHypothesis, ord=1)",
+          "to": "s337_p01 (ServiceInvariant, ord=3)",
+          "fix": "H由来 — seasonal_correctionをOperationalPolicy(ord=2)に昇格"
+        }
+      ]
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S337",
+      "layers": [
+        {
+          "name": "ServiceInvariant",
+          "ordValue": 3,
+          "definition": "サービス可用性・安全性に関する必須条件",
+          "derivedFrom": ["C1", "C2", "C5"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "運営効率・コスト管理・プライバシーの運用方針",
+          "derivedFrom": ["C3", "C4", "H2"]
+        },
+        {
+          "name": "OptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測・再配置最適化に関する推定仮説",
+          "derivedFrom": ["H1", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s337_p01",
+          "layerName": "ServiceInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s337_p02",
+          "layerName": "ServiceInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s337_p03",
+          "layerName": "ServiceInvariant",
+          "justification": ["C5"],
+          "dependencies": [".s337_p02"]
+        },
+        {
+          "id": "s337_p04",
+          "layerName": "OperationalPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s337_p01"]
+        },
+        {
+          "id": "s337_p05",
+          "layerName": "OperationalPolicy",
+          "justification": ["C4"],
+          "dependencies": []
+        },
+        {
+          "id": "s337_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["C3", "H2"],
+          "dependencies": [".s337_p04"]
+        },
+        {
+          "id": "s337_p07",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s337_p01"]
+        },
+        {
+          "id": "s337_p08",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s337_p06"]
+        },
+        {
+          "id": "s337_p09",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s337_p02"]
+        },
+        {
+          "id": "s337_p10",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s337_p01"]
+        },
+        {
+          "id": "s337_p11",
+          "layerName": "OperationalPolicy",
+          "justification": ["H1", "H3"],
+          "dependencies": [".s337_p07", ".s337_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 338,
+    "project": "学習障害早期検知システム",
+    "phase0": {
+      "vision": "小学校低学年児童の学習行動データを分析し、ディスレクシア・ADHD等の学習障害を早期に検知して適切な支援につなぐシステム。スクリーニングツールとして機能する。",
+      "stakeholders": "教師、保護者、特別支援教育コーディネーター、学校心理士、児童",
+      "priority": "支援が必要な子への見逃しを最小化。スティグマ防止のため誤検知への配慮も重要"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "支援が必要な子の80%以上を検知する（感度80%以上）"},
+        {"id": "C2", "content": "分析結果は保護者の同意なしに第三者に開示しない"},
+        {"id": "C3", "content": "システムの判定は確定診断ではなく支援検討の参考情報として提示する"},
+        {"id": "C4", "content": "文化的・言語的多様性（外国語児童等）に配慮した評価を行う"},
+        {"id": "C5", "content": "教師・保護者が理解できる形式で根拠を説明できる"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "読み取り速度・正確性の2軸評価でディスレクシアの早期サインを85%精度で検知できる", "refutation": "読み取り練習量の個人差が大きく経験不足との区別が困難な場合"},
+        {"id": "H2", "basis": "C4", "content": "母語別ベースラインモデルの構築で外国語児童の誤検知を50%削減できる", "refutation": "サンプルデータが少ない言語では過学習が発生する場合"},
+        {"id": "H3", "basis": "C5", "content": "SHAP値による特徴量寄与度説明は教師の80%が理解できる形式に変換できる", "refutation": "複数特徴量の相互作用が強い場合に直感的説明が困難になる場合"},
+        {"id": "H4", "basis": "外部知識", "content": "注意持続時間の計測は45分授業内の3回の観察で安定した指標を得られる", "refutation": "授業内容・時間帯・体調による変動が個体差より大きい場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S338",
+      "layers": [
+        {
+          "name": "EthicalInvariant",
+          "ordValue": 3,
+          "definition": "児童プライバシー・誤診防止・倫理的配慮に関する絶対不変条件",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "AssessmentPolicy",
+          "ordValue": 2,
+          "definition": "スクリーニング実施・報告・支援連携の運用方針",
+          "derivedFrom": ["C1", "C4", "C5"]
+        },
+        {
+          "name": "DetectionHypothesis",
+          "ordValue": 1,
+          "definition": "検知アルゴリズム・特徴量・説明可能性に関する推定仮説",
+          "derivedFrom": ["H1", "H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s338_p01",
+          "layerName": "EthicalInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s338_p02",
+          "layerName": "EthicalInvariant",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s338_p03",
+          "layerName": "AssessmentPolicy",
+          "justification": ["C1"],
+          "dependencies": [".s338_p02"]
+        },
+        {
+          "id": "s338_p04",
+          "layerName": "AssessmentPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s338_p03"]
+        },
+        {
+          "id": "s338_p05",
+          "layerName": "AssessmentPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s338_p02"]
+        },
+        {
+          "id": "s338_p06",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s338_p03"]
+        },
+        {
+          "id": "s338_p07",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s338_p04"]
+        },
+        {
+          "id": "s338_p08",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s338_p05"]
+        },
+        {
+          "id": "s338_p09",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s338_p06"]
+        },
+        {
+          "id": "s338_p10",
+          "layerName": "AssessmentPolicy",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s338_p06", ".s338_p07"]
+        },
+        {
+          "id": "s338_p11",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s338_p09", ".s338_p08"]
+        },
+        {
+          "id": "s338_p12",
+          "layerName": "AssessmentPolicy",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s338_p10", ".s338_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 339,
+    "project": "カーボンクレジット追跡システム",
+    "phase0": {
+      "vision": "カーボンクレジットの発行・移転・償却をブロックチェーンで追跡し、二重計上・詐欺・グリーンウォッシングを防止するシステム。透明性と信頼性を担保する。",
+      "stakeholders": "企業のサステナビリティ担当、クレジット検証機関、規制当局、投資家",
+      "priority": "二重計上ゼロ（1クレジット = 1トンのCO2削減を一度だけ主張可能）が絶対条件"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "同一クレジットの二重償却を技術的に不可能にする"},
+        {"id": "C2", "content": "クレジットの発行には認証機関による第三者検証を必須とする"},
+        {"id": "C3", "content": "全トランザクションは公開監査可能な形で永続記録する"},
+        {"id": "C4", "content": "企業の保有クレジットと削減目標の整合性を可視化する"},
+        {"id": "C5", "content": "国際基準（Paris Agreement, ICAO CORSIA等）との互換性を維持する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "NFTベースのクレジット管理でオンチェーンの一意性を保証できる", "refutation": "ブリッジ機能を通じたクロスチェーン二重計上には対応できない場合"},
+        {"id": "H2", "basis": "C2", "content": "IoTセンサーとスマートコントラクトの組み合わせで検証コストを60%削減できる", "refutation": "IoTデータ改竄攻撃（オラクル問題）でデータ信頼性が損なわれる場合"},
+        {"id": "H3", "basis": "C4", "content": "企業スコープ1-3の排出量と保有クレジットの自動照合で開示精度を向上できる", "refutation": "スコープ3の算定方法が企業間で標準化されていない場合"},
+        {"id": "H4", "basis": "外部知識", "content": "クレジット価格のボラティリティ指数化で炭素市場リスクを可視化できる", "refutation": "市場流動性が低い場合は指数が実態を反映しない場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S339",
+      "layers": [
+        {
+          "name": "IntegrityInvariant",
+          "ordValue": 3,
+          "definition": "二重計上防止・データ整合性に関する絶対不変条件",
+          "derivedFrom": ["C1", "C3"]
+        },
+        {
+          "name": "CompliancePolicy",
+          "ordValue": 2,
+          "definition": "認証・国際標準適合・開示の運用方針",
+          "derivedFrom": ["C2", "C4", "C5"]
+        },
+        {
+          "name": "MarketHypothesis",
+          "ordValue": 1,
+          "definition": "技術実装・市場設計に関する推定仮説",
+          "derivedFrom": ["H1", "H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s339_p01",
+          "layerName": "IntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s339_p02",
+          "layerName": "IntegrityInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s339_p01"]
+        },
+        {
+          "id": "s339_p03",
+          "layerName": "CompliancePolicy",
+          "justification": ["C2"],
+          "dependencies": [".s339_p01"]
+        },
+        {
+          "id": "s339_p04",
+          "layerName": "CompliancePolicy",
+          "justification": ["C4"],
+          "dependencies": [".s339_p02"]
+        },
+        {
+          "id": "s339_p05",
+          "layerName": "CompliancePolicy",
+          "justification": ["C5"],
+          "dependencies": [".s339_p03"]
+        },
+        {
+          "id": "s339_p06",
+          "layerName": "MarketHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s339_p01"]
+        },
+        {
+          "id": "s339_p07",
+          "layerName": "MarketHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s339_p03"]
+        },
+        {
+          "id": "s339_p08",
+          "layerName": "MarketHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s339_p04"]
+        },
+        {
+          "id": "s339_p09",
+          "layerName": "MarketHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s339_p05"]
+        },
+        {
+          "id": "s339_p10",
+          "layerName": "CompliancePolicy",
+          "justification": ["C2", "H2"],
+          "dependencies": [".s339_p07", ".s339_p03"]
+        },
+        {
+          "id": "s339_p11",
+          "layerName": "MarketHypothesis",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s339_p06", ".s339_p07"]
+        },
+        {
+          "id": "s339_p12",
+          "layerName": "CompliancePolicy",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s339_p08", ".s339_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 340,
+    "project": "溶接ロボット品質制御システム",
+    "phase0": {
+      "vision": "自動車・造船・建設鉄骨などの溶接ロボットにリアルタイム品質監視を統合し、溶接欠陥をインライン検査で検知・修正するシステム。後工程での破壊検査を最小化する。",
+      "stakeholders": "製造ライン管理者、品質保証担当、溶接工、顧客（自動車OEM等）",
+      "priority": "溶接欠陥による構造破壊の防止が最優先。製造スループットはその枠内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "クラック・ポロシティ等の重大欠陥は100%検知する（ゼロ見逃し）"},
+        {"id": "C2", "content": "JIS/ISO溶接品質基準（レベルB相当）に適合した検査を実施する"},
+        {"id": "C3", "content": "欠陥検知時は即時停止し、人間作業者への通知と自動ログ記録を行う"},
+        {"id": "C4", "content": "インライン検査は製造タクトタイムを3%以上増加させない"},
+        {"id": "C5", "content": "検査データは顧客品質保証のためのトレーサビリティとして保存する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "レーザー超音波とAIビジョンの組み合わせでポロシティ0.5mm以上を98%以上検知できる", "refutation": "溶接後の急冷変形で超音波の結合が不安定になる場合"},
+        {"id": "H2", "basis": "C4", "content": "並列検査パイプラインにより検査時間をタクトタイムの2%以内に収められる", "refutation": "高速ライン（30秒タクト以下）では処理が間に合わない場合"},
+        {"id": "H3", "basis": "C2", "content": "転移学習ベースの欠陥分類モデルは材料種変更後も50サンプルで再適応できる", "refutation": "材料特性が大きく異なる場合は転移が効かず精度劣化する場合"},
+        {"id": "H4", "basis": "外部知識", "content": "溶接電流・電圧のモニタリングで溶け込み不良を溶接中にリアルタイム予測できる", "refutation": "溶接棒の組成バリエーションがプロセスパラメータに大きく影響する場合"},
+        {"id": "H5", "basis": "C5", "content": "デジタルツインによる溶接シミュレーションで欠陥発生予測精度を向上できる", "refutation": "シミュレーションの境界条件設定が実条件と乖離する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S340",
+      "layers": [
+        {
+          "name": "QualityInvariant",
+          "ordValue": 4,
+          "definition": "構造安全性に関する溶接品質の絶対不変条件",
+          "derivedFrom": ["C1", "C3"]
+        },
+        {
+          "name": "StandardsCompliance",
+          "ordValue": 3,
+          "definition": "JIS/ISO品質基準・トレーサビリティ要件",
+          "derivedFrom": ["C2", "C5"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "検査タイミング・生産効率・停止判断の運用方針",
+          "derivedFrom": ["C3", "C4", "H2"]
+        },
+        {
+          "name": "InspectionHypothesis",
+          "ordValue": 1,
+          "definition": "検査技術・AIモデル・プロセス監視に関する推定仮説",
+          "derivedFrom": ["H1", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s340_p01",
+          "layerName": "QualityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s340_p02",
+          "layerName": "QualityInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s340_p01"]
+        },
+        {
+          "id": "s340_p03",
+          "layerName": "StandardsCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s340_p01"]
+        },
+        {
+          "id": "s340_p04",
+          "layerName": "StandardsCompliance",
+          "justification": ["C5"],
+          "dependencies": [".s340_p03"]
+        },
+        {
+          "id": "s340_p05",
+          "layerName": "OperationalPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s340_p01"]
+        },
+        {
+          "id": "s340_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["C3", "H2"],
+          "dependencies": [".s340_p02", ".s340_p05"]
+        },
+        {
+          "id": "s340_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s340_p05"]
+        },
+        {
+          "id": "s340_p08",
+          "layerName": "InspectionHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s340_p01"]
+        },
+        {
+          "id": "s340_p09",
+          "layerName": "InspectionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s340_p03"]
+        },
+        {
+          "id": "s340_p10",
+          "layerName": "InspectionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s340_p06"]
+        },
+        {
+          "id": "s340_p11",
+          "layerName": "InspectionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s340_p09", ".s340_p10"]
+        },
+        {
+          "id": "s340_p12",
+          "layerName": "OperationalPolicy",
+          "justification": ["H1", "H4"],
+          "dependencies": [".s340_p08", ".s340_p10"]
+        },
+        {
+          "id": "s340_p13",
+          "layerName": "StandardsCompliance",
+          "justification": ["C2", "H3"],
+          "dependencies": [".s340_p09", ".s340_p12"]
+        },
+        {
+          "id": "s340_p14",
+          "layerName": "InspectionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s340_p11", ".s340_p13"]
+        }
+      ]
+    }
+  }
+]

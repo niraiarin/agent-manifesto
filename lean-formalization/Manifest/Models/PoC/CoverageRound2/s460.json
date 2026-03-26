@@ -1,0 +1,193 @@
+{
+  "namespace": "TestCoverage.S460",
+  "layers": [
+    {
+      "name": "PatientSafetySupplyInvariant",
+      "ordValue": 4,
+      "definition": "医薬品・医療機器の欠品・誤配送による患者危害防止の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryStorageCompliance",
+      "ordValue": 3,
+      "definition": "薬機法・GMP・冷鎖管理に基づく医薬品保管・搬送の法的遵守要件",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "InventoryAllocationPolicy",
+      "ordValue": 2,
+      "definition": "病棟別在庫配分・緊急補充・期限管理・無駄削減の運用方針",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "DemandPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "手術スケジュール・季節疾患・入院患者数変動による需要予測仮説",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s460_p01",
+      "layerName": "PatientSafetySupplyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s460_p02",
+      "layerName": "PatientSafetySupplyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s460_p03",
+      "layerName": "RegulatoryStorageCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s460_p01"
+      ]
+    },
+    {
+      "id": "s460_p04",
+      "layerName": "RegulatoryStorageCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s460_p01",
+        ".s460_p02"
+      ]
+    },
+    {
+      "id": "s460_p05",
+      "layerName": "RegulatoryStorageCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s460_p03",
+        ".s460_p04"
+      ]
+    },
+    {
+      "id": "s460_p06",
+      "layerName": "InventoryAllocationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s460_p03"
+      ]
+    },
+    {
+      "id": "s460_p07",
+      "layerName": "InventoryAllocationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s460_p04"
+      ]
+    },
+    {
+      "id": "s460_p08",
+      "layerName": "InventoryAllocationPolicy",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s460_p05",
+        ".s460_p06"
+      ]
+    },
+    {
+      "id": "s460_p09",
+      "layerName": "InventoryAllocationPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s460_p07",
+        ".s460_p08"
+      ]
+    },
+    {
+      "id": "s460_p10",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s460_p06"
+      ]
+    },
+    {
+      "id": "s460_p11",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s460_p07",
+        ".s460_p09"
+      ]
+    },
+    {
+      "id": "s460_p12",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s460_p10",
+        ".s460_p11"
+      ]
+    },
+    {
+      "id": "s460_p13",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "C5",
+        "H5"
+      ],
+      "dependencies": [
+        ".s460_p11",
+        ".s460_p12"
+      ]
+    },
+    {
+      "id": "s460_p14",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s460_p13"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "namespace": "TestCoverage.S443",
+  "layers": [
+    {
+      "name": "PhysicalSecurityInvariant",
+      "ordValue": 5,
+      "definition": "エッジノードの物理的セキュリティ・耐障害性・電源冗長性の絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "DataSovereigntyPolicy",
+      "ordValue": 4,
+      "definition": "データ主権・プライバシー規制・国境越えデータ転送制約",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "LatencyQoSPolicy",
+      "ordValue": 3,
+      "definition": "レイテンシSLA・帯域保証・QoS優先度管理の運用方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ResourceAllocationPolicy",
+      "ordValue": 2,
+      "definition": "CPU・メモリ・ストレージの動的割当・スケーリング戦略",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "WorkloadPlacementHypothesis",
+      "ordValue": 1,
+      "definition": "ワークロード配置最適化・キャッシュ効率・移行コストに関する仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s443_p01",
+      "layerName": "PhysicalSecurityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s443_p02",
+      "layerName": "DataSovereigntyPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s443_p01"
+      ]
+    },
+    {
+      "id": "s443_p03",
+      "layerName": "DataSovereigntyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s443_p01"
+      ]
+    },
+    {
+      "id": "s443_p04",
+      "layerName": "DataSovereigntyPolicy",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s443_p02",
+        ".s443_p03"
+      ]
+    },
+    {
+      "id": "s443_p05",
+      "layerName": "LatencyQoSPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s443_p02"
+      ]
+    },
+    {
+      "id": "s443_p06",
+      "layerName": "LatencyQoSPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s443_p04"
+      ]
+    },
+    {
+      "id": "s443_p07",
+      "layerName": "LatencyQoSPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s443_p05",
+        ".s443_p06"
+      ]
+    },
+    {
+      "id": "s443_p08",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s443_p05"
+      ]
+    },
+    {
+      "id": "s443_p09",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s443_p06"
+      ]
+    },
+    {
+      "id": "s443_p10",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s443_p07",
+        ".s443_p08"
+      ]
+    },
+    {
+      "id": "s443_p11",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s443_p09",
+        ".s443_p10"
+      ]
+    },
+    {
+      "id": "s443_p12",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s443_p08"
+      ]
+    },
+    {
+      "id": "s443_p13",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s443_p09"
+      ]
+    },
+    {
+      "id": "s443_p14",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s443_p11",
+        ".s443_p12"
+      ]
+    },
+    {
+      "id": "s443_p15",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s443_p13"
+      ]
+    },
+    {
+      "id": "s443_p16",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s443_p14",
+        ".s443_p15"
+      ]
+    },
+    {
+      "id": "s443_p17",
+      "layerName": "WorkloadPlacementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s443_p16"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S386",
+  "layers": [
+    {
+      "name": "EducationalAccuracy",
+      "ordValue": 3,
+      "definition": "科学的正確性と安全教育に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "PedagogicalPolicy",
+      "ordValue": 2,
+      "definition": "教育設計と学習体験の運用ポリシー",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H2",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "TechnicalHypothesis",
+      "ordValue": 1,
+      "definition": "シミュレーション手法と実装技術に関する仮説",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s386_p01",
+      "layerName": "EducationalAccuracy",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s386_p02",
+      "layerName": "EducationalAccuracy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s386_p03",
+      "layerName": "EducationalAccuracy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s386_p01"
+      ]
+    },
+    {
+      "id": "s386_p04",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s386_p01"
+      ]
+    },
+    {
+      "id": "s386_p05",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s386_p04"
+      ]
+    },
+    {
+      "id": "s386_p06",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s386_p02"
+      ]
+    },
+    {
+      "id": "s386_p07",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s386_p04"
+      ]
+    },
+    {
+      "id": "s386_p08",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s386_p05"
+      ]
+    },
+    {
+      "id": "s386_p09",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s386_p01"
+      ]
+    },
+    {
+      "id": "s386_p10",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s386_p03"
+      ]
+    },
+    {
+      "id": "s386_p11",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        ".s386_p07"
+      ]
+    },
+    {
+      "id": "s386_p12",
+      "layerName": "EducationalAccuracy",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        ".s386_p10"
+      ]
+    },
+    {
+      "id": "s386_p13",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s386_p09",
+        ".s386_p10"
+      ]
+    },
+    {
+      "id": "s386_p14",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s386_p06",
+        ".s386_p08"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "namespace": "TestCoverage.S311",
+  "layers": [
+    {
+      "name": "security_invariant",
+      "ordValue": 4,
+      "definition": "侵入検知の絶対要件。見逃しゼロ方針とログ保全",
+      "derivedFrom": [
+        "C1",
+        "C6"
+      ]
+    },
+    {
+      "name": "detection_policy",
+      "ordValue": 3,
+      "definition": "検知アルゴリズムの選択・運用方針。SLO定義",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "integration_model",
+      "ordValue": 2,
+      "definition": "外部SIEMとの連携・インターフェース仕様",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "learning_hypothesis",
+      "ordValue": 1,
+      "definition": "ML モデルの学習・更新に関する仮説",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s311_p01",
+      "layerName": "security_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s311_p02",
+      "layerName": "security_invariant",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s311_p03",
+      "layerName": "detection_policy",
+      "justification": [
+        "C2",
+        "C5"
+      ],
+      "dependencies": [
+        ".s311_p01"
+      ]
+    },
+    {
+      "id": "s311_p04",
+      "layerName": "detection_policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s311_p03"
+      ]
+    },
+    {
+      "id": "s311_p05",
+      "layerName": "detection_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s311_p03"
+      ]
+    },
+    {
+      "id": "s311_p06",
+      "layerName": "integration_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s311_p04"
+      ]
+    },
+    {
+      "id": "s311_p07",
+      "layerName": "integration_model",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s311_p06"
+      ]
+    },
+    {
+      "id": "s311_p08",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s311_p03"
+      ]
+    },
+    {
+      "id": "s311_p09",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s311_p04",
+        ".s311_p08"
+      ]
+    },
+    {
+      "id": "s311_p10",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s311_p05",
+        ".s311_p08"
+      ]
+    },
+    {
+      "id": "s311_p11",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s311_p08",
+        ".s311_p09"
+      ]
+    },
+    {
+      "id": "s311_p12",
+      "layerName": "security_invariant",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s311_p02",
+        ".s311_p07"
+      ]
+    }
+  ]
+}

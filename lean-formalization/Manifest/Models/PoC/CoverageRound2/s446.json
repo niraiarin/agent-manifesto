@@ -1,0 +1,162 @@
+{
+  "namespace": "TestCoverage.S446",
+  "layers": [
+    {
+      "name": "SpectrumRegulationInvariant",
+      "ordValue": 3,
+      "definition": "総務省・ITU電波規則・免許条件・混信防止の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AllocationOptimizationPolicy",
+      "ordValue": 2,
+      "definition": "干渉最小化・スペクトル効率・動的周波数再使用の最適化方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "UsagePatternHypothesis",
+      "ordValue": 1,
+      "definition": "周波数利用パターン・需要予測・二次利用可能性に関する仮説",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s446_p01",
+      "layerName": "SpectrumRegulationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s446_p02",
+      "layerName": "SpectrumRegulationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s446_p01"
+      ]
+    },
+    {
+      "id": "s446_p03",
+      "layerName": "SpectrumRegulationInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s446_p01"
+      ]
+    },
+    {
+      "id": "s446_p04",
+      "layerName": "AllocationOptimizationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s446_p02"
+      ]
+    },
+    {
+      "id": "s446_p05",
+      "layerName": "AllocationOptimizationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s446_p03"
+      ]
+    },
+    {
+      "id": "s446_p06",
+      "layerName": "AllocationOptimizationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s446_p04"
+      ]
+    },
+    {
+      "id": "s446_p07",
+      "layerName": "AllocationOptimizationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s446_p05",
+        ".s446_p06"
+      ]
+    },
+    {
+      "id": "s446_p08",
+      "layerName": "UsagePatternHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s446_p04"
+      ]
+    },
+    {
+      "id": "s446_p09",
+      "layerName": "UsagePatternHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s446_p06",
+        ".s446_p08"
+      ]
+    },
+    {
+      "id": "s446_p10",
+      "layerName": "UsagePatternHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s446_p07"
+      ]
+    },
+    {
+      "id": "s446_p11",
+      "layerName": "UsagePatternHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s446_p09",
+        ".s446_p10"
+      ]
+    },
+    {
+      "id": "s446_p12",
+      "layerName": "UsagePatternHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s446_p09",
+        ".s446_p11"
+      ]
+    }
+  ]
+}

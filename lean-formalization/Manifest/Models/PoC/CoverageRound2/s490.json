@@ -1,0 +1,179 @@
+{
+  "namespace": "TestCoverage.S490",
+  "layers": [
+    {
+      "name": "MissionCriticalSafetyInvariant",
+      "ordValue": 4,
+      "definition": "耐圧破壊・通信途絶・浮上失敗を防ぐロボット存続の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "EnvironmentalProtectionPolicy",
+      "ordValue": 3,
+      "definition": "深海生態系への干渉禁止・試料採取上限・排水規制",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "NavigationControlModel",
+      "ordValue": 2,
+      "definition": "水圧・潮流・地形マップを用いた経路制御モデル",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "SensorDataHypothesis",
+      "ordValue": 1,
+      "definition": "ソナー・カメラ・化学センサーによる環境推定仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s490_p01",
+      "layerName": "MissionCriticalSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s490_p02",
+      "layerName": "MissionCriticalSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s490_p03",
+      "layerName": "MissionCriticalSafetyInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s490_p01"
+      ]
+    },
+    {
+      "id": "s490_p04",
+      "layerName": "EnvironmentalProtectionPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s490_p01"
+      ]
+    },
+    {
+      "id": "s490_p05",
+      "layerName": "EnvironmentalProtectionPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s490_p02",
+        ".s490_p03"
+      ]
+    },
+    {
+      "id": "s490_p06",
+      "layerName": "NavigationControlModel",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s490_p03"
+      ]
+    },
+    {
+      "id": "s490_p07",
+      "layerName": "NavigationControlModel",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s490_p04"
+      ]
+    },
+    {
+      "id": "s490_p08",
+      "layerName": "NavigationControlModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s490_p05",
+        ".s490_p06"
+      ]
+    },
+    {
+      "id": "s490_p09",
+      "layerName": "NavigationControlModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s490_p06",
+        ".s490_p07"
+      ]
+    },
+    {
+      "id": "s490_p10",
+      "layerName": "SensorDataHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s490_p08"
+      ]
+    },
+    {
+      "id": "s490_p11",
+      "layerName": "SensorDataHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s490_p09"
+      ]
+    },
+    {
+      "id": "s490_p12",
+      "layerName": "SensorDataHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s490_p10",
+        ".s490_p11"
+      ]
+    },
+    {
+      "id": "s490_p13",
+      "layerName": "MissionCriticalSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s490_p11",
+        ".s490_p12"
+      ]
+    }
+  ]
+}

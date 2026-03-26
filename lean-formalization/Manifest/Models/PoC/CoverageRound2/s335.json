@@ -1,0 +1,159 @@
+{
+  "namespace": "TestCoverage.S335",
+  "layers": [
+    {
+      "name": "WarningInvariant",
+      "ordValue": 3,
+      "definition": "生命保護に関する警報発令の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "OperationalStandard",
+      "ordValue": 2,
+      "definition": "観測運用・情報発表の標準手順",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "SeismicHypothesis",
+      "ordValue": 1,
+      "definition": "地震・津波物理モデルに基づく推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s335_p01",
+      "layerName": "WarningInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s335_p02",
+      "layerName": "WarningInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s335_p03",
+      "layerName": "OperationalStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s335_p01",
+        ".s335_p02"
+      ]
+    },
+    {
+      "id": "s335_p04",
+      "layerName": "OperationalStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s335_p03"
+      ]
+    },
+    {
+      "id": "s335_p05",
+      "layerName": "OperationalStandard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s335_p04"
+      ]
+    },
+    {
+      "id": "s335_p06",
+      "layerName": "SeismicHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s335_p02"
+      ]
+    },
+    {
+      "id": "s335_p07",
+      "layerName": "SeismicHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s335_p01",
+        ".s335_p06"
+      ]
+    },
+    {
+      "id": "s335_p08",
+      "layerName": "SeismicHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s335_p03"
+      ]
+    },
+    {
+      "id": "s335_p09",
+      "layerName": "SeismicHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s335_p06"
+      ]
+    },
+    {
+      "id": "s335_p10",
+      "layerName": "OperationalStandard",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        ".s335_p08"
+      ]
+    },
+    {
+      "id": "s335_p11",
+      "layerName": "SeismicHypothesis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s335_p07",
+        ".s335_p06"
+      ]
+    },
+    {
+      "id": "s335_p12",
+      "layerName": "OperationalStandard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s335_p09",
+        ".s335_p11"
+      ]
+    }
+  ]
+}

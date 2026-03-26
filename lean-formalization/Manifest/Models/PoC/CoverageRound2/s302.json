@@ -1,0 +1,194 @@
+{
+  "namespace": "TestCoverage.S302",
+  "layers": [
+    {
+      "name": "PatientSafety",
+      "ordValue": 5,
+      "definition": "患者の生命・健康を守る最上位不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LegalCompliance",
+      "ordValue": 4,
+      "definition": "医師法・個人情報保護法・遠隔診療ガイドラインへの適合",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "ClinicalPolicy",
+      "ordValue": 3,
+      "definition": "診断支援・処方制限・緊急搬送の臨床方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "SystemReliability",
+      "ordValue": 2,
+      "definition": "通信品質・バックアップ・可用性に関する方針",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DiagnosticHypothesis",
+      "ordValue": 1,
+      "definition": "症状推定・疾患分類に関するML推論仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s302_p01",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s302_p02",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s302_p03",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s302_p01"
+      ]
+    },
+    {
+      "id": "s302_p04",
+      "layerName": "ClinicalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s302_p01",
+        ".s302_p03"
+      ]
+    },
+    {
+      "id": "s302_p05",
+      "layerName": "ClinicalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s302_p02"
+      ]
+    },
+    {
+      "id": "s302_p06",
+      "layerName": "ClinicalPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s302_p03"
+      ]
+    },
+    {
+      "id": "s302_p07",
+      "layerName": "SystemReliability",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s302_p04"
+      ]
+    },
+    {
+      "id": "s302_p08",
+      "layerName": "SystemReliability",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s302_p05"
+      ]
+    },
+    {
+      "id": "s302_p09",
+      "layerName": "SystemReliability",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s302_p06",
+        ".s302_p07"
+      ]
+    },
+    {
+      "id": "s302_p10",
+      "layerName": "DiagnosticHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s302_p07"
+      ]
+    },
+    {
+      "id": "s302_p11",
+      "layerName": "DiagnosticHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s302_p08"
+      ]
+    },
+    {
+      "id": "s302_p12",
+      "layerName": "DiagnosticHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s302_p09"
+      ]
+    },
+    {
+      "id": "s302_p13",
+      "layerName": "DiagnosticHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s302_p10",
+        ".s302_p11"
+      ]
+    },
+    {
+      "id": "s302_p14",
+      "layerName": "DiagnosticHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s302_p12"
+      ]
+    }
+  ]
+}

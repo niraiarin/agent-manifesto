@@ -1,0 +1,111 @@
+{
+  "namespace": "TestCoverage.S348",
+  "layers": [
+    {
+      "name": "LegalIntegrityInvariant",
+      "ordValue": 2,
+      "definition": "判例の改竄防止・著作権尊重・司法独立性保護の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RetrievalHypothesis",
+      "ordValue": 1,
+      "definition": "判例類似度計算・法令解釈・関連性スコアリングの推論仮説",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s348_p01",
+      "layerName": "LegalIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s348_p02",
+      "layerName": "LegalIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s348_p03",
+      "layerName": "RetrievalHypothesis",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s348_p01"
+      ]
+    },
+    {
+      "id": "s348_p04",
+      "layerName": "RetrievalHypothesis",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s348_p02"
+      ]
+    },
+    {
+      "id": "s348_p05",
+      "layerName": "RetrievalHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s348_p03"
+      ]
+    },
+    {
+      "id": "s348_p06",
+      "layerName": "LegalIntegrityInvariant",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s348_p04"
+      ]
+    },
+    {
+      "id": "s348_p07",
+      "layerName": "RetrievalHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s348_p03",
+        ".s348_p05"
+      ]
+    },
+    {
+      "id": "s348_p08",
+      "layerName": "RetrievalHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s348_p06",
+        ".s348_p07"
+      ]
+    }
+  ]
+}

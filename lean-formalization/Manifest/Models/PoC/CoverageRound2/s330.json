@@ -1,0 +1,220 @@
+{
+  "namespace": "TestCoverage.S330",
+  "layers": [
+    {
+      "name": "safety_invariant",
+      "ordValue": 5,
+      "definition": "毒性見逃しゼロ・臨床移行ゲートに関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ip_protection",
+      "ordValue": 4,
+      "definition": "化合物データ・予測結果の知的財産保護",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "quality_standard",
+      "ordValue": 3,
+      "definition": "モデル検証・ベンチマーク合格・ADMET評価基準",
+      "derivedFrom": [
+        "C5",
+        "C3"
+      ]
+    },
+    {
+      "name": "prioritization_policy",
+      "ordValue": 2,
+      "definition": "アンメット・ニーズ優先・ヒット率管理・候補選定方針",
+      "derivedFrom": [
+        "C6",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ml_model",
+      "ordValue": 1,
+      "definition": "GNN・アンサンブル毒性予測・類似化合物検索の仮説",
+      "derivedFrom": [
+        "H1",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s330_p01",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s330_p02",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s330_p01"
+      ]
+    },
+    {
+      "id": "s330_p03",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s330_p01",
+        ".s330_p02"
+      ]
+    },
+    {
+      "id": "s330_p04",
+      "layerName": "ip_protection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s330_p05",
+      "layerName": "ip_protection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s330_p04"
+      ]
+    },
+    {
+      "id": "s330_p06",
+      "layerName": "quality_standard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s330_p01"
+      ]
+    },
+    {
+      "id": "s330_p07",
+      "layerName": "quality_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s330_p06"
+      ]
+    },
+    {
+      "id": "s330_p08",
+      "layerName": "quality_standard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s330_p06",
+        ".s330_p07"
+      ]
+    },
+    {
+      "id": "s330_p09",
+      "layerName": "prioritization_policy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s330_p06"
+      ]
+    },
+    {
+      "id": "s330_p10",
+      "layerName": "prioritization_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s330_p02",
+        ".s330_p09"
+      ]
+    },
+    {
+      "id": "s330_p11",
+      "layerName": "prioritization_policy",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        ".s330_p07",
+        ".s330_p10"
+      ]
+    },
+    {
+      "id": "s330_p12",
+      "layerName": "prioritization_policy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s330_p09",
+        ".s330_p11"
+      ]
+    },
+    {
+      "id": "s330_p13",
+      "layerName": "ml_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s330_p06",
+        ".s330_p08"
+      ]
+    },
+    {
+      "id": "s330_p14",
+      "layerName": "ml_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s330_p01",
+        ".s330_p13"
+      ]
+    },
+    {
+      "id": "s330_p15",
+      "layerName": "ml_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s330_p08"
+      ]
+    },
+    {
+      "id": "s330_p16",
+      "layerName": "ml_model",
+      "justification": [
+        "H1",
+        "H5"
+      ],
+      "dependencies": [
+        ".s330_p13",
+        ".s330_p14"
+      ]
+    }
+  ]
+}

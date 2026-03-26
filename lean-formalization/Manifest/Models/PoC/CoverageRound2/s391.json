@@ -1,0 +1,166 @@
+{
+  "namespace": "TestCoverage.S391",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 3,
+      "definition": "被介護者の身体的安全に関わる絶対不変条件（転倒検知・緊急通報の必須性）",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PrivacyProtection",
+      "ordValue": 2,
+      "definition": "在宅環境の映像・音声データに対するプライバシー保護方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "CareQualityHypothesis",
+      "ordValue": 1,
+      "definition": "見守り精度・介護者への通知タイミングに関する経験的仮説",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s391_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s391_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s391_p03",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s391_p01",
+        ".s391_p02"
+      ]
+    },
+    {
+      "id": "s391_p04",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s391_p01"
+      ]
+    },
+    {
+      "id": "s391_p05",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s391_p02"
+      ]
+    },
+    {
+      "id": "s391_p06",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s391_p04",
+        ".s391_p05"
+      ]
+    },
+    {
+      "id": "s391_p07",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s391_p03"
+      ]
+    },
+    {
+      "id": "s391_p08",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s391_p04"
+      ]
+    },
+    {
+      "id": "s391_p09",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s391_p07"
+      ]
+    },
+    {
+      "id": "s391_p10",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s391_p08"
+      ]
+    },
+    {
+      "id": "s391_p11",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s391_p06"
+      ]
+    },
+    {
+      "id": "s391_p12",
+      "layerName": "CareQualityHypothesis",
+      "justification": [
+        "C5",
+        "H1",
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s391_p09",
+        ".s391_p10",
+        ".s391_p11"
+      ]
+    }
+  ]
+}

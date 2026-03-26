@@ -1,0 +1,172 @@
+{
+  "namespace": "TestCoverage.S318",
+  "layers": [
+    {
+      "name": "disclosure_invariant",
+      "ordValue": 4,
+      "definition": "透明性・不確実性開示の絶対要件",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "regulatory_compliance",
+      "ordValue": 3,
+      "definition": "規制変化対応・法的レビュー要件",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "risk_model",
+      "ordValue": 2,
+      "definition": "市場・スマートコントラクト・テールリスクの評価モデル",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "analytical_hypothesis",
+      "ordValue": 1,
+      "definition": "リスク分析手法・モデル設計の仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s318_p01",
+      "layerName": "disclosure_invariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s318_p02",
+      "layerName": "disclosure_invariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s318_p01"
+      ]
+    },
+    {
+      "id": "s318_p03",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s318_p02"
+      ]
+    },
+    {
+      "id": "s318_p04",
+      "layerName": "risk_model",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".s318_p01"
+      ]
+    },
+    {
+      "id": "s318_p05",
+      "layerName": "risk_model",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s318_p04"
+      ]
+    },
+    {
+      "id": "s318_p06",
+      "layerName": "risk_model",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s318_p04"
+      ]
+    },
+    {
+      "id": "s318_p07",
+      "layerName": "risk_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s318_p04",
+        ".s318_p06"
+      ]
+    },
+    {
+      "id": "s318_p08",
+      "layerName": "analytical_hypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s318_p04",
+        ".s318_p07"
+      ]
+    },
+    {
+      "id": "s318_p09",
+      "layerName": "analytical_hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s318_p05",
+        ".s318_p08"
+      ]
+    },
+    {
+      "id": "s318_p10",
+      "layerName": "analytical_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s318_p06",
+        ".s318_p08"
+      ]
+    },
+    {
+      "id": "s318_p11",
+      "layerName": "analytical_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s318_p03",
+        ".s318_p09"
+      ]
+    },
+    {
+      "id": "s318_p12",
+      "layerName": "risk_model",
+      "justification": [
+        "C2",
+        "H2"
+      ],
+      "dependencies": [
+        ".s318_p05",
+        ".s318_p09"
+      ]
+    }
+  ]
+}

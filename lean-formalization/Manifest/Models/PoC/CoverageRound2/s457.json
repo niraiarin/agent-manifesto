@@ -1,0 +1,178 @@
+{
+  "namespace": "TestCoverage.S457",
+  "layers": [
+    {
+      "name": "WasteRegulationInvariant",
+      "ordValue": 4,
+      "definition": "廃棄物処理法・地方自治体条例に基づく収集義務・不法投棄防止の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PublicHealthSafetyPolicy",
+      "ordValue": 3,
+      "definition": "衛生管理・有害物質分別・医療廃棄物取扱いの保健行政方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "RouteOptimizationRule",
+      "ordValue": 2,
+      "definition": "車両積載効率・燃費・収集頻度の最適化ルール。交通規制・収集時間帯制約を考慮",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DemandForecastHypothesis",
+      "ordValue": 1,
+      "definition": "排出量季節変動・イベント影響・人口増減による需要予測仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s457_p01",
+      "layerName": "WasteRegulationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s457_p02",
+      "layerName": "WasteRegulationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s457_p03",
+      "layerName": "PublicHealthSafetyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s457_p01"
+      ]
+    },
+    {
+      "id": "s457_p04",
+      "layerName": "PublicHealthSafetyPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s457_p02"
+      ]
+    },
+    {
+      "id": "s457_p05",
+      "layerName": "PublicHealthSafetyPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s457_p03",
+        ".s457_p04"
+      ]
+    },
+    {
+      "id": "s457_p06",
+      "layerName": "RouteOptimizationRule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s457_p03"
+      ]
+    },
+    {
+      "id": "s457_p07",
+      "layerName": "RouteOptimizationRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s457_p04",
+        ".s457_p05"
+      ]
+    },
+    {
+      "id": "s457_p08",
+      "layerName": "RouteOptimizationRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s457_p06",
+        ".s457_p07"
+      ]
+    },
+    {
+      "id": "s457_p09",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s457_p06"
+      ]
+    },
+    {
+      "id": "s457_p10",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s457_p07",
+        ".s457_p08"
+      ]
+    },
+    {
+      "id": "s457_p11",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s457_p09"
+      ]
+    },
+    {
+      "id": "s457_p12",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s457_p10",
+        ".s457_p11"
+      ]
+    },
+    {
+      "id": "s457_p13",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s457_p12"
+      ]
+    }
+  ]
+}

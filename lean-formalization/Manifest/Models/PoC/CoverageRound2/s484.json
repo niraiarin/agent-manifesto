@@ -1,0 +1,231 @@
+{
+  "namespace": "TestCoverage.S484",
+  "layers": [
+    {
+      "name": "ProductSafetyInvariant",
+      "ordValue": 4,
+      "definition": "航空・自動車部品の強度基準違反ゼロの絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "QualityStandardPolicy",
+      "ordValue": 3,
+      "definition": "ISO9001・IATF16949・JIS規格への適合方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ProcessParameterModel",
+      "ordValue": 2,
+      "definition": "溶湯温度・充填速度・冷却速度の欠陥発生メカニズム",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DefectPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "気泡・収縮巣・ミスランの発生確率に関する予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s484_p01",
+      "layerName": "ProductSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s484_p02",
+      "layerName": "ProductSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s484_p03",
+      "layerName": "ProductSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s484_p01",
+        ".s484_p02"
+      ]
+    },
+    {
+      "id": "s484_p04",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s484_p01"
+      ]
+    },
+    {
+      "id": "s484_p05",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s484_p02"
+      ]
+    },
+    {
+      "id": "s484_p06",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s484_p04",
+        ".s484_p05"
+      ]
+    },
+    {
+      "id": "s484_p07",
+      "layerName": "ProcessParameterModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s484_p04"
+      ]
+    },
+    {
+      "id": "s484_p08",
+      "layerName": "ProcessParameterModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s484_p05"
+      ]
+    },
+    {
+      "id": "s484_p09",
+      "layerName": "ProcessParameterModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s484_p06",
+        ".s484_p07"
+      ]
+    },
+    {
+      "id": "s484_p10",
+      "layerName": "ProcessParameterModel",
+      "justification": [
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s484_p07",
+        ".s484_p08",
+        ".s484_p09"
+      ]
+    },
+    {
+      "id": "s484_p11",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s484_p07"
+      ]
+    },
+    {
+      "id": "s484_p12",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s484_p08"
+      ]
+    },
+    {
+      "id": "s484_p13",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s484_p09",
+        ".s484_p11"
+      ]
+    },
+    {
+      "id": "s484_p14",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s484_p10",
+        ".s484_p12"
+      ]
+    },
+    {
+      "id": "s484_p15",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s484_p11",
+        ".s484_p12"
+      ]
+    },
+    {
+      "id": "s484_p16",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s484_p13",
+        ".s484_p14"
+      ]
+    },
+    {
+      "id": "s484_p17",
+      "layerName": "DefectPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s484_p15",
+        ".s484_p16"
+      ]
+    }
+  ]
+}

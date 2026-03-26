@@ -1,0 +1,142 @@
+{
+  "namespace": "TestCoverage.S461",
+  "layers": [
+    {
+      "name": "AnimalWelfareInvariant",
+      "ordValue": 3,
+      "definition": "動物の生命・福祉を守る最上位制約。危険な診断推奨の絶対排除",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "VeterinaryCompliance",
+      "ordValue": 2,
+      "definition": "獣医師法・医薬品規制に基づく診断補助ガイドライン準拠",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "HealthPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "バイタルデータ・行動パターンから疾患リスクを推定する仮説層",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s461_p01",
+      "layerName": "AnimalWelfareInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s461_p02",
+      "layerName": "AnimalWelfareInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s461_p01"
+      ]
+    },
+    {
+      "id": "s461_p03",
+      "layerName": "VeterinaryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s461_p01"
+      ]
+    },
+    {
+      "id": "s461_p04",
+      "layerName": "VeterinaryCompliance",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s461_p02"
+      ]
+    },
+    {
+      "id": "s461_p05",
+      "layerName": "VeterinaryCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s461_p03",
+        ".s461_p04"
+      ]
+    },
+    {
+      "id": "s461_p06",
+      "layerName": "HealthPredictionHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s461_p03"
+      ]
+    },
+    {
+      "id": "s461_p07",
+      "layerName": "HealthPredictionHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s461_p04"
+      ]
+    },
+    {
+      "id": "s461_p08",
+      "layerName": "HealthPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s461_p06"
+      ]
+    },
+    {
+      "id": "s461_p09",
+      "layerName": "HealthPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s461_p07"
+      ]
+    },
+    {
+      "id": "s461_p10",
+      "layerName": "HealthPredictionHypothesis",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s461_p08",
+        ".s461_p09"
+      ]
+    }
+  ]
+}

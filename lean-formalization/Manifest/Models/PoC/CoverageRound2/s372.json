@@ -1,0 +1,207 @@
+{
+  "namespace": "TestCoverage.S372",
+  "layers": [
+    {
+      "name": "CapitalPreservation",
+      "ordValue": 5,
+      "definition": "自己資本比率規制・最大損失限度の絶対遵守",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryHedgeAccounting",
+      "ordValue": 4,
+      "definition": "IFRS9・ASC815ヘッジ会計適格要件",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "HedgeEffectivenessPolicy",
+      "ordValue": 3,
+      "definition": "ヘッジ有効性測定・リバランス頻度の方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ExposureMeasurementModel",
+      "ordValue": 2,
+      "definition": "通貨エクスポージャー計算・VaRモデルの推論",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "MarketPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "為替レート変動・相関係数に関する予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s372_p01",
+      "layerName": "CapitalPreservation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s372_p02",
+      "layerName": "CapitalPreservation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s372_p03",
+      "layerName": "CapitalPreservation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s372_p01",
+        ".s372_p02"
+      ]
+    },
+    {
+      "id": "s372_p04",
+      "layerName": "RegulatoryHedgeAccounting",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s372_p01"
+      ]
+    },
+    {
+      "id": "s372_p05",
+      "layerName": "RegulatoryHedgeAccounting",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s372_p03"
+      ]
+    },
+    {
+      "id": "s372_p06",
+      "layerName": "HedgeEffectivenessPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s372_p04"
+      ]
+    },
+    {
+      "id": "s372_p07",
+      "layerName": "HedgeEffectivenessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s372_p05",
+        ".s372_p06"
+      ]
+    },
+    {
+      "id": "s372_p08",
+      "layerName": "HedgeEffectivenessPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s372_p06",
+        ".s372_p07"
+      ]
+    },
+    {
+      "id": "s372_p09",
+      "layerName": "ExposureMeasurementModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s372_p06"
+      ]
+    },
+    {
+      "id": "s372_p10",
+      "layerName": "ExposureMeasurementModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s372_p07"
+      ]
+    },
+    {
+      "id": "s372_p11",
+      "layerName": "ExposureMeasurementModel",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s372_p09",
+        ".s372_p10"
+      ]
+    },
+    {
+      "id": "s372_p12",
+      "layerName": "MarketPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s372_p09"
+      ]
+    },
+    {
+      "id": "s372_p13",
+      "layerName": "MarketPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s372_p10"
+      ]
+    },
+    {
+      "id": "s372_p14",
+      "layerName": "MarketPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s372_p12",
+        ".s372_p13"
+      ]
+    },
+    {
+      "id": "s372_p15",
+      "layerName": "MarketPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s372_p11",
+        ".s372_p14"
+      ]
+    }
+  ]
+}

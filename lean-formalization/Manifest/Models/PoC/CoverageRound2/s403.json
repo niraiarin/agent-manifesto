@@ -1,0 +1,150 @@
+{
+  "namespace": "TestCoverage.S403",
+  "layers": [
+    {
+      "name": "ContentIntegrityInvariant",
+      "ordValue": 3,
+      "definition": "翻訳内容の意味的正確性・有害コンテンツ排除の不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "QualityStandardPolicy",
+      "ordValue": 2,
+      "definition": "翻訳品質基準・レビュープロセス・承認ゲート。事業基準に基づくポリシー",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AdaptationHypothesis",
+      "ordValue": 1,
+      "definition": "ドメイン特化モデル改善・文脈適応の仮説。フィードバックで更新",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s403_p01",
+      "layerName": "ContentIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s403_p02",
+      "layerName": "ContentIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s403_p03",
+      "layerName": "ContentIntegrityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s403_p01",
+        ".s403_p02"
+      ]
+    },
+    {
+      "id": "s403_p04",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s403_p01"
+      ]
+    },
+    {
+      "id": "s403_p05",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s403_p02"
+      ]
+    },
+    {
+      "id": "s403_p06",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s403_p03"
+      ]
+    },
+    {
+      "id": "s403_p07",
+      "layerName": "QualityStandardPolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s403_p04",
+        ".s403_p05"
+      ]
+    },
+    {
+      "id": "s403_p08",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s403_p04"
+      ]
+    },
+    {
+      "id": "s403_p09",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s403_p05"
+      ]
+    },
+    {
+      "id": "s403_p10",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s403_p06"
+      ]
+    },
+    {
+      "id": "s403_p11",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s403_p07",
+        ".s403_p08",
+        ".s403_p09"
+      ]
+    }
+  ]
+}

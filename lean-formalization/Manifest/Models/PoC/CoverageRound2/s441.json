@@ -1,0 +1,190 @@
+{
+  "namespace": "TestCoverage.S441",
+  "layers": [
+    {
+      "name": "OrbitalSafetyInvariant",
+      "ordValue": 4,
+      "definition": "衛星軌道の衝突回避・電波干渉防止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliancePolicy",
+      "ordValue": 3,
+      "definition": "ITU周波数規制・国際条約・ライセンス条件への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "SchedulingOptimizationPolicy",
+      "ordValue": 2,
+      "definition": "スループット最大化・優先度付きキュー・時間窓配分の方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "TrafficPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "通信需要パターン・障害予測・容量見積もりに関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s441_p01",
+      "layerName": "OrbitalSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s441_p02",
+      "layerName": "OrbitalSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s441_p03",
+      "layerName": "OrbitalSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s441_p01",
+        ".s441_p02"
+      ]
+    },
+    {
+      "id": "s441_p04",
+      "layerName": "RegulatoryCompliancePolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s441_p01"
+      ]
+    },
+    {
+      "id": "s441_p05",
+      "layerName": "RegulatoryCompliancePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s441_p02"
+      ]
+    },
+    {
+      "id": "s441_p06",
+      "layerName": "RegulatoryCompliancePolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s441_p04",
+        ".s441_p05"
+      ]
+    },
+    {
+      "id": "s441_p07",
+      "layerName": "SchedulingOptimizationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s441_p04"
+      ]
+    },
+    {
+      "id": "s441_p08",
+      "layerName": "SchedulingOptimizationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s441_p05"
+      ]
+    },
+    {
+      "id": "s441_p09",
+      "layerName": "SchedulingOptimizationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s441_p06",
+        ".s441_p07"
+      ]
+    },
+    {
+      "id": "s441_p10",
+      "layerName": "TrafficPredictionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s441_p07"
+      ]
+    },
+    {
+      "id": "s441_p11",
+      "layerName": "TrafficPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s441_p08"
+      ]
+    },
+    {
+      "id": "s441_p12",
+      "layerName": "TrafficPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s441_p09",
+        ".s441_p10"
+      ]
+    },
+    {
+      "id": "s441_p13",
+      "layerName": "TrafficPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s441_p11"
+      ]
+    },
+    {
+      "id": "s441_p14",
+      "layerName": "TrafficPredictionHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s441_p12",
+        ".s441_p13"
+      ]
+    }
+  ]
+}

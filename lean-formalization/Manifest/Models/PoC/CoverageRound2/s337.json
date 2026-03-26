@@ -1,0 +1,144 @@
+{
+  "namespace": "TestCoverage.S337",
+  "layers": [
+    {
+      "name": "ServiceInvariant",
+      "ordValue": 3,
+      "definition": "サービス可用性・安全性に関する必須条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "運営効率・コスト管理・プライバシーの運用方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測・再配置最適化に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s337_p01",
+      "layerName": "ServiceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s337_p02",
+      "layerName": "ServiceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s337_p03",
+      "layerName": "ServiceInvariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s337_p02"
+      ]
+    },
+    {
+      "id": "s337_p04",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s337_p01"
+      ]
+    },
+    {
+      "id": "s337_p05",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s337_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s337_p04"
+      ]
+    },
+    {
+      "id": "s337_p07",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s337_p01"
+      ]
+    },
+    {
+      "id": "s337_p08",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s337_p06"
+      ]
+    },
+    {
+      "id": "s337_p09",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s337_p02"
+      ]
+    },
+    {
+      "id": "s337_p10",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s337_p01"
+      ]
+    },
+    {
+      "id": "s337_p11",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s337_p07",
+        ".s337_p10"
+      ]
+    }
+  ]
+}

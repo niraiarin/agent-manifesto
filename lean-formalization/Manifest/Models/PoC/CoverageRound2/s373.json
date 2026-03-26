@@ -1,0 +1,151 @@
+{
+  "namespace": "TestCoverage.S373",
+  "layers": [
+    {
+      "name": "MissionCriticalSafety",
+      "ordValue": 3,
+      "definition": "宇宙機・乗員の安全確保に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TrackingOperationsPolicy",
+      "ordValue": 2,
+      "definition": "観測スケジュール・警報発令・軌道修正指令の方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "OrbitPropagationHypothesis",
+      "ordValue": 1,
+      "definition": "軌道伝播モデル・大気抵抗推定に関する予測仮説",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s373_p01",
+      "layerName": "MissionCriticalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s373_p02",
+      "layerName": "MissionCriticalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s373_p03",
+      "layerName": "MissionCriticalSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s373_p01",
+        ".s373_p02"
+      ]
+    },
+    {
+      "id": "s373_p04",
+      "layerName": "TrackingOperationsPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s373_p01"
+      ]
+    },
+    {
+      "id": "s373_p05",
+      "layerName": "TrackingOperationsPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s373_p02"
+      ]
+    },
+    {
+      "id": "s373_p06",
+      "layerName": "TrackingOperationsPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s373_p03",
+        ".s373_p04"
+      ]
+    },
+    {
+      "id": "s373_p07",
+      "layerName": "OrbitPropagationHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s373_p04"
+      ]
+    },
+    {
+      "id": "s373_p08",
+      "layerName": "OrbitPropagationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s373_p05"
+      ]
+    },
+    {
+      "id": "s373_p09",
+      "layerName": "OrbitPropagationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s373_p06"
+      ]
+    },
+    {
+      "id": "s373_p10",
+      "layerName": "OrbitPropagationHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s373_p07",
+        ".s373_p08"
+      ]
+    },
+    {
+      "id": "s373_p11",
+      "layerName": "OrbitPropagationHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s373_p09",
+        ".s373_p10"
+      ]
+    }
+  ]
+}

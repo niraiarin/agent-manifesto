@@ -1,0 +1,252 @@
+{
+  "namespace": "TestCoverage.S437",
+  "layers": [
+    {
+      "name": "GeneticFundamentalLaw",
+      "ordValue": 6,
+      "definition": "メンデル遺伝則・DNA複製メカニズムの不変法則",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BioethicsRegulation",
+      "ordValue": 5,
+      "definition": "遺伝子組換え規制・生物多様性条約・倫理審査基準",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "BreedingObjectivePolicy",
+      "ordValue": 4,
+      "definition": "目標形質の優先順位・育種目標・選抜基準の方針",
+      "derivedFrom": [
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "SimulationModelPolicy",
+      "ordValue": 3,
+      "definition": "ゲノム選抜モデル・量的形質座位解析手法の選択",
+      "derivedFrom": [
+        "C7",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PhenotypeExpressionModel",
+      "ordValue": 2,
+      "definition": "遺伝子型・環境相互作用・表現型発現の推論モデル",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "GenerationPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "世代進行・形質固定確率・育種年限の予測仮説",
+      "derivedFrom": [
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s437_p01",
+      "layerName": "GeneticFundamentalLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s437_p02",
+      "layerName": "GeneticFundamentalLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s437_p03",
+      "layerName": "BioethicsRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s437_p01"
+      ]
+    },
+    {
+      "id": "s437_p04",
+      "layerName": "BioethicsRegulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s437_p02"
+      ]
+    },
+    {
+      "id": "s437_p05",
+      "layerName": "BioethicsRegulation",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s437_p03",
+        ".s437_p04"
+      ]
+    },
+    {
+      "id": "s437_p06",
+      "layerName": "BreedingObjectivePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s437_p03"
+      ]
+    },
+    {
+      "id": "s437_p07",
+      "layerName": "BreedingObjectivePolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s437_p04"
+      ]
+    },
+    {
+      "id": "s437_p08",
+      "layerName": "BreedingObjectivePolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s437_p06",
+        ".s437_p07"
+      ]
+    },
+    {
+      "id": "s437_p09",
+      "layerName": "SimulationModelPolicy",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s437_p05"
+      ]
+    },
+    {
+      "id": "s437_p10",
+      "layerName": "SimulationModelPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s437_p06"
+      ]
+    },
+    {
+      "id": "s437_p11",
+      "layerName": "SimulationModelPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s437_p08",
+        ".s437_p09"
+      ]
+    },
+    {
+      "id": "s437_p12",
+      "layerName": "PhenotypeExpressionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s437_p09"
+      ]
+    },
+    {
+      "id": "s437_p13",
+      "layerName": "PhenotypeExpressionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s437_p10"
+      ]
+    },
+    {
+      "id": "s437_p14",
+      "layerName": "PhenotypeExpressionModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s437_p11",
+        ".s437_p12"
+      ]
+    },
+    {
+      "id": "s437_p15",
+      "layerName": "GenerationPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s437_p12"
+      ]
+    },
+    {
+      "id": "s437_p16",
+      "layerName": "GenerationPredictionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s437_p13",
+        ".s437_p15"
+      ]
+    },
+    {
+      "id": "s437_p17",
+      "layerName": "GenerationPredictionHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s437_p14",
+        ".s437_p16"
+      ]
+    },
+    {
+      "id": "s437_p18",
+      "layerName": "GenerationPredictionHypothesis",
+      "justification": [
+        "H6",
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".s437_p15",
+        ".s437_p16",
+        ".s437_p17"
+      ]
+    }
+  ]
+}

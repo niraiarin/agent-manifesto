@@ -1,0 +1,144 @@
+{
+  "namespace": "TestCoverage.S438",
+  "layers": [
+    {
+      "name": "WaterRightLegalInvariant",
+      "ordValue": 4,
+      "definition": "水利権・取水量上限・農業用水法令の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "CropWaterNeedStandard",
+      "ordValue": 3,
+      "definition": "作物蒸散量・根域水分・生育ステージ別必要水量基準",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "IrrigationSchedulePolicy",
+      "ordValue": 2,
+      "definition": "灌漑スケジュール・区画優先順位・節水目標の方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "SoilMoisturePredictionModel",
+      "ordValue": 1,
+      "definition": "土壌水分変動・浸透速度・蒸発散予測の仮説モデル",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s438_p01",
+      "layerName": "WaterRightLegalInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s438_p02",
+      "layerName": "WaterRightLegalInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s438_p03",
+      "layerName": "CropWaterNeedStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s438_p01"
+      ]
+    },
+    {
+      "id": "s438_p04",
+      "layerName": "CropWaterNeedStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s438_p02"
+      ]
+    },
+    {
+      "id": "s438_p05",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s438_p03"
+      ]
+    },
+    {
+      "id": "s438_p06",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s438_p04"
+      ]
+    },
+    {
+      "id": "s438_p07",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s438_p05",
+        ".s438_p06"
+      ]
+    },
+    {
+      "id": "s438_p08",
+      "layerName": "SoilMoisturePredictionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s438_p05"
+      ]
+    },
+    {
+      "id": "s438_p09",
+      "layerName": "SoilMoisturePredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s438_p06",
+        ".s438_p08"
+      ]
+    },
+    {
+      "id": "s438_p10",
+      "layerName": "SoilMoisturePredictionModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s438_p07",
+        ".s438_p09"
+      ]
+    }
+  ]
+}

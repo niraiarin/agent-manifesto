@@ -1,0 +1,167 @@
+{
+  "namespace": "TestCoverage.S463",
+  "layers": [
+    {
+      "name": "ServiceReliabilityInvariant",
+      "ordValue": 4,
+      "definition": "配信断絶ゼロ・視聴者体験の最低品質保証。SLA 違反の絶対禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "NetworkProtocolCompliance",
+      "ordValue": 3,
+      "definition": "RTMP/HLS/WebRTC プロトコル規格・帯域割当規制への準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "AdaptiveBitratePolicy",
+      "ordValue": 2,
+      "definition": "ネットワーク状態に応じたビットレート自動調整方針。遅延 vs 品質トレードオフ基準",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ViewerExperienceHypothesis",
+      "ordValue": 1,
+      "definition": "視聴者の接続環境・デバイス特性から体感品質を推定する仮説層",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s463_p01",
+      "layerName": "ServiceReliabilityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s463_p02",
+      "layerName": "ServiceReliabilityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s463_p01"
+      ]
+    },
+    {
+      "id": "s463_p03",
+      "layerName": "NetworkProtocolCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s463_p01"
+      ]
+    },
+    {
+      "id": "s463_p04",
+      "layerName": "NetworkProtocolCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s463_p02"
+      ]
+    },
+    {
+      "id": "s463_p05",
+      "layerName": "AdaptiveBitratePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s463_p03"
+      ]
+    },
+    {
+      "id": "s463_p06",
+      "layerName": "AdaptiveBitratePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s463_p04"
+      ]
+    },
+    {
+      "id": "s463_p07",
+      "layerName": "AdaptiveBitratePolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s463_p05",
+        ".s463_p06"
+      ]
+    },
+    {
+      "id": "s463_p08",
+      "layerName": "ViewerExperienceHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s463_p05"
+      ]
+    },
+    {
+      "id": "s463_p09",
+      "layerName": "ViewerExperienceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s463_p06"
+      ]
+    },
+    {
+      "id": "s463_p10",
+      "layerName": "ViewerExperienceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s463_p07"
+      ]
+    },
+    {
+      "id": "s463_p11",
+      "layerName": "ViewerExperienceHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s463_p08",
+        ".s463_p09"
+      ]
+    },
+    {
+      "id": "s463_p12",
+      "layerName": "ViewerExperienceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s463_p10",
+        ".s463_p11"
+      ]
+    }
+  ]
+}

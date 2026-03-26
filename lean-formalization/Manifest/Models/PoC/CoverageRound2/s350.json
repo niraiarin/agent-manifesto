@@ -1,0 +1,233 @@
+{
+  "namespace": "TestCoverage.S350",
+  "layers": [
+    {
+      "name": "InstrumentSafetyInvariant",
+      "ordValue": 5,
+      "definition": "望遠鏡・検出器の物理的損傷防止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ObservatoryPolicy",
+      "ordValue": 4,
+      "definition": "観測時間配分・光害規制・気象安全停止の運用方針",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "SciencePolicy",
+      "ordValue": 3,
+      "definition": "優先度付け・競合解決・公開データ要件の科学方針",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "SchedulingHypothesis",
+      "ordValue": 2,
+      "definition": "空き時間充填・制約充足・マルチ目標最適化に関する仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "AstronomyHypothesis",
+      "ordValue": 1,
+      "definition": "天体可視性・大気透明度・シーイング条件に関する推論仮説",
+      "derivedFrom": [
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s350_p01",
+      "layerName": "InstrumentSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s350_p02",
+      "layerName": "ObservatoryPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s350_p01"
+      ]
+    },
+    {
+      "id": "s350_p03",
+      "layerName": "ObservatoryPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s350_p01"
+      ]
+    },
+    {
+      "id": "s350_p04",
+      "layerName": "SciencePolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s350_p02"
+      ]
+    },
+    {
+      "id": "s350_p05",
+      "layerName": "SciencePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s350_p03"
+      ]
+    },
+    {
+      "id": "s350_p06",
+      "layerName": "SciencePolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s350_p04",
+        ".s350_p05"
+      ]
+    },
+    {
+      "id": "s350_p07",
+      "layerName": "SchedulingHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s350_p04"
+      ]
+    },
+    {
+      "id": "s350_p08",
+      "layerName": "SchedulingHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s350_p05"
+      ]
+    },
+    {
+      "id": "s350_p09",
+      "layerName": "SchedulingHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s350_p06",
+        ".s350_p07"
+      ]
+    },
+    {
+      "id": "s350_p10",
+      "layerName": "SchedulingHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s350_p08",
+        ".s350_p09"
+      ]
+    },
+    {
+      "id": "s350_p11",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s350_p07"
+      ]
+    },
+    {
+      "id": "s350_p12",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s350_p08"
+      ]
+    },
+    {
+      "id": "s350_p13",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s350_p09",
+        ".s350_p11"
+      ]
+    },
+    {
+      "id": "s350_p14",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s350_p10",
+        ".s350_p12"
+      ]
+    },
+    {
+      "id": "s350_p15",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s350_p13"
+      ]
+    },
+    {
+      "id": "s350_p16",
+      "layerName": "SchedulingHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s350_p14"
+      ]
+    },
+    {
+      "id": "s350_p17",
+      "layerName": "AstronomyHypothesis",
+      "justification": [
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".s350_p15",
+        ".s350_p16"
+      ]
+    }
+  ]
+}

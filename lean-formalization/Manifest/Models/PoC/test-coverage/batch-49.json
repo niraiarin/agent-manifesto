@@ -1,0 +1,2085 @@
+[
+  {
+    "scenario_id": 481,
+    "project": "歯科矯正シミュレーションAI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S481",
+      "layers": [
+        {
+          "name": "PatientSafetyInvariant",
+          "ordValue": 4,
+          "definition": "骨・歯根・神経への不可逆的損傷を防ぐ絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ClinicalRegulationPolicy",
+          "ordValue": 3,
+          "definition": "歯科医師法・医療機器規制・インフォームドコンセント要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "TreatmentPlanningModel",
+          "ordValue": 2,
+          "definition": "歯列移動量・保定期間・装置選択に関するモデル推論",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "PredictiveOutcomeHypothesis",
+          "ordValue": 1,
+          "definition": "治療後の審美結果・後戻りリスクに関する予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s481_p01",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s481_p02",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s481_p03",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s481_p01",
+            ".s481_p02"
+          ]
+        },
+        {
+          "id": "s481_p04",
+          "layerName": "ClinicalRegulationPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s481_p01"
+          ]
+        },
+        {
+          "id": "s481_p05",
+          "layerName": "ClinicalRegulationPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s481_p03"
+          ]
+        },
+        {
+          "id": "s481_p06",
+          "layerName": "ClinicalRegulationPolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s481_p04",
+            ".s481_p05"
+          ]
+        },
+        {
+          "id": "s481_p07",
+          "layerName": "TreatmentPlanningModel",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s481_p04"
+          ]
+        },
+        {
+          "id": "s481_p08",
+          "layerName": "TreatmentPlanningModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s481_p05"
+          ]
+        },
+        {
+          "id": "s481_p09",
+          "layerName": "TreatmentPlanningModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s481_p06",
+            ".s481_p07"
+          ]
+        },
+        {
+          "id": "s481_p10",
+          "layerName": "PredictiveOutcomeHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s481_p07"
+          ]
+        },
+        {
+          "id": "s481_p11",
+          "layerName": "PredictiveOutcomeHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s481_p08"
+          ]
+        },
+        {
+          "id": "s481_p12",
+          "layerName": "PredictiveOutcomeHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s481_p09",
+            ".s481_p10"
+          ]
+        },
+        {
+          "id": "s481_p13",
+          "layerName": "PredictiveOutcomeHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s481_p10",
+            ".s481_p11"
+          ]
+        },
+        {
+          "id": "s481_p14",
+          "layerName": "PredictiveOutcomeHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s481_p12",
+            ".s481_p13"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 482,
+    "project": "デリバティブ価格算定エンジン",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S482",
+      "layers": [
+        {
+          "name": "RegulatoryCapitalInvariant",
+          "ordValue": 5,
+          "definition": "Basel III自己資本規制・CVA/DVA計上の絶対遵守要件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "MarketRiskFramework",
+          "ordValue": 4,
+          "definition": "FRTB・VaR/ES計算・リスク感応度測定の規制枠組み",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "PricingModelPolicy",
+          "ordValue": 3,
+          "definition": "ブラック・ショールズ・モンテカルロ法選択と校正方針",
+          "derivedFrom": [
+            "C5",
+            "C6"
+          ]
+        },
+        {
+          "name": "VolatilitySurfaceModel",
+          "ordValue": 2,
+          "definition": "インプライドボラティリティ・スキューのモデル化推論",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "MarketScenarioHypothesis",
+          "ordValue": 1,
+          "definition": "ストレスシナリオ・テールリスクに関する予測仮説",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s482_p01",
+          "layerName": "RegulatoryCapitalInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s482_p02",
+          "layerName": "RegulatoryCapitalInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s482_p03",
+          "layerName": "RegulatoryCapitalInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s482_p01",
+            ".s482_p02"
+          ]
+        },
+        {
+          "id": "s482_p04",
+          "layerName": "MarketRiskFramework",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s482_p01"
+          ]
+        },
+        {
+          "id": "s482_p05",
+          "layerName": "MarketRiskFramework",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s482_p03"
+          ]
+        },
+        {
+          "id": "s482_p06",
+          "layerName": "MarketRiskFramework",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s482_p04",
+            ".s482_p05"
+          ]
+        },
+        {
+          "id": "s482_p07",
+          "layerName": "PricingModelPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s482_p04"
+          ]
+        },
+        {
+          "id": "s482_p08",
+          "layerName": "PricingModelPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s482_p06"
+          ]
+        },
+        {
+          "id": "s482_p09",
+          "layerName": "VolatilitySurfaceModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s482_p07"
+          ]
+        },
+        {
+          "id": "s482_p10",
+          "layerName": "VolatilitySurfaceModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s482_p08"
+          ]
+        },
+        {
+          "id": "s482_p11",
+          "layerName": "VolatilitySurfaceModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s482_p09",
+            ".s482_p10"
+          ]
+        },
+        {
+          "id": "s482_p12",
+          "layerName": "VolatilitySurfaceModel",
+          "justification": [
+            "H1",
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s482_p09",
+            ".s482_p10",
+            ".s482_p11"
+          ]
+        },
+        {
+          "id": "s482_p13",
+          "layerName": "MarketScenarioHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s482_p09"
+          ]
+        },
+        {
+          "id": "s482_p14",
+          "layerName": "MarketScenarioHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s482_p10"
+          ]
+        },
+        {
+          "id": "s482_p15",
+          "layerName": "MarketScenarioHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s482_p13",
+            ".s482_p14"
+          ]
+        },
+        {
+          "id": "s482_p16",
+          "layerName": "MarketScenarioHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s482_p11",
+            ".s482_p15"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 483,
+    "project": "空飛ぶクルマ運航管理システム",
+    "num_c": 7,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S483",
+      "layers": [
+        {
+          "name": "AirspaceFlightSafetyInvariant",
+          "ordValue": 3,
+          "definition": "衝突回避・緊急着陸・乗員安全の絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "AirTrafficRegulationPolicy",
+          "ordValue": 2,
+          "definition": "UTM統合・飛行経路承認・騒音規制・航空法遵守方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "C6",
+            "C7"
+          ]
+        },
+        {
+          "name": "RouteOptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "気象条件・交通密度・バッテリー残量に基づく経路予測仮説",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s483_p01",
+          "layerName": "AirspaceFlightSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s483_p02",
+          "layerName": "AirspaceFlightSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s483_p03",
+          "layerName": "AirspaceFlightSafetyInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s483_p01"
+          ]
+        },
+        {
+          "id": "s483_p04",
+          "layerName": "AirspaceFlightSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s483_p01",
+            ".s483_p02",
+            ".s483_p03"
+          ]
+        },
+        {
+          "id": "s483_p05",
+          "layerName": "AirTrafficRegulationPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s483_p01"
+          ]
+        },
+        {
+          "id": "s483_p06",
+          "layerName": "AirTrafficRegulationPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s483_p02",
+            ".s483_p04"
+          ]
+        },
+        {
+          "id": "s483_p07",
+          "layerName": "AirTrafficRegulationPolicy",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".s483_p05",
+            ".s483_p06"
+          ]
+        },
+        {
+          "id": "s483_p08",
+          "layerName": "RouteOptimizationHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s483_p05"
+          ]
+        },
+        {
+          "id": "s483_p09",
+          "layerName": "RouteOptimizationHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s483_p06"
+          ]
+        },
+        {
+          "id": "s483_p10",
+          "layerName": "RouteOptimizationHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s483_p07",
+            ".s483_p08"
+          ]
+        },
+        {
+          "id": "s483_p11",
+          "layerName": "RouteOptimizationHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s483_p08",
+            ".s483_p09"
+          ]
+        },
+        {
+          "id": "s483_p12",
+          "layerName": "RouteOptimizationHypothesis",
+          "justification": [
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s483_p10",
+            ".s483_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 484,
+    "project": "鋳造欠陥予測AIシステム",
+    "num_c": 4,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 17,
+    "num_deps": 25,
+    "model_spec": {
+      "namespace": "TestCoverage.S484",
+      "layers": [
+        {
+          "name": "ProductSafetyInvariant",
+          "ordValue": 4,
+          "definition": "航空・自動車部品の強度基準違反ゼロの絶対要件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "QualityStandardPolicy",
+          "ordValue": 3,
+          "definition": "ISO9001・IATF16949・JIS規格への適合方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ProcessParameterModel",
+          "ordValue": 2,
+          "definition": "溶湯温度・充填速度・冷却速度の欠陥発生メカニズム",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "DefectPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "気泡・収縮巣・ミスランの発生確率に関する予測仮説",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s484_p01",
+          "layerName": "ProductSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s484_p02",
+          "layerName": "ProductSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s484_p03",
+          "layerName": "ProductSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s484_p01",
+            ".s484_p02"
+          ]
+        },
+        {
+          "id": "s484_p04",
+          "layerName": "QualityStandardPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s484_p01"
+          ]
+        },
+        {
+          "id": "s484_p05",
+          "layerName": "QualityStandardPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s484_p02"
+          ]
+        },
+        {
+          "id": "s484_p06",
+          "layerName": "QualityStandardPolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s484_p04",
+            ".s484_p05"
+          ]
+        },
+        {
+          "id": "s484_p07",
+          "layerName": "ProcessParameterModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s484_p04"
+          ]
+        },
+        {
+          "id": "s484_p08",
+          "layerName": "ProcessParameterModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s484_p05"
+          ]
+        },
+        {
+          "id": "s484_p09",
+          "layerName": "ProcessParameterModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s484_p06",
+            ".s484_p07"
+          ]
+        },
+        {
+          "id": "s484_p10",
+          "layerName": "ProcessParameterModel",
+          "justification": [
+            "H1",
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s484_p07",
+            ".s484_p08",
+            ".s484_p09"
+          ]
+        },
+        {
+          "id": "s484_p11",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s484_p07"
+          ]
+        },
+        {
+          "id": "s484_p12",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s484_p08"
+          ]
+        },
+        {
+          "id": "s484_p13",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s484_p09",
+            ".s484_p11"
+          ]
+        },
+        {
+          "id": "s484_p14",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s484_p10",
+            ".s484_p12"
+          ]
+        },
+        {
+          "id": "s484_p15",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s484_p11",
+            ".s484_p12"
+          ]
+        },
+        {
+          "id": "s484_p16",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            ".s484_p13",
+            ".s484_p14"
+          ]
+        },
+        {
+          "id": "s484_p17",
+          "layerName": "DefectPredictionHypothesis",
+          "justification": [
+            "H4",
+            "H5",
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            ".s484_p15",
+            ".s484_p16"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 485,
+    "project": "フィッシング検知AIシステム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S485",
+      "layers": [
+        {
+          "name": "UserPrivacySecurityInvariant",
+          "ordValue": 3,
+          "definition": "個人情報漏洩・金融詐欺被害の発生を防ぐ絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ComplianceDetectionPolicy",
+          "ordValue": 2,
+          "definition": "GDPR・サイバーセキュリティ法・誤検知率上限の遵守方針",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "ThreatIntelligenceHypothesis",
+          "ordValue": 1,
+          "definition": "URLパターン・送信元評判・コンテンツ類似度による脅威推論",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s485_p01",
+          "layerName": "UserPrivacySecurityInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s485_p02",
+          "layerName": "UserPrivacySecurityInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s485_p03",
+          "layerName": "UserPrivacySecurityInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s485_p01",
+            ".s485_p02"
+          ]
+        },
+        {
+          "id": "s485_p04",
+          "layerName": "ComplianceDetectionPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s485_p01"
+          ]
+        },
+        {
+          "id": "s485_p05",
+          "layerName": "ComplianceDetectionPolicy",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".s485_p02",
+            ".s485_p03"
+          ]
+        },
+        {
+          "id": "s485_p06",
+          "layerName": "ComplianceDetectionPolicy",
+          "justification": [
+            "C3",
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".s485_p04",
+            ".s485_p05"
+          ]
+        },
+        {
+          "id": "s485_p07",
+          "layerName": "ThreatIntelligenceHypothesis",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s485_p04"
+          ]
+        },
+        {
+          "id": "s485_p08",
+          "layerName": "ThreatIntelligenceHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s485_p05"
+          ]
+        },
+        {
+          "id": "s485_p09",
+          "layerName": "ThreatIntelligenceHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s485_p06",
+            ".s485_p07"
+          ]
+        },
+        {
+          "id": "s485_p10",
+          "layerName": "ThreatIntelligenceHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s485_p07",
+            ".s485_p08"
+          ]
+        },
+        {
+          "id": "s485_p11",
+          "layerName": "ThreatIntelligenceHypothesis",
+          "justification": [
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s485_p09",
+            ".s485_p10"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 486,
+    "project": "オンライン試験監督AIシステム",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 2,
+    "num_props": 8,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S486",
+      "layers": [
+        {
+          "name": "ExamIntegrityInvariant",
+          "ordValue": 2,
+          "definition": "試験の公正性・受験者のプライバシー・差別禁止の絶対要件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "ProctoringSurveillanceHypothesis",
+          "ordValue": 1,
+          "definition": "視線追跡・キーストローク解析・環境音検知による不正推論",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "C6",
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s486_p01",
+          "layerName": "ExamIntegrityInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s486_p02",
+          "layerName": "ExamIntegrityInvariant",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s486_p03",
+          "layerName": "ExamIntegrityInvariant",
+          "justification": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s486_p01",
+            ".s486_p02"
+          ]
+        },
+        {
+          "id": "s486_p04",
+          "layerName": "ProctoringSurveillanceHypothesis",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s486_p01"
+          ]
+        },
+        {
+          "id": "s486_p05",
+          "layerName": "ProctoringSurveillanceHypothesis",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s486_p02"
+          ]
+        },
+        {
+          "id": "s486_p06",
+          "layerName": "ProctoringSurveillanceHypothesis",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s486_p03",
+            ".s486_p04"
+          ]
+        },
+        {
+          "id": "s486_p07",
+          "layerName": "ProctoringSurveillanceHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s486_p05",
+            ".s486_p06"
+          ]
+        },
+        {
+          "id": "s486_p08",
+          "layerName": "ProctoringSurveillanceHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s486_p06",
+            ".s486_p07"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 487,
+    "project": "農業用水管理AIシステム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "TestCoverage.S487",
+      "layers": [
+        {
+          "name": "WaterResourceInvariant",
+          "ordValue": 5,
+          "definition": "地下水枯渇・生態系破壊を防ぐ取水量の絶対上限",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "RegulatoryWaterRightPolicy",
+          "ordValue": 4,
+          "definition": "河川法・農業用水権・環境影響評価への適合要件",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "IrrigationSchedulePolicy",
+          "ordValue": 3,
+          "definition": "作物の水ストレス回避・省水効率・施肥連携の灌漑方針",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "SoilMoistureModel",
+          "ordValue": 2,
+          "definition": "土壌水分・蒸発散量・根域分布のモデル推論",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "YieldPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "収量・品質・病害リスクに関する予測仮説",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s487_p01",
+          "layerName": "WaterResourceInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s487_p02",
+          "layerName": "WaterResourceInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": [
+            ".s487_p01"
+          ]
+        },
+        {
+          "id": "s487_p03",
+          "layerName": "RegulatoryWaterRightPolicy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s487_p01"
+          ]
+        },
+        {
+          "id": "s487_p04",
+          "layerName": "RegulatoryWaterRightPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s487_p01"
+          ]
+        },
+        {
+          "id": "s487_p05",
+          "layerName": "RegulatoryWaterRightPolicy",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s487_p03",
+            ".s487_p04"
+          ]
+        },
+        {
+          "id": "s487_p06",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s487_p02"
+          ]
+        },
+        {
+          "id": "s487_p07",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s487_p05"
+          ]
+        },
+        {
+          "id": "s487_p08",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            ".s487_p06",
+            ".s487_p07"
+          ]
+        },
+        {
+          "id": "s487_p09",
+          "layerName": "SoilMoistureModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s487_p06"
+          ]
+        },
+        {
+          "id": "s487_p10",
+          "layerName": "SoilMoistureModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s487_p07"
+          ]
+        },
+        {
+          "id": "s487_p11",
+          "layerName": "SoilMoistureModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s487_p08",
+            ".s487_p09"
+          ]
+        },
+        {
+          "id": "s487_p12",
+          "layerName": "SoilMoistureModel",
+          "justification": [
+            "H1",
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s487_p09",
+            ".s487_p10",
+            ".s487_p11"
+          ]
+        },
+        {
+          "id": "s487_p13",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s487_p09"
+          ]
+        },
+        {
+          "id": "s487_p14",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s487_p10"
+          ]
+        },
+        {
+          "id": "s487_p15",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s487_p11",
+            ".s487_p13"
+          ]
+        },
+        {
+          "id": "s487_p16",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s487_p13",
+            ".s487_p14"
+          ]
+        },
+        {
+          "id": "s487_p17",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s487_p14",
+            ".s487_p15"
+          ]
+        },
+        {
+          "id": "s487_p18",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": [
+            "H4",
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s487_p16",
+            ".s487_p17"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 488,
+    "project": "コンプライアンス研修AIアシスタント",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 20,
+    "model_spec": {
+      "namespace": "TestCoverage.S488",
+      "layers": [
+        {
+          "name": "LegalAccuracyInvariant",
+          "ordValue": 4,
+          "definition": "法令情報の誤りが業務違反を招くことを防ぐ絶対正確性要件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryUpdatePolicy",
+          "ordValue": 3,
+          "definition": "法改正・ガイドライン更新の即時反映・バージョン管理方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "LearnerAdaptationModel",
+          "ordValue": 2,
+          "definition": "受講者の理解度・職種・リスク領域に応じた研修カスタマイズ",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "KnowledgeRetentionHypothesis",
+          "ordValue": 1,
+          "definition": "繰り返し学習・事例演習・定期テストによる定着率向上仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s488_p01",
+          "layerName": "LegalAccuracyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s488_p02",
+          "layerName": "LegalAccuracyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s488_p03",
+          "layerName": "LegalAccuracyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s488_p01",
+            ".s488_p02"
+          ]
+        },
+        {
+          "id": "s488_p04",
+          "layerName": "RegulatoryUpdatePolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s488_p01"
+          ]
+        },
+        {
+          "id": "s488_p05",
+          "layerName": "RegulatoryUpdatePolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s488_p03"
+          ]
+        },
+        {
+          "id": "s488_p06",
+          "layerName": "RegulatoryUpdatePolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s488_p04",
+            ".s488_p05"
+          ]
+        },
+        {
+          "id": "s488_p07",
+          "layerName": "LearnerAdaptationModel",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s488_p04"
+          ]
+        },
+        {
+          "id": "s488_p08",
+          "layerName": "LearnerAdaptationModel",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s488_p05"
+          ]
+        },
+        {
+          "id": "s488_p09",
+          "layerName": "LearnerAdaptationModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s488_p06",
+            ".s488_p07"
+          ]
+        },
+        {
+          "id": "s488_p10",
+          "layerName": "LearnerAdaptationModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s488_p07",
+            ".s488_p08"
+          ]
+        },
+        {
+          "id": "s488_p11",
+          "layerName": "KnowledgeRetentionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s488_p09"
+          ]
+        },
+        {
+          "id": "s488_p12",
+          "layerName": "KnowledgeRetentionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s488_p10"
+          ]
+        },
+        {
+          "id": "s488_p13",
+          "layerName": "KnowledgeRetentionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s488_p09",
+            ".s488_p11"
+          ]
+        },
+        {
+          "id": "s488_p14",
+          "layerName": "KnowledgeRetentionHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s488_p11",
+            ".s488_p12"
+          ]
+        },
+        {
+          "id": "s488_p15",
+          "layerName": "KnowledgeRetentionHypothesis",
+          "justification": [
+            "H3",
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s488_p13",
+            ".s488_p14"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 489,
+    "project": "スマートホーム制御AIシステム",
+    "num_c": 5,
+    "num_h": 8,
+    "num_layers": 6,
+    "num_props": 20,
+    "num_deps": 27,
+    "model_spec": {
+      "namespace": "TestCoverage.S489",
+      "layers": [
+        {
+          "name": "PhysicalSafetyInvariant",
+          "ordValue": 6,
+          "definition": "火災・感電・ガス漏れ等の物理的危険を防ぐ絶対不変条件",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "PrivacyDataProtectionInvariant",
+          "ordValue": 5,
+          "definition": "居住者行動データ・映像の漏洩を防ぐプライバシー絶対要件",
+          "derivedFrom": [
+            "C2"
+          ]
+        },
+        {
+          "name": "DeviceInteroperabilityPolicy",
+          "ordValue": 4,
+          "definition": "Matter/Zigbee互換性・ファームウェア更新・認証方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "EnergyOptimizationPolicy",
+          "ordValue": 3,
+          "definition": "電力消費削減・ピークシフト・再生可能エネルギー優先方針",
+          "derivedFrom": [
+            "C5"
+          ]
+        },
+        {
+          "name": "UserBehaviorModel",
+          "ordValue": 2,
+          "definition": "生活パターン・嗜好・季節変動に基づく行動モデル",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "AutomationPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "先読み制御・異常検知・コスト最適化に関する予測仮説",
+          "derivedFrom": [
+            "H5",
+            "H6",
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s489_p01",
+          "layerName": "PhysicalSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s489_p02",
+          "layerName": "PrivacyDataProtectionInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s489_p03",
+          "layerName": "PhysicalSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": [
+            ".s489_p01"
+          ]
+        },
+        {
+          "id": "s489_p04",
+          "layerName": "DeviceInteroperabilityPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s489_p01"
+          ]
+        },
+        {
+          "id": "s489_p05",
+          "layerName": "DeviceInteroperabilityPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s489_p02"
+          ]
+        },
+        {
+          "id": "s489_p06",
+          "layerName": "DeviceInteroperabilityPolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s489_p04",
+            ".s489_p05"
+          ]
+        },
+        {
+          "id": "s489_p07",
+          "layerName": "EnergyOptimizationPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s489_p03"
+          ]
+        },
+        {
+          "id": "s489_p08",
+          "layerName": "EnergyOptimizationPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s489_p06"
+          ]
+        },
+        {
+          "id": "s489_p09",
+          "layerName": "UserBehaviorModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s489_p04"
+          ]
+        },
+        {
+          "id": "s489_p10",
+          "layerName": "UserBehaviorModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s489_p07"
+          ]
+        },
+        {
+          "id": "s489_p11",
+          "layerName": "UserBehaviorModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s489_p08"
+          ]
+        },
+        {
+          "id": "s489_p12",
+          "layerName": "UserBehaviorModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s489_p09",
+            ".s489_p10"
+          ]
+        },
+        {
+          "id": "s489_p13",
+          "layerName": "UserBehaviorModel",
+          "justification": [
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s489_p10",
+            ".s489_p11",
+            ".s489_p12"
+          ]
+        },
+        {
+          "id": "s489_p14",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s489_p09"
+          ]
+        },
+        {
+          "id": "s489_p15",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s489_p10"
+          ]
+        },
+        {
+          "id": "s489_p16",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s489_p11",
+            ".s489_p14"
+          ]
+        },
+        {
+          "id": "s489_p17",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".s489_p12",
+            ".s489_p15"
+          ]
+        },
+        {
+          "id": "s489_p18",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s489_p14",
+            ".s489_p15"
+          ]
+        },
+        {
+          "id": "s489_p19",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".s489_p16",
+            ".s489_p17"
+          ]
+        },
+        {
+          "id": "s489_p20",
+          "layerName": "AutomationPredictionHypothesis",
+          "justification": [
+            "H5",
+            "H6",
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".s489_p18",
+            ".s489_p19"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 490,
+    "project": "深海探査ロボット制御システム",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S490",
+      "layers": [
+        {
+          "name": "MissionCriticalSafetyInvariant",
+          "ordValue": 4,
+          "definition": "耐圧破壊・通信途絶・浮上失敗を防ぐロボット存続の絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "EnvironmentalProtectionPolicy",
+          "ordValue": 3,
+          "definition": "深海生態系への干渉禁止・試料採取上限・排水規制",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "NavigationControlModel",
+          "ordValue": 2,
+          "definition": "水圧・潮流・地形マップを用いた経路制御モデル",
+          "derivedFrom": [
+            "C6",
+            "C7",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "SensorDataHypothesis",
+          "ordValue": 1,
+          "definition": "ソナー・カメラ・化学センサーによる環境推定仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s490_p01",
+          "layerName": "MissionCriticalSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s490_p02",
+          "layerName": "MissionCriticalSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s490_p03",
+          "layerName": "MissionCriticalSafetyInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s490_p01"
+          ]
+        },
+        {
+          "id": "s490_p04",
+          "layerName": "EnvironmentalProtectionPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s490_p01"
+          ]
+        },
+        {
+          "id": "s490_p05",
+          "layerName": "EnvironmentalProtectionPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s490_p02",
+            ".s490_p03"
+          ]
+        },
+        {
+          "id": "s490_p06",
+          "layerName": "NavigationControlModel",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s490_p03"
+          ]
+        },
+        {
+          "id": "s490_p07",
+          "layerName": "NavigationControlModel",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".s490_p04"
+          ]
+        },
+        {
+          "id": "s490_p08",
+          "layerName": "NavigationControlModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s490_p05",
+            ".s490_p06"
+          ]
+        },
+        {
+          "id": "s490_p09",
+          "layerName": "NavigationControlModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s490_p06",
+            ".s490_p07"
+          ]
+        },
+        {
+          "id": "s490_p10",
+          "layerName": "SensorDataHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s490_p08"
+          ]
+        },
+        {
+          "id": "s490_p11",
+          "layerName": "SensorDataHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s490_p09"
+          ]
+        },
+        {
+          "id": "s490_p12",
+          "layerName": "SensorDataHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s490_p10",
+            ".s490_p11"
+          ]
+        },
+        {
+          "id": "s490_p13",
+          "layerName": "MissionCriticalSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s490_p11",
+            ".s490_p12"
+          ]
+        }
+      ]
+    }
+  }
+]

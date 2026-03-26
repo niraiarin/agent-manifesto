@@ -1,0 +1,126 @@
+{
+  "namespace": "TestCoverage.S439",
+  "layers": [
+    {
+      "name": "FoodLossLegalInvariant",
+      "ordValue": 3,
+      "definition": "食品廃棄物削減法・食品ロス削減推進法への適合",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "WasteReductionPolicy",
+      "ordValue": 2,
+      "definition": "廃棄目標値・寄付プログラム・値下げタイミングの方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DemandForecastHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測・販売速度・廃棄確率の統計的仮説モデル",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s439_p01",
+      "layerName": "FoodLossLegalInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s439_p02",
+      "layerName": "FoodLossLegalInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s439_p03",
+      "layerName": "WasteReductionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s439_p01"
+      ]
+    },
+    {
+      "id": "s439_p04",
+      "layerName": "WasteReductionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s439_p03",
+        ".s439_p06"
+      ]
+    },
+    {
+      "id": "s439_p05",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s439_p01"
+      ]
+    },
+    {
+      "id": "s439_p06",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s439_p05"
+      ]
+    },
+    {
+      "id": "s439_p07",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s439_p03"
+      ]
+    },
+    {
+      "id": "s439_p08",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s439_p06",
+        ".s439_p07"
+      ]
+    },
+    {
+      "id": "s439_p09",
+      "layerName": "DemandForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s439_p04",
+        ".s439_p08"
+      ]
+    }
+  ]
+}

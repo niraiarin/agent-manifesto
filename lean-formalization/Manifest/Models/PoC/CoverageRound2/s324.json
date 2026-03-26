@@ -1,0 +1,192 @@
+{
+  "namespace": "TestCoverage.S324",
+  "layers": [
+    {
+      "name": "fairness_invariant",
+      "ordValue": 4,
+      "definition": "公正・無差別な査定に関する絶対不変条件",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "regulatory_compliance",
+      "ordValue": 3,
+      "definition": "保険業法・金融庁・個人情報保護法への適合",
+      "derivedFrom": [
+        "C1",
+        "C6"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "ordValue": 2,
+      "definition": "査定プロセス・不正検出・人間審査ゲート",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H1",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ml_model",
+      "ordValue": 1,
+      "definition": "公平性制約付き学習・説明可能AI・フェデレーテッドラーニングの仮説",
+      "derivedFrom": [
+        "H2",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s324_p01",
+      "layerName": "fairness_invariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s324_p02",
+      "layerName": "fairness_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s324_p03",
+      "layerName": "fairness_invariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s324_p01",
+        ".s324_p02"
+      ]
+    },
+    {
+      "id": "s324_p04",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s324_p02"
+      ]
+    },
+    {
+      "id": "s324_p05",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s324_p04"
+      ]
+    },
+    {
+      "id": "s324_p06",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C1",
+        "C6"
+      ],
+      "dependencies": [
+        ".s324_p04",
+        ".s324_p05"
+      ]
+    },
+    {
+      "id": "s324_p07",
+      "layerName": "operational_policy",
+      "justification": [
+        "C3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s324_p03"
+      ]
+    },
+    {
+      "id": "s324_p08",
+      "layerName": "operational_policy",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".s324_p02"
+      ]
+    },
+    {
+      "id": "s324_p09",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s324_p06"
+      ]
+    },
+    {
+      "id": "s324_p10",
+      "layerName": "operational_policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s324_p07",
+        ".s324_p08"
+      ]
+    },
+    {
+      "id": "s324_p11",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s324_p09"
+      ]
+    },
+    {
+      "id": "s324_p12",
+      "layerName": "ml_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s324_p01",
+        ".s324_p10"
+      ]
+    },
+    {
+      "id": "s324_p13",
+      "layerName": "ml_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s324_p05"
+      ]
+    },
+    {
+      "id": "s324_p14",
+      "layerName": "ml_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s324_p08",
+        ".s324_p12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "namespace": "TestCoverage.S498",
+  "layers": [
+    {
+      "name": "WorkerRightsInvariant",
+      "ordValue": 7,
+      "definition": "労働者の基本権・安全衛生・差別禁止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LegalCompliance",
+      "ordValue": 6,
+      "definition": "労働基準法・労働安全衛生法・男女雇用機会均等法への準拠",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "PrivacyProtection",
+      "ordValue": 5,
+      "definition": "従業員個人情報・健康情報・行動データの保護要件",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "HRPolicy",
+      "ordValue": 4,
+      "definition": "人事評価基準・介入タイミング・エスカレーション手順に関するHRポリシー",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "RiskAssessmentModel",
+      "ordValue": 3,
+      "definition": "離職リスク・健康リスク・ハラスメントリスクの評価モデル",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "InterventionStrategy",
+      "ordValue": 2,
+      "definition": "早期介入・メンタルヘルス支援・職場改善に関する介入戦略",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "AdaptiveLearning",
+      "ordValue": 1,
+      "definition": "フィードバックループ・モデル更新・組織学習に関する適応学習仮説",
+      "derivedFrom": [
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s498_p01",
+      "layerName": "WorkerRightsInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s498_p02",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s498_p01"
+      ]
+    },
+    {
+      "id": "s498_p03",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s498_p01"
+      ]
+    },
+    {
+      "id": "s498_p04",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s498_p02",
+        ".s498_p03"
+      ]
+    },
+    {
+      "id": "s498_p05",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s498_p02"
+      ]
+    },
+    {
+      "id": "s498_p06",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s498_p04",
+        ".s498_p05"
+      ]
+    },
+    {
+      "id": "s498_p07",
+      "layerName": "HRPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s498_p04"
+      ]
+    },
+    {
+      "id": "s498_p08",
+      "layerName": "HRPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s498_p05"
+      ]
+    },
+    {
+      "id": "s498_p09",
+      "layerName": "HRPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s498_p06",
+        ".s498_p07"
+      ]
+    },
+    {
+      "id": "s498_p10",
+      "layerName": "RiskAssessmentModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s498_p07"
+      ]
+    },
+    {
+      "id": "s498_p11",
+      "layerName": "RiskAssessmentModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s498_p08"
+      ]
+    },
+    {
+      "id": "s498_p12",
+      "layerName": "RiskAssessmentModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s498_p09",
+        ".s498_p10"
+      ]
+    },
+    {
+      "id": "s498_p13",
+      "layerName": "RiskAssessmentModel",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".s498_p11",
+        ".s498_p12"
+      ]
+    },
+    {
+      "id": "s498_p14",
+      "layerName": "InterventionStrategy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s498_p10"
+      ]
+    },
+    {
+      "id": "s498_p15",
+      "layerName": "InterventionStrategy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s498_p11"
+      ]
+    },
+    {
+      "id": "s498_p16",
+      "layerName": "InterventionStrategy",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s498_p12",
+        ".s498_p14"
+      ]
+    },
+    {
+      "id": "s498_p17",
+      "layerName": "AdaptiveLearning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s498_p13"
+      ]
+    },
+    {
+      "id": "s498_p18",
+      "layerName": "AdaptiveLearning",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s498_p14"
+      ]
+    },
+    {
+      "id": "s498_p19",
+      "layerName": "AdaptiveLearning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s498_p15",
+        ".s498_p17"
+      ]
+    },
+    {
+      "id": "s498_p20",
+      "layerName": "AdaptiveLearning",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s498_p16",
+        ".s498_p18",
+        ".s498_p19"
+      ]
+    }
+  ]
+}

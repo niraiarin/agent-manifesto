@@ -1,0 +1,230 @@
+{
+  "namespace": "TestCoverage.S358",
+  "layers": [
+    {
+      "name": "AntiDiscriminationInvariant",
+      "ordValue": 5,
+      "definition": "雇用差別禁止・公平採用の絶対制約。性別・人種・年齢等属性による不当選別の禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LaborLawCompliance",
+      "ordValue": 4,
+      "definition": "労働基準法・雇用機会均等法・個人情報保護法への準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "HiringPolicy",
+      "ordValue": 3,
+      "definition": "採用基準・選考フロー・合否通知に関する人事方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "CandidateEvaluation",
+      "ordValue": 2,
+      "definition": "スキルマッチング・文化適合・ポテンシャル評価の方法論",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 1,
+      "definition": "入社後パフォーマンス・定着率・成長予測に関する統計仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s358_p01",
+      "layerName": "AntiDiscriminationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s358_p02",
+      "layerName": "AntiDiscriminationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s358_p03",
+      "layerName": "AntiDiscriminationInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s358_p01"
+      ]
+    },
+    {
+      "id": "s358_p04",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s358_p01"
+      ]
+    },
+    {
+      "id": "s358_p05",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s358_p02"
+      ]
+    },
+    {
+      "id": "s358_p06",
+      "layerName": "LaborLawCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s358_p03"
+      ]
+    },
+    {
+      "id": "s358_p07",
+      "layerName": "HiringPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s358_p04"
+      ]
+    },
+    {
+      "id": "s358_p08",
+      "layerName": "HiringPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s358_p05"
+      ]
+    },
+    {
+      "id": "s358_p09",
+      "layerName": "HiringPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s358_p06",
+        ".s358_p07"
+      ]
+    },
+    {
+      "id": "s358_p10",
+      "layerName": "CandidateEvaluation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s358_p07"
+      ]
+    },
+    {
+      "id": "s358_p11",
+      "layerName": "CandidateEvaluation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s358_p08"
+      ]
+    },
+    {
+      "id": "s358_p12",
+      "layerName": "CandidateEvaluation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s358_p09"
+      ]
+    },
+    {
+      "id": "s358_p13",
+      "layerName": "CandidateEvaluation",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".s358_p10",
+        ".s358_p12"
+      ]
+    },
+    {
+      "id": "s358_p14",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s358_p10"
+      ]
+    },
+    {
+      "id": "s358_p15",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s358_p11"
+      ]
+    },
+    {
+      "id": "s358_p16",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s358_p12",
+        ".s358_p13"
+      ]
+    },
+    {
+      "id": "s358_p17",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s358_p14",
+        ".s358_p15"
+      ]
+    }
+  ]
+}

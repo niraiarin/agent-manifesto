@@ -1,0 +1,201 @@
+{
+  "namespace": "TestCoverage.S389",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 4,
+      "definition": "在室者安全と消防・避難に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "安全・エネルギー規制への遵守義務",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "BuildingOperationPolicy",
+      "ordValue": 2,
+      "definition": "HVAC・エネルギー・セキュリティの運用ポリシー",
+      "derivedFrom": [
+        "C2",
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測・故障分析に関する機械学習仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s389_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s389_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s389_p01"
+      ]
+    },
+    {
+      "id": "s389_p03",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s389_p01"
+      ]
+    },
+    {
+      "id": "s389_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s389_p03"
+      ]
+    },
+    {
+      "id": "s389_p05",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s389_p02"
+      ]
+    },
+    {
+      "id": "s389_p06",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s389_p05"
+      ]
+    },
+    {
+      "id": "s389_p07",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s389_p05",
+        ".s389_p03"
+      ]
+    },
+    {
+      "id": "s389_p08",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s389_p03"
+      ]
+    },
+    {
+      "id": "s389_p09",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s389_p02"
+      ]
+    },
+    {
+      "id": "s389_p10",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s389_p04"
+      ]
+    },
+    {
+      "id": "s389_p11",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s389_p06",
+        ".s389_p07"
+      ]
+    },
+    {
+      "id": "s389_p12",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s389_p10"
+      ]
+    },
+    {
+      "id": "s389_p13",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".s389_p01",
+        ".s389_p02"
+      ]
+    },
+    {
+      "id": "s389_p14",
+      "layerName": "BuildingOperationPolicy",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s389_p08",
+        ".s389_p09"
+      ]
+    },
+    {
+      "id": "s389_p15",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s389_p10",
+        ".s389_p12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "namespace": "TestCoverage.S383",
+  "layers": [
+    {
+      "name": "SafetyAbsolute",
+      "ordValue": 5,
+      "definition": "人命と船体安全に関する絶対不変条件。COLREGS強制規定",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryMandatory",
+      "ordValue": 4,
+      "definition": "IMO・COLREGS規則の遵守義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "OperationalControl",
+      "ordValue": 3,
+      "definition": "通常運航・緊急時の操船制御ポリシー",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "AlgorithmPolicy",
+      "ordValue": 2,
+      "definition": "回避アルゴリズムとセンサー統合の運用方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "SimulationHypothesis",
+      "ordValue": 1,
+      "definition": "シミュレーションと最適化手法に関する計算仮説",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s383_p01",
+      "layerName": "SafetyAbsolute",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s383_p02",
+      "layerName": "SafetyAbsolute",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s383_p03",
+      "layerName": "RegulatoryMandatory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s383_p02"
+      ]
+    },
+    {
+      "id": "s383_p04",
+      "layerName": "RegulatoryMandatory",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s383_p01"
+      ]
+    },
+    {
+      "id": "s383_p05",
+      "layerName": "OperationalControl",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s383_p01",
+        ".s383_p03"
+      ]
+    },
+    {
+      "id": "s383_p06",
+      "layerName": "OperationalControl",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s383_p03",
+        ".s383_p05"
+      ]
+    },
+    {
+      "id": "s383_p07",
+      "layerName": "OperationalControl",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s383_p04"
+      ]
+    },
+    {
+      "id": "s383_p08",
+      "layerName": "AlgorithmPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s383_p01",
+        ".s383_p05"
+      ]
+    },
+    {
+      "id": "s383_p09",
+      "layerName": "AlgorithmPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s383_p04"
+      ]
+    },
+    {
+      "id": "s383_p10",
+      "layerName": "AlgorithmPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s383_p07"
+      ]
+    },
+    {
+      "id": "s383_p11",
+      "layerName": "AlgorithmPolicy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s383_p06"
+      ]
+    },
+    {
+      "id": "s383_p12",
+      "layerName": "SimulationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s383_p05",
+        ".s383_p08"
+      ]
+    },
+    {
+      "id": "s383_p13",
+      "layerName": "OperationalControl",
+      "justification": [
+        "C4",
+        "C6"
+      ],
+      "dependencies": [
+        ".s383_p07",
+        ".s383_p10"
+      ]
+    },
+    {
+      "id": "s383_p14",
+      "layerName": "AlgorithmPolicy",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s383_p12"
+      ]
+    },
+    {
+      "id": "s383_p15",
+      "layerName": "RegulatoryMandatory",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s383_p09"
+      ]
+    },
+    {
+      "id": "s383_p16",
+      "layerName": "OperationalControl",
+      "justification": [
+        "C5",
+        "H5"
+      ],
+      "dependencies": [
+        ".s383_p11",
+        ".s383_p06"
+      ]
+    },
+    {
+      "id": "s383_p17",
+      "layerName": "SimulationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s383_p08",
+        ".s383_p12"
+      ]
+    }
+  ]
+}

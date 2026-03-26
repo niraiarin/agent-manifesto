@@ -1,0 +1,182 @@
+{
+  "namespace": "TestCoverage.S424",
+  "layers": [
+    {
+      "name": "FinancialConstraint",
+      "ordValue": 4,
+      "definition": "投資上限・負債比率上限・最低ROI閾値に関する財務的絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "StrategicAlignment",
+      "ordValue": 3,
+      "definition": "事業戦略・中期計画・ESG目標への整合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "EvaluationPolicy",
+      "ordValue": 2,
+      "definition": "NPV・IRR・回収期間・リスク調整リターンに基づく評価方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ForecastHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測・コスト削減効果・技術陳腐化リスクに関する予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s424_p01",
+      "layerName": "FinancialConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s424_p02",
+      "layerName": "FinancialConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s424_p03",
+      "layerName": "StrategicAlignment",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s424_p01"
+      ]
+    },
+    {
+      "id": "s424_p04",
+      "layerName": "StrategicAlignment",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s424_p02"
+      ]
+    },
+    {
+      "id": "s424_p05",
+      "layerName": "StrategicAlignment",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s424_p03",
+        ".s424_p04"
+      ]
+    },
+    {
+      "id": "s424_p06",
+      "layerName": "EvaluationPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s424_p03"
+      ]
+    },
+    {
+      "id": "s424_p07",
+      "layerName": "EvaluationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s424_p04"
+      ]
+    },
+    {
+      "id": "s424_p08",
+      "layerName": "EvaluationPolicy",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s424_p06",
+        ".s424_p07"
+      ]
+    },
+    {
+      "id": "s424_p09",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s424_p06"
+      ]
+    },
+    {
+      "id": "s424_p10",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s424_p07"
+      ]
+    },
+    {
+      "id": "s424_p11",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s424_p09"
+      ]
+    },
+    {
+      "id": "s424_p12",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s424_p10"
+      ]
+    },
+    {
+      "id": "s424_p13",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s424_p11",
+        ".s424_p12"
+      ]
+    }
+  ]
+}

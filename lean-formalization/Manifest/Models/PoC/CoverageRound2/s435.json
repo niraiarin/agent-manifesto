@@ -1,0 +1,103 @@
+{
+  "namespace": "TestCoverage.S435",
+  "layers": [
+    {
+      "name": "FoodSafetyInvariant",
+      "ordValue": 3,
+      "definition": "食品衛生法・HACCP・細菌増殖限界の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "StorageManagementPolicy",
+      "ordValue": 2,
+      "definition": "温度帯管理・湿度制御・先入先出原則の方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "FreshnessDecayHypothesis",
+      "ordValue": 1,
+      "definition": "品目別鮮度劣化速度・廃棄タイミングの予測仮説",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s435_p01",
+      "layerName": "FoodSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s435_p02",
+      "layerName": "FoodSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s435_p03",
+      "layerName": "StorageManagementPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s435_p01"
+      ]
+    },
+    {
+      "id": "s435_p04",
+      "layerName": "StorageManagementPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s435_p02",
+        ".s435_p03"
+      ]
+    },
+    {
+      "id": "s435_p05",
+      "layerName": "FreshnessDecayHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s435_p03"
+      ]
+    },
+    {
+      "id": "s435_p06",
+      "layerName": "FreshnessDecayHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s435_p04"
+      ]
+    },
+    {
+      "id": "s435_p07",
+      "layerName": "FreshnessDecayHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s435_p05",
+        ".s435_p06"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "namespace": "TestCoverage.S469",
+  "layers": [
+    {
+      "name": "PedestrianSafetyInvariant",
+      "ordValue": 5,
+      "definition": "歩行者・運転者の安全を守る最上位制約。視覚的誘導ミスによる事故の絶対防止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TrafficLawCompliance",
+      "ordValue": 4,
+      "definition": "道路交通法・交通標識規格・地域別交通規制への準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ARRenderingPolicy",
+      "ordValue": 3,
+      "definition": "AR オーバーレイの視野角・輝度・遅延基準。認知負荷最小化のレンダリング方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "RouteOptimizationPolicy",
+      "ordValue": 2,
+      "definition": "リアルタイム交通データ・地図精度・ETA 計算方針。動的再計算トリガー条件",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "UserLocalizationHypothesis",
+      "ordValue": 1,
+      "definition": "GPS 精度・センサーフュージョン・屋内測位から現在位置を推定する仮説",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s469_p01",
+      "layerName": "PedestrianSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s469_p02",
+      "layerName": "PedestrianSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s469_p01"
+      ]
+    },
+    {
+      "id": "s469_p03",
+      "layerName": "TrafficLawCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s469_p01"
+      ]
+    },
+    {
+      "id": "s469_p04",
+      "layerName": "TrafficLawCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s469_p02"
+      ]
+    },
+    {
+      "id": "s469_p05",
+      "layerName": "ARRenderingPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s469_p03"
+      ]
+    },
+    {
+      "id": "s469_p06",
+      "layerName": "ARRenderingPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s469_p04"
+      ]
+    },
+    {
+      "id": "s469_p07",
+      "layerName": "ARRenderingPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s469_p05",
+        ".s469_p06"
+      ]
+    },
+    {
+      "id": "s469_p08",
+      "layerName": "RouteOptimizationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s469_p05"
+      ]
+    },
+    {
+      "id": "s469_p09",
+      "layerName": "RouteOptimizationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s469_p06"
+      ]
+    },
+    {
+      "id": "s469_p10",
+      "layerName": "RouteOptimizationPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s469_p07"
+      ]
+    },
+    {
+      "id": "s469_p11",
+      "layerName": "RouteOptimizationPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s469_p08",
+        ".s469_p09"
+      ]
+    },
+    {
+      "id": "s469_p12",
+      "layerName": "UserLocalizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s469_p08"
+      ]
+    },
+    {
+      "id": "s469_p13",
+      "layerName": "UserLocalizationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s469_p09"
+      ]
+    },
+    {
+      "id": "s469_p14",
+      "layerName": "UserLocalizationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s469_p10"
+      ]
+    },
+    {
+      "id": "s469_p15",
+      "layerName": "UserLocalizationHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s469_p12",
+        ".s469_p13"
+      ]
+    },
+    {
+      "id": "s469_p16",
+      "layerName": "ARRenderingPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s469_p12"
+      ]
+    }
+  ]
+}

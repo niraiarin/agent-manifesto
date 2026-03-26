@@ -1,0 +1,162 @@
+{
+  "namespace": "TestCoverage.S474",
+  "layers": [
+    {
+      "name": "SafetyAndRegulatoryInvariant",
+      "ordValue": 3,
+      "definition": "水道法・建築基準法・漏水事故防止の安全絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "InspectionAndPriorityPolicy",
+      "ordValue": 2,
+      "definition": "劣化指標測定・点検頻度・修繕優先度付けポリシー",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "DegradationModelHypothesis",
+      "ordValue": 1,
+      "definition": "配管材質・年数・使用条件による劣化進行予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s474_p01",
+      "layerName": "SafetyAndRegulatoryInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s474_p02",
+      "layerName": "SafetyAndRegulatoryInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s474_p03",
+      "layerName": "SafetyAndRegulatoryInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s474_p01",
+        ".s474_p02"
+      ]
+    },
+    {
+      "id": "s474_p04",
+      "layerName": "InspectionAndPriorityPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s474_p01"
+      ]
+    },
+    {
+      "id": "s474_p05",
+      "layerName": "InspectionAndPriorityPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s474_p02"
+      ]
+    },
+    {
+      "id": "s474_p06",
+      "layerName": "InspectionAndPriorityPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s474_p03",
+        ".s474_p04"
+      ]
+    },
+    {
+      "id": "s474_p07",
+      "layerName": "InspectionAndPriorityPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s474_p05",
+        ".s474_p06"
+      ]
+    },
+    {
+      "id": "s474_p08",
+      "layerName": "DegradationModelHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s474_p04"
+      ]
+    },
+    {
+      "id": "s474_p09",
+      "layerName": "DegradationModelHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s474_p06"
+      ]
+    },
+    {
+      "id": "s474_p10",
+      "layerName": "DegradationModelHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s474_p07",
+        ".s474_p08"
+      ]
+    },
+    {
+      "id": "s474_p11",
+      "layerName": "DegradationModelHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s474_p09",
+        ".s474_p10"
+      ]
+    },
+    {
+      "id": "s474_p12",
+      "layerName": "InspectionAndPriorityPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s474_p06",
+        ".s474_p07"
+      ]
+    }
+  ]
+}

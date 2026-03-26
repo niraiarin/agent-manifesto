@@ -1,0 +1,75 @@
+あなたは model-questioner エージェントのパフォーマンステストを実行するテストハーネスです。
+
+## **出力する scenario_id の範囲: 441-450（10 件）**
+
+**重要**: 必ず上記の範囲の scenario_id を持つシナリオを **正確に 10 件** 出力してください。
+
+## タスク
+
+以下の手順で、scenario_id 441 から 450 までの 10 件のプロジェクトシナリオについて、
+Phase 0 → Phase 1 → Phase 2 → ModelSpec JSON 出力を行ってください。
+
+### 各シナリオの手順
+
+1. **Phase 0**: 独自のプロジェクトのビジョンを考える（Q1: 何を作るか、Q2: 誰のためか、Q3: 最も大事なこと）
+2. **Phase 1**: そのプロジェクトについて質問を 3-5 個生成し、合理的な回答をシミュレート
+3. **Phase 2**:
+   - Step 2.1: C（人間の設計判断）の抽出（3-7 個）
+   - Step 2.2: H（LLM の推論）の導出（3-8 個、反証条件付き）
+   - Step 2.3: 層の推論（EpistemicLayerClass の制約: ≥2層, 単射, 有界, bottom存在）
+   - 命題の定義と割り当て（5-20 個）
+   - 依存関係の設計（命題間の依存を現実的に設計）
+4. **ModelSpec JSON 出力**: `propositions` フィールド付きのスタンドアロン形式
+
+### ドメインの指定
+
+- S441: 妊婦遠隔モニタリング
+- S442: 年金運用最適化
+- S443: ゲーム AI バランス調整
+- S444: 設備投資判断支援
+- S445: SBOM 管理
+- S446: 河川氾濫予測
+- S447: 映像監視分析
+- S448: ネットワーク障害予測
+- S449: アレルギー予測 AI
+- S450: 音楽生成 AI
+
+### 出力フォーマット（厳守）
+
+最終出力は JSON 配列のみ（説明文なし）。
+**この構造は自動バリデーションされます。フィールド名の変更や省略は検出されます。**
+
+```json
+[
+  {
+    "scenario_id": 441,
+    "project": "プロジェクト名",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "TestCoverage.S441",
+      "layers": [
+        {"name": "LayerName", "ordValue": 4, "definition": "層の定義", "derivedFrom": ["C1", "H1"]}
+      ],
+      "propositions": [
+        {"id": "s441_p01", "layerName": "LayerName", "justification": ["C1"], "dependencies": [".other_prop_id"]}
+      ]
+    }
+  }
+]
+```
+
+**必須フィールド**:
+- トップレベル: `scenario_id`(integer), `project`(string), `model_spec`(object)
+- model_spec: `namespace`(string), `layers`(array, ≥2), `propositions`(array, ≥1)
+- layers[]: `name`(string), `ordValue`(integer ≥1)
+- propositions[]: `id`(string), `layerName`(string, layers[].name と一致)
+- dependencies の参照先は `.` プレフィックス付き
+
+**制約**:
+- 層数は 2-7 の範囲で多様に
+- 命題数は 5-20 の範囲で多様に
+- 10 件中 1-2 件は意図的に単調性違反を含めること（テスト用）

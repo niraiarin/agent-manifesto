@@ -1,0 +1,216 @@
+{
+  "namespace": "TestCoverage.S343",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 4,
+      "definition": "乗客・乗務員・線路近接者の生命安全に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "鉄道事業法・国土交通省安全指針・信号保安規則への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "ダイヤ管理・遅延回復・乗務員配置の運行方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 1,
+      "definition": "混雑予測・故障予兆・最適ルート推論に関する仮説",
+      "derivedFrom": [
+        "C7",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s343_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s343_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s343_p03",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s343_p01",
+        ".s343_p02"
+      ]
+    },
+    {
+      "id": "s343_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s343_p01"
+      ]
+    },
+    {
+      "id": "s343_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s343_p02"
+      ]
+    },
+    {
+      "id": "s343_p06",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s343_p04",
+        ".s343_p05"
+      ]
+    },
+    {
+      "id": "s343_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s343_p04"
+      ]
+    },
+    {
+      "id": "s343_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s343_p05"
+      ]
+    },
+    {
+      "id": "s343_p09",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s343_p06",
+        ".s343_p07"
+      ]
+    },
+    {
+      "id": "s343_p10",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s343_p08"
+      ]
+    },
+    {
+      "id": "s343_p11",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "C7",
+        "H3"
+      ],
+      "dependencies": [
+        ".s343_p07"
+      ]
+    },
+    {
+      "id": "s343_p12",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s343_p08"
+      ]
+    },
+    {
+      "id": "s343_p13",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s343_p09",
+        ".s343_p11"
+      ]
+    },
+    {
+      "id": "s343_p14",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s343_p10",
+        ".s343_p12"
+      ]
+    },
+    {
+      "id": "s343_p15",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s343_p13"
+      ]
+    },
+    {
+      "id": "s343_p16",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "C7",
+        "H5"
+      ],
+      "dependencies": [
+        ".s343_p14",
+        ".s343_p15"
+      ]
+    }
+  ]
+}

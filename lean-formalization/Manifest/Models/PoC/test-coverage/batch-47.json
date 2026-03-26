@@ -1,0 +1,1830 @@
+[
+  {
+    "scenario_id": 461,
+    "project": "ペット健康管理 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S461",
+      "layers": [
+        {
+          "name": "AnimalWelfareInvariant",
+          "ordValue": 3,
+          "definition": "動物の生命・福祉を守る最上位制約。危険な診断推奨の絶対排除",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "VeterinaryCompliance",
+          "ordValue": 2,
+          "definition": "獣医師法・医薬品規制に基づく診断補助ガイドライン準拠",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "HealthPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "バイタルデータ・行動パターンから疾患リスクを推定する仮説層",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s461_p01",
+          "layerName": "AnimalWelfareInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s461_p02",
+          "layerName": "AnimalWelfareInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s461_p01"
+          ]
+        },
+        {
+          "id": "s461_p03",
+          "layerName": "VeterinaryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s461_p01"
+          ]
+        },
+        {
+          "id": "s461_p04",
+          "layerName": "VeterinaryCompliance",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s461_p02"
+          ]
+        },
+        {
+          "id": "s461_p05",
+          "layerName": "VeterinaryCompliance",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s461_p03",
+            ".s461_p04"
+          ]
+        },
+        {
+          "id": "s461_p06",
+          "layerName": "HealthPredictionHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s461_p03"
+          ]
+        },
+        {
+          "id": "s461_p07",
+          "layerName": "HealthPredictionHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s461_p04"
+          ]
+        },
+        {
+          "id": "s461_p08",
+          "layerName": "HealthPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s461_p06"
+          ]
+        },
+        {
+          "id": "s461_p09",
+          "layerName": "HealthPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s461_p07"
+          ]
+        },
+        {
+          "id": "s461_p10",
+          "layerName": "HealthPredictionHypothesis",
+          "justification": [
+            "H2",
+            "H5"
+          ],
+          "dependencies": [
+            ".s461_p08",
+            ".s461_p09"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 462,
+    "project": "映画レーティング予測システム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S462",
+      "layers": [
+        {
+          "name": "ContentSafetyInvariant",
+          "ordValue": 4,
+          "definition": "未成年保護・有害コンテンツ排除の絶対制約。レーティング誤判定の防止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryRatingStandard",
+          "ordValue": 3,
+          "definition": "映倫・放送倫理基準・年齢制限法規への準拠要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "GenreClassificationPolicy",
+          "ordValue": 2,
+          "definition": "ジャンル・暴力度・性描写スコアリング方針。多次元特徴量による分類基準",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "AudienceReactionHypothesis",
+          "ordValue": 1,
+          "definition": "視聴者属性・過去評価から反応を推定する仮説。A/B テスト結果で更新可能",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s462_p01",
+          "layerName": "ContentSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s462_p02",
+          "layerName": "ContentSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s462_p01"
+          ]
+        },
+        {
+          "id": "s462_p03",
+          "layerName": "RegulatoryRatingStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s462_p01"
+          ]
+        },
+        {
+          "id": "s462_p04",
+          "layerName": "RegulatoryRatingStandard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s462_p02"
+          ]
+        },
+        {
+          "id": "s462_p05",
+          "layerName": "GenreClassificationPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s462_p03"
+          ]
+        },
+        {
+          "id": "s462_p06",
+          "layerName": "GenreClassificationPolicy",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": [
+            ".s462_p04"
+          ]
+        },
+        {
+          "id": "s462_p07",
+          "layerName": "GenreClassificationPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s462_p05",
+            ".s462_p06"
+          ]
+        },
+        {
+          "id": "s462_p08",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s462_p05"
+          ]
+        },
+        {
+          "id": "s462_p09",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s462_p06"
+          ]
+        },
+        {
+          "id": "s462_p10",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s462_p07"
+          ]
+        },
+        {
+          "id": "s462_p11",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s462_p08"
+          ]
+        },
+        {
+          "id": "s462_p12",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s462_p09"
+          ]
+        },
+        {
+          "id": "s462_p13",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H3",
+            "H5"
+          ],
+          "dependencies": [
+            ".s462_p10",
+            ".s462_p11"
+          ]
+        },
+        {
+          "id": "s462_p14",
+          "layerName": "AudienceReactionHypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            ".s462_p12",
+            ".s462_p13"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 463,
+    "project": "ライブ配信品質最適化システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S463",
+      "layers": [
+        {
+          "name": "ServiceReliabilityInvariant",
+          "ordValue": 4,
+          "definition": "配信断絶ゼロ・視聴者体験の最低品質保証。SLA 違反の絶対禁止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "NetworkProtocolCompliance",
+          "ordValue": 3,
+          "definition": "RTMP/HLS/WebRTC プロトコル規格・帯域割当規制への準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "AdaptiveBitratePolicy",
+          "ordValue": 2,
+          "definition": "ネットワーク状態に応じたビットレート自動調整方針。遅延 vs 品質トレードオフ基準",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "ViewerExperienceHypothesis",
+          "ordValue": 1,
+          "definition": "視聴者の接続環境・デバイス特性から体感品質を推定する仮説層",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s463_p01",
+          "layerName": "ServiceReliabilityInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s463_p02",
+          "layerName": "ServiceReliabilityInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s463_p01"
+          ]
+        },
+        {
+          "id": "s463_p03",
+          "layerName": "NetworkProtocolCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s463_p01"
+          ]
+        },
+        {
+          "id": "s463_p04",
+          "layerName": "NetworkProtocolCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s463_p02"
+          ]
+        },
+        {
+          "id": "s463_p05",
+          "layerName": "AdaptiveBitratePolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s463_p03"
+          ]
+        },
+        {
+          "id": "s463_p06",
+          "layerName": "AdaptiveBitratePolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s463_p04"
+          ]
+        },
+        {
+          "id": "s463_p07",
+          "layerName": "AdaptiveBitratePolicy",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s463_p05",
+            ".s463_p06"
+          ]
+        },
+        {
+          "id": "s463_p08",
+          "layerName": "ViewerExperienceHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s463_p05"
+          ]
+        },
+        {
+          "id": "s463_p09",
+          "layerName": "ViewerExperienceHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s463_p06"
+          ]
+        },
+        {
+          "id": "s463_p10",
+          "layerName": "ViewerExperienceHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s463_p07"
+          ]
+        },
+        {
+          "id": "s463_p11",
+          "layerName": "ViewerExperienceHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s463_p08",
+            ".s463_p09"
+          ]
+        },
+        {
+          "id": "s463_p12",
+          "layerName": "ViewerExperienceHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s463_p10",
+            ".s463_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 464,
+    "project": "広告ターゲティング AI",
+    "num_c": 6,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "TestCoverage.S464",
+      "layers": [
+        {
+          "name": "PrivacyRightsInvariant",
+          "ordValue": 5,
+          "definition": "個人情報の収集・利用の絶対制約。GDPR・個人情報保護法への違反禁止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "AdRegulationCompliance",
+          "ordValue": 4,
+          "definition": "景品表示法・不当広告規制・プラットフォーム広告ポリシーへの準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "TargetingEthicsPolicy",
+          "ordValue": 3,
+          "definition": "脆弱層（未成年・依存症リスク）への有害広告排除。差別的ターゲティングの禁止",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "AudienceSegmentationPolicy",
+          "ordValue": 2,
+          "definition": "行動データ・デモグラフィクスによるオーディエンスセグメント設計方針",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "ConversionPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "クリック率・購買確率の予測仮説。実績データによる継続的更新",
+          "derivedFrom": [
+            "H5",
+            "H6",
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s464_p01",
+          "layerName": "PrivacyRightsInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s464_p02",
+          "layerName": "PrivacyRightsInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s464_p01"
+          ]
+        },
+        {
+          "id": "s464_p03",
+          "layerName": "AdRegulationCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s464_p01"
+          ]
+        },
+        {
+          "id": "s464_p04",
+          "layerName": "AdRegulationCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s464_p02"
+          ]
+        },
+        {
+          "id": "s464_p05",
+          "layerName": "TargetingEthicsPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s464_p03"
+          ]
+        },
+        {
+          "id": "s464_p06",
+          "layerName": "TargetingEthicsPolicy",
+          "justification": [
+            "C6",
+            "H1"
+          ],
+          "dependencies": [
+            ".s464_p04"
+          ]
+        },
+        {
+          "id": "s464_p07",
+          "layerName": "TargetingEthicsPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s464_p05",
+            ".s464_p06"
+          ]
+        },
+        {
+          "id": "s464_p08",
+          "layerName": "AudienceSegmentationPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s464_p05"
+          ]
+        },
+        {
+          "id": "s464_p09",
+          "layerName": "AudienceSegmentationPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s464_p06"
+          ]
+        },
+        {
+          "id": "s464_p10",
+          "layerName": "AudienceSegmentationPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s464_p07"
+          ]
+        },
+        {
+          "id": "s464_p11",
+          "layerName": "AudienceSegmentationPolicy",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s464_p08",
+            ".s464_p09"
+          ]
+        },
+        {
+          "id": "s464_p12",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s464_p08"
+          ]
+        },
+        {
+          "id": "s464_p13",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s464_p09"
+          ]
+        },
+        {
+          "id": "s464_p14",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s464_p10"
+          ]
+        },
+        {
+          "id": "s464_p15",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".s464_p11"
+          ]
+        },
+        {
+          "id": "s464_p16",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s464_p12",
+            ".s464_p13"
+          ]
+        },
+        {
+          "id": "s464_p17",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".s464_p14",
+            ".s464_p15"
+          ]
+        },
+        {
+          "id": "s464_p18",
+          "layerName": "ConversionPredictionHypothesis",
+          "justification": [
+            "H5",
+            "H7"
+          ],
+          "dependencies": [
+            ".s464_p16",
+            ".s464_p17"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 465,
+    "project": "著作権侵害検知システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S465",
+      "layers": [
+        {
+          "name": "IPRightsInvariant",
+          "ordValue": 4,
+          "definition": "著作権・知的財産権の侵害防止絶対制約。誤検知による正当コンテンツ削除の最小化",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "CopyrightLawCompliance",
+          "ordValue": 3,
+          "definition": "著作権法・DMCA・フェアユース原則への準拠。法的根拠に基づく削除判断",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "DetectionPolicy",
+          "ordValue": 2,
+          "definition": "フィンガープリント照合・メタデータ分析・類似度閾値設定方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "SimilarityInferenceHypothesis",
+          "ordValue": 1,
+          "definition": "音声・映像・テキストの特徴量類似度から侵害確率を推定する仮説層",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s465_p01",
+          "layerName": "IPRightsInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s465_p02",
+          "layerName": "IPRightsInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s465_p01"
+          ]
+        },
+        {
+          "id": "s465_p03",
+          "layerName": "CopyrightLawCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s465_p01"
+          ]
+        },
+        {
+          "id": "s465_p04",
+          "layerName": "CopyrightLawCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s465_p02"
+          ]
+        },
+        {
+          "id": "s465_p05",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s465_p03"
+          ]
+        },
+        {
+          "id": "s465_p06",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s465_p04"
+          ]
+        },
+        {
+          "id": "s465_p07",
+          "layerName": "DetectionPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s465_p05",
+            ".s465_p06"
+          ]
+        },
+        {
+          "id": "s465_p08",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s465_p05"
+          ]
+        },
+        {
+          "id": "s465_p09",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s465_p06"
+          ]
+        },
+        {
+          "id": "s465_p10",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s465_p07"
+          ]
+        },
+        {
+          "id": "s465_p11",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s465_p08"
+          ]
+        },
+        {
+          "id": "s465_p12",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H3",
+            "H5"
+          ],
+          "dependencies": [
+            ".s465_p09",
+            ".s465_p10"
+          ]
+        },
+        {
+          "id": "s465_p13",
+          "layerName": "SimilarityInferenceHypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            ".s465_p11",
+            ".s465_p12"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 466,
+    "project": "バーチャルアシスタント",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 2,
+    "num_props": 7,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "TestCoverage.S466",
+      "layers": [
+        {
+          "name": "UserSafetyInvariant",
+          "ordValue": 2,
+          "definition": "ユーザーの安全・プライバシー保護の絶対制約。有害情報提供・個人情報漏洩の禁止",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "DialogueCapabilityHypothesis",
+          "ordValue": 1,
+          "definition": "意図理解・文脈把握・応答生成に関する推論能力仮説。ユーザー行動から更新可能",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s466_p01",
+          "layerName": "UserSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s466_p02",
+          "layerName": "UserSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s466_p01"
+          ]
+        },
+        {
+          "id": "s466_p03",
+          "layerName": "UserSafetyInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s466_p01"
+          ]
+        },
+        {
+          "id": "s466_p04",
+          "layerName": "DialogueCapabilityHypothesis",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s466_p01"
+          ]
+        },
+        {
+          "id": "s466_p05",
+          "layerName": "DialogueCapabilityHypothesis",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s466_p02",
+            ".s466_p04"
+          ]
+        },
+        {
+          "id": "s466_p06",
+          "layerName": "DialogueCapabilityHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s466_p03"
+          ]
+        },
+        {
+          "id": "s466_p07",
+          "layerName": "DialogueCapabilityHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s466_p05",
+            ".s466_p06"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 467,
+    "project": "eスポーツ分析プラットフォーム",
+    "num_c": 4,
+    "num_h": 7,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S467",
+      "layers": [
+        {
+          "name": "FairPlayInvariant",
+          "ordValue": 3,
+          "definition": "チート検知・不正行為排除の絶対制約。試合結果の公正性保証",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "GameRuleCompliance",
+          "ordValue": 2,
+          "definition": "ゲームタイトル毎のルール・大会レギュレーション・プラットフォームポリシー準拠",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "PerformanceModelHypothesis",
+          "ordValue": 1,
+          "definition": "プレイヤーの行動パターン・チーム連携・スキル成長を推定する仮説層",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4",
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s467_p01",
+          "layerName": "FairPlayInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s467_p02",
+          "layerName": "FairPlayInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s467_p01"
+          ]
+        },
+        {
+          "id": "s467_p03",
+          "layerName": "GameRuleCompliance",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s467_p01"
+          ]
+        },
+        {
+          "id": "s467_p04",
+          "layerName": "GameRuleCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s467_p02"
+          ]
+        },
+        {
+          "id": "s467_p05",
+          "layerName": "PerformanceModelHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s467_p03"
+          ]
+        },
+        {
+          "id": "s467_p06",
+          "layerName": "PerformanceModelHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s467_p04"
+          ]
+        },
+        {
+          "id": "s467_p07",
+          "layerName": "PerformanceModelHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s467_p05"
+          ]
+        },
+        {
+          "id": "s467_p08",
+          "layerName": "PerformanceModelHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s467_p06"
+          ]
+        },
+        {
+          "id": "s467_p09",
+          "layerName": "PerformanceModelHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s467_p07",
+            ".s467_p08"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 468,
+    "project": "VPN 性能最適化エンジン",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S468",
+      "layers": [
+        {
+          "name": "SecurityPrivacyInvariant",
+          "ordValue": 4,
+          "definition": "通信の暗号化・匿名性保証の絶対制約。ユーザーデータ漏洩・ログ保持の禁止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "TelecomRegulationCompliance",
+          "ordValue": 3,
+          "definition": "通信法・輸出規制・地域別暗号化法規への準拠。特定国での利用制限",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ProtocolSelectionPolicy",
+          "ordValue": 2,
+          "definition": "WireGuard/OpenVPN/IKEv2 プロトコル選択基準。遅延・スループット・互換性のトレードオフ",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "NetworkConditionHypothesis",
+          "ordValue": 1,
+          "definition": "ユーザーの地理的位置・ISP 特性・混雑状況から最適経路を推定する仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s468_p01",
+          "layerName": "SecurityPrivacyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s468_p02",
+          "layerName": "SecurityPrivacyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s468_p01"
+          ]
+        },
+        {
+          "id": "s468_p03",
+          "layerName": "TelecomRegulationCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s468_p01"
+          ]
+        },
+        {
+          "id": "s468_p04",
+          "layerName": "TelecomRegulationCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s468_p02"
+          ]
+        },
+        {
+          "id": "s468_p05",
+          "layerName": "ProtocolSelectionPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s468_p03"
+          ]
+        },
+        {
+          "id": "s468_p06",
+          "layerName": "ProtocolSelectionPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s468_p04"
+          ]
+        },
+        {
+          "id": "s468_p07",
+          "layerName": "ProtocolSelectionPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s468_p05",
+            ".s468_p06"
+          ]
+        },
+        {
+          "id": "s468_p08",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s468_p05"
+          ]
+        },
+        {
+          "id": "s468_p09",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s468_p06"
+          ]
+        },
+        {
+          "id": "s468_p10",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s468_p07"
+          ]
+        },
+        {
+          "id": "s468_p11",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s468_p08"
+          ]
+        },
+        {
+          "id": "s468_p12",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s468_p09",
+            ".s468_p10"
+          ]
+        },
+        {
+          "id": "s468_p13",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s468_p11",
+            ".s468_p12"
+          ]
+        },
+        {
+          "id": "s468_p14",
+          "layerName": "ProtocolSelectionPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s468_p11"
+          ]
+        },
+        {
+          "id": "s468_p15",
+          "layerName": "NetworkConditionHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s468_p13"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 469,
+    "project": "AR ナビゲーションシステム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S469",
+      "layers": [
+        {
+          "name": "PedestrianSafetyInvariant",
+          "ordValue": 5,
+          "definition": "歩行者・運転者の安全を守る最上位制約。視覚的誘導ミスによる事故の絶対防止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "TrafficLawCompliance",
+          "ordValue": 4,
+          "definition": "道路交通法・交通標識規格・地域別交通規制への準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ARRenderingPolicy",
+          "ordValue": 3,
+          "definition": "AR オーバーレイの視野角・輝度・遅延基準。認知負荷最小化のレンダリング方針",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "RouteOptimizationPolicy",
+          "ordValue": 2,
+          "definition": "リアルタイム交通データ・地図精度・ETA 計算方針。動的再計算トリガー条件",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "UserLocalizationHypothesis",
+          "ordValue": 1,
+          "definition": "GPS 精度・センサーフュージョン・屋内測位から現在位置を推定する仮説",
+          "derivedFrom": [
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s469_p01",
+          "layerName": "PedestrianSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s469_p02",
+          "layerName": "PedestrianSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s469_p01"
+          ]
+        },
+        {
+          "id": "s469_p03",
+          "layerName": "TrafficLawCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s469_p01"
+          ]
+        },
+        {
+          "id": "s469_p04",
+          "layerName": "TrafficLawCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s469_p02"
+          ]
+        },
+        {
+          "id": "s469_p05",
+          "layerName": "ARRenderingPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s469_p03"
+          ]
+        },
+        {
+          "id": "s469_p06",
+          "layerName": "ARRenderingPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s469_p04"
+          ]
+        },
+        {
+          "id": "s469_p07",
+          "layerName": "ARRenderingPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s469_p05",
+            ".s469_p06"
+          ]
+        },
+        {
+          "id": "s469_p08",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s469_p05"
+          ]
+        },
+        {
+          "id": "s469_p09",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s469_p06"
+          ]
+        },
+        {
+          "id": "s469_p10",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s469_p07"
+          ]
+        },
+        {
+          "id": "s469_p11",
+          "layerName": "RouteOptimizationPolicy",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s469_p08",
+            ".s469_p09"
+          ]
+        },
+        {
+          "id": "s469_p12",
+          "layerName": "UserLocalizationHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s469_p08"
+          ]
+        },
+        {
+          "id": "s469_p13",
+          "layerName": "UserLocalizationHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s469_p09"
+          ]
+        },
+        {
+          "id": "s469_p14",
+          "layerName": "UserLocalizationHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s469_p10"
+          ]
+        },
+        {
+          "id": "s469_p15",
+          "layerName": "UserLocalizationHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s469_p12",
+            ".s469_p13"
+          ]
+        },
+        {
+          "id": "s469_p16",
+          "layerName": "ARRenderingPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s469_p12"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 470,
+    "project": "IoT デバイス認証システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S470",
+      "layers": [
+        {
+          "name": "DeviceSecurityInvariant",
+          "ordValue": 4,
+          "definition": "デバイス偽装・不正アクセスの絶対防止制約。クリティカルインフラ保護の最上位要件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "SecurityStandardCompliance",
+          "ordValue": 3,
+          "definition": "FIDO2・X.509・ISO/IEC 27001 などセキュリティ標準への準拠要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "AuthenticationPolicy",
+          "ordValue": 2,
+          "definition": "多要素認証・証明書ライフサイクル管理・失効チェック頻度の方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "TrustScoreHypothesis",
+          "ordValue": 1,
+          "definition": "デバイス行動履歴・ファームウェア整合性・ネットワーク文脈から信頼スコアを推定する仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s470_p01",
+          "layerName": "DeviceSecurityInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s470_p02",
+          "layerName": "DeviceSecurityInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s470_p01"
+          ]
+        },
+        {
+          "id": "s470_p03",
+          "layerName": "SecurityStandardCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s470_p01"
+          ]
+        },
+        {
+          "id": "s470_p04",
+          "layerName": "SecurityStandardCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s470_p02"
+          ]
+        },
+        {
+          "id": "s470_p05",
+          "layerName": "AuthenticationPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s470_p03"
+          ]
+        },
+        {
+          "id": "s470_p06",
+          "layerName": "AuthenticationPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s470_p04"
+          ]
+        },
+        {
+          "id": "s470_p07",
+          "layerName": "TrustScoreHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s470_p05"
+          ]
+        },
+        {
+          "id": "s470_p08",
+          "layerName": "TrustScoreHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s470_p06"
+          ]
+        },
+        {
+          "id": "s470_p09",
+          "layerName": "TrustScoreHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s470_p07"
+          ]
+        },
+        {
+          "id": "s470_p10",
+          "layerName": "TrustScoreHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s470_p08",
+            ".s470_p09"
+          ]
+        },
+        {
+          "id": "s470_p11",
+          "layerName": "TrustScoreHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s470_p09"
+          ]
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,280 @@
+{
+  "namespace": "TestCoverage.S440",
+  "layers": [
+    {
+      "name": "PhysicalNetworkLaw",
+      "ordValue": 7,
+      "definition": "シャノン容量定理・電磁干渉法規・周波数割当の物理法則",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TelecomRegulation",
+      "ordValue": 6,
+      "definition": "電気通信事業法・総務省周波数管理規制・SLA法的義務",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "QoSGuaranteeStandard",
+      "ordValue": 5,
+      "definition": "遅延・ジッタ・パケットロス率の品質保証基準",
+      "derivedFrom": [
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "TrafficManagementPolicy",
+      "ordValue": 4,
+      "definition": "トラフィッククラス優先度・輻輳制御・ルーティングポリシー",
+      "derivedFrom": [
+        "C7",
+        "H1"
+      ]
+    },
+    {
+      "name": "ResourceAllocationPolicy",
+      "ordValue": 3,
+      "definition": "帯域幅割当アルゴリズム・動的再配分・利用率目標",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictiveOptimizationModel",
+      "ordValue": 2,
+      "definition": "トラフィック需要予測・ボトルネック特定の推論モデル",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "AdaptiveLearningHypothesis",
+      "ordValue": 1,
+      "definition": "利用パターン学習・自律的最適化に関する適応仮説",
+      "derivedFrom": [
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s440_p01",
+      "layerName": "PhysicalNetworkLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s440_p02",
+      "layerName": "PhysicalNetworkLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s440_p03",
+      "layerName": "TelecomRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s440_p01"
+      ]
+    },
+    {
+      "id": "s440_p04",
+      "layerName": "TelecomRegulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s440_p02"
+      ]
+    },
+    {
+      "id": "s440_p05",
+      "layerName": "TelecomRegulation",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s440_p03",
+        ".s440_p04"
+      ]
+    },
+    {
+      "id": "s440_p06",
+      "layerName": "QoSGuaranteeStandard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s440_p03"
+      ]
+    },
+    {
+      "id": "s440_p07",
+      "layerName": "QoSGuaranteeStandard",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s440_p04"
+      ]
+    },
+    {
+      "id": "s440_p08",
+      "layerName": "QoSGuaranteeStandard",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s440_p06",
+        ".s440_p07"
+      ]
+    },
+    {
+      "id": "s440_p09",
+      "layerName": "TrafficManagementPolicy",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s440_p05"
+      ]
+    },
+    {
+      "id": "s440_p10",
+      "layerName": "TrafficManagementPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s440_p06",
+        ".s440_p09"
+      ]
+    },
+    {
+      "id": "s440_p11",
+      "layerName": "TrafficManagementPolicy",
+      "justification": [
+        "C7",
+        "H1"
+      ],
+      "dependencies": [
+        ".s440_p08",
+        ".s440_p10"
+      ]
+    },
+    {
+      "id": "s440_p12",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s440_p09"
+      ]
+    },
+    {
+      "id": "s440_p13",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s440_p10"
+      ]
+    },
+    {
+      "id": "s440_p14",
+      "layerName": "ResourceAllocationPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s440_p11",
+        ".s440_p12"
+      ]
+    },
+    {
+      "id": "s440_p15",
+      "layerName": "PredictiveOptimizationModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s440_p12"
+      ]
+    },
+    {
+      "id": "s440_p16",
+      "layerName": "PredictiveOptimizationModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s440_p13"
+      ]
+    },
+    {
+      "id": "s440_p17",
+      "layerName": "PredictiveOptimizationModel",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s440_p14",
+        ".s440_p15"
+      ]
+    },
+    {
+      "id": "s440_p18",
+      "layerName": "AdaptiveLearningHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s440_p15"
+      ]
+    },
+    {
+      "id": "s440_p19",
+      "layerName": "AdaptiveLearningHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s440_p16",
+        ".s440_p18"
+      ]
+    },
+    {
+      "id": "s440_p20",
+      "layerName": "AdaptiveLearningHypothesis",
+      "justification": [
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".s440_p17",
+        ".s440_p19"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "namespace": "TestCoverage.S468",
+  "layers": [
+    {
+      "name": "SecurityPrivacyInvariant",
+      "ordValue": 4,
+      "definition": "通信の暗号化・匿名性保証の絶対制約。ユーザーデータ漏洩・ログ保持の禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TelecomRegulationCompliance",
+      "ordValue": 3,
+      "definition": "通信法・輸出規制・地域別暗号化法規への準拠。特定国での利用制限",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ProtocolSelectionPolicy",
+      "ordValue": 2,
+      "definition": "WireGuard/OpenVPN/IKEv2 プロトコル選択基準。遅延・スループット・互換性のトレードオフ",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "NetworkConditionHypothesis",
+      "ordValue": 1,
+      "definition": "ユーザーの地理的位置・ISP 特性・混雑状況から最適経路を推定する仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s468_p01",
+      "layerName": "SecurityPrivacyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s468_p02",
+      "layerName": "SecurityPrivacyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s468_p01"
+      ]
+    },
+    {
+      "id": "s468_p03",
+      "layerName": "TelecomRegulationCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s468_p01"
+      ]
+    },
+    {
+      "id": "s468_p04",
+      "layerName": "TelecomRegulationCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s468_p02"
+      ]
+    },
+    {
+      "id": "s468_p05",
+      "layerName": "ProtocolSelectionPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s468_p03"
+      ]
+    },
+    {
+      "id": "s468_p06",
+      "layerName": "ProtocolSelectionPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s468_p04"
+      ]
+    },
+    {
+      "id": "s468_p07",
+      "layerName": "ProtocolSelectionPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s468_p05",
+        ".s468_p06"
+      ]
+    },
+    {
+      "id": "s468_p08",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s468_p05"
+      ]
+    },
+    {
+      "id": "s468_p09",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s468_p06"
+      ]
+    },
+    {
+      "id": "s468_p10",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s468_p07"
+      ]
+    },
+    {
+      "id": "s468_p11",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s468_p08"
+      ]
+    },
+    {
+      "id": "s468_p12",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s468_p09",
+        ".s468_p10"
+      ]
+    },
+    {
+      "id": "s468_p13",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s468_p11",
+        ".s468_p12"
+      ]
+    },
+    {
+      "id": "s468_p14",
+      "layerName": "ProtocolSelectionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s468_p11"
+      ]
+    },
+    {
+      "id": "s468_p15",
+      "layerName": "NetworkConditionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s468_p13"
+      ]
+    }
+  ]
+}

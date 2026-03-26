@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S313",
+  "layers": [
+    {
+      "name": "safety_core",
+      "ordValue": 4,
+      "definition": "衝突回避・フォールバック手順の絶対安全要件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "regulatory_compliance",
+      "ordValue": 3,
+      "definition": "ICAO/RASA規制への適合要件",
+      "derivedFrom": [
+        "C2",
+        "C7"
+      ]
+    },
+    {
+      "name": "operational_support",
+      "ordValue": 2,
+      "definition": "管制官支援・気象統合・容量管理の運用機能",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "learning_hypothesis",
+      "ordValue": 1,
+      "definition": "AIモデル更新・フィードバック利用の仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s313_p01",
+      "layerName": "safety_core",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s313_p02",
+      "layerName": "safety_core",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s313_p03",
+      "layerName": "safety_core",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".s313_p02"
+      ]
+    },
+    {
+      "id": "s313_p04",
+      "layerName": "safety_core",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s313_p01"
+      ]
+    },
+    {
+      "id": "s313_p05",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s313_p02"
+      ]
+    },
+    {
+      "id": "s313_p06",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s313_p05"
+      ]
+    },
+    {
+      "id": "s313_p07",
+      "layerName": "operational_support",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s313_p04"
+      ]
+    },
+    {
+      "id": "s313_p08",
+      "layerName": "operational_support",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s313_p01",
+        ".s313_p05"
+      ]
+    },
+    {
+      "id": "s313_p09",
+      "layerName": "operational_support",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s313_p08"
+      ]
+    },
+    {
+      "id": "s313_p10",
+      "layerName": "operational_support",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s313_p06",
+        ".s313_p07"
+      ]
+    },
+    {
+      "id": "s313_p11",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s313_p05",
+        ".s313_p08"
+      ]
+    },
+    {
+      "id": "s313_p12",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s313_p09",
+        ".s313_p11"
+      ]
+    },
+    {
+      "id": "s313_p13",
+      "layerName": "learning_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s313_p06",
+        ".s313_p10"
+      ]
+    }
+  ]
+}

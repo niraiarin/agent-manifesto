@@ -1,0 +1,145 @@
+{
+  "namespace": "TestCoverage.S363",
+  "layers": [
+    {
+      "name": "ServiceIntegrity",
+      "ordValue": 3,
+      "definition": "マルチモーダル交通サービスの継続性・利用者安全の不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InteroperabilityPolicy",
+      "ordValue": 2,
+      "definition": "交通事業者間データ共有・決済統合・API連携方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "経路最適化・需要予測・混雑緩和に関する推論仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s363_p01",
+      "layerName": "ServiceIntegrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s363_p02",
+      "layerName": "ServiceIntegrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s363_p01"
+      ]
+    },
+    {
+      "id": "s363_p03",
+      "layerName": "InteroperabilityPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s363_p01"
+      ]
+    },
+    {
+      "id": "s363_p04",
+      "layerName": "InteroperabilityPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s363_p02"
+      ]
+    },
+    {
+      "id": "s363_p05",
+      "layerName": "InteroperabilityPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s363_p03",
+        ".s363_p04"
+      ]
+    },
+    {
+      "id": "s363_p06",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s363_p03"
+      ]
+    },
+    {
+      "id": "s363_p07",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s363_p04"
+      ]
+    },
+    {
+      "id": "s363_p08",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s363_p05",
+        ".s363_p06"
+      ]
+    },
+    {
+      "id": "s363_p09",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s363_p07"
+      ]
+    },
+    {
+      "id": "s363_p10",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s363_p08",
+        ".s363_p09"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "namespace": "TestCoverage.S359",
+  "layers": [
+    {
+      "name": "ConstructionSafetyInvariant",
+      "ordValue": 4,
+      "definition": "作業員の生命安全・重大事故防止の絶対的工事安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "建設業法・労働安全衛生法・建築基準法への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ProjectManagementPolicy",
+      "ordValue": 2,
+      "definition": "工程計画・資材調達・サブコン管理・品質検査の施工管理方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ProgressForecastHypothesis",
+      "ordValue": 1,
+      "definition": "完工予測・遅延リスク・コスト超過に関する進捗予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s359_p01",
+      "layerName": "ConstructionSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s359_p02",
+      "layerName": "ConstructionSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s359_p01"
+      ]
+    },
+    {
+      "id": "s359_p03",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s359_p01"
+      ]
+    },
+    {
+      "id": "s359_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s359_p02"
+      ]
+    },
+    {
+      "id": "s359_p05",
+      "layerName": "ProjectManagementPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s359_p03"
+      ]
+    },
+    {
+      "id": "s359_p06",
+      "layerName": "ProjectManagementPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s359_p04"
+      ]
+    },
+    {
+      "id": "s359_p07",
+      "layerName": "ProjectManagementPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s359_p03",
+        ".s359_p04"
+      ]
+    },
+    {
+      "id": "s359_p08",
+      "layerName": "ProgressForecastHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s359_p05"
+      ]
+    },
+    {
+      "id": "s359_p09",
+      "layerName": "ProgressForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s359_p06"
+      ]
+    },
+    {
+      "id": "s359_p10",
+      "layerName": "ProgressForecastHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s359_p07",
+        ".s359_p08"
+      ]
+    },
+    {
+      "id": "s359_p11",
+      "layerName": "ProgressForecastHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s359_p09",
+        ".s359_p10"
+      ]
+    }
+  ]
+}

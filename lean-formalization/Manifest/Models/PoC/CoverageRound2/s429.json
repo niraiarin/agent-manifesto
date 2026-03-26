@@ -1,0 +1,120 @@
+{
+  "namespace": "TestCoverage.S429",
+  "layers": [
+    {
+      "name": "PatientSafetyConstraint",
+      "ordValue": 2,
+      "definition": "アナフィラキシーリスク過小評価禁止・医師最終確認義務・患者同意必須に関する安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "AllergyHypothesis",
+      "ordValue": 1,
+      "definition": "遺伝的素因・食物抗原交差反応・環境曝露累積・腸内菌叢変化に関するアレルギー発症仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s429_p01",
+      "layerName": "PatientSafetyConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s429_p02",
+      "layerName": "PatientSafetyConstraint",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s429_p01"
+      ]
+    },
+    {
+      "id": "s429_p03",
+      "layerName": "PatientSafetyConstraint",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s429_p01"
+      ]
+    },
+    {
+      "id": "s429_p04",
+      "layerName": "AllergyHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s429_p02"
+      ]
+    },
+    {
+      "id": "s429_p05",
+      "layerName": "AllergyHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s429_p03"
+      ]
+    },
+    {
+      "id": "s429_p06",
+      "layerName": "AllergyHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s429_p04"
+      ]
+    },
+    {
+      "id": "s429_p07",
+      "layerName": "AllergyHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s429_p05"
+      ]
+    },
+    {
+      "id": "s429_p08",
+      "layerName": "AllergyHypothesis",
+      "justification": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s429_p06",
+        ".s429_p07"
+      ]
+    }
+  ]
+}
