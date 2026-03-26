@@ -540,12 +540,12 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（61回実行データ、Run 61 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（62回実行データ、Run 62 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。60回 success / 1回 partial / 3回 observation。Verifier pass rate: Run 60 は 5/8 PASS（62.5%）。Run 60 FAIL 1件は hypothesis_error (H_wrong_premise) |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。61回 success / 1回 partial / 3回 observation。Verifier pass rate: Run 61 は 4/4 PASS（100%）。全期間 186/248 PASS（75%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=273。compression 4.33x（433%）。V4 blocked=0 の Goodhart 懸念は継続 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間183改善統合（Run 60 まで）。D4 フェーズ順序違反なし |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=288。compression 4.57x（457%）。V4 blocked=0 の Goodhart 懸念は継続 |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間231改善統合（150 conservative extension, 78 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。10 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60）。session cost: mean 4.47 USD, median 4.77 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 7/10 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
 | H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。10 データポイント: CPI mean 1.23 USD/improvement, median 1.00 USD (range 0.03-3.94 USD)。前半5 runs (39-46) CPI mean 1.42 USD → 後半5 runs (47-60) CPI mean 1.04 USD（26.8% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
 

@@ -95,7 +95,7 @@ def currentProfile : AxiomSystemProfile :=
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
     structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
-    theoremCount     := 269  -- 全モジュール合計
+    theoremCount     := 288  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -106,9 +106,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 63 := by rfl
 
-/-- 現在の公理系の定理数は 269。 -/
+/-- 現在の公理系の定理数は 288。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 269 := by rfl
+  currentProfile.theoremCount = 288 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -147,7 +147,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
 
 /-- 現在のモジュール別定理分布。 -/
 def currentTheoremDistribution : TheoremDistribution :=
-  { ontologyM              := 16  -- +1: affected_contains_dependency_chain (Section 8 性質3)
+  { ontologyM              := 20  -- +4: D4/D5/D6 半順序型クラスインスタンス (Run 61 追加)
     axiomsM                := 0
     empiricalPostulatesM   := 0
     observableM            := 23
@@ -156,7 +156,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 41  -- +4: StructureKind-PropositionIdブリッジ (manifest_has_widest_impact, design_convention_has_impact) + /research + D14
+    designFoundationM      := 56  -- +15: D4/D5/D6 半順序インスタンス定理 (Run 61 追加)
     procedureM             := 25  -- +6: AGM Structure拡張 (manifest_contraction_forbidden' etc.)
     evolutionM             := 16
     evolveSkillM           := 29  -- +6: φ₁₂-φ₁₇ ループバック再設計 (Issue #7, #8, #9)

@@ -271,6 +271,9 @@ grep -q "evolve_skill_compliant" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: Evolv
 # φ₆: Conservative strategy safe
 grep -q "conservative_strategy_safe" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₆ conservative_strategy_safe" || fail "Lean trace: EvolveSkill φ₆ conservative_strategy_safe"
 
+# φ₁₁系: Untracked forward reference violates D3
+grep -q "untracked_forward_reference_violates_d3" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₁₁系 untracked_forward_reference_violates_d3" || fail "Lean trace: EvolveSkill φ₁₁系 untracked_forward_reference_violates_d3"
+
 echo ""
 
 # --- Loopback Redesign (Issue #7, #8, #9) ---
