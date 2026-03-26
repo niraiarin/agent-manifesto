@@ -32,10 +32,10 @@
 | `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない | なし |
 | `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル | なし |
 | `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 | なし |
-| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 | テスト欠如: Section 7 に "no_self_knowledge_transition" テストなし |
-| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 | テスト欠如: Section 7 に "knowledge_full_cycle_exists" テストなし |
+| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 | なし（Run 56 で Section 7 にテスト追加済み） |
+| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 | なし（Run 56 で Section 7 にテスト追加済み） |
 | `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 | なし |
-| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 | テスト欠如: Section 7 に "feedback_precedes_improvement" テストなし |
+| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 | なし（Run 56 で Section 7 にテスト追加済み） |
 
 ## Evolution.lean 逆引きチェックリスト（Run 40 追加）
 
@@ -123,9 +123,9 @@
 
 | Lean 定理（Procedure.lean） | SKILL.md での運用化 | 備考 | Gap |
 |---------------------------|---------------------|------|-----|
-| `manifest_contraction_forbidden'` | P3: manifest への縮小は禁止（L1 境界の形式的根拠） | structurePartition .manifest = .baseTheory → contraction 禁止 | テスト欠如: test-evolve-structural.sh に専用テストなし |
-| `manifest_revision_forbidden` | P3: manifest への revision も禁止（T₀ 変更禁止の Structure 版） | contraction と同様に permittedOp = false | テスト欠如: test-evolve-structural.sh に専用テストなし |
-| `non_manifest_all_ops_permitted` | P3: 非 manifest 構造（skill/test/document 等）は全 AGM 操作が許可 | StructureKind ≠ .manifest → 全 op = true | テスト欠如: test-evolve-structural.sh に専用テストなし |
-| `empty_world_no_contraction_affected` | P3: 空の構造セットでは contraction の影響集合は空 | World.structures = [] → contractionAffected 発生なし | テスト欠如: test-evolve-structural.sh に専用テストなし |
-| `manifest_no_contraction_affected` | P3: manifest は contraction が禁止されているため影響集合は発生しない | manifest 縮小禁止 → 影響波及なし | テスト欠如: test-evolve-structural.sh に専用テストなし |
-| `contraction_affected_trans` | P3: contraction 影響の推移性（reachableVia の推移性から導出） | s → mid → t の波及は s → t に集約 | テスト欠如: test-evolve-structural.sh に専用テストなし |
+| `manifest_contraction_forbidden'` | P3: manifest への縮小は禁止（L1 境界の形式的根拠） | structurePartition .manifest = .baseTheory → contraction 禁止 | なし（Run 56 で Section 13 にテスト追加済み） |
+| `manifest_revision_forbidden` | P3: manifest への revision も禁止（T₀ 変更禁止の Structure 版） | contraction と同様に permittedOp = false | なし（Run 56 で Section 13 にテスト追加済み） |
+| `non_manifest_all_ops_permitted` | P3: 非 manifest 構造（skill/test/document 等）は全 AGM 操作が許可 | StructureKind ≠ .manifest → 全 op = true | なし（Run 56 で Section 13 にテスト追加済み） |
+| `empty_world_no_contraction_affected` | P3: 空の構造セットでは contraction の影響集合は空 | World.structures = [] → contractionAffected 発生なし | なし（Run 56 で Section 13 にテスト追加済み） |
+| `manifest_no_contraction_affected` | P3: manifest は contraction が禁止されているため影響集合は発生しない | manifest 縮小禁止 → 影響波及なし | なし（Run 56 で Section 13 にテスト追加済み） |
+| `contraction_affected_trans` | P3: contraction 影響の推移性（reachableVia の推移性から導出） | s → mid → t の波及は s → t に集約 | なし（Run 56 で Section 13 にテスト追加済み） |

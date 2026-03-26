@@ -191,6 +191,12 @@ grep -q "FAIL.*分析\|ループバック\|loopback" "$SKILL" && pass "Lean trac
 # retirement -> observation (サイクル循環)
 grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "Lean trace: retirement -> observation (cycle in SKILL.md)" || fail "Lean trace: retirement -> observation cycle not covered in SKILL.md"
 
+# Workflow.lean 追加定理（Run 55 Gap 解消: no_self_knowledge_transition, knowledge_full_cycle_exists, feedback_precedes_improvement）
+WORKFLOW_LEAN_PATH="lean-formalization/Manifest/Workflow.lean"
+grep -q "no_self_knowledge_transition" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: no_self_knowledge_transition exists in Workflow.lean" || fail "Lean trace: no_self_knowledge_transition not found in Workflow.lean"
+grep -q "knowledge_full_cycle_exists" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: knowledge_full_cycle_exists exists in Workflow.lean" || fail "Lean trace: knowledge_full_cycle_exists not found in Workflow.lean"
+grep -q "feedback_precedes_improvement" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: feedback_precedes_improvement exists in Workflow.lean" || fail "Lean trace: feedback_precedes_improvement not found in Workflow.lean"
+
 echo ""
 
 # ============================================================
@@ -333,27 +339,35 @@ HISTORY="$BASE/.claude/metrics/evolve-history.jsonl"
 # 前方参照キーワードを含む notes が deferred=[] のエントリを検出
 # Run 41 で制約を導入。それ以降の新規エントリのみ検証対象。
 # 過去エントリの遡及修正は append-only 規約に反するため除外。
+#
+# 同一 Run ID に複数エントリがある場合（暫定記録と確定記録が混在）、
+# 最終エントリ（ファイル末尾側）のみを orphan 検証対象とする。
+# 根拠: SKILL.md Step 5 不変条件「1 Run につき 1 エントリのみ」だが、
+#       移行期に暫定エントリが存在する場合の後方互換性を確保するため。
 ORPHAN_COUNT=$(python3 -c "
 import json, sys
 FORWARD_KEYWORDS = ['次回', '次の evolve', 'next run', 'next evolve', '蓄積待ち', '蓄積され次第', '可能になる', 'が必要', 'TODO', 'remaining']
 ENFORCEMENT_START = 41
-count = 0
+# 同一 Run ID は最終エントリのみ対象（暫定記録を除外）
+last_by_run = {}
 for line in open('$HISTORY'):
     try:
         rec = json.loads(line.strip())
         run = rec.get('run')
-        if run is None or run < ENFORCEMENT_START:
-            continue
-        notes = rec.get('notes', '')
-        deferred = rec.get('deferred', [])
-        if not notes or not isinstance(deferred, list):
-            continue
-        has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
-        has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
-        if has_forward_ref and not has_resolution_marker and len(deferred) == 0:
-            count += 1
+        if run is not None and run >= ENFORCEMENT_START:
+            last_by_run[run] = rec
     except:
         pass
+count = 0
+for rec in last_by_run.values():
+    notes = rec.get('notes', '')
+    deferred = rec.get('deferred', [])
+    if not notes or not isinstance(deferred, list):
+        continue
+    has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
+    has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
+    if has_forward_ref and not has_resolution_marker and len(deferred) == 0:
+        count += 1
 print(count)
 " 2>/dev/null)
 echo -n "  No orphan forward-references in notes... "
@@ -483,6 +497,22 @@ echo -n "  structureKind_lt_iff_le_not_le theorem exists... "
 grep -q "^theorem structureKind_lt_iff_le_not_le" "$ONTOLOGY" && \
   pass "structureKind_lt_iff_le_not_le" || \
   fail "structureKind_lt_iff_le_not_le missing"
+
+echo ""
+
+# ============================================================
+# Section 13: Procedure.lean AGM Bridge 定理 Traceability（Run 56 Gap 解消）
+# ============================================================
+echo "--- Section 13: Procedure.lean AGM Bridge Theorems ---"
+
+PROCEDURE_LEAN="$BASE/lean-formalization/Manifest/Procedure.lean"
+
+grep -q "manifest_contraction_forbidden'" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_contraction_forbidden' exists in Procedure.lean" || fail "Lean trace: manifest_contraction_forbidden' not found in Procedure.lean"
+grep -q "manifest_revision_forbidden" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_revision_forbidden exists in Procedure.lean" || fail "Lean trace: manifest_revision_forbidden not found in Procedure.lean"
+grep -q "non_manifest_all_ops_permitted" "$PROCEDURE_LEAN" && pass "Lean trace: non_manifest_all_ops_permitted exists in Procedure.lean" || fail "Lean trace: non_manifest_all_ops_permitted not found in Procedure.lean"
+grep -q "empty_world_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: empty_world_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: empty_world_no_contraction_affected not found in Procedure.lean"
+grep -q "manifest_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: manifest_no_contraction_affected not found in Procedure.lean"
+grep -q "contraction_affected_trans" "$PROCEDURE_LEAN" && pass "Lean trace: contraction_affected_trans exists in Procedure.lean" || fail "Lean trace: contraction_affected_trans not found in Procedure.lean"
 
 echo ""
 

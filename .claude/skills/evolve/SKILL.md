@@ -373,6 +373,10 @@ Integrator は以下を実行:
 4. git commit（互換性分類付き）
 5. evolve-history.jsonl に記録（以下の `cost` フィールドを含む）
 
+**evolve-history.jsonl 記録の不変条件:**
+- evolve-history.jsonl には 1 Run につき 1 エントリのみ追加する。暫定記録は行わない。
+- 記録は全フェーズ完了後（Phase 4: git commit 後）に 1 回のみ実行する。
+
 **コスト効率記録フォーマット（T7 可観測性）:**
 evolve-history.jsonl の各エントリに以下のフィールドを追加:
 ```json
