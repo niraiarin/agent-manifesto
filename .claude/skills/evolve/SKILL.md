@@ -521,8 +521,8 @@ compatible change または breaking change に該当しうる。
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=253。compression 4.08x（408%）。V4 blocked=0 の Goodhart 懸念は継続 |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間178改善統合（113 conservative extension, 63 compatible change, 0 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 8 件（run 39, 41, 42, 45, 46, 47, 49, 50）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 評価準備中。7 データポイント: mean $1.07/improvement (range $0.64-$3.94)。Run 46 外れ値 ($3.94) は findings:improvements 比率 12:1 に起因。evolve-history.jsonl に cost フィールド追加済み（Run 51）。10 件以上で傾向評価実施予定 |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 8 件（run 39, 41, 42, 45, 46, 47, 49, 50）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト 3.13-5.90 USD/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 評価準備中。7 データポイント: mean 1.07 USD/improvement (range 0.64-3.94 USD)。Run 46 外れ値 (3.94 USD) は findings:improvements 比率 12:1 に起因。evolve-history.jsonl に cost フィールド追加済み（Run 51）。10 件以上で傾向評価実施予定 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

@@ -13,6 +13,7 @@ import Manifest.Procedure
 import Manifest.ConformanceVerification
 import Manifest.AxiomQuality
 import Manifest.EvolveSkill
+import Manifest.EpistemicLayer
 
 /-!
 # Agent Manifest — Formal Specification

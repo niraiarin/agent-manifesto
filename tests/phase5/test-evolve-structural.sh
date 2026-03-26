@@ -443,6 +443,24 @@ grep -q "構造的整合性\|Structural Coherence" "$MANIFESTO" && \
   pass "Section 8 exists" || \
   fail "Section 8 missing"
 
+# ============================================================
+# スキル変数展開の安全性（全 SKILL.md 対象）
+# ============================================================
+echo "--- Skill variable expansion safety ---"
+
+# SKILL.md 内の $0, $1, ... $9 はスキルローダーにより引数展開される。
+# 意図しない展開を防ぐため、$[0-9] パターンが SKILL.md に含まれないことを検証する。
+# 判例: Run 54 — H6 仮説テーブルの "$1.07" がスキル引数に展開され内容破損。
+for skill_file in .claude/skills/*/SKILL.md; do
+  skill_name="$(basename "$(dirname "$skill_file")")"
+  echo -n "  $skill_name SKILL.md: no unescaped \$[0-9] patterns... "
+  if grep -qE '\$[0-9]' "$skill_file" 2>/dev/null; then
+    fail "$skill_name contains \$[0-9] — will be expanded by skill loader"
+  else
+    pass "$skill_name safe"
+  fi
+done
+
 echo ""
 
 # ============================================================
