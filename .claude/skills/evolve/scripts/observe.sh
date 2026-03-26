@@ -376,6 +376,64 @@ else
   DEFERRED_TOTAL=0
   DEFERRED_UNIQUE=0
 fi
-echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE, \"note\": \"legacy_audit_metric: not_for_analysis. See SKILL.md Step 0\"}"
+echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE, \"note\": \"legacy_audit_metric: not_for_analysis. See SKILL.md Step 0\"},"
+
+# --- 仮説テーブル自動集計（evolve-history.jsonl からの権威的カウント） ---
+# H1: Verifier pass/fail 全期間合計（.phases.verifier フィールド対応エントリのみ）
+# H4: 互換性クラス別改善件数（.improvements[].compatibility）
+# H5: 有効 UUID session_id 件数（UUID v4 パターンに一致し "unknown" を除外）
+if [ -f "$HISTORY_FILE" ]; then
+  MAX_RUN=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | sort -n | tail -1)
+  MAX_RUN=${MAX_RUN:-0}
+  TOTAL_ENTRIES=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
+  TOTAL_ENTRIES=${TOTAL_ENTRIES:-0}
+
+  # H1: Verifier pass/fail 合計
+  H1_PASS=$(jq -r '.phases.verifier.pass_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  H1_FAIL=$(jq -r '.phases.verifier.fail_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  H1_TOTAL=$((H1_PASS + H1_FAIL))
+  if [ "$H1_TOTAL" -gt 0 ] 2>/dev/null; then
+    H1_PASS_RATE=$((H1_PASS * 100 / H1_TOTAL))
+  else
+    H1_PASS_RATE=0
+  fi
+
+  # H4: 互換性クラス別改善件数
+  # grep -c が 0 マッチで exit 1 を返すため || true で保護し ${:-0} で既定値
+  H4_CONSERVATIVE=$({ jq -r '.improvements[]?.compatibility // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "conservative extension"; } || true)
+  H4_COMPATIBLE=$({ jq -r '.improvements[]?.compatibility // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "compatible change"; } || true)
+  H4_BREAKING=$({ jq -r '.improvements[]?.compatibility // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "breaking change"; } || true)
+  H4_OTHER=$({ jq -r '.improvements[]?.compatibility // empty' "$HISTORY_FILE" 2>/dev/null | grep -cv "conservative extension\|compatible change\|breaking change"; } || true)
+  H4_CONSERVATIVE=${H4_CONSERVATIVE:-0}
+  H4_COMPATIBLE=${H4_COMPATIBLE:-0}
+  H4_BREAKING=${H4_BREAKING:-0}
+  H4_OTHER=${H4_OTHER:-0}
+  H4_TOTAL=$((H4_CONSERVATIVE + H4_COMPATIBLE + H4_BREAKING + H4_OTHER))
+
+  # H5: 有効 UUID session_id 件数（UUID v4 パターン: 8-4-4-4-12 の hex 文字列）
+  # POSIX 互換 grep（grep -oP 非対応の macOS 向け: -E で代替）
+  H5_VALID_UUIDS=$({ jq -r '.session_id // empty' "$HISTORY_FILE" 2>/dev/null | \
+    grep -cE '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; } || true)
+  H5_VALID_UUIDS=${H5_VALID_UUIDS:-0}
+else
+  MAX_RUN=0
+  TOTAL_ENTRIES=0
+  H1_PASS=0
+  H1_FAIL=0
+  H1_TOTAL=0
+  H1_PASS_RATE=0
+  H4_CONSERVATIVE=0
+  H4_COMPATIBLE=0
+  H4_BREAKING=0
+  H4_OTHER=0
+  H4_TOTAL=0
+  H5_VALID_UUIDS=0
+fi
+echo "  \"hypothesis_table_stats\": {"
+echo "    \"header\": {\"max_run\": $MAX_RUN, \"total_entries\": $TOTAL_ENTRIES},"
+echo "    \"h1_verifier\": {\"pass\": $H1_PASS, \"fail\": $H1_FAIL, \"total\": $H1_TOTAL, \"pass_rate_percent\": $H1_PASS_RATE},"
+echo "    \"h4_compatibility\": {\"conservative_extension\": $H4_CONSERVATIVE, \"compatible_change\": $H4_COMPATIBLE, \"breaking_change\": $H4_BREAKING, \"other\": $H4_OTHER, \"total\": $H4_TOTAL},"
+echo "    \"h5_valid_uuids\": $H5_VALID_UUIDS"
+echo "  }"
 
 echo "}"
