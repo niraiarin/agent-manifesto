@@ -330,6 +330,8 @@ Step 1: 根本原因を分類する:
 | `H_redundancy_check` | hypothesis_error | 既存定義・既存制約との重複確認不足 |
 | `H_impl_specification` | hypothesis_error | 実装手順の具体性不足（位置・内容が曖昧） |
 | `H_repeated_failure` | hypothesis_error | 同一改善案の繰り返し提案（段階的抑止ルール違反） |
+| `H_wrong_premise` | hypothesis_error | 概念の誤適用・所有権の誤認識・カテゴリエラー（過去の決定との矛盾を含む） |
+| `H_technical_validation` | hypothesis_error | スクリプト・コマンドの技術的妥当性未検証（構文エラー・型不整合・ゼロ除算等） |
 | `O_data_quality` | observation_error | 観察データの品質問題（手動カウント誤り・パス誤り等） |
 
 > 注記: append-only 規約のため、旧エントリには failure_subtype がない。
