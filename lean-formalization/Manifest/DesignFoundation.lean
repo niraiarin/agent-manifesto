@@ -2,6 +2,7 @@ import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 import Manifest.Observable
+import Manifest.ObservableDesign
 import Manifest.Principles
 
 /-!
