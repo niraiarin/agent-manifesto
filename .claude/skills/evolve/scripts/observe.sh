@@ -313,7 +313,28 @@ if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -e
 else
   V3_BASELINE_MET="false"
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\" },"
+# V3 hallucination_proxy: rejected[].failure_type の集計
+# 注意: failure_type フィールドは Run 54 から標準化開始。
+# データが蓄積されるまで全指標値は 0 になる（設計上の帰結であり異常ではない）。
+V3_HALL_OBS=0
+V3_HALL_HYP=0
+V3_HALL_ASS=0
+V3_HALL_PRE=0
+V3_HALL_LOOPBACK_TOTAL=0
+V3_HALL_REJECTED_TOTAL=0
+if [ -f "$HISTORY_FILE" ]; then
+  V3_HALL_OBS=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
+  V3_HALL_HYP=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
+  V3_HALL_ASS=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^assumption_error$"; } || true)
+  V3_HALL_PRE=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^precondition_error$"; } || true)
+  V3_HALL_OBS=${V3_HALL_OBS:-0}
+  V3_HALL_HYP=${V3_HALL_HYP:-0}
+  V3_HALL_ASS=${V3_HALL_ASS:-0}
+  V3_HALL_PRE=${V3_HALL_PRE:-0}
+  V3_HALL_LOOPBACK_TOTAL=$({ jq -r '.rejected[]?.loopback_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}'; } || echo 0)
+  V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
+fi
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
