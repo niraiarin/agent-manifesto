@@ -3,7 +3,7 @@ import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 
 /-!
-# Layer 5: Manifest Evolution — 体系の拡張（用語リファレンス §5.5）
+# Meta-theoretic: Evolution — 体系の拡張（用語リファレンス §5.5）
 
 マニフェスト自身の進化を形式化する。manifesto.md Section 7
 「このマニフェストの自己適用」および Observable.lean

@@ -2,7 +2,7 @@ import Manifest.Ontology
 import Manifest.Axioms
 
 /-!
-# Layer 4: Observability — V1–V7（最適化変数）— Γ \ T₀ の設計由来公理
+# Epistemic Layer: boundary/designTheorem (strength 2-1) — V1–V7 可観測変数 — Γ \ T₀
 
 **変数は境界条件ではない。** エージェントが構造を通じて改善できるパラメータであり、
 構造品質の指標。境界条件（Ontology.lean の L1–L6）が「行動空間の壁」なら、

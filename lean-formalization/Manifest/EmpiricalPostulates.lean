@@ -1,7 +1,7 @@
 import Manifest.Ontology
 
 /-!
-# Layer 2b: Empirical Postulates (E1–E2) — 前提集合 Γ の拡大部分
+# Epistemic Layer: empiricalPostulate (strength 4) — E1–E2 前提集合 Γ \ T₀
 
 経験的公準を Lean の非論理的公理（用語リファレンス §4.1）として形式化する。
 
