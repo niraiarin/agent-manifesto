@@ -177,25 +177,51 @@ else
 fi
 
 # V2: Context Efficiency — primary: recent_avg (delta-based), baseline: cumulative_avg
+# cumulative_avg = mean of all session deltas with delta > MIN_SESSION_DELTA (full history).
+# raw_cumulative_avg = total_tool_calls / session_count (legacy, kept for transition period).
 if [ -f "$SESSIONS_FILE" ]; then
   SESSION_COUNT=$(wc -l < "$SESSIONS_FILE" | tr -d ' ')
+  # raw_cumulative_avg: legacy value (TOOL_CALLS / SESSION_COUNT), kept for transition comparison
   if [ "$SESSION_COUNT" -gt 0 ] 2>/dev/null && [ "$TOOL_CALLS" -gt 0 ] 2>/dev/null; then
-    V2_CALLS_PER_SESSION=$((TOOL_CALLS / SESSION_COUNT))
+    V2_RAW_CUMULATIVE=$((TOOL_CALLS / SESSION_COUNT))
   else
-    V2_CALLS_PER_SESSION=0
+    V2_RAW_CUMULATIVE=0
   fi
   # Compute per-session deltas from consecutive total_tool_calls values
   # V2 uses MEDIAN of recent deltas (robust to outliers like evolve sessions).
   # V2_RECENT_AVG = median of last 10 session deltas (primary metric).
-  # V2_CALLS_PER_SESSION = total_tool_calls / session_count (cumulative baseline).
+  # V2_CALLS_PER_SESSION = mean of all filtered deltas (full history, microSession-excluded baseline).
   # These are DIFFERENT values. Do not confuse them.
   # MIN_SESSION_DELTA: micro-sessions (e.g., single /metrics invocations) with <= this
-  # delta are excluded from V2 median to prevent downward bias.
+  # delta are excluded from V2 median and cumulative_avg to prevent downward bias.
   MIN_SESSION_DELTA=3
   V2_RECENT_AVG=0
+  V2_CALLS_PER_SESSION=0
   RAW_DELTA_COUNT=0
   FILTERED_DELTA_COUNT=0
+  ALL_FILTERED_SUM=0
+  ALL_FILTERED_COUNT=0
   if [ "$SESSION_COUNT" -gt 1 ] 2>/dev/null; then
+    # --- Full history pass: compute cumulative_avg from all deltas (filtered) ---
+    ALL_TOTALS=$(jq -r '.total_tool_calls // empty' "$SESSIONS_FILE" 2>/dev/null)
+    PREV_FULL=""
+    for T in $ALL_TOTALS; do
+      if [ -n "$PREV_FULL" ] 2>/dev/null; then
+        D=$((T - PREV_FULL))
+        if [ "$D" -ge 0 ] 2>/dev/null; then
+          # Exclude micro-sessions from cumulative_avg
+          if [ "$D" -gt "$MIN_SESSION_DELTA" ] 2>/dev/null; then
+            ALL_FILTERED_SUM=$((ALL_FILTERED_SUM + D))
+            ALL_FILTERED_COUNT=$((ALL_FILTERED_COUNT + 1))
+          fi
+        fi
+      fi
+      PREV_FULL=$T
+    done
+    if [ "$ALL_FILTERED_COUNT" -gt 0 ] 2>/dev/null; then
+      V2_CALLS_PER_SESSION=$((ALL_FILTERED_SUM / ALL_FILTERED_COUNT))
+    fi
+    # --- Recent pass: compute recent_avg from last 10 deltas (filtered) ---
     # Extract last 11 total_tool_calls to compute 10 deltas
     TOTALS=$(tail -11 "$SESSIONS_FILE" | jq -r '.total_tool_calls // empty' 2>/dev/null)
     PREV=""
@@ -231,6 +257,7 @@ if [ -f "$SESSIONS_FILE" ]; then
   fi
 else
   SESSION_COUNT=0
+  V2_RAW_CUMULATIVE=0
   V2_CALLS_PER_SESSION=0
   V2_RECENT_AVG=0
 fi
@@ -295,7 +322,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
   fi
   V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
 fi
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"raw_cumulative_avg\": ${V2_RAW_CUMULATIVE:-0}, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 # V3 fix_ratio proxy の制限: このパターンは "[fix]:" や "fix:" で始まるコミットのみにマッチする。
 # "[evolve] Fix ..." のようにプレフィックスが異なる形式はマッチしない。
