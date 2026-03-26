@@ -58,7 +58,7 @@ instance : EpistemicLayerClass ConcreteLayer where
 -- 3. classify
 -- ============================================================
 
-/-- 全命題の層分類。各ケースの根拠は Assumptions に記録。 -/
+/-- 全命題の層分類。 -/
 def classify : PropositionId → ConcreteLayer
   -- foundation
   | .t1 | .t2 | .t3 | .t4 | .t5 | .t6 | .t7 | .t8 | .e1 | .e2 => .foundation
@@ -82,15 +82,5 @@ theorem classify_monotone :
 theorem classify_total :
     ∀ (p : PropositionId), ∃ (l : ConcreteLayer), classify p = l :=
   fun p => ⟨classify p, rfl⟩
-
--- ============================================================
--- 5. LayerAssignment
--- ============================================================
-
-/-- 生成されたモデルに基づく LayerAssignment。 -/
-def generatedAssignment : LayerAssignment ConcreteLayer where
-  assign := classify
-  monotone := classify_monotone
-  bounded := ⟨2, fun d => by cases d <;> simp [classify, ConcreteLayer.ord, EpistemicLayerClass.ord]⟩
 
 end Manifest.Models

@@ -2,34 +2,16 @@
 # generate-conditional-axiom-system.sh
 #
 # ModelSpec (JSON) から ConditionalAxiomSystem.lean を生成する。
-# B+C ハイブリッドの「B（スクリプト）」側。
 #
-# 入力: ModelSpec JSON (stdin または -f オプション)
-# 出力: ConditionalAxiomSystem.lean (stdout または -o オプション)
-#
-# ModelSpec JSON フォーマット:
-# {
-#   "namespace": "Manifest.Models",
-#   "layers": [
-#     {"name": "foundation", "ordValue": 2, "definition": "覆らない前提", "derivedFrom": ["C1","C2"]},
-#     {"name": "derived",    "ordValue": 1, "definition": "前提から導出",  "derivedFrom": ["H1"]},
-#     {"name": "applied",    "ordValue": 0, "definition": "環境依存の設計判断", "derivedFrom": ["H2"]}
-#   ],
-#   "assignments": [
-#     {"proposition": "t1", "layerName": "foundation", "justification": ["C1"]},
-#     ...
-#   ]
-# }
+# 2 つのモードを持つ:
+#   1. 統合モード: "assignments" フィールドあり → 既存の PropositionId を使用
+#   2. スタンドアロンモード: "propositions" フィールドあり → PropositionId も生成
 #
 # Usage:
-#   bash generate-conditional-axiom-system.sh -f model-spec.json -o ConditionalAxiomSystem.lean
-#   cat model-spec.json | bash generate-conditional-axiom-system.sh > ConditionalAxiomSystem.lean
+#   bash generate-conditional-axiom-system.sh -f model-spec.json -o Output.lean
+#   bash generate-conditional-axiom-system.sh -f model-spec.json --no-verify > Output.lean
 
 set -euo pipefail
-
-# ============================================================
-# オプション解析
-# ============================================================
 
 INPUT_FILE=""
 OUTPUT_FILE=""
@@ -47,28 +29,40 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# 入力の読み込み
 if [ -n "$INPUT_FILE" ]; then
   JSON=$(cat "$INPUT_FILE")
 else
   JSON=$(cat)
 fi
 
-# jq の存在確認
 if ! command -v jq &> /dev/null; then
   echo "Error: jq is required but not installed" >&2
   exit 1
 fi
 
 # ============================================================
-# JSON のパース
+# モード判定
+# ============================================================
+
+HAS_PROPOSITIONS=$(echo "$JSON" | jq 'has("propositions")')
+HAS_ASSIGNMENTS=$(echo "$JSON" | jq 'has("assignments")')
+
+if [ "$HAS_PROPOSITIONS" = "true" ]; then
+  MODE="standalone"
+elif [ "$HAS_ASSIGNMENTS" = "true" ]; then
+  MODE="integrated"
+else
+  echo "Error: JSON must have either 'propositions' or 'assignments' field" >&2
+  exit 1
+fi
+
+# ============================================================
+# 共通: 層の情報をパース
 # ============================================================
 
 NAMESPACE=$(echo "$JSON" | jq -r '.namespace // "Manifest.Models"')
 NUM_LAYERS=$(echo "$JSON" | jq '.layers | length')
-NUM_ASSIGNMENTS=$(echo "$JSON" | jq '.assignments | length')
 
-# 層の情報を配列に展開
 declare -a LAYER_NAMES LAYER_ORDS LAYER_DEFS LAYER_SOURCES
 for i in $(seq 0 $((NUM_LAYERS - 1))); do
   LAYER_NAMES[$i]=$(echo "$JSON" | jq -r ".layers[$i].name")
@@ -77,7 +71,6 @@ for i in $(seq 0 $((NUM_LAYERS - 1))); do
   LAYER_SOURCES[$i]=$(echo "$JSON" | jq -r ".layers[$i].derivedFrom | join(\", \")")
 done
 
-# bottom（ord 最小）と top（ord 最大）を特定
 min_ord=999999; max_ord=0; bottom_name=""; top_name=""
 for i in $(seq 0 $((NUM_LAYERS - 1))); do
   ord=${LAYER_ORDS[$i]}
@@ -91,6 +84,21 @@ done
 
 generate_lean() {
 
+# --- ヘッダー ---
+if [ "$MODE" = "standalone" ]; then
+cat <<LEAN_HEADER
+/-!
+# 条件付き公理体系（スタンドアロン生成）
+
+このファイルは generate-conditional-axiom-system.sh によって
+ModelSpec JSON から自動生成されました。独自の PropositionId を含みます。
+
+手動で編集しないでください。
+
+## 層構造
+
+LEAN_HEADER
+else
 cat <<LEAN_HEADER
 import Manifest.EpistemicLayer
 
@@ -106,8 +114,8 @@ ModelSpec JSON から自動生成されました。
 ## 層構造
 
 LEAN_HEADER
+fi
 
-# 層の一覧を doc comment に出力
 for i in $(seq 0 $((NUM_LAYERS - 1))); do
   echo "- **${LAYER_NAMES[$i]}** (ord=${LAYER_ORDS[$i]}): ${LAYER_DEFS[$i]} [${LAYER_SOURCES[$i]}]"
 done
@@ -117,16 +125,61 @@ cat <<LEAN_NS
 
 namespace ${NAMESPACE}
 
-open Manifest
-open Manifest.EpistemicLayer
-
--- ============================================================
--- 1. ConcreteLayer inductive
--- ============================================================
-
-/-- 認識論的層。 -/
-inductive ConcreteLayer where
 LEAN_NS
+
+if [ "$MODE" = "integrated" ]; then
+  echo "open Manifest"
+  echo "open Manifest.EpistemicLayer"
+  echo ""
+fi
+
+# --- スタンドアロンモード: PropositionId + 依存関係の生成 ---
+if [ "$MODE" = "standalone" ]; then
+  NUM_PROPS=$(echo "$JSON" | jq '.propositions | length')
+
+  echo "-- ============================================================"
+  echo "-- 0. PropositionId (プロジェクト固有)"
+  echo "-- ============================================================"
+  echo ""
+  echo "/-- プロジェクト固有の命題識別子。 -/"
+  echo "inductive PropositionId where"
+
+  for j in $(seq 0 $((NUM_PROPS - 1))); do
+    prop_id=$(echo "$JSON" | jq -r ".propositions[$j].id")
+    echo "  | ${prop_id}"
+  done
+
+  echo "  deriving BEq, Repr, DecidableEq"
+  echo ""
+
+  # 依存関係
+  echo "/-- 命題の直接依存先。 -/"
+  echo "def PropositionId.dependencies : PropositionId → List PropositionId"
+
+  for j in $(seq 0 $((NUM_PROPS - 1))); do
+    prop_id=$(echo "$JSON" | jq -r ".propositions[$j].id")
+    deps=$(echo "$JSON" | jq -r ".propositions[$j].dependencies | map(\".\" + .) | join(\", \")")
+    if [ -z "$deps" ] || [ "$deps" = "" ]; then
+      echo "  | .${prop_id} => []"
+    else
+      echo "  | .${prop_id} => [${deps}]"
+    fi
+  done
+
+  echo ""
+  echo "/-- 命題が別の命題に直接依存する。 -/"
+  echo "def propositionDependsOn (a b : PropositionId) : Bool :="
+  echo "  a.dependencies.contains b"
+  echo ""
+fi
+
+# --- ConcreteLayer ---
+echo "-- ============================================================"
+echo "-- 1. ConcreteLayer inductive"
+echo "-- ============================================================"
+echo ""
+echo "/-- 認識論的層。 -/"
+echo "inductive ConcreteLayer where"
 
 for i in $(seq 0 $((NUM_LAYERS - 1))); do
   echo "  /-- ${LAYER_DEFS[$i]} (ord=${LAYER_ORDS[$i]}) -/"
@@ -136,7 +189,7 @@ done
 echo "  deriving BEq, Repr, DecidableEq"
 echo ""
 
-# ord 関数
+# --- ord + instance ---
 cat <<LEAN_ORD
 -- ============================================================
 -- 2. EpistemicLayerClass instance
@@ -152,7 +205,21 @@ done
 
 echo ""
 
-# EpistemicLayerClass instance
+# EpistemicLayerClass — スタンドアロンではインライン定義
+if [ "$MODE" = "standalone" ]; then
+cat <<LEAN_TYPECLASS
+/-- 認識論的層構造の typeclass（スタンドアロン版）。 -/
+class EpistemicLayerClass (α : Type) where
+  ord : α → Nat
+  bottom : α
+  nontrivial : ∃ (a b : α), ord a ≠ ord b
+  ord_injective : ∀ (a b : α), ord a = ord b → a = b
+  ord_bounded : ∃ (n : Nat), ∀ (a : α), ord a ≤ n
+  bottom_minimum : ∀ (a : α), ord bottom ≤ ord a
+
+LEAN_TYPECLASS
+fi
+
 cat <<LEAN_INSTANCE
 instance : EpistemicLayerClass ConcreteLayer where
   ord := ConcreteLayer.ord
@@ -165,42 +232,61 @@ instance : EpistemicLayerClass ConcreteLayer where
 
 LEAN_INSTANCE
 
-# classify 関数
-cat <<LEAN_CLASSIFY_HEADER
--- ============================================================
--- 3. classify
--- ============================================================
+# --- classify ---
+echo "-- ============================================================"
+echo "-- 3. classify"
+echo "-- ============================================================"
+echo ""
+echo "/-- 全命題の層分類。 -/"
+echo "def classify : PropositionId → ConcreteLayer"
 
-/-- 全命題の層分類。各ケースの根拠は Assumptions に記録。 -/
-def classify : PropositionId → ConcreteLayer
-LEAN_CLASSIFY_HEADER
-
-# assignments を層ごとにグループ化して出力
-for i in $(seq 0 $((NUM_LAYERS - 1))); do
-  layer_name=${LAYER_NAMES[$i]}
-  props=""
-  justifications=""
-  for j in $(seq 0 $((NUM_ASSIGNMENTS - 1))); do
-    a_layer=$(echo "$JSON" | jq -r ".assignments[$j].layerName")
-    if [ "$a_layer" = "$layer_name" ]; then
-      a_prop=$(echo "$JSON" | jq -r ".assignments[$j].proposition")
-      a_just=$(echo "$JSON" | jq -r ".assignments[$j].justification | join(\", \")")
-      if [ -n "$props" ]; then
-        props="$props | .$a_prop"
-      else
-        props="  | .$a_prop"
+if [ "$MODE" = "standalone" ]; then
+  NUM_PROPS=$(echo "$JSON" | jq '.propositions | length')
+  for i in $(seq 0 $((NUM_LAYERS - 1))); do
+    layer_name=${LAYER_NAMES[$i]}
+    props=""
+    for j in $(seq 0 $((NUM_PROPS - 1))); do
+      a_layer=$(echo "$JSON" | jq -r ".propositions[$j].layerName")
+      if [ "$a_layer" = "$layer_name" ]; then
+        a_prop=$(echo "$JSON" | jq -r ".propositions[$j].id")
+        if [ -n "$props" ]; then
+          props="$props | .$a_prop"
+        else
+          props="  | .$a_prop"
+        fi
       fi
+    done
+    if [ -n "$props" ]; then
+      echo "  -- ${layer_name}"
+      echo "${props} => .${layer_name}"
     fi
   done
-  if [ -n "$props" ]; then
-    echo "  -- ${layer_name}"
-    echo "${props} => .${layer_name}"
-  fi
-done
+else
+  NUM_ASSIGNMENTS=$(echo "$JSON" | jq '.assignments | length')
+  for i in $(seq 0 $((NUM_LAYERS - 1))); do
+    layer_name=${LAYER_NAMES[$i]}
+    props=""
+    for j in $(seq 0 $((NUM_ASSIGNMENTS - 1))); do
+      a_layer=$(echo "$JSON" | jq -r ".assignments[$j].layerName")
+      if [ "$a_layer" = "$layer_name" ]; then
+        a_prop=$(echo "$JSON" | jq -r ".assignments[$j].proposition")
+        if [ -n "$props" ]; then
+          props="$props | .$a_prop"
+        else
+          props="  | .$a_prop"
+        fi
+      fi
+    done
+    if [ -n "$props" ]; then
+      echo "  -- ${layer_name}"
+      echo "${props} => .${layer_name}"
+    fi
+  done
+fi
 
 echo ""
 
-# 証明
+# --- 証明 ---
 cat <<LEAN_PROOFS
 -- ============================================================
 -- 4. 証明
@@ -218,16 +304,6 @@ theorem classify_total :
     ∀ (p : PropositionId), ∃ (l : ConcreteLayer), classify p = l :=
   fun p => ⟨classify p, rfl⟩
 
--- ============================================================
--- 5. LayerAssignment
--- ============================================================
-
-/-- 生成されたモデルに基づく LayerAssignment。 -/
-def generatedAssignment : LayerAssignment ConcreteLayer where
-  assign := classify
-  monotone := classify_monotone
-  bounded := ⟨${max_ord}, fun d => by cases d <;> simp [classify, ConcreteLayer.ord, EpistemicLayerClass.ord]⟩
-
 end ${NAMESPACE}
 LEAN_PROOFS
 
@@ -239,14 +315,11 @@ LEAN_PROOFS
 
 if [ -n "$OUTPUT_FILE" ]; then
   generate_lean > "$OUTPUT_FILE"
-  echo "Generated: $OUTPUT_FILE" >&2
+  echo "Generated: $OUTPUT_FILE (mode: $MODE)" >&2
 
-  # 自動検証
   if $VERIFY; then
     echo "Verifying with lake build..." >&2
-    # lakefile.lean のあるディレクトリを探す
     LEAN_ROOT="$(cd "$(dirname "$OUTPUT_FILE")" && while [ ! -f lakefile.lean ] && [ "$(pwd)" != "/" ]; do cd ..; done; pwd)"
-    # 出力ファイルの絶対パスから相対パスを算出してモジュール名に変換
     ABS_OUTPUT="$(cd "$(dirname "$OUTPUT_FILE")" && pwd)/$(basename "$OUTPUT_FILE")"
     REL_PATH="${ABS_OUTPUT#${LEAN_ROOT}/}"
     MODULE_NAME=$(echo "$REL_PATH" | sed 's|/|.|g' | sed 's|\.lean$||')
@@ -254,8 +327,7 @@ if [ -n "$OUTPUT_FILE" ]; then
     if (cd "$LEAN_ROOT" && lake build "$MODULE_NAME" 2>&1); then
       echo "✓ Verification passed" >&2
     else
-      echo "✗ Verification failed — check for monotonicity violations" >&2
-      echo "  Run: #eval findViolations in CheckMonotone.lean" >&2
+      echo "✗ Verification failed" >&2
       exit 1
     fi
   fi
