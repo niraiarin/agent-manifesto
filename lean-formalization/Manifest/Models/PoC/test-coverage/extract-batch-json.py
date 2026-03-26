@@ -8,7 +8,7 @@
 4. ファイルに直接出力された JSON
 5. tool_result 内の JSON
 """
-import json, re, sys
+import argparse, json, re, sys
 
 
 def _wrap_individual_specs(specs):
@@ -116,7 +116,7 @@ def extract_from_agent_output(filepath):
             continue
         try:
             obj = json.loads(line)
-            if obj.get('type') != 'assistant':
+            if not isinstance(obj, dict) or obj.get('type') != 'assistant':
                 continue
 
             content = obj.get('message', {}).get('content', '')
@@ -144,16 +144,79 @@ def extract_from_agent_output(filepath):
     return _try_parse_json(full)
 
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <agent-output-file> <output-json>", file=sys.stderr)
-        sys.exit(1)
+def validate_count_and_ids(data, expected_count=None, expected_range=None):
+    """抽出結果の件数と scenario_id を検証する。
 
-    data = extract_from_agent_output(sys.argv[1])
-    if data:
-        with open(sys.argv[2], 'w') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"Extracted {len(data)} scenarios")
-    else:
+    Returns:
+        (ok: bool, missing_ids: list[int], message: str)
+    """
+    actual_ids = sorted(d.get("scenario_id", 0) for d in data)
+    actual_count = len(data)
+    missing = []
+    messages = []
+
+    if expected_count is not None and actual_count != expected_count:
+        messages.append(
+            f"Count mismatch: expected {expected_count}, got {actual_count}"
+        )
+
+    if expected_range is not None:
+        start, end = expected_range
+        expected_ids = set(range(start, end + 1))
+        actual_set = set(actual_ids)
+        missing = sorted(expected_ids - actual_set)
+        unexpected = sorted(actual_set - expected_ids)
+        if missing:
+            messages.append(f"Missing scenario_ids: {missing}")
+        if unexpected:
+            messages.append(f"Unexpected scenario_ids: {unexpected}")
+
+    ok = len(messages) == 0
+    return ok, missing, "; ".join(messages) if messages else "OK"
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="Extract ModelSpec JSON from agent output files"
+    )
+    parser.add_argument("input", help="Agent output file")
+    parser.add_argument("output", help="Output JSON file")
+    parser.add_argument(
+        "--expected-count", type=int, default=None,
+        help="Expected number of scenarios"
+    )
+    parser.add_argument(
+        "--expected-range", type=str, default=None,
+        help="Expected scenario_id range, e.g. '221-230'"
+    )
+    args = parser.parse_args()
+
+    data = extract_from_agent_output(args.input)
+    if not data:
         print("Failed to extract JSON", file=sys.stderr)
         sys.exit(1)
+
+    with open(args.output, 'w') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"Extracted {len(data)} scenarios")
+
+    # Validate if requested
+    expected_count = args.expected_count
+    expected_range = None
+    if args.expected_range:
+        parts = args.expected_range.split("-")
+        expected_range = (int(parts[0]), int(parts[1]))
+        if expected_count is None:
+            expected_count = expected_range[1] - expected_range[0] + 1
+
+    if expected_count is not None or expected_range is not None:
+        ok, missing, msg = validate_count_and_ids(
+            data, expected_count, expected_range
+        )
+        if not ok:
+            print(f"VALIDATION FAILED: {msg}", file=sys.stderr)
+            if missing:
+                print(f"Missing IDs for re-generation: {missing}", file=sys.stderr)
+            sys.exit(1)
+        else:
+            print("Validation passed")

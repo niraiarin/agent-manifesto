@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BatchOutput",
+  "description": "バッチ出力の JSON 配列スキーマ。各要素は1シナリオの ModelSpec。",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["scenario_id", "project", "model_spec"],
+    "properties": {
+      "scenario_id": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "シナリオの一意な ID"
+      },
+      "project": {
+        "type": "string",
+        "minLength": 1,
+        "description": "プロジェクト名"
+      },
+      "num_c": { "type": "integer", "minimum": 0 },
+      "num_h": { "type": "integer", "minimum": 0 },
+      "num_layers": { "type": "integer", "minimum": 2 },
+      "num_props": { "type": "integer", "minimum": 1 },
+      "num_deps": { "type": "integer", "minimum": 0 },
+      "model_spec": {
+        "type": "object",
+        "required": ["namespace", "layers", "propositions"],
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.]*$",
+            "description": "Lean namespace (e.g. TestCoverage.S1)"
+          },
+          "layers": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["name", "ordValue"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "層の名前 (PascalCase or snake_case)"
+                },
+                "ordValue": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "順序値 (高い = より根源的)"
+                },
+                "definition": { "type": "string" },
+                "derivedFrom": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          },
+          "propositions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "layerName"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "命題の一意な ID"
+                },
+                "layerName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "割り当て先の層名 (layers[].name と一致)"
+                },
+                "justification": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "根拠 (C1, H2 等)"
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "依存先の命題 ID"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
