@@ -306,8 +306,11 @@ fi
 echo "  \"v1_v7\": {"
 echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"benchmark.json implementation OR operational correlation evidence (T6)\" },"
 # V2 trend semantics: compare recent_avg (median of last 10 session deltas)
-# against cumulative_avg (total_tool_calls / session_count) as baseline.
+# against cumulative_avg (filtered full-history mean) as baseline.
 # divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
+# NOTE: V2 is a hub variable with tradeoffs against V1,V3,V5,V6,V7 (tradeoff_context_is_hub).
+# divergence_percent > 100% is NOT necessarily a problem: evolve sessions (large tool usage)
+# drive recent_avg upward. Rising divergence with rising evolve depth is expected behavior.
 V2_TREND="stable"
 V2_DIVERGENCE=0
 if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then

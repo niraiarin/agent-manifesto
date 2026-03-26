@@ -159,9 +159,13 @@ opaque skillQuality : World → Nat
     測定方法: タスク完了率 / 消費トークン数。
     関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。
     observe.sh proxy: recent_avg（直近10セッションデルタ中央値、primary）,
-    cumulative_avg（累積平均、baseline）。
+    cumulative_avg（全履歴マイクロセッション除外平均、baseline）。
     primary_metric: recent_median（中央値ベース、外れ値にロバスト）。
-    運用注記: recent_avg が cumulative_avg の ±20% 以上乖離した場合にトレンド変化と判定。 -/
+    運用注記: recent_avg が cumulative_avg の ±20% 以上乖離した場合にトレンド変化と判定。
+    divergence 解釈: V2 は 5 変数とトレードオフ関係を持つハブ変数（定理 tradeoff_context_is_hub）。
+    evolve セッション（大量ツール使用）が recent_avg を押し上げるため、
+    divergence_percent > 100% は必ずしも問題ではない。
+    evolve の深さと頻度が増すほど recent_avg が上昇する傾向は想定内。 -/
 opaque contextEfficiency : World → Nat
 
 /-- V3: 出力品質。コード・設計・文書の品質。
