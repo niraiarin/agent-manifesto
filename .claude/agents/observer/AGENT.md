@@ -149,6 +149,11 @@ jq -r '.rejected[]? | select(.failure_subtype != null) | select((.resolved // fa
 - 同一条件に該当する改善候補を観察報告に警告として含める
 - 繰り返し発生するパターンは「高優先度の改善候補」として報告
 
+### 観察報告における V7 teamwork_percent の扱い
+
+- teamwork_percent が 0% かつ teamwork_status が suppressed_single_agent の場合、観察報告に含めない
+- single-agent 運用では teamwork_percent は常に 0 であり、改善候補にならない
+
 ## 出力フォーマット
 
 観察結果を以下の構造で出力する:
