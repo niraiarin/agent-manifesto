@@ -1,0 +1,193 @@
+{
+  "namespace": "TestScenario.S169",
+  "description": "河口堆積物監視 AI",
+  "layers": [
+    {
+      "name": "hydrologicPrinciple",
+      "ordValue": 4,
+      "definition": "河川水理学・海洋潮汐の基本法則",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "sedimentTransport",
+      "ordValue": 3,
+      "definition": "堆積物輸送の物理モデルと経験式",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "monitoringInfra",
+      "ordValue": 2,
+      "definition": "観測機器配置と測定プロトコル",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "floodRiskAssess",
+      "ordValue": 1,
+      "definition": "洪水リスク評価と浚渫優先度決定",
+      "derivedFrom": [
+        "H4",
+        "C3"
+      ]
+    },
+    {
+      "name": "reportSchedule",
+      "ordValue": 0,
+      "definition": "定期報告サイクルと異常通知閾値",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "massConservation",
+      "layerName": "hydrologicPrinciple",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tidalForcing",
+      "layerName": "hydrologicPrinciple",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "salinityGradient",
+      "layerName": "hydrologicPrinciple",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bedloadFormula",
+      "layerName": "sedimentTransport",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".massConservation"
+      ]
+    },
+    {
+      "id": "suspendedLoadCalc",
+      "layerName": "sedimentTransport",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".massConservation",
+        ".tidalForcing"
+      ]
+    },
+    {
+      "id": "flocculationModel",
+      "layerName": "sedimentTransport",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".salinityGradient",
+        ".suspendedLoadCalc"
+      ]
+    },
+    {
+      "id": "bathymetrySurvey",
+      "layerName": "monitoringInfra",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".bedloadFormula"
+      ]
+    },
+    {
+      "id": "turbidityProbe",
+      "layerName": "monitoringInfra",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".suspendedLoadCalc"
+      ]
+    },
+    {
+      "id": "adcpDeployment",
+      "layerName": "monitoringInfra",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".tidalForcing",
+        ".bathymetrySurvey"
+      ]
+    },
+    {
+      "id": "channelNarrowingDetect",
+      "layerName": "floodRiskAssess",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".bathymetrySurvey",
+        ".bedloadFormula"
+      ]
+    },
+    {
+      "id": "dredgePriority",
+      "layerName": "floodRiskAssess",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".channelNarrowingDetect",
+        ".flocculationModel"
+      ]
+    },
+    {
+      "id": "stormSurgeOverlay",
+      "layerName": "floodRiskAssess",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".tidalForcing",
+        ".channelNarrowingDetect"
+      ]
+    },
+    {
+      "id": "monthlyTrendReport",
+      "layerName": "reportSchedule",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".turbidityProbe",
+        ".channelNarrowingDetect"
+      ]
+    },
+    {
+      "id": "anomalyAlert",
+      "layerName": "reportSchedule",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".dredgePriority",
+        ".stormSurgeOverlay"
+      ]
+    }
+  ]
+}

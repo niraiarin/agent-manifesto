@@ -1,0 +1,161 @@
+{
+  "namespace": "TestScenario.S262",
+  "description": "化石同定 AI",
+  "layers": [
+    {
+      "name": "taxonomic_law",
+      "ordValue": 4,
+      "definition": "国際動物命名規約・分類学の原則。学名の有効性基準",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "geological_context",
+      "ordValue": 3,
+      "definition": "地質年代・地層情報。化石の時空間的制約",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "morphological_rule",
+      "ordValue": 2,
+      "definition": "形態学的同定基準。鍵となる形質の判定ルール",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "inference",
+      "ordValue": 1,
+      "definition": "画像認識・統計的推論による同定候補",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未確認の分類仮説",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "tx1",
+      "layerName": "taxonomic_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tx2",
+      "layerName": "taxonomic_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gl1",
+      "layerName": "geological_context",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".tx1"
+      ]
+    },
+    {
+      "id": "gl2",
+      "layerName": "geological_context",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mr1",
+      "layerName": "morphological_rule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".tx1",
+        ".gl1"
+      ]
+    },
+    {
+      "id": "mr2",
+      "layerName": "morphological_rule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".tx2"
+      ]
+    },
+    {
+      "id": "mr3",
+      "layerName": "morphological_rule",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".gl2"
+      ]
+    },
+    {
+      "id": "in1",
+      "layerName": "inference",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".mr1",
+        ".mr2"
+      ]
+    },
+    {
+      "id": "in2",
+      "layerName": "inference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".mr3",
+        ".gl2"
+      ]
+    },
+    {
+      "id": "in3",
+      "layerName": "inference",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".in1"
+      ]
+    },
+    {
+      "id": "hp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".in2"
+      ]
+    }
+  ]
+}

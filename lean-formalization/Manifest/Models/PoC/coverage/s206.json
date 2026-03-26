@@ -1,0 +1,130 @@
+{
+  "namespace": "FoodTextureEvaluation",
+  "layers": [
+    {
+      "name": "standard",
+      "ordValue": 3,
+      "definition": "食品安全基準・規格の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "sensor",
+      "ordValue": 2,
+      "definition": "センサー・測定系の外部依存",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "evaluation",
+      "ordValue": 1,
+      "definition": "評価アルゴリズム・判定基準",
+      "derivedFrom": [
+        "C3",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sns1",
+      "layerName": "sensor",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sns2",
+      "layerName": "sensor",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".sns1"
+      ]
+    },
+    {
+      "id": "sns3",
+      "layerName": "sensor",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".std1"
+      ]
+    },
+    {
+      "id": "evl1",
+      "layerName": "evaluation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".std1",
+        ".sns1"
+      ]
+    },
+    {
+      "id": "evl2",
+      "layerName": "evaluation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".std2",
+        ".sns2"
+      ]
+    },
+    {
+      "id": "evl3",
+      "layerName": "evaluation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".sns3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".evl1"
+      ]
+    }
+  ]
+}

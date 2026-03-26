@@ -1,0 +1,390 @@
+{
+  "namespace": "TestCoverage.S153",
+  "layers": [
+    {
+      "name": "MaritimeLaw",
+      "ordValue": 6,
+      "definition": "海上衝突予防規則（COLREG）。国際条約であり違反不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "VesselSafety",
+      "ordValue": 5,
+      "definition": "船舶の構造的安全制約。物理的限界",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "SensorFusion",
+      "ordValue": 4,
+      "definition": "レーダー・AIS・カメラ統合の技術的制約",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "NavigationPractice",
+      "ordValue": 3,
+      "definition": "航行慣行に基づく回避戦略。経験則",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "AutonomyLevel",
+      "ordValue": 2,
+      "definition": "自律度の設計選択。人間-AI間の権限分配",
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    },
+    {
+      "name": "OperationalTuning",
+      "ordValue": 1,
+      "definition": "運用パラメータの微調整。航路・天候で変動",
+      "derivedFrom": [
+        "C6",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s153_p01",
+      "layerName": "MaritimeLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s153_p02",
+      "layerName": "MaritimeLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s153_p03",
+      "layerName": "VesselSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s153_p01"
+      ]
+    },
+    {
+      "id": "s153_p04",
+      "layerName": "VesselSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s153_p01"
+      ]
+    },
+    {
+      "id": "s153_p05",
+      "layerName": "VesselSafety",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s153_p01",
+        ".s153_p02"
+      ]
+    },
+    {
+      "id": "s153_p06",
+      "layerName": "SensorFusion",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s153_p03"
+      ]
+    },
+    {
+      "id": "s153_p07",
+      "layerName": "SensorFusion",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s153_p04"
+      ]
+    },
+    {
+      "id": "s153_p08",
+      "layerName": "SensorFusion",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s153_p03",
+        ".s153_p05"
+      ]
+    },
+    {
+      "id": "s153_p09",
+      "layerName": "NavigationPractice",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s153_p06"
+      ]
+    },
+    {
+      "id": "s153_p10",
+      "layerName": "NavigationPractice",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s153_p07"
+      ]
+    },
+    {
+      "id": "s153_p11",
+      "layerName": "NavigationPractice",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s153_p08",
+        ".s153_p14"
+      ]
+    },
+    {
+      "id": "s153_p12",
+      "layerName": "AutonomyLevel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s153_p09"
+      ]
+    },
+    {
+      "id": "s153_p13",
+      "layerName": "AutonomyLevel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s153_p10"
+      ]
+    },
+    {
+      "id": "s153_p14",
+      "layerName": "AutonomyLevel",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s153_p09",
+        ".s153_p10"
+      ]
+    },
+    {
+      "id": "s153_p15",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s153_p12"
+      ]
+    },
+    {
+      "id": "s153_p16",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s153_p13"
+      ]
+    },
+    {
+      "id": "s153_p17",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s153_p14"
+      ]
+    },
+    {
+      "id": "s153_p18",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s153_p15",
+        ".s153_p16"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "海上衝突予防規則（COLREG 1972）の全条項を遵守する。特に規則13-17（追越し・行会い・横切り・避航船・保持船）"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "船舶の旋回性能（旋回径・キック・アドバンス）は操縦性能基準に基づく物理的限界がある"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "停船距離は速力と積載量に依存し、即時停止は不可能である"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "レーダー（X帯・S帯）、AIS、光学カメラの3系統のセンサーを統合して使用する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "最終的な操船判断は船長が行う。AIは回避案を提示し船長が承認する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "沿岸航行と外洋航行で回避パラメータ（安全距離・回避開始タイミング）を変える"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "単一センサーで十分な検知精度が得られる場合"
+        }
+      },
+      "content": "センサーフュージョンではカルマンフィルタによる他船追跡が有効。各センサーの特性を補完する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C2"
+          ],
+          "refutation": "COLREGの解釈が全状況で一意に定まる場合"
+        }
+      },
+      "content": "COLREG規則の適用が曖昧な状況（交差する義務等）では最も保守的な解釈を採用すべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C3"
+          ],
+          "refutation": "全船舶の操縦性能が均一である場合"
+        }
+      },
+      "content": "回避行動の開始タイミングは船舶の操縦性能（旋回径・停船距離）に基づいて動的に決定すべき"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "完全自律航行が法的に認められた場合"
+        }
+      },
+      "content": "自律度はIMOの自律船ガイドライン（MASS degree 2: 遠隔操作・船上判断）に準拠すべき"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "C4"
+          ],
+          "refutation": "航路に関わらず一律のパラメータで安全が確保できる場合"
+        }
+      },
+      "content": "狭水道・輻輳海域では安全距離を通常の2倍に設定し、回避開始を早める"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "天候がセンサー性能に影響しない場合"
+        }
+      },
+      "content": "視界制限状態（濃霧等）ではレーダー依存度を上げ、安全マージンを拡大する"
+    }
+  ]
+}

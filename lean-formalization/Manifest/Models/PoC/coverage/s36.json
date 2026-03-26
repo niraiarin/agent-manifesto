@@ -1,0 +1,141 @@
+{
+  "layers": [
+    {
+      "name": "pharmacological_law",
+      "definition": "薬事法・臨床試験規制・安全性基準",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "therapeutic_constraint",
+      "definition": "治療域・毒性閾値・薬物動態パラメータ",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "delivery_design",
+      "definition": "デリバリーシステム設計・製剤パラメータ",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "manufacturing_config",
+      "definition": "製造条件・品質管理パラメータ・ログ設定",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C7",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "regulatory_approval_pathway",
+      "layerName": "pharmacological_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gmp_compliance",
+      "layerName": "pharmacological_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "therapeutic_window_definition",
+      "layerName": "therapeutic_constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "maximum_toxicity_threshold",
+      "layerName": "therapeutic_constraint",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pharmacokinetic_model",
+      "layerName": "therapeutic_constraint",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "nanoparticle_size_range",
+      "layerName": "delivery_design",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "release_profile_target",
+      "layerName": "delivery_design",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "targeting_ligand_selection",
+      "layerName": "delivery_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "batch_size_specification",
+      "layerName": "manufacturing_config",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "temperature_control_range",
+      "layerName": "manufacturing_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "quality_control_sampling",
+      "layerName": "manufacturing_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "stability_test_protocol",
+      "layerName": "manufacturing_config",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

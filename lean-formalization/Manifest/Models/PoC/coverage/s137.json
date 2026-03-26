@@ -1,0 +1,304 @@
+{
+  "namespace": "TestCoverage.S137",
+  "layers": [
+    {
+      "name": "StructuralSafety",
+      "ordValue": 5,
+      "definition": "橋梁の構造安全性。崩落リスクに直結する不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InspectionStandard",
+      "ordValue": 4,
+      "definition": "道路法・橋梁点検要領に基づく基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DiagnosisMethod",
+      "ordValue": 3,
+      "definition": "洗掘診断手法の設計。技術進歩で更新",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "MonitoringPolicy",
+      "ordValue": 2,
+      "definition": "監視頻度・体制の運用方針。予算に応じて調整",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictionHeuristic",
+      "ordValue": 1,
+      "definition": "洗掘進行予測の仮説。観測データで検証",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s137_p01",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s137_p02",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s137_p03",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s137_p01"
+      ]
+    },
+    {
+      "id": "s137_p04",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s137_p01",
+        ".s137_p02"
+      ]
+    },
+    {
+      "id": "s137_p05",
+      "layerName": "DiagnosisMethod",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s137_p03"
+      ]
+    },
+    {
+      "id": "s137_p06",
+      "layerName": "DiagnosisMethod",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s137_p03",
+        ".s137_p04"
+      ]
+    },
+    {
+      "id": "s137_p07",
+      "layerName": "DiagnosisMethod",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s137_p04"
+      ]
+    },
+    {
+      "id": "s137_p08",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s137_p05"
+      ]
+    },
+    {
+      "id": "s137_p09",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s137_p06"
+      ]
+    },
+    {
+      "id": "s137_p10",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s137_p05",
+        ".s137_p07"
+      ]
+    },
+    {
+      "id": "s137_p11",
+      "layerName": "PredictionHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s137_p08"
+      ]
+    },
+    {
+      "id": "s137_p12",
+      "layerName": "PredictionHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s137_p09"
+      ]
+    },
+    {
+      "id": "s137_p13",
+      "layerName": "PredictionHeuristic",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s137_p10",
+        ".s137_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "橋脚基礎の健全性は橋梁全体の安全に直結する。洗掘による崩落は絶対に防止する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "緊急通行規制の判断は道路管理者が行う。AIは健全度評価と緊急度の提示のみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "道路法に基づく5年ごとの定期点検データを基礎情報として活用する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "水中ソナーと傾斜計を組合せたセンシングで洗掘深を計測する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "出水期（6-10月）は監視頻度を上げ、常時監視に近い体制とする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "点検データのフォーマットが自治体間で統一されていない場合"
+        }
+      },
+      "content": "過去の点検データの時系列分析により洗掘の進行傾向を把握できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "河川の濁度が高くソナーの精度が著しく低下する場合"
+        }
+      },
+      "content": "マルチビームソナーにより河床形状の3Dマッピングが可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "センサーの電源確保が出水期の過酷環境で困難な場合"
+        }
+      },
+      "content": "水位と流速のリアルタイムデータから洗掘リスクを動的に評価できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "地質条件の局所的変動が大きく一般化モデルが適用できない場合"
+        }
+      },
+      "content": "河床材料の粒径と流速から限界掃流力を用いて洗掘深を予測できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "気候変動による降雨パターンの変化が過去データに基づく予測を無効にする場合"
+        }
+      },
+      "content": "過去の出水イベントと洗掘深の関係から将来の大規模出水時の洗掘量を推定できる"
+    }
+  ]
+}

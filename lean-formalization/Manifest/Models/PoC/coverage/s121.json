@@ -1,0 +1,345 @@
+{
+  "layers": [
+    {
+      "name": "AirspaceSafety",
+      "definition": "航空法・飛行禁止区域の安全制約。違反は法的責任を伴う",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "definition": "自治体規制・騒音制限。外部権威による制約",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "definition": "運用ポリシー。天候・バッテリー残量に基づく判断基準",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "RouteOptimization",
+      "definition": "配送効率の最適化。コスト・時間のトレードオフ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "AdaptiveHeuristic",
+      "definition": "運用データから学習する経験的ヒューリスティック",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s121_p01",
+      "layerName": "AirspaceSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s121_p02",
+      "layerName": "AirspaceSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s121_p03",
+      "layerName": "AirspaceSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s121_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s121_p01"
+      ]
+    },
+    {
+      "id": "s121_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s121_p02"
+      ]
+    },
+    {
+      "id": "s121_p06",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s121_p01",
+        ".s121_p03"
+      ]
+    },
+    {
+      "id": "s121_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s121_p04"
+      ]
+    },
+    {
+      "id": "s121_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s121_p05"
+      ]
+    },
+    {
+      "id": "s121_p09",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s121_p04",
+        ".s121_p06"
+      ]
+    },
+    {
+      "id": "s121_p10",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s121_p07"
+      ]
+    },
+    {
+      "id": "s121_p11",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s121_p08",
+        ".s121_p09"
+      ]
+    },
+    {
+      "id": "s121_p12",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s121_p07"
+      ]
+    },
+    {
+      "id": "s121_p13",
+      "layerName": "AdaptiveHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s121_p10"
+      ]
+    },
+    {
+      "id": "s121_p14",
+      "layerName": "AdaptiveHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s121_p11"
+      ]
+    },
+    {
+      "id": "s121_p15",
+      "layerName": "AdaptiveHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s121_p12",
+        ".s121_p13"
+      ]
+    },
+    {
+      "id": "s121_p16",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s121_p02"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "航空法の飛行禁止区域を絶対に通過しない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ドローンの最大飛行高度は150m以下（航空法準拠）"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "住宅地上空では騒音レベルを60dB以下に制限"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "風速15m/s以上では飛行を中断する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "バッテリー残量20%で自動帰還する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "緊急着陸地点を経路上に常時確保する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "騒音規制が統一されている地域では不要"
+        }
+      },
+      "content": "自治体ごとに異なる騒音規制を経路計画に反映すべき"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "気象データの精度が十分でない場合"
+        }
+      },
+      "content": "気象予報APIを用いたリアルタイム経路再計算が有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "配送時間より安全が常に優先される運用方針の場合"
+        }
+      },
+      "content": "風況を考慮したエネルギー最適経路がコスト削減につながる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "固定経路で十分な配送エリアの場合"
+        }
+      },
+      "content": "動的経路計画がバッテリー効率を15%改善できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H3"
+          ],
+          "refutation": "十分な運用データが蓄積されていない初期段階"
+        }
+      },
+      "content": "過去の飛行データから地域ごとの風況パターンを学習可能"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "layers": [
+    {
+      "name": "grading_standard",
+      "definition": "JAS規格・等級基準など公的に定められた判定基準",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "visual_model",
+      "definition": "画像認識モデルの精度仮定・学習データの品質前提",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "sorting_policy",
+      "definition": "判定フロー・人間レビュー基準・ライン制御方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "line_parameter",
+      "definition": "ベルトコンベア速度・カメラ位置・照明条件などの現場パラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "grading_standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "grading_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "grading_standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "visual_model",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "visual_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "visual_model",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "sorting_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "sorting_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l2",
+      "layerName": "sorting_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "line_parameter",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "line_parameter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "namespace": "ASDEarlyDetection",
+  "layers": [
+    {
+      "name": "ethics",
+      "ordValue": 6,
+      "definition": "倫理的絶対制約（誤判定の影響）",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 5,
+      "definition": "臨床エビデンスに基づく医学的前提",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 4,
+      "definition": "医療機器規制・個人情報保護",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "data",
+      "ordValue": 3,
+      "definition": "データ収集・品質の外部依存",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "early_detection",
+      "ordValue": 2,
+      "definition": "早期検出アルゴリズム・閾値",
+      "derivedFrom": [
+        "C5",
+        "H5"
+      ]
+    },
+    {
+      "name": "ux",
+      "ordValue": 1,
+      "definition": "保護者・専門家向けUI設計",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".eth2"
+      ]
+    },
+    {
+      "id": "regu1",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".eth2"
+      ]
+    },
+    {
+      "id": "regu2",
+      "layerName": "regulation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".clin1"
+      ]
+    },
+    {
+      "id": "dat1",
+      "layerName": "data",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".regu1"
+      ]
+    },
+    {
+      "id": "dat2",
+      "layerName": "data",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dat3",
+      "layerName": "data",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "scr1",
+      "layerName": "early_detection",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".clin1",
+        ".dat1"
+      ]
+    },
+    {
+      "id": "scr2",
+      "layerName": "early_detection",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".dat3"
+      ]
+    },
+    {
+      "id": "ux1",
+      "layerName": "ux",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".scr1",
+        ".eth1"
+      ]
+    },
+    {
+      "id": "ux2",
+      "layerName": "ux",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".regu2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": []
+    }
+  ]
+}

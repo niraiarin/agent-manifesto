@@ -1,0 +1,186 @@
+{
+  "namespace": "Scenario198",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "人命と健康に関わる安全基準。違反は作業停止。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 2,
+      "definition": "自治体基準と所有権に関する法的・倫理的制約。",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "design",
+      "ordValue": 1,
+      "definition": "分別・識別の技術的設計判断。改善可能。",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "実証が必要な技術的仮説。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".reg1"
+      ]
+    },
+    {
+      "id": "des1",
+      "layerName": "design",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf3"
+      ]
+    },
+    {
+      "id": "des2",
+      "layerName": "design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "des3",
+      "layerName": "design",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".reg1"
+      ]
+    },
+    {
+      "id": "des4",
+      "layerName": "design",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".des1",
+        ".des3"
+      ]
+    },
+    {
+      "id": "des5",
+      "layerName": "design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg3",
+        ".des2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".reg2",
+        ".des3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".des4",
+        ".des5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".hyp1"
+      ]
+    }
+  ]
+}

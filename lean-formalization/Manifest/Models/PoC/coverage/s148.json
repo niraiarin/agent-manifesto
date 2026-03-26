@@ -1,0 +1,323 @@
+{
+  "namespace": "TestCoverage.S148",
+  "layers": [
+    {
+      "name": "VisitorPrivacy",
+      "ordValue": 4,
+      "definition": "来園者のプライバシー保護。個人識別データの取扱い制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "AnimalWelfare",
+      "ordValue": 3,
+      "definition": "動物福祉に関する運営方針。動物へのストレス最小化",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "動物園の運営ポリシー。人員配置・混雑管理",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalyticsMethod",
+      "ordValue": 1,
+      "definition": "行動分析の技術的手法。センサー・アルゴリズム選択",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "InsightHypothesis",
+      "ordValue": 0,
+      "definition": "来園者行動に関する洞察仮説。データで検証が必要",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s148_p01",
+      "layerName": "VisitorPrivacy",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s148_p02",
+      "layerName": "VisitorPrivacy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s148_p03",
+      "layerName": "VisitorPrivacy",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s148_p04",
+      "layerName": "AnimalWelfare",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s148_p01"
+      ]
+    },
+    {
+      "id": "s148_p05",
+      "layerName": "AnimalWelfare",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s148_p02"
+      ]
+    },
+    {
+      "id": "s148_p06",
+      "layerName": "AnimalWelfare",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s148_p01",
+        ".s148_p03"
+      ]
+    },
+    {
+      "id": "s148_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s148_p04"
+      ]
+    },
+    {
+      "id": "s148_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s148_p05"
+      ]
+    },
+    {
+      "id": "s148_p09",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s148_p04",
+        ".s148_p06"
+      ]
+    },
+    {
+      "id": "s148_p10",
+      "layerName": "AnalyticsMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s148_p07"
+      ]
+    },
+    {
+      "id": "s148_p11",
+      "layerName": "AnalyticsMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s148_p08"
+      ]
+    },
+    {
+      "id": "s148_p12",
+      "layerName": "AnalyticsMethod",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s148_p07",
+        ".s148_p09"
+      ]
+    },
+    {
+      "id": "s148_p13",
+      "layerName": "InsightHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s148_p10"
+      ]
+    },
+    {
+      "id": "s148_p14",
+      "layerName": "InsightHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s148_p11"
+      ]
+    },
+    {
+      "id": "s148_p15",
+      "layerName": "InsightHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s148_p12",
+        ".s148_p13"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "来園者の顔画像は保存せず、統計的な人数カウントと動線分析のみ行う"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "カメラの設置場所と目的を園内に掲示し、来園者に告知する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "動物の展示エリアの混雑が動物にストレスを与えるため、滞留人数に上限を設ける"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "混雑時はスタッフを動的に再配置して安全を確保する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "既設の防犯カメラ映像を流用し、追加設備投資は最小限にする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "動物の種類によってストレス反応の閾値が大きく異なる場合"
+        }
+      },
+      "content": "滞留人数が一定値を超えると動物の行動パターンにストレス反応が現れる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "スタッフの再配置が来園者の不満を招く場合"
+        }
+      },
+      "content": "リアルタイムの混雑度マップにより最適なスタッフ配置を算出できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "既設カメラの画角・解像度が人数カウントに不十分な場合"
+        }
+      },
+      "content": "既設防犯カメラの映像からYOLOv8による人物検出で十分な精度の人数カウントが可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "天候・イベントなど外部要因の影響が大きく予測困難な場合"
+        }
+      },
+      "content": "曜日・時間帯・天候に基づく混雑予測モデルが翌日の来園者数を予測できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "動線データの解像度が粗く展示ごとの滞在時間を正確に計測できない場合"
+        }
+      },
+      "content": "来園者の動線パターンから人気展示と回遊経路を特定し、展示レイアウト改善に活用できる"
+    }
+  ]
+}

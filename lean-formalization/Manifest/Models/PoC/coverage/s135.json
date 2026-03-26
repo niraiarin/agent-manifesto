@@ -1,0 +1,418 @@
+{
+  "namespace": "TestCoverage.S135",
+  "layers": [
+    {
+      "name": "PhysicalLaw",
+      "ordValue": 7,
+      "definition": "物理法則に基づく気候制約。覆らない自然法則",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ObservationalRecord",
+      "ordValue": 6,
+      "definition": "観測データに基づく経験的事実。計測精度に依存",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "ScientificConsensus",
+      "ordValue": 5,
+      "definition": "IPCCレベルの科学的合意。新知見で修正されうる",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "RegionalProjection",
+      "ordValue": 4,
+      "definition": "地域スケールの気候予測。ダウンスケーリング手法に依存",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ImpactAssessment",
+      "ordValue": 3,
+      "definition": "社会経済的影響評価。シナリオ選択に依存",
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    },
+    {
+      "name": "AdaptationStrategy",
+      "ordValue": 2,
+      "definition": "適応策の設計。政策判断で変更可能",
+      "derivedFrom": [
+        "C6",
+        "H5"
+      ]
+    },
+    {
+      "name": "UncertaintyBound",
+      "ordValue": 1,
+      "definition": "不確実性の定量化。モデルアンサンブルで推定",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s135_p01",
+      "layerName": "PhysicalLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s135_p02",
+      "layerName": "ObservationalRecord",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s135_p01"
+      ]
+    },
+    {
+      "id": "s135_p03",
+      "layerName": "ObservationalRecord",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s135_p01"
+      ]
+    },
+    {
+      "id": "s135_p04",
+      "layerName": "ScientificConsensus",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s135_p02"
+      ]
+    },
+    {
+      "id": "s135_p05",
+      "layerName": "ScientificConsensus",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s135_p02",
+        ".s135_p03"
+      ]
+    },
+    {
+      "id": "s135_p06",
+      "layerName": "ScientificConsensus",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s135_p01"
+      ]
+    },
+    {
+      "id": "s135_p07",
+      "layerName": "RegionalProjection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s135_p04"
+      ]
+    },
+    {
+      "id": "s135_p08",
+      "layerName": "RegionalProjection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s135_p05"
+      ]
+    },
+    {
+      "id": "s135_p09",
+      "layerName": "RegionalProjection",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s135_p04",
+        ".s135_p06"
+      ]
+    },
+    {
+      "id": "s135_p10",
+      "layerName": "ImpactAssessment",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s135_p07"
+      ]
+    },
+    {
+      "id": "s135_p11",
+      "layerName": "ImpactAssessment",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s135_p08"
+      ]
+    },
+    {
+      "id": "s135_p12",
+      "layerName": "ImpactAssessment",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s135_p07",
+        ".s135_p09"
+      ]
+    },
+    {
+      "id": "s135_p13",
+      "layerName": "AdaptationStrategy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s135_p10"
+      ]
+    },
+    {
+      "id": "s135_p14",
+      "layerName": "AdaptationStrategy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s135_p11"
+      ]
+    },
+    {
+      "id": "s135_p15",
+      "layerName": "AdaptationStrategy",
+      "justification": [
+        "C6",
+        "H5"
+      ],
+      "dependencies": [
+        ".s135_p10",
+        ".s135_p12"
+      ]
+    },
+    {
+      "id": "s135_p16",
+      "layerName": "UncertaintyBound",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s135_p07"
+      ]
+    },
+    {
+      "id": "s135_p17",
+      "layerName": "UncertaintyBound",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s135_p08"
+      ]
+    },
+    {
+      "id": "s135_p18",
+      "layerName": "UncertaintyBound",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s135_p09"
+      ]
+    },
+    {
+      "id": "s135_p19",
+      "layerName": "UncertaintyBound",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s135_p13",
+        ".s135_p14"
+      ]
+    },
+    {
+      "id": "s135_p20",
+      "layerName": "UncertaintyBound",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s135_p15"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "温室効果ガスの放射強制力は物理法則に基づき計算可能"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "過去150年の気温観測データは品質管理済みで信頼できる"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "衛星データにより海面水位の変動をmmレベルで追跡できる"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "IPCC AR6の知見を基盤シナリオとして採用する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "農業・水資源・インフラへの影響を重点評価対象とする"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "適応策の提案は自治体の予算制約と実行可能性を考慮する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "気候感度の推定値が大幅に見直された場合"
+        }
+      },
+      "content": "平衡気候感度は2.5-4.0°Cの範囲にある可能性が高い"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C4"
+          ],
+          "refutation": "統計的ダウンスケーリングがGCMのバイアスを継承し地域予測に不適切な場合"
+        }
+      },
+      "content": "統計的ダウンスケーリングにより5km解像度の地域予測が可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "氷床ダイナミクスの不確実性が海面上昇予測を大幅に拡大する場合"
+        }
+      },
+      "content": "海面上昇の地域的パターンは重力場の変化で予測できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "社会経済変数の将来推定が困難で影響評価の信頼性が低い場合"
+        }
+      },
+      "content": "作物モデルと気候シナリオの結合により農業影響を定量評価できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "適応策のコスト便益分析に必要な割引率の選択が結果を大きく左右する場合"
+        }
+      },
+      "content": "グリーンインフラと従来型インフラのハイブリッド適応策が費用対効果最大"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H1"
+          ],
+          "refutation": "モデル間の構造的類似性により独立アンサンブルが得られない場合"
+        }
+      },
+      "content": "CMIP6マルチモデルアンサンブルにより不確実性の定量化が可能"
+    }
+  ]
+}

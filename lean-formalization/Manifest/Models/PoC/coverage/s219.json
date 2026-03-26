@@ -1,0 +1,244 @@
+{
+  "namespace": "Scenario219",
+  "layers": [
+    {
+      "name": "structural",
+      "ordValue": 4,
+      "definition": "トンネル構造の安全基準。土木工学的に不変。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "standard",
+      "ordValue": 3,
+      "definition": "検査基準・検出閾値。規格で固定。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "運用上の制約。ダイヤ・設備で決定。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "detection",
+      "ordValue": 1,
+      "definition": "検知アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実地テストで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "str1",
+      "layerName": "structural",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "str2",
+      "layerName": "structural",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".str1"
+      ]
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".str1"
+      ]
+    },
+    {
+      "id": "std3",
+      "layerName": "standard",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".str2"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operational",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".str1",
+        ".std1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".std1"
+      ]
+    },
+    {
+      "id": "opr3",
+      "layerName": "operational",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".std2",
+        ".std3"
+      ]
+    },
+    {
+      "id": "dtc1",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".opr2",
+        ".std1"
+      ]
+    },
+    {
+      "id": "dtc2",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".opr3"
+      ]
+    },
+    {
+      "id": "dtc3",
+      "layerName": "detection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".std2",
+        ".std3",
+        ".opr3"
+      ]
+    },
+    {
+      "id": "dtc4",
+      "layerName": "detection",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".std1",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "dtc5",
+      "layerName": "detection",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "dtc6",
+      "layerName": "detection",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".std3",
+        ".dtc1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dtc4",
+        ".dtc5"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dtc1",
+        ".dtc6"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4",
+        "H2"
+      ],
+      "dependencies": [
+        ".dtc2"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dtc3"
+      ]
+    }
+  ]
+}

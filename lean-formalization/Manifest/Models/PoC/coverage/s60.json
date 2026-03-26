@@ -1,0 +1,280 @@
+{
+  "namespace": "CreditRisk",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "融資判断の最終責任は審査担当者にある"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "反社会的勢力との取引を排除する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "AIの判断根拠を金融庁に説明可能にする"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "個人情報保護法・銀行法に準拠する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "信用スコアの算出に人種・性別を使用しない"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "デフォルト率の年間目標は1%以下"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "リスク評価モデルの更新は四半期ごとに実施する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C6",
+        "refutation": "マクロ経済が根本的に不安定化した場合",
+        "content": "過去の財務データからデフォルト確率を統計的に予測可能"
+      },
+      {
+        "id": "H2",
+        "basis": "C3",
+        "refutation": "XAI技術の限界が判明した場合",
+        "content": "SHAP値による特徴量重要度の説明が規制要件を満たす"
+      },
+      {
+        "id": "H3",
+        "basis": "C5",
+        "refutation": "公正性の定義が変更された場合",
+        "content": "公正性メトリクス（Demographic Parity等）で偏り検出可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C7",
+        "refutation": "リアルタイムモデル更新が必須になった場合",
+        "content": "四半期更新で十分な精度を維持できる"
+      },
+      {
+        "id": "H5",
+        "basis": "C6",
+        "refutation": "非財務データの重要性が支配的になった場合",
+        "content": "財務諸表の3期分で基本的な信用評価が可能"
+      },
+      {
+        "id": "H6",
+        "basis": "H1",
+        "refutation": "産業構造の急変で業種分類が無効化された場合",
+        "content": "業種別のデフォルト率ベンチマークが参照可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "compliance",
+      "ordValue": 4,
+      "definition": "法規制・倫理の絶対条件",
+      "derivedFrom": [
+        "C2",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "accountability",
+      "ordValue": 3,
+      "definition": "説明責任・監査に関する制約",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "riskPolicy",
+      "ordValue": 2,
+      "definition": "リスク管理の運用方針",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H4"
+      ]
+    },
+    {
+      "name": "modeling",
+      "ordValue": 1,
+      "definition": "AIモデルの学習・評価戦略",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "comp1",
+      "layerName": "compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "comp2",
+      "layerName": "compliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "comp3",
+      "layerName": "compliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "acc1",
+      "layerName": "accountability",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        "comp1"
+      ]
+    },
+    {
+      "id": "acc2",
+      "layerName": "accountability",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "comp2"
+      ]
+    },
+    {
+      "id": "acc3",
+      "layerName": "accountability",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "comp3"
+      ]
+    },
+    {
+      "id": "risk1",
+      "layerName": "riskPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "acc1"
+      ]
+    },
+    {
+      "id": "risk2",
+      "layerName": "riskPolicy",
+      "justification": [
+        "C7",
+        "H4"
+      ],
+      "dependencies": [
+        "acc2"
+      ]
+    },
+    {
+      "id": "risk3",
+      "layerName": "riskPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "acc3",
+        "comp3"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "modeling",
+      "justification": [
+        "H1",
+        "H5"
+      ],
+      "dependencies": [
+        "risk1"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "modeling",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "comp3",
+        "risk3"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "modeling",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "risk1",
+        "risk2"
+      ]
+    },
+    {
+      "id": "mod4",
+      "layerName": "modeling",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "mod1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "mod1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    }
+  ]
+}

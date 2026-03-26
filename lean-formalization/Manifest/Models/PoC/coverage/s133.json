@@ -1,0 +1,389 @@
+{
+  "namespace": "TestCoverage.S133",
+  "layers": [
+    {
+      "name": "PatientSafety",
+      "ordValue": 6,
+      "definition": "患者の生命に直結する安全制約。絶対に違反不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 5,
+      "definition": "薬事法・GVP省令への準拠。法的義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "PharmacologicalEvidence",
+      "ordValue": 4,
+      "definition": "薬理学的エビデンス。臨床試験データに基づく",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ClinicalPractice",
+      "ordValue": 3,
+      "definition": "臨床現場の運用ルール。施設判断で変更可能",
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictionModel",
+      "ordValue": 2,
+      "definition": "副作用予測モデルの設計選択。手法更新可能",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ResearchHypothesis",
+      "ordValue": 1,
+      "definition": "未検証の研究仮説。追加研究で検証が必要",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s133_p01",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s133_p02",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s133_p03",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s133_p01"
+      ]
+    },
+    {
+      "id": "s133_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s133_p01"
+      ]
+    },
+    {
+      "id": "s133_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s133_p01",
+        ".s133_p02"
+      ]
+    },
+    {
+      "id": "s133_p06",
+      "layerName": "PharmacologicalEvidence",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s133_p03"
+      ]
+    },
+    {
+      "id": "s133_p07",
+      "layerName": "PharmacologicalEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s133_p04"
+      ]
+    },
+    {
+      "id": "s133_p08",
+      "layerName": "PharmacologicalEvidence",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s133_p03",
+        ".s133_p05"
+      ]
+    },
+    {
+      "id": "s133_p09",
+      "layerName": "ClinicalPractice",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s133_p06"
+      ]
+    },
+    {
+      "id": "s133_p10",
+      "layerName": "ClinicalPractice",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s133_p07"
+      ]
+    },
+    {
+      "id": "s133_p11",
+      "layerName": "ClinicalPractice",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s133_p08",
+        ".s133_p14"
+      ]
+    },
+    {
+      "id": "s133_p12",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s133_p09"
+      ]
+    },
+    {
+      "id": "s133_p13",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s133_p10"
+      ]
+    },
+    {
+      "id": "s133_p14",
+      "layerName": "ResearchHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s133_p12"
+      ]
+    },
+    {
+      "id": "s133_p15",
+      "layerName": "ResearchHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s133_p13"
+      ]
+    },
+    {
+      "id": "s133_p16",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s133_p09",
+        ".s133_p10"
+      ]
+    },
+    {
+      "id": "s133_p17",
+      "layerName": "ResearchHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s133_p14",
+        ".s133_p15"
+      ]
+    },
+    {
+      "id": "s133_p18",
+      "layerName": "ResearchHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s133_p16"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "患者の安全が最優先。副作用リスクの見逃しは許容されない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "医薬品医療機器等法に基づく副作用報告義務を遵守する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "GVP省令に基づく安全管理体制の下で運用する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "添付文書の薬理作用情報と臨床試験データを基礎データとして使用する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "副作用アラートは処方医に即時通知し、最終判断は医師が行う"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "多剤併用患者の薬物相互作用を重点的に監視する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "添付文書の記載が不完全で、実臨床データとの乖離が大きい場合"
+        }
+      },
+      "content": "薬理作用の分子メカニズムから副作用経路を推論できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "処方時チェックの負荷が高すぎて医師がアラート疲れを起こす場合"
+        }
+      },
+      "content": "処方オーダー時のリアルタイムチェックが最も効果的な介入タイミング"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C6"
+          ],
+          "refutation": "薬物相互作用のデータベースが網羅的でない場合"
+        }
+      },
+      "content": "グラフニューラルネットワークで分子構造から相互作用を予測できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "電子カルテの自然言語記録の構造化が困難な場合"
+        }
+      },
+      "content": "電子カルテの自然言語処理により未報告の副作用シグナルを検出できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "H3"
+          ],
+          "refutation": "遺伝子多型データの取得コストが臨床利用に見合わない場合"
+        }
+      },
+      "content": "薬物代謝酵素の遺伝子多型が個人差の主要因である"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H4"
+          ],
+          "refutation": "マイクロバイオームの影響が薬物動態に与える効果が小さい場合"
+        }
+      },
+      "content": "腸内細菌叢が経口薬の代謝に影響し副作用リスクを変動させる"
+    }
+  ]
+}

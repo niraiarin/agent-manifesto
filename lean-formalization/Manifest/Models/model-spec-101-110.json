@@ -1,0 +1,345 @@
+[
+  {
+    "scenario_id": 101,
+    "project": "手話翻訳 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S101",
+      "layers": [
+        {"name": "AccessibilityRight", "ordValue": 5, "definition": "障害者の情報アクセス権。障害者権利条約・障害者差別解消法に基づく不可侵の権利", "derivedFrom": ["C1", "C2"]},
+        {"name": "LinguisticIntegrity", "ordValue": 4, "definition": "手話の言語学的正確性。手話は独立した言語であり、日本語の単純変換ではない", "derivedFrom": ["C3", "H1"]},
+        {"name": "CulturalNorm", "ordValue": 3, "definition": "ろう文化の規範と慣習。コミュニティの承認に基づく", "derivedFrom": ["C4", "H2"]},
+        {"name": "TranslationPolicy", "ordValue": 2, "definition": "翻訳品質・速度のトレードオフに関する運用方針", "derivedFrom": ["C5", "H3"]},
+        {"name": "TechnicalHypothesis", "ordValue": 1, "definition": "未検証の技術的仮説。精度改善のための実験的アプローチ", "derivedFrom": ["C6", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s101_p01", "layerName": "AccessibilityRight", "justification": ["C1"], "dependencies": []},
+        {"id": "s101_p02", "layerName": "AccessibilityRight", "justification": ["C2"], "dependencies": []},
+        {"id": "s101_p03", "layerName": "AccessibilityRight", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s101_p04", "layerName": "LinguisticIntegrity", "justification": ["C3"], "dependencies": [".s101_p01"]},
+        {"id": "s101_p05", "layerName": "LinguisticIntegrity", "justification": ["H1"], "dependencies": [".s101_p02"]},
+        {"id": "s101_p06", "layerName": "CulturalNorm", "justification": ["C4"], "dependencies": [".s101_p04"]},
+        {"id": "s101_p07", "layerName": "CulturalNorm", "justification": ["H2"], "dependencies": [".s101_p04", ".s101_p05"]},
+        {"id": "s101_p08", "layerName": "TranslationPolicy", "justification": ["C5"], "dependencies": [".s101_p06"]},
+        {"id": "s101_p09", "layerName": "TranslationPolicy", "justification": ["H3"], "dependencies": [".s101_p07"]},
+        {"id": "s101_p10", "layerName": "TranslationPolicy", "justification": ["C5", "H3"], "dependencies": [".s101_p06", ".s101_p07"]},
+        {"id": "s101_p11", "layerName": "TechnicalHypothesis", "justification": ["C6"], "dependencies": [".s101_p08"]},
+        {"id": "s101_p12", "layerName": "TechnicalHypothesis", "justification": ["H4"], "dependencies": [".s101_p09"]},
+        {"id": "s101_p13", "layerName": "TechnicalHypothesis", "justification": ["H5"], "dependencies": [".s101_p10"]},
+        {"id": "s101_p14", "layerName": "TechnicalHypothesis", "justification": ["H4", "H5"], "dependencies": [".s101_p11", ".s101_p12"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 102,
+    "project": "土壌汚染評価 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 15,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S102",
+      "layers": [
+        {"name": "RegulatoryStandard", "ordValue": 6, "definition": "土壌汚染対策法の基準値。法定で変更不可", "derivedFrom": ["C1"]},
+        {"name": "PublicHealthSafety", "ordValue": 5, "definition": "住民の健康被害防止。人命に関わる不可侵制約", "derivedFrom": ["C2"]},
+        {"name": "GeochemicalEvidence", "ordValue": 4, "definition": "地球化学的知見に基づく汚染挙動の経験則", "derivedFrom": ["C3", "H1"]},
+        {"name": "SamplingProtocol", "ordValue": 3, "definition": "調査・サンプリング手法に関する技術的手続き", "derivedFrom": ["C4", "H2"]},
+        {"name": "AssessmentModel", "ordValue": 2, "definition": "汚染拡散モデル・リスク評価手法の選択", "derivedFrom": ["H3", "H4"]},
+        {"name": "RemediationHypothesis", "ordValue": 1, "definition": "浄化手法の効果に関する未検証仮説", "derivedFrom": ["C5", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s102_p01", "layerName": "RegulatoryStandard", "justification": ["C1"], "dependencies": []},
+        {"id": "s102_p02", "layerName": "PublicHealthSafety", "justification": ["C2"], "dependencies": [".s102_p01"]},
+        {"id": "s102_p03", "layerName": "PublicHealthSafety", "justification": ["C2", "C1"], "dependencies": [".s102_p01"]},
+        {"id": "s102_p04", "layerName": "GeochemicalEvidence", "justification": ["C3"], "dependencies": [".s102_p02"]},
+        {"id": "s102_p05", "layerName": "GeochemicalEvidence", "justification": ["H1"], "dependencies": [".s102_p01", ".s102_p03"]},
+        {"id": "s102_p06", "layerName": "SamplingProtocol", "justification": ["C4"], "dependencies": [".s102_p04"]},
+        {"id": "s102_p07", "layerName": "SamplingProtocol", "justification": ["H2"], "dependencies": [".s102_p04", ".s102_p05"]},
+        {"id": "s102_p08", "layerName": "SamplingProtocol", "justification": ["C4", "H2"], "dependencies": [".s102_p05"]},
+        {"id": "s102_p09", "layerName": "AssessmentModel", "justification": ["H3"], "dependencies": [".s102_p06"]},
+        {"id": "s102_p10", "layerName": "AssessmentModel", "justification": ["H4"], "dependencies": [".s102_p07"]},
+        {"id": "s102_p11", "layerName": "AssessmentModel", "justification": ["H3", "H4"], "dependencies": [".s102_p06", ".s102_p08"]},
+        {"id": "s102_p12", "layerName": "RemediationHypothesis", "justification": ["C5"], "dependencies": [".s102_p09"]},
+        {"id": "s102_p13", "layerName": "RemediationHypothesis", "justification": ["H5"], "dependencies": [".s102_p10"]},
+        {"id": "s102_p14", "layerName": "RemediationHypothesis", "justification": ["H6"], "dependencies": [".s102_p11"]},
+        {"id": "s102_p15", "layerName": "RemediationHypothesis", "justification": ["H5", "H6"], "dependencies": [".s102_p12", ".s102_p13"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 103,
+    "project": "電動キックボードシェアリング管理 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S103",
+      "layers": [
+        {"name": "TrafficSafety", "ordValue": 4, "definition": "道路交通法に基づく安全規制。法的に違反不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "MunicipalRegulation", "ordValue": 3, "definition": "自治体の条例・駐車規制。地域ルールに基づく", "derivedFrom": ["C3", "H1"]},
+        {"name": "FleetOperation", "ordValue": 2, "definition": "車両配置・充電管理の運用ルール", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "DemandPrediction", "ordValue": 1, "definition": "需要予測・価格最適化の仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s103_p01", "layerName": "TrafficSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s103_p02", "layerName": "TrafficSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s103_p03", "layerName": "MunicipalRegulation", "justification": ["C3"], "dependencies": [".s103_p01"]},
+        {"id": "s103_p04", "layerName": "MunicipalRegulation", "justification": ["H1"], "dependencies": [".s103_p01", ".s103_p02"]},
+        {"id": "s103_p05", "layerName": "FleetOperation", "justification": ["C4"], "dependencies": [".s103_p03"]},
+        {"id": "s103_p06", "layerName": "FleetOperation", "justification": ["H2"], "dependencies": [".s103_p04"]},
+        {"id": "s103_p07", "layerName": "FleetOperation", "justification": ["H3"], "dependencies": [".s103_p03", ".s103_p04"]},
+        {"id": "s103_p08", "layerName": "DemandPrediction", "justification": ["C5"], "dependencies": [".s103_p05"]},
+        {"id": "s103_p09", "layerName": "DemandPrediction", "justification": ["H4"], "dependencies": [".s103_p06"]},
+        {"id": "s103_p10", "layerName": "DemandPrediction", "justification": ["H5"], "dependencies": [".s103_p07"]},
+        {"id": "s103_p11", "layerName": "TrafficSafety", "justification": ["C1", "H4"], "dependencies": [".s103_p09"]},
+        {"id": "s103_p12", "layerName": "DemandPrediction", "justification": ["H4", "H5"], "dependencies": [".s103_p08", ".s103_p10"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 104,
+    "project": "古文書デジタル化・解読 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S104",
+      "layers": [
+        {"name": "ArchivalIntegrity", "ordValue": 5, "definition": "原本の保全・非破壊原則。文化財保護法に基づく不変制約", "derivedFrom": ["C1"]},
+        {"name": "PaleographicPrinciple", "ordValue": 4, "definition": "古文書学の確立された読解原則", "derivedFrom": ["C2", "H1"]},
+        {"name": "HistoricalContext", "ordValue": 3, "definition": "歴史学的文脈に基づく解釈の枠組み", "derivedFrom": ["C3", "H2"]},
+        {"name": "DigitizationMethod", "ordValue": 2, "definition": "撮影・画像処理の技術的手法選択", "derivedFrom": ["C4", "C5", "H3"]},
+        {"name": "OCRHypothesis", "ordValue": 1, "definition": "文字認識精度・自動解読に関する技術的仮説", "derivedFrom": ["H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s104_p01", "layerName": "ArchivalIntegrity", "justification": ["C1"], "dependencies": []},
+        {"id": "s104_p02", "layerName": "ArchivalIntegrity", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s104_p03", "layerName": "PaleographicPrinciple", "justification": ["C2"], "dependencies": [".s104_p01"]},
+        {"id": "s104_p04", "layerName": "PaleographicPrinciple", "justification": ["H1"], "dependencies": [".s104_p01", ".s104_p02"]},
+        {"id": "s104_p05", "layerName": "HistoricalContext", "justification": ["C3"], "dependencies": [".s104_p03"]},
+        {"id": "s104_p06", "layerName": "HistoricalContext", "justification": ["H2"], "dependencies": [".s104_p03", ".s104_p04"]},
+        {"id": "s104_p07", "layerName": "DigitizationMethod", "justification": ["C4"], "dependencies": [".s104_p05"]},
+        {"id": "s104_p08", "layerName": "DigitizationMethod", "justification": ["C5"], "dependencies": [".s104_p01"]},
+        {"id": "s104_p09", "layerName": "DigitizationMethod", "justification": ["H3"], "dependencies": [".s104_p05", ".s104_p06"]},
+        {"id": "s104_p10", "layerName": "OCRHypothesis", "justification": ["H4"], "dependencies": [".s104_p07"]},
+        {"id": "s104_p11", "layerName": "OCRHypothesis", "justification": ["H5"], "dependencies": [".s104_p08"]},
+        {"id": "s104_p12", "layerName": "OCRHypothesis", "justification": ["H4", "H5"], "dependencies": [".s104_p09", ".s104_p10"]},
+        {"id": "s104_p13", "layerName": "OCRHypothesis", "justification": ["H5"], "dependencies": [".s104_p07", ".s104_p11"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 105,
+    "project": "食品ロス予測・削減 AI",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S105",
+      "layers": [
+        {"name": "FoodSafetyLaw", "ordValue": 4, "definition": "食品衛生法・消費期限の法的規制。違反不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "SupplyChainRule", "ordValue": 3, "definition": "サプライチェーンの確立された商慣行", "derivedFrom": ["C3", "C4"]},
+        {"name": "DemandForecast", "ordValue": 2, "definition": "需要予測モデルと在庫管理ルール", "derivedFrom": ["C5", "H1", "H2"]},
+        {"name": "WasteReductionHypothesis", "ordValue": 1, "definition": "廃棄削減効果に関する未検証仮説", "derivedFrom": ["C6", "H3", "H4"]}
+      ],
+      "propositions": [
+        {"id": "s105_p01", "layerName": "FoodSafetyLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s105_p02", "layerName": "FoodSafetyLaw", "justification": ["C2"], "dependencies": []},
+        {"id": "s105_p03", "layerName": "SupplyChainRule", "justification": ["C3"], "dependencies": [".s105_p01"]},
+        {"id": "s105_p04", "layerName": "SupplyChainRule", "justification": ["C4"], "dependencies": [".s105_p01", ".s105_p02"]},
+        {"id": "s105_p05", "layerName": "SupplyChainRule", "justification": ["C3", "C4"], "dependencies": [".s105_p02"]},
+        {"id": "s105_p06", "layerName": "DemandForecast", "justification": ["C5"], "dependencies": [".s105_p03"]},
+        {"id": "s105_p07", "layerName": "DemandForecast", "justification": ["H1"], "dependencies": [".s105_p04"]},
+        {"id": "s105_p08", "layerName": "DemandForecast", "justification": ["H2"], "dependencies": [".s105_p03", ".s105_p05"]},
+        {"id": "s105_p09", "layerName": "WasteReductionHypothesis", "justification": ["C6"], "dependencies": [".s105_p06"]},
+        {"id": "s105_p10", "layerName": "WasteReductionHypothesis", "justification": ["H3"], "dependencies": [".s105_p07"]},
+        {"id": "s105_p11", "layerName": "WasteReductionHypothesis", "justification": ["H4"], "dependencies": [".s105_p08"]},
+        {"id": "s105_p12", "layerName": "WasteReductionHypothesis", "justification": ["H3", "H4"], "dependencies": [".s105_p09", ".s105_p10"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 106,
+    "project": "海上物流コンテナ追跡 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S106",
+      "layers": [
+        {"name": "MaritimeLaw", "ordValue": 5, "definition": "海上運送法・国際海事条約。法的義務として不変", "derivedFrom": ["C1"]},
+        {"name": "CustomsCompliance", "ordValue": 4, "definition": "通関手続き・関税法規。各国規制に基づく", "derivedFrom": ["C2", "H1"]},
+        {"name": "CarrierContract", "ordValue": 3, "definition": "船会社との契約条件。商業的合意に基づく", "derivedFrom": ["C3", "H2"]},
+        {"name": "RoutingOptimization", "ordValue": 2, "definition": "航路最適化・ETA予測の運用ルール", "derivedFrom": ["C4", "H3", "H4"]},
+        {"name": "VisibilityHypothesis", "ordValue": 1, "definition": "リアルタイム可視化・異常検知の技術的仮説", "derivedFrom": ["C5", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s106_p01", "layerName": "MaritimeLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s106_p02", "layerName": "MaritimeLaw", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s106_p03", "layerName": "CustomsCompliance", "justification": ["C2"], "dependencies": [".s106_p01"]},
+        {"id": "s106_p04", "layerName": "CustomsCompliance", "justification": ["H1"], "dependencies": [".s106_p01", ".s106_p02"]},
+        {"id": "s106_p05", "layerName": "CarrierContract", "justification": ["C3"], "dependencies": [".s106_p03"]},
+        {"id": "s106_p06", "layerName": "CarrierContract", "justification": ["H2"], "dependencies": [".s106_p03", ".s106_p04"]},
+        {"id": "s106_p07", "layerName": "CarrierContract", "justification": ["C3", "H2"], "dependencies": [".s106_p04"]},
+        {"id": "s106_p08", "layerName": "RoutingOptimization", "justification": ["C4"], "dependencies": [".s106_p05"]},
+        {"id": "s106_p09", "layerName": "RoutingOptimization", "justification": ["H3"], "dependencies": [".s106_p06"]},
+        {"id": "s106_p10", "layerName": "RoutingOptimization", "justification": ["H4"], "dependencies": [".s106_p05", ".s106_p07"]},
+        {"id": "s106_p11", "layerName": "VisibilityHypothesis", "justification": ["C5"], "dependencies": [".s106_p08"]},
+        {"id": "s106_p12", "layerName": "VisibilityHypothesis", "justification": ["H5"], "dependencies": [".s106_p09"]},
+        {"id": "s106_p13", "layerName": "VisibilityHypothesis", "justification": ["H6"], "dependencies": [".s106_p10"]},
+        {"id": "s106_p14", "layerName": "VisibilityHypothesis", "justification": ["H5", "H6"], "dependencies": [".s106_p11", ".s106_p12"]},
+        {"id": "s106_p15", "layerName": "VisibilityHypothesis", "justification": ["H6"], "dependencies": [".s106_p08", ".s106_p13"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 107,
+    "project": "睡眠品質改善 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S107",
+      "layers": [
+        {"name": "MedicalSafety", "ordValue": 3, "definition": "医学的安全基準。睡眠障害の見落とし防止・医療機関への適切な誘導", "derivedFrom": ["C1", "C2"]},
+        {"name": "SleepScience", "ordValue": 2, "definition": "睡眠科学のエビデンスに基づく改善手法", "derivedFrom": ["C3", "C4", "H1", "H2"]},
+        {"name": "PersonalizationHypothesis", "ordValue": 1, "definition": "個人最適化アルゴリズムの未検証仮説", "derivedFrom": ["C5", "H3", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s107_p01", "layerName": "MedicalSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s107_p02", "layerName": "MedicalSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s107_p03", "layerName": "MedicalSafety", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s107_p04", "layerName": "SleepScience", "justification": ["C3"], "dependencies": [".s107_p01"]},
+        {"id": "s107_p05", "layerName": "SleepScience", "justification": ["C4", "H1"], "dependencies": [".s107_p02"]},
+        {"id": "s107_p06", "layerName": "SleepScience", "justification": ["H2"], "dependencies": [".s107_p01", ".s107_p03"]},
+        {"id": "s107_p07", "layerName": "PersonalizationHypothesis", "justification": ["C5"], "dependencies": [".s107_p04"]},
+        {"id": "s107_p08", "layerName": "PersonalizationHypothesis", "justification": ["H3"], "dependencies": [".s107_p05"]},
+        {"id": "s107_p09", "layerName": "PersonalizationHypothesis", "justification": ["H4"], "dependencies": [".s107_p04", ".s107_p06"]},
+        {"id": "s107_p10", "layerName": "PersonalizationHypothesis", "justification": ["H5"], "dependencies": [".s107_p07", ".s107_p08"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 108,
+    "project": "地下鉄混雑予測 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 7,
+    "num_props": 18,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "TestCoverage.S108",
+      "layers": [
+        {"name": "PassengerSafety", "ordValue": 7, "definition": "乗客の安全確保。過密状態での事故防止は最優先", "derivedFrom": ["C1"]},
+        {"name": "TransportRegulation", "ordValue": 6, "definition": "鉄道営業法・国交省基準。法定遵守事項", "derivedFrom": ["C2"]},
+        {"name": "OperationalConstraint", "ordValue": 5, "definition": "ダイヤ・車両運用の物理的制約", "derivedFrom": ["C3", "H1"]},
+        {"name": "DemandPattern", "ordValue": 4, "definition": "乗客需要パターンの経験則。過去データに基づく", "derivedFrom": ["C4", "H2"]},
+        {"name": "InformationPolicy", "ordValue": 3, "definition": "混雑情報の公開方針。利用者コミュニケーション", "derivedFrom": ["C5", "H3"]},
+        {"name": "PredictionModel", "ordValue": 2, "definition": "混雑予測モデルの選択・パラメータ調整", "derivedFrom": ["H4", "H5"]},
+        {"name": "BehaviorHypothesis", "ordValue": 1, "definition": "混雑情報提供による旅客行動変容の仮説", "derivedFrom": ["C6", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s108_p01", "layerName": "PassengerSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s108_p02", "layerName": "TransportRegulation", "justification": ["C2"], "dependencies": [".s108_p01"]},
+        {"id": "s108_p03", "layerName": "TransportRegulation", "justification": ["C2", "C1"], "dependencies": [".s108_p01"]},
+        {"id": "s108_p04", "layerName": "OperationalConstraint", "justification": ["C3"], "dependencies": [".s108_p02"]},
+        {"id": "s108_p05", "layerName": "OperationalConstraint", "justification": ["H1"], "dependencies": [".s108_p02", ".s108_p03"]},
+        {"id": "s108_p06", "layerName": "DemandPattern", "justification": ["C4"], "dependencies": [".s108_p04"]},
+        {"id": "s108_p07", "layerName": "DemandPattern", "justification": ["H2"], "dependencies": [".s108_p04", ".s108_p05"]},
+        {"id": "s108_p08", "layerName": "DemandPattern", "justification": ["C4", "H2"], "dependencies": [".s108_p05"]},
+        {"id": "s108_p09", "layerName": "InformationPolicy", "justification": ["C5"], "dependencies": [".s108_p06"]},
+        {"id": "s108_p10", "layerName": "InformationPolicy", "justification": ["H3"], "dependencies": [".s108_p07"]},
+        {"id": "s108_p11", "layerName": "InformationPolicy", "justification": ["C5", "H3"], "dependencies": [".s108_p06", ".s108_p08"]},
+        {"id": "s108_p12", "layerName": "PredictionModel", "justification": ["H4"], "dependencies": [".s108_p09"]},
+        {"id": "s108_p13", "layerName": "PredictionModel", "justification": ["H5"], "dependencies": [".s108_p10"]},
+        {"id": "s108_p14", "layerName": "PredictionModel", "justification": ["H4", "H5"], "dependencies": [".s108_p09", ".s108_p11"]},
+        {"id": "s108_p15", "layerName": "BehaviorHypothesis", "justification": ["C6"], "dependencies": [".s108_p12"]},
+        {"id": "s108_p16", "layerName": "BehaviorHypothesis", "justification": ["H6"], "dependencies": [".s108_p13"]},
+        {"id": "s108_p17", "layerName": "BehaviorHypothesis", "justification": ["H6"], "dependencies": [".s108_p14"]},
+        {"id": "s108_p18", "layerName": "BehaviorHypothesis", "justification": ["C6", "H6"], "dependencies": [".s108_p15", ".s108_p16"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 109,
+    "project": "野生動物保護監視 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S109",
+      "layers": [
+        {"name": "SpeciesProtectionLaw", "ordValue": 5, "definition": "種の保存法・ワシントン条約。法的に不変の保護義務", "derivedFrom": ["C1", "C2"]},
+        {"name": "EcologicalPrinciple", "ordValue": 4, "definition": "生態学の確立された原則。学術的合意に基づく", "derivedFrom": ["C3", "H1"]},
+        {"name": "HabitatManagement", "ordValue": 3, "definition": "生息地管理の運用方針。環境条件に応じて調整", "derivedFrom": ["C4", "H2"]},
+        {"name": "MonitoringMethod", "ordValue": 2, "definition": "監視手法・センサー配置の技術的選択", "derivedFrom": ["C5", "H3"]},
+        {"name": "PopulationHypothesis", "ordValue": 1, "definition": "個体数推定・行動予測の未検証仮説", "derivedFrom": ["C6", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s109_p01", "layerName": "SpeciesProtectionLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s109_p02", "layerName": "SpeciesProtectionLaw", "justification": ["C2"], "dependencies": []},
+        {"id": "s109_p03", "layerName": "EcologicalPrinciple", "justification": ["C3"], "dependencies": [".s109_p01"]},
+        {"id": "s109_p04", "layerName": "EcologicalPrinciple", "justification": ["H1"], "dependencies": [".s109_p01", ".s109_p02"]},
+        {"id": "s109_p05", "layerName": "HabitatManagement", "justification": ["C4"], "dependencies": [".s109_p03"]},
+        {"id": "s109_p06", "layerName": "HabitatManagement", "justification": ["H2"], "dependencies": [".s109_p03", ".s109_p04"]},
+        {"id": "s109_p07", "layerName": "MonitoringMethod", "justification": ["C5"], "dependencies": [".s109_p05"]},
+        {"id": "s109_p08", "layerName": "MonitoringMethod", "justification": ["H3"], "dependencies": [".s109_p05", ".s109_p06"]},
+        {"id": "s109_p09", "layerName": "PopulationHypothesis", "justification": ["C6"], "dependencies": [".s109_p07"]},
+        {"id": "s109_p10", "layerName": "PopulationHypothesis", "justification": ["H4"], "dependencies": [".s109_p08"]},
+        {"id": "s109_p11", "layerName": "PopulationHypothesis", "justification": ["H5"], "dependencies": [".s109_p07", ".s109_p08"]},
+        {"id": "s109_p12", "layerName": "EcologicalPrinciple", "justification": ["H1", "H4"], "dependencies": [".s109_p09"]},
+        {"id": "s109_p13", "layerName": "PopulationHypothesis", "justification": ["H4", "H5"], "dependencies": [".s109_p09", ".s109_p10"]},
+        {"id": "s109_p14", "layerName": "PopulationHypothesis", "justification": ["H5"], "dependencies": [".s109_p11", ".s109_p13"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 110,
+    "project": "3Dプリンタ品質管理 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S110",
+      "layers": [
+        {"name": "MaterialSafety", "ordValue": 4, "definition": "材料の安全性・有害物質規制。RoHS/REACH等の法的要件", "derivedFrom": ["C1", "C2"]},
+        {"name": "EngineeringStandard", "ordValue": 3, "definition": "JIS/ISO準拠の寸法精度・強度基準", "derivedFrom": ["C3", "H1"]},
+        {"name": "ProcessParameter", "ordValue": 2, "definition": "印刷パラメータの最適化ルール。材料・形状に依存", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "DefectPrediction", "ordValue": 1, "definition": "欠陥予測・品質改善の技術的仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s110_p01", "layerName": "MaterialSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s110_p02", "layerName": "MaterialSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s110_p03", "layerName": "EngineeringStandard", "justification": ["C3"], "dependencies": [".s110_p01"]},
+        {"id": "s110_p04", "layerName": "EngineeringStandard", "justification": ["H1"], "dependencies": [".s110_p01", ".s110_p02"]},
+        {"id": "s110_p05", "layerName": "EngineeringStandard", "justification": ["C3", "H1"], "dependencies": [".s110_p02"]},
+        {"id": "s110_p06", "layerName": "ProcessParameter", "justification": ["C4"], "dependencies": [".s110_p03"]},
+        {"id": "s110_p07", "layerName": "ProcessParameter", "justification": ["H2"], "dependencies": [".s110_p04"]},
+        {"id": "s110_p08", "layerName": "ProcessParameter", "justification": ["H3"], "dependencies": [".s110_p03", ".s110_p05"]},
+        {"id": "s110_p09", "layerName": "DefectPrediction", "justification": ["C5"], "dependencies": [".s110_p06"]},
+        {"id": "s110_p10", "layerName": "DefectPrediction", "justification": ["H4"], "dependencies": [".s110_p07"]},
+        {"id": "s110_p11", "layerName": "DefectPrediction", "justification": ["H5"], "dependencies": [".s110_p06", ".s110_p08"]},
+        {"id": "s110_p12", "layerName": "DefectPrediction", "justification": ["H4", "H5"], "dependencies": [".s110_p09", ".s110_p10"]}
+      ]
+    }
+  }
+]

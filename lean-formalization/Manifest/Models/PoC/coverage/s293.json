@@ -1,0 +1,180 @@
+{
+  "namespace": "StormSurgePrediction",
+  "layers": [
+    {
+      "name": "safety_constraint",
+      "ordValue": 6,
+      "definition": "人命に関わる予測下限保証",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "institutional_rule",
+      "ordValue": 5,
+      "definition": "気象庁・自治体との制度的整合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "forecast_standard",
+      "ordValue": 4,
+      "definition": "予測品質・リードタイム基準",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "data_pipeline",
+      "ordValue": 3,
+      "definition": "入力データ・前処理の方式",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "ensemble_config",
+      "ordValue": 2,
+      "definition": "アンサンブル構成・統計処理の選択",
+      "derivedFrom": [
+        "H1",
+        "H4"
+      ]
+    },
+    {
+      "name": "physics_model",
+      "ordValue": 1,
+      "definition": "物理モデル・非線形効果の仮説",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "no_underpredict",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mayor_authority",
+      "layerName": "institutional_rule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".no_underpredict"
+      ]
+    },
+    {
+      "id": "jma_consistency",
+      "layerName": "institutional_rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".no_underpredict"
+      ]
+    },
+    {
+      "id": "lead_time_6h",
+      "layerName": "forecast_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".no_underpredict",
+        ".jma_consistency"
+      ]
+    },
+    {
+      "id": "uncertainty_band",
+      "layerName": "forecast_standard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".no_underpredict"
+      ]
+    },
+    {
+      "id": "gpv_initial",
+      "layerName": "data_pipeline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".jma_consistency"
+      ]
+    },
+    {
+      "id": "tide_gauge_feed",
+      "layerName": "data_pipeline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".lead_time_6h"
+      ]
+    },
+    {
+      "id": "upper_percentile",
+      "layerName": "ensemble_config",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".uncertainty_band",
+        ".gpv_initial"
+      ]
+    },
+    {
+      "id": "bootstrap_ci",
+      "layerName": "ensemble_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".uncertainty_band"
+      ]
+    },
+    {
+      "id": "nonlinear_coupling",
+      "layerName": "physics_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".gpv_initial",
+        ".tide_gauge_feed"
+      ]
+    },
+    {
+      "id": "wave_setup_effect",
+      "layerName": "physics_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".nonlinear_coupling"
+      ]
+    },
+    {
+      "id": "surge_wind_drag",
+      "layerName": "physics_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".nonlinear_coupling",
+        ".upper_percentile"
+      ]
+    }
+  ]
+}

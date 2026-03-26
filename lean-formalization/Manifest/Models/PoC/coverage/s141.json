@@ -1,0 +1,346 @@
+{
+  "namespace": "TestCoverage.S141",
+  "layers": [
+    {
+      "name": "SafetyMandate",
+      "ordValue": 5,
+      "definition": "住民の生命に関わる避難判断の安全制約。絶対に違反不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "GeophysicalLaw",
+      "ordValue": 4,
+      "definition": "地球物理学的に確立された法則・知見",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ObservationProtocol",
+      "ordValue": 2,
+      "definition": "観測網の運用手順と閾値設定",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictionPolicy",
+      "ordValue": 1,
+      "definition": "噴火予測モデルの運用方針。データに基づき更新可能",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ExploratoryModel",
+      "ordValue": 0,
+      "definition": "未検証の予測仮説。研究段階のモデル",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s141_p01",
+      "layerName": "SafetyMandate",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s141_p02",
+      "layerName": "SafetyMandate",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s141_p03",
+      "layerName": "SafetyMandate",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s141_p04",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s141_p01"
+      ]
+    },
+    {
+      "id": "s141_p05",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s141_p02"
+      ]
+    },
+    {
+      "id": "s141_p06",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s141_p01",
+        ".s141_p03"
+      ]
+    },
+    {
+      "id": "s141_p07",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s141_p04"
+      ]
+    },
+    {
+      "id": "s141_p08",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s141_p05"
+      ]
+    },
+    {
+      "id": "s141_p09",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s141_p04",
+        ".s141_p06"
+      ]
+    },
+    {
+      "id": "s141_p10",
+      "layerName": "PredictionPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s141_p07"
+      ]
+    },
+    {
+      "id": "s141_p11",
+      "layerName": "PredictionPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s141_p08",
+        ".s141_p09"
+      ]
+    },
+    {
+      "id": "s141_p12",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s141_p14"
+      ]
+    },
+    {
+      "id": "s141_p13",
+      "layerName": "PredictionPolicy",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s141_p07",
+        ".s141_p10"
+      ]
+    },
+    {
+      "id": "s141_p14",
+      "layerName": "ExploratoryModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s141_p10"
+      ]
+    },
+    {
+      "id": "s141_p15",
+      "layerName": "ExploratoryModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s141_p11",
+        ".s141_p13"
+      ]
+    },
+    {
+      "id": "s141_p16",
+      "layerName": "ExploratoryModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s141_p14"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "噴火警報発令時には住民避難を最優先し、AIの予測が不確実でも安全側に判断する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "避難指示の最終判断は自治体の防災担当者が行う。AIは支援情報の提供のみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "マグマの上昇は地震活動・地殻変動・火山ガス放出の3指標で捉えられる"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "気象庁の観測網データをリアルタイムで受信できる"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "GPSによる地殻変動データは1分間隔で取得する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "過去の噴火データは気象庁のデータベースから取得可能"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "水蒸気爆発など前兆なしの噴火パターンが存在する場合"
+        }
+      },
+      "content": "3指標の統合解析により噴火の数時間前に前兆を検出できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "通信障害や機器故障でデータ欠損が頻発する場合"
+        }
+      },
+      "content": "リアルタイムデータの欠損率は5%以下に抑えられる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C6"
+          ],
+          "refutation": "過去の噴火パターンが将来の噴火に適用できない場合"
+        }
+      },
+      "content": "過去データに基づく統計モデルが噴火確率の推定に有用"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "センサー配置の最適化が不可能な地形条件がある場合"
+        }
+      },
+      "content": "観測点の空間配置を最適化することで予測精度が向上する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C6"
+          ],
+          "refutation": "深層学習モデルが物理モデルを超える精度を達成できない場合"
+        }
+      },
+      "content": "深層学習による時系列解析が統計モデルより高精度な予測を実現する"
+    }
+  ]
+}

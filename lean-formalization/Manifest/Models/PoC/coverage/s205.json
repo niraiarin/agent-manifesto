@@ -1,0 +1,168 @@
+{
+  "namespace": "SolarWindPrediction",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "太陽物理の基本法則",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "observation",
+      "ordValue": 3,
+      "definition": "観測データ・衛星依存",
+      "derivedFrom": [
+        "C1",
+        "H3"
+      ]
+    },
+    {
+      "name": "model",
+      "ordValue": 2,
+      "definition": "予測モデル・パラメータ",
+      "derivedFrom": [
+        "C2",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "operation",
+      "ordValue": 1,
+      "definition": "運用方針・警報閾値",
+      "derivedFrom": [
+        "C3",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phys1",
+      "layerName": "physics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys2",
+      "layerName": "physics",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "obs1",
+      "layerName": "observation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "obs2",
+      "layerName": "observation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".phys1"
+      ]
+    },
+    {
+      "id": "obs3",
+      "layerName": "observation",
+      "justification": [
+        "C1",
+        "H3"
+      ],
+      "dependencies": [
+        ".phys2"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "model",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phys1",
+        ".obs1"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".obs2",
+        ".obs3"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".phys2"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".mod1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".mod2",
+        ".mod3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".opr1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": []
+    }
+  ]
+}

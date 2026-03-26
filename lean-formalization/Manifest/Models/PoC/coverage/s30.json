@@ -1,0 +1,137 @@
+{
+  "layers": [
+    {
+      "name": "sla_constraint",
+      "definition": "SLA・可用性の制約。コスト削減でサービス品質を犠牲にしない",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "infrastructure_postulate",
+      "definition": "クラウドインフラの前提。マルチクラウド・料金体系",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "optimization_principle",
+      "definition": "コスト最適化の原則。自動化とガバナンスのバランス",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "sizing_hypothesis",
+      "definition": "サイジング・リザベーションの仮説。利用実績で調整",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "availability_guarantee",
+      "layerName": "sla_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "disaster_recovery_rpo",
+      "layerName": "sla_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "multi_cloud_strategy",
+      "layerName": "infrastructure_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pricing_model_awareness",
+      "layerName": "infrastructure_postulate",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "auto_scaling_policy",
+      "layerName": "optimization_principle",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cost_anomaly_detection",
+      "layerName": "optimization_principle",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rightsizing_recommendation",
+      "layerName": "sizing_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reserved_instance_ratio",
+      "layerName": "sizing_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "spot_instance_tolerance",
+      "layerName": "sizing_hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "budget_alert_threshold",
+      "layerName": "optimization_principle",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "idle_resource_cleanup",
+      "layerName": "sizing_hypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

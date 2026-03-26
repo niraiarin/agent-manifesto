@@ -1,0 +1,174 @@
+{
+  "namespace": "Scenario255",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 3,
+      "definition": "太陽物理と地球磁気圏の物理法則に基づく制約。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 2,
+      "definition": "国際規格と業界要件に基づく運用制約。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "modeling",
+      "ordValue": 1,
+      "definition": "予測モデルの設計判断。科学的知見の蓄積に応じて改善可能。",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。観測データとの照合で検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phy1",
+      "layerName": "physics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physics",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy3",
+      "layerName": "physics",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rul1",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phy2"
+      ]
+    },
+    {
+      "id": "rul2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rul3",
+      "layerName": "regulation",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".rul1",
+        ".rul2"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "modeling",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy3"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "modeling",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phy2",
+        ".rul1"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "modeling",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "mod4",
+      "layerName": "modeling",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".mod1",
+        ".mod2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".mod3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".mod1",
+        ".mod4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rul3",
+        ".hyp1"
+      ]
+    }
+  ]
+}

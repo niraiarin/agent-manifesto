@@ -1,0 +1,217 @@
+{
+  "namespace": "BuildingEnergyPerformance",
+  "layers": [
+    {
+      "name": "building_code",
+      "ordValue": 4,
+      "definition": "建築基準法・省エネ法に基づく法的要件。改正まで不変",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "physics",
+      "ordValue": 3,
+      "definition": "熱力学・流体力学の物理法則。変わらない自然法則",
+      "derivedFrom": [
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "simulation",
+      "ordValue": 2,
+      "definition": "BEM シミュレーションモデルの構成・パラメータ",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "省エネ改修・HVAC 制御の最適化推奨",
+      "derivedFrom": [
+        "C6",
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "新素材・新技術による性能改善の未検証仮説",
+      "derivedFrom": [
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "code_insulation",
+      "layerName": "building_code",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "code_hvac_std",
+      "layerName": "building_code",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "code_certification",
+      "layerName": "building_code",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys_heat_transfer",
+      "layerName": "physics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys_ventilation",
+      "layerName": "physics",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".phys_heat_transfer"
+      ]
+    },
+    {
+      "id": "phys_solar_gain",
+      "layerName": "physics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sim_envelope",
+      "layerName": "simulation",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        ".code_insulation",
+        ".phys_heat_transfer"
+      ]
+    },
+    {
+      "id": "sim_hvac",
+      "layerName": "simulation",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".code_hvac_std",
+        ".phys_ventilation"
+      ]
+    },
+    {
+      "id": "sim_occupancy",
+      "layerName": "simulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".sim_envelope"
+      ]
+    },
+    {
+      "id": "sim_weather",
+      "layerName": "simulation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".phys_solar_gain"
+      ]
+    },
+    {
+      "id": "opt_retrofit",
+      "layerName": "optimization",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".sim_envelope",
+        ".sim_hvac",
+        ".code_certification"
+      ]
+    },
+    {
+      "id": "opt_control",
+      "layerName": "optimization",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".sim_hvac",
+        ".sim_occupancy"
+      ]
+    },
+    {
+      "id": "opt_renewable",
+      "layerName": "optimization",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".sim_weather",
+        ".phys_solar_gain"
+      ]
+    },
+    {
+      "id": "opt_cost_benefit",
+      "layerName": "optimization",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".opt_retrofit",
+        ".opt_renewable"
+      ]
+    },
+    {
+      "id": "hyp_phase_change",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".sim_envelope",
+        ".phys_heat_transfer"
+      ]
+    },
+    {
+      "id": "hyp_ai_hvac",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".opt_control",
+        ".sim_occupancy"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,312 @@
+{
+  "namespace": "TestCoverage.S131",
+  "layers": [
+    {
+      "name": "InfrastructureSafety",
+      "ordValue": 5,
+      "definition": "水道インフラの安全制約。断水・汚染リスクに直結",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryStandard",
+      "ordValue": 4,
+      "definition": "水道法・水質基準への準拠。法的義務",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 3,
+      "definition": "水道事業体の運用方針。組織判断で変更可能",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "DetectionMethod",
+      "ordValue": 2,
+      "definition": "漏水検知手法の選択。技術進歩に応じて更新",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "MaintenanceHeuristic",
+      "ordValue": 1,
+      "definition": "保守優先度の経験則。運用データで調整",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s131_p01",
+      "layerName": "InfrastructureSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s131_p02",
+      "layerName": "InfrastructureSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s131_p03",
+      "layerName": "InfrastructureSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s131_p04",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s131_p01"
+      ]
+    },
+    {
+      "id": "s131_p05",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s131_p02"
+      ]
+    },
+    {
+      "id": "s131_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s131_p04"
+      ]
+    },
+    {
+      "id": "s131_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s131_p04",
+        ".s131_p05"
+      ]
+    },
+    {
+      "id": "s131_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s131_p03"
+      ]
+    },
+    {
+      "id": "s131_p09",
+      "layerName": "DetectionMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s131_p06"
+      ]
+    },
+    {
+      "id": "s131_p10",
+      "layerName": "DetectionMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s131_p07"
+      ]
+    },
+    {
+      "id": "s131_p11",
+      "layerName": "DetectionMethod",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s131_p06",
+        ".s131_p08"
+      ]
+    },
+    {
+      "id": "s131_p12",
+      "layerName": "MaintenanceHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s131_p09"
+      ]
+    },
+    {
+      "id": "s131_p13",
+      "layerName": "MaintenanceHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s131_p10"
+      ]
+    },
+    {
+      "id": "s131_p14",
+      "layerName": "MaintenanceHeuristic",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s131_p11",
+        ".s131_p12"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "漏水は早期発見が必須。大規模漏水は断水リスクと地盤沈下を引き起こす"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "修繕工事の最終判断は水道事業体の技術者が行う。AIは検知と優先度提案のみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "水道法に基づく有収率の基準を満たす必要がある"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "夜間最小流量の監視を基本とし、異常値で漏水候補を絞り込む"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "音響センサーと流量センサーの組合せで検知する方式を採用する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "有収率基準が緩和された場合や、自治体独自の基準が適用される場合"
+        }
+      },
+      "content": "有収率90%以上の維持が事実上の運用目標となる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "24時間連続監視が可能なスマートメーターが全域に導入された場合"
+        }
+      },
+      "content": "夜間最小流量分析に加え、日中の圧力変動パターンも漏水指標として有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "音響センサーの精度が管種（塩ビ管等）により大きく低下する場合"
+        }
+      },
+      "content": "音響センサーのスペクトル解析により漏水と他の水流音を区別できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "管路の老朽化データが十分に整備されていない場合"
+        }
+      },
+      "content": "管路の埋設年数と材質から漏水リスクの事前確率を推定できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C5"
+          ],
+          "refutation": "漏水量の推定精度が低く、優先度付けに使えない場合"
+        }
+      },
+      "content": "漏水量の推定値に基づき修繕優先度を自動ランク付けできる"
+    }
+  ]
+}

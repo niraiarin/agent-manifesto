@@ -1,0 +1,358 @@
+[
+  {
+    "scenario_id": 1,
+    "project": "自動運転タクシー配車システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S1",
+      "layers": [
+        {"name": "SafetyInvariant", "ordValue": 5, "definition": "人命に関わる安全制約。いかなる状況でも違反不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "RegulatoryCompliance", "ordValue": 4, "definition": "法令・規制への準拠。外部権威に基づく", "derivedFrom": ["C3", "H1"]},
+        {"name": "ServicePolicy", "ordValue": 3, "definition": "サービス品質に関するポリシー。事業判断で変更可能", "derivedFrom": ["C4", "H2"]},
+        {"name": "OptimizationRule", "ordValue": 2, "definition": "配車効率の最適化ルール。データに基づき調整可能", "derivedFrom": ["H3", "H4"]},
+        {"name": "UserPreference", "ordValue": 1, "definition": "乗客の好みに基づく調整。個別に変動する", "derivedFrom": ["C5", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s1_p01", "layerName": "SafetyInvariant", "justification": ["C1"], "dependencies": []},
+        {"id": "s1_p02", "layerName": "SafetyInvariant", "justification": ["C2"], "dependencies": []},
+        {"id": "s1_p03", "layerName": "SafetyInvariant", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s1_p04", "layerName": "RegulatoryCompliance", "justification": ["C3"], "dependencies": ["s1_p01"]},
+        {"id": "s1_p05", "layerName": "RegulatoryCompliance", "justification": ["H1"], "dependencies": ["s1_p02"]},
+        {"id": "s1_p06", "layerName": "RegulatoryCompliance", "justification": ["C3", "H1"], "dependencies": ["s1_p01", "s1_p03"]},
+        {"id": "s1_p07", "layerName": "ServicePolicy", "justification": ["C4"], "dependencies": ["s1_p04"]},
+        {"id": "s1_p08", "layerName": "ServicePolicy", "justification": ["H2"], "dependencies": ["s1_p05"]},
+        {"id": "s1_p09", "layerName": "ServicePolicy", "justification": ["C4", "H2"], "dependencies": ["s1_p04", "s1_p06"]},
+        {"id": "s1_p10", "layerName": "OptimizationRule", "justification": ["H3"], "dependencies": ["s1_p07"]},
+        {"id": "s1_p11", "layerName": "OptimizationRule", "justification": ["H4"], "dependencies": ["s1_p08", "s1_p09"]},
+        {"id": "s1_p12", "layerName": "OptimizationRule", "justification": ["H3", "H4"], "dependencies": ["s1_p07"]},
+        {"id": "s1_p13", "layerName": "UserPreference", "justification": ["C5"], "dependencies": ["s1_p10"]},
+        {"id": "s1_p14", "layerName": "UserPreference", "justification": ["H5"], "dependencies": ["s1_p11"]},
+        {"id": "s1_p15", "layerName": "UserPreference", "justification": ["H5", "H6"], "dependencies": ["s1_p12", "s1_p13"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 2,
+    "project": "病院の電子カルテ AI アシスタント",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S2",
+      "layers": [
+        {"name": "PatientSafety", "ordValue": 6, "definition": "患者の生命・健康に直結する安全制約", "derivedFrom": ["C1"]},
+        {"name": "MedicalEthics", "ordValue": 5, "definition": "医療倫理・守秘義務。法的・倫理的義務", "derivedFrom": ["C2", "C3"]},
+        {"name": "ClinicalEvidence", "ordValue": 4, "definition": "エビデンスに基づく臨床判断基準", "derivedFrom": ["C4", "H1"]},
+        {"name": "InstitutionalPolicy", "ordValue": 3, "definition": "病院の運用ポリシー。組織判断で変更可能", "derivedFrom": ["C5", "H2"]},
+        {"name": "WorkflowOptimization", "ordValue": 2, "definition": "業務効率化ルール。現場データに基づき調整", "derivedFrom": ["H3", "H4"]},
+        {"name": "UIPreference", "ordValue": 1, "definition": "医師個人のインターフェース設定", "derivedFrom": ["C6", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s2_p01", "layerName": "PatientSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s2_p02", "layerName": "PatientSafety", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s2_p03", "layerName": "MedicalEthics", "justification": ["C2"], "dependencies": ["s2_p01"]},
+        {"id": "s2_p04", "layerName": "MedicalEthics", "justification": ["C3"], "dependencies": ["s2_p01"]},
+        {"id": "s2_p05", "layerName": "MedicalEthics", "justification": ["C2", "C3"], "dependencies": ["s2_p01", "s2_p02"]},
+        {"id": "s2_p06", "layerName": "ClinicalEvidence", "justification": ["C4"], "dependencies": ["s2_p03"]},
+        {"id": "s2_p07", "layerName": "ClinicalEvidence", "justification": ["H1"], "dependencies": ["s2_p04"]},
+        {"id": "s2_p08", "layerName": "ClinicalEvidence", "justification": ["C4", "H1"], "dependencies": ["s2_p03", "s2_p05"]},
+        {"id": "s2_p09", "layerName": "InstitutionalPolicy", "justification": ["C5"], "dependencies": ["s2_p06"]},
+        {"id": "s2_p10", "layerName": "InstitutionalPolicy", "justification": ["H2"], "dependencies": ["s2_p07"]},
+        {"id": "s2_p11", "layerName": "InstitutionalPolicy", "justification": ["C5", "H2"], "dependencies": ["s2_p06", "s2_p08"]},
+        {"id": "s2_p12", "layerName": "WorkflowOptimization", "justification": ["H3"], "dependencies": ["s2_p09"]},
+        {"id": "s2_p13", "layerName": "WorkflowOptimization", "justification": ["H4"], "dependencies": ["s2_p10"]},
+        {"id": "s2_p14", "layerName": "WorkflowOptimization", "justification": ["H3", "H4"], "dependencies": ["s2_p09", "s2_p11"]},
+        {"id": "s2_p15", "layerName": "UIPreference", "justification": ["C6"], "dependencies": ["s2_p12"]},
+        {"id": "s2_p16", "layerName": "UIPreference", "justification": ["H5"], "dependencies": ["s2_p13"]},
+        {"id": "s2_p17", "layerName": "UIPreference", "justification": ["H6"], "dependencies": ["s2_p14"]},
+        {"id": "s2_p18", "layerName": "UIPreference", "justification": ["H5", "H7"], "dependencies": ["s2_p15", "s2_p16"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 3,
+    "project": "農業ドローン自動散布システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S3",
+      "layers": [
+        {"name": "FlightSafety", "ordValue": 4, "definition": "飛行安全・航空法遵守。違反不可", "derivedFrom": ["C1"]},
+        {"name": "EnvironmentalRegulation", "ordValue": 3, "definition": "環境保護規制・農薬使用基準", "derivedFrom": ["C2", "H1"]},
+        {"name": "AgronomicPractice", "ordValue": 2, "definition": "農学的知見に基づく散布計画", "derivedFrom": ["C3", "H2"]},
+        {"name": "OperationalEfficiency", "ordValue": 1, "definition": "運用効率・コスト最適化", "derivedFrom": ["C4", "H3"]}
+      ],
+      "propositions": [
+        {"id": "s3_p01", "layerName": "FlightSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s3_p02", "layerName": "FlightSafety", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s3_p03", "layerName": "EnvironmentalRegulation", "justification": ["C2"], "dependencies": ["s3_p01"]},
+        {"id": "s3_p04", "layerName": "EnvironmentalRegulation", "justification": ["H1"], "dependencies": ["s3_p02"]},
+        {"id": "s3_p05", "layerName": "AgronomicPractice", "justification": ["C3"], "dependencies": ["s3_p03"]},
+        {"id": "s3_p06", "layerName": "AgronomicPractice", "justification": ["H2"], "dependencies": ["s3_p04"]},
+        {"id": "s3_p07", "layerName": "OperationalEfficiency", "justification": ["C4"], "dependencies": ["s3_p05"]},
+        {"id": "s3_p08", "layerName": "OperationalEfficiency", "justification": ["H3"], "dependencies": ["s3_p06"]},
+        {"id": "s3_p09", "layerName": "AgronomicPractice", "justification": ["H4"], "dependencies": ["s3_p07"]},
+        {"id": "s3_p10", "layerName": "OperationalEfficiency", "justification": ["H3", "H5"], "dependencies": ["s3_p05", "s3_p08"]},
+        {"id": "s3_p11", "layerName": "EnvironmentalRegulation", "justification": ["C2", "H1"], "dependencies": ["s3_p01", "s3_p02"]},
+        {"id": "s3_p12", "layerName": "FlightSafety", "justification": ["C1"], "dependencies": ["s3_p03"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 4,
+    "project": "オンライン教育の個別最適化 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S4",
+      "layers": [
+        {"name": "ChildProtection", "ordValue": 5, "definition": "児童保護・プライバシー。法的義務", "derivedFrom": ["C1"]},
+        {"name": "EducationalStandard", "ordValue": 4, "definition": "教育課程基準。文科省指導要領準拠", "derivedFrom": ["C2", "H1"]},
+        {"name": "PedagogicalPrinciple", "ordValue": 3, "definition": "教育学的原則。学習理論に基づく", "derivedFrom": ["C3", "H2"]},
+        {"name": "AdaptiveAlgorithm", "ordValue": 2, "definition": "適応的学習アルゴリズムのパラメータ", "derivedFrom": ["H3", "H4"]},
+        {"name": "LearnerPreference", "ordValue": 1, "definition": "学習者個人の好み・ペース設定", "derivedFrom": ["C5", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s4_p01", "layerName": "ChildProtection", "justification": ["C1"], "dependencies": []},
+        {"id": "s4_p02", "layerName": "ChildProtection", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s4_p03", "layerName": "EducationalStandard", "justification": ["C2"], "dependencies": ["s4_p01"]},
+        {"id": "s4_p04", "layerName": "EducationalStandard", "justification": ["H1"], "dependencies": ["s4_p02"]},
+        {"id": "s4_p05", "layerName": "PedagogicalPrinciple", "justification": ["C3"], "dependencies": ["s4_p03"]},
+        {"id": "s4_p06", "layerName": "PedagogicalPrinciple", "justification": ["H2"], "dependencies": ["s4_p04"]},
+        {"id": "s4_p07", "layerName": "PedagogicalPrinciple", "justification": ["C3", "C4"], "dependencies": ["s4_p03", "s4_p04"]},
+        {"id": "s4_p08", "layerName": "AdaptiveAlgorithm", "justification": ["H3"], "dependencies": ["s4_p05"]},
+        {"id": "s4_p09", "layerName": "AdaptiveAlgorithm", "justification": ["H4"], "dependencies": ["s4_p06"]},
+        {"id": "s4_p10", "layerName": "AdaptiveAlgorithm", "justification": ["H3", "H4"], "dependencies": ["s4_p05", "s4_p07"]},
+        {"id": "s4_p11", "layerName": "LearnerPreference", "justification": ["C5"], "dependencies": ["s4_p08"]},
+        {"id": "s4_p12", "layerName": "LearnerPreference", "justification": ["H5"], "dependencies": ["s4_p09"]},
+        {"id": "s4_p13", "layerName": "LearnerPreference", "justification": ["H5", "H6"], "dependencies": ["s4_p10"]},
+        {"id": "s4_p14", "layerName": "LearnerPreference", "justification": ["C5", "H6"], "dependencies": ["s4_p11", "s4_p12"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 5,
+    "project": "災害時避難誘導 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S5",
+      "layers": [
+        {"name": "LifeSafety", "ordValue": 5, "definition": "人命最優先。全判断の不動点", "derivedFrom": ["C1"]},
+        {"name": "EmergencyProtocol", "ordValue": 4, "definition": "災害対策基本法・自治体防災計画に基づく手順", "derivedFrom": ["C2", "H1"]},
+        {"name": "SituationalAssessment", "ordValue": 3, "definition": "リアルタイム状況判断。センサー・通報データに基づく", "derivedFrom": ["C3", "H2"]},
+        {"name": "RouteOptimization", "ordValue": 2, "definition": "避難経路の最適化。混雑・通行止め情報を反映", "derivedFrom": ["H3", "H4"]},
+        {"name": "IndividualAccommodation", "ordValue": 1, "definition": "個人の身体能力・特別なニーズへの対応", "derivedFrom": ["C5", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s5_p01", "layerName": "LifeSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s5_p02", "layerName": "LifeSafety", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s5_p03", "layerName": "EmergencyProtocol", "justification": ["C2"], "dependencies": ["s5_p01"]},
+        {"id": "s5_p04", "layerName": "EmergencyProtocol", "justification": ["H1"], "dependencies": ["s5_p02"]},
+        {"id": "s5_p05", "layerName": "EmergencyProtocol", "justification": ["C2", "H1"], "dependencies": ["s5_p01", "s5_p02"]},
+        {"id": "s5_p06", "layerName": "SituationalAssessment", "justification": ["C3"], "dependencies": ["s5_p03"]},
+        {"id": "s5_p07", "layerName": "SituationalAssessment", "justification": ["H2"], "dependencies": ["s5_p04"]},
+        {"id": "s5_p08", "layerName": "SituationalAssessment", "justification": ["C3", "H2"], "dependencies": ["s5_p03", "s5_p05"]},
+        {"id": "s5_p09", "layerName": "RouteOptimization", "justification": ["H3"], "dependencies": ["s5_p06"]},
+        {"id": "s5_p10", "layerName": "RouteOptimization", "justification": ["H4"], "dependencies": ["s5_p07"]},
+        {"id": "s5_p11", "layerName": "RouteOptimization", "justification": ["H3", "H4"], "dependencies": ["s5_p06", "s5_p08"]},
+        {"id": "s5_p12", "layerName": "IndividualAccommodation", "justification": ["C5"], "dependencies": ["s5_p09"]},
+        {"id": "s5_p13", "layerName": "IndividualAccommodation", "justification": ["H5"], "dependencies": ["s5_p10"]},
+        {"id": "s5_p14", "layerName": "IndividualAccommodation", "justification": ["H6"], "dependencies": ["s5_p11"]},
+        {"id": "s5_p15", "layerName": "IndividualAccommodation", "justification": ["H5", "H7"], "dependencies": ["s5_p12", "s5_p13"]},
+        {"id": "s5_p16", "layerName": "SituationalAssessment", "justification": ["C4", "H2"], "dependencies": ["s5_p05"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 6,
+    "project": "レストラン在庫管理 AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S6",
+      "layers": [
+        {"name": "FoodSafety", "ordValue": 4, "definition": "食品衛生法・アレルゲン管理。違反不可", "derivedFrom": ["C1"]},
+        {"name": "QualityStandard", "ordValue": 3, "definition": "食材品質基準。シェフの判断に基づく", "derivedFrom": ["C2", "H1"]},
+        {"name": "InventoryPolicy", "ordValue": 2, "definition": "在庫回転・発注ルール。経営判断で調整可能", "derivedFrom": ["C3", "H2"]},
+        {"name": "CostOptimization", "ordValue": 1, "definition": "コスト最適化・仕入れ先選定の効率化", "derivedFrom": ["C4", "H3"]}
+      ],
+      "propositions": [
+        {"id": "s6_p01", "layerName": "FoodSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s6_p02", "layerName": "FoodSafety", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s6_p03", "layerName": "QualityStandard", "justification": ["C2"], "dependencies": ["s6_p01"]},
+        {"id": "s6_p04", "layerName": "QualityStandard", "justification": ["H1"], "dependencies": ["s6_p02"]},
+        {"id": "s6_p05", "layerName": "QualityStandard", "justification": ["C2", "H1"], "dependencies": ["s6_p01", "s6_p02"]},
+        {"id": "s6_p06", "layerName": "InventoryPolicy", "justification": ["C3"], "dependencies": ["s6_p03"]},
+        {"id": "s6_p07", "layerName": "InventoryPolicy", "justification": ["H2"], "dependencies": ["s6_p04"]},
+        {"id": "s6_p08", "layerName": "InventoryPolicy", "justification": ["C3", "H2"], "dependencies": ["s6_p03", "s6_p05"]},
+        {"id": "s6_p09", "layerName": "CostOptimization", "justification": ["C4"], "dependencies": ["s6_p06"]},
+        {"id": "s6_p10", "layerName": "CostOptimization", "justification": ["H3"], "dependencies": ["s6_p07"]},
+        {"id": "s6_p11", "layerName": "CostOptimization", "justification": ["H4"], "dependencies": ["s6_p08"]},
+        {"id": "s6_p12", "layerName": "CostOptimization", "justification": ["H3", "H5"], "dependencies": ["s6_p09", "s6_p10"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 7,
+    "project": "音楽作曲 AI サービス",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S7",
+      "layers": [
+        {"name": "CopyrightCompliance", "ordValue": 4, "definition": "著作権法遵守。既存楽曲の無断利用禁止", "derivedFrom": ["C1"]},
+        {"name": "MusicTheory", "ordValue": 3, "definition": "音楽理論的整合性。和声法・対位法の基本ルール", "derivedFrom": ["C2", "H1"]},
+        {"name": "StyleAdaptation", "ordValue": 2, "definition": "ジャンル・スタイルへの適応ルール", "derivedFrom": ["C3", "H2"]},
+        {"name": "CreativeExpression", "ordValue": 1, "definition": "創造的表現のパラメータ。ユーザーの好みに応じて変動", "derivedFrom": ["C4", "H3"]}
+      ],
+      "propositions": [
+        {"id": "s7_p01", "layerName": "CopyrightCompliance", "justification": ["C1"], "dependencies": []},
+        {"id": "s7_p02", "layerName": "CopyrightCompliance", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s7_p03", "layerName": "MusicTheory", "justification": ["C2"], "dependencies": ["s7_p01"]},
+        {"id": "s7_p04", "layerName": "MusicTheory", "justification": ["H1"], "dependencies": ["s7_p02"]},
+        {"id": "s7_p05", "layerName": "StyleAdaptation", "justification": ["C3"], "dependencies": ["s7_p03"]},
+        {"id": "s7_p06", "layerName": "StyleAdaptation", "justification": ["H2"], "dependencies": ["s7_p04"]},
+        {"id": "s7_p07", "layerName": "CreativeExpression", "justification": ["C4"], "dependencies": ["s7_p05"]},
+        {"id": "s7_p08", "layerName": "CreativeExpression", "justification": ["H3"], "dependencies": ["s7_p06"]},
+        {"id": "s7_p09", "layerName": "CreativeExpression", "justification": ["H3", "H4"], "dependencies": ["s7_p05", "s7_p06"]},
+        {"id": "s7_p10", "layerName": "StyleAdaptation", "justification": ["H5"], "dependencies": ["s7_p07"]},
+        {"id": "s7_p11", "layerName": "MusicTheory", "justification": ["C2", "H1"], "dependencies": ["s7_p01", "s7_p02"]},
+        {"id": "s7_p12", "layerName": "CopyrightCompliance", "justification": ["C1"], "dependencies": ["s7_p03"]},
+        {"id": "s7_p13", "layerName": "CreativeExpression", "justification": ["H4", "H5"], "dependencies": ["s7_p07", "s7_p08"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 8,
+    "project": "法律文書レビュー AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S8",
+      "layers": [
+        {"name": "LegalAccuracy", "ordValue": 5, "definition": "法的正確性。誤った法解釈は許容不可", "derivedFrom": ["C1"]},
+        {"name": "Confidentiality", "ordValue": 4, "definition": "守秘義務。弁護士・依頼者間の秘密保持", "derivedFrom": ["C2", "H1"]},
+        {"name": "JurisdictionalRule", "ordValue": 3, "definition": "管轄固有の法的ルール。地域により異なる", "derivedFrom": ["C3", "H2"]},
+        {"name": "DocumentConvention", "ordValue": 2, "definition": "文書作成の慣行・書式ルール", "derivedFrom": ["C4", "H3"]},
+        {"name": "StylePreference", "ordValue": 1, "definition": "事務所・弁護士個人の文体の好み", "derivedFrom": ["C5", "H4"]}
+      ],
+      "propositions": [
+        {"id": "s8_p01", "layerName": "LegalAccuracy", "justification": ["C1"], "dependencies": []},
+        {"id": "s8_p02", "layerName": "LegalAccuracy", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s8_p03", "layerName": "Confidentiality", "justification": ["C2"], "dependencies": ["s8_p01"]},
+        {"id": "s8_p04", "layerName": "Confidentiality", "justification": ["H1"], "dependencies": ["s8_p02"]},
+        {"id": "s8_p05", "layerName": "Confidentiality", "justification": ["C2", "H1"], "dependencies": ["s8_p01", "s8_p02"]},
+        {"id": "s8_p06", "layerName": "JurisdictionalRule", "justification": ["C3"], "dependencies": ["s8_p03"]},
+        {"id": "s8_p07", "layerName": "JurisdictionalRule", "justification": ["H2"], "dependencies": ["s8_p04"]},
+        {"id": "s8_p08", "layerName": "JurisdictionalRule", "justification": ["C3", "H2"], "dependencies": ["s8_p03", "s8_p05"]},
+        {"id": "s8_p09", "layerName": "DocumentConvention", "justification": ["C4"], "dependencies": ["s8_p06"]},
+        {"id": "s8_p10", "layerName": "DocumentConvention", "justification": ["H3"], "dependencies": ["s8_p07"]},
+        {"id": "s8_p11", "layerName": "DocumentConvention", "justification": ["H3", "H5"], "dependencies": ["s8_p06", "s8_p08"]},
+        {"id": "s8_p12", "layerName": "StylePreference", "justification": ["C5"], "dependencies": ["s8_p09"]},
+        {"id": "s8_p13", "layerName": "StylePreference", "justification": ["H4"], "dependencies": ["s8_p10"]},
+        {"id": "s8_p14", "layerName": "StylePreference", "justification": ["H6"], "dependencies": ["s8_p11"]},
+        {"id": "s8_p15", "layerName": "StylePreference", "justification": ["H4", "H6"], "dependencies": ["s8_p12", "s8_p13"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 9,
+    "project": "ペット健康モニタリング IoT",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S9",
+      "layers": [
+        {"name": "AnimalWelfare", "ordValue": 4, "definition": "動物福祉。緊急時の即時通報義務", "derivedFrom": ["C1"]},
+        {"name": "VeterinaryGuideline", "ordValue": 3, "definition": "獣医学的ガイドライン。正常値範囲の定義", "derivedFrom": ["C2", "H1"]},
+        {"name": "MonitoringPolicy", "ordValue": 2, "definition": "モニタリング頻度・閾値の設定ポリシー", "derivedFrom": ["C3", "H2"]},
+        {"name": "OwnerCustomization", "ordValue": 1, "definition": "飼い主の好みに応じた通知・表示設定", "derivedFrom": ["C4", "H3"]}
+      ],
+      "propositions": [
+        {"id": "s9_p01", "layerName": "AnimalWelfare", "justification": ["C1"], "dependencies": []},
+        {"id": "s9_p02", "layerName": "AnimalWelfare", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s9_p03", "layerName": "VeterinaryGuideline", "justification": ["C2"], "dependencies": ["s9_p01"]},
+        {"id": "s9_p04", "layerName": "VeterinaryGuideline", "justification": ["H1"], "dependencies": ["s9_p02"]},
+        {"id": "s9_p05", "layerName": "VeterinaryGuideline", "justification": ["C2", "H1"], "dependencies": ["s9_p01", "s9_p02"]},
+        {"id": "s9_p06", "layerName": "MonitoringPolicy", "justification": ["C3"], "dependencies": ["s9_p03"]},
+        {"id": "s9_p07", "layerName": "MonitoringPolicy", "justification": ["H2"], "dependencies": ["s9_p04"]},
+        {"id": "s9_p08", "layerName": "MonitoringPolicy", "justification": ["C3", "H2"], "dependencies": ["s9_p03", "s9_p05"]},
+        {"id": "s9_p09", "layerName": "OwnerCustomization", "justification": ["C4"], "dependencies": ["s9_p06"]},
+        {"id": "s9_p10", "layerName": "OwnerCustomization", "justification": ["H3"], "dependencies": ["s9_p07"]},
+        {"id": "s9_p11", "layerName": "OwnerCustomization", "justification": ["H4"], "dependencies": ["s9_p08"]},
+        {"id": "s9_p12", "layerName": "OwnerCustomization", "justification": ["H3", "H5"], "dependencies": ["s9_p09", "s9_p10"]}
+      ]
+    }
+  },
+  {
+    "scenario_id": 10,
+    "project": "建設現場安全監視 AI",
+    "num_c": 5,
+    "num_h": 8,
+    "num_layers": 7,
+    "num_props": 20,
+    "num_deps": 23,
+    "model_spec": {
+      "namespace": "TestCoverage.S10",
+      "layers": [
+        {"name": "WorkerSafety", "ordValue": 7, "definition": "作業員の生命・身体の安全。労安法の最上位義務", "derivedFrom": ["C1"]},
+        {"name": "LegalCompliance", "ordValue": 6, "definition": "労働安全衛生法・建設業法の遵守", "derivedFrom": ["C2", "H1"]},
+        {"name": "SiteProtocol", "ordValue": 5, "definition": "現場固有の安全手順・作業標準", "derivedFrom": ["C3", "H2"]},
+        {"name": "HazardDetection", "ordValue": 4, "definition": "危険検知アルゴリズムのパラメータ", "derivedFrom": ["H3", "H4"]},
+        {"name": "EquipmentMonitoring", "ordValue": 3, "definition": "重機・設備の稼働状態監視ルール", "derivedFrom": ["C4", "H5"]},
+        {"name": "WorkflowScheduling", "ordValue": 2, "definition": "作業スケジュール・動線管理の最適化", "derivedFrom": ["H6", "H7"]},
+        {"name": "ReportingFormat", "ordValue": 1, "definition": "報告書・ダッシュボードの表示形式", "derivedFrom": ["C5", "H8"]}
+      ],
+      "propositions": [
+        {"id": "s10_p01", "layerName": "WorkerSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s10_p02", "layerName": "WorkerSafety", "justification": ["C1", "H1"], "dependencies": []},
+        {"id": "s10_p03", "layerName": "LegalCompliance", "justification": ["C2"], "dependencies": ["s10_p01"]},
+        {"id": "s10_p04", "layerName": "LegalCompliance", "justification": ["H1"], "dependencies": ["s10_p02"]},
+        {"id": "s10_p05", "layerName": "SiteProtocol", "justification": ["C3"], "dependencies": ["s10_p03"]},
+        {"id": "s10_p06", "layerName": "SiteProtocol", "justification": ["H2"], "dependencies": ["s10_p04"]},
+        {"id": "s10_p07", "layerName": "SiteProtocol", "justification": ["C3", "H2"], "dependencies": ["s10_p03", "s10_p04"]},
+        {"id": "s10_p08", "layerName": "HazardDetection", "justification": ["H3"], "dependencies": ["s10_p05"]},
+        {"id": "s10_p09", "layerName": "HazardDetection", "justification": ["H4"], "dependencies": ["s10_p06"]},
+        {"id": "s10_p10", "layerName": "HazardDetection", "justification": ["H3", "H4"], "dependencies": ["s10_p05", "s10_p07"]},
+        {"id": "s10_p11", "layerName": "EquipmentMonitoring", "justification": ["C4"], "dependencies": ["s10_p08"]},
+        {"id": "s10_p12", "layerName": "EquipmentMonitoring", "justification": ["H5"], "dependencies": ["s10_p09"]},
+        {"id": "s10_p13", "layerName": "EquipmentMonitoring", "justification": ["C4", "H5"], "dependencies": ["s10_p08", "s10_p10"]},
+        {"id": "s10_p14", "layerName": "WorkflowScheduling", "justification": ["H6"], "dependencies": ["s10_p11"]},
+        {"id": "s10_p15", "layerName": "WorkflowScheduling", "justification": ["H7"], "dependencies": ["s10_p12"]},
+        {"id": "s10_p16", "layerName": "WorkflowScheduling", "justification": ["H6", "H7"], "dependencies": ["s10_p11", "s10_p13"]},
+        {"id": "s10_p17", "layerName": "ReportingFormat", "justification": ["C5"], "dependencies": ["s10_p14"]},
+        {"id": "s10_p18", "layerName": "ReportingFormat", "justification": ["H8"], "dependencies": ["s10_p15"]},
+        {"id": "s10_p19", "layerName": "ReportingFormat", "justification": ["H8"], "dependencies": ["s10_p16"]},
+        {"id": "s10_p20", "layerName": "ReportingFormat", "justification": ["C5", "H8"], "dependencies": ["s10_p17", "s10_p18"]}
+      ]
+    }
+  }
+]

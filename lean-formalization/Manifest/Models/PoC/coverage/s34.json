@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "traffic_regulation",
+      "definition": "道路交通法・信号制御の法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "safety_constraint",
+      "definition": "安全性の数値基準と緊急車両対応",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "optimization_model",
+      "definition": "信号タイミング最適化アルゴリズムとパラメータ",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "operational_tuning",
+      "definition": "時間帯別調整・天候対応・モニタリング設定",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "minimum_green_duration",
+      "layerName": "traffic_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pedestrian_phase_requirement",
+      "layerName": "traffic_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "emergency_vehicle_preemption",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "collision_avoidance_clearance",
+      "layerName": "safety_constraint",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "flow_optimization_objective",
+      "layerName": "optimization_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cycle_length_bounds",
+      "layerName": "optimization_model",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "adaptive_algorithm_selection",
+      "layerName": "optimization_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "peak_hour_profile",
+      "layerName": "operational_tuning",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "weather_adjustment_factor",
+      "layerName": "operational_tuning",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sensor_health_monitoring",
+      "layerName": "operational_tuning",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dashboard_refresh_rate",
+      "layerName": "operational_tuning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

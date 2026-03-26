@@ -1,0 +1,137 @@
+{
+  "namespace": "TestCoverage.S107",
+  "layers": [
+    {
+      "name": "MedicalSafety",
+      "ordValue": 3,
+      "definition": "医学的安全基準。睡眠障害の見落とし防止・医療機関への適切な誘導",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "SleepScience",
+      "ordValue": 2,
+      "definition": "睡眠科学のエビデンスに基づく改善手法",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PersonalizationHypothesis",
+      "ordValue": 1,
+      "definition": "個人最適化アルゴリズムの未検証仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s107_p01",
+      "layerName": "MedicalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s107_p02",
+      "layerName": "MedicalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s107_p03",
+      "layerName": "MedicalSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s107_p04",
+      "layerName": "SleepScience",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s107_p01"
+      ]
+    },
+    {
+      "id": "s107_p05",
+      "layerName": "SleepScience",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s107_p02"
+      ]
+    },
+    {
+      "id": "s107_p06",
+      "layerName": "SleepScience",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s107_p01",
+        ".s107_p03"
+      ]
+    },
+    {
+      "id": "s107_p07",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s107_p04"
+      ]
+    },
+    {
+      "id": "s107_p08",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s107_p05"
+      ]
+    },
+    {
+      "id": "s107_p09",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s107_p04",
+        ".s107_p06"
+      ]
+    },
+    {
+      "id": "s107_p10",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s107_p07",
+        ".s107_p08"
+      ]
+    }
+  ]
+}

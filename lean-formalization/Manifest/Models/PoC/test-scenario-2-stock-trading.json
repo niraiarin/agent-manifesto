@@ -1,0 +1,26 @@
+{
+  "namespace": "StockTrading",
+  "layers": [
+    {"name": "constraint",  "ordValue": 4, "definition": "絶対不変条件。違反でシステム停止",      "derivedFrom": ["C2","C5"]},
+    {"name": "environment", "ordValue": 3, "definition": "外部依存。自分で制御できない前提",       "derivedFrom": ["H1","H5","H8"]},
+    {"name": "policy",      "ordValue": 2, "definition": "人間が設定・調整する運用方針",            "derivedFrom": ["C1","C3"]},
+    {"name": "strategy",    "ordValue": 1, "definition": "AIが自律的に最適化する戦略",              "derivedFrom": ["C3","C6"]},
+    {"name": "hypothesis",  "ordValue": 0, "definition": "未検証の仮説",                           "derivedFrom": ["H4"]}
+  ],
+  "propositions": [
+    {"id": "safe1", "layerName": "constraint",  "justification": ["C2","C5"], "dependencies": []},
+    {"id": "safe2", "layerName": "constraint",  "justification": ["C1"],      "dependencies": []},
+    {"id": "safe3", "layerName": "constraint",  "justification": ["C1"],      "dependencies": []},
+    {"id": "env1",  "layerName": "environment", "justification": ["H1"],      "dependencies": []},
+    {"id": "env2",  "layerName": "environment", "justification": ["H5"],      "dependencies": []},
+    {"id": "env3",  "layerName": "environment", "justification": ["H8"],      "dependencies": []},
+    {"id": "pol1",  "layerName": "policy",      "justification": ["C1"],      "dependencies": ["safe3"]},
+    {"id": "pol2",  "layerName": "policy",      "justification": ["C7","H4"], "dependencies": ["safe1"]},
+    {"id": "pol3",  "layerName": "policy",      "justification": ["H2"],      "dependencies": ["safe2","env1"]},
+    {"id": "pol4",  "layerName": "policy",      "justification": ["C3","H3"], "dependencies": []},
+    {"id": "str1",  "layerName": "strategy",    "justification": ["C3"],      "dependencies": ["safe1","pol4"]},
+    {"id": "str2",  "layerName": "strategy",    "justification": ["C3","H6"], "dependencies": ["str1"]},
+    {"id": "str3",  "layerName": "strategy",    "justification": ["C6"],      "dependencies": ["env1","env3"]},
+    {"id": "hyp2",  "layerName": "hypothesis",  "justification": ["H4"],      "dependencies": []}
+  ]
+}

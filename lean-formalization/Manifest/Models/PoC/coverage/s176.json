@@ -1,0 +1,209 @@
+{
+  "namespace": "TestCoverage.S176",
+  "layers": [
+    {
+      "name": "NumismaticAuthority",
+      "ordValue": 3,
+      "definition": "貨幣学・考古学に基づく鑑定基準。専門家の合意に基づく",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ImageAnalysisDesign",
+      "ordValue": 2,
+      "definition": "画像認識・分類モデルの設計選択",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "MarketHypothesis",
+      "ordValue": 1,
+      "definition": "市場価値・希少性に関する未検証の仮説",
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s176_p01",
+      "layerName": "NumismaticAuthority",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s176_p02",
+      "layerName": "NumismaticAuthority",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s176_p03",
+      "layerName": "ImageAnalysisDesign",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s176_p01"
+      ]
+    },
+    {
+      "id": "s176_p04",
+      "layerName": "ImageAnalysisDesign",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s176_p01",
+        ".s176_p02"
+      ]
+    },
+    {
+      "id": "s176_p05",
+      "layerName": "ImageAnalysisDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s176_p02"
+      ]
+    },
+    {
+      "id": "s176_p06",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s176_p03"
+      ]
+    },
+    {
+      "id": "s176_p07",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s176_p04"
+      ]
+    },
+    {
+      "id": "s176_p08",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s176_p03",
+        ".s176_p05"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "古銭の真贋判定は最終的に専門の鑑定士が行う。AIは候補の絞り込みと参考情報の提供"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "鑑定基準は日本貨幣カタログ等の標準的な分類体系に準拠する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ユーザーがスマートフォンで撮影した画像から鑑定を行う"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "鑑定結果には推定市場価格帯も表示したい"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "摩耗・腐食が激しい古銭では書体の判読が困難な場合"
+        }
+      },
+      "content": "書体（篆書・楷書等）の分類が年代特定の主要手がかりになる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "照明条件のばらつきが大きいスマートフォン撮影では前処理が重要"
+        }
+      },
+      "content": "EfficientNetベースのCNNで古銭の時代・種類を高精度に分類可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "古銭市場の価格変動が大きく、過去データの参照価値が低い場合"
+        }
+      },
+      "content": "オークション落札データの統計分析で市場価格帯を推定可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "保存状態の客観的評価基準が確立されていない場合"
+        }
+      },
+      "content": "画像から保存状態（極美品・美品・並品等）の自動判定が可能"
+    }
+  ]
+}

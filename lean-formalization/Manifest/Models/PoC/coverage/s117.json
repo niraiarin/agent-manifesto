@@ -1,0 +1,263 @@
+{
+  "namespace": "ParliamentaryVotePrediction",
+  "layers": [
+    {
+      "name": "constitutional",
+      "ordValue": 4,
+      "definition": "憲法・議会法規に基づく制度的制約。改正なしに変更不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "political_science",
+      "ordValue": 3,
+      "definition": "政治学の確立理論。政党行動・連立理論の学術的知見",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "behavioral_model",
+      "ordValue": 2,
+      "definition": "議員の投票行動モデル。過去データに基づく統計的知見",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "個別法案の投票結果予測。リアルタイム推論",
+      "derivedFrom": [
+        "C6",
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "政治変動・新党結成等の未検証仮説",
+      "derivedFrom": [
+        "H8",
+        "H9",
+        "H10"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "const_procedure",
+      "layerName": "constitutional",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "const_quorum",
+      "layerName": "constitutional",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "const_bicameral",
+      "layerName": "constitutional",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "polsci_party_disc",
+      "layerName": "political_science",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".const_procedure"
+      ]
+    },
+    {
+      "id": "polsci_coalition",
+      "layerName": "political_science",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".const_quorum"
+      ]
+    },
+    {
+      "id": "polsci_ideology",
+      "layerName": "political_science",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "polsci_lobby",
+      "layerName": "political_science",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".polsci_ideology"
+      ]
+    },
+    {
+      "id": "beh_voting_hist",
+      "layerName": "behavioral_model",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".polsci_party_disc"
+      ]
+    },
+    {
+      "id": "beh_issue_salience",
+      "layerName": "behavioral_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".polsci_ideology",
+        ".polsci_lobby"
+      ]
+    },
+    {
+      "id": "beh_whip_effect",
+      "layerName": "behavioral_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".polsci_party_disc",
+        ".polsci_coalition"
+      ]
+    },
+    {
+      "id": "beh_constituency",
+      "layerName": "behavioral_model",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".polsci_ideology"
+      ]
+    },
+    {
+      "id": "beh_media_impact",
+      "layerName": "behavioral_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".beh_issue_salience"
+      ]
+    },
+    {
+      "id": "pred_bill_outcome",
+      "layerName": "prediction",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".beh_voting_hist",
+        ".beh_whip_effect",
+        ".const_quorum"
+      ]
+    },
+    {
+      "id": "pred_swing_vote",
+      "layerName": "prediction",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".beh_constituency",
+        ".beh_media_impact"
+      ]
+    },
+    {
+      "id": "pred_amendment",
+      "layerName": "prediction",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".pred_bill_outcome",
+        ".beh_issue_salience"
+      ]
+    },
+    {
+      "id": "pred_timeline",
+      "layerName": "prediction",
+      "justification": [
+        "C6",
+        "H7"
+      ],
+      "dependencies": [
+        ".const_procedure",
+        ".pred_bill_outcome"
+      ]
+    },
+    {
+      "id": "pred_cross_party",
+      "layerName": "constitutional",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".hyp_realignment"
+      ]
+    },
+    {
+      "id": "hyp_realignment",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".polsci_party_disc",
+        ".beh_voting_hist"
+      ]
+    },
+    {
+      "id": "hyp_new_party",
+      "layerName": "hypothesis",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".polsci_coalition",
+        ".beh_constituency"
+      ]
+    },
+    {
+      "id": "hyp_digital_vote",
+      "layerName": "hypothesis",
+      "justification": [
+        "H10"
+      ],
+      "dependencies": [
+        ".const_procedure",
+        ".pred_timeline"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "namespace": "TestScenario.S163",
+  "description": "駅構内ナビゲーション AI",
+  "layers": [
+    {
+      "name": "safetyRegulation",
+      "ordValue": 4,
+      "definition": "消防法・バリアフリー法等の法的義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "stationTopology",
+      "ordValue": 3,
+      "definition": "駅構造の物理的制約と通路接続",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "accessibilityPolicy",
+      "ordValue": 2,
+      "definition": "障害者・高齢者への経路案内ポリシー",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "congestionModel",
+      "ordValue": 1,
+      "definition": "混雑度推定と動的経路切替",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "personalPreference",
+      "ordValue": 0,
+      "definition": "ユーザー個人の好みと学習",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "emergencyEvacRoute",
+      "layerName": "safetyRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "barrierFreeObligation",
+      "layerName": "safetyRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "platformConnectivity",
+      "layerName": "stationTopology",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".emergencyEvacRoute"
+      ]
+    },
+    {
+      "id": "elevatorLocation",
+      "layerName": "stationTopology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".barrierFreeObligation"
+      ]
+    },
+    {
+      "id": "gatePassageWidth",
+      "layerName": "stationTopology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".emergencyEvacRoute"
+      ]
+    },
+    {
+      "id": "wheelchairRoute",
+      "layerName": "accessibilityPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".barrierFreeObligation",
+        ".elevatorLocation"
+      ]
+    },
+    {
+      "id": "visualGuidance",
+      "layerName": "accessibilityPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".platformConnectivity"
+      ]
+    },
+    {
+      "id": "signLanguageSupport",
+      "layerName": "accessibilityPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".wheelchairRoute"
+      ]
+    },
+    {
+      "id": "peakHourReroute",
+      "layerName": "congestionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".platformConnectivity",
+        ".gatePassageWidth"
+      ]
+    },
+    {
+      "id": "realTimeDensity",
+      "layerName": "congestionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".peakHourReroute"
+      ]
+    },
+    {
+      "id": "transferTimeEstimate",
+      "layerName": "congestionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".platformConnectivity",
+        ".realTimeDensity"
+      ]
+    },
+    {
+      "id": "preferredExit",
+      "layerName": "personalPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".peakHourReroute",
+        ".transferTimeEstimate"
+      ]
+    },
+    {
+      "id": "walkSpeedAdapt",
+      "layerName": "personalPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".realTimeDensity"
+      ]
+    }
+  ]
+}

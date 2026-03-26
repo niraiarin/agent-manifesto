@@ -1,0 +1,2020 @@
+[
+  {
+    "scenario_id": 161,
+    "project": "手術ロボット制御 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 7,
+    "num_props": 15,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestScenario.S161",
+      "description": "手術ロボット制御 AI — 意図的単調性違反あり（incisionDepthFromAdaptive→tissueAdaptation: medicalProtocol(5)→adaptiveParam(0)）",
+      "layers": [
+        {
+          "name": "safetyInvariant",
+          "ordValue": 6,
+          "definition": "患者の生命安全に関する不変条件。いかなる状況でも覆らない",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "medicalProtocol",
+          "ordValue": 5,
+          "definition": "確立された医学的手順・エビデンスに基づく制約",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "regulatoryReq",
+          "ordValue": 4,
+          "definition": "医療機器規制・認証要件",
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "surgeonAuthority",
+          "ordValue": 3,
+          "definition": "執刀医の判断権限と介入ポリシー",
+          "derivedFrom": [
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "sensorFusion",
+          "ordValue": 2,
+          "definition": "術中センサーデータの統合と解釈",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "motionPlanning",
+          "ordValue": 1,
+          "definition": "アーム軌道計画・力覚フィードバック制御",
+          "derivedFrom": [
+            "H6"
+          ]
+        },
+        {
+          "name": "adaptiveParam",
+          "ordValue": 0,
+          "definition": "患者固有の組織特性に応じた動的パラメータ調整",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "patientLifePriority",
+          "layerName": "safetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "immediateHalt",
+          "layerName": "safetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "noAutonomousIncision",
+          "layerName": "safetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "evidenceBasedProcedure",
+          "layerName": "medicalProtocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".patientLifePriority"
+          ]
+        },
+        {
+          "id": "sterileFieldMaint",
+          "layerName": "medicalProtocol",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".patientLifePriority"
+          ]
+        },
+        {
+          "id": "fdaClearance",
+          "layerName": "regulatoryReq",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".evidenceBasedProcedure"
+          ]
+        },
+        {
+          "id": "auditTrailReq",
+          "layerName": "regulatoryReq",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".fdaClearance"
+          ]
+        },
+        {
+          "id": "surgeonOverride",
+          "layerName": "surgeonAuthority",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".patientLifePriority",
+            ".evidenceBasedProcedure"
+          ]
+        },
+        {
+          "id": "hapticFeedback",
+          "layerName": "sensorFusion",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".surgeonOverride"
+          ]
+        },
+        {
+          "id": "tissueBoundaryDetect",
+          "layerName": "sensorFusion",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".sterileFieldMaint",
+            ".hapticFeedback"
+          ]
+        },
+        {
+          "id": "armTrajectory",
+          "layerName": "motionPlanning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".tissueBoundaryDetect",
+            ".hapticFeedback"
+          ]
+        },
+        {
+          "id": "forceLimit",
+          "layerName": "motionPlanning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".patientLifePriority",
+            ".armTrajectory"
+          ]
+        },
+        {
+          "id": "tissueAdaptation",
+          "layerName": "adaptiveParam",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".tissueBoundaryDetect",
+            ".armTrajectory"
+          ]
+        },
+        {
+          "id": "emergencyProtocol",
+          "layerName": "adaptiveParam",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".immediateHalt",
+            ".surgeonOverride"
+          ]
+        },
+        {
+          "id": "incisionDepthFromAdaptive",
+          "layerName": "medicalProtocol",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".tissueAdaptation"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 162,
+    "project": "降雹予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestScenario.S162",
+      "description": "降雹予測 AI",
+      "layers": [
+        {
+          "name": "physicsLaw",
+          "ordValue": 4,
+          "definition": "大気物理学の基本法則。熱力学・流体力学の原理",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "observationalBasis",
+          "ordValue": 3,
+          "definition": "気象観測ネットワークとデータ品質基準",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "forecastModel",
+          "ordValue": 2,
+          "definition": "雹形成メカニズムに基づく予測モデル構造",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "warningPolicy",
+          "ordValue": 1,
+          "definition": "警報発令基準と伝達プロトコル",
+          "derivedFrom": [
+            "C3",
+            "H4"
+          ]
+        },
+        {
+          "name": "localCalibration",
+          "ordValue": 0,
+          "definition": "地域特性に応じたモデルパラメータ較正",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "thermodynamicConstraint",
+          "layerName": "physicsLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "updraftDynamics",
+          "layerName": "physicsLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "radarReliability",
+          "layerName": "observationalBasis",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".thermodynamicConstraint"
+          ]
+        },
+        {
+          "id": "soundingDataQuality",
+          "layerName": "observationalBasis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".thermodynamicConstraint"
+          ]
+        },
+        {
+          "id": "satelliteIntegration",
+          "layerName": "observationalBasis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".updraftDynamics"
+          ]
+        },
+        {
+          "id": "hailNucleation",
+          "layerName": "forecastModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".thermodynamicConstraint",
+            ".updraftDynamics"
+          ]
+        },
+        {
+          "id": "stormCellTracking",
+          "layerName": "forecastModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".radarReliability",
+            ".satelliteIntegration"
+          ]
+        },
+        {
+          "id": "hailSizeEstimation",
+          "layerName": "forecastModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".hailNucleation",
+            ".soundingDataQuality"
+          ]
+        },
+        {
+          "id": "falseAlarmTolerance",
+          "layerName": "warningPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".hailSizeEstimation"
+          ]
+        },
+        {
+          "id": "leadTimeTarget",
+          "layerName": "warningPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".stormCellTracking",
+            ".falseAlarmTolerance"
+          ]
+        },
+        {
+          "id": "disseminationChannel",
+          "layerName": "warningPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".falseAlarmTolerance"
+          ]
+        },
+        {
+          "id": "terrainAdjustment",
+          "layerName": "localCalibration",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".hailNucleation",
+            ".stormCellTracking"
+          ]
+        },
+        {
+          "id": "cropVulnerability",
+          "layerName": "localCalibration",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".hailSizeEstimation",
+            ".terrainAdjustment"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 163,
+    "project": "駅構内ナビゲーション AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestScenario.S163",
+      "description": "駅構内ナビゲーション AI",
+      "layers": [
+        {
+          "name": "safetyRegulation",
+          "ordValue": 4,
+          "definition": "消防法・バリアフリー法等の法的義務",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "stationTopology",
+          "ordValue": 3,
+          "definition": "駅構造の物理的制約と通路接続",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "accessibilityPolicy",
+          "ordValue": 2,
+          "definition": "障害者・高齢者への経路案内ポリシー",
+          "derivedFrom": [
+            "C3",
+            "H2"
+          ]
+        },
+        {
+          "name": "congestionModel",
+          "ordValue": 1,
+          "definition": "混雑度推定と動的経路切替",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "personalPreference",
+          "ordValue": 0,
+          "definition": "ユーザー個人の好みと学習",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "emergencyEvacRoute",
+          "layerName": "safetyRegulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "barrierFreeObligation",
+          "layerName": "safetyRegulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "platformConnectivity",
+          "layerName": "stationTopology",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".emergencyEvacRoute"
+          ]
+        },
+        {
+          "id": "elevatorLocation",
+          "layerName": "stationTopology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".barrierFreeObligation"
+          ]
+        },
+        {
+          "id": "gatePassageWidth",
+          "layerName": "stationTopology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".emergencyEvacRoute"
+          ]
+        },
+        {
+          "id": "wheelchairRoute",
+          "layerName": "accessibilityPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".barrierFreeObligation",
+            ".elevatorLocation"
+          ]
+        },
+        {
+          "id": "visualGuidance",
+          "layerName": "accessibilityPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".platformConnectivity"
+          ]
+        },
+        {
+          "id": "signLanguageSupport",
+          "layerName": "accessibilityPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".wheelchairRoute"
+          ]
+        },
+        {
+          "id": "peakHourReroute",
+          "layerName": "congestionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".platformConnectivity",
+            ".gatePassageWidth"
+          ]
+        },
+        {
+          "id": "realTimeDensity",
+          "layerName": "congestionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".peakHourReroute"
+          ]
+        },
+        {
+          "id": "transferTimeEstimate",
+          "layerName": "congestionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".platformConnectivity",
+            ".realTimeDensity"
+          ]
+        },
+        {
+          "id": "preferredExit",
+          "layerName": "personalPreference",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".peakHourReroute",
+            ".transferTimeEstimate"
+          ]
+        },
+        {
+          "id": "walkSpeedAdapt",
+          "layerName": "personalPreference",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".realTimeDensity"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 164,
+    "project": "DNA配列アラインメント AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 6,
+    "num_props": 15,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestScenario.S164",
+      "description": "DNA配列アラインメント AI",
+      "layers": [
+        {
+          "name": "bioChemInvariant",
+          "ordValue": 5,
+          "definition": "分子生物学の基本原理。塩基対合則・セントラルドグマ",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "scoringTheory",
+          "ordValue": 4,
+          "definition": "置換行列・ギャップペナルティの理論的基盤",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "algorithmGuarantee",
+          "ordValue": 3,
+          "definition": "アラインメントアルゴリズムの計算量・最適性保証",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "qualityFilter",
+          "ordValue": 2,
+          "definition": "シーケンス品質フィルタリングとエラー補正",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "heuristicTuning",
+          "ordValue": 1,
+          "definition": "BLAST系ヒューリスティックの閾値調整",
+          "derivedFrom": [
+            "H5"
+          ]
+        },
+        {
+          "name": "outputFormat",
+          "ordValue": 0,
+          "definition": "結果表示形式と可視化パラメータ",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "basePairComplementarity",
+          "layerName": "bioChemInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "codonDegeneracy",
+          "layerName": "bioChemInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "evolutionaryModel",
+          "layerName": "bioChemInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "substitutionMatrix",
+          "layerName": "scoringTheory",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".basePairComplementarity",
+            ".evolutionaryModel"
+          ]
+        },
+        {
+          "id": "gapPenaltyModel",
+          "layerName": "scoringTheory",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".evolutionaryModel"
+          ]
+        },
+        {
+          "id": "affineGapExtension",
+          "layerName": "scoringTheory",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".gapPenaltyModel"
+          ]
+        },
+        {
+          "id": "dpOptimality",
+          "layerName": "algorithmGuarantee",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".substitutionMatrix",
+            ".gapPenaltyModel"
+          ]
+        },
+        {
+          "id": "seedAndExtend",
+          "layerName": "algorithmGuarantee",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".dpOptimality"
+          ]
+        },
+        {
+          "id": "phredScoreThreshold",
+          "layerName": "qualityFilter",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".basePairComplementarity"
+          ]
+        },
+        {
+          "id": "adapterTrimming",
+          "layerName": "qualityFilter",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".phredScoreThreshold"
+          ]
+        },
+        {
+          "id": "lowComplexityMask",
+          "layerName": "qualityFilter",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".seedAndExtend"
+          ]
+        },
+        {
+          "id": "eValueCutoff",
+          "layerName": "heuristicTuning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".seedAndExtend",
+            ".phredScoreThreshold"
+          ]
+        },
+        {
+          "id": "wordSizeParam",
+          "layerName": "heuristicTuning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".seedAndExtend"
+          ]
+        },
+        {
+          "id": "msaVisualization",
+          "layerName": "outputFormat",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".eValueCutoff",
+            ".lowComplexityMask"
+          ]
+        },
+        {
+          "id": "conservationHighlight",
+          "layerName": "outputFormat",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".substitutionMatrix",
+            ".msaVisualization"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 165,
+    "project": "照明制御省エネ AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestScenario.S165",
+      "description": "照明制御省エネ AI",
+      "layers": [
+        {
+          "name": "buildingCode",
+          "ordValue": 3,
+          "definition": "建築基準法・労働安全衛生法の最低照度要件",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "occupantWellbeing",
+          "ordValue": 2,
+          "definition": "在室者の健康・快適性に関する照明要件",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "energyOptimization",
+          "ordValue": 1,
+          "definition": "電力消費最小化のための制御戦略",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "ambientAdaptation",
+          "ordValue": 0,
+          "definition": "外光・天候に応じた動的調光",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "minLuxStandard",
+          "layerName": "buildingCode",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "emergencyLighting",
+          "layerName": "buildingCode",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "exitSignVisibility",
+          "layerName": "buildingCode",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "circadianRhythm",
+          "layerName": "occupantWellbeing",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".minLuxStandard"
+          ]
+        },
+        {
+          "id": "glarePrevention",
+          "layerName": "occupantWellbeing",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".minLuxStandard"
+          ]
+        },
+        {
+          "id": "colorTempRange",
+          "layerName": "occupantWellbeing",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".circadianRhythm"
+          ]
+        },
+        {
+          "id": "occupancySensing",
+          "layerName": "energyOptimization",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".minLuxStandard",
+            ".circadianRhythm"
+          ]
+        },
+        {
+          "id": "zoneDimming",
+          "layerName": "energyOptimization",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".occupancySensing",
+            ".glarePrevention"
+          ]
+        },
+        {
+          "id": "peakShaving",
+          "layerName": "energyOptimization",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".zoneDimming"
+          ]
+        },
+        {
+          "id": "daylightHarvest",
+          "layerName": "ambientAdaptation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".occupancySensing",
+            ".zoneDimming"
+          ]
+        },
+        {
+          "id": "cloudTransientSmooth",
+          "layerName": "ambientAdaptation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".daylightHarvest",
+            ".glarePrevention"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 166,
+    "project": "食肉トレーサビリティ AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 6,
+    "num_props": 16,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "TestScenario.S166",
+      "description": "食肉トレーサビリティ AI",
+      "layers": [
+        {
+          "name": "foodSafetyLaw",
+          "ordValue": 5,
+          "definition": "食品衛生法・HACCP義務に基づく安全基準",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "traceabilityStandard",
+          "ordValue": 4,
+          "definition": "ISO 22005準拠のトレーサビリティ要件",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "supplyChainIntegrity",
+          "ordValue": 3,
+          "definition": "サプライチェーン各段階のデータ完全性保証",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "qualityGrading",
+          "ordValue": 2,
+          "definition": "品質等級判定と格付けロジック",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "consumerInterface",
+          "ordValue": 1,
+          "definition": "消費者向け産地・履歴情報の提示方式",
+          "derivedFrom": [
+            "H5"
+          ]
+        },
+        {
+          "name": "analyticsLayer",
+          "ordValue": 0,
+          "definition": "流通効率化・需要予測のための分析",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "haccpCompliance",
+          "layerName": "foodSafetyLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "recallCapability",
+          "layerName": "foodSafetyLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "coldChainIntegrity",
+          "layerName": "foodSafetyLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lotIdentification",
+          "layerName": "traceabilityStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".haccpCompliance"
+          ]
+        },
+        {
+          "id": "originCertification",
+          "layerName": "traceabilityStandard",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".lotIdentification"
+          ]
+        },
+        {
+          "id": "slaughterRecord",
+          "layerName": "traceabilityStandard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".haccpCompliance",
+            ".lotIdentification"
+          ]
+        },
+        {
+          "id": "transportLog",
+          "layerName": "supplyChainIntegrity",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".coldChainIntegrity",
+            ".lotIdentification"
+          ]
+        },
+        {
+          "id": "tamperDetection",
+          "layerName": "supplyChainIntegrity",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".transportLog"
+          ]
+        },
+        {
+          "id": "blockchainAnchor",
+          "layerName": "supplyChainIntegrity",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".tamperDetection",
+            ".originCertification"
+          ]
+        },
+        {
+          "id": "marblingScore",
+          "layerName": "qualityGrading",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".slaughterRecord"
+          ]
+        },
+        {
+          "id": "agingDuration",
+          "layerName": "qualityGrading",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".coldChainIntegrity",
+            ".marblingScore"
+          ]
+        },
+        {
+          "id": "gradeLabelAssign",
+          "layerName": "qualityGrading",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".marblingScore",
+            ".agingDuration"
+          ]
+        },
+        {
+          "id": "qrCodeDisplay",
+          "layerName": "consumerInterface",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".blockchainAnchor",
+            ".gradeLabelAssign"
+          ]
+        },
+        {
+          "id": "allergenDisclosure",
+          "layerName": "consumerInterface",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".haccpCompliance",
+            ".qrCodeDisplay"
+          ]
+        },
+        {
+          "id": "demandForecast",
+          "layerName": "analyticsLayer",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".transportLog",
+            ".gradeLabelAssign"
+          ]
+        },
+        {
+          "id": "wasteReduction",
+          "layerName": "analyticsLayer",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".demandForecast",
+            ".agingDuration"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 167,
+    "project": "不発弾探査 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 6,
+    "num_props": 16,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestScenario.S167",
+      "description": "不発弾探査 AI — 意図的単調性違反あり（confidenceFromReport→gridMapOutput: detectionMethodology(3)→reportingFormat(0)）",
+      "layers": [
+        {
+          "name": "personnelSafety",
+          "ordValue": 5,
+          "definition": "探査員・周辺住民の生命安全。最優先不変条件",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "explosivePhysics",
+          "ordValue": 4,
+          "definition": "爆発物の物理化学的特性と劣化モデル",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "detectionMethodology",
+          "ordValue": 3,
+          "definition": "地中探査手法の選定基準と信頼度",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "siteAssessment",
+          "ordValue": 2,
+          "definition": "探査現場の地質・環境条件評価",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "disposalProtocol",
+          "ordValue": 1,
+          "definition": "発見時の処理手順と避難計画",
+          "derivedFrom": [
+            "C3",
+            "H5"
+          ]
+        },
+        {
+          "name": "reportingFormat",
+          "ordValue": 0,
+          "definition": "探査結果の記録・報告フォーマット",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safeDistanceRule",
+          "layerName": "personnelSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "evacuationPlan",
+          "layerName": "personnelSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "noTouchPolicy",
+          "layerName": "personnelSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fuzeTypeCatalog",
+          "layerName": "explosivePhysics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".safeDistanceRule"
+          ]
+        },
+        {
+          "id": "corrosionModel",
+          "layerName": "explosivePhysics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".fuzeTypeCatalog"
+          ]
+        },
+        {
+          "id": "blastRadiusCalc",
+          "layerName": "explosivePhysics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".safeDistanceRule",
+            ".fuzeTypeCatalog"
+          ]
+        },
+        {
+          "id": "magnetometerSpec",
+          "layerName": "detectionMethodology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".fuzeTypeCatalog"
+          ]
+        },
+        {
+          "id": "gprPenetration",
+          "layerName": "detectionMethodology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".magnetometerSpec"
+          ]
+        },
+        {
+          "id": "multiSensorFusion",
+          "layerName": "detectionMethodology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".magnetometerSpec",
+            ".gprPenetration"
+          ]
+        },
+        {
+          "id": "soilClassification",
+          "layerName": "siteAssessment",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".gprPenetration"
+          ]
+        },
+        {
+          "id": "waterTableDepth",
+          "layerName": "siteAssessment",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".soilClassification"
+          ]
+        },
+        {
+          "id": "historicalBombingMap",
+          "layerName": "siteAssessment",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".fuzeTypeCatalog",
+            ".soilClassification"
+          ]
+        },
+        {
+          "id": "eodCallProtocol",
+          "layerName": "disposalProtocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".evacuationPlan",
+            ".blastRadiusCalc"
+          ]
+        },
+        {
+          "id": "insituNeutralize",
+          "layerName": "disposalProtocol",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".corrosionModel",
+            ".eodCallProtocol"
+          ]
+        },
+        {
+          "id": "gridMapOutput",
+          "layerName": "reportingFormat",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".multiSensorFusion",
+            ".historicalBombingMap"
+          ]
+        },
+        {
+          "id": "confidenceFromReport",
+          "layerName": "detectionMethodology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".gridMapOutput"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 168,
+    "project": "VR酔い軽減 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestScenario.S168",
+      "description": "VR酔い軽減 AI",
+      "layers": [
+        {
+          "name": "vestibularPhysiology",
+          "ordValue": 4,
+          "definition": "前庭系と視覚系の感覚統合に関する生理学的原理",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "motionSicknessModel",
+          "ordValue": 3,
+          "definition": "VR酔いの定量モデルと予測因子",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "renderingConstraint",
+          "ordValue": 2,
+          "definition": "フレームレート・遅延の許容閾値",
+          "derivedFrom": [
+            "C2",
+            "H3"
+          ]
+        },
+        {
+          "name": "adaptiveIntervention",
+          "ordValue": 1,
+          "definition": "酔い兆候検出時の動的介入手法",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "userProfile",
+          "ordValue": 0,
+          "definition": "個人の酔い感受性プロファイル",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "sensoryConflictTheory",
+          "layerName": "vestibularPhysiology",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "otolithResponse",
+          "layerName": "vestibularPhysiology",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "optokineticReflex",
+          "layerName": "vestibularPhysiology",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ssqScoring",
+          "layerName": "motionSicknessModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".sensoryConflictTheory"
+          ]
+        },
+        {
+          "id": "vectionIntensity",
+          "layerName": "motionSicknessModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".optokineticReflex"
+          ]
+        },
+        {
+          "id": "postureInstability",
+          "layerName": "motionSicknessModel",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".otolithResponse",
+            ".ssqScoring"
+          ]
+        },
+        {
+          "id": "motionToPhotonLatency",
+          "layerName": "renderingConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".sensoryConflictTheory"
+          ]
+        },
+        {
+          "id": "fovRendering",
+          "layerName": "renderingConstraint",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".motionToPhotonLatency",
+            ".vectionIntensity"
+          ]
+        },
+        {
+          "id": "fpsFloorGuard",
+          "layerName": "renderingConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".motionToPhotonLatency"
+          ]
+        },
+        {
+          "id": "fovReduction",
+          "layerName": "adaptiveIntervention",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".vectionIntensity",
+            ".fovRendering"
+          ]
+        },
+        {
+          "id": "restFrameInsert",
+          "layerName": "adaptiveIntervention",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".sensoryConflictTheory",
+            ".fovReduction"
+          ]
+        },
+        {
+          "id": "galvanicStimHint",
+          "layerName": "adaptiveIntervention",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".otolithResponse",
+            ".postureInstability"
+          ]
+        },
+        {
+          "id": "susceptibilityScore",
+          "layerName": "userProfile",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".ssqScoring",
+            ".postureInstability"
+          ]
+        },
+        {
+          "id": "sessionDurationLimit",
+          "layerName": "userProfile",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".susceptibilityScore",
+            ".restFrameInsert"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 169,
+    "project": "河口堆積物監視 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestScenario.S169",
+      "description": "河口堆積物監視 AI",
+      "layers": [
+        {
+          "name": "hydrologicPrinciple",
+          "ordValue": 4,
+          "definition": "河川水理学・海洋潮汐の基本法則",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "sedimentTransport",
+          "ordValue": 3,
+          "definition": "堆積物輸送の物理モデルと経験式",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "monitoringInfra",
+          "ordValue": 2,
+          "definition": "観測機器配置と測定プロトコル",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "floodRiskAssess",
+          "ordValue": 1,
+          "definition": "洪水リスク評価と浚渫優先度決定",
+          "derivedFrom": [
+            "H4",
+            "C3"
+          ]
+        },
+        {
+          "name": "reportSchedule",
+          "ordValue": 0,
+          "definition": "定期報告サイクルと異常通知閾値",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "massConservation",
+          "layerName": "hydrologicPrinciple",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "tidalForcing",
+          "layerName": "hydrologicPrinciple",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "salinityGradient",
+          "layerName": "hydrologicPrinciple",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bedloadFormula",
+          "layerName": "sedimentTransport",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".massConservation"
+          ]
+        },
+        {
+          "id": "suspendedLoadCalc",
+          "layerName": "sedimentTransport",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".massConservation",
+            ".tidalForcing"
+          ]
+        },
+        {
+          "id": "flocculationModel",
+          "layerName": "sedimentTransport",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".salinityGradient",
+            ".suspendedLoadCalc"
+          ]
+        },
+        {
+          "id": "bathymetrySurvey",
+          "layerName": "monitoringInfra",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".bedloadFormula"
+          ]
+        },
+        {
+          "id": "turbidityProbe",
+          "layerName": "monitoringInfra",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".suspendedLoadCalc"
+          ]
+        },
+        {
+          "id": "adcpDeployment",
+          "layerName": "monitoringInfra",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".tidalForcing",
+            ".bathymetrySurvey"
+          ]
+        },
+        {
+          "id": "channelNarrowingDetect",
+          "layerName": "floodRiskAssess",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".bathymetrySurvey",
+            ".bedloadFormula"
+          ]
+        },
+        {
+          "id": "dredgePriority",
+          "layerName": "floodRiskAssess",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".channelNarrowingDetect",
+            ".flocculationModel"
+          ]
+        },
+        {
+          "id": "stormSurgeOverlay",
+          "layerName": "floodRiskAssess",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".tidalForcing",
+            ".channelNarrowingDetect"
+          ]
+        },
+        {
+          "id": "monthlyTrendReport",
+          "layerName": "reportSchedule",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".turbidityProbe",
+            ".channelNarrowingDetect"
+          ]
+        },
+        {
+          "id": "anomalyAlert",
+          "layerName": "reportSchedule",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".dredgePriority",
+            ".stormSurgeOverlay"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 170,
+    "project": "自動採点 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestScenario.S170",
+      "description": "自動採点 AI",
+      "layers": [
+        {
+          "name": "assessmentTheory",
+          "ordValue": 3,
+          "definition": "教育測定学の基本理論。信頼性・妥当性・公平性",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "rubricDesign",
+          "ordValue": 2,
+          "definition": "採点ルーブリックの構造と基準定義",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "nlpPipeline",
+          "ordValue": 1,
+          "definition": "自然言語処理による回答分析パイプライン",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "feedbackGen",
+          "ordValue": 0,
+          "definition": "学習者へのフィードバック生成と提示",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "constructValidity",
+          "layerName": "assessmentTheory",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "interRaterReliability",
+          "layerName": "assessmentTheory",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "biasProhibition",
+          "layerName": "assessmentTheory",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "criterionDefinition",
+          "layerName": "rubricDesign",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".constructValidity"
+          ]
+        },
+        {
+          "id": "partialCreditRule",
+          "layerName": "rubricDesign",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".criterionDefinition",
+            ".interRaterReliability"
+          ]
+        },
+        {
+          "id": "anchorResponse",
+          "layerName": "rubricDesign",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".criterionDefinition"
+          ]
+        },
+        {
+          "id": "semanticSimilarity",
+          "layerName": "nlpPipeline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".criterionDefinition",
+            ".anchorResponse"
+          ]
+        },
+        {
+          "id": "keywordExtraction",
+          "layerName": "nlpPipeline",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".semanticSimilarity"
+          ]
+        },
+        {
+          "id": "plagiarismDetect",
+          "layerName": "nlpPipeline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".biasProhibition",
+            ".semanticSimilarity"
+          ]
+        },
+        {
+          "id": "scoreCalibration",
+          "layerName": "nlpPipeline",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".partialCreditRule",
+            ".keywordExtraction"
+          ]
+        },
+        {
+          "id": "diagnosticComment",
+          "layerName": "feedbackGen",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".scoreCalibration",
+            ".semanticSimilarity"
+          ]
+        },
+        {
+          "id": "improvementSuggest",
+          "layerName": "feedbackGen",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".diagnosticComment",
+            ".anchorResponse"
+          ]
+        }
+      ]
+    }
+  }
+]

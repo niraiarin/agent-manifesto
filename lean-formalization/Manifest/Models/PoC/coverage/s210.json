@@ -1,0 +1,193 @@
+{
+  "namespace": "TidalPowerOptimization",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 6,
+      "definition": "設備・人員安全の絶対制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 5,
+      "definition": "環境規制・漁業権等の法的制約",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "oceanography",
+      "ordValue": 4,
+      "definition": "海洋物理・潮汐モデル",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "engineering",
+      "ordValue": 3,
+      "definition": "タービン設計・構造工学制約",
+      "derivedFrom": [
+        "C3",
+        "H4"
+      ]
+    },
+    {
+      "name": "grid",
+      "ordValue": 2,
+      "definition": "送電網・系統連系の外部依存",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "発電最適化アルゴリズム",
+      "derivedFrom": [
+        "C4",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "regu1",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "regu2",
+      "layerName": "regulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ocn1",
+      "layerName": "oceanography",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ocn2",
+      "layerName": "oceanography",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ocn1"
+      ]
+    },
+    {
+      "id": "eng1",
+      "layerName": "engineering",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe1",
+        ".ocn1"
+      ]
+    },
+    {
+      "id": "eng2",
+      "layerName": "engineering",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".regu1",
+        ".ocn2"
+      ]
+    },
+    {
+      "id": "grd1",
+      "layerName": "grid",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "grd2",
+      "layerName": "grid",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".eng1",
+        ".grd1"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".eng2",
+        ".grd2"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".ocn2",
+        ".grd1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".opt1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": []
+    }
+  ]
+}

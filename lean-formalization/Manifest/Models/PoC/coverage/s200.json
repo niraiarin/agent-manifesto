@@ -1,0 +1,218 @@
+{
+  "namespace": "Scenario200",
+  "layers": [
+    {
+      "name": "medical",
+      "ordValue": 4,
+      "definition": "医療安全と患者権利の不可侵原則。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "regulatory",
+      "ordValue": 3,
+      "definition": "医療機器規制とデータ保護法。外部依存。",
+      "derivedFrom": [
+        "C2",
+        "C4",
+        "C6"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床運用の方針。施設ごとに設定可能。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "algorithmic",
+      "ordValue": 1,
+      "definition": "AI推奨アルゴリズムの設計判断。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "臨床データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rgl1",
+      "layerName": "regulatory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "rgl2",
+      "layerName": "regulatory",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rgl3",
+      "layerName": "regulatory",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".rgl2"
+      ]
+    },
+    {
+      "id": "cln1",
+      "layerName": "clinical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".med1",
+        ".med2"
+      ]
+    },
+    {
+      "id": "cln2",
+      "layerName": "clinical",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".med2"
+      ]
+    },
+    {
+      "id": "cln3",
+      "layerName": "clinical",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".rgl1",
+        ".cln1"
+      ]
+    },
+    {
+      "id": "alg1",
+      "layerName": "algorithmic",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cln1",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "alg2",
+      "layerName": "algorithmic",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".rgl1"
+      ]
+    },
+    {
+      "id": "alg3",
+      "layerName": "algorithmic",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".cln2",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "alg4",
+      "layerName": "algorithmic",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg3"
+      ]
+    },
+    {
+      "id": "alg5",
+      "layerName": "algorithmic",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".rgl1",
+        ".rgl3",
+        ".alg2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".rgl3",
+        ".alg5"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".alg4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg5",
+        ".hyp1"
+      ]
+    }
+  ]
+}

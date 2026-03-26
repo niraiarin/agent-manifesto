@@ -1,0 +1,276 @@
+{
+  "namespace": "CryptoPortfolio",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "顧客資産の毀損を防ぐことが最優先"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "法定通貨への出金は24時間以内に完了する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "リスク許容度はユーザーが設定する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "取引所APIの仕様変更には48時間以内に対応する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "損切りラインを超えた場合は自動売却する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "一回の取引でポートフォリオの20%以上を動かさない"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "顧客の個人情報と取引履歴を暗号化保存する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C1",
+        "refutation": "暗号資産市場が消滅した場合",
+        "content": "暗号資産の流動性は常に確保される前提"
+      },
+      {
+        "id": "H2",
+        "basis": "C3",
+        "refutation": "規制によりリスク許容度が法的に固定された場合",
+        "content": "ユーザーのリスク選好は時間とともに変化する"
+      },
+      {
+        "id": "H3",
+        "basis": "C4",
+        "refutation": "取引所が完全に標準化された場合",
+        "content": "複数取引所の価格差は裁定機会として活用可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C5,C6",
+        "refutation": "市場構造が根本的に変化した場合",
+        "content": "ボラティリティは過去データから統計的に予測可能"
+      },
+      {
+        "id": "H5",
+        "basis": "C1,C7",
+        "refutation": "コールドウォレットの安全性が破綻した場合",
+        "content": "大口資産はコールドウォレットで保管"
+      },
+      {
+        "id": "H6",
+        "basis": "H4",
+        "refutation": "AIモデルが系統的に失敗する場合",
+        "content": "リバランス頻度はボラティリティに応じて動的調整"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 4,
+      "definition": "資産保全・法規制の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C7"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 3,
+      "definition": "市場・取引所などの外部依存",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "C4"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 2,
+      "definition": "ユーザーが設定する運用方針",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "strategy",
+      "ordValue": 1,
+      "definition": "AIが最適化する投資戦略",
+      "derivedFrom": [
+        "H4",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "constraint",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "constraint",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env3",
+      "layerName": "environment",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "safe3"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "safe3",
+        "env1"
+      ]
+    },
+    {
+      "id": "pol4",
+      "layerName": "policy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "str1",
+      "layerName": "strategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "pol3",
+        "env1"
+      ]
+    },
+    {
+      "id": "str2",
+      "layerName": "strategy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "str1",
+        "pol2"
+      ]
+    },
+    {
+      "id": "str3",
+      "layerName": "strategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "env2",
+        "pol4"
+      ]
+    },
+    {
+      "id": "str4",
+      "layerName": "strategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "env1",
+        "env3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    }
+  ]
+}

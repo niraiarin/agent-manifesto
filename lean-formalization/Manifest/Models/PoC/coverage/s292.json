@@ -1,0 +1,130 @@
+{
+  "namespace": "WashiCraftAnalysis",
+  "layers": [
+    {
+      "name": "craft_authority",
+      "ordValue": 4,
+      "definition": "職人の技と判断が最上位である不変原則",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ethical_boundary",
+      "ordValue": 3,
+      "definition": "データ所有権・公開範囲の倫理的制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "sensing_policy",
+      "ordValue": 2,
+      "definition": "センシング配置・方式の運用方針",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "analysis_method",
+      "ordValue": 1,
+      "definition": "解析手法・モデルの選択",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "artisan_primacy",
+      "layerName": "craft_authority",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_ai_instruction",
+      "layerName": "craft_authority",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data_ownership",
+      "layerName": "ethical_boundary",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".artisan_primacy"
+      ]
+    },
+    {
+      "id": "disclosure_control",
+      "layerName": "ethical_boundary",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".artisan_primacy",
+        ".data_ownership"
+      ]
+    },
+    {
+      "id": "non_intrusive_sensor",
+      "layerName": "sensing_policy",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".artisan_primacy"
+      ]
+    },
+    {
+      "id": "camera_placement",
+      "layerName": "sensing_policy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".non_intrusive_sensor"
+      ]
+    },
+    {
+      "id": "water_temp_model",
+      "layerName": "analysis_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".non_intrusive_sensor"
+      ]
+    },
+    {
+      "id": "skeleton_estimation",
+      "layerName": "analysis_method",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".camera_placement"
+      ]
+    },
+    {
+      "id": "fiber_density_corr",
+      "layerName": "analysis_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".water_temp_model"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "namespace": "TestScenario.S265",
+  "description": "成層圏オゾン層監視 AI",
+  "layers": [
+    {
+      "name": "atmospheric_physics",
+      "ordValue": 6,
+      "definition": "大気化学・光化学反応の基本法則。Chapman機構",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "regulatory_framework",
+      "ordValue": 5,
+      "definition": "モントリオール議定書・規制物質リスト",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "observation_system",
+      "ordValue": 4,
+      "definition": "観測機器の仕様・校正基準。ドブソン分光計・衛星センサ",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "retrieval_algorithm",
+      "ordValue": 3,
+      "definition": "オゾン全量・鉛直分布の導出アルゴリズム",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "trend_analysis",
+      "ordValue": 2,
+      "definition": "オゾン層回復トレンド解析。統計的有意性検定",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "early_warning",
+      "ordValue": 1,
+      "definition": "オゾンホール拡大警報の判定ロジック",
+      "derivedFrom": [
+        "H6",
+        "C5"
+      ]
+    },
+    {
+      "name": "projection",
+      "ordValue": 0,
+      "definition": "将来予測・気候モデル連携の仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "ap1",
+      "layerName": "atmospheric_physics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ap2",
+      "layerName": "atmospheric_physics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rf1",
+      "layerName": "regulatory_framework",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".ap1"
+      ]
+    },
+    {
+      "id": "rf2",
+      "layerName": "regulatory_framework",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "os1",
+      "layerName": "observation_system",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".ap1"
+      ]
+    },
+    {
+      "id": "os2",
+      "layerName": "observation_system",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".rf1"
+      ]
+    },
+    {
+      "id": "ra1",
+      "layerName": "retrieval_algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".os1",
+        ".ap2"
+      ]
+    },
+    {
+      "id": "ra2",
+      "layerName": "retrieval_algorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".os2"
+      ]
+    },
+    {
+      "id": "ta1",
+      "layerName": "trend_analysis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ra1",
+        ".ra2"
+      ]
+    },
+    {
+      "id": "ta2",
+      "layerName": "trend_analysis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".rf2"
+      ]
+    },
+    {
+      "id": "ew1",
+      "layerName": "early_warning",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".ta1"
+      ]
+    },
+    {
+      "id": "ew2",
+      "layerName": "early_warning",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".ta2",
+        ".rf1"
+      ]
+    },
+    {
+      "id": "pj1",
+      "layerName": "projection",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".ew1",
+        ".ta1"
+      ]
+    }
+  ]
+}

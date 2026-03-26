@@ -1,0 +1,162 @@
+{
+  "namespace": "TestScenario.S170",
+  "description": "自動採点 AI",
+  "layers": [
+    {
+      "name": "assessmentTheory",
+      "ordValue": 3,
+      "definition": "教育測定学の基本理論。信頼性・妥当性・公平性",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "rubricDesign",
+      "ordValue": 2,
+      "definition": "採点ルーブリックの構造と基準定義",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "nlpPipeline",
+      "ordValue": 1,
+      "definition": "自然言語処理による回答分析パイプライン",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "feedbackGen",
+      "ordValue": 0,
+      "definition": "学習者へのフィードバック生成と提示",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "constructValidity",
+      "layerName": "assessmentTheory",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "interRaterReliability",
+      "layerName": "assessmentTheory",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "biasProhibition",
+      "layerName": "assessmentTheory",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "criterionDefinition",
+      "layerName": "rubricDesign",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".constructValidity"
+      ]
+    },
+    {
+      "id": "partialCreditRule",
+      "layerName": "rubricDesign",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".criterionDefinition",
+        ".interRaterReliability"
+      ]
+    },
+    {
+      "id": "anchorResponse",
+      "layerName": "rubricDesign",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".criterionDefinition"
+      ]
+    },
+    {
+      "id": "semanticSimilarity",
+      "layerName": "nlpPipeline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".criterionDefinition",
+        ".anchorResponse"
+      ]
+    },
+    {
+      "id": "keywordExtraction",
+      "layerName": "nlpPipeline",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".semanticSimilarity"
+      ]
+    },
+    {
+      "id": "plagiarismDetect",
+      "layerName": "nlpPipeline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".biasProhibition",
+        ".semanticSimilarity"
+      ]
+    },
+    {
+      "id": "scoreCalibration",
+      "layerName": "nlpPipeline",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".partialCreditRule",
+        ".keywordExtraction"
+      ]
+    },
+    {
+      "id": "diagnosticComment",
+      "layerName": "feedbackGen",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".scoreCalibration",
+        ".semanticSimilarity"
+      ]
+    },
+    {
+      "id": "improvementSuggest",
+      "layerName": "feedbackGen",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".diagnosticComment",
+        ".anchorResponse"
+      ]
+    }
+  ]
+}

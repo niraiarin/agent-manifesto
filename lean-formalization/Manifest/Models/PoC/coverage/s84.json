@@ -1,0 +1,304 @@
+{
+  "namespace": "RecallAnalysis",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "道路運送車両法・リコール届出に基づく法的義務",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "supply_chain",
+      "ordValue": 2,
+      "definition": "部品サプライチェーン・車両登録データの外部依存",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "メーカーが設定する優先順位・通知方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の影響範囲推定仮説",
+      "derivedFrom": [
+        "H4",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sc1",
+      "layerName": "supply_chain",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sc2",
+      "layerName": "supply_chain",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sc3",
+      "layerName": "supply_chain",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "reg1"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "reg1",
+        "reg2"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "reg3",
+        "sc1"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "sc2"
+      ]
+    },
+    {
+      "id": "pol4",
+      "layerName": "policy",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        "sc3"
+      ]
+    },
+    {
+      "id": "pol5",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "reg2",
+        "sc1",
+        "sc2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "sc1",
+        "sc2",
+        "pol1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "pol2",
+        "pol3"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "pol4",
+        "pol5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "hyp5",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "hyp1"
+      ]
+    },
+    {
+      "id": "hyp6",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        "hyp3",
+        "hyp4"
+      ]
+    },
+    {
+      "id": "hyp7",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "hyp5",
+        "hyp6"
+      ]
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "安全に関わる不具合は発見後30日以内に国交省へ届出する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "対象車両の所有者全員に確実に通知する義務がある"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "リコール対象部品のトレーサビリティを完全に確保する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "安全リスクの高い車両から優先的に対応する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "修理完了率を95%以上に維持する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C3,外部知識",
+        "refutation": "部品メーカーが倒産しデータ消失",
+        "content": "部品供給元のデータベースは照会可能な状態にある"
+      },
+      {
+        "id": "H2",
+        "basis": "C2,外部知識",
+        "refutation": "中古車転売で所有者追跡不能",
+        "content": "車両登録データから現在の所有者を特定可能"
+      },
+      {
+        "id": "H3",
+        "basis": "C4,H1",
+        "refutation": "修理拠点のキャパシティ不足",
+        "content": "地域別の修理対応キャパシティは推定可能"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H2",
+        "refutation": "部品ロット番号の記録が不完全",
+        "content": "部品ロット情報から影響車両を網羅的に特定可能"
+      },
+      {
+        "id": "H5",
+        "basis": "C1,外部知識",
+        "refutation": "類似不具合のDB構造が変更",
+        "content": "過去のリコール事例データベースは参照可能"
+      },
+      {
+        "id": "H6",
+        "basis": "H2,H4",
+        "refutation": "地域間の車両移動パターンが想定外",
+        "content": "地域別の影響台数は登録データから推定可能"
+      },
+      {
+        "id": "H7",
+        "basis": "H3,H6",
+        "refutation": "部品在庫が全国的に枯渇",
+        "content": "修理部品の在庫・調達リードタイムは予測可能"
+      }
+    ]
+  }
+}

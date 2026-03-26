@@ -1,0 +1,24 @@
+{
+  "namespace": "TestScenario.S266",
+  "description": "伝統建築修復支援 AI",
+  "layers": [
+    {"name": "cultural_heritage_law", "ordValue": 4, "definition": "文化財保護法・修復原則（ヴェネツィア憲章）。可逆性・真正性", "derivedFrom": ["C1","C2"]},
+    {"name": "structural_principle", "ordValue": 3, "definition": "伝統構法の力学原理。木組み・石積みの構造力学", "derivedFrom": ["C3","H1"]},
+    {"name": "material_knowledge", "ordValue": 2, "definition": "伝統材料の特性。木材樹種・漆喰配合・金属加工", "derivedFrom": ["H2","H3"]},
+    {"name": "restoration_plan", "ordValue": 1, "definition": "修復工法の選定・工程計画", "derivedFrom": ["H4","H5"]},
+    {"name": "assessment", "ordValue": 0, "definition": "劣化度推定・優先度判定の仮説", "derivedFrom": ["H6"]}
+  ],
+  "propositions": [
+    {"id": "cl1", "layerName": "cultural_heritage_law", "justification": ["C1"], "dependencies": []},
+    {"id": "cl2", "layerName": "cultural_heritage_law", "justification": ["C2"], "dependencies": []},
+    {"id": "sp1", "layerName": "structural_principle", "justification": ["C3"], "dependencies": [".cl1"]},
+    {"id": "sp2", "layerName": "structural_principle", "justification": ["H1"], "dependencies": []},
+    {"id": "mk1", "layerName": "material_knowledge", "justification": ["H2"], "dependencies": [".sp1",".sp2"]},
+    {"id": "mk2", "layerName": "material_knowledge", "justification": ["H3"], "dependencies": [".cl2"]},
+    {"id": "mk3", "layerName": "material_knowledge", "justification": ["H2","H3"], "dependencies": [".sp1"]},
+    {"id": "rp1", "layerName": "restoration_plan", "justification": ["H4"], "dependencies": [".mk1",".cl1"]},
+    {"id": "rp2", "layerName": "restoration_plan", "justification": ["H5"], "dependencies": [".mk2",".mk3"]},
+    {"id": "as1", "layerName": "assessment", "justification": ["H6"], "dependencies": [".rp1"]},
+    {"id": "as2", "layerName": "assessment", "justification": ["H6"], "dependencies": [".mk1",".rp2"]}
+  ]
+}

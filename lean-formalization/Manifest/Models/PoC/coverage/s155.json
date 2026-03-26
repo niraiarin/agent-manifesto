@@ -1,0 +1,338 @@
+{
+  "namespace": "TestCoverage.S155",
+  "layers": [
+    {
+      "name": "EnvironmentalRegulation",
+      "ordValue": 5,
+      "definition": "排水基準値（BOD・COD・窒素・リン等）。法令遵守義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ProcessConstraint",
+      "ordValue": 4,
+      "definition": "処理施設の物理的・生物学的制約",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "ControlStrategy",
+      "ordValue": 3,
+      "definition": "曝気・薬注・汚泥管理の制御戦略",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "EnergyOptimization",
+      "ordValue": 2,
+      "definition": "電力消費・薬品コストの最適化",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "OperationalAdjustment",
+      "ordValue": 1,
+      "definition": "季節・流入変動に応じた微調整",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s155_p01",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s155_p02",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s155_p03",
+      "layerName": "ProcessConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s155_p01"
+      ]
+    },
+    {
+      "id": "s155_p04",
+      "layerName": "ProcessConstraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s155_p01"
+      ]
+    },
+    {
+      "id": "s155_p05",
+      "layerName": "ProcessConstraint",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s155_p01",
+        ".s155_p02"
+      ]
+    },
+    {
+      "id": "s155_p06",
+      "layerName": "ControlStrategy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s155_p03"
+      ]
+    },
+    {
+      "id": "s155_p07",
+      "layerName": "ControlStrategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s155_p04"
+      ]
+    },
+    {
+      "id": "s155_p08",
+      "layerName": "ControlStrategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s155_p03",
+        ".s155_p05"
+      ]
+    },
+    {
+      "id": "s155_p09",
+      "layerName": "EnergyOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s155_p06"
+      ]
+    },
+    {
+      "id": "s155_p10",
+      "layerName": "EnergyOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s155_p07",
+        ".s155_p08"
+      ]
+    },
+    {
+      "id": "s155_p11",
+      "layerName": "EnergyOptimization",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s155_p06"
+      ]
+    },
+    {
+      "id": "s155_p12",
+      "layerName": "OperationalAdjustment",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s155_p09"
+      ]
+    },
+    {
+      "id": "s155_p13",
+      "layerName": "OperationalAdjustment",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s155_p10"
+      ]
+    },
+    {
+      "id": "s155_p14",
+      "layerName": "OperationalAdjustment",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s155_p11"
+      ]
+    },
+    {
+      "id": "s155_p15",
+      "layerName": "OperationalAdjustment",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s155_p12",
+        ".s155_p13"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "排水基準値（水質汚濁防止法の一律基準および上乗せ基準）を常に遵守する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "活性汚泥法による生物処理を主プロセスとし、曝気槽の容量は固定"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "硝化脱窒プロセスで窒素除去を行い、微生物の活性維持が必須"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "DO（溶存酸素）センサーとMLSS計で曝気量をフィードバック制御する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "雨天時の流入量急増に対応できる制御ロジックが必要"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C3"
+          ],
+          "refutation": "微生物群集が流入水質の変動に対して自律的に安定する場合"
+        }
+      },
+      "content": "活性汚泥のSRT（汚泥滞留時間）制御が硝化菌維持の鍵"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "DO制御だけで十分な処理性能が得られる場合"
+        }
+      },
+      "content": "曝気量のPID制御に加え、流入負荷のフィードフォワード制御を併用すべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C2"
+          ],
+          "refutation": "電力コストが固定料金で節約の余地がない場合"
+        }
+      },
+      "content": "曝気ブロワの間欠運転により電力消費を20-30%削減できる可能性がある"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "薬品コストが全体コストに対して十分小さい場合"
+        }
+      },
+      "content": "凝集剤の注入量をAIで最適化することで薬品コストを削減できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "流入量が年間を通じてほぼ一定の場合"
+        }
+      },
+      "content": "季節ごとの流入水質変動パターンを学習し、制御パラメータを事前調整すべき"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C2"
+          ],
+          "refutation": "雨天時の希釈効果で処理が不要になる場合"
+        }
+      },
+      "content": "雨天時の流入量増大に対して曝気量と返送汚泥量の同時制御が必要"
+    }
+  ]
+}

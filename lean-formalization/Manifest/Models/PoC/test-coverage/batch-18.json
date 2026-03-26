@@ -1,0 +1,474 @@
+[
+  {
+    "scenario_id": 171,
+    "project": "点字翻訳 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S171",
+      "layers": [
+        {"name": "AccessibilityRight", "ordValue": 4, "definition": "情報アクセス権に関わる不変制約。障害者権利条約に基づく", "derivedFrom": ["C1", "C2"]},
+        {"name": "LinguisticRule", "ordValue": 3, "definition": "点字表記の言語学的規則。標準化団体の規定に準拠", "derivedFrom": ["C3", "H1"]},
+        {"name": "TranslationDesign", "ordValue": 2, "definition": "翻訳エンジンの設計選択。精度と速度のトレードオフ", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "OutputHypothesis", "ordValue": 1, "definition": "出力品質に関する未検証の仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s171_p01", "layerName": "AccessibilityRight", "justification": ["C1"], "dependencies": []},
+        {"id": "s171_p02", "layerName": "AccessibilityRight", "justification": ["C2"], "dependencies": []},
+        {"id": "s171_p03", "layerName": "AccessibilityRight", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s171_p04", "layerName": "LinguisticRule", "justification": ["C3"], "dependencies": [".s171_p01"]},
+        {"id": "s171_p05", "layerName": "LinguisticRule", "justification": ["H1"], "dependencies": [".s171_p02"]},
+        {"id": "s171_p06", "layerName": "LinguisticRule", "justification": ["C3", "H1"], "dependencies": [".s171_p01", ".s171_p03"]},
+        {"id": "s171_p07", "layerName": "TranslationDesign", "justification": ["C4"], "dependencies": [".s171_p04"]},
+        {"id": "s171_p08", "layerName": "TranslationDesign", "justification": ["H2"], "dependencies": [".s171_p05"]},
+        {"id": "s171_p09", "layerName": "TranslationDesign", "justification": ["H3"], "dependencies": [".s171_p04", ".s171_p06"]},
+        {"id": "s171_p10", "layerName": "OutputHypothesis", "justification": ["C5"], "dependencies": [".s171_p07"]},
+        {"id": "s171_p11", "layerName": "OutputHypothesis", "justification": ["H4"], "dependencies": [".s171_p08", ".s171_p09"]},
+        {"id": "s171_p12", "layerName": "OutputHypothesis", "justification": ["H5"], "dependencies": [".s171_p10"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "視覚障害者が文書にアクセスする権利は法的に保障されており、翻訳精度の下限を設けなければならない"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "翻訳結果の最終確認は点字校正者が行う。AIは下訳を提供するのみ"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "日本語点字は日本点字委員会の表記法に準拠する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "リアルタイム翻訳と高精度バッチ翻訳の両モードを提供したい"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "点字ディスプレイとエンボッサーの両方に出力対応したい"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "外国語点字も対象とする場合、各言語固有の規則が必要"}}, "content": "分かち書き規則はルールベースで高精度に実装可能"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "リアルタイム処理の遅延が許容範囲を超える場合"}}, "content": "リアルタイムモードではルールベース、バッチモードではニューラル翻訳を使い分けるのが効率的"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "数式・化学式などの特殊記号が多い文書では専用パーサーが必要"}}, "content": "一般的な文書では形態素解析と点字変換規則の組み合わせで90%以上の精度が達成可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "点字ディスプレイの仕様が機種ごとに大きく異なる場合"}}, "content": "BRFフォーマットが点字ディスプレイの標準出力形式として最適"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C1", "C5"], "refutation": "ユーザーが触読に慣れておらず別の出力形式を好む場合"}}, "content": "エンボッサー出力では用紙サイズに応じた自動レイアウト調整が必要"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 172,
+    "project": "雪崩予測 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 14,
+    "monotonicity_violation": {
+      "description": "s172_p09（SensorFusion, ord=2）が s172_p12（FieldHypothesis, ord=1）に依存 — 依存先の ord が依存元より低い",
+      "violating_proposition": "s172_p09",
+      "violating_dependency": "s172_p12",
+      "fix_applied": false
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S172",
+      "layers": [
+        {"name": "SafetyMandate", "ordValue": 5, "definition": "人命保護に関わる安全義務。気象庁の警報基準に準拠", "derivedFrom": ["C1", "C2"]},
+        {"name": "GeophysicalLaw", "ordValue": 4, "definition": "積雪力学・気象学の法則。自然科学的根拠", "derivedFrom": ["C3", "H1"]},
+        {"name": "ObservationProtocol", "ordValue": 3, "definition": "観測手順と判定基準。現場の運用規定", "derivedFrom": ["C4", "H2"]},
+        {"name": "SensorFusion", "ordValue": 2, "definition": "センサーデータ統合の設計選択", "derivedFrom": ["C5", "H3"]},
+        {"name": "FieldHypothesis", "ordValue": 1, "definition": "現場データに基づく未検証の仮説", "derivedFrom": ["C6", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s172_p01", "layerName": "SafetyMandate", "justification": ["C1"], "dependencies": []},
+        {"id": "s172_p02", "layerName": "SafetyMandate", "justification": ["C2"], "dependencies": []},
+        {"id": "s172_p03", "layerName": "GeophysicalLaw", "justification": ["C3"], "dependencies": [".s172_p01"]},
+        {"id": "s172_p04", "layerName": "GeophysicalLaw", "justification": ["H1"], "dependencies": [".s172_p01", ".s172_p02"]},
+        {"id": "s172_p05", "layerName": "GeophysicalLaw", "justification": ["C3", "H1"], "dependencies": [".s172_p02"]},
+        {"id": "s172_p06", "layerName": "ObservationProtocol", "justification": ["C4"], "dependencies": [".s172_p03"]},
+        {"id": "s172_p07", "layerName": "ObservationProtocol", "justification": ["H2"], "dependencies": [".s172_p04"]},
+        {"id": "s172_p08", "layerName": "SensorFusion", "justification": ["C5"], "dependencies": [".s172_p06"]},
+        {"id": "s172_p09", "layerName": "SensorFusion", "justification": ["H3"], "dependencies": [".s172_p07", ".s172_p12"]},
+        {"id": "s172_p10", "layerName": "SensorFusion", "justification": ["C5", "H3"], "dependencies": [".s172_p06", ".s172_p07"]},
+        {"id": "s172_p11", "layerName": "FieldHypothesis", "justification": ["C6"], "dependencies": [".s172_p08"]},
+        {"id": "s172_p12", "layerName": "FieldHypothesis", "justification": ["H4"], "dependencies": [".s172_p08"]},
+        {"id": "s172_p13", "layerName": "FieldHypothesis", "justification": ["H5"], "dependencies": [".s172_p09", ".s172_p10"]},
+        {"id": "s172_p14", "layerName": "FieldHypothesis", "justification": ["H4", "H5"], "dependencies": [".s172_p10"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "雪崩警報は人命に直結するため、偽陰性（見逃し）を最小化しなければならない"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "最終的な避難指示の発令は自治体の防災担当者が行う"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "積雪の層構造（弱層の存在）が雪崩発生の主要因である"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "観測データは気象庁AMeDASと現地積雪観測所から取得する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "複数センサーのデータを統合して危険度を評価したい"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "スキー場運営者にもリアルタイムで危険度情報を提供したい"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "湿雪雪崩など弱層以外の要因が支配的な地域では適用が限定的"}}, "content": "弱層の形成は気温の日較差と降雪パターンから推定可能"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "AMeDASの観測点密度が低い山岳地域では空間補間の精度が不十分"}}, "content": "AMeDASデータは10分間隔で取得可能であり、リアルタイム性は十分"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C5"], "refutation": "センサー間のデータ形式が統一されていない場合、前処理コストが大きい"}}, "content": "積雪深・気温・風速・降水量の4変数で危険度の80%を説明可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C3", "C5"], "refutation": "過去の雪崩データが少ない地域では統計的妥当性が低い"}}, "content": "過去30年分の雪崩発生データとの照合で検証精度を確保できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C6"], "refutation": "スキー場ごとに地形が大きく異なり汎用モデルが適用困難な場合"}}, "content": "スキー場ごとの地形データを組み込むことで予測精度が向上する"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 173,
+    "project": "自動駐車 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S173",
+      "layers": [
+        {"name": "PhysicalSafety", "ordValue": 5, "definition": "人身事故防止に関わる安全制約。道路交通法に準拠", "derivedFrom": ["C1", "C2"]},
+        {"name": "VehicleRegulation", "ordValue": 4, "definition": "車両基準・型式認証に関わる法規制", "derivedFrom": ["C3", "H1"]},
+        {"name": "ParkingPolicy", "ordValue": 3, "definition": "駐車場運用のルール。施設管理者の方針", "derivedFrom": ["C4", "H2"]},
+        {"name": "ControlAlgorithm", "ordValue": 2, "definition": "経路計画・制御アルゴリズムの設計選択", "derivedFrom": ["C5", "H3", "H4"]},
+        {"name": "SensorHypothesis", "ordValue": 1, "definition": "センサー性能に関する未検証の仮説", "derivedFrom": ["C6", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s173_p01", "layerName": "PhysicalSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s173_p02", "layerName": "PhysicalSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s173_p03", "layerName": "PhysicalSafety", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s173_p04", "layerName": "VehicleRegulation", "justification": ["C3"], "dependencies": [".s173_p01"]},
+        {"id": "s173_p05", "layerName": "VehicleRegulation", "justification": ["H1"], "dependencies": [".s173_p02"]},
+        {"id": "s173_p06", "layerName": "ParkingPolicy", "justification": ["C4"], "dependencies": [".s173_p04"]},
+        {"id": "s173_p07", "layerName": "ParkingPolicy", "justification": ["H2"], "dependencies": [".s173_p04", ".s173_p05"]},
+        {"id": "s173_p08", "layerName": "ParkingPolicy", "justification": ["C4", "H2"], "dependencies": [".s173_p03"]},
+        {"id": "s173_p09", "layerName": "ControlAlgorithm", "justification": ["C5"], "dependencies": [".s173_p06"]},
+        {"id": "s173_p10", "layerName": "ControlAlgorithm", "justification": ["H3"], "dependencies": [".s173_p07"]},
+        {"id": "s173_p11", "layerName": "ControlAlgorithm", "justification": ["H4"], "dependencies": [".s173_p06", ".s173_p08"]},
+        {"id": "s173_p12", "layerName": "SensorHypothesis", "justification": ["C6"], "dependencies": [".s173_p09"]},
+        {"id": "s173_p13", "layerName": "SensorHypothesis", "justification": ["H5"], "dependencies": [".s173_p10"]},
+        {"id": "s173_p14", "layerName": "SensorHypothesis", "justification": ["H6"], "dependencies": [".s173_p11"]},
+        {"id": "s173_p15", "layerName": "SensorHypothesis", "justification": ["H5", "H6"], "dependencies": [".s173_p09", ".s173_p12"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "歩行者との接触事故はゼロでなければならない。衝突回避は最優先"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "ドライバーはいつでも手動介入できなければならない"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "自動駐車機能は国土交通省の型式認証を取得する必要がある"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "駐車場の白線・区画情報は施設管理者から提供される"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "駐車経路は最短距離よりも安全マージンを優先して計画する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "超音波センサーとカメラの両方を搭載する予定"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "型式認証の要件が改定された場合、準拠基準が変わる"}}, "content": "UN-R79（自動操舵に関する国連規則）への準拠が型式認証の前提条件"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "白線が劣化・消失している駐車場では区画認識精度が低下する"}}, "content": "白線認識にはセマンティックセグメンテーションが有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C5"], "refutation": "狭小区画では安全マージンの確保と駐車可能性がトレードオフになる"}}, "content": "RRTアルゴリズムで安全マージンを制約として経路計画可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4", "C5"], "refutation": "動的障害物（歩行者・他車両）が多い場合、静的経路計画では不十分"}}, "content": "静的環境（駐車場）ではオフライン経路計画が効率的"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C6"], "refutation": "雨天・夜間でカメラ性能が大幅に低下する場合"}}, "content": "超音波センサーとカメラの冗長構成で悪天候時にも検知精度を維持可能"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C1", "C6"], "refutation": "LiDARの価格低下により超音波センサーより優位になる場合"}}, "content": "近距離（5m以内）の障害物検知では超音波センサーがカメラより高精度"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 174,
+    "project": "微生物叢解析 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 16,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S174",
+      "layers": [
+        {"name": "BioethicsConstraint", "ordValue": 6, "definition": "生命倫理・個人情報保護に関する不変制約", "derivedFrom": ["C1"]},
+        {"name": "ScientificBasis", "ordValue": 5, "definition": "微生物学・ゲノム科学の確立された知見", "derivedFrom": ["C2", "H1"]},
+        {"name": "ClinicalEvidence", "ordValue": 4, "definition": "臨床研究で裏付けられたエビデンス", "derivedFrom": ["C3", "H2"]},
+        {"name": "AnalysisPipeline", "ordValue": 3, "definition": "解析パイプラインの設計選択", "derivedFrom": ["C4", "H3"]},
+        {"name": "InterpretationModel", "ordValue": 2, "definition": "解析結果の解釈モデル。データに基づく調整可能", "derivedFrom": ["H4", "H5"]},
+        {"name": "ClinicalHypothesis", "ordValue": 1, "definition": "臨床応用に関する未検証の仮説", "derivedFrom": ["C5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s174_p01", "layerName": "BioethicsConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s174_p02", "layerName": "ScientificBasis", "justification": ["C2"], "dependencies": [".s174_p01"]},
+        {"id": "s174_p03", "layerName": "ScientificBasis", "justification": ["H1"], "dependencies": [".s174_p01"]},
+        {"id": "s174_p04", "layerName": "ClinicalEvidence", "justification": ["C3"], "dependencies": [".s174_p02"]},
+        {"id": "s174_p05", "layerName": "ClinicalEvidence", "justification": ["H2"], "dependencies": [".s174_p02", ".s174_p03"]},
+        {"id": "s174_p06", "layerName": "ClinicalEvidence", "justification": ["C3", "H2"], "dependencies": [".s174_p03"]},
+        {"id": "s174_p07", "layerName": "AnalysisPipeline", "justification": ["C4"], "dependencies": [".s174_p04"]},
+        {"id": "s174_p08", "layerName": "AnalysisPipeline", "justification": ["H3"], "dependencies": [".s174_p05"]},
+        {"id": "s174_p09", "layerName": "AnalysisPipeline", "justification": ["C4", "H3"], "dependencies": [".s174_p04", ".s174_p06"]},
+        {"id": "s174_p10", "layerName": "InterpretationModel", "justification": ["H4"], "dependencies": [".s174_p07"]},
+        {"id": "s174_p11", "layerName": "InterpretationModel", "justification": ["H5"], "dependencies": [".s174_p08"]},
+        {"id": "s174_p12", "layerName": "InterpretationModel", "justification": ["H4", "H5"], "dependencies": [".s174_p07", ".s174_p09"]},
+        {"id": "s174_p13", "layerName": "ClinicalHypothesis", "justification": ["C5"], "dependencies": [".s174_p10"]},
+        {"id": "s174_p14", "layerName": "ClinicalHypothesis", "justification": ["H6"], "dependencies": [".s174_p11"]},
+        {"id": "s174_p15", "layerName": "ClinicalHypothesis", "justification": ["H6"], "dependencies": [".s174_p12"]},
+        {"id": "s174_p16", "layerName": "ClinicalHypothesis", "justification": ["C5", "H6"], "dependencies": [".s174_p10", ".s174_p13"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "患者の腸内細菌データは個人の遺伝情報に準じる機微情報であり、匿名化と同意取得が必須"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "16S rRNA遺伝子解析が微生物叢の同定に用いられる標準手法である"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "腸内細菌叢の多様性低下は複数の疾患リスクと関連することが臨床研究で示されている"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "解析パイプラインはQIIME2をベースに構築する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "解析結果は臨床医が治療方針の参考にするが、診断そのものには使用しない"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "ショットガンメタゲノミクスの方が種レベルの解像度が高い場合"}}, "content": "16S rRNAのV3-V4領域が細菌分類に最も情報量が多い"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3"], "refutation": "多様性指標だけでは疾患特異性が低い場合"}}, "content": "Shannon多様性指数とSimpson指数の組み合わせで腸内環境の健全性を評価可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "QIIME2のDADA2がデータ品質によりノイズ除去に失敗する場合"}}, "content": "DADA2によるノイズ除去でASV（Amplicon Sequence Variant）の精度が向上する"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "機械学習モデルが過学習しサンプル外の予測精度が低い場合"}}, "content": "Random Forestで疾患関連菌種の特徴量重要度を推定可能"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C2", "C3"], "refutation": "PCoAの次元削減で重要な構造情報が失われる場合"}}, "content": "PCoA（主座標分析）で個体間の微生物叢の類似性を可視化できる"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C5"], "refutation": "個別化された食事指導の効果が統計的に検証されていない場合"}}, "content": "微生物叢プロファイルに基づく個別化された食事指導が健康改善に寄与する"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 175,
+    "project": "ビル風シミュレーション AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 10,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S175",
+      "layers": [
+        {"name": "PhysicsLaw", "ordValue": 4, "definition": "流体力学の基本法則。変更不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "UrbanRegulation", "ordValue": 3, "definition": "都市計画・建築基準法に基づく環境評価基準", "derivedFrom": ["C3", "H1"]},
+        {"name": "SimulationDesign", "ordValue": 2, "definition": "シミュレーション手法の設計選択", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "ValidationHypothesis", "ordValue": 1, "definition": "検証精度に関する未検証の仮説", "derivedFrom": ["C5", "H4"]}
+      ],
+      "propositions": [
+        {"id": "s175_p01", "layerName": "PhysicsLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s175_p02", "layerName": "PhysicsLaw", "justification": ["C2"], "dependencies": []},
+        {"id": "s175_p03", "layerName": "UrbanRegulation", "justification": ["C3"], "dependencies": [".s175_p01"]},
+        {"id": "s175_p04", "layerName": "UrbanRegulation", "justification": ["H1"], "dependencies": [".s175_p01", ".s175_p02"]},
+        {"id": "s175_p05", "layerName": "SimulationDesign", "justification": ["C4"], "dependencies": [".s175_p03"]},
+        {"id": "s175_p06", "layerName": "SimulationDesign", "justification": ["H2"], "dependencies": [".s175_p03", ".s175_p04"]},
+        {"id": "s175_p07", "layerName": "SimulationDesign", "justification": ["H3"], "dependencies": [".s175_p04"]},
+        {"id": "s175_p08", "layerName": "ValidationHypothesis", "justification": ["C5"], "dependencies": [".s175_p05"]},
+        {"id": "s175_p09", "layerName": "ValidationHypothesis", "justification": ["H4"], "dependencies": [".s175_p06", ".s175_p07"]},
+        {"id": "s175_p10", "layerName": "ValidationHypothesis", "justification": ["C5", "H4"], "dependencies": [".s175_p05", ".s175_p06"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "ナビエ・ストークス方程式が風の流れのシミュレーションの基礎である"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "建物形状は3D CADデータから取得し、周辺建物も含めてモデル化する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "環境アセスメントの風環境評価基準（村上基準）に適合させる必要がある"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "計算コストを抑えるためにRANSモデルを基本手法とする"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "シミュレーション結果は風洞実験データと照合して精度を検証する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "村上基準が改訂された場合、評価閾値が変わる"}}, "content": "歩行者レベル（地上1.5m）の風速が評価の主要ターゲット"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "RANSでは渦の非定常性を捉えられず精度が不十分な場合"}}, "content": "k-εモデルが都市風のRANSシミュレーションに最も広く検証されている"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C2", "C4"], "refutation": "複雑な建物形状ではメッシュ品質の確保が困難な場合"}}, "content": "非構造メッシュで複雑な建物形状を効率的に離散化可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "風洞実験のスケール効果が大きく実スケールとの乖離がある場合"}}, "content": "1/400スケールの風洞実験データとの相関係数0.9以上が達成可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 176,
+    "project": "古銭鑑定 AI",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S176",
+      "layers": [
+        {"name": "NumismaticAuthority", "ordValue": 3, "definition": "貨幣学・考古学に基づく鑑定基準。専門家の合意に基づく", "derivedFrom": ["C1", "C2"]},
+        {"name": "ImageAnalysisDesign", "ordValue": 2, "definition": "画像認識・分類モデルの設計選択", "derivedFrom": ["C3", "H1", "H2"]},
+        {"name": "MarketHypothesis", "ordValue": 1, "definition": "市場価値・希少性に関する未検証の仮説", "derivedFrom": ["C4", "H3", "H4"]}
+      ],
+      "propositions": [
+        {"id": "s176_p01", "layerName": "NumismaticAuthority", "justification": ["C1"], "dependencies": []},
+        {"id": "s176_p02", "layerName": "NumismaticAuthority", "justification": ["C2"], "dependencies": []},
+        {"id": "s176_p03", "layerName": "ImageAnalysisDesign", "justification": ["C3"], "dependencies": [".s176_p01"]},
+        {"id": "s176_p04", "layerName": "ImageAnalysisDesign", "justification": ["H1"], "dependencies": [".s176_p01", ".s176_p02"]},
+        {"id": "s176_p05", "layerName": "ImageAnalysisDesign", "justification": ["H2"], "dependencies": [".s176_p02"]},
+        {"id": "s176_p06", "layerName": "MarketHypothesis", "justification": ["C4"], "dependencies": [".s176_p03"]},
+        {"id": "s176_p07", "layerName": "MarketHypothesis", "justification": ["H3"], "dependencies": [".s176_p04"]},
+        {"id": "s176_p08", "layerName": "MarketHypothesis", "justification": ["H4"], "dependencies": [".s176_p03", ".s176_p05"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "古銭の真贋判定は最終的に専門の鑑定士が行う。AIは候補の絞り込みと参考情報の提供"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "鑑定基準は日本貨幣カタログ等の標準的な分類体系に準拠する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "ユーザーがスマートフォンで撮影した画像から鑑定を行う"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "鑑定結果には推定市場価格帯も表示したい"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "摩耗・腐食が激しい古銭では書体の判読が困難な場合"}}, "content": "書体（篆書・楷書等）の分類が年代特定の主要手がかりになる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3"], "refutation": "照明条件のばらつきが大きいスマートフォン撮影では前処理が重要"}}, "content": "EfficientNetベースのCNNで古銭の時代・種類を高精度に分類可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "古銭市場の価格変動が大きく、過去データの参照価値が低い場合"}}, "content": "オークション落札データの統計分析で市場価格帯を推定可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "保存状態の客観的評価基準が確立されていない場合"}}, "content": "画像から保存状態（極美品・美品・並品等）の自動判定が可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 177,
+    "project": "油流出拡散予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S177",
+      "layers": [
+        {"name": "EnvironmentalLaw", "ordValue": 5, "definition": "海洋汚染防止法・国際条約に基づく法的義務", "derivedFrom": ["C1"]},
+        {"name": "OceanPhysics", "ordValue": 4, "definition": "海洋物理学の確立された知見", "derivedFrom": ["C2", "H1"]},
+        {"name": "ResponseProtocol", "ordValue": 3, "definition": "油防除の対応手順。海上保安庁の指針に基づく", "derivedFrom": ["C3", "H2"]},
+        {"name": "ModelDesign", "ordValue": 2, "definition": "拡散予測モデルの設計選択", "derivedFrom": ["C4", "H3"]},
+        {"name": "OperationalHypothesis", "ordValue": 1, "definition": "運用効率に関する未検証の仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s177_p01", "layerName": "EnvironmentalLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s177_p02", "layerName": "OceanPhysics", "justification": ["C2"], "dependencies": [".s177_p01"]},
+        {"id": "s177_p03", "layerName": "OceanPhysics", "justification": ["H1"], "dependencies": [".s177_p01"]},
+        {"id": "s177_p04", "layerName": "ResponseProtocol", "justification": ["C3"], "dependencies": [".s177_p02"]},
+        {"id": "s177_p05", "layerName": "ResponseProtocol", "justification": ["H2"], "dependencies": [".s177_p02", ".s177_p03"]},
+        {"id": "s177_p06", "layerName": "ResponseProtocol", "justification": ["C3", "H2"], "dependencies": [".s177_p03"]},
+        {"id": "s177_p07", "layerName": "ModelDesign", "justification": ["C4"], "dependencies": [".s177_p04"]},
+        {"id": "s177_p08", "layerName": "ModelDesign", "justification": ["H3"], "dependencies": [".s177_p05"]},
+        {"id": "s177_p09", "layerName": "ModelDesign", "justification": ["C4", "H3"], "dependencies": [".s177_p04", ".s177_p06"]},
+        {"id": "s177_p10", "layerName": "OperationalHypothesis", "justification": ["C5"], "dependencies": [".s177_p07"]},
+        {"id": "s177_p11", "layerName": "OperationalHypothesis", "justification": ["H4"], "dependencies": [".s177_p08"]},
+        {"id": "s177_p12", "layerName": "OperationalHypothesis", "justification": ["H5"], "dependencies": [".s177_p09"]},
+        {"id": "s177_p13", "layerName": "OperationalHypothesis", "justification": ["H4", "H5"], "dependencies": [".s177_p07", ".s177_p10"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "油流出事故の通報と対応は海洋汚染防止法に基づく法的義務である"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "油の拡散は潮流・風・波浪の影響を受ける流体力学的現象である"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "油防除作業の優先順位は海上保安庁の指針に従う"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "予測モデルは72時間先までの拡散を予測する必要がある"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "予測結果は海上保安庁と自治体にリアルタイムで共有する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "沿岸域の複雑な地形で潮流モデルの精度が不十分な場合"}}, "content": "FVCOM（有限体積法海洋モデル）で潮流場を高精度に再現可能"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3"], "refutation": "重油と軽油で風化過程が大きく異なる場合、油種別の対応が必要"}}, "content": "油の風化過程（蒸発・乳化・分散）をパラメトリックにモデル化可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "気象予報の精度が低い海域では72時間予測の信頼性が低下する"}}, "content": "粒子追跡法（ラグランジュ法）で油の拡散経路を確率的に予測可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "通信インフラが不十分な離島・遠洋での運用が困難な場合"}}, "content": "WebGISベースの可視化で関係機関との情報共有が効率化される"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C4", "C5"], "refutation": "アンサンブル予測の計算コストがリアルタイム運用に耐えない場合"}}, "content": "アンサンブル予測（複数シナリオ）で予測の不確実性を定量化可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 178,
+    "project": "エレベーター故障予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S178",
+      "layers": [
+        {"name": "SafetyStandard", "ordValue": 4, "definition": "建築基準法・エレベーター安全規格に基づく安全基準", "derivedFrom": ["C1", "C2"]},
+        {"name": "MaintenanceEvidence", "ordValue": 3, "definition": "保守実績から得られた経験則", "derivedFrom": ["C3", "H1"]},
+        {"name": "PredictionDesign", "ordValue": 2, "definition": "予測モデルの設計選択", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "CostHypothesis", "ordValue": 1, "definition": "コスト効果に関する未検証の仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s178_p01", "layerName": "SafetyStandard", "justification": ["C1"], "dependencies": []},
+        {"id": "s178_p02", "layerName": "SafetyStandard", "justification": ["C2"], "dependencies": []},
+        {"id": "s178_p03", "layerName": "MaintenanceEvidence", "justification": ["C3"], "dependencies": [".s178_p01"]},
+        {"id": "s178_p04", "layerName": "MaintenanceEvidence", "justification": ["H1"], "dependencies": [".s178_p01", ".s178_p02"]},
+        {"id": "s178_p05", "layerName": "PredictionDesign", "justification": ["C4"], "dependencies": [".s178_p03"]},
+        {"id": "s178_p06", "layerName": "PredictionDesign", "justification": ["H2"], "dependencies": [".s178_p03", ".s178_p04"]},
+        {"id": "s178_p07", "layerName": "PredictionDesign", "justification": ["H3"], "dependencies": [".s178_p04"]},
+        {"id": "s178_p08", "layerName": "CostHypothesis", "justification": ["C5"], "dependencies": [".s178_p05"]},
+        {"id": "s178_p09", "layerName": "CostHypothesis", "justification": ["H4"], "dependencies": [".s178_p06"]},
+        {"id": "s178_p10", "layerName": "CostHypothesis", "justification": ["H5"], "dependencies": [".s178_p07"]},
+        {"id": "s178_p11", "layerName": "CostHypothesis", "justification": ["H4", "H5"], "dependencies": [".s178_p05", ".s178_p08"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "エレベーターの安全性は建築基準法施行令129条に定められた基準を満たさなければならない"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "故障予測の結果に関わらず、法定点検は省略できない"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "過去10年分の保守記録と故障履歴がデータベースに蓄積されている"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "振動センサーとモーター電流センサーのデータをリアルタイムで取得する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "予測に基づく予防保守で保守コストの削減を目指す"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "保守記録のデータ品質（記録漏れ・分類の不統一）が低い場合"}}, "content": "ワイブル分布で主要部品の故障時期を統計的に推定可能"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "振動パターンが故障モードと1対1に対応しない場合"}}, "content": "振動の周波数スペクトル変化がベアリング劣化の早期指標になる"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "異なるメーカー・機種間でモデルの転用ができない場合"}}, "content": "LSTMで時系列センサーデータから故障までの残存寿命を予測可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "予防保守の頻度増加がコスト削減効果を相殺する場合"}}, "content": "故障前の予防交換により緊急停止件数を50%削減可能"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C3", "C5"], "refutation": "部品の在庫管理コストが予測精度に見合わない場合"}}, "content": "故障予測に基づく部品の事前発注で在庫最適化が可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 179,
+    "project": "難民支援マッチング AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 7,
+    "num_props": 18,
+    "num_deps": 19,
+    "monotonicity_violation": {
+      "description": "s179_p10（CulturalAdaptation, ord=3）が s179_p14（IntegrationHypothesis, ord=1）に依存 — 依存先の ord が依存元より低い",
+      "violating_proposition": "s179_p10",
+      "violating_dependency": "s179_p14",
+      "fix_applied": false
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S179",
+      "layers": [
+        {"name": "HumanRightsLaw", "ordValue": 7, "definition": "難民条約・国際人権法に基づく不可侵の権利保障", "derivedFrom": ["C1"]},
+        {"name": "ProtectionPrinciple", "ordValue": 6, "definition": "UNHCRの保護原則。ノン・ルフールマン原則等", "derivedFrom": ["C2"]},
+        {"name": "DataEthics", "ordValue": 5, "definition": "脆弱な立場にある人々のデータ保護に関する倫理基準", "derivedFrom": ["C3", "H1"]},
+        {"name": "ServicePolicy", "ordValue": 4, "definition": "支援サービスの提供方針。受入自治体の裁量", "derivedFrom": ["C4", "H2"]},
+        {"name": "CulturalAdaptation", "ordValue": 3, "definition": "文化的適応に関する運用ルール。データに基づき更新可能", "derivedFrom": ["C5", "H3"]},
+        {"name": "MatchingAlgorithm", "ordValue": 2, "definition": "マッチングアルゴリズムの設計選択", "derivedFrom": ["C6", "H4"]},
+        {"name": "IntegrationHypothesis", "ordValue": 1, "definition": "社会統合の成果に関する未検証の仮説", "derivedFrom": ["H5"]}
+      ],
+      "propositions": [
+        {"id": "s179_p01", "layerName": "HumanRightsLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s179_p02", "layerName": "ProtectionPrinciple", "justification": ["C2"], "dependencies": [".s179_p01"]},
+        {"id": "s179_p03", "layerName": "ProtectionPrinciple", "justification": ["C2", "H1"], "dependencies": [".s179_p01"]},
+        {"id": "s179_p04", "layerName": "DataEthics", "justification": ["C3"], "dependencies": [".s179_p02"]},
+        {"id": "s179_p05", "layerName": "DataEthics", "justification": ["H1"], "dependencies": [".s179_p02", ".s179_p03"]},
+        {"id": "s179_p06", "layerName": "ServicePolicy", "justification": ["C4"], "dependencies": [".s179_p04"]},
+        {"id": "s179_p07", "layerName": "ServicePolicy", "justification": ["H2"], "dependencies": [".s179_p04", ".s179_p05"]},
+        {"id": "s179_p08", "layerName": "CulturalAdaptation", "justification": ["C5"], "dependencies": [".s179_p06"]},
+        {"id": "s179_p09", "layerName": "CulturalAdaptation", "justification": ["H3"], "dependencies": [".s179_p06", ".s179_p07"]},
+        {"id": "s179_p10", "layerName": "CulturalAdaptation", "justification": ["H3"], "dependencies": [".s179_p07", ".s179_p14"]},
+        {"id": "s179_p11", "layerName": "MatchingAlgorithm", "justification": ["C6"], "dependencies": [".s179_p08"]},
+        {"id": "s179_p12", "layerName": "MatchingAlgorithm", "justification": ["H4"], "dependencies": [".s179_p09"]},
+        {"id": "s179_p13", "layerName": "MatchingAlgorithm", "justification": ["C6", "H4"], "dependencies": [".s179_p08", ".s179_p10"]},
+        {"id": "s179_p14", "layerName": "IntegrationHypothesis", "justification": ["H5"], "dependencies": [".s179_p11"]},
+        {"id": "s179_p15", "layerName": "IntegrationHypothesis", "justification": ["H5"], "dependencies": [".s179_p12"]},
+        {"id": "s179_p16", "layerName": "IntegrationHypothesis", "justification": ["H5"], "dependencies": [".s179_p13"]},
+        {"id": "s179_p17", "layerName": "IntegrationHypothesis", "justification": ["H5"], "dependencies": [".s179_p11", ".s179_p14"]},
+        {"id": "s179_p18", "layerName": "IntegrationHypothesis", "justification": ["H5"], "dependencies": [".s179_p12", ".s179_p15"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "難民の権利は1951年難民条約及び1967年議定書に基づいて保障される"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "ノン・ルフールマン原則（迫害の恐れがある国への送還禁止）は絶対的な制約である"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "難民の個人情報は最高レベルのセキュリティで保護し、支援目的以外での使用を禁止する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "支援サービス（住居・就労・教育）のマッチングは受入自治体のリソースに基づいて行う"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "マッチングでは言語・文化的背景を考慮して、同じコミュニティの近くに配置することを優先する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "マッチング結果は必ず支援担当者が確認し、難民本人の希望を尊重して最終決定する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "データの匿名化が技術的に不完全で再識別リスクがある場合"}}, "content": "差分プライバシーの適用でデータの統計的有用性を維持しつつプライバシーを保護可能"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "自治体間のリソース情報がリアルタイムで共有されていない場合"}}, "content": "自治体のリソース空き情報をAPIで連携し、動的にマッチング候補を更新可能"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C5"], "refutation": "同一コミュニティへの集中配置がかえって社会統合を阻害する場合"}}, "content": "既存コミュニティの規模と受入キャパシティのバランスが最適な配置を決定する"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C6"], "refutation": "多目的最適化の計算コストがリアルタイム運用に耐えない場合"}}, "content": "多目的最適化（住居・就労・教育の複合スコア）でマッチング品質を向上可能"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C4", "C5"], "refutation": "社会統合の指標自体が文化的に偏っている場合"}}, "content": "マッチング後の就労率・言語習得度を追跡することで、アルゴリズムの効果を定量評価可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 180,
+    "project": "半導体設計ルールチェック AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S180",
+      "layers": [
+        {"name": "PhysicsConstraint", "ordValue": 5, "definition": "半導体物理の基本法則。プロセスノードに依存しない不変制約", "derivedFrom": ["C1"]},
+        {"name": "ProcessRule", "ordValue": 4, "definition": "ファウンドリのプロセスデザインルール。製造仕様に基づく", "derivedFrom": ["C2", "H1"]},
+        {"name": "DesignMethodology", "ordValue": 3, "definition": "設計手法・EDAツールフローの選択", "derivedFrom": ["C3", "H2"]},
+        {"name": "CheckAlgorithm", "ordValue": 2, "definition": "DRCアルゴリズムの設計選択", "derivedFrom": ["C4", "H3"]},
+        {"name": "PerformanceHypothesis", "ordValue": 1, "definition": "チェック性能に関する未検証の仮説", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s180_p01", "layerName": "PhysicsConstraint", "justification": ["C1"], "dependencies": []},
+        {"id": "s180_p02", "layerName": "ProcessRule", "justification": ["C2"], "dependencies": [".s180_p01"]},
+        {"id": "s180_p03", "layerName": "ProcessRule", "justification": ["H1"], "dependencies": [".s180_p01"]},
+        {"id": "s180_p04", "layerName": "ProcessRule", "justification": ["C2", "H1"], "dependencies": [".s180_p01"]},
+        {"id": "s180_p05", "layerName": "DesignMethodology", "justification": ["C3"], "dependencies": [".s180_p02"]},
+        {"id": "s180_p06", "layerName": "DesignMethodology", "justification": ["H2"], "dependencies": [".s180_p02", ".s180_p03"]},
+        {"id": "s180_p07", "layerName": "CheckAlgorithm", "justification": ["C4"], "dependencies": [".s180_p05"]},
+        {"id": "s180_p08", "layerName": "CheckAlgorithm", "justification": ["H3"], "dependencies": [".s180_p05", ".s180_p06"]},
+        {"id": "s180_p09", "layerName": "CheckAlgorithm", "justification": ["C4", "H3"], "dependencies": [".s180_p06"]},
+        {"id": "s180_p10", "layerName": "PerformanceHypothesis", "justification": ["C5"], "dependencies": [".s180_p07"]},
+        {"id": "s180_p11", "layerName": "PerformanceHypothesis", "justification": ["H4"], "dependencies": [".s180_p08"]},
+        {"id": "s180_p12", "layerName": "PerformanceHypothesis", "justification": ["H5"], "dependencies": [".s180_p09"]},
+        {"id": "s180_p13", "layerName": "PerformanceHypothesis", "justification": ["H4", "H5"], "dependencies": [".s180_p07", ".s180_p10"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "電気的特性（寄生容量・抵抗・電磁干渉）は物理法則に従い、設計ルールで管理しなければならない"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "TSMCのN5プロセスのDesign Rule Manual（DRM）に準拠する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "設計フローはCadence Virtuosoをベースとする"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "DRCチェックは全レイヤー（Metal、Via、Poly等）を対象とする"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "フルチップDRCを1時間以内に完了させたい"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "DRMのバージョンアップでルールが大幅に変更される場合"}}, "content": "N5プロセスではマルチパターニング（SADP/SAQP）のルールが最も複雑で違反が多い"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3"], "refutation": "Synopsys ICValidatorの方がN5プロセスとの親和性が高い場合"}}, "content": "Cadence PVSがVirtuosoフローと最も統合されたDRCエンジン"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "ルール間の相互作用が複雑でAIによる分類が不十分な場合"}}, "content": "過去の違反パターンを学習し、違反しやすい箇所を優先的にチェックすることで効率化可能"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "チップ面積が極端に大きい場合、並列化の通信オーバーヘッドが支配的になる"}}, "content": "チップ領域を分割して並列DRCを実行することで処理時間を線形にスケールダウン可能"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C4", "C5"], "refutation": "インクリメンタルチェックの差分検出が不完全で見逃しが発生する場合"}}, "content": "変更箇所のみをインクリメンタルにチェックすることで再チェック時間を90%削減可能"}
+      ]
+    }
+  }
+]

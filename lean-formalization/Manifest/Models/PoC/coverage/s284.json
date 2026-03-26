@@ -1,0 +1,192 @@
+{
+  "namespace": "Scenario284",
+  "layers": [
+    {
+      "name": "medical",
+      "ordValue": 3,
+      "definition": "医療倫理と患者安全に関する不可侵の原則。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床評価基準と計測プロトコル。専門家の合意で設定。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "algorithm",
+      "ordValue": 1,
+      "definition": "AI評価アルゴリズムの設計判断。データで改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。臨床データで検証が必要。",
+      "derivedFrom": [
+        "H1",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med3",
+      "layerName": "medical",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cln1",
+      "layerName": "clinical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "cln2",
+      "layerName": "clinical",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".med2"
+      ]
+    },
+    {
+      "id": "cln3",
+      "layerName": "clinical",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".med1",
+        ".med2"
+      ]
+    },
+    {
+      "id": "alg1",
+      "layerName": "algorithm",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cln1",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "alg2",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".cln2",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "alg3",
+      "layerName": "algorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".med1",
+        ".cln1"
+      ]
+    },
+    {
+      "id": "alg4",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg2"
+      ]
+    },
+    {
+      "id": "alg5",
+      "layerName": "algorithm",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".cln2",
+        ".alg3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".alg3",
+        ".alg5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2"
+      ]
+    }
+  ]
+}

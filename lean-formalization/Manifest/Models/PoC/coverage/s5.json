@@ -1,0 +1,217 @@
+{
+  "namespace": "TestCoverage.S5",
+  "layers": [
+    {
+      "name": "LifeSafety",
+      "ordValue": 5,
+      "definition": "人命最優先。全判断の不動点",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "EmergencyProtocol",
+      "ordValue": 4,
+      "definition": "災害対策基本法・自治体防災計画に基づく手順",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "SituationalAssessment",
+      "ordValue": 3,
+      "definition": "リアルタイム状況判断。センサー・通報データに基づく",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "RouteOptimization",
+      "ordValue": 2,
+      "definition": "避難経路の最適化。混雑・通行止め情報を反映",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "IndividualAccommodation",
+      "ordValue": 1,
+      "definition": "個人の身体能力・特別なニーズへの対応",
+      "derivedFrom": [
+        "C5",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s5_p01",
+      "layerName": "LifeSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s5_p02",
+      "layerName": "LifeSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s5_p03",
+      "layerName": "EmergencyProtocol",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s5_p01"
+      ]
+    },
+    {
+      "id": "s5_p04",
+      "layerName": "EmergencyProtocol",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s5_p02"
+      ]
+    },
+    {
+      "id": "s5_p05",
+      "layerName": "EmergencyProtocol",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s5_p01",
+        "s5_p02"
+      ]
+    },
+    {
+      "id": "s5_p06",
+      "layerName": "SituationalAssessment",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s5_p03"
+      ]
+    },
+    {
+      "id": "s5_p07",
+      "layerName": "SituationalAssessment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s5_p04"
+      ]
+    },
+    {
+      "id": "s5_p08",
+      "layerName": "SituationalAssessment",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "s5_p03",
+        "s5_p05"
+      ]
+    },
+    {
+      "id": "s5_p09",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s5_p06"
+      ]
+    },
+    {
+      "id": "s5_p10",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s5_p07"
+      ]
+    },
+    {
+      "id": "s5_p11",
+      "layerName": "RouteOptimization",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s5_p06",
+        "s5_p08"
+      ]
+    },
+    {
+      "id": "s5_p12",
+      "layerName": "IndividualAccommodation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s5_p09"
+      ]
+    },
+    {
+      "id": "s5_p13",
+      "layerName": "IndividualAccommodation",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s5_p10"
+      ]
+    },
+    {
+      "id": "s5_p14",
+      "layerName": "IndividualAccommodation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "s5_p11"
+      ]
+    },
+    {
+      "id": "s5_p15",
+      "layerName": "IndividualAccommodation",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        "s5_p12",
+        "s5_p13"
+      ]
+    },
+    {
+      "id": "s5_p16",
+      "layerName": "SituationalAssessment",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        "s5_p05"
+      ]
+    }
+  ]
+}

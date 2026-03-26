@@ -1,0 +1,175 @@
+{
+  "namespace": "Scenario197",
+  "layers": [
+    {
+      "name": "environmental",
+      "ordValue": 3,
+      "definition": "極地環境の物理的制約と野生動物保護規制。変更不可。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "communication",
+      "ordValue": 2,
+      "definition": "通信・帯域に関する制約。インフラ依存。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "planning",
+      "ordValue": 1,
+      "definition": "研究チームとAIが協調する飛行・観測計画。",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "検証が必要な技術的仮説。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "env1",
+      "layerName": "environmental",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environmental",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env3",
+      "layerName": "environmental",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env4",
+      "layerName": "environmental",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".env1"
+      ]
+    },
+    {
+      "id": "com1",
+      "layerName": "communication",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "com2",
+      "layerName": "communication",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".env3"
+      ]
+    },
+    {
+      "id": "pln1",
+      "layerName": "planning",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".env1",
+        ".env3"
+      ]
+    },
+    {
+      "id": "pln2",
+      "layerName": "planning",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".env4",
+        ".com2"
+      ]
+    },
+    {
+      "id": "pln3",
+      "layerName": "planning",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".com1",
+        ".com2"
+      ]
+    },
+    {
+      "id": "pln4",
+      "layerName": "planning",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".env2",
+        ".pln1"
+      ]
+    },
+    {
+      "id": "pln5",
+      "layerName": "planning",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".pln2",
+        ".pln3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".env1",
+        ".pln1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".pln2",
+        ".pln5"
+      ]
+    }
+  ]
+}

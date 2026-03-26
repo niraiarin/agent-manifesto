@@ -1,0 +1,241 @@
+{
+  "namespace": "Scenario285",
+  "layers": [
+    {
+      "name": "geophysics",
+      "ordValue": 4,
+      "definition": "地球物理学的制約。太陽-地球間の電磁相互作用の法則。",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "gridSafety",
+      "ordValue": 3,
+      "definition": "送電網の保護と安全基準。物理的限界で規定。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "operations",
+      "ordValue": 2,
+      "definition": "電力系統運用者が設定する運用パラメータ。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "GIC予測モデルの設計判断。観測データで改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。磁気嵐イベントで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "geo1",
+      "layerName": "geophysics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo2",
+      "layerName": "geophysics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo3",
+      "layerName": "geophysics",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gs1",
+      "layerName": "gridSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".geo1"
+      ]
+    },
+    {
+      "id": "gs2",
+      "layerName": "gridSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".geo2",
+        ".geo3"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operations",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".gs1"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operations",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".gs1",
+        ".gs2"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operations",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".ops1",
+        ".ops2"
+      ]
+    },
+    {
+      "id": "prd1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".geo1",
+        ".geo2"
+      ]
+    },
+    {
+      "id": "prd2",
+      "layerName": "prediction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".gs1",
+        ".gs2"
+      ]
+    },
+    {
+      "id": "prd3",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".geo2",
+        ".geo3"
+      ]
+    },
+    {
+      "id": "prd4",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".prd1",
+        ".prd3"
+      ]
+    },
+    {
+      "id": "prd5",
+      "layerName": "prediction",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".prd2",
+        ".prd4"
+      ]
+    },
+    {
+      "id": "prd6",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".ops3",
+        ".prd1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops2",
+        ".prd4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".prd5",
+        ".prd6"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp2",
+        ".hyp3"
+      ]
+    }
+  ]
+}

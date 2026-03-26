@@ -1,0 +1,383 @@
+{
+  "namespace": "TestCoverage.S179",
+  "layers": [
+    {
+      "name": "HumanRightsLaw",
+      "ordValue": 7,
+      "definition": "難民条約・国際人権法に基づく不可侵の権利保障",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ProtectionPrinciple",
+      "ordValue": 6,
+      "definition": "UNHCRの保護原則。ノン・ルフールマン原則等",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "DataEthics",
+      "ordValue": 5,
+      "definition": "脆弱な立場にある人々のデータ保護に関する倫理基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ServicePolicy",
+      "ordValue": 4,
+      "definition": "支援サービスの提供方針。受入自治体の裁量",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "CulturalAdaptation",
+      "ordValue": 3,
+      "definition": "文化的適応に関する運用ルール。データに基づき更新可能",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "MatchingAlgorithm",
+      "ordValue": 2,
+      "definition": "マッチングアルゴリズムの設計選択",
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "IntegrationHypothesis",
+      "ordValue": 1,
+      "definition": "社会統合の成果に関する未検証の仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s179_p01",
+      "layerName": "HumanRightsLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s179_p02",
+      "layerName": "ProtectionPrinciple",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s179_p01"
+      ]
+    },
+    {
+      "id": "s179_p03",
+      "layerName": "ProtectionPrinciple",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".s179_p01"
+      ]
+    },
+    {
+      "id": "s179_p04",
+      "layerName": "DataEthics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s179_p02"
+      ]
+    },
+    {
+      "id": "s179_p05",
+      "layerName": "DataEthics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s179_p02",
+        ".s179_p03"
+      ]
+    },
+    {
+      "id": "s179_p06",
+      "layerName": "ServicePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s179_p04"
+      ]
+    },
+    {
+      "id": "s179_p07",
+      "layerName": "ServicePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s179_p04",
+        ".s179_p05"
+      ]
+    },
+    {
+      "id": "s179_p08",
+      "layerName": "CulturalAdaptation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s179_p06"
+      ]
+    },
+    {
+      "id": "s179_p09",
+      "layerName": "CulturalAdaptation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s179_p06",
+        ".s179_p07"
+      ]
+    },
+    {
+      "id": "s179_p10",
+      "layerName": "CulturalAdaptation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s179_p07",
+        ".s179_p14"
+      ]
+    },
+    {
+      "id": "s179_p11",
+      "layerName": "MatchingAlgorithm",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s179_p08"
+      ]
+    },
+    {
+      "id": "s179_p12",
+      "layerName": "MatchingAlgorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s179_p09"
+      ]
+    },
+    {
+      "id": "s179_p13",
+      "layerName": "MatchingAlgorithm",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s179_p08",
+        ".s179_p10"
+      ]
+    },
+    {
+      "id": "s179_p14",
+      "layerName": "IntegrationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s179_p11"
+      ]
+    },
+    {
+      "id": "s179_p15",
+      "layerName": "IntegrationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s179_p12"
+      ]
+    },
+    {
+      "id": "s179_p16",
+      "layerName": "IntegrationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s179_p13"
+      ]
+    },
+    {
+      "id": "s179_p17",
+      "layerName": "IntegrationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s179_p11",
+        ".s179_p14"
+      ]
+    },
+    {
+      "id": "s179_p18",
+      "layerName": "IntegrationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s179_p12",
+        ".s179_p15"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "難民の権利は1951年難民条約及び1967年議定書に基づいて保障される"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ノン・ルフールマン原則（迫害の恐れがある国への送還禁止）は絶対的な制約である"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "難民の個人情報は最高レベルのセキュリティで保護し、支援目的以外での使用を禁止する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "支援サービス（住居・就労・教育）のマッチングは受入自治体のリソースに基づいて行う"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "マッチングでは言語・文化的背景を考慮して、同じコミュニティの近くに配置することを優先する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "マッチング結果は必ず支援担当者が確認し、難民本人の希望を尊重して最終決定する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "データの匿名化が技術的に不完全で再識別リスクがある場合"
+        }
+      },
+      "content": "差分プライバシーの適用でデータの統計的有用性を維持しつつプライバシーを保護可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "自治体間のリソース情報がリアルタイムで共有されていない場合"
+        }
+      },
+      "content": "自治体のリソース空き情報をAPIで連携し、動的にマッチング候補を更新可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "同一コミュニティへの集中配置がかえって社会統合を阻害する場合"
+        }
+      },
+      "content": "既存コミュニティの規模と受入キャパシティのバランスが最適な配置を決定する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "多目的最適化の計算コストがリアルタイム運用に耐えない場合"
+        }
+      },
+      "content": "多目的最適化（住居・就労・教育の複合スコア）でマッチング品質を向上可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "社会統合の指標自体が文化的に偏っている場合"
+        }
+      },
+      "content": "マッチング後の就労率・言語習得度を追跡することで、アルゴリズムの効果を定量評価可能"
+    }
+  ]
+}

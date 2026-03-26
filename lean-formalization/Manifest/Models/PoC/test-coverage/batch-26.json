@@ -1,0 +1,492 @@
+[
+  {
+    "scenario_id": 251,
+    "project": "原子力プラント異常検知 AI",
+    "phase0_vision": "原子力発電プラントの各系統をリアルタイムで監視し、異常の兆候を早期検知するAI。センサーデータの統合解析、異常パターンの分類、運転員への警報通知と対応提案を行う。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "原子炉の緊急停止（スクラム）判断は制御棒駆動系のハードウェアインターロックが最終防衛線であり、AIはこれを無効化できない" },
+      "C2": { "source": "humanDecision", "content": "異常検知結果の最終判断は運転員が行う。AIは判断材料を提示するのみ" },
+      "C3": { "source": "humanDecision", "content": "原子力規制委員会の安全基準に準拠した閾値設定は変更不可" },
+      "C4": { "source": "humanDecision", "content": "センサーデータの取得間隔は系統ごとに規定されており、AIが変更することはない" },
+      "C5": { "source": "humanDecision", "content": "全ての異常検知イベントは記録・保管し、規制当局への報告対象となる" },
+      "C6": { "source": "humanDecision", "content": "運転員の交代時に前任者の判断コンテキストをAIが引き継ぎ提示する" },
+      "H1": { "source": "llmInference", "basis": ["C1","C4"], "refutation": "物理モデルが全異常モードを網羅できる場合", "content": "異常検知には物理モデルベースと統計ベースのハイブリッドアプローチが必要" },
+      "H2": { "source": "llmInference", "basis": ["C3"], "refutation": "規制基準が動的に変わるリスクベース規制に移行した場合", "content": "閾値超過と異常パターンの複合判定で誤報率を低減できる" },
+      "H3": { "source": "llmInference", "basis": ["C5"], "refutation": "リアルタイム記録が計算負荷で検知遅延を起こす場合", "content": "イベントログは構造化データとして即時記録し、事後分析と規制報告を自動化すべき" },
+      "H4": { "source": "llmInference", "basis": ["C2","C6"], "refutation": "運転員がAI提案を常に無視する運用が確立された場合", "content": "運転員への提示には確信度と根拠の可視化が効果的" }
+    },
+    "phase2_internal": {
+      "layer_derivation": "5層: regulatory(規制的制約,ord=4) > safety(安全設計,ord=3) > operational(運転方針,ord=2) > analysis(解析戦略,ord=1) > hyp(未検証,ord=0)",
+      "monotonicity_violations_initial": [
+        {
+          "violation": "ana2 (analysis, ord=1) が hyp1 (hyp, ord=0) に依存 — 依存先のordが依存元より低い",
+          "cause": "H由来: ana2の複合判定戦略がhyp1（ログ自動化仮説）に依存する構造になっていた",
+          "resolution": "hyp1への依存を除去し、ana2はops2（運転層の記録方針）への依存に変更。ログフォーマットは運転方針レベルの確定事項として扱う",
+          "resolved_in": "Phase 2.5 自律修正（H由来のみのため人間確認不要）"
+        }
+      ],
+      "monotonicity_violations_final": 0
+    },
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "Scenario251",
+      "layers": [
+        { "name": "regulatory", "ordValue": 4, "definition": "原子力規制委員会の基準に基づく制約。法的強制力を持つ。", "derivedFrom": ["C1","C3"] },
+        { "name": "safety", "ordValue": 3, "definition": "プラント安全設計に由来する不変条件。ハードウェアインターロックで強制。", "derivedFrom": ["C1","C4"] },
+        { "name": "operational", "ordValue": 2, "definition": "運転員と管理者が設定する運転方針。シフトやプラント状態に応じて変動。", "derivedFrom": ["C2","C5","C6"] },
+        { "name": "analysis", "ordValue": 1, "definition": "AIが自律的に最適化する解析手法。データに応じて調整可能。", "derivedFrom": ["H1","H2","H4"] },
+        { "name": "hyp", "ordValue": 0, "definition": "運用データで検証が必要な未検証仮説。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "reg1", "layerName": "regulatory", "justification": ["C1"], "dependencies": [] },
+        { "id": "reg2", "layerName": "regulatory", "justification": ["C3"], "dependencies": [] },
+        { "id": "reg3", "layerName": "regulatory", "justification": ["C1","C3"], "dependencies": [] },
+        { "id": "saf1", "layerName": "safety", "justification": ["C1"], "dependencies": [".reg1"] },
+        { "id": "saf2", "layerName": "safety", "justification": ["C4"], "dependencies": [".reg2"] },
+        { "id": "saf3", "layerName": "safety", "justification": ["C1","C4"], "dependencies": [".reg1",".reg3"] },
+        { "id": "ops1", "layerName": "operational", "justification": ["C2"], "dependencies": [".saf1"] },
+        { "id": "ops2", "layerName": "operational", "justification": ["C5"], "dependencies": [".reg2",".saf2"] },
+        { "id": "ops3", "layerName": "operational", "justification": ["C6"], "dependencies": [".saf1",".saf3"] },
+        { "id": "ops4", "layerName": "operational", "justification": ["C2","C5"], "dependencies": [".ops1",".ops2"] },
+        { "id": "ana1", "layerName": "analysis", "justification": ["H1"], "dependencies": [".saf2",".saf3"] },
+        { "id": "ana2", "layerName": "analysis", "justification": ["H2"], "dependencies": [".reg2",".ops2"] },
+        { "id": "ana3", "layerName": "analysis", "justification": ["H4"], "dependencies": [".ops1",".ops3"] },
+        { "id": "ana4", "layerName": "analysis", "justification": ["H1","H2"], "dependencies": [".ana1",".ana2"] },
+        { "id": "hyp1", "layerName": "hyp", "justification": ["H3"], "dependencies": [".ops2"] },
+        { "id": "hyp2", "layerName": "hyp", "justification": ["H3"], "dependencies": [".ana3",".ana4"] },
+        { "id": "hyp3", "layerName": "hyp", "justification": ["H3","H4"], "dependencies": [".ana1",".hyp1"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 252,
+    "project": "バイオリン製作支援 AI",
+    "phase0_vision": "バイオリン製作の各工程を支援するAI。木材の選定・厚み管理・ニス塗布の条件最適化を行い、音響特性のシミュレーションで職人の判断を補助する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "最終的な音の評価は職人の耳と感性による。AIの音響分析は参考情報" },
+      "C2": { "source": "humanDecision", "content": "木材の選定基準は樹齢・乾燥期間・木目の密度など、工房ごとの伝統に従う" },
+      "C3": { "source": "humanDecision", "content": "厚みの調整は0.1mm単位の精度が要求される。最終仕上げは手作業" },
+      "C4": { "source": "humanDecision", "content": "ニスの配合は各工房の秘伝であり、外部に共有しない" },
+      "H1": { "source": "llmInference", "basis": ["C1","C3"], "refutation": "音響シミュレーションが職人の聴覚判断を完全再現できる場合", "content": "有限要素法による板厚と振動モードの相関分析が厚み最適化に有効" },
+      "H2": { "source": "llmInference", "basis": ["C2"], "refutation": "人工乾燥で天然乾燥と同等の音響特性が得られる場合", "content": "木材のCT画像から内部欠陥と年輪構造を非破壊で評価できる" },
+      "H3": { "source": "llmInference", "basis": ["C4"], "refutation": "化学分析で配合を完全に特定できてしまう場合", "content": "ニス塗布条件（温度・湿度・層数）の最適化は配合を知らなくても可能" }
+    },
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "Scenario252",
+      "layers": [
+        { "name": "craft", "ordValue": 2, "definition": "職人の権威と工房の伝統に関わる不可侵の前提。", "derivedFrom": ["C1","C2","C4"] },
+        { "name": "engineering", "ordValue": 1, "definition": "科学的手法に基づく支援技術。精度向上に応じて改善可能。", "derivedFrom": ["C3","H1","H2"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "効果が未検証の仮説。実験で確認が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "cra1", "layerName": "craft", "justification": ["C1"], "dependencies": [] },
+        { "id": "cra2", "layerName": "craft", "justification": ["C2"], "dependencies": [] },
+        { "id": "cra3", "layerName": "craft", "justification": ["C4"], "dependencies": [] },
+        { "id": "eng1", "layerName": "engineering", "justification": ["H1"], "dependencies": [".cra1"] },
+        { "id": "eng2", "layerName": "engineering", "justification": ["H2"], "dependencies": [".cra2"] },
+        { "id": "eng3", "layerName": "engineering", "justification": ["C3"], "dependencies": [".cra1",".cra2"] },
+        { "id": "eng4", "layerName": "engineering", "justification": ["H1","H2"], "dependencies": [".eng1",".eng2"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".cra3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".eng1",".hyp1"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".eng4"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 253,
+    "project": "津波浸水予測 AI",
+    "phase0_vision": "地震発生直後に津波の到達時間と浸水範囲をリアルタイムで予測するAI。沿岸地形データ・潮位観測・地震パラメータを統合し、避難指示の判断を支援する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "避難指示の発令判断は自治体の首長が行う。AIは判断材料を提供するのみ" },
+      "C2": { "source": "humanDecision", "content": "地震発生から3分以内に第一報の予測結果を出すことが必須" },
+      "C3": { "source": "humanDecision", "content": "過小評価よりも過大評価の方が安全。予測は保守的であるべき" },
+      "C4": { "source": "humanDecision", "content": "沿岸地形データは国土地理院のDEMを基準とし、定期的に更新する" },
+      "C5": { "source": "humanDecision", "content": "過去の津波記録（歴史津波含む）は検証データとして保持する" },
+      "H1": { "source": "llmInference", "basis": ["C2"], "refutation": "3分以内に3D流体シミュレーションが完了する計算環境が実現した場合", "content": "3分制約下ではGPU上の事前計算データベースと補間による近似が現実的" },
+      "H2": { "source": "llmInference", "basis": ["C3","C4"], "refutation": "地盤変動でDEMの精度が大幅に低下する場合", "content": "浸水範囲は最大ケースの包絡線で提示し、確率的な不確実性帯を付加すべき" },
+      "H3": { "source": "llmInference", "basis": ["C5"], "refutation": "歴史津波のデータ品質が計算検証に使えないほど低い場合", "content": "歴史津波との整合性検証で予測モデルの信頼性を定量評価できる" },
+      "H4": { "source": "llmInference", "basis": ["C1","C3"], "refutation": "自治体が過大評価による避難疲れを問題視した場合", "content": "予測結果の提示は最悪ケース・中央値・楽観ケースの3段階が最適" }
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "Scenario253",
+      "layers": [
+        { "name": "geophysics", "ordValue": 4, "definition": "地球物理学的な制約。津波の物理法則と地形データ。", "derivedFrom": ["C4"] },
+        { "name": "policy", "ordValue": 3, "definition": "防災政策と法令に基づく制約。保守的予測の要請。", "derivedFrom": ["C1","C3"] },
+        { "name": "operational", "ordValue": 2, "definition": "運用上の要件。時間制約とデータ管理。", "derivedFrom": ["C2","C5"] },
+        { "name": "method", "ordValue": 1, "definition": "予測手法の設計判断。計算技術の進歩に応じて改善可能。", "derivedFrom": ["H1","H2"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。実運用データで検証が必要。", "derivedFrom": ["H3","H4"] }
+      ],
+      "propositions": [
+        { "id": "geo1", "layerName": "geophysics", "justification": ["C4"], "dependencies": [] },
+        { "id": "geo2", "layerName": "geophysics", "justification": ["C4"], "dependencies": [] },
+        { "id": "pol1", "layerName": "policy", "justification": ["C1"], "dependencies": [] },
+        { "id": "pol2", "layerName": "policy", "justification": ["C3"], "dependencies": [] },
+        { "id": "pol3", "layerName": "policy", "justification": ["C1","C3"], "dependencies": [".pol1"] },
+        { "id": "opr1", "layerName": "operational", "justification": ["C2"], "dependencies": [".pol2"] },
+        { "id": "opr2", "layerName": "operational", "justification": ["C5"], "dependencies": [".geo1"] },
+        { "id": "opr3", "layerName": "operational", "justification": ["C2","C5"], "dependencies": [".opr1",".opr2"] },
+        { "id": "met1", "layerName": "method", "justification": ["H1"], "dependencies": [".opr1",".geo1"] },
+        { "id": "met2", "layerName": "method", "justification": ["H2"], "dependencies": [".geo1",".geo2",".pol2"] },
+        { "id": "met3", "layerName": "method", "justification": ["H1","H2"], "dependencies": [".met1",".met2"] },
+        { "id": "met4", "layerName": "method", "justification": ["H2"], "dependencies": [".opr2",".opr3"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".opr2",".met3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H4"], "dependencies": [".pol3",".met2"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3","H4"], "dependencies": [".met4",".hyp1"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 254,
+    "project": "自動書道評価 AI",
+    "phase0_vision": "書道作品の美的品質を評価するAI。筆圧・運筆速度・墨の滲みなどのセンサーデータと画像解析を組み合わせ、師範の評価基準を学習して練習者にフィードバックを提供する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "書道の美的評価の最終判断は師範が行う。AIは定量的指標の提示のみ" },
+      "C2": { "source": "humanDecision", "content": "流派ごとに書風・評価基準が異なる。他流派のデータで学習しない" },
+      "C3": { "source": "humanDecision", "content": "練習者のモチベーション維持のため、否定的なフィードバックは改善提案とセットで提示する" },
+      "H1": { "source": "llmInference", "basis": ["C1","C2"], "refutation": "美的評価が完全に定量化できた場合", "content": "筆圧・速度の時系列データから運筆のリズムと安定性を定量評価できる" },
+      "H2": { "source": "llmInference", "basis": ["C2"], "refutation": "流派横断的な美的基準が存在する場合", "content": "流派固有の手本データベースとの類似度計算が評価の基本になる" },
+      "H3": { "source": "llmInference", "basis": ["C3"], "refutation": "厳しい評価の方が上達に効果的という実証結果がある場合", "content": "フィードバックの表現は難易度レベルに応じた段階的な提示が効果的" }
+    },
+    "num_c": 3,
+    "num_h": 3,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "Scenario254",
+      "layers": [
+        { "name": "aesthetics", "ordValue": 2, "definition": "師範と流派の美的権威に基づく不可侵の前提。", "derivedFrom": ["C1","C2"] },
+        { "name": "pedagogy", "ordValue": 1, "definition": "教育手法と評価指標の設計。技術進歩に応じて改善可能。", "derivedFrom": ["C3","H1","H2"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "効果が未検証の仮説。実践データで確認が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "aes1", "layerName": "aesthetics", "justification": ["C1"], "dependencies": [] },
+        { "id": "aes2", "layerName": "aesthetics", "justification": ["C2"], "dependencies": [] },
+        { "id": "aes3", "layerName": "aesthetics", "justification": ["C1","C2"], "dependencies": [] },
+        { "id": "ped1", "layerName": "pedagogy", "justification": ["H1"], "dependencies": [".aes1",".aes2"] },
+        { "id": "ped2", "layerName": "pedagogy", "justification": ["H2"], "dependencies": [".aes2",".aes3"] },
+        { "id": "ped3", "layerName": "pedagogy", "justification": ["C3"], "dependencies": [".aes1"] },
+        { "id": "ped4", "layerName": "pedagogy", "justification": ["H1","H2"], "dependencies": [".ped1",".ped2"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".ped3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".ped1",".ped4"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".ped2",".hyp1"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 255,
+    "project": "地磁気嵐予測 AI",
+    "phase0_vision": "太陽活動データから地磁気嵐の発生を予測するAI。人工衛星の軌道制御・送電網の保護・航空機の極域飛行計画に必要な予測情報を提供する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "太陽観測データ（SDO, SOHO等）はNASA/NOAAの配信に依存する。自前の観測設備は持たない" },
+      "C2": { "source": "humanDecision", "content": "Kp指数の予測は最低72時間先まで必要" },
+      "C3": { "source": "humanDecision", "content": "送電網への影響予測は地域ごとの地質構造（地電流伝導率）を考慮する" },
+      "C4": { "source": "humanDecision", "content": "航空会社への通知は国際民間航空機関（ICAO）のフォーマットに準拠する" },
+      "C5": { "source": "humanDecision", "content": "過去の磁気嵐データ（カリントンイベント含む）は較正基準として保持する" },
+      "H1": { "source": "llmInference", "basis": ["C1"], "refutation": "独自の太陽観測ネットワークが構築された場合", "content": "コロナ質量放出（CME）の到達時間推定には太陽風速度のリアルタイム補正が必要" },
+      "H2": { "source": "llmInference", "basis": ["C2","C5"], "refutation": "太陽フレアの物理モデルが72時間予測を不可能にする理論が証明された場合", "content": "72時間先の予測にはアンサンブル手法とベイズ更新の組み合わせが有効" },
+      "H3": { "source": "llmInference", "basis": ["C3"], "refutation": "地質構造が地磁気嵐応答に影響しないという新知見が得られた場合", "content": "地電流モデルは3D地質構造データに基づく有限要素計算が必要" }
+    },
+    "num_c": 5,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "Scenario255",
+      "layers": [
+        { "name": "physics", "ordValue": 3, "definition": "太陽物理と地球磁気圏の物理法則に基づく制約。", "derivedFrom": ["C1","C5"] },
+        { "name": "regulation", "ordValue": 2, "definition": "国際規格と業界要件に基づく運用制約。", "derivedFrom": ["C2","C4"] },
+        { "name": "modeling", "ordValue": 1, "definition": "予測モデルの設計判断。科学的知見の蓄積に応じて改善可能。", "derivedFrom": ["C3","H1","H2"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。観測データとの照合で検証が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "phy1", "layerName": "physics", "justification": ["C1"], "dependencies": [] },
+        { "id": "phy2", "layerName": "physics", "justification": ["C5"], "dependencies": [] },
+        { "id": "phy3", "layerName": "physics", "justification": ["C1","C5"], "dependencies": [] },
+        { "id": "rul1", "layerName": "regulation", "justification": ["C2"], "dependencies": [".phy2"] },
+        { "id": "rul2", "layerName": "regulation", "justification": ["C4"], "dependencies": [] },
+        { "id": "rul3", "layerName": "regulation", "justification": ["C2","C4"], "dependencies": [".rul1",".rul2"] },
+        { "id": "mod1", "layerName": "modeling", "justification": ["H1"], "dependencies": [".phy1",".phy3"] },
+        { "id": "mod2", "layerName": "modeling", "justification": ["H2"], "dependencies": [".phy2",".rul1"] },
+        { "id": "mod3", "layerName": "modeling", "justification": ["C3"], "dependencies": [".phy1"] },
+        { "id": "mod4", "layerName": "modeling", "justification": ["H1","H2"], "dependencies": [".mod1",".mod2"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".mod3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".mod1",".mod4"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".rul3",".hyp1"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 256,
+    "project": "酒造発酵管理 AI",
+    "phase0_vision": "日本酒の醪（もろみ）発酵をリアルタイムで監視し、最適な温度・撹拌タイミングを提案するAI。杜氏の経験知をデータで補完し、品質の安定と多様な酒質の実現を支援する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "発酵管理の最終判断は杜氏が行う。AIの提案は参考情報" },
+      "C2": { "source": "humanDecision", "content": "使用する酒米の品種と精米歩合は蔵元が決定する" },
+      "C3": { "source": "humanDecision", "content": "麹菌の培養条件は蔵の伝統に従い、AIが直接変更しない" },
+      "C4": { "source": "humanDecision", "content": "出荷前の官能検査（利き酒）は人間が行う。AIは化学分析データを提供" },
+      "C5": { "source": "humanDecision", "content": "酒税法の規定に準拠した成分管理（アルコール度数等）は必須" },
+      "H1": { "source": "llmInference", "basis": ["C1","C3"], "refutation": "発酵プロセスが完全にモデル化できた場合", "content": "醪の温度プロファイルと日本酒度の相関モデルで発酵進行を予測できる" },
+      "H2": { "source": "llmInference", "basis": ["C2"], "refutation": "酒米の年次ばらつきが品質に影響しないことが判明した場合", "content": "原料米の吸水率データから最適な掛水量を推定できる" },
+      "H3": { "source": "llmInference", "basis": ["C4"], "refutation": "電子舌センサーが人間の官能検査と完全に一致する場合", "content": "ガスクロマトグラフィーによる香気成分プロファイルが品質指標として有用" },
+      "H4": { "source": "llmInference", "basis": ["C1","C5"], "refutation": "杜氏が科学的データを全く参照しない運用が確立された場合", "content": "発酵経過のダッシュボード表示は杜氏の判断を効率化する" }
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "Scenario256",
+      "layers": [
+        { "name": "tradition", "ordValue": 3, "definition": "蔵の伝統と杜氏の権威に関わる不可侵の前提。", "derivedFrom": ["C1","C2","C3"] },
+        { "name": "compliance", "ordValue": 2, "definition": "酒税法と食品安全基準に基づく法的制約。", "derivedFrom": ["C4","C5"] },
+        { "name": "fermentation", "ordValue": 1, "definition": "発酵管理と分析手法の設計判断。技術進歩に応じて改善可能。", "derivedFrom": ["H1","H2","H4"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。醸造実験で検証が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "tra1", "layerName": "tradition", "justification": ["C1"], "dependencies": [] },
+        { "id": "tra2", "layerName": "tradition", "justification": ["C2"], "dependencies": [] },
+        { "id": "tra3", "layerName": "tradition", "justification": ["C3"], "dependencies": [] },
+        { "id": "com1", "layerName": "compliance", "justification": ["C5"], "dependencies": [".tra1"] },
+        { "id": "com2", "layerName": "compliance", "justification": ["C4"], "dependencies": [".tra1",".tra2"] },
+        { "id": "com3", "layerName": "compliance", "justification": ["C4","C5"], "dependencies": [".com1",".com2"] },
+        { "id": "fer1", "layerName": "fermentation", "justification": ["H1"], "dependencies": [".tra3",".com1"] },
+        { "id": "fer2", "layerName": "fermentation", "justification": ["H2"], "dependencies": [".tra2"] },
+        { "id": "fer3", "layerName": "fermentation", "justification": ["H4"], "dependencies": [".com1",".fer1"] },
+        { "id": "fer4", "layerName": "fermentation", "justification": ["H1","H2"], "dependencies": [".fer1",".fer2"] },
+        { "id": "fer5", "layerName": "fermentation", "justification": ["H4"], "dependencies": [".com3",".fer4"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".com2"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".fer4",".hyp1"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".fer3",".fer5"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 257,
+    "project": "海底火山活動監視 AI",
+    "phase0_vision": "海底火山の活動状況をリアルタイムで監視し、噴火リスクを評価するAI。海底地震計・水温センサー・海面変色の衛星画像を統合解析し、航行警報と避難勧告の判断を支援する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "航行警報の発令判断は海上保安庁が行う。AIは監視データと評価結果を提供するのみ" },
+      "C2": { "source": "humanDecision", "content": "海底地震計のデータはリアルタイム伝送されるが、通信断は常に想定する" },
+      "C3": { "source": "humanDecision", "content": "噴火予測の不確実性は必ず定量的に提示する。確定的な予測と誤解されないようにする" },
+      "C4": { "source": "humanDecision", "content": "過去の海底噴火事例（西之島、福徳岡ノ場等）のデータは検証基準として保持する" },
+      "C5": { "source": "humanDecision", "content": "監視対象の火山リストは火山噴火予知連絡会が決定する" },
+      "H1": { "source": "llmInference", "basis": ["C2"], "refutation": "海底ケーブル通信が完全冗長化された場合", "content": "通信断時は最後の有効データから状態を外挿し、不確実性を拡大して表示すべき" },
+      "H2": { "source": "llmInference", "basis": ["C3","C4"], "refutation": "海底火山の噴火メカニズムが完全に解明された場合", "content": "噴火確率の推定にはベイズ推論と過去事例の類似度マッチングが有効" },
+      "H3": { "source": "llmInference", "basis": ["C1","C5"], "refutation": "AIに航行警報の自動発令権限が付与された場合", "content": "リスク評価結果の可視化はヒートマップと時系列トレンドの組み合わせが効果的" }
+    },
+    "num_c": 5,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "Scenario257",
+      "layers": [
+        { "name": "volcanology", "ordValue": 3, "definition": "火山学と海洋物理の法則に基づく不変制約。", "derivedFrom": ["C2","C4"] },
+        { "name": "authority", "ordValue": 2, "definition": "海上保安庁・予知連の権限と法的制約。", "derivedFrom": ["C1","C3","C5"] },
+        { "name": "analysis", "ordValue": 1, "definition": "監視・分析手法の設計判断。技術進歩に応じて改善可能。", "derivedFrom": ["H1","H2","H3"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。監視データとの照合で検証が必要。", "derivedFrom": ["H2"] }
+      ],
+      "propositions": [
+        { "id": "vol1", "layerName": "volcanology", "justification": ["C2"], "dependencies": [] },
+        { "id": "vol2", "layerName": "volcanology", "justification": ["C4"], "dependencies": [] },
+        { "id": "vol3", "layerName": "volcanology", "justification": ["C2","C4"], "dependencies": [] },
+        { "id": "aut1", "layerName": "authority", "justification": ["C1"], "dependencies": [] },
+        { "id": "aut2", "layerName": "authority", "justification": ["C3"], "dependencies": [".vol1"] },
+        { "id": "aut3", "layerName": "authority", "justification": ["C5"], "dependencies": [".aut1"] },
+        { "id": "anl1", "layerName": "analysis", "justification": ["H1"], "dependencies": [".vol1",".vol3"] },
+        { "id": "anl2", "layerName": "analysis", "justification": ["H2"], "dependencies": [".vol2",".aut2"] },
+        { "id": "anl3", "layerName": "analysis", "justification": ["H3"], "dependencies": [".aut1",".aut3"] },
+        { "id": "anl4", "layerName": "analysis", "justification": ["H1","H2"], "dependencies": [".anl1",".anl2"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H2"], "dependencies": [".anl2"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H2"], "dependencies": [".anl4",".hyp1"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H2"], "dependencies": [".anl3",".vol2"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 258,
+    "project": "視覚障害者歩行支援 AI",
+    "phase0_vision": "視覚障害者の屋外歩行を支援するAI。カメラ・LiDAR・GPS・IMUの融合センシングで周囲環境を認識し、音声と触覚デバイスで障害物・段差・信号の情報をリアルタイムで伝達する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "利用者の自律的判断を最優先する。AIは情報提供に徹し、進路を強制しない" },
+      "C2": { "source": "humanDecision", "content": "誤検知による急停止は転倒リスクがある。通知は状況の緊急度に応じて段階的に行う" },
+      "C3": { "source": "humanDecision", "content": "白杖との併用が前提。白杖の範囲外の情報を補完する位置づけ" },
+      "C4": { "source": "humanDecision", "content": "プライバシー保護のため、カメラ映像はオンデバイスで処理し、外部送信しない" },
+      "C5": { "source": "humanDecision", "content": "バッテリー駆動8時間以上。充電中は使用不可のため、長時間稼働が必須" },
+      "C6": { "source": "humanDecision", "content": "歩行支援情報と周囲環境音を同時に聴取できるよう、骨伝導または片耳イヤホンを使用する" },
+      "H1": { "source": "llmInference", "basis": ["C2","C3"], "refutation": "障害物検知が100%の精度を達成した場合", "content": "障害物の距離と方向に応じて通知の緊急度を3段階に分類すべき" },
+      "H2": { "source": "llmInference", "basis": ["C4","C5"], "refutation": "エッジAIの消費電力が無視できるほど低下した場合", "content": "深層学習モデルは量子化・プルーニングで消費電力を抑制すべき" },
+      "H3": { "source": "llmInference", "basis": ["C1","C6"], "refutation": "触覚デバイスだけで全情報を伝達できる場合", "content": "音声ガイドの頻度と詳細度は利用者の習熟度に応じてカスタマイズすべき" },
+      "H4": { "source": "llmInference", "basis": ["C3"], "refutation": "AIセンシングだけで白杖の機能を完全代替できる場合", "content": "段差検知にはLiDARの点群データと歩行パターンの組み合わせが有効" },
+      "H5": { "source": "llmInference", "basis": ["C1","C2"], "refutation": "全利用者が同一の通知設定を好む場合", "content": "通知設定のプロファイルは個人ごとに学習し、移動環境に応じて動的に切り替えるべき" }
+    },
+    "phase2_internal": {
+      "layer_derivation": "7層: ethics(倫理的制約,ord=6) > safety(安全設計,ord=5) > accessibility(アクセシビリティ,ord=4) > hardware(ハードウェア制約,ord=3) > interaction(インタラクション設計,ord=2) > optimization(最適化戦略,ord=1) > hyp(未検証,ord=0)",
+      "monotonicity_violations_initial": [
+        {
+          "violation": "opt2 (optimization, ord=1) が hyp1_orig (hypothesis, ord=0) に依存 — 依存先のordが依存元より低い",
+          "cause": "H由来: opt2のモデル最適化がhyp1_orig（通知プロファイル仮説）に依存する構造になっていた",
+          "resolution": "hyp1_origへの依存を除去し、opt2はint2（インタラクション層の通知設計）への依存に変更。通知カスタマイズはインタラクション層の確定事項として扱う",
+          "resolved_in": "Phase 2.5 自律修正（H由来のみのため人間確認不要）"
+        }
+      ],
+      "monotonicity_violations_final": 0
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 7,
+    "num_props": 25,
+    "num_deps": 35,
+    "model_spec": {
+      "namespace": "Scenario258",
+      "layers": [
+        { "name": "ethics", "ordValue": 6, "definition": "利用者の自律性と尊厳に関わる倫理的制約。不可侵。", "derivedFrom": ["C1"] },
+        { "name": "safety", "ordValue": 5, "definition": "転倒・衝突防止に関わる安全設計制約。", "derivedFrom": ["C2"] },
+        { "name": "accessibility", "ordValue": 4, "definition": "障害特性に応じたアクセシビリティ要件。白杖との共存前提。", "derivedFrom": ["C3","C6"] },
+        { "name": "hardware", "ordValue": 3, "definition": "デバイスのハードウェア制約。バッテリー・センサー仕様。", "derivedFrom": ["C4","C5"] },
+        { "name": "interaction", "ordValue": 2, "definition": "利用者とのインタラクション設計。利用者テストに基づく改善可能。", "derivedFrom": ["H1","H3"] },
+        { "name": "optimization", "ordValue": 1, "definition": "AIモデルの最適化戦略。技術進歩に応じて改善可能。", "derivedFrom": ["H2","H4"] },
+        { "name": "hyp", "ordValue": 0, "definition": "未検証の仮説。フィールドテストで検証が必要。", "derivedFrom": ["H5"] }
+      ],
+      "propositions": [
+        { "id": "eth1", "layerName": "ethics", "justification": ["C1"], "dependencies": [] },
+        { "id": "eth2", "layerName": "ethics", "justification": ["C1"], "dependencies": [] },
+        { "id": "saf1", "layerName": "safety", "justification": ["C2"], "dependencies": [".eth1"] },
+        { "id": "saf2", "layerName": "safety", "justification": ["C2"], "dependencies": [".eth1",".eth2"] },
+        { "id": "saf3", "layerName": "safety", "justification": ["C2"], "dependencies": [".saf1"] },
+        { "id": "acc1", "layerName": "accessibility", "justification": ["C3"], "dependencies": [".saf1"] },
+        { "id": "acc2", "layerName": "accessibility", "justification": ["C6"], "dependencies": [".eth1",".saf2"] },
+        { "id": "acc3", "layerName": "accessibility", "justification": ["C3","C6"], "dependencies": [".acc1",".acc2"] },
+        { "id": "hw1", "layerName": "hardware", "justification": ["C4"], "dependencies": [".eth1"] },
+        { "id": "hw2", "layerName": "hardware", "justification": ["C5"], "dependencies": [".saf3"] },
+        { "id": "hw3", "layerName": "hardware", "justification": ["C4","C5"], "dependencies": [".hw1",".hw2"] },
+        { "id": "int1", "layerName": "interaction", "justification": ["H1"], "dependencies": [".saf1",".acc1"] },
+        { "id": "int2", "layerName": "interaction", "justification": ["H1"], "dependencies": [".saf2",".acc3"] },
+        { "id": "int3", "layerName": "interaction", "justification": ["H3"], "dependencies": [".acc2",".hw3"] },
+        { "id": "int4", "layerName": "interaction", "justification": ["H1","H3"], "dependencies": [".int1",".int2"] },
+        { "id": "int5", "layerName": "interaction", "justification": ["H3"], "dependencies": [".int3",".int4"] },
+        { "id": "opt1", "layerName": "optimization", "justification": ["H2"], "dependencies": [".hw1",".hw2",".hw3"] },
+        { "id": "opt2", "layerName": "optimization", "justification": ["H2"], "dependencies": [".hw3",".int2"] },
+        { "id": "opt3", "layerName": "optimization", "justification": ["H4"], "dependencies": [".acc1",".saf1"] },
+        { "id": "opt4", "layerName": "optimization", "justification": ["H2","H4"], "dependencies": [".opt1",".opt3"] },
+        { "id": "opt5", "layerName": "optimization", "justification": ["H4"], "dependencies": [".opt3",".opt4"] },
+        { "id": "hyp1", "layerName": "hyp", "justification": ["H5"], "dependencies": [".int4"] },
+        { "id": "hyp2", "layerName": "hyp", "justification": ["H5"], "dependencies": [".int5",".opt2"] },
+        { "id": "hyp3", "layerName": "hyp", "justification": ["H5"], "dependencies": [".opt4",".opt5"] },
+        { "id": "hyp4", "layerName": "hyp", "justification": ["H5"], "dependencies": [".hyp1",".hyp2"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 259,
+    "project": "氷山追跡 AI",
+    "phase0_vision": "南極海・北極海の氷山をリアルタイムで追跡するAI。衛星SAR画像・海流モデル・気象データを統合し、氷山の漂流経路を予測して船舶航行の安全と海底インフラの保護に貢献する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "氷山の衝突リスク評価は最終的に船長が判断する。AIは予測情報の提供のみ" },
+      "C2": { "source": "humanDecision", "content": "衛星画像の取得頻度は軌道に依存し、6-12時間の間隔がある" },
+      "C3": { "source": "humanDecision", "content": "海面下の氷山体積（海面上の約7倍）は直接観測できず、推定に依存する" },
+      "C4": { "source": "humanDecision", "content": "国際氷山パトロール（IIP）のデータフォーマットと互換性を保つ" },
+      "H1": { "source": "llmInference", "basis": ["C2","C3"], "refutation": "海中ドローンで氷山の水中形状を直接計測できる場合", "content": "衛星画像間の補間にはカルマンフィルタと海流モデルの融合が有効" },
+      "H2": { "source": "llmInference", "basis": ["C3"], "refutation": "氷山の融解速度が予測不可能なほど変動する場合", "content": "水面上の形状から水面下の体積を推定するには統計的形状モデルが必要" },
+      "H3": { "source": "llmInference", "basis": ["C1","C4"], "refutation": "IIPが独自のAI追跡システムを運用開始した場合", "content": "追跡結果はIIPフォーマットで自動配信し、既存ワークフローに統合すべき" }
+    },
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "Scenario259",
+      "layers": [
+        { "name": "oceanography", "ordValue": 3, "definition": "海洋物理と氷山力学の法則に基づく制約。", "derivedFrom": ["C2","C3"] },
+        { "name": "maritime", "ordValue": 2, "definition": "航行安全と国際規格に基づく制約。", "derivedFrom": ["C1","C4"] },
+        { "name": "tracking", "ordValue": 1, "definition": "追跡・予測手法の設計判断。技術進歩に応じて改善可能。", "derivedFrom": ["H1","H2"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。運用データで検証が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "ocn1", "layerName": "oceanography", "justification": ["C2"], "dependencies": [] },
+        { "id": "ocn2", "layerName": "oceanography", "justification": ["C3"], "dependencies": [] },
+        { "id": "ocn3", "layerName": "oceanography", "justification": ["C2","C3"], "dependencies": [] },
+        { "id": "mar1", "layerName": "maritime", "justification": ["C1"], "dependencies": [] },
+        { "id": "mar2", "layerName": "maritime", "justification": ["C4"], "dependencies": [".mar1"] },
+        { "id": "trk1", "layerName": "tracking", "justification": ["H1"], "dependencies": [".ocn1",".ocn3"] },
+        { "id": "trk2", "layerName": "tracking", "justification": ["H2"], "dependencies": [".ocn2"] },
+        { "id": "trk3", "layerName": "tracking", "justification": ["H1","H2"], "dependencies": [".trk1",".trk2"] },
+        { "id": "trk4", "layerName": "tracking", "justification": ["H1"], "dependencies": [".ocn1",".mar2"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".mar2",".trk3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".trk4"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".hyp1",".hyp2"] }
+      ]
+    }
+  },
+  {
+    "scenario_id": 260,
+    "project": "製薬プロセス最適化 AI",
+    "phase0_vision": "医薬品製造プロセスの各工程を最適化するAI。原料の品質ばらつきに応じて製造パラメータをリアルタイムで調整し、収率向上と品質の一貫性を実現する。GMP準拠の環境で運用する。",
+    "phase1_assumptions": {
+      "C1": { "source": "humanDecision", "content": "GMP（適正製造規範）の要件は絶対遵守。逸脱は製品回収につながる" },
+      "C2": { "source": "humanDecision", "content": "製造パラメータの変更にはバリデーション（工程確認）が必要。AIの提案は即時適用しない" },
+      "C3": { "source": "humanDecision", "content": "全ての工程データは監査対応のため改ざん不能な形で記録・保管する" },
+      "C4": { "source": "humanDecision", "content": "品質管理部門の承認なく製造条件を変更しない" },
+      "C5": { "source": "humanDecision", "content": "原薬の有効成分含有量は許容範囲が厳密に規定されており、AIはこの範囲を逸脱する提案をしない" },
+      "C6": { "source": "humanDecision", "content": "新規の製造パラメータ提案は実験室スケールでの確認を経てからパイロットプラントに適用する" },
+      "H1": { "source": "llmInference", "basis": ["C1","C5"], "refutation": "品質パラメータが工程条件に依存しないことが判明した場合", "content": "プロセス分析技術（PAT）のリアルタイムデータで工程パラメータを動的最適化できる" },
+      "H2": { "source": "llmInference", "basis": ["C2","C6"], "refutation": "連続生産でバッチレスのバリデーションが認可された場合", "content": "最適化提案はバッチ単位で生成し、次バッチへの適用を提案する形式が現実的" },
+      "H3": { "source": "llmInference", "basis": ["C3"], "refutation": "ブロックチェーンベースの記録が全面採用された場合", "content": "工程データの完全性検証にはハッシュチェーンによるタンパーエビデンスが有効" },
+      "H4": { "source": "llmInference", "basis": ["C1","C2","C4"], "refutation": "AIの自律的判断が薬事規制で認められた場合", "content": "AIの最適化提案には変更の根拠と影響範囲の説明を必ず付与すべき" }
+    },
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "Scenario260",
+      "layers": [
+        { "name": "regulatory", "ordValue": 4, "definition": "GMP・薬事規制に基づく法的制約。違反は製品回収と行政処分。", "derivedFrom": ["C1","C5"] },
+        { "name": "quality", "ordValue": 3, "definition": "品質管理部門の承認とバリデーション要件。", "derivedFrom": ["C2","C4"] },
+        { "name": "traceability", "ordValue": 2, "definition": "データ完全性と監査対応の記録要件。", "derivedFrom": ["C3","C6"] },
+        { "name": "optimization", "ordValue": 1, "definition": "AIによる工程最適化の手法。技術進歩に応じて改善可能。", "derivedFrom": ["H1","H2","H4"] },
+        { "name": "hypothesis", "ordValue": 0, "definition": "未検証の仮説。パイロットプラントで検証が必要。", "derivedFrom": ["H3"] }
+      ],
+      "propositions": [
+        { "id": "reg1", "layerName": "regulatory", "justification": ["C1"], "dependencies": [] },
+        { "id": "reg2", "layerName": "regulatory", "justification": ["C5"], "dependencies": [] },
+        { "id": "reg3", "layerName": "regulatory", "justification": ["C1","C5"], "dependencies": [] },
+        { "id": "qua1", "layerName": "quality", "justification": ["C2"], "dependencies": [".reg1"] },
+        { "id": "qua2", "layerName": "quality", "justification": ["C4"], "dependencies": [".reg1",".reg2"] },
+        { "id": "qua3", "layerName": "quality", "justification": ["C2","C4"], "dependencies": [".qua1",".qua2"] },
+        { "id": "trc1", "layerName": "traceability", "justification": ["C3"], "dependencies": [".reg1",".qua1"] },
+        { "id": "trc2", "layerName": "traceability", "justification": ["C6"], "dependencies": [".qua2"] },
+        { "id": "trc3", "layerName": "traceability", "justification": ["C3","C6"], "dependencies": [".trc1",".trc2"] },
+        { "id": "trc4", "layerName": "traceability", "justification": ["C3"], "dependencies": [".qua3",".trc1"] },
+        { "id": "opt1", "layerName": "optimization", "justification": ["H1"], "dependencies": [".reg2",".qua1"] },
+        { "id": "opt2", "layerName": "optimization", "justification": ["H2"], "dependencies": [".qua3",".trc2"] },
+        { "id": "opt3", "layerName": "optimization", "justification": ["H4"], "dependencies": [".qua2",".trc1"] },
+        { "id": "opt4", "layerName": "optimization", "justification": ["H1","H2"], "dependencies": [".opt1",".opt2"] },
+        { "id": "opt5", "layerName": "optimization", "justification": ["H4"], "dependencies": [".opt3",".opt4"] },
+        { "id": "hyp1", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".trc1",".trc3"] },
+        { "id": "hyp2", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".opt4",".hyp1"] },
+        { "id": "hyp3", "layerName": "hypothesis", "justification": ["H3"], "dependencies": [".opt5",".trc4"] }
+      ]
+    }
+  }
+]

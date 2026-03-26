@@ -1,0 +1,137 @@
+{
+  "namespace": "Scenario236",
+  "layers": [
+    {
+      "name": "physical",
+      "ordValue": 2,
+      "definition": "弦の物理的限界と基準音高。破断張力は絶対制約。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "tuning",
+      "ordValue": 1,
+      "definition": "調律のアルゴリズムと品質評価基準。人間承認を前提。",
+      "derivedFrom": [
+        "C2",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の音響学的仮説。実機データで検証が必要。",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phy1",
+      "layerName": "physical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy3",
+      "layerName": "physical",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tun1",
+      "layerName": "tuning",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy2"
+      ]
+    },
+    {
+      "id": "tun2",
+      "layerName": "tuning",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy3"
+      ]
+    },
+    {
+      "id": "tun3",
+      "layerName": "tuning",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phy2"
+      ]
+    },
+    {
+      "id": "tun4",
+      "layerName": "tuning",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".tun1",
+        ".tun2"
+      ]
+    },
+    {
+      "id": "tun5",
+      "layerName": "tuning",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".phy3",
+        ".tun3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".tun3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".tun4",
+        ".tun5"
+      ]
+    }
+  ]
+}

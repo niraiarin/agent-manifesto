@@ -1,0 +1,1853 @@
+[
+  {
+    "scenario_id": 11,
+    "project": "スマートホーム省エネ制御",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S11",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 4,
+          "definition": "人命・設備安全に関わる不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 3,
+          "definition": "外部環境（気象・電力網）への依存",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 2,
+          "definition": "ユーザが設定する運用方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "AIが自律的に最適化する省エネ戦略",
+          "derivedFrom": [
+            "C5",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "saf1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf3",
+          "layerName": "safety",
+          "justification": [
+            "C1",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "saf1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "saf2",
+            "env1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            "saf3"
+          ]
+        },
+        {
+          "id": "opt1",
+          "layerName": "optimization",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "pol1",
+            "env1"
+          ]
+        },
+        {
+          "id": "opt2",
+          "layerName": "optimization",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "pol2"
+          ]
+        },
+        {
+          "id": "opt3",
+          "layerName": "optimization",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            "pol3",
+            "env2"
+          ]
+        },
+        {
+          "id": "opt4",
+          "layerName": "optimization",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "opt1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 12,
+    "project": "ゲーム AI 対戦マッチング",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S12",
+      "layers": [
+        {
+          "name": "fairness",
+          "ordValue": 4,
+          "definition": "公平性・不正防止の不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "platform",
+          "ordValue": 3,
+          "definition": "プラットフォーム基盤への依存",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "rule",
+          "ordValue": 2,
+          "definition": "運営が設定するマッチングルール",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "tuning",
+          "ordValue": 1,
+          "definition": "AIが自動調整するマッチングパラメータ",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "fair1",
+          "layerName": "fairness",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fair2",
+          "layerName": "fairness",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "plat1",
+          "layerName": "platform",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "plat2",
+          "layerName": "platform",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rul1",
+          "layerName": "rule",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "fair1"
+          ]
+        },
+        {
+          "id": "rul2",
+          "layerName": "rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "fair2",
+            "plat1"
+          ]
+        },
+        {
+          "id": "rul3",
+          "layerName": "rule",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            "fair1"
+          ]
+        },
+        {
+          "id": "tun1",
+          "layerName": "tuning",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "rul1",
+            "plat1"
+          ]
+        },
+        {
+          "id": "tun2",
+          "layerName": "tuning",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "rul2"
+          ]
+        },
+        {
+          "id": "tun3",
+          "layerName": "tuning",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            "rul3",
+            "plat2"
+          ]
+        },
+        {
+          "id": "tun4",
+          "layerName": "tuning",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "tun1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 13,
+    "project": "倉庫ロボット制御システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S13",
+      "layers": [
+        {
+          "name": "physical_safety",
+          "ordValue": 5,
+          "definition": "人身安全・衝突回避の絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "hardware",
+          "ordValue": 4,
+          "definition": "ロボットハードウェアの物理制約",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "warehouse_layout",
+          "ordValue": 3,
+          "definition": "倉庫レイアウト・棚配置への依存",
+          "derivedFrom": [
+            "H3",
+            "C3"
+          ]
+        },
+        {
+          "name": "dispatch_policy",
+          "ordValue": 2,
+          "definition": "管理者が設定するタスク割当方針",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "path_optimization",
+          "ordValue": 1,
+          "definition": "AIが最適化する経路・動作計画",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "ps1",
+          "layerName": "physical_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ps2",
+          "layerName": "physical_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hw1",
+          "layerName": "hardware",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hw2",
+          "layerName": "hardware",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "ps1"
+          ]
+        },
+        {
+          "id": "wl1",
+          "layerName": "warehouse_layout",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "wl2",
+          "layerName": "warehouse_layout",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "hw1"
+          ]
+        },
+        {
+          "id": "dp1",
+          "layerName": "dispatch_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "ps1",
+            "wl1"
+          ]
+        },
+        {
+          "id": "dp2",
+          "layerName": "dispatch_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "ps2",
+            "hw2"
+          ]
+        },
+        {
+          "id": "dp3",
+          "layerName": "dispatch_policy",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            "wl2"
+          ]
+        },
+        {
+          "id": "po1",
+          "layerName": "path_optimization",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "dp1",
+            "hw1"
+          ]
+        },
+        {
+          "id": "po2",
+          "layerName": "path_optimization",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "dp2",
+            "wl1"
+          ]
+        },
+        {
+          "id": "po3",
+          "layerName": "path_optimization",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "dp3"
+          ]
+        },
+        {
+          "id": "po4",
+          "layerName": "path_optimization",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "po1",
+            "po2"
+          ]
+        },
+        {
+          "id": "po5",
+          "layerName": "path_optimization",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "dp1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 14,
+    "project": "SNS コンテンツモデレーション AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 14,
+    "_monotonicity_violation": {
+      "description": "mod3 (community_standard, ord=2) depends on adapt1 (adaptation, ord=1) -- 依存先のordが依存元より低い",
+      "violation_prop": "mod3",
+      "violation_dep": "adapt1",
+      "fix_suggestion": "adapt1をcommunity_standard層以上に昇格するか、mod3をadaptation層に降格する"
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S14",
+      "layers": [
+        {
+          "name": "legal",
+          "ordValue": 5,
+          "definition": "法的義務・コンプライアンス要件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "platform_integrity",
+          "ordValue": 4,
+          "definition": "プラットフォームの信頼性基盤",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "cultural_context",
+          "ordValue": 3,
+          "definition": "地域・文化的コンテキストへの依存",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "community_standard",
+          "ordValue": 2,
+          "definition": "コミュニティが設定するモデレーション基準",
+          "derivedFrom": [
+            "C4",
+            "H4"
+          ]
+        },
+        {
+          "name": "adaptation",
+          "ordValue": 1,
+          "definition": "AIが学習・適応するモデレーション判定",
+          "derivedFrom": [
+            "C5",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "leg1",
+          "layerName": "legal",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "leg2",
+          "layerName": "legal",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pi1",
+          "layerName": "platform_integrity",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "leg1"
+          ]
+        },
+        {
+          "id": "pi2",
+          "layerName": "platform_integrity",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            "leg2"
+          ]
+        },
+        {
+          "id": "cc1",
+          "layerName": "cultural_context",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cc2",
+          "layerName": "cultural_context",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "pi1"
+          ]
+        },
+        {
+          "id": "mod1",
+          "layerName": "community_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "leg1",
+            "pi1"
+          ]
+        },
+        {
+          "id": "mod2",
+          "layerName": "community_standard",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "cc1"
+          ]
+        },
+        {
+          "id": "mod3",
+          "layerName": "community_standard",
+          "justification": [
+            "C4",
+            "H5"
+          ],
+          "dependencies": [
+            "adapt1"
+          ]
+        },
+        {
+          "id": "mod4",
+          "layerName": "community_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "pi2",
+            "cc2"
+          ]
+        },
+        {
+          "id": "adapt1",
+          "layerName": "adaptation",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "mod1",
+            "cc1"
+          ]
+        },
+        {
+          "id": "adapt2",
+          "layerName": "adaptation",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "mod2"
+          ]
+        },
+        {
+          "id": "adapt3",
+          "layerName": "adaptation",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "mod4",
+            "cc2"
+          ]
+        },
+        {
+          "id": "adapt4",
+          "layerName": "adaptation",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "adapt1"
+          ]
+        },
+        {
+          "id": "adapt5",
+          "layerName": "adaptation",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "mod1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 15,
+    "project": "保険査定自動化 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S15",
+      "layers": [
+        {
+          "name": "regulation",
+          "ordValue": 5,
+          "definition": "保険業法・金融規制の法的義務",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "actuarial",
+          "ordValue": 4,
+          "definition": "保険数理の前提・リスクモデル",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "product_design",
+          "ordValue": 3,
+          "definition": "保険商品設計の構造的制約",
+          "derivedFrom": [
+            "C3",
+            "H3"
+          ]
+        },
+        {
+          "name": "underwriting",
+          "ordValue": 2,
+          "definition": "査定担当者が設定する引受基準",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "scoring",
+          "ordValue": 1,
+          "definition": "AIが算出するリスクスコア・査定推奨",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "act1",
+          "layerName": "actuarial",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "act2",
+          "layerName": "actuarial",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "reg1"
+          ]
+        },
+        {
+          "id": "pd1",
+          "layerName": "product_design",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "reg1",
+            "act1"
+          ]
+        },
+        {
+          "id": "pd2",
+          "layerName": "product_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "reg2",
+            "act2"
+          ]
+        },
+        {
+          "id": "uw1",
+          "layerName": "underwriting",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "pd1"
+          ]
+        },
+        {
+          "id": "uw2",
+          "layerName": "underwriting",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "pd2",
+            "act1"
+          ]
+        },
+        {
+          "id": "uw3",
+          "layerName": "underwriting",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            "reg2"
+          ]
+        },
+        {
+          "id": "sc1",
+          "layerName": "scoring",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "uw1",
+            "act1"
+          ]
+        },
+        {
+          "id": "sc2",
+          "layerName": "scoring",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "uw2"
+          ]
+        },
+        {
+          "id": "sc3",
+          "layerName": "scoring",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "uw3",
+            "pd1"
+          ]
+        },
+        {
+          "id": "sc4",
+          "layerName": "scoring",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "sc1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 16,
+    "project": "水質監視 IoT システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S16",
+      "layers": [
+        {
+          "name": "health_safety",
+          "ordValue": 4,
+          "definition": "公衆衛生・安全基準の絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "sensor_infra",
+          "ordValue": 3,
+          "definition": "センサー・通信インフラの物理制約",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "monitoring_policy",
+          "ordValue": 2,
+          "definition": "管理者が設定する監視・通報方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "anomaly_detection",
+          "ordValue": 1,
+          "definition": "AIが自動判定する異常検知・予測",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "hs1",
+          "layerName": "health_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hs2",
+          "layerName": "health_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "si1",
+          "layerName": "sensor_infra",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "si2",
+          "layerName": "sensor_infra",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "hs1"
+          ]
+        },
+        {
+          "id": "si3",
+          "layerName": "sensor_infra",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mp1",
+          "layerName": "monitoring_policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "hs1",
+            "si1"
+          ]
+        },
+        {
+          "id": "mp2",
+          "layerName": "monitoring_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "hs2",
+            "si2"
+          ]
+        },
+        {
+          "id": "mp3",
+          "layerName": "monitoring_policy",
+          "justification": [
+            "C3",
+            "H4"
+          ],
+          "dependencies": [
+            "si3"
+          ]
+        },
+        {
+          "id": "ad1",
+          "layerName": "anomaly_detection",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "mp1",
+            "si1"
+          ]
+        },
+        {
+          "id": "ad2",
+          "layerName": "anomaly_detection",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "mp2"
+          ]
+        },
+        {
+          "id": "ad3",
+          "layerName": "anomaly_detection",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "mp3",
+            "si3"
+          ]
+        },
+        {
+          "id": "ad4",
+          "layerName": "anomaly_detection",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "ad1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 17,
+    "project": "旅行プラン AI コンシェルジュ",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S17",
+      "layers": [
+        {
+          "name": "traveler_safety",
+          "ordValue": 4,
+          "definition": "旅行者の安全・法的制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "external_service",
+          "ordValue": 3,
+          "definition": "航空会社・ホテルAPI等への外部依存",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "preference",
+          "ordValue": 2,
+          "definition": "ユーザの旅行嗜好・予算設定",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "recommendation",
+          "ordValue": 1,
+          "definition": "AIが生成するプラン提案・最適化",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "ts1",
+          "layerName": "traveler_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ts2",
+          "layerName": "traveler_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "es1",
+          "layerName": "external_service",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "es2",
+          "layerName": "external_service",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "ts1"
+          ]
+        },
+        {
+          "id": "pref1",
+          "layerName": "preference",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "ts1"
+          ]
+        },
+        {
+          "id": "pref2",
+          "layerName": "preference",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "ts2",
+            "es1"
+          ]
+        },
+        {
+          "id": "pref3",
+          "layerName": "preference",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            "es2"
+          ]
+        },
+        {
+          "id": "rec1",
+          "layerName": "recommendation",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "pref1",
+            "es1"
+          ]
+        },
+        {
+          "id": "rec2",
+          "layerName": "recommendation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "pref2"
+          ]
+        },
+        {
+          "id": "rec3",
+          "layerName": "recommendation",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            "pref3",
+            "es2"
+          ]
+        },
+        {
+          "id": "rec4",
+          "layerName": "recommendation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "rec1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 18,
+    "project": "工場品質検査 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 15,
+    "_monotonicity_violation": {
+      "description": "line2 (production_line, ord=3) depends on cal1 (calibration, ord=1) -- 依存先のordが依存元より低い",
+      "violation_prop": "line2",
+      "violation_dep": "cal1",
+      "fix_suggestion": "cal1をproduction_line層以上に昇格するか、line2をcalibration層に降格する"
+    },
+    "model_spec": {
+      "namespace": "TestCoverage.S18",
+      "layers": [
+        {
+          "name": "product_standard",
+          "ordValue": 5,
+          "definition": "JIS/ISO品質規格の法的義務",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "equipment",
+          "ordValue": 4,
+          "definition": "検査装置の物理的制約・精度限界",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "production_line",
+          "ordValue": 3,
+          "definition": "製造ラインの工程依存",
+          "derivedFrom": [
+            "H3",
+            "C3"
+          ]
+        },
+        {
+          "name": "inspection_rule",
+          "ordValue": 2,
+          "definition": "品質管理者が設定する検査基準",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "calibration",
+          "ordValue": 1,
+          "definition": "AIが自動調整する検査パラメータ",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "std1",
+          "layerName": "product_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "std2",
+          "layerName": "product_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eq1",
+          "layerName": "equipment",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eq2",
+          "layerName": "equipment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "std1"
+          ]
+        },
+        {
+          "id": "line1",
+          "layerName": "production_line",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "eq1"
+          ]
+        },
+        {
+          "id": "line2",
+          "layerName": "production_line",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "cal1"
+          ]
+        },
+        {
+          "id": "line3",
+          "layerName": "production_line",
+          "justification": [
+            "H3",
+            "C3"
+          ],
+          "dependencies": [
+            "eq2"
+          ]
+        },
+        {
+          "id": "ir1",
+          "layerName": "inspection_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "std1",
+            "line1"
+          ]
+        },
+        {
+          "id": "ir2",
+          "layerName": "inspection_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "std2",
+            "eq2"
+          ]
+        },
+        {
+          "id": "ir3",
+          "layerName": "inspection_rule",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            "line3"
+          ]
+        },
+        {
+          "id": "cal1",
+          "layerName": "calibration",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "ir1",
+            "eq1"
+          ]
+        },
+        {
+          "id": "cal2",
+          "layerName": "calibration",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "ir2"
+          ]
+        },
+        {
+          "id": "cal3",
+          "layerName": "calibration",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "ir3",
+            "line1"
+          ]
+        },
+        {
+          "id": "cal4",
+          "layerName": "calibration",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "cal1"
+          ]
+        },
+        {
+          "id": "cal5",
+          "layerName": "calibration",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "ir1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 19,
+    "project": "フィットネスパーソナルトレーナー AI",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S19",
+      "layers": [
+        {
+          "name": "medical_safety",
+          "ordValue": 4,
+          "definition": "医学的安全・禁忌事項の絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "physiology",
+          "ordValue": 3,
+          "definition": "運動生理学の外部知識・前提",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "user_goal",
+          "ordValue": 2,
+          "definition": "ユーザが設定する目標・制約",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "program",
+          "ordValue": 1,
+          "definition": "AIが生成するトレーニングプログラム",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "ms1",
+          "layerName": "medical_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms2",
+          "layerName": "medical_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phy1",
+          "layerName": "physiology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phy2",
+          "layerName": "physiology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "ms1"
+          ]
+        },
+        {
+          "id": "ug1",
+          "layerName": "user_goal",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "ms1",
+            "phy1"
+          ]
+        },
+        {
+          "id": "ug2",
+          "layerName": "user_goal",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "ms2"
+          ]
+        },
+        {
+          "id": "ug3",
+          "layerName": "user_goal",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            "phy2"
+          ]
+        },
+        {
+          "id": "prg1",
+          "layerName": "program",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "ug1",
+            "phy1"
+          ]
+        },
+        {
+          "id": "prg2",
+          "layerName": "program",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "ug2"
+          ]
+        },
+        {
+          "id": "prg3",
+          "layerName": "program",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            "ug3",
+            "phy2"
+          ]
+        },
+        {
+          "id": "prg4",
+          "layerName": "program",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "prg1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 20,
+    "project": "不動産価格予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S20",
+      "layers": [
+        {
+          "name": "legal_regulation",
+          "ordValue": 5,
+          "definition": "不動産取引法・宅建業法の法的義務",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "macro_economy",
+          "ordValue": 4,
+          "definition": "金利・人口動態等のマクロ経済環境依存",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "area_attribute",
+          "ordValue": 3,
+          "definition": "地域属性・インフラ等の構造的要因",
+          "derivedFrom": [
+            "H3",
+            "C3"
+          ]
+        },
+        {
+          "name": "valuation_policy",
+          "ordValue": 2,
+          "definition": "鑑定士が設定する評価方針",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "price_estimate",
+          "ordValue": 1,
+          "definition": "AIが算出する価格予測・推奨値",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "lr1",
+          "layerName": "legal_regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lr2",
+          "layerName": "legal_regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "me1",
+          "layerName": "macro_economy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "me2",
+          "layerName": "macro_economy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "lr1"
+          ]
+        },
+        {
+          "id": "aa1",
+          "layerName": "area_attribute",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "me1"
+          ]
+        },
+        {
+          "id": "aa2",
+          "layerName": "area_attribute",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "lr2"
+          ]
+        },
+        {
+          "id": "vp1",
+          "layerName": "valuation_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "lr1",
+            "aa1"
+          ]
+        },
+        {
+          "id": "vp2",
+          "layerName": "valuation_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "lr2",
+            "me2"
+          ]
+        },
+        {
+          "id": "vp3",
+          "layerName": "valuation_policy",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            "aa2"
+          ]
+        },
+        {
+          "id": "pe1",
+          "layerName": "price_estimate",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "vp1",
+            "me1"
+          ]
+        },
+        {
+          "id": "pe2",
+          "layerName": "price_estimate",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "vp2",
+            "aa1"
+          ]
+        },
+        {
+          "id": "pe3",
+          "layerName": "price_estimate",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "vp3",
+            "aa2"
+          ]
+        },
+        {
+          "id": "pe4",
+          "layerName": "price_estimate",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "pe1"
+          ]
+        },
+        {
+          "id": "pe5",
+          "layerName": "price_estimate",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "vp1"
+          ]
+        }
+      ]
+    }
+  }
+]

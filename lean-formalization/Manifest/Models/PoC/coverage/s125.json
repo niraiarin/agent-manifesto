@@ -1,0 +1,329 @@
+{
+  "layers": [
+    {
+      "name": "AcademicStandard",
+      "definition": "考古学の学術的基準・分類体系。学界の合意に基づく",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ProvenanceIntegrity",
+      "definition": "出土記録・来歴の完全性要件",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ClassificationMethod",
+      "definition": "分類手法の設計選択。技術的妥当性に基づく",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "FeatureExtraction",
+      "definition": "特徴抽出の技術的選択。精度と効率のトレードオフ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "InterpretiveHypothesis",
+      "definition": "解釈的仮説。専門家による検証が必要",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s125_p01",
+      "layerName": "AcademicStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s125_p02",
+      "layerName": "AcademicStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s125_p03",
+      "layerName": "ProvenanceIntegrity",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s125_p01"
+      ]
+    },
+    {
+      "id": "s125_p04",
+      "layerName": "ProvenanceIntegrity",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s125_p01",
+        ".s125_p02"
+      ]
+    },
+    {
+      "id": "s125_p05",
+      "layerName": "ClassificationMethod",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s125_p03"
+      ]
+    },
+    {
+      "id": "s125_p06",
+      "layerName": "ClassificationMethod",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s125_p04"
+      ]
+    },
+    {
+      "id": "s125_p07",
+      "layerName": "ClassificationMethod",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s125_p03",
+        ".s125_p04"
+      ]
+    },
+    {
+      "id": "s125_p08",
+      "layerName": "FeatureExtraction",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s125_p05"
+      ]
+    },
+    {
+      "id": "s125_p09",
+      "layerName": "FeatureExtraction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s125_p06"
+      ]
+    },
+    {
+      "id": "s125_p10",
+      "layerName": "FeatureExtraction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s125_p05",
+        ".s125_p07"
+      ]
+    },
+    {
+      "id": "s125_p11",
+      "layerName": "InterpretiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s125_p08"
+      ]
+    },
+    {
+      "id": "s125_p12",
+      "layerName": "InterpretiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s125_p09"
+      ]
+    },
+    {
+      "id": "s125_p13",
+      "layerName": "InterpretiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s125_p10",
+        ".s125_p11"
+      ]
+    },
+    {
+      "id": "s125_p14",
+      "layerName": "ProvenanceIntegrity",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s125_p02"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "遺物の分類は既存の考古学的型式学に準拠する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "最終的な分類判定は考古学者が行う。AIは候補提示のみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "出土コンテキスト（層位・遺構との関係）は分類の必須情報"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "遺物のデジタル記録は原資料と紐づけて管理する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "土器の分類を最優先対象とする（石器・金属器は第2段階）"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "3Dスキャンデータを特徴抽出の入力とする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C5"
+          ],
+          "refutation": "型式学の基準が地域で大きく異なる場合"
+        }
+      },
+      "content": "土器の形態的特徴（器形・口縁部・底部）がCNN分類の有効な特徴量"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C4"
+          ],
+          "refutation": "出土コンテキストのデータ化が不十分な場合"
+        }
+      },
+      "content": "出土層位データと形態的特徴の組み合わせが分類精度を向上させる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "3Dスキャンの解像度が不十分な場合"
+        }
+      },
+      "content": "点群データからの曲率分析が器形分類に有効"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6",
+            "H1"
+          ],
+          "refutation": "土器片が小さく全体形状の復元が困難な場合"
+        }
+      },
+      "content": "破片からの全体形状推定にGANベースの復元が利用可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H1",
+            "H2"
+          ],
+          "refutation": "十分な教師データが蓄積されていない場合"
+        }
+      },
+      "content": "類似遺物の時空間分布パターンから交易ネットワークを推定可能"
+    }
+  ]
+}

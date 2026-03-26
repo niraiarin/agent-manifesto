@@ -1,0 +1,486 @@
+{
+  "namespace": "TestCoverage.S159",
+  "layers": [
+    {
+      "name": "ChildRights",
+      "ordValue": 7,
+      "definition": "児童の権利条約・生命身体の安全。絶対不可侵",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LegalFramework",
+      "ordValue": 6,
+      "definition": "児童福祉法・児童虐待防止法の法的義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "PrivacyProtection",
+      "ordValue": 5,
+      "definition": "個人情報保護・要配慮個人情報の取扱い制約",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "InstitutionalPolicy",
+      "ordValue": 4,
+      "definition": "児童相談所・自治体の運用方針",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictiveModeling",
+      "ordValue": 3,
+      "definition": "リスク予測モデルの設計方針",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DataIntegration",
+      "ordValue": 2,
+      "definition": "複数機関のデータ連携と統合手法",
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "AlertInterface",
+      "ordValue": 1,
+      "definition": "アラート表示・優先度付けのインターフェース",
+      "derivedFrom": [
+        "C7",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s159_p01",
+      "layerName": "ChildRights",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s159_p02",
+      "layerName": "ChildRights",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s159_p03",
+      "layerName": "LegalFramework",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s159_p01"
+      ]
+    },
+    {
+      "id": "s159_p04",
+      "layerName": "LegalFramework",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s159_p01"
+      ]
+    },
+    {
+      "id": "s159_p05",
+      "layerName": "LegalFramework",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s159_p01",
+        ".s159_p02"
+      ]
+    },
+    {
+      "id": "s159_p06",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s159_p03"
+      ]
+    },
+    {
+      "id": "s159_p07",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s159_p04"
+      ]
+    },
+    {
+      "id": "s159_p08",
+      "layerName": "PrivacyProtection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s159_p03",
+        ".s159_p05"
+      ]
+    },
+    {
+      "id": "s159_p09",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s159_p06"
+      ]
+    },
+    {
+      "id": "s159_p10",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s159_p07"
+      ]
+    },
+    {
+      "id": "s159_p11",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s159_p06",
+        ".s159_p08"
+      ]
+    },
+    {
+      "id": "s159_p12",
+      "layerName": "PredictiveModeling",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s159_p09"
+      ]
+    },
+    {
+      "id": "s159_p13",
+      "layerName": "PredictiveModeling",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s159_p10"
+      ]
+    },
+    {
+      "id": "s159_p14",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s159_p08",
+        ".s159_p18"
+      ]
+    },
+    {
+      "id": "s159_p15",
+      "layerName": "PredictiveModeling",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s159_p09",
+        ".s159_p11"
+      ]
+    },
+    {
+      "id": "s159_p16",
+      "layerName": "DataIntegration",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s159_p12"
+      ]
+    },
+    {
+      "id": "s159_p17",
+      "layerName": "DataIntegration",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s159_p13"
+      ]
+    },
+    {
+      "id": "s159_p18",
+      "layerName": "PredictiveModeling",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s159_p10",
+        ".s159_p11"
+      ]
+    },
+    {
+      "id": "s159_p19",
+      "layerName": "DataIntegration",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s159_p15",
+        ".s159_p12"
+      ]
+    },
+    {
+      "id": "s159_p20",
+      "layerName": "AlertInterface",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s159_p16"
+      ]
+    },
+    {
+      "id": "s159_p21",
+      "layerName": "AlertInterface",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s159_p17"
+      ]
+    },
+    {
+      "id": "s159_p22",
+      "layerName": "AlertInterface",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s159_p19"
+      ]
+    },
+    {
+      "id": "s159_p23",
+      "layerName": "AlertInterface",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s159_p20",
+        ".s159_p21"
+      ]
+    },
+    {
+      "id": "s159_p24",
+      "layerName": "AlertInterface",
+      "justification": [
+        "C7",
+        "H6"
+      ],
+      "dependencies": [
+        ".s159_p22"
+      ]
+    },
+    {
+      "id": "s159_p25",
+      "layerName": "AlertInterface",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s159_p23",
+        ".s159_p24"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "児童の生命・身体の安全が最優先。見逃し（偽陰性）のコストは誤報（偽陽性）より遥かに大きい"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "児童福祉法第25条に基づく通告義務を支援する。AIは通告判断の参考情報を提供するのみ"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "児童虐待防止法に基づき、一時保護の判断は児童福祉司が行う。AIは代替しない"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "要配慮個人情報（DV歴・精神疾患歴等）の取扱いは個人情報保護法に厳格に準拠する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "リスクスコアは児童福祉司の判断を補助するツールであり、スコアのみで対応を決定しない"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "学校・医療機関・警察からの情報を統合するが、データ共有は各機関の同意に基づく"
+    },
+    {
+      "id": "C7",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q7",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "アラート画面はリスク要因の根拠を明示し、ブラックボックスにしない"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C3"
+          ],
+          "refutation": "全ケースに対して統一的な対応プロトコルが適用可能な場合"
+        }
+      },
+      "content": "リスクレベルに応じた段階的対応プロトコル（低・中・高・緊急）が運用効率を向上させる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C5"
+          ],
+          "refutation": "構造化されたリスク要因データが十分に蓄積されていない場合"
+        }
+      },
+      "content": "過去の虐待事例データから抽出したリスク要因の重み付けモデルが予測に有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1"
+          ],
+          "refutation": "単一時点のリスク評価で十分な場合"
+        }
+      },
+      "content": "時系列でのリスクスコア変動（上昇トレンド）が早期介入の重要なシグナル"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "C4"
+          ],
+          "refutation": "各機関のデータ形式が統一されている場合"
+        }
+      },
+      "content": "自然言語処理による非構造化テキスト（相談記録・通報内容）の構造化が必要"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C7"
+          ],
+          "refutation": "児童福祉司がAIの判断根拠に関心を持たない場合"
+        }
+      },
+      "content": "SHAP値等による個別ケースのリスク要因寄与度の可視化が信頼性向上に有効"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C7",
+            "C5"
+          ],
+          "refutation": "アラート件数が少なく優先度付けが不要な場合"
+        }
+      },
+      "content": "アラートの優先度キューイングにより、限られた人員で緊急度の高いケースを先に対応できる"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "namespace": "CropDiseaseDiagnosis",
+  "layers": [
+    {
+      "name": "biosafety",
+      "ordValue": 4,
+      "definition": "農薬使用規制・検疫法規・食品安全基準。法的不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "pathology",
+      "ordValue": 3,
+      "definition": "植物病理学の確立知見。病原体同定・感染メカニズム",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "diagnosis",
+      "ordValue": 2,
+      "definition": "画像診断モデル・症状分類の方法論",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "treatment",
+      "ordValue": 1,
+      "definition": "防除推奨・薬剤選択のアルゴリズム的判断",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "新規病害・耐性変異に関する未検証仮説",
+      "derivedFrom": [
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "bio_pesticide_reg",
+      "layerName": "biosafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bio_quarantine",
+      "layerName": "biosafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "bio_food_safety",
+      "layerName": "biosafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "path_taxonomy",
+      "layerName": "pathology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "path_lifecycle",
+      "layerName": "pathology",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".path_taxonomy"
+      ]
+    },
+    {
+      "id": "path_env_factor",
+      "layerName": "pathology",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "path_resistance",
+      "layerName": "pathology",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".path_taxonomy",
+        ".path_lifecycle"
+      ]
+    },
+    {
+      "id": "diag_image_cls",
+      "layerName": "diagnosis",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".path_taxonomy"
+      ]
+    },
+    {
+      "id": "diag_symptom_map",
+      "layerName": "diagnosis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".path_lifecycle",
+        ".path_env_factor"
+      ]
+    },
+    {
+      "id": "diag_severity",
+      "layerName": "diagnosis",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".diag_image_cls",
+        ".diag_symptom_map"
+      ]
+    },
+    {
+      "id": "diag_multi_crop",
+      "layerName": "diagnosis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".diag_image_cls"
+      ]
+    },
+    {
+      "id": "treat_recommend",
+      "layerName": "treatment",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".bio_pesticide_reg",
+        ".diag_severity"
+      ]
+    },
+    {
+      "id": "treat_organic",
+      "layerName": "treatment",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".bio_food_safety",
+        ".treat_recommend"
+      ]
+    },
+    {
+      "id": "treat_schedule",
+      "layerName": "treatment",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".path_env_factor",
+        ".diag_severity"
+      ]
+    },
+    {
+      "id": "treat_rotation",
+      "layerName": "treatment",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".path_resistance",
+        ".treat_recommend"
+      ]
+    },
+    {
+      "id": "hyp_new_strain",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".diag_image_cls",
+        ".path_taxonomy"
+      ]
+    },
+    {
+      "id": "hyp_climate_shift",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".path_env_factor",
+        ".diag_symptom_map"
+      ]
+    }
+  ]
+}

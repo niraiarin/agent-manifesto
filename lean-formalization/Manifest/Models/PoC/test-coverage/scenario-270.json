@@ -1,0 +1,29 @@
+{
+  "namespace": "TestScenario.S270",
+  "description": "航空管制支援 AI",
+  "layers": [
+    {"name": "icao_regulation", "ordValue": 6, "definition": "ICAO国際民間航空条約・Annex規定。管制間隔基準", "derivedFrom": ["C1","C2"]},
+    {"name": "airspace_structure", "ordValue": 5, "definition": "空域構造・航空路設定。SID/STAR・セクタ分割", "derivedFrom": ["C3","C4"]},
+    {"name": "separation_model", "ordValue": 4, "definition": "管制間隔確保モデル。ウェイクタービュランス分類", "derivedFrom": ["H1","C5"]},
+    {"name": "traffic_flow", "ordValue": 3, "definition": "交通流管理。ATFM遅延配分・容量管理", "derivedFrom": ["H2","H3"]},
+    {"name": "conflict_detection", "ordValue": 2, "definition": "コンフリクト検出・解消アルゴリズム", "derivedFrom": ["H4","H5"]},
+    {"name": "advisory", "ordValue": 1, "definition": "管制官への助言生成。優先度・代替案提示", "derivedFrom": ["H6","H7"]},
+    {"name": "prediction", "ordValue": 0, "definition": "交通量予測・気象影響の仮説", "derivedFrom": ["H8"]}
+  ],
+  "propositions": [
+    {"id": "ir1", "layerName": "icao_regulation", "justification": ["C1"], "dependencies": []},
+    {"id": "ir2", "layerName": "icao_regulation", "justification": ["C2"], "dependencies": []},
+    {"id": "as1", "layerName": "airspace_structure", "justification": ["C3"], "dependencies": [".ir1"]},
+    {"id": "as2", "layerName": "airspace_structure", "justification": ["C4"], "dependencies": [".ir2"]},
+    {"id": "sm1", "layerName": "separation_model", "justification": ["H1"], "dependencies": [".ir1",".as1"]},
+    {"id": "sm2", "layerName": "separation_model", "justification": ["C5"], "dependencies": [".as2"]},
+    {"id": "tf1", "layerName": "traffic_flow", "justification": ["H2"], "dependencies": [".sm1",".as1"]},
+    {"id": "tf2", "layerName": "traffic_flow", "justification": ["H3"], "dependencies": [".sm2"]},
+    {"id": "cd1", "layerName": "conflict_detection", "justification": ["H4"], "dependencies": [".tf1",".sm1"]},
+    {"id": "cd2", "layerName": "conflict_detection", "justification": ["H5"], "dependencies": [".tf2"]},
+    {"id": "ad1", "layerName": "advisory", "justification": ["H6"], "dependencies": [".cd1",".cd2"]},
+    {"id": "ad2", "layerName": "advisory", "justification": ["H7"], "dependencies": [".tf1"]},
+    {"id": "pd1", "layerName": "prediction", "justification": ["H8"], "dependencies": [".ad1"]}
+  ],
+  "_fix_log": "Phase 2.5: cd3 (conflict_detection, ord=2) depended on pd1 (prediction, ord=0) — monotonicity violation. Both H-justified. Fix: removed cd3. Conflict detection cannot depend on unverified predictions."
+}

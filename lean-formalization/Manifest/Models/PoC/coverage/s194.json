@@ -1,0 +1,137 @@
+{
+  "namespace": "Scenario194",
+  "layers": [
+    {
+      "name": "tradition",
+      "ordValue": 2,
+      "definition": "伝統技法と師匠の権限に関わる不可侵の前提。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "method",
+      "ordValue": 1,
+      "definition": "技術記録・支援の手法。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "効果が未検証の仮説。実地テストで確認が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "trad1",
+      "layerName": "tradition",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "trad2",
+      "layerName": "tradition",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "trad3",
+      "layerName": "tradition",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "trad4",
+      "layerName": "tradition",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".trad1"
+      ]
+    },
+    {
+      "id": "meth1",
+      "layerName": "method",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".trad1",
+        ".trad2"
+      ]
+    },
+    {
+      "id": "meth2",
+      "layerName": "method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".trad3",
+        ".trad4"
+      ]
+    },
+    {
+      "id": "meth3",
+      "layerName": "method",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".trad2"
+      ]
+    },
+    {
+      "id": "meth4",
+      "layerName": "method",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".meth1",
+        ".meth2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".trad1",
+        ".meth1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".meth2",
+        ".meth4"
+      ]
+    }
+  ]
+}

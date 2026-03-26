@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "academic_integrity",
+      "definition": "学術倫理・盗用検出・利益相反の原則",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "review_standard",
+      "definition": "査読品質基準・評価フレームワーク",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "analysis_method",
+      "definition": "論文分析手法・スコアリングモデル",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "workflow_config",
+      "definition": "ワークフロー設定・通知・レポート形式",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "plagiarism_detection_mandatory",
+      "layerName": "academic_integrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "conflict_of_interest_check",
+      "layerName": "academic_integrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "double_blind_protocol",
+      "layerName": "review_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "review_criteria_framework",
+      "layerName": "review_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "statistical_rigor_check",
+      "layerName": "review_standard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "novelty_assessment_model",
+      "layerName": "analysis_method",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "citation_network_analysis",
+      "layerName": "analysis_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reviewer_matching_algorithm",
+      "layerName": "analysis_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "deadline_management",
+      "layerName": "workflow_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "notification_template",
+      "layerName": "workflow_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "review_progress_dashboard",
+      "layerName": "workflow_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "namespace": "Scenario220",
+  "layers": [
+    {
+      "name": "pharma",
+      "ordValue": 4,
+      "definition": "薬事規制・温度管理基準。法的に不変。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "publicHealth",
+      "ordValue": 3,
+      "definition": "公衆衛生当局の方針。政策で決定。",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "logistics",
+      "ordValue": 2,
+      "definition": "物流・在庫制約。インフラで決定。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "配送最適化アルゴリズムの設計方針。技術で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実運用データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "pha1",
+      "layerName": "pharma",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pha2",
+      "layerName": "pharma",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pha3",
+      "layerName": "pharma",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pub1",
+      "layerName": "publicHealth",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".pha1"
+      ]
+    },
+    {
+      "id": "pub2",
+      "layerName": "publicHealth",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".pha1",
+        ".pha2"
+      ]
+    },
+    {
+      "id": "pub3",
+      "layerName": "publicHealth",
+      "justification": [
+        "C2",
+        "C5"
+      ],
+      "dependencies": [
+        ".pha3"
+      ]
+    },
+    {
+      "id": "log1",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".pha2",
+        ".pub1"
+      ]
+    },
+    {
+      "id": "log2",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".pub2"
+      ]
+    },
+    {
+      "id": "log3",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".pha3",
+        ".pub3"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".pha1",
+        ".pha2",
+        ".log1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".pub1",
+        ".log1",
+        ".log2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".pub2",
+        ".pub3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".pha2",
+        ".log1",
+        ".log3"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".log2",
+        ".log3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt2",
+        ".opt5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".opt3"
+      ]
+    }
+  ]
+}

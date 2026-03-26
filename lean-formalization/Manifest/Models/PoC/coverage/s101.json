@@ -1,0 +1,193 @@
+{
+  "namespace": "TestCoverage.S101",
+  "layers": [
+    {
+      "name": "AccessibilityRight",
+      "ordValue": 5,
+      "definition": "障害者の情報アクセス権。障害者権利条約・障害者差別解消法に基づく不可侵の権利",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LinguisticIntegrity",
+      "ordValue": 4,
+      "definition": "手話の言語学的正確性。手話は独立した言語であり、日本語の単純変換ではない",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "CulturalNorm",
+      "ordValue": 3,
+      "definition": "ろう文化の規範と慣習。コミュニティの承認に基づく",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "TranslationPolicy",
+      "ordValue": 2,
+      "definition": "翻訳品質・速度のトレードオフに関する運用方針",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "TechnicalHypothesis",
+      "ordValue": 1,
+      "definition": "未検証の技術的仮説。精度改善のための実験的アプローチ",
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s101_p01",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s101_p02",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s101_p03",
+      "layerName": "AccessibilityRight",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s101_p04",
+      "layerName": "LinguisticIntegrity",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s101_p01"
+      ]
+    },
+    {
+      "id": "s101_p05",
+      "layerName": "LinguisticIntegrity",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s101_p02"
+      ]
+    },
+    {
+      "id": "s101_p06",
+      "layerName": "CulturalNorm",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s101_p04"
+      ]
+    },
+    {
+      "id": "s101_p07",
+      "layerName": "CulturalNorm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s101_p04",
+        ".s101_p05"
+      ]
+    },
+    {
+      "id": "s101_p08",
+      "layerName": "TranslationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s101_p06"
+      ]
+    },
+    {
+      "id": "s101_p09",
+      "layerName": "TranslationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s101_p07"
+      ]
+    },
+    {
+      "id": "s101_p10",
+      "layerName": "TranslationPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s101_p06",
+        ".s101_p07"
+      ]
+    },
+    {
+      "id": "s101_p11",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s101_p08"
+      ]
+    },
+    {
+      "id": "s101_p12",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s101_p09"
+      ]
+    },
+    {
+      "id": "s101_p13",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s101_p10"
+      ]
+    },
+    {
+      "id": "s101_p14",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s101_p11",
+        ".s101_p12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "namespace": "OperatingRoomAirQuality",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "患者安全に直結する絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "法規制・ガイドライン要件",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 2,
+      "definition": "外部環境依存（HVAC・外気等）",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "運用方針（閾値設定・アラート頻度）",
+      "derivedFrom": [
+        "C4",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".safe2"
+      ]
+    },
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".env1"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".env1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".safe3",
+        ".env2"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": [
+        ".reg2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".pol1"
+      ]
+    }
+  ]
+}

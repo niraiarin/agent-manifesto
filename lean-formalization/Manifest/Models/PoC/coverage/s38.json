@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "privacy_ethics",
+      "definition": "プライバシー保護・同意取得・倫理ガイドラインの法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "recognition_standard",
+      "definition": "感情認識精度基準・文化的バイアス補正",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "model_design",
+      "definition": "認識モデル設計・特徴量抽出・分類手法",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "deployment_config",
+      "definition": "デプロイ設定・閾値調整・ログ管理",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "informed_consent_requirement",
+      "layerName": "privacy_ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data_anonymization_standard",
+      "layerName": "privacy_ethics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "recognition_accuracy_baseline",
+      "layerName": "recognition_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cultural_bias_mitigation",
+      "layerName": "recognition_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "valence_arousal_model",
+      "layerName": "recognition_standard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "feature_extraction_pipeline",
+      "layerName": "model_design",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "classifier_architecture",
+      "layerName": "model_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "real_time_latency_target",
+      "layerName": "model_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "confidence_threshold_setting",
+      "layerName": "deployment_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "audio_retention_policy",
+      "layerName": "deployment_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fallback_behavior_config",
+      "layerName": "deployment_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

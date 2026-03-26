@@ -1,0 +1,226 @@
+{
+  "namespace": "Scenario283",
+  "layers": [
+    {
+      "name": "governance",
+      "ordValue": 4,
+      "definition": "防災行政の法的枠組みと権限構造。法令で規定。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "ordValue": 3,
+      "definition": "河川・堤防・センサーの物理的特性。変更に年単位を要する。",
+      "derivedFrom": [
+        "C2",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "運用者が設定する予測パラメータと出力形式。",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "model",
+      "ordValue": 1,
+      "definition": "予測モデルの設計判断。データと知見で改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実運用で検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "gov1",
+      "layerName": "governance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gov2",
+      "layerName": "governance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "inf1",
+      "layerName": "infrastructure",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "inf2",
+      "layerName": "infrastructure",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "inf3",
+      "layerName": "infrastructure",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "inf4",
+      "layerName": "infrastructure",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".inf1",
+        ".inf2"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operational",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".gov1"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operational",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".gov1",
+        ".gov2"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operational",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".inf4",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "mdl1",
+      "layerName": "model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".inf1",
+        ".inf2"
+      ]
+    },
+    {
+      "id": "mdl2",
+      "layerName": "model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".inf4",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "mdl3",
+      "layerName": "model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".inf3",
+        ".mdl1"
+      ]
+    },
+    {
+      "id": "mdl4",
+      "layerName": "model",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".mdl1",
+        ".mdl2"
+      ]
+    },
+    {
+      "id": "mdl5",
+      "layerName": "model",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".ops3",
+        ".mdl3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops2",
+        ".mdl4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".mdl5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2"
+      ]
+    }
+  ]
+}

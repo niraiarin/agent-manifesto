@@ -1,0 +1,178 @@
+{
+  "namespace": "Scenario280",
+  "layers": [
+    {
+      "name": "compliance",
+      "ordValue": 3,
+      "definition": "法規制と顧客契約。労基法・交通法規。不可侵。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "customer",
+      "ordValue": 2,
+      "definition": "顧客との合意事項。時間帯指定・置き配承認。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "routing",
+      "ordValue": 1,
+      "definition": "AIの配送最適化手法。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。配送データで確認。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "cmp1",
+      "layerName": "compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cmp2",
+      "layerName": "compliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cmp3",
+      "layerName": "compliance",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cus1",
+      "layerName": "customer",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".cmp2"
+      ]
+    },
+    {
+      "id": "cus2",
+      "layerName": "customer",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".cmp1"
+      ]
+    },
+    {
+      "id": "cus3",
+      "layerName": "customer",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".cus1",
+        ".cus2"
+      ]
+    },
+    {
+      "id": "rte1",
+      "layerName": "routing",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cmp2",
+        ".cus1"
+      ]
+    },
+    {
+      "id": "rte2",
+      "layerName": "routing",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".cus2",
+        ".cus3"
+      ]
+    },
+    {
+      "id": "rte3",
+      "layerName": "routing",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".cmp1",
+        ".cmp3"
+      ]
+    },
+    {
+      "id": "rte4",
+      "layerName": "routing",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".rte1",
+        ".rte2"
+      ]
+    },
+    {
+      "id": "rte5",
+      "layerName": "routing",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".rte1",
+        ".rte3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rte3",
+        ".rte4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rte5"
+      ]
+    }
+  ]
+}

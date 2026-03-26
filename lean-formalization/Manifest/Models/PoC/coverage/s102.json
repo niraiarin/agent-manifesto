@@ -1,0 +1,216 @@
+{
+  "namespace": "TestCoverage.S102",
+  "layers": [
+    {
+      "name": "RegulatoryStandard",
+      "ordValue": 6,
+      "definition": "土壌汚染対策法の基準値。法定で変更不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "PublicHealthSafety",
+      "ordValue": 5,
+      "definition": "住民の健康被害防止。人命に関わる不可侵制約",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "GeochemicalEvidence",
+      "ordValue": 4,
+      "definition": "地球化学的知見に基づく汚染挙動の経験則",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "SamplingProtocol",
+      "ordValue": 3,
+      "definition": "調査・サンプリング手法に関する技術的手続き",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "AssessmentModel",
+      "ordValue": 2,
+      "definition": "汚染拡散モデル・リスク評価手法の選択",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "RemediationHypothesis",
+      "ordValue": 1,
+      "definition": "浄化手法の効果に関する未検証仮説",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s102_p01",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s102_p02",
+      "layerName": "PublicHealthSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s102_p01"
+      ]
+    },
+    {
+      "id": "s102_p03",
+      "layerName": "PublicHealthSafety",
+      "justification": [
+        "C2",
+        "C1"
+      ],
+      "dependencies": [
+        ".s102_p01"
+      ]
+    },
+    {
+      "id": "s102_p04",
+      "layerName": "GeochemicalEvidence",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s102_p02"
+      ]
+    },
+    {
+      "id": "s102_p05",
+      "layerName": "GeochemicalEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s102_p01",
+        ".s102_p03"
+      ]
+    },
+    {
+      "id": "s102_p06",
+      "layerName": "SamplingProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s102_p04"
+      ]
+    },
+    {
+      "id": "s102_p07",
+      "layerName": "SamplingProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s102_p04",
+        ".s102_p05"
+      ]
+    },
+    {
+      "id": "s102_p08",
+      "layerName": "SamplingProtocol",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s102_p05"
+      ]
+    },
+    {
+      "id": "s102_p09",
+      "layerName": "AssessmentModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s102_p06"
+      ]
+    },
+    {
+      "id": "s102_p10",
+      "layerName": "AssessmentModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s102_p07"
+      ]
+    },
+    {
+      "id": "s102_p11",
+      "layerName": "AssessmentModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s102_p06",
+        ".s102_p08"
+      ]
+    },
+    {
+      "id": "s102_p12",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s102_p09"
+      ]
+    },
+    {
+      "id": "s102_p13",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s102_p10"
+      ]
+    },
+    {
+      "id": "s102_p14",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s102_p11"
+      ]
+    },
+    {
+      "id": "s102_p15",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s102_p12",
+        ".s102_p13"
+      ]
+    }
+  ]
+}

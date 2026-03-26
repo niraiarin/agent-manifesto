@@ -1,0 +1,161 @@
+{
+  "layers": [
+    {
+      "name": "constraint",
+      "definition": "動物福祉・訓練基準の不変前提。",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "empirical",
+      "definition": "訓練データ・行動科学の経験則。",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "design",
+      "definition": "AIシステムの設計選択。",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "definition": "検証待ちの仮説。",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "detected": true,
+    "description": "「ストレスサインの自動検出で訓練強度を調整」(empirical, ord=2) が「センサーデータの精度は訓練判断に十分」(design, ord=1) に依存するが、依存先(design, ord=1) < 依存元(empirical, ord=2) で単調性違反",
+    "violating_edge": {
+      "from": "ストレスサインの自動検出で訓練強度を調整",
+      "from_layer": "empirical",
+      "from_ord": 2,
+      "to": "センサーデータの精度は訓練判断に十分",
+      "to_layer": "design",
+      "to_ord": 1
+    },
+    "resolution": {
+      "action": "promote",
+      "detail": "H3由来（LLM推論のみ）のため、LLMが自律的に修正。「センサーデータの精度は訓練判断に十分」をdesign(ord=1)からempirical(ord=2)に昇格。根拠: センサー精度は経験的に検証可能な事実であり、設計選択ではなく経験的前提として扱うのが適切。",
+      "updated_assignment": {
+        "proposition": "センサーデータの精度は訓練判断に十分",
+        "layerName": "empirical",
+        "justification": [
+          "H3",
+          "C5"
+        ]
+      }
+    },
+    "post_resolution_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "prop_4dd613",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_715752",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "IGDF_1f4518",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_1a98cd",
+      "layerName": "empirical",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_bab487",
+      "layerName": "empirical",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_9a3a66",
+      "layerName": "design",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d403ff",
+      "layerName": "design",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_26b812",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "AI_6a3450",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_7fe0ca",
+      "layerName": "design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_70ef5f",
+      "layerName": "constraint",
+      "justification": [
+        "C1",
+        "H2"
+      ],
+      "dependencies": []
+    }
+  ]
+}

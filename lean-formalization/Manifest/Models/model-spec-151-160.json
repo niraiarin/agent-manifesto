@@ -1,0 +1,479 @@
+[
+  {
+    "scenario_id": 151,
+    "project": "義肢制御 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S151",
+      "layers": [
+        {"name": "BiologicalSafety", "ordValue": 5, "definition": "人体への直接的安全制約。神経損傷・誤動作による傷害を防止", "derivedFrom": ["C1", "C2"]},
+        {"name": "NeuralInterface", "ordValue": 4, "definition": "筋電信号・神経インターフェースの生理学的制約", "derivedFrom": ["C3", "H1"]},
+        {"name": "MotorControl", "ordValue": 3, "definition": "運動制御アルゴリズムの設計方針", "derivedFrom": ["C4", "H2"]},
+        {"name": "Adaptation", "ordValue": 2, "definition": "ユーザ適応・学習に基づく調整ルール", "derivedFrom": ["H3", "H4"]},
+        {"name": "ComfortPreference", "ordValue": 1, "definition": "装着感・操作感の個人的好み", "derivedFrom": ["C5", "C6", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s151_p01", "layerName": "BiologicalSafety", "justification": ["C1"], "dependencies": []},
+        {"id": "s151_p02", "layerName": "BiologicalSafety", "justification": ["C2"], "dependencies": []},
+        {"id": "s151_p03", "layerName": "BiologicalSafety", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s151_p04", "layerName": "NeuralInterface", "justification": ["C3"], "dependencies": [".s151_p01"]},
+        {"id": "s151_p05", "layerName": "NeuralInterface", "justification": ["H1"], "dependencies": [".s151_p02"]},
+        {"id": "s151_p06", "layerName": "NeuralInterface", "justification": ["C3", "H1"], "dependencies": [".s151_p01", ".s151_p03"]},
+        {"id": "s151_p07", "layerName": "MotorControl", "justification": ["C4"], "dependencies": [".s151_p04"]},
+        {"id": "s151_p08", "layerName": "MotorControl", "justification": ["H2"], "dependencies": [".s151_p05"]},
+        {"id": "s151_p09", "layerName": "MotorControl", "justification": ["C4", "H2"], "dependencies": [".s151_p04", ".s151_p06"]},
+        {"id": "s151_p10", "layerName": "Adaptation", "justification": ["H3"], "dependencies": [".s151_p07"]},
+        {"id": "s151_p11", "layerName": "Adaptation", "justification": ["H4"], "dependencies": [".s151_p08", ".s151_p09"]},
+        {"id": "s151_p12", "layerName": "ComfortPreference", "justification": ["C5"], "dependencies": [".s151_p10"]},
+        {"id": "s151_p13", "layerName": "ComfortPreference", "justification": ["C6"], "dependencies": [".s151_p11"]},
+        {"id": "s151_p14", "layerName": "ComfortPreference", "justification": ["H5"], "dependencies": [".s151_p12", ".s151_p13"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "義肢の誤動作が装着者の身体を傷つけてはならない。緊急停止機構を必ず搭載する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "筋電信号の取得電極は生体適合性材料を使用し、皮膚炎症を起こさない"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "表面筋電図（sEMG）を主要な制御入力とし、8チャンネル以上のセンサーで取得する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "把持・ピンチ・回内回外の3自由度を制御対象とする"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "義肢の重量は500g以下に抑え、長時間装着の疲労を軽減する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "把持力のフィードバックは振動触覚で装着者に伝える"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "侵襲型インターフェース（筋内電極等）が安全に使用可能になった場合"}}, "content": "sEMGは皮膚表面のノイズに影響されやすく、信号前処理が制御精度の鍵"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "6自由度以上の制御が実用的に可能になった場合"}}, "content": "3自由度の逐次切替制御が初期段階として妥当。同時制御は学習コスト大"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "ユーザの筋電パターンが時間経過で安定し適応不要な場合"}}, "content": "装着者の筋電パターンは日内変動があり、オンライン適応が必要"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4", "H2"], "refutation": "事前キャリブレーションだけで十分な精度が得られる場合"}}, "content": "各把持モードの遷移タイミングは個人差が大きく、強化学習による最適化が有効"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5", "C6"], "refutation": "触覚フィードバックが不要と判断される場合"}}, "content": "振動触覚の強度・パターンは個人ごとの感覚閾値に合わせてカスタマイズすべき"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 152,
+    "project": "花粉飛散予測 AI",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S152",
+      "layers": [
+        {"name": "DataInfrastructure", "ordValue": 3, "definition": "気象観測・花粉計測の物理的基盤。変更不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "PredictionModel", "ordValue": 2, "definition": "予測アルゴリズムとパラメータ設計。データに基づき改善可能", "derivedFrom": ["C3", "H1", "H2"]},
+        {"name": "DeliveryFormat", "ordValue": 1, "definition": "予測結果の配信方式と表示形式", "derivedFrom": ["C4", "H3", "H4"]}
+      ],
+      "propositions": [
+        {"id": "s152_p01", "layerName": "DataInfrastructure", "justification": ["C1"], "dependencies": []},
+        {"id": "s152_p02", "layerName": "DataInfrastructure", "justification": ["C2"], "dependencies": []},
+        {"id": "s152_p03", "layerName": "PredictionModel", "justification": ["C3"], "dependencies": [".s152_p01"]},
+        {"id": "s152_p04", "layerName": "PredictionModel", "justification": ["H1"], "dependencies": [".s152_p01", ".s152_p02"]},
+        {"id": "s152_p05", "layerName": "PredictionModel", "justification": ["H2"], "dependencies": [".s152_p02"]},
+        {"id": "s152_p06", "layerName": "DeliveryFormat", "justification": ["C4"], "dependencies": [".s152_p03"]},
+        {"id": "s152_p07", "layerName": "DeliveryFormat", "justification": ["H3"], "dependencies": [".s152_p04"]},
+        {"id": "s152_p08", "layerName": "DeliveryFormat", "justification": ["H4"], "dependencies": [".s152_p05", ".s152_p06"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "気象庁のアメダスデータ（風向・風速・気温・降水量）をリアルタイムで取得できる"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "全国の花粉観測装置（ダーラム法・自動計測器）の計測データを使用する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "予測は市区町村単位で3日先まで提供する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "予測結果はスマートフォンアプリとWebで配信する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1", "C2"], "refutation": "花粉飛散が気象条件に依存しない（温室栽培のような閉鎖環境）場合"}}, "content": "気温の積算と降水パターンが花粉飛散開始日の予測に最も寄与する"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C2"], "refutation": "衛星画像やLiDARによる広域花粉観測が実用化された場合"}}, "content": "地上観測データの空間補間にはクリギング法が適している"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3", "C4"], "refutation": "ユーザが時間帯別の詳細情報を求めない場合"}}, "content": "時間帯別（朝・昼・夕・夜）の飛散量表示がユーザ行動変容に有効"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4"], "refutation": "プッシュ通知がユーザに煩わしいと感じられる場合"}}, "content": "個人の花粉症重症度に応じたアラート閾値のカスタマイズが必要"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 153,
+    "project": "船舶衝突回避 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 21,
+    "monotonicity_violation": true,
+    "violation_description": "s153_p11（NavigationPractice, ord=3）が s153_p14（AutonomyLevel, ord=2）に依存 — 高い層が低い層に依存する単調性違反",
+    "model_spec": {
+      "namespace": "TestCoverage.S153",
+      "layers": [
+        {"name": "MaritimeLaw", "ordValue": 6, "definition": "海上衝突予防規則（COLREG）。国際条約であり違反不可", "derivedFrom": ["C1"]},
+        {"name": "VesselSafety", "ordValue": 5, "definition": "船舶の構造的安全制約。物理的限界", "derivedFrom": ["C2", "C3"]},
+        {"name": "SensorFusion", "ordValue": 4, "definition": "レーダー・AIS・カメラ統合の技術的制約", "derivedFrom": ["C4", "H1"]},
+        {"name": "NavigationPractice", "ordValue": 3, "definition": "航行慣行に基づく回避戦略。経験則", "derivedFrom": ["H2", "H3"]},
+        {"name": "AutonomyLevel", "ordValue": 2, "definition": "自律度の設計選択。人間-AI間の権限分配", "derivedFrom": ["C5", "H4"]},
+        {"name": "OperationalTuning", "ordValue": 1, "definition": "運用パラメータの微調整。航路・天候で変動", "derivedFrom": ["C6", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s153_p01", "layerName": "MaritimeLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s153_p02", "layerName": "MaritimeLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s153_p03", "layerName": "VesselSafety", "justification": ["C2"], "dependencies": [".s153_p01"]},
+        {"id": "s153_p04", "layerName": "VesselSafety", "justification": ["C3"], "dependencies": [".s153_p01"]},
+        {"id": "s153_p05", "layerName": "VesselSafety", "justification": ["C2", "C3"], "dependencies": [".s153_p01", ".s153_p02"]},
+        {"id": "s153_p06", "layerName": "SensorFusion", "justification": ["C4"], "dependencies": [".s153_p03"]},
+        {"id": "s153_p07", "layerName": "SensorFusion", "justification": ["H1"], "dependencies": [".s153_p04"]},
+        {"id": "s153_p08", "layerName": "SensorFusion", "justification": ["C4", "H1"], "dependencies": [".s153_p03", ".s153_p05"]},
+        {"id": "s153_p09", "layerName": "NavigationPractice", "justification": ["H2"], "dependencies": [".s153_p06"]},
+        {"id": "s153_p10", "layerName": "NavigationPractice", "justification": ["H3"], "dependencies": [".s153_p07"]},
+        {"id": "s153_p11", "layerName": "NavigationPractice", "justification": ["H2", "H3"], "dependencies": [".s153_p08", ".s153_p14"]},
+        {"id": "s153_p12", "layerName": "AutonomyLevel", "justification": ["C5"], "dependencies": [".s153_p09"]},
+        {"id": "s153_p13", "layerName": "AutonomyLevel", "justification": ["H4"], "dependencies": [".s153_p10"]},
+        {"id": "s153_p14", "layerName": "AutonomyLevel", "justification": ["C5", "H4"], "dependencies": [".s153_p09", ".s153_p10"]},
+        {"id": "s153_p15", "layerName": "OperationalTuning", "justification": ["C6"], "dependencies": [".s153_p12"]},
+        {"id": "s153_p16", "layerName": "OperationalTuning", "justification": ["H5"], "dependencies": [".s153_p13"]},
+        {"id": "s153_p17", "layerName": "OperationalTuning", "justification": ["H6"], "dependencies": [".s153_p14"]},
+        {"id": "s153_p18", "layerName": "OperationalTuning", "justification": ["H5", "H6"], "dependencies": [".s153_p15", ".s153_p16"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "海上衝突予防規則（COLREG 1972）の全条項を遵守する。特に規則13-17（追越し・行会い・横切り・避航船・保持船）"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "船舶の旋回性能（旋回径・キック・アドバンス）は操縦性能基準に基づく物理的限界がある"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "停船距離は速力と積載量に依存し、即時停止は不可能である"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "レーダー（X帯・S帯）、AIS、光学カメラの3系統のセンサーを統合して使用する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "最終的な操船判断は船長が行う。AIは回避案を提示し船長が承認する"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "沿岸航行と外洋航行で回避パラメータ（安全距離・回避開始タイミング）を変える"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C4"], "refutation": "単一センサーで十分な検知精度が得られる場合"}}, "content": "センサーフュージョンではカルマンフィルタによる他船追跡が有効。各センサーの特性を補完する"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1", "C2"], "refutation": "COLREGの解釈が全状況で一意に定まる場合"}}, "content": "COLREG規則の適用が曖昧な状況（交差する義務等）では最も保守的な解釈を採用すべき"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C2", "C3"], "refutation": "全船舶の操縦性能が均一である場合"}}, "content": "回避行動の開始タイミングは船舶の操縦性能（旋回径・停船距離）に基づいて動的に決定すべき"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "完全自律航行が法的に認められた場合"}}, "content": "自律度はIMOの自律船ガイドライン（MASS degree 2: 遠隔操作・船上判断）に準拠すべき"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C6", "C4"], "refutation": "航路に関わらず一律のパラメータで安全が確保できる場合"}}, "content": "狭水道・輻輳海域では安全距離を通常の2倍に設定し、回避開始を早める"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C6"], "refutation": "天候がセンサー性能に影響しない場合"}}, "content": "視界制限状態（濃霧等）ではレーダー依存度を上げ、安全マージンを拡大する"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 154,
+    "project": "古写真修復 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S154",
+      "layers": [
+        {"name": "ArchivalIntegrity", "ordValue": 4, "definition": "原資料の情報保全。修復で歴史的記録を改変してはならない", "derivedFrom": ["C1", "C2"]},
+        {"name": "RestorationScience", "ordValue": 3, "definition": "写真劣化の科学的知見に基づく修復方針", "derivedFrom": ["C3", "H1", "H2"]},
+        {"name": "AlgorithmDesign", "ordValue": 2, "definition": "画像処理・生成AIのアルゴリズム選択", "derivedFrom": ["C4", "H3"]},
+        {"name": "PresentationStyle", "ordValue": 1, "definition": "修復結果の表示・出力形式の好み", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s154_p01", "layerName": "ArchivalIntegrity", "justification": ["C1"], "dependencies": []},
+        {"id": "s154_p02", "layerName": "ArchivalIntegrity", "justification": ["C2"], "dependencies": []},
+        {"id": "s154_p03", "layerName": "ArchivalIntegrity", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s154_p04", "layerName": "RestorationScience", "justification": ["C3"], "dependencies": [".s154_p01"]},
+        {"id": "s154_p05", "layerName": "RestorationScience", "justification": ["H1"], "dependencies": [".s154_p02"]},
+        {"id": "s154_p06", "layerName": "RestorationScience", "justification": ["H2"], "dependencies": [".s154_p01", ".s154_p03"]},
+        {"id": "s154_p07", "layerName": "AlgorithmDesign", "justification": ["C4"], "dependencies": [".s154_p04"]},
+        {"id": "s154_p08", "layerName": "AlgorithmDesign", "justification": ["H3"], "dependencies": [".s154_p05", ".s154_p06"]},
+        {"id": "s154_p09", "layerName": "AlgorithmDesign", "justification": ["C4", "H3"], "dependencies": [".s154_p04"]},
+        {"id": "s154_p10", "layerName": "PresentationStyle", "justification": ["C5"], "dependencies": [".s154_p07"]},
+        {"id": "s154_p11", "layerName": "PresentationStyle", "justification": ["H4"], "dependencies": [".s154_p08"]},
+        {"id": "s154_p12", "layerName": "PresentationStyle", "justification": ["H5"], "dependencies": [".s154_p09", ".s154_p10"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "修復後の画像には修復箇所を明示するメタデータを付与し、原本との区別を保証する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "修復で存在しない人物・建物・文字を追加してはならない。欠損部分は推定として明示する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "銀塩写真の経年劣化（褪色・銀鏡・カビ）の種類ごとに修復手法を分ける"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "修復前の原画像を常に保持し、修復処理は非破壊で行う"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "修復結果は原画像との比較スライダーで表示し、修復度合いを調整可能にする"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "全劣化タイプに対して単一の修復アルゴリズムが有効な場合"}}, "content": "褪色修復にはチャンネル別ヒストグラム補正、銀鏡にはinpaintingが適切"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1", "C3"], "refutation": "AIによる補完が歴史考証的に検証不可能な場合"}}, "content": "大規模欠損部分の補完には拡散モデルが有効だが、推定であることの確信度を出力すべき"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "リアルタイム処理が不要な場合"}}, "content": "高解像度スキャン画像の処理にはタイル分割とGPU並列化が必要"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "ユーザが技術的パラメータに関心がない場合"}}, "content": "修復パラメータ（ノイズ除去強度・色温度補正量）の詳細表示オプションが上級ユーザに有用"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5", "C1"], "refutation": "カラー化の需要がない場合"}}, "content": "モノクロ写真のカラー化は修復とは別機能として提供し、推定であることを明示すべき"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 155,
+    "project": "排水処理最適化 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S155",
+      "layers": [
+        {"name": "EnvironmentalRegulation", "ordValue": 5, "definition": "排水基準値（BOD・COD・窒素・リン等）。法令遵守義務", "derivedFrom": ["C1"]},
+        {"name": "ProcessConstraint", "ordValue": 4, "definition": "処理施設の物理的・生物学的制約", "derivedFrom": ["C2", "C3"]},
+        {"name": "ControlStrategy", "ordValue": 3, "definition": "曝気・薬注・汚泥管理の制御戦略", "derivedFrom": ["C4", "H1", "H2"]},
+        {"name": "EnergyOptimization", "ordValue": 2, "definition": "電力消費・薬品コストの最適化", "derivedFrom": ["H3", "H4"]},
+        {"name": "OperationalAdjustment", "ordValue": 1, "definition": "季節・流入変動に応じた微調整", "derivedFrom": ["C5", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s155_p01", "layerName": "EnvironmentalRegulation", "justification": ["C1"], "dependencies": []},
+        {"id": "s155_p02", "layerName": "EnvironmentalRegulation", "justification": ["C1"], "dependencies": []},
+        {"id": "s155_p03", "layerName": "ProcessConstraint", "justification": ["C2"], "dependencies": [".s155_p01"]},
+        {"id": "s155_p04", "layerName": "ProcessConstraint", "justification": ["C3"], "dependencies": [".s155_p01"]},
+        {"id": "s155_p05", "layerName": "ProcessConstraint", "justification": ["C2", "C3"], "dependencies": [".s155_p01", ".s155_p02"]},
+        {"id": "s155_p06", "layerName": "ControlStrategy", "justification": ["C4"], "dependencies": [".s155_p03"]},
+        {"id": "s155_p07", "layerName": "ControlStrategy", "justification": ["H1"], "dependencies": [".s155_p04"]},
+        {"id": "s155_p08", "layerName": "ControlStrategy", "justification": ["H2"], "dependencies": [".s155_p03", ".s155_p05"]},
+        {"id": "s155_p09", "layerName": "EnergyOptimization", "justification": ["H3"], "dependencies": [".s155_p06"]},
+        {"id": "s155_p10", "layerName": "EnergyOptimization", "justification": ["H4"], "dependencies": [".s155_p07", ".s155_p08"]},
+        {"id": "s155_p11", "layerName": "EnergyOptimization", "justification": ["H3", "H4"], "dependencies": [".s155_p06"]},
+        {"id": "s155_p12", "layerName": "OperationalAdjustment", "justification": ["C5"], "dependencies": [".s155_p09"]},
+        {"id": "s155_p13", "layerName": "OperationalAdjustment", "justification": ["H5"], "dependencies": [".s155_p10"]},
+        {"id": "s155_p14", "layerName": "OperationalAdjustment", "justification": ["H6"], "dependencies": [".s155_p11"]},
+        {"id": "s155_p15", "layerName": "OperationalAdjustment", "justification": ["H5", "H6"], "dependencies": [".s155_p12", ".s155_p13"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "排水基準値（水質汚濁防止法の一律基準および上乗せ基準）を常に遵守する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "活性汚泥法による生物処理を主プロセスとし、曝気槽の容量は固定"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "硝化脱窒プロセスで窒素除去を行い、微生物の活性維持が必須"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "DO（溶存酸素）センサーとMLSS計で曝気量をフィードバック制御する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "雨天時の流入量急増に対応できる制御ロジックが必要"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2", "C3"], "refutation": "微生物群集が流入水質の変動に対して自律的に安定する場合"}}, "content": "活性汚泥のSRT（汚泥滞留時間）制御が硝化菌維持の鍵"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C4"], "refutation": "DO制御だけで十分な処理性能が得られる場合"}}, "content": "曝気量のPID制御に加え、流入負荷のフィードフォワード制御を併用すべき"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4", "C2"], "refutation": "電力コストが固定料金で節約の余地がない場合"}}, "content": "曝気ブロワの間欠運転により電力消費を20-30%削減できる可能性がある"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4"], "refutation": "薬品コストが全体コストに対して十分小さい場合"}}, "content": "凝集剤の注入量をAIで最適化することで薬品コストを削減できる"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5"], "refutation": "流入量が年間を通じてほぼ一定の場合"}}, "content": "季節ごとの流入水質変動パターンを学習し、制御パラメータを事前調整すべき"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C5", "C2"], "refutation": "雨天時の希釈効果で処理が不要になる場合"}}, "content": "雨天時の流入量増大に対して曝気量と返送汚泥量の同時制御が必要"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 156,
+    "project": "バス運行ダイヤ最適化 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S156",
+      "layers": [
+        {"name": "TransportRegulation", "ordValue": 4, "definition": "道路運送法・労基法等の法的制約。変更不可", "derivedFrom": ["C1", "C2"]},
+        {"name": "DemandAnalysis", "ordValue": 3, "definition": "乗客需要の分析に基づく運行方針", "derivedFrom": ["C3", "H1", "H2"]},
+        {"name": "ScheduleDesign", "ordValue": 2, "definition": "時刻表・車両配置の設計最適化", "derivedFrom": ["C4", "H3"]},
+        {"name": "RealTimeAdjustment", "ordValue": 1, "definition": "リアルタイムの遅延対応・運行調整", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s156_p01", "layerName": "TransportRegulation", "justification": ["C1"], "dependencies": []},
+        {"id": "s156_p02", "layerName": "TransportRegulation", "justification": ["C2"], "dependencies": []},
+        {"id": "s156_p03", "layerName": "TransportRegulation", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s156_p04", "layerName": "DemandAnalysis", "justification": ["C3"], "dependencies": [".s156_p01"]},
+        {"id": "s156_p05", "layerName": "DemandAnalysis", "justification": ["H1"], "dependencies": [".s156_p02"]},
+        {"id": "s156_p06", "layerName": "DemandAnalysis", "justification": ["H2"], "dependencies": [".s156_p01", ".s156_p03"]},
+        {"id": "s156_p07", "layerName": "ScheduleDesign", "justification": ["C4"], "dependencies": [".s156_p04"]},
+        {"id": "s156_p08", "layerName": "ScheduleDesign", "justification": ["H3"], "dependencies": [".s156_p05", ".s156_p06"]},
+        {"id": "s156_p09", "layerName": "ScheduleDesign", "justification": ["C4", "H3"], "dependencies": [".s156_p04"]},
+        {"id": "s156_p10", "layerName": "RealTimeAdjustment", "justification": ["C5"], "dependencies": [".s156_p07"]},
+        {"id": "s156_p11", "layerName": "RealTimeAdjustment", "justification": ["H4"], "dependencies": [".s156_p08"]},
+        {"id": "s156_p12", "layerName": "RealTimeAdjustment", "justification": ["H5"], "dependencies": [".s156_p09"]},
+        {"id": "s156_p13", "layerName": "RealTimeAdjustment", "justification": ["H4", "H5"], "dependencies": [".s156_p10", ".s156_p11"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "運転手の連続運転時間は4時間以内、1日の拘束時間は13時間以内（労基法・改善基準告示）"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "路線認可されたルート・停留所は変更不可。ダイヤのみ最適化対象"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "ICカードの乗降データ（OD データ）を需要分析に使用する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "保有車両数は30台で固定。車両配置を最適化する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "バスロケーションシステムでリアルタイム位置を把握し、遅延を乗客に通知する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "ICカード以外の乗車手段（現金）の利用者が多数を占める場合"}}, "content": "ICカードデータに携帯電話の人流データを加えることで潜在需要を推定できる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3", "C1"], "refutation": "需要が時間帯・曜日でほぼ均一な場合"}}, "content": "朝夕ラッシュと日中の需要差が大きく、変動ダイヤ（時間帯別運行間隔）が有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "全路線が独立で車両共有が不要な場合"}}, "content": "複数路線間での車両共有（インターライニング）により車両稼働率を向上できる"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "遅延がほとんど発生しない場合"}}, "content": "連鎖遅延を防ぐため、遅延バスの後続便を増発する動的制御が有効"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5", "C3"], "refutation": "乗客がリアルタイム情報に反応して行動を変えない場合"}}, "content": "遅延情報と代替経路の提示により乗客の分散が促進される"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 157,
+    "project": "害獣侵入検知 AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S157",
+      "layers": [
+        {"name": "WildlifeProtection", "ordValue": 3, "definition": "鳥獣保護法・動物福祉の法的制約。保護種の捕獲禁止", "derivedFrom": ["C1", "C2"]},
+        {"name": "DetectionSystem", "ordValue": 2, "definition": "センサー・画像認識システムの設計方針", "derivedFrom": ["C3", "H1", "H2", "H3"]},
+        {"name": "ResponseProtocol", "ordValue": 1, "definition": "検知後の対応手順と通知方式", "derivedFrom": ["C4", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s157_p01", "layerName": "WildlifeProtection", "justification": ["C1"], "dependencies": []},
+        {"id": "s157_p02", "layerName": "WildlifeProtection", "justification": ["C2"], "dependencies": []},
+        {"id": "s157_p03", "layerName": "WildlifeProtection", "justification": ["C1", "C2"], "dependencies": []},
+        {"id": "s157_p04", "layerName": "DetectionSystem", "justification": ["C3"], "dependencies": [".s157_p01"]},
+        {"id": "s157_p05", "layerName": "DetectionSystem", "justification": ["H1"], "dependencies": [".s157_p02"]},
+        {"id": "s157_p06", "layerName": "DetectionSystem", "justification": ["H2"], "dependencies": [".s157_p01", ".s157_p03"]},
+        {"id": "s157_p07", "layerName": "DetectionSystem", "justification": ["H3"], "dependencies": [".s157_p02"]},
+        {"id": "s157_p08", "layerName": "ResponseProtocol", "justification": ["C4"], "dependencies": [".s157_p04"]},
+        {"id": "s157_p09", "layerName": "ResponseProtocol", "justification": ["H4"], "dependencies": [".s157_p05", ".s157_p06"]},
+        {"id": "s157_p10", "layerName": "ResponseProtocol", "justification": ["H5"], "dependencies": [".s157_p07", ".s157_p08"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "鳥獣保護管理法に基づき、保護種（ツキノワグマ等）の捕殺は許可なく行えない"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "忌避装置（超音波・光・音）は動物に永続的な身体的害を与えないものに限定する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "赤外線カメラとトレイルカメラを農地周辺に設置し、24時間監視する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "検知時は農家のスマートフォンに即時通知し、写真付きで種別を報告する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C3"], "refutation": "赤外線カメラだけで十分な精度が得られる場合"}}, "content": "夜間のイノシシ・シカ識別にはYOLO系の物体検出モデルが赤外線画像で有効"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1", "C3"], "refutation": "対象種がイノシシ・シカのみの場合"}}, "content": "保護種と有害鳥獣の自動分類が必須。誤分類時は保守的に保護種扱いにすべき"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C3"], "refutation": "カメラの電力供給が安定している場合"}}, "content": "太陽光パネル+バッテリーによるオフグリッド運用が山間部では必要"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4", "C2"], "refutation": "人手による追い払いが常に可能な場合"}}, "content": "検知→忌避装置自動起動→人間への通知の段階的対応が効率的"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C4"], "refutation": "侵入パターンの分析が不要な場合"}}, "content": "侵入時刻・頻度・方向のログから侵入経路を推定し、重点防御地点を提案できる"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 158,
+    "project": "材料強度試験 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S158",
+      "layers": [
+        {"name": "StandardCompliance", "ordValue": 5, "definition": "JIS・ISO試験規格への準拠。認証に必須", "derivedFrom": ["C1"]},
+        {"name": "MaterialScience", "ordValue": 4, "definition": "材料力学の理論的制約。破壊力学・疲労理論", "derivedFrom": ["C2", "H1"]},
+        {"name": "TestProtocol", "ordValue": 3, "definition": "試験手順・条件設定の設計方針", "derivedFrom": ["C3", "C4", "H2"]},
+        {"name": "DataAnalysis", "ordValue": 2, "definition": "試験データの統計解析・異常検出手法", "derivedFrom": ["H3", "H4"]},
+        {"name": "ReportGeneration", "ordValue": 1, "definition": "試験レポートの出力形式と可視化", "derivedFrom": ["C5", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s158_p01", "layerName": "StandardCompliance", "justification": ["C1"], "dependencies": []},
+        {"id": "s158_p02", "layerName": "StandardCompliance", "justification": ["C1"], "dependencies": []},
+        {"id": "s158_p03", "layerName": "MaterialScience", "justification": ["C2"], "dependencies": [".s158_p01"]},
+        {"id": "s158_p04", "layerName": "MaterialScience", "justification": ["H1"], "dependencies": [".s158_p01"]},
+        {"id": "s158_p05", "layerName": "MaterialScience", "justification": ["C2", "H1"], "dependencies": [".s158_p01", ".s158_p02"]},
+        {"id": "s158_p06", "layerName": "TestProtocol", "justification": ["C3"], "dependencies": [".s158_p03"]},
+        {"id": "s158_p07", "layerName": "TestProtocol", "justification": ["C4"], "dependencies": [".s158_p04"]},
+        {"id": "s158_p08", "layerName": "TestProtocol", "justification": ["H2"], "dependencies": [".s158_p03", ".s158_p05"]},
+        {"id": "s158_p09", "layerName": "DataAnalysis", "justification": ["H3"], "dependencies": [".s158_p06"]},
+        {"id": "s158_p10", "layerName": "DataAnalysis", "justification": ["H4"], "dependencies": [".s158_p07", ".s158_p08"]},
+        {"id": "s158_p11", "layerName": "DataAnalysis", "justification": ["H3", "H4"], "dependencies": [".s158_p06"]},
+        {"id": "s158_p12", "layerName": "ReportGeneration", "justification": ["C5"], "dependencies": [".s158_p09"]},
+        {"id": "s158_p13", "layerName": "ReportGeneration", "justification": ["H5"], "dependencies": [".s158_p10"]},
+        {"id": "s158_p14", "layerName": "ReportGeneration", "justification": ["H6"], "dependencies": [".s158_p11"]},
+        {"id": "s158_p15", "layerName": "ReportGeneration", "justification": ["H5", "H6"], "dependencies": [".s158_p12", ".s158_p13"]},
+        {"id": "s158_p16", "layerName": "ReportGeneration", "justification": ["C5", "H6"], "dependencies": [".s158_p14", ".s158_p09"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "全試験はJIS Z 2241（金属材料引張試験）またはISO 6892に準拠し、認証に使用可能なデータを出力する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "応力-ひずみ曲線から降伏点・引張強さ・伸び・絞りを自動算出する"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "試験速度（ひずみ速度）は規格で定められた範囲内で自動制御する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "試験片の寸法測定は画像計測で自動化し、手入力の誤りを排除する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "試験レポートはPDF形式で自動生成し、規格要求項目を全て含める"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C2"], "refutation": "全材料で降伏点が明確に現れる場合"}}, "content": "0.2%オフセット法による耐力算出が必要な材料（アルミ合金等）の自動判別"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C3", "C2"], "refutation": "全試験で同一のひずみ速度が適用可能な場合"}}, "content": "弾性域と塑性域でひずみ速度を切り替える二段階制御が精度向上に有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C2"], "refutation": "試験データに異常値が含まれない場合"}}, "content": "荷重セル・伸び計の異常値検出にはMADベースのロバスト統計が適切"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C4"], "refutation": "試験片形状が常に規格通りに加工されている場合"}}, "content": "試験片寸法の画像計測で検出した形状不良を試験前に警告すべき"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5", "C2"], "refutation": "過去データとの比較が不要な場合"}}, "content": "同一材料の過去試験データとの統計的比較（管理図）をレポートに含めると品質管理に有用"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C5"], "refutation": "レポート出力がPDFのみで十分な場合"}}, "content": "試験データのCSVエクスポートとAPI連携により、上位の品質管理システムとの統合が可能"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 159,
+    "project": "児童虐待リスクスクリーニング AI",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 7,
+    "num_props": 25,
+    "num_deps": 30,
+    "monotonicity_violation": true,
+    "violation_description": "s159_p14（InstitutionalPolicy, ord=4）が s159_p18（PredictiveModeling, ord=3）に依存 — 高い層が低い層に依存する単調性違反",
+    "model_spec": {
+      "namespace": "TestCoverage.S159",
+      "layers": [
+        {"name": "ChildRights", "ordValue": 7, "definition": "児童の権利条約・生命身体の安全。絶対不可侵", "derivedFrom": ["C1"]},
+        {"name": "LegalFramework", "ordValue": 6, "definition": "児童福祉法・児童虐待防止法の法的義務", "derivedFrom": ["C2", "C3"]},
+        {"name": "PrivacyProtection", "ordValue": 5, "definition": "個人情報保護・要配慮個人情報の取扱い制約", "derivedFrom": ["C4"]},
+        {"name": "InstitutionalPolicy", "ordValue": 4, "definition": "児童相談所・自治体の運用方針", "derivedFrom": ["C5", "H1"]},
+        {"name": "PredictiveModeling", "ordValue": 3, "definition": "リスク予測モデルの設計方針", "derivedFrom": ["H2", "H3"]},
+        {"name": "DataIntegration", "ordValue": 2, "definition": "複数機関のデータ連携と統合手法", "derivedFrom": ["C6", "H4"]},
+        {"name": "AlertInterface", "ordValue": 1, "definition": "アラート表示・優先度付けのインターフェース", "derivedFrom": ["C7", "H5", "H6"]}
+      ],
+      "propositions": [
+        {"id": "s159_p01", "layerName": "ChildRights", "justification": ["C1"], "dependencies": []},
+        {"id": "s159_p02", "layerName": "ChildRights", "justification": ["C1"], "dependencies": []},
+        {"id": "s159_p03", "layerName": "LegalFramework", "justification": ["C2"], "dependencies": [".s159_p01"]},
+        {"id": "s159_p04", "layerName": "LegalFramework", "justification": ["C3"], "dependencies": [".s159_p01"]},
+        {"id": "s159_p05", "layerName": "LegalFramework", "justification": ["C2", "C3"], "dependencies": [".s159_p01", ".s159_p02"]},
+        {"id": "s159_p06", "layerName": "PrivacyProtection", "justification": ["C4"], "dependencies": [".s159_p03"]},
+        {"id": "s159_p07", "layerName": "PrivacyProtection", "justification": ["C4"], "dependencies": [".s159_p04"]},
+        {"id": "s159_p08", "layerName": "PrivacyProtection", "justification": ["C4"], "dependencies": [".s159_p03", ".s159_p05"]},
+        {"id": "s159_p09", "layerName": "InstitutionalPolicy", "justification": ["C5"], "dependencies": [".s159_p06"]},
+        {"id": "s159_p10", "layerName": "InstitutionalPolicy", "justification": ["H1"], "dependencies": [".s159_p07"]},
+        {"id": "s159_p11", "layerName": "InstitutionalPolicy", "justification": ["C5", "H1"], "dependencies": [".s159_p06", ".s159_p08"]},
+        {"id": "s159_p12", "layerName": "PredictiveModeling", "justification": ["H2"], "dependencies": [".s159_p09"]},
+        {"id": "s159_p13", "layerName": "PredictiveModeling", "justification": ["H3"], "dependencies": [".s159_p10"]},
+        {"id": "s159_p14", "layerName": "InstitutionalPolicy", "justification": ["C5", "H2"], "dependencies": [".s159_p08", ".s159_p18"]},
+        {"id": "s159_p15", "layerName": "PredictiveModeling", "justification": ["H2", "H3"], "dependencies": [".s159_p09", ".s159_p11"]},
+        {"id": "s159_p16", "layerName": "DataIntegration", "justification": ["C6"], "dependencies": [".s159_p12"]},
+        {"id": "s159_p17", "layerName": "DataIntegration", "justification": ["H4"], "dependencies": [".s159_p13"]},
+        {"id": "s159_p18", "layerName": "PredictiveModeling", "justification": ["H3"], "dependencies": [".s159_p10", ".s159_p11"]},
+        {"id": "s159_p19", "layerName": "DataIntegration", "justification": ["C6", "H4"], "dependencies": [".s159_p15", ".s159_p12"]},
+        {"id": "s159_p20", "layerName": "AlertInterface", "justification": ["C7"], "dependencies": [".s159_p16"]},
+        {"id": "s159_p21", "layerName": "AlertInterface", "justification": ["H5"], "dependencies": [".s159_p17"]},
+        {"id": "s159_p22", "layerName": "AlertInterface", "justification": ["H6"], "dependencies": [".s159_p19"]},
+        {"id": "s159_p23", "layerName": "AlertInterface", "justification": ["H5", "H6"], "dependencies": [".s159_p20", ".s159_p21"]},
+        {"id": "s159_p24", "layerName": "AlertInterface", "justification": ["C7", "H6"], "dependencies": [".s159_p22"]},
+        {"id": "s159_p25", "layerName": "AlertInterface", "justification": ["H5"], "dependencies": [".s159_p23", ".s159_p24"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "児童の生命・身体の安全が最優先。見逃し（偽陰性）のコストは誤報（偽陽性）より遥かに大きい"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "児童福祉法第25条に基づく通告義務を支援する。AIは通告判断の参考情報を提供するのみ"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "児童虐待防止法に基づき、一時保護の判断は児童福祉司が行う。AIは代替しない"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "要配慮個人情報（DV歴・精神疾患歴等）の取扱いは個人情報保護法に厳格に準拠する"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "リスクスコアは児童福祉司の判断を補助するツールであり、スコアのみで対応を決定しない"},
+        {"id": "C6", "source": {"humanDecision": {"phase": 1, "question": "Q6", "date": "2026-03-26"}}, "content": "学校・医療機関・警察からの情報を統合するが、データ共有は各機関の同意に基づく"},
+        {"id": "C7", "source": {"humanDecision": {"phase": 1, "question": "Q7", "date": "2026-03-26"}}, "content": "アラート画面はリスク要因の根拠を明示し、ブラックボックスにしない"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C5", "C3"], "refutation": "全ケースに対して統一的な対応プロトコルが適用可能な場合"}}, "content": "リスクレベルに応じた段階的対応プロトコル（低・中・高・緊急）が運用効率を向上させる"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C1", "C5"], "refutation": "構造化されたリスク要因データが十分に蓄積されていない場合"}}, "content": "過去の虐待事例データから抽出したリスク要因の重み付けモデルが予測に有効"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C1"], "refutation": "単一時点のリスク評価で十分な場合"}}, "content": "時系列でのリスクスコア変動（上昇トレンド）が早期介入の重要なシグナル"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C6", "C4"], "refutation": "各機関のデータ形式が統一されている場合"}}, "content": "自然言語処理による非構造化テキスト（相談記録・通報内容）の構造化が必要"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C7"], "refutation": "児童福祉司がAIの判断根拠に関心を持たない場合"}}, "content": "SHAP値等による個別ケースのリスク要因寄与度の可視化が信頼性向上に有効"},
+        {"id": "H6", "source": {"llmInference": {"basis": ["C7", "C5"], "refutation": "アラート件数が少なく優先度付けが不要な場合"}}, "content": "アラートの優先度キューイングにより、限られた人員で緊急度の高いケースを先に対応できる"}
+      ]
+    }
+  },
+  {
+    "scenario_id": 160,
+    "project": "風洞実験データ解析 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S160",
+      "layers": [
+        {"name": "PhysicalLaw", "ordValue": 4, "definition": "流体力学の基礎法則（ナビエ-ストークス方程式等）。不変", "derivedFrom": ["C1", "C2"]},
+        {"name": "ExperimentalProtocol", "ordValue": 3, "definition": "風洞試験の手順・計測精度の制約", "derivedFrom": ["C3", "H1"]},
+        {"name": "AnalysisMethod", "ordValue": 2, "definition": "データ解析・補正アルゴリズムの選択", "derivedFrom": ["C4", "H2", "H3"]},
+        {"name": "Visualization", "ordValue": 1, "definition": "結果の可視化・レポート形式", "derivedFrom": ["C5", "H4", "H5"]}
+      ],
+      "propositions": [
+        {"id": "s160_p01", "layerName": "PhysicalLaw", "justification": ["C1"], "dependencies": []},
+        {"id": "s160_p02", "layerName": "PhysicalLaw", "justification": ["C2"], "dependencies": []},
+        {"id": "s160_p03", "layerName": "ExperimentalProtocol", "justification": ["C3"], "dependencies": [".s160_p01"]},
+        {"id": "s160_p04", "layerName": "ExperimentalProtocol", "justification": ["H1"], "dependencies": [".s160_p01", ".s160_p02"]},
+        {"id": "s160_p05", "layerName": "AnalysisMethod", "justification": ["C4"], "dependencies": [".s160_p03"]},
+        {"id": "s160_p06", "layerName": "AnalysisMethod", "justification": ["H2"], "dependencies": [".s160_p03", ".s160_p04"]},
+        {"id": "s160_p07", "layerName": "AnalysisMethod", "justification": ["H3"], "dependencies": [".s160_p04"]},
+        {"id": "s160_p08", "layerName": "Visualization", "justification": ["C5"], "dependencies": [".s160_p05"]},
+        {"id": "s160_p09", "layerName": "Visualization", "justification": ["H4"], "dependencies": [".s160_p06"]},
+        {"id": "s160_p10", "layerName": "Visualization", "justification": ["H5"], "dependencies": [".s160_p07"]},
+        {"id": "s160_p11", "layerName": "Visualization", "justification": ["H4", "H5"], "dependencies": [".s160_p08", ".s160_p09"]}
+      ],
+      "assumptions": [
+        {"id": "C1", "source": {"humanDecision": {"phase": 1, "question": "Q1", "date": "2026-03-26"}}, "content": "レイノルズ数の相似則を満たす試験条件で実験する。実機との相似性を保証する"},
+        {"id": "C2", "source": {"humanDecision": {"phase": 1, "question": "Q2", "date": "2026-03-26"}}, "content": "風洞壁面の干渉効果（ブロッケージ効果）を補正する。補正なしのデータは使用しない"},
+        {"id": "C3", "source": {"humanDecision": {"phase": 1, "question": "Q3", "date": "2026-03-26"}}, "content": "6分力天秤の校正は試験前に毎回実施し、校正証明書を付与する"},
+        {"id": "C4", "source": {"humanDecision": {"phase": 1, "question": "Q4", "date": "2026-03-26"}}, "content": "データ取得はナショナルインスツルメンツのDAQで10kHzサンプリングする"},
+        {"id": "C5", "source": {"humanDecision": {"phase": 1, "question": "Q5", "date": "2026-03-26"}}, "content": "空力係数（CL, CD, CM）の迎角依存性をプロットし、CFD結果と比較表示する"},
+        {"id": "H1", "source": {"llmInference": {"basis": ["C1", "C3"], "refutation": "天秤のヒステリシスが無視できるほど小さい場合"}}, "content": "天秤のヒステリシス補正には迎角の昇降両方向のスイープデータが必要"},
+        {"id": "H2", "source": {"llmInference": {"basis": ["C2", "C4"], "refutation": "ブロッケージ比が5%未満で補正が不要な場合"}}, "content": "Maskellの補正法が閉断面風洞でのブロッケージ補正に適しているが、大迎角では限界がある"},
+        {"id": "H3", "source": {"llmInference": {"basis": ["C4"], "refutation": "ノイズレベルが十分低くフィルタリング不要な場合"}}, "content": "高周波ノイズの除去にはバターワースフィルタ（カットオフ500Hz）が適切"},
+        {"id": "H4", "source": {"llmInference": {"basis": ["C5"], "refutation": "風洞データとCFDデータの形式が統一されている場合"}}, "content": "風洞データとCFDデータのアライメント（迎角・レイノルズ数の一致）が比較精度の鍵"},
+        {"id": "H5", "source": {"llmInference": {"basis": ["C5", "C4"], "refutation": "不確かさ解析が規格で要求されない場合"}}, "content": "GUM（計測の不確かさ表現のガイド）に基づく不確かさバーの表示が学術的信頼性に必要"}
+      ]
+    }
+  }
+]

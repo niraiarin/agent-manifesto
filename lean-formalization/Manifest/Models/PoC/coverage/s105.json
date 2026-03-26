@@ -1,0 +1,166 @@
+{
+  "namespace": "TestCoverage.S105",
+  "layers": [
+    {
+      "name": "FoodSafetyLaw",
+      "ordValue": 4,
+      "definition": "食品衛生法・消費期限の法的規制。違反不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "SupplyChainRule",
+      "ordValue": 3,
+      "definition": "サプライチェーンの確立された商慣行",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DemandForecast",
+      "ordValue": 2,
+      "definition": "需要予測モデルと在庫管理ルール",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "WasteReductionHypothesis",
+      "ordValue": 1,
+      "definition": "廃棄削減効果に関する未検証仮説",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s105_p01",
+      "layerName": "FoodSafetyLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s105_p02",
+      "layerName": "FoodSafetyLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s105_p03",
+      "layerName": "SupplyChainRule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s105_p01"
+      ]
+    },
+    {
+      "id": "s105_p04",
+      "layerName": "SupplyChainRule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s105_p01",
+        ".s105_p02"
+      ]
+    },
+    {
+      "id": "s105_p05",
+      "layerName": "SupplyChainRule",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s105_p02"
+      ]
+    },
+    {
+      "id": "s105_p06",
+      "layerName": "DemandForecast",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s105_p03"
+      ]
+    },
+    {
+      "id": "s105_p07",
+      "layerName": "DemandForecast",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s105_p04"
+      ]
+    },
+    {
+      "id": "s105_p08",
+      "layerName": "DemandForecast",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s105_p03",
+        ".s105_p05"
+      ]
+    },
+    {
+      "id": "s105_p09",
+      "layerName": "WasteReductionHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s105_p06"
+      ]
+    },
+    {
+      "id": "s105_p10",
+      "layerName": "WasteReductionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s105_p07"
+      ]
+    },
+    {
+      "id": "s105_p11",
+      "layerName": "WasteReductionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s105_p08"
+      ]
+    },
+    {
+      "id": "s105_p12",
+      "layerName": "WasteReductionHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s105_p09",
+        ".s105_p10"
+      ]
+    }
+  ]
+}

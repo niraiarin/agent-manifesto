@@ -1,0 +1,510 @@
+{
+  "layers": [
+    {
+      "name": "LegalObligation",
+      "definition": "法令遵守義務。個人情報保護法・特商法等",
+      "ordValue": 6,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "FraudPolicy",
+      "definition": "不正対策ポリシー。経営レベルで設定",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "RiskFramework",
+      "definition": "リスク評価フレームワーク。業界基準に基づく",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "DetectionRule",
+      "definition": "検知ルールの設計。精度と再現率のバランス",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "FeatureEngineering",
+      "definition": "特徴量エンジニアリング。データに基づく技術選択",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "ModelSelection",
+      "definition": "モデル選択。性能評価に基づく技術判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H6"
+      ]
+    },
+    {
+      "name": "ThresholdTuning",
+      "definition": "閾値の微調整。運用データで継続的に最適化",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "detected": true,
+    "description": "「取引速度の異常検知ルール」(DetectionRule, ord=3) が「デバイスフィンガープリントの特徴量」(FeatureEngineering, ord=2) に依存するのは単調性を満たす。しかし、「不正パターンのグラフ分析」(RiskFramework, ord=4) が「GNNベースのアカウント関連性モデル」(ModelSelection, ord=1) に依存する形で設計されており、依存先(ord=1) < 依存元(ord=4) で単調性違反。H6由来のためLLMが自律修正。",
+    "violating_edge": {
+      "from": "s127_p10",
+      "from_layer": "RiskFramework",
+      "from_ord": 4,
+      "to": "s127_p20",
+      "to_layer": "ModelSelection",
+      "to_ord": 1
+    },
+    "resolution": {
+      "action": "promote",
+      "detail": "H6由来（LLM推論のみ、C関与なし）。「GNNベースのアカウント関連性モデル」をModelSelection(ord=1)からRiskFramework(ord=4)に昇格。グラフ分析は不正パターンのリスク評価の一部であり、技術選択ではなくリスクフレームワークの構成要素として扱うのが適切。",
+      "updated_assignment": {
+        "proposition": "s127_p20",
+        "layerName": "RiskFramework",
+        "justification": [
+          "H6",
+          "C4"
+        ]
+      }
+    },
+    "post_resolution_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "s127_p01",
+      "layerName": "LegalObligation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s127_p02",
+      "layerName": "LegalObligation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s127_p03",
+      "layerName": "FraudPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s127_p01"
+      ]
+    },
+    {
+      "id": "s127_p04",
+      "layerName": "FraudPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s127_p01"
+      ]
+    },
+    {
+      "id": "s127_p05",
+      "layerName": "FraudPolicy",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s127_p01",
+        ".s127_p02"
+      ]
+    },
+    {
+      "id": "s127_p06",
+      "layerName": "RiskFramework",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s127_p03"
+      ]
+    },
+    {
+      "id": "s127_p07",
+      "layerName": "RiskFramework",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s127_p04"
+      ]
+    },
+    {
+      "id": "s127_p08",
+      "layerName": "RiskFramework",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s127_p03",
+        ".s127_p05"
+      ]
+    },
+    {
+      "id": "s127_p09",
+      "layerName": "DetectionRule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s127_p06"
+      ]
+    },
+    {
+      "id": "s127_p10",
+      "layerName": "RiskFramework",
+      "justification": [
+        "H1",
+        "H6"
+      ],
+      "dependencies": [
+        ".s127_p04",
+        ".s127_p20"
+      ]
+    },
+    {
+      "id": "s127_p11",
+      "layerName": "DetectionRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s127_p07"
+      ]
+    },
+    {
+      "id": "s127_p12",
+      "layerName": "DetectionRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s127_p06",
+        ".s127_p08"
+      ]
+    },
+    {
+      "id": "s127_p13",
+      "layerName": "DetectionRule",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s127_p07"
+      ]
+    },
+    {
+      "id": "s127_p14",
+      "layerName": "FeatureEngineering",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s127_p09"
+      ]
+    },
+    {
+      "id": "s127_p15",
+      "layerName": "FeatureEngineering",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s127_p11"
+      ]
+    },
+    {
+      "id": "s127_p16",
+      "layerName": "FeatureEngineering",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s127_p09",
+        ".s127_p12"
+      ]
+    },
+    {
+      "id": "s127_p17",
+      "layerName": "FeatureEngineering",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s127_p13"
+      ]
+    },
+    {
+      "id": "s127_p18",
+      "layerName": "ModelSelection",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s127_p14"
+      ]
+    },
+    {
+      "id": "s127_p19",
+      "layerName": "ModelSelection",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s127_p15",
+        ".s127_p16"
+      ]
+    },
+    {
+      "id": "s127_p20",
+      "layerName": "RiskFramework",
+      "justification": [
+        "H6",
+        "C4"
+      ],
+      "dependencies": [
+        ".s127_p04"
+      ]
+    },
+    {
+      "id": "s127_p21",
+      "layerName": "ThresholdTuning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s127_p18"
+      ]
+    },
+    {
+      "id": "s127_p22",
+      "layerName": "ThresholdTuning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s127_p19"
+      ]
+    },
+    {
+      "id": "s127_p23",
+      "layerName": "ThresholdTuning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s127_p20",
+        ".s127_p21"
+      ]
+    },
+    {
+      "id": "s127_p24",
+      "layerName": "ThresholdTuning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s127_p17"
+      ]
+    },
+    {
+      "id": "s127_p25",
+      "layerName": "ThresholdTuning",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s127_p22",
+        ".s127_p24"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "個人情報の取り扱いは個人情報保護法に準拠する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "不正検知による注文ブロックは売上損失より優先する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "正規顧客の誤ブロック率は0.1%以下に抑える"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "リスクスコアリングは注文受付から3秒以内に完了する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "高額注文（5万円以上）は追加認証を要求する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "IPアドレス・デバイス情報を不正検知に使用する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "バッチ処理で十分なレイテンシが許容される場合"
+        }
+      },
+      "content": "リアルタイムスコアリングにはストリーミング処理基盤が必要"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "高額注文の不正率が低額と同程度の場合"
+        }
+      },
+      "content": "金額帯別のリスク重み付けが検知精度を向上させる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "速度ベースの検知が誤検知を増加させる場合"
+        }
+      },
+      "content": "短時間での連続注文パターンが不正の有力な指標"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "VPN/プロキシ使用が一般化しIPの信頼性が低い場合"
+        }
+      },
+      "content": "デバイスフィンガープリントがIP以上の識別精度を持つ"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "H4"
+          ],
+          "refutation": "住所・氏名の表記揺れが大きく正規化困難な場合"
+        }
+      },
+      "content": "配送先住所の類似性分析が組織的不正の検出に有効"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H1"
+          ],
+          "refutation": "アカウント間の関連性データが不十分な場合"
+        }
+      },
+      "content": "GNNベースのアカウント関連性分析が組織的不正を検出可能"
+    },
+    {
+      "id": "H7",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "H2",
+            "H3"
+          ],
+          "refutation": "不正パターンの変化速度が閾値調整より速い場合"
+        }
+      },
+      "content": "閾値の自動調整が不正パターンの変化に追従可能"
+    }
+  ]
+}

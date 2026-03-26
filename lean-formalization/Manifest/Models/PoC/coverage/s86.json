@@ -1,0 +1,375 @@
+{
+  "namespace": "DamManagement",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "河川法・ダム操作規則に基づく絶対安全条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "hydrology",
+      "ordValue": 3,
+      "definition": "水文学的前提・気象外部依存",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "管理者が設定する運用基準",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6",
+        "H3"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "流入量予測・貯水位最適化モデル",
+      "derivedFrom": [
+        "H4",
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の長期運用仮説",
+      "derivedFrom": [
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hyd1",
+      "layerName": "hydrology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hyd2",
+      "layerName": "hydrology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "saf1"
+      ]
+    },
+    {
+      "id": "hyd3",
+      "layerName": "hydrology",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "op1",
+      "layerName": "operational",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "saf1",
+        "saf2"
+      ]
+    },
+    {
+      "id": "op2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "saf3",
+        "hyd1"
+      ]
+    },
+    {
+      "id": "op3",
+      "layerName": "operational",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "hyd2"
+      ]
+    },
+    {
+      "id": "op4",
+      "layerName": "operational",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "saf2",
+        "hyd3"
+      ]
+    },
+    {
+      "id": "op5",
+      "layerName": "operational",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        "hyd1",
+        "hyd2"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "hyd1",
+        "op1"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "op2",
+        "op3"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "hyd3",
+        "op4"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        "pred1",
+        "pred2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "pred1",
+        "pred3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "pred4"
+      ]
+    },
+    {
+      "id": "viol1",
+      "layerName": "operational",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "pred2"
+      ]
+    },
+    {
+      "id": "viol2",
+      "layerName": "hydrology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "op5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "pred5",
+      "layerName": "prediction",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "op5",
+        "pred4"
+      ]
+    }
+  ],
+  "monotonicity_violations": [
+    {
+      "from": "viol1",
+      "to": "pred2",
+      "from_layer": "operational",
+      "from_ord": 2,
+      "to_layer": "prediction",
+      "to_ord": 1,
+      "description": "operational層(ord=2)の命題viol1がprediction層(ord=1)の命題pred2に依存: 依存先のordが依存元より低い",
+      "resolution": "viol1をprediction層に降格するか、pred2をoperational層に昇格"
+    },
+    {
+      "from": "viol2",
+      "to": "op5",
+      "from_layer": "hydrology",
+      "from_ord": 3,
+      "to_layer": "operational",
+      "to_ord": 2,
+      "description": "hydrology層(ord=3)の命題viol2がoperational層(ord=2)の命題op5に依存: 依存先のordが依存元より低い",
+      "resolution": "viol2をoperational層に降格するか、op5をhydrology層に昇格"
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "放流操作は人間の最終承認なしに実行しない"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "設計洪水流量を超える場合は非常用洪水吐きを開放する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "下流域住民への放流通知は操作の30分前に行う"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "利水・治水の優先順位は季節と水位で決定する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "堆砂量の年間計測を実施し貯水容量を更新する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "環境放流量の最低基準を下回らない"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "外部知識",
+        "refutation": "気象庁のデータ配信が長期停止",
+        "content": "気象レーダーと雨量計データはリアルタイムで取得可能"
+      },
+      {
+        "id": "H2",
+        "basis": "H1,外部知識",
+        "refutation": "流域の土地利用変化で流出係数が大幅変動",
+        "content": "流域の降雨-流出モデルは過去データで校正済み"
+      },
+      {
+        "id": "H3",
+        "basis": "C4,H1",
+        "refutation": "ゲート設備の老朽化で応答遅延",
+        "content": "ゲート操作の応答時間は制御要件を満たす"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H2",
+        "refutation": "ゲリラ豪雨の頻度増加で予測精度が低下",
+        "content": "6時間先までの流入量予測は実用精度を持つ"
+      },
+      {
+        "id": "H5",
+        "basis": "外部知識",
+        "refutation": "水位計の測定誤差が許容範囲を超過",
+        "content": "貯水位センサーの精度は管理基準を満たす"
+      },
+      {
+        "id": "H6",
+        "basis": "C5,H2",
+        "refutation": "異常堆砂で有効貯水量が急減",
+        "content": "堆砂進行は線形近似で中期予測可能"
+      },
+      {
+        "id": "H7",
+        "basis": "H4,H6",
+        "refutation": "複数ダムの連携最適化が局所最適に陥る",
+        "content": "上下流ダムの連携放流最適化は単独運用より効率的"
+      },
+      {
+        "id": "H8",
+        "basis": "H4,H7",
+        "refutation": "気候変動で過去データの代表性が失われる",
+        "content": "長期の貯水池運用計画はシミュレーションで最適化可能"
+      }
+    ]
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "namespace": "TestCoverage.S6",
+  "layers": [
+    {
+      "name": "FoodSafety",
+      "ordValue": 4,
+      "definition": "食品衛生法・アレルゲン管理。違反不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "QualityStandard",
+      "ordValue": 3,
+      "definition": "食材品質基準。シェフの判断に基づく",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "InventoryPolicy",
+      "ordValue": 2,
+      "definition": "在庫回転・発注ルール。経営判断で調整可能",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "CostOptimization",
+      "ordValue": 1,
+      "definition": "コスト最適化・仕入れ先選定の効率化",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s6_p01",
+      "layerName": "FoodSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s6_p02",
+      "layerName": "FoodSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s6_p03",
+      "layerName": "QualityStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s6_p01"
+      ]
+    },
+    {
+      "id": "s6_p04",
+      "layerName": "QualityStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s6_p02"
+      ]
+    },
+    {
+      "id": "s6_p05",
+      "layerName": "QualityStandard",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s6_p01",
+        "s6_p02"
+      ]
+    },
+    {
+      "id": "s6_p06",
+      "layerName": "InventoryPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s6_p03"
+      ]
+    },
+    {
+      "id": "s6_p07",
+      "layerName": "InventoryPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s6_p04"
+      ]
+    },
+    {
+      "id": "s6_p08",
+      "layerName": "InventoryPolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "s6_p03",
+        "s6_p05"
+      ]
+    },
+    {
+      "id": "s6_p09",
+      "layerName": "CostOptimization",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s6_p06"
+      ]
+    },
+    {
+      "id": "s6_p10",
+      "layerName": "CostOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s6_p07"
+      ]
+    },
+    {
+      "id": "s6_p11",
+      "layerName": "CostOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s6_p08"
+      ]
+    },
+    {
+      "id": "s6_p12",
+      "layerName": "CostOptimization",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        "s6_p09",
+        "s6_p10"
+      ]
+    }
+  ]
+}

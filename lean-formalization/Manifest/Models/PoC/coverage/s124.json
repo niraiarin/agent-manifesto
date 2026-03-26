@@ -1,0 +1,257 @@
+{
+  "layers": [
+    {
+      "name": "BusinessConstraint",
+      "definition": "事業運営上の不変前提。経営判断で設定された制約",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "DemandModel",
+      "definition": "需要予測モデルの設計選択。データに基づき更新",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "OperationalTuning",
+      "definition": "運用パラメータの微調整。日常的に変動する",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s124_p01",
+      "layerName": "BusinessConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s124_p02",
+      "layerName": "BusinessConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s124_p03",
+      "layerName": "BusinessConstraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s124_p04",
+      "layerName": "DemandModel",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s124_p01"
+      ]
+    },
+    {
+      "id": "s124_p05",
+      "layerName": "DemandModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s124_p02"
+      ]
+    },
+    {
+      "id": "s124_p06",
+      "layerName": "DemandModel",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s124_p01",
+        ".s124_p03"
+      ]
+    },
+    {
+      "id": "s124_p07",
+      "layerName": "DemandModel",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s124_p02",
+        ".s124_p03"
+      ]
+    },
+    {
+      "id": "s124_p08",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s124_p04"
+      ]
+    },
+    {
+      "id": "s124_p09",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s124_p05",
+        ".s124_p06"
+      ]
+    },
+    {
+      "id": "s124_p10",
+      "layerName": "OperationalTuning",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s124_p07"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "配達員の稼働可能人数には上限がある"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "注文から配達完了まで30分以内を目標とする"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "加盟店の営業時間外の注文は受け付けない"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "天候データを需要予測の入力として使用したい"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "週末・祝日の需要パターンは平日と異なる"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "天候と注文数の相関が弱い地域の場合"
+        }
+      },
+      "content": "雨天時は注文数が30-50%増加する傾向がある"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "配達エリアが狭く移動時間が一定の場合"
+        }
+      },
+      "content": "エリア別の需要予測が配達員の事前配置に有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "イベント情報が事前に入手できない場合"
+        }
+      },
+      "content": "地域イベント情報を外部データとして取り込むことで予測精度向上"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "H1"
+          ],
+          "refutation": "需要変動がリアルタイム調整不要なほど緩やかな場合"
+        }
+      },
+      "content": "30分単位のリアルタイム需要更新が配達員配置の最適化に寄与"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H2",
+            "H3"
+          ],
+          "refutation": "固定的なエリア割り当てで十分な場合"
+        }
+      },
+      "content": "動的エリア分割がピーク時の配達効率を改善する"
+    }
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "namespace": "WarehouseTemp",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 3,
+      "definition": "食品衛生法・HACCP基準に基づく温度管理の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 2,
+      "definition": "外気温・設備性能等の外部依存前提",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "倉庫管理者が設定する運用方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の省エネ・予測制御仮説",
+      "derivedFrom": [
+        "H4",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env3",
+      "layerName": "environment",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "safe1",
+        "safe2"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "safe3",
+        "env1"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "env2"
+      ]
+    },
+    {
+      "id": "pol4",
+      "layerName": "policy",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        "env3"
+      ]
+    },
+    {
+      "id": "pol5",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "safe2",
+        "env1",
+        "env2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "env1",
+        "pol1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "pol2",
+        "pol3"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "pol4",
+        "pol5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "hyp5",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "hyp1"
+      ]
+    },
+    {
+      "id": "hyp6",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        "hyp3",
+        "hyp4"
+      ]
+    },
+    {
+      "id": "hyp7",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "hyp5",
+        "hyp6"
+      ]
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "冷蔵品は常時0-10℃、冷凍品は-18℃以下を維持する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "温度逸脱が15分以上継続した場合は即時アラートを発報する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "温度記録は1分間隔で5年間保存する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "電力コスト削減より温度維持を優先する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "設備故障時の手動切替手順を常時維持する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "外部知識",
+        "refutation": "気象予報APIの精度が著しく低い地域",
+        "content": "外気温予報データは24時間先まで取得可能"
+      },
+      {
+        "id": "H2",
+        "basis": "外部知識",
+        "refutation": "冷凍機の経年劣化で性能が大幅低下",
+        "content": "冷凍機の冷却能力はカタログスペックを維持している"
+      },
+      {
+        "id": "H3",
+        "basis": "C4,H1,H2",
+        "refutation": "入出荷頻度が予想を大幅に超過",
+        "content": "ドア開閉頻度と熱負荷の関係はモデル化可能"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H3",
+        "refutation": "予測制御が不安定化し温度逸脱を誘発",
+        "content": "外気温予測に基づく先行冷却で省エネが可能"
+      },
+      {
+        "id": "H5",
+        "basis": "C3,外部知識",
+        "refutation": "センサー故障の検知遅延",
+        "content": "温度センサーの精度は±0.5℃以内を維持"
+      },
+      {
+        "id": "H6",
+        "basis": "H2,H3",
+        "refutation": "ゾーン間の熱干渉が想定以上",
+        "content": "倉庫内の温度分布はゾーン別に独立制御可能"
+      },
+      {
+        "id": "H7",
+        "basis": "H3,H4",
+        "refutation": "複数ゾーンの同時制御で制御干渉が発生",
+        "content": "入出荷スケジュールと連動した温度制御は実現可能"
+      }
+    ]
+  }
+}

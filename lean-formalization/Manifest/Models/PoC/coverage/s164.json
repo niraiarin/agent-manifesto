@@ -1,0 +1,207 @@
+{
+  "namespace": "TestScenario.S164",
+  "description": "DNA配列アラインメント AI",
+  "layers": [
+    {
+      "name": "bioChemInvariant",
+      "ordValue": 5,
+      "definition": "分子生物学の基本原理。塩基対合則・セントラルドグマ",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "scoringTheory",
+      "ordValue": 4,
+      "definition": "置換行列・ギャップペナルティの理論的基盤",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "algorithmGuarantee",
+      "ordValue": 3,
+      "definition": "アラインメントアルゴリズムの計算量・最適性保証",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "qualityFilter",
+      "ordValue": 2,
+      "definition": "シーケンス品質フィルタリングとエラー補正",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "heuristicTuning",
+      "ordValue": 1,
+      "definition": "BLAST系ヒューリスティックの閾値調整",
+      "derivedFrom": [
+        "H5"
+      ]
+    },
+    {
+      "name": "outputFormat",
+      "ordValue": 0,
+      "definition": "結果表示形式と可視化パラメータ",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "basePairComplementarity",
+      "layerName": "bioChemInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "codonDegeneracy",
+      "layerName": "bioChemInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "evolutionaryModel",
+      "layerName": "bioChemInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "substitutionMatrix",
+      "layerName": "scoringTheory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".basePairComplementarity",
+        ".evolutionaryModel"
+      ]
+    },
+    {
+      "id": "gapPenaltyModel",
+      "layerName": "scoringTheory",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".evolutionaryModel"
+      ]
+    },
+    {
+      "id": "affineGapExtension",
+      "layerName": "scoringTheory",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".gapPenaltyModel"
+      ]
+    },
+    {
+      "id": "dpOptimality",
+      "layerName": "algorithmGuarantee",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".substitutionMatrix",
+        ".gapPenaltyModel"
+      ]
+    },
+    {
+      "id": "seedAndExtend",
+      "layerName": "algorithmGuarantee",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".dpOptimality"
+      ]
+    },
+    {
+      "id": "phredScoreThreshold",
+      "layerName": "qualityFilter",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".basePairComplementarity"
+      ]
+    },
+    {
+      "id": "adapterTrimming",
+      "layerName": "qualityFilter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".phredScoreThreshold"
+      ]
+    },
+    {
+      "id": "lowComplexityMask",
+      "layerName": "qualityFilter",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".seedAndExtend"
+      ]
+    },
+    {
+      "id": "eValueCutoff",
+      "layerName": "heuristicTuning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".seedAndExtend",
+        ".phredScoreThreshold"
+      ]
+    },
+    {
+      "id": "wordSizeParam",
+      "layerName": "heuristicTuning",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".seedAndExtend"
+      ]
+    },
+    {
+      "id": "msaVisualization",
+      "layerName": "outputFormat",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".eValueCutoff",
+        ".lowComplexityMask"
+      ]
+    },
+    {
+      "id": "conservationHighlight",
+      "layerName": "outputFormat",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".substitutionMatrix",
+        ".msaVisualization"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "namespace": "TestCoverage.S186",
+  "layers": [
+    {
+      "name": "ChildSafety",
+      "ordValue": 4,
+      "definition": "児童の安全・プライバシーに関する絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PedagogicalPrinciple",
+      "ordValue": 3,
+      "definition": "教育学に基づく指導原則。研究知見で更新されうる",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "CurriculumDesign",
+      "ordValue": 2,
+      "definition": "カリキュラム・難易度設計。学習指導要領に準拠",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "AdaptiveAlgorithm",
+      "ordValue": 1,
+      "definition": "適応的学習アルゴリズムの設計選択",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "LearningHypothesis",
+      "ordValue": 0,
+      "definition": "学習効果に関する未検証仮説",
+      "derivedFrom": [
+        "C6",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s186_p01",
+      "layerName": "ChildSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s186_p02",
+      "layerName": "ChildSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s186_p03",
+      "layerName": "PedagogicalPrinciple",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s186_p01"
+      ]
+    },
+    {
+      "id": "s186_p04",
+      "layerName": "PedagogicalPrinciple",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s186_p01",
+        ".s186_p02"
+      ]
+    },
+    {
+      "id": "s186_p05",
+      "layerName": "CurriculumDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s186_p03"
+      ]
+    },
+    {
+      "id": "s186_p06",
+      "layerName": "CurriculumDesign",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s186_p03",
+        ".s186_p04"
+      ]
+    },
+    {
+      "id": "s186_p07",
+      "layerName": "CurriculumDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s186_p04"
+      ]
+    },
+    {
+      "id": "s186_p08",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s186_p05"
+      ]
+    },
+    {
+      "id": "s186_p09",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s186_p06"
+      ]
+    },
+    {
+      "id": "s186_p10",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s186_p05",
+        ".s186_p07"
+      ]
+    },
+    {
+      "id": "s186_p11",
+      "layerName": "AdaptiveAlgorithm",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s186_p06"
+      ]
+    },
+    {
+      "id": "s186_p12",
+      "layerName": "LearningHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s186_p08"
+      ]
+    },
+    {
+      "id": "s186_p13",
+      "layerName": "LearningHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s186_p09",
+        ".s186_p10"
+      ]
+    },
+    {
+      "id": "s186_p14",
+      "layerName": "LearningHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s186_p11"
+      ]
+    },
+    {
+      "id": "s186_p15",
+      "layerName": "LearningHypothesis",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".s186_p08",
+        ".s186_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "児童の個人情報は厳格に保護し、第三者に提供しない（COPPA準拠）"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "AIは答えを直接教えず、ヒントを段階的に提示して自力解決を促す"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "スモールステップの原理に基づき、理解度に応じて問題の難易度を調整する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "対象は小学4年〜中学3年の算数・数学。学習指導要領に準拠する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "保護者が学習進捗をダッシュボードで確認できる"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "1回の学習セッションは15〜30分を想定する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C3"
+          ],
+          "refutation": "ゲーミフィケーションが学習動機を外的報酬に依存させてしまう場合"
+        }
+      },
+      "content": "ゲーミフィケーション要素（バッジ・レベルアップ）が学習継続率を向上させる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "前提知識のギャップが大きすぎてスモールステップが機能しない場合"
+        }
+      },
+      "content": "知識グラフベースの前提条件チェックにより、つまずきの原因を特定できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "忘却曲線モデルが個人差が大きすぎて汎用化できない場合"
+        }
+      },
+      "content": "忘却曲線に基づく間隔反復（spaced repetition）が定着率を改善する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H2"
+          ],
+          "refutation": "多腕バンディットの探索コストが児童のモチベーションを低下させる場合"
+        }
+      },
+      "content": "多腕バンディットアルゴリズムにより最適な問題難易度をリアルタイムで選択できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "自然言語でのヒント生成がLLMの幻覚（hallucination）により不正確になる場合"
+        }
+      },
+      "content": "LLMを用いた自然言語ヒント生成が固定テンプレートより理解を促進する"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "H3"
+          ],
+          "refutation": "短時間セッションでは適応学習の効果が統計的に有意でない場合"
+        }
+      },
+      "content": "15分の集中学習が30分の漫然学習より定着率が高い"
+    }
+  ]
+}

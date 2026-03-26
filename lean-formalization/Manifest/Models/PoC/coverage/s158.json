@@ -1,0 +1,349 @@
+{
+  "namespace": "TestCoverage.S158",
+  "layers": [
+    {
+      "name": "StandardCompliance",
+      "ordValue": 5,
+      "definition": "JIS・ISO試験規格への準拠。認証に必須",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "MaterialScience",
+      "ordValue": 4,
+      "definition": "材料力学の理論的制約。破壊力学・疲労理論",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "TestProtocol",
+      "ordValue": 3,
+      "definition": "試験手順・条件設定の設計方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "DataAnalysis",
+      "ordValue": 2,
+      "definition": "試験データの統計解析・異常検出手法",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ReportGeneration",
+      "ordValue": 1,
+      "definition": "試験レポートの出力形式と可視化",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s158_p01",
+      "layerName": "StandardCompliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s158_p02",
+      "layerName": "StandardCompliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s158_p03",
+      "layerName": "MaterialScience",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s158_p01"
+      ]
+    },
+    {
+      "id": "s158_p04",
+      "layerName": "MaterialScience",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s158_p01"
+      ]
+    },
+    {
+      "id": "s158_p05",
+      "layerName": "MaterialScience",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".s158_p01",
+        ".s158_p02"
+      ]
+    },
+    {
+      "id": "s158_p06",
+      "layerName": "TestProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s158_p03"
+      ]
+    },
+    {
+      "id": "s158_p07",
+      "layerName": "TestProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s158_p04"
+      ]
+    },
+    {
+      "id": "s158_p08",
+      "layerName": "TestProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s158_p03",
+        ".s158_p05"
+      ]
+    },
+    {
+      "id": "s158_p09",
+      "layerName": "DataAnalysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s158_p06"
+      ]
+    },
+    {
+      "id": "s158_p10",
+      "layerName": "DataAnalysis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s158_p07",
+        ".s158_p08"
+      ]
+    },
+    {
+      "id": "s158_p11",
+      "layerName": "DataAnalysis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s158_p06"
+      ]
+    },
+    {
+      "id": "s158_p12",
+      "layerName": "ReportGeneration",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s158_p09"
+      ]
+    },
+    {
+      "id": "s158_p13",
+      "layerName": "ReportGeneration",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s158_p10"
+      ]
+    },
+    {
+      "id": "s158_p14",
+      "layerName": "ReportGeneration",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s158_p11"
+      ]
+    },
+    {
+      "id": "s158_p15",
+      "layerName": "ReportGeneration",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s158_p12",
+        ".s158_p13"
+      ]
+    },
+    {
+      "id": "s158_p16",
+      "layerName": "ReportGeneration",
+      "justification": [
+        "C5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s158_p14",
+        ".s158_p09"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "全試験はJIS Z 2241（金属材料引張試験）またはISO 6892に準拠し、認証に使用可能なデータを出力する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "応力-ひずみ曲線から降伏点・引張強さ・伸び・絞りを自動算出する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "試験速度（ひずみ速度）は規格で定められた範囲内で自動制御する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "試験片の寸法測定は画像計測で自動化し、手入力の誤りを排除する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "試験レポートはPDF形式で自動生成し、規格要求項目を全て含める"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "全材料で降伏点が明確に現れる場合"
+        }
+      },
+      "content": "0.2%オフセット法による耐力算出が必要な材料（アルミ合金等）の自動判別"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C2"
+          ],
+          "refutation": "全試験で同一のひずみ速度が適用可能な場合"
+        }
+      },
+      "content": "弾性域と塑性域でひずみ速度を切り替える二段階制御が精度向上に有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "試験データに異常値が含まれない場合"
+        }
+      },
+      "content": "荷重セル・伸び計の異常値検出にはMADベースのロバスト統計が適切"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "試験片形状が常に規格通りに加工されている場合"
+        }
+      },
+      "content": "試験片寸法の画像計測で検出した形状不良を試験前に警告すべき"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C2"
+          ],
+          "refutation": "過去データとの比較が不要な場合"
+        }
+      },
+      "content": "同一材料の過去試験データとの統計的比較（管理図）をレポートに含めると品質管理に有用"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "レポート出力がPDFのみで十分な場合"
+        }
+      },
+      "content": "試験データのCSVエクスポートとAPI連携により、上位の品質管理システムとの統合が可能"
+    }
+  ]
+}

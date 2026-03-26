@@ -1,0 +1,392 @@
+{
+  "namespace": "TestCoverage.S188",
+  "layers": [
+    {
+      "name": "FoodSafetyLaw",
+      "ordValue": 5,
+      "definition": "食品衛生法・JAS法に基づく法的義務。違反は刑事罰の対象",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryStandard",
+      "ordValue": 4,
+      "definition": "公的検査基準・認証制度。行政の改定に従う",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "SupplyChainDesign",
+      "ordValue": 3,
+      "definition": "サプライチェーン監視の設計。取引構造に応じて調整可能",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalyticalMethod",
+      "ordValue": 2,
+      "definition": "分析手法の選択。技術の進歩で更新される",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "DataIntegration",
+      "ordValue": 1,
+      "definition": "データ統合・前処理の設計",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    },
+    {
+      "name": "DetectionHypothesis",
+      "ordValue": 0,
+      "definition": "検知精度に関する未検証仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s188_p01",
+      "layerName": "FoodSafetyLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s188_p02",
+      "layerName": "FoodSafetyLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s188_p03",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s188_p01"
+      ]
+    },
+    {
+      "id": "s188_p04",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s188_p01",
+        ".s188_p02"
+      ]
+    },
+    {
+      "id": "s188_p05",
+      "layerName": "RegulatoryStandard",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s188_p02"
+      ]
+    },
+    {
+      "id": "s188_p06",
+      "layerName": "SupplyChainDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s188_p03"
+      ]
+    },
+    {
+      "id": "s188_p07",
+      "layerName": "SupplyChainDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s188_p03",
+        ".s188_p04"
+      ]
+    },
+    {
+      "id": "s188_p08",
+      "layerName": "AnalyticalMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s188_p06"
+      ]
+    },
+    {
+      "id": "s188_p09",
+      "layerName": "SupplyChainDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s188_p15"
+      ]
+    },
+    {
+      "id": "s188_p10",
+      "layerName": "AnalyticalMethod",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s188_p06",
+        ".s188_p07"
+      ]
+    },
+    {
+      "id": "s188_p11",
+      "layerName": "AnalyticalMethod",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s188_p07"
+      ]
+    },
+    {
+      "id": "s188_p12",
+      "layerName": "DataIntegration",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s188_p08"
+      ]
+    },
+    {
+      "id": "s188_p13",
+      "layerName": "DataIntegration",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s188_p10",
+        ".s188_p11"
+      ]
+    },
+    {
+      "id": "s188_p14",
+      "layerName": "DataIntegration",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s188_p08"
+      ]
+    },
+    {
+      "id": "s188_p15",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s188_p12"
+      ]
+    },
+    {
+      "id": "s188_p16",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s188_p13",
+        ".s188_p14"
+      ]
+    },
+    {
+      "id": "s188_p17",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s188_p12"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "食品偽装は食品衛生法・不正競争防止法の違反であり、検知は法的義務"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "産地偽装・品種偽装の最終判定は公的検査機関が行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "DNA鑑定・安定同位体比分析が公的に認められた検査手法"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "流通経路の追跡にはトレーサビリティシステムのデータを使用する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "近赤外分光法（NIR）による非破壊スクリーニングを一次検査に使用する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検知結果はリスクスコアとして流通業者に提供する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "公的検査基準が国際的に統一される場合"
+        }
+      },
+      "content": "国ごとの検査基準の差異を考慮したマルチ基準対応が必要"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "トレーサビリティデータが完全に信頼できる場合"
+        }
+      },
+      "content": "流通経路の異常パターン検知がサプライチェーンの脆弱点特定に有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6"
+          ],
+          "refutation": "NIRスペクトルの品目間差異が小さすぎて判別不能な場合"
+        }
+      },
+      "content": "NIRスペクトルの機械学習分類により迅速なスクリーニングが可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "近赤外分光法のデータが環境条件（温度・湿度）に強く依存する場合"
+        }
+      },
+      "content": "分光データの前処理（MSC, SNV）により装置間差異を補正できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C6"
+          ],
+          "refutation": "データソース間のフォーマット不統一が解消されない場合"
+        }
+      },
+      "content": "流通データと分析データのデータレイク統合により横断的な検知が可能"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "H3"
+          ],
+          "refutation": "異なる食品カテゴリ間でリスクスコアの比較が意味をなさない場合"
+        }
+      },
+      "content": "品目ごとのベイジアンリスクスコアリングが偽装確率の定量化に有効"
+    },
+    {
+      "id": "H7",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H5",
+            "H6"
+          ],
+          "refutation": "多次元データの統合が過学習を引き起こし汎化性能が低下する場合"
+        }
+      },
+      "content": "マルチモーダルデータ融合（分光+流通+画像）がアンサンブル的に精度を向上させる"
+    }
+  ]
+}

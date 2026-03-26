@@ -1,0 +1,138 @@
+{
+  "namespace": "Scenario276",
+  "layers": [
+    {
+      "name": "aesthetics",
+      "ordValue": 2,
+      "definition": "書道の美的価値と人間の判断権限。不変。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "material",
+      "ordValue": 1,
+      "definition": "素材の物理特性に依存する制御手法。素材変更で再調整。",
+      "derivedFrom": [
+        "C2",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。実験で確認。",
+      "derivedFrom": [
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "aes1",
+      "layerName": "aesthetics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aes2",
+      "layerName": "aesthetics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aes3",
+      "layerName": "aesthetics",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".aes1"
+      ]
+    },
+    {
+      "id": "mat1",
+      "layerName": "material",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".aes1"
+      ]
+    },
+    {
+      "id": "mat2",
+      "layerName": "material",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".mat1"
+      ]
+    },
+    {
+      "id": "mat3",
+      "layerName": "material",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".aes2"
+      ]
+    },
+    {
+      "id": "mat4",
+      "layerName": "material",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".mat1",
+        ".mat3"
+      ]
+    },
+    {
+      "id": "mat5",
+      "layerName": "material",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".aes3",
+        ".mat2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".aes3",
+        ".mat1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".mat4",
+        ".mat5"
+      ]
+    }
+  ]
+}

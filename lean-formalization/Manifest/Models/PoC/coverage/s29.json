@@ -1,0 +1,169 @@
+{
+  "layers": [
+    {
+      "name": "resident_safety_constraint",
+      "definition": "入居者の生命・尊厳の保護。絶対的制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "privacy_postulate",
+      "definition": "プライバシー・個人情報保護の前提",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "care_principle",
+      "definition": "介護の原則。人間の介護者との協働",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "monitoring_boundary",
+      "definition": "見守りの境界条件。センサーと判定基準",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C7",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "alert_hypothesis",
+      "definition": "アラート設定の仮説。運用で調整",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "_monotonicity_violations": [
+    {
+      "violation": "staff_notification_protocol (care_principle, ord=3) depends on vital_sign_anomaly_level (alert_hypothesis, ord=0)",
+      "explanation": "介護スタッフへの通知プロトコル（介護原則層 ord=3）がバイタルサイン異常レベル（仮説層 ord=0）に依存。依存先の ord が依存元より低いため単調性違反",
+      "resolution": "H5由来のため LLM が自律修正: vital_sign_anomaly_level を monitoring_boundary (ord=2) に昇格。ただし care_principle (ord=3) への依存なので ord=3 以上が必要 → care_principle に昇格",
+      "fix_applied": true,
+      "fixed_assignment": {
+        "proposition": "vital_sign_anomaly_level",
+        "layerName": "care_principle",
+        "justification": [
+          "H5",
+          "C5"
+        ]
+      }
+    }
+  ],
+  "propositions": [
+    {
+      "id": "fall_detection_immediate",
+      "layerName": "resident_safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dignity_preservation",
+      "layerName": "resident_safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "camera_placement_consent",
+      "layerName": "privacy_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data_retention_policy",
+      "layerName": "privacy_postulate",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "staff_notification_protocol",
+      "layerName": "care_principle",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "human_verification_required",
+      "layerName": "care_principle",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sensor_coverage_map",
+      "layerName": "monitoring_boundary",
+      "justification": [
+        "C7",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "nighttime_monitoring_mode",
+      "layerName": "monitoring_boundary",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "wandering_alert_threshold",
+      "layerName": "alert_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "vital_sign_anomaly_level",
+      "layerName": "alert_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "emergency_call_trigger",
+      "layerName": "resident_safety_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "family_notification_rule",
+      "layerName": "care_principle",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": []
+    }
+  ]
+}

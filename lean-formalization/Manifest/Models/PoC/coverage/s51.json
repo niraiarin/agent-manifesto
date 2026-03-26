@@ -1,0 +1,251 @@
+{
+  "namespace": "AirportBaggage",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "手荷物の紛失率を0.1%以下に維持する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "乗客のプライバシーを保護し、手荷物画像を追跡以外に使わない"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "空港職員が最終的な手荷物再ルーティングを判断する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "IATA規格に準拠したタグ読み取りを行う"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "リアルタイム追跡で遅延荷物を5分以内に検知する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "他空港システムとのデータ連携は標準APIで行う"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "IATA以外の独自規格が主流になった場合",
+        "content": "RFIDタグ読取精度は99.5%以上を前提とする"
+      },
+      {
+        "id": "H2",
+        "basis": "C5,C6",
+        "refutation": "ネットワーク遅延が恒常的に10秒以上の場合",
+        "content": "空港間データ連携の遅延は3秒以内"
+      },
+      {
+        "id": "H3",
+        "basis": "C1",
+        "refutation": "AI判断が人間を上回ることが実証された場合",
+        "content": "再ルーティング提案はAIが行い最終判断は人間"
+      },
+      {
+        "id": "H4",
+        "basis": "C5",
+        "refutation": "センサー技術の根本的変化",
+        "content": "コンベア上の荷物位置はカメラ+RFIDの融合で特定"
+      },
+      {
+        "id": "H5",
+        "basis": "H2",
+        "refutation": "完全オフライン運用が可能になった場合",
+        "content": "クラウド接続断時はローカルキャッシュで30分稼働可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "旅客安全・プライバシーに関わる不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 2,
+      "definition": "業界規格・法規制への準拠",
+      "derivedFrom": [
+        "C4",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "operation",
+      "ordValue": 1,
+      "definition": "空港職員が設定・調整する運用方針",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化する追跡戦略",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "op1",
+      "layerName": "operation",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        "safe1",
+        "reg1"
+      ]
+    },
+    {
+      "id": "op2",
+      "layerName": "operation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "reg1"
+      ]
+    },
+    {
+      "id": "op3",
+      "layerName": "operation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "op4",
+      "layerName": "operation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "reg2"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "op2",
+        "reg1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "op2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H4",
+        "H2"
+      ],
+      "dependencies": [
+        "reg2",
+        "op3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "op1"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "reg3"
+      ]
+    }
+  ]
+}

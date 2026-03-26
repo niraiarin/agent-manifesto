@@ -1,0 +1,252 @@
+{
+  "namespace": "UsedCarAppraisal",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 2,
+      "definition": "古物営業法・消費者契約法に基づく不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "market",
+      "ordValue": 1,
+      "definition": "中古車市場・車両状態の前提と運用方針",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の査定精度・価格予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mkt1",
+      "layerName": "market",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mkt2",
+      "layerName": "market",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "mkt3",
+      "layerName": "market",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "mkt4",
+      "layerName": "market",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "safe3",
+        "mkt1"
+      ]
+    },
+    {
+      "id": "mkt5",
+      "layerName": "market",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        "mkt1",
+        "mkt2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "mkt1",
+        "mkt2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "mkt3",
+        "mkt4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "mkt5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "hyp5",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp3"
+      ]
+    },
+    {
+      "id": "hyp6",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "hyp4"
+      ]
+    },
+    {
+      "id": "hyp7",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "hyp5",
+        "hyp6"
+      ]
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "査定価格の根拠を顧客に説明可能な形で提示する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "事故歴・修復歴は必ず開示し査定に反映する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "最終査定価格の決定権は査定士にある"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "査定有効期間は7日間とする"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "外部知識",
+        "refutation": "オークション相場データのAPI停止",
+        "content": "中古車オークション相場データはリアルタイムで参照可能"
+      },
+      {
+        "id": "H2",
+        "basis": "C2,H1",
+        "refutation": "事故歴DBのカバレッジ不足",
+        "content": "車両の事故歴・整備歴はデータベースから取得可能"
+      },
+      {
+        "id": "H3",
+        "basis": "C3,H1",
+        "refutation": "AIと査定士の判断乖離が常態化",
+        "content": "AI査定は査定士の参考価格として有用"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H2",
+        "refutation": "希少車種でデータ不足により精度低下",
+        "content": "過去取引データから車種別の価格予測が可能"
+      },
+      {
+        "id": "H5",
+        "basis": "H1,H3",
+        "refutation": "外装・内装の主観評価が画像認識で再現不能",
+        "content": "車両画像から外装・内装の状態をスコアリング可能"
+      },
+      {
+        "id": "H6",
+        "basis": "H1,H4",
+        "refutation": "EV化の加速でICE車の残価予測が困難",
+        "content": "市場トレンドから将来の残価率を予測可能"
+      }
+    ]
+  }
+}

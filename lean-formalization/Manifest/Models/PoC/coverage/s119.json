@@ -1,0 +1,189 @@
+{
+  "namespace": "PetFoodFormulation",
+  "layers": [
+    {
+      "name": "safety_regulation",
+      "ordValue": 3,
+      "definition": "飼料安全法・ペットフード安全法の法的基準。不変",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "nutrition_science",
+      "ordValue": 2,
+      "definition": "動物栄養学の確立知見。AAFCO/FEDIAF 基準",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "formulation",
+      "ordValue": 1,
+      "definition": "原材料配合・コスト最適化のアルゴリズム的判断",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "新素材・機能性成分の効果に関する未検証仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe_ingredient",
+      "layerName": "safety_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe_contaminant",
+      "layerName": "safety_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe_labeling",
+      "layerName": "safety_regulation",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "nutr_protein",
+      "layerName": "nutrition_science",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".safe_ingredient"
+      ]
+    },
+    {
+      "id": "nutr_mineral",
+      "layerName": "nutrition_science",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".safe_contaminant"
+      ]
+    },
+    {
+      "id": "nutr_calorie",
+      "layerName": "nutrition_science",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "nutr_life_stage",
+      "layerName": "nutrition_science",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".nutr_protein",
+        ".nutr_calorie"
+      ]
+    },
+    {
+      "id": "form_ingredient_mix",
+      "layerName": "formulation",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".nutr_protein",
+        ".nutr_mineral"
+      ]
+    },
+    {
+      "id": "form_cost_opt",
+      "layerName": "formulation",
+      "justification": [
+        "C7",
+        "H5"
+      ],
+      "dependencies": [
+        ".form_ingredient_mix"
+      ]
+    },
+    {
+      "id": "form_palatability",
+      "layerName": "formulation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".nutr_life_stage"
+      ]
+    },
+    {
+      "id": "form_shelf_life",
+      "layerName": "formulation",
+      "justification": [
+        "H4",
+        "C6"
+      ],
+      "dependencies": [
+        ".safe_contaminant",
+        ".form_ingredient_mix"
+      ]
+    },
+    {
+      "id": "form_label_gen",
+      "layerName": "formulation",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".safe_labeling",
+        ".form_ingredient_mix"
+      ]
+    },
+    {
+      "id": "hyp_insect_protein",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".nutr_protein"
+      ]
+    },
+    {
+      "id": "hyp_probiotic",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".nutr_life_stage",
+        ".form_palatability"
+      ]
+    }
+  ]
+}

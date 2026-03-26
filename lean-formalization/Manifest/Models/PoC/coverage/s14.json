@@ -1,0 +1,203 @@
+{
+  "namespace": "TestCoverage.S14",
+  "layers": [
+    {
+      "name": "legal",
+      "ordValue": 5,
+      "definition": "法的義務・コンプライアンス要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "platform_integrity",
+      "ordValue": 4,
+      "definition": "プラットフォームの信頼性基盤",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "cultural_context",
+      "ordValue": 3,
+      "definition": "地域・文化的コンテキストへの依存",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "community_standard",
+      "ordValue": 2,
+      "definition": "コミュニティが設定するモデレーション基準",
+      "derivedFrom": [
+        "C4",
+        "H4"
+      ]
+    },
+    {
+      "name": "adaptation",
+      "ordValue": 1,
+      "definition": "AIが学習・適応するモデレーション判定",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "leg1",
+      "layerName": "legal",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "leg2",
+      "layerName": "legal",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pi1",
+      "layerName": "platform_integrity",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "leg1"
+      ]
+    },
+    {
+      "id": "pi2",
+      "layerName": "platform_integrity",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "leg2"
+      ]
+    },
+    {
+      "id": "cc1",
+      "layerName": "cultural_context",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cc2",
+      "layerName": "cultural_context",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "pi1"
+      ]
+    },
+    {
+      "id": "mod1",
+      "layerName": "community_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "leg1",
+        "pi1"
+      ]
+    },
+    {
+      "id": "mod2",
+      "layerName": "community_standard",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "cc1"
+      ]
+    },
+    {
+      "id": "mod3",
+      "layerName": "community_standard",
+      "justification": [
+        "C4",
+        "H5"
+      ],
+      "dependencies": [
+        "adapt1"
+      ]
+    },
+    {
+      "id": "mod4",
+      "layerName": "community_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "pi2",
+        "cc2"
+      ]
+    },
+    {
+      "id": "adapt1",
+      "layerName": "adaptation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "mod1",
+        "cc1"
+      ]
+    },
+    {
+      "id": "adapt2",
+      "layerName": "adaptation",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "mod2"
+      ]
+    },
+    {
+      "id": "adapt3",
+      "layerName": "adaptation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "mod4",
+        "cc2"
+      ]
+    },
+    {
+      "id": "adapt4",
+      "layerName": "adaptation",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "adapt1"
+      ]
+    },
+    {
+      "id": "adapt5",
+      "layerName": "adaptation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "mod1"
+      ]
+    }
+  ]
+}

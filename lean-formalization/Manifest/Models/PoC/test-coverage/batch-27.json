@@ -1,0 +1,1564 @@
+[
+  {
+    "scenario_id": 261,
+    "project": "遠隔手術通信品質保証 AI",
+    "num_layers": 6,
+    "num_props": 12,
+    "num_deps": 11,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S261",
+      "description": "遠隔手術通信品質保証 AI",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 5,
+          "definition": "患者の生命に直結する不変安全条件。通信途絶時の即時フェイルセーフ",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulatory",
+          "ordValue": 4,
+          "definition": "医療機器通信の法規制・認証要件",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "physical_constraint",
+          "ordValue": 3,
+          "definition": "通信物理層の特性。遅延・帯域・ジッタの物理的限界",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "protocol",
+          "ordValue": 2,
+          "definition": "QoS保証プロトコル。冗長経路・優先制御",
+          "derivedFrom": [
+            "C4",
+            "H4"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "帯域最適化・圧縮戦略",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の通信品質仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "sf1",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sf2",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sf3",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rg1",
+          "layerName": "regulatory",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".sf1"
+          ]
+        },
+        {
+          "id": "rg2",
+          "layerName": "regulatory",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".sf2"
+          ]
+        },
+        {
+          "id": "ph1",
+          "layerName": "physical_constraint",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ph2",
+          "layerName": "physical_constraint",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".rg1"
+          ]
+        },
+        {
+          "id": "pr1",
+          "layerName": "protocol",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".sf1",
+            ".ph1"
+          ]
+        },
+        {
+          "id": "pr2",
+          "layerName": "protocol",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".rg2",
+            ".ph2"
+          ]
+        },
+        {
+          "id": "op1",
+          "layerName": "optimization",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".pr1"
+          ]
+        },
+        {
+          "id": "op2",
+          "layerName": "optimization",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".ph1",
+            ".pr2"
+          ]
+        },
+        {
+          "id": "hy1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".op1"
+          ]
+        }
+      ],
+      "_fix_log": "Phase 2.5: pr3 (protocol, ord=2) depended on hy1 (hypothesis, ord=0) — monotonicity violation. Both H-justified. Fix: removed pr3. Protocol cannot depend on unverified hypothesis."
+    }
+  },
+  {
+    "scenario_id": 262,
+    "project": "化石同定 AI",
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 11,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S262",
+      "description": "化石同定 AI",
+      "layers": [
+        {
+          "name": "taxonomic_law",
+          "ordValue": 4,
+          "definition": "国際動物命名規約・分類学の原則。学名の有効性基準",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "geological_context",
+          "ordValue": 3,
+          "definition": "地質年代・地層情報。化石の時空間的制約",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "morphological_rule",
+          "ordValue": 2,
+          "definition": "形態学的同定基準。鍵となる形質の判定ルール",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "inference",
+          "ordValue": 1,
+          "definition": "画像認識・統計的推論による同定候補",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未確認の分類仮説",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "tx1",
+          "layerName": "taxonomic_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "tx2",
+          "layerName": "taxonomic_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "gl1",
+          "layerName": "geological_context",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".tx1"
+          ]
+        },
+        {
+          "id": "gl2",
+          "layerName": "geological_context",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mr1",
+          "layerName": "morphological_rule",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".tx1",
+            ".gl1"
+          ]
+        },
+        {
+          "id": "mr2",
+          "layerName": "morphological_rule",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".tx2"
+          ]
+        },
+        {
+          "id": "mr3",
+          "layerName": "morphological_rule",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".gl2"
+          ]
+        },
+        {
+          "id": "in1",
+          "layerName": "inference",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".mr1",
+            ".mr2"
+          ]
+        },
+        {
+          "id": "in2",
+          "layerName": "inference",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".mr3",
+            ".gl2"
+          ]
+        },
+        {
+          "id": "in3",
+          "layerName": "inference",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".in1"
+          ]
+        },
+        {
+          "id": "hp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".in2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 263,
+    "project": "ダム堆砂量予測 AI",
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 12,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S263",
+      "description": "ダム堆砂量予測 AI",
+      "layers": [
+        {
+          "name": "hydraulic_law",
+          "ordValue": 4,
+          "definition": "水理学・土砂水理の基本法則。連続方程式・運動方程式",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "dam_constraint",
+          "ordValue": 3,
+          "definition": "ダム構造・運用の物理的制約。堆砂容量・排砂設備仕様",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "sediment_model",
+          "ordValue": 2,
+          "definition": "堆砂予測モデル。流出土砂量推定・堆積分布計算",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "operational",
+          "ordValue": 1,
+          "definition": "排砂運用最適化。フラッシング・浚渫計画",
+          "derivedFrom": [
+            "H3",
+            "C4"
+          ]
+        },
+        {
+          "name": "forecast",
+          "ordValue": 0,
+          "definition": "将来予測・気候変動影響の仮説",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "hl1",
+          "layerName": "hydraulic_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hl2",
+          "layerName": "hydraulic_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dc1",
+          "layerName": "dam_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".hl1"
+          ]
+        },
+        {
+          "id": "dc2",
+          "layerName": "dam_constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dc3",
+          "layerName": "dam_constraint",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".hl2"
+          ]
+        },
+        {
+          "id": "sm1",
+          "layerName": "sediment_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".hl1",
+            ".dc1"
+          ]
+        },
+        {
+          "id": "sm2",
+          "layerName": "sediment_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".dc2",
+            ".dc3"
+          ]
+        },
+        {
+          "id": "sm3",
+          "layerName": "sediment_model",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".sm1"
+          ]
+        },
+        {
+          "id": "op1",
+          "layerName": "operational",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".sm1",
+            ".dc1"
+          ]
+        },
+        {
+          "id": "op2",
+          "layerName": "operational",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".sm2"
+          ]
+        },
+        {
+          "id": "fc1",
+          "layerName": "forecast",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".sm3",
+            ".op1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 264,
+    "project": "点字プリンタ制御 AI",
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S264",
+      "description": "点字プリンタ制御 AI",
+      "layers": [
+        {
+          "name": "braille_standard",
+          "ordValue": 3,
+          "definition": "点字表記規則（日本点字表記法・UEB等）。文字体系の不変規則",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "mechanical_spec",
+          "ordValue": 2,
+          "definition": "プリンタ機構の物理仕様。ピン配置・用紙サイズ・打刻力",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "translation",
+          "ordValue": 1,
+          "definition": "墨字→点字変換ロジック。略字・分かち書き・数式処理",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 0,
+          "definition": "印刷速度・品質の最適化仮説",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "bs1",
+          "layerName": "braille_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bs2",
+          "layerName": "braille_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bs3",
+          "layerName": "braille_standard",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms1",
+          "layerName": "mechanical_spec",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms2",
+          "layerName": "mechanical_spec",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".bs1"
+          ]
+        },
+        {
+          "id": "tr1",
+          "layerName": "translation",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".bs1",
+            ".bs2"
+          ]
+        },
+        {
+          "id": "tr2",
+          "layerName": "translation",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".bs3",
+            ".ms1"
+          ]
+        },
+        {
+          "id": "tr3",
+          "layerName": "translation",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".ms2"
+          ]
+        },
+        {
+          "id": "ot1",
+          "layerName": "optimization",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".tr1",
+            ".ms1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 265,
+    "project": "成層圏オゾン層監視 AI",
+    "num_layers": 7,
+    "num_props": 13,
+    "num_deps": 14,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S265",
+      "description": "成層圏オゾン層監視 AI",
+      "layers": [
+        {
+          "name": "atmospheric_physics",
+          "ordValue": 6,
+          "definition": "大気化学・光化学反応の基本法則。Chapman機構",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "regulatory_framework",
+          "ordValue": 5,
+          "definition": "モントリオール議定書・規制物質リスト",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "observation_system",
+          "ordValue": 4,
+          "definition": "観測機器の仕様・校正基準。ドブソン分光計・衛星センサ",
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "retrieval_algorithm",
+          "ordValue": 3,
+          "definition": "オゾン全量・鉛直分布の導出アルゴリズム",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "trend_analysis",
+          "ordValue": 2,
+          "definition": "オゾン層回復トレンド解析。統計的有意性検定",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "early_warning",
+          "ordValue": 1,
+          "definition": "オゾンホール拡大警報の判定ロジック",
+          "derivedFrom": [
+            "H6",
+            "C5"
+          ]
+        },
+        {
+          "name": "projection",
+          "ordValue": 0,
+          "definition": "将来予測・気候モデル連携の仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "ap1",
+          "layerName": "atmospheric_physics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ap2",
+          "layerName": "atmospheric_physics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rf1",
+          "layerName": "regulatory_framework",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".ap1"
+          ]
+        },
+        {
+          "id": "rf2",
+          "layerName": "regulatory_framework",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "os1",
+          "layerName": "observation_system",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".ap1"
+          ]
+        },
+        {
+          "id": "os2",
+          "layerName": "observation_system",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".rf1"
+          ]
+        },
+        {
+          "id": "ra1",
+          "layerName": "retrieval_algorithm",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".os1",
+            ".ap2"
+          ]
+        },
+        {
+          "id": "ra2",
+          "layerName": "retrieval_algorithm",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".os2"
+          ]
+        },
+        {
+          "id": "ta1",
+          "layerName": "trend_analysis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".ra1",
+            ".ra2"
+          ]
+        },
+        {
+          "id": "ta2",
+          "layerName": "trend_analysis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".rf2"
+          ]
+        },
+        {
+          "id": "ew1",
+          "layerName": "early_warning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".ta1"
+          ]
+        },
+        {
+          "id": "ew2",
+          "layerName": "early_warning",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".ta2",
+            ".rf1"
+          ]
+        },
+        {
+          "id": "pj1",
+          "layerName": "projection",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".ew1",
+            ".ta1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 266,
+    "project": "伝統建築修復支援 AI",
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 12,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S266",
+      "description": "伝統建築修復支援 AI",
+      "layers": [
+        {
+          "name": "cultural_heritage_law",
+          "ordValue": 4,
+          "definition": "文化財保護法・修復原則（ヴェネツィア憲章）。可逆性・真正性",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "structural_principle",
+          "ordValue": 3,
+          "definition": "伝統構法の力学原理。木組み・石積みの構造力学",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "material_knowledge",
+          "ordValue": 2,
+          "definition": "伝統材料の特性。木材樹種・漆喰配合・金属加工",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "restoration_plan",
+          "ordValue": 1,
+          "definition": "修復工法の選定・工程計画",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "assessment",
+          "ordValue": 0,
+          "definition": "劣化度推定・優先度判定の仮説",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "cl1",
+          "layerName": "cultural_heritage_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cl2",
+          "layerName": "cultural_heritage_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sp1",
+          "layerName": "structural_principle",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".cl1"
+          ]
+        },
+        {
+          "id": "sp2",
+          "layerName": "structural_principle",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mk1",
+          "layerName": "material_knowledge",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".sp1",
+            ".sp2"
+          ]
+        },
+        {
+          "id": "mk2",
+          "layerName": "material_knowledge",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".cl2"
+          ]
+        },
+        {
+          "id": "mk3",
+          "layerName": "material_knowledge",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".sp1"
+          ]
+        },
+        {
+          "id": "rp1",
+          "layerName": "restoration_plan",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".mk1",
+            ".cl1"
+          ]
+        },
+        {
+          "id": "rp2",
+          "layerName": "restoration_plan",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".mk2",
+            ".mk3"
+          ]
+        },
+        {
+          "id": "as1",
+          "layerName": "assessment",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".rp1"
+          ]
+        },
+        {
+          "id": "as2",
+          "layerName": "assessment",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".mk1",
+            ".rp2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 267,
+    "project": "海洋プラスチック回収最適化 AI",
+    "num_layers": 6,
+    "num_props": 12,
+    "num_deps": 15,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S267",
+      "description": "海洋プラスチック回収最適化 AI",
+      "layers": [
+        {
+          "name": "environmental_law",
+          "ordValue": 5,
+          "definition": "海洋環境保護の国際法規。MARPOL条約・生態系保全義務",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "oceanographic_model",
+          "ordValue": 4,
+          "definition": "海流・波浪の物理モデル。Ekman輸送・Stokes漂流",
+          "derivedFrom": [
+            "H1",
+            "C3"
+          ]
+        },
+        {
+          "name": "debris_dynamics",
+          "ordValue": 3,
+          "definition": "プラスチック漂流・分解モデル。マイクロプラスチック拡散",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "collection_strategy",
+          "ordValue": 2,
+          "definition": "回収船配置・回収装置の運用戦略",
+          "derivedFrom": [
+            "H4",
+            "C4"
+          ]
+        },
+        {
+          "name": "route_planning",
+          "ordValue": 1,
+          "definition": "回収ルート最適化。燃料効率・回収量最大化",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        },
+        {
+          "name": "impact_hypothesis",
+          "ordValue": 0,
+          "definition": "回収効果・生態系影響の未検証仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "el1",
+          "layerName": "environmental_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "el2",
+          "layerName": "environmental_law",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "om1",
+          "layerName": "oceanographic_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".el1"
+          ]
+        },
+        {
+          "id": "om2",
+          "layerName": "oceanographic_model",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dd1",
+          "layerName": "debris_dynamics",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".om1",
+            ".om2"
+          ]
+        },
+        {
+          "id": "dd2",
+          "layerName": "debris_dynamics",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".om2"
+          ]
+        },
+        {
+          "id": "cs1",
+          "layerName": "collection_strategy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".dd1",
+            ".el1"
+          ]
+        },
+        {
+          "id": "cs2",
+          "layerName": "collection_strategy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".dd2",
+            ".el2"
+          ]
+        },
+        {
+          "id": "rp1",
+          "layerName": "route_planning",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".cs1",
+            ".om1"
+          ]
+        },
+        {
+          "id": "rp2",
+          "layerName": "route_planning",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".cs2",
+            ".dd1"
+          ]
+        },
+        {
+          "id": "ih1",
+          "layerName": "impact_hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".rp1",
+            ".rp2"
+          ]
+        },
+        {
+          "id": "ih2",
+          "layerName": "impact_hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".dd2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 268,
+    "project": "聴覚検査自動化 AI",
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 9,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S268",
+      "description": "聴覚検査自動化 AI",
+      "layers": [
+        {
+          "name": "medical_standard",
+          "ordValue": 3,
+          "definition": "聴覚検査の医学的基準。ISO 8253・JIS規格準拠",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "audiometric_model",
+          "ordValue": 2,
+          "definition": "聴力測定のモデル。純音・語音・ABR検査パラメータ",
+          "derivedFrom": [
+            "H1",
+            "C3"
+          ]
+        },
+        {
+          "name": "adaptive_algorithm",
+          "ordValue": 1,
+          "definition": "適応型検査アルゴリズム。閾値追跡・被検者応答解析",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "calibration_hypothesis",
+          "ordValue": 0,
+          "definition": "環境騒音補正・機器校正の仮説",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "ms1",
+          "layerName": "medical_standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms2",
+          "layerName": "medical_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms3",
+          "layerName": "medical_standard",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "am1",
+          "layerName": "audiometric_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".ms1"
+          ]
+        },
+        {
+          "id": "am2",
+          "layerName": "audiometric_model",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".ms2",
+            ".ms3"
+          ]
+        },
+        {
+          "id": "am3",
+          "layerName": "audiometric_model",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".ms1"
+          ]
+        },
+        {
+          "id": "aa1",
+          "layerName": "adaptive_algorithm",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".am1",
+            ".am2"
+          ]
+        },
+        {
+          "id": "aa2",
+          "layerName": "adaptive_algorithm",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".am3"
+          ]
+        },
+        {
+          "id": "ch1",
+          "layerName": "calibration_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".aa1",
+            ".aa2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 269,
+    "project": "砂漠化進行監視 AI",
+    "num_layers": 6,
+    "num_props": 12,
+    "num_deps": 15,
+    "num_c": 5,
+    "num_h": 5,
+    "model_spec": {
+      "namespace": "TestScenario.S269",
+      "description": "砂漠化進行監視 AI",
+      "layers": [
+        {
+          "name": "climate_science",
+          "ordValue": 5,
+          "definition": "気候学・土壌学の基本法則。水収支・蒸発散",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "unccd_framework",
+          "ordValue": 4,
+          "definition": "国連砂漠化対処条約（UNCCD）の指標体系",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "remote_sensing",
+          "ordValue": 3,
+          "definition": "衛星リモートセンシングの物理モデル。NDVI・土壌水分指標",
+          "derivedFrom": [
+            "H1",
+            "C4"
+          ]
+        },
+        {
+          "name": "degradation_model",
+          "ordValue": 2,
+          "definition": "土地劣化評価モデル。LDN指標・生産性動態",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "intervention",
+          "ordValue": 1,
+          "definition": "緑化・土壌保全介入の効果推定",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "projection",
+          "ordValue": 0,
+          "definition": "砂漠化進行の将来予測仮説",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "cs1",
+          "layerName": "climate_science",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cs2",
+          "layerName": "climate_science",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "uf1",
+          "layerName": "unccd_framework",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".cs1"
+          ]
+        },
+        {
+          "id": "uf2",
+          "layerName": "unccd_framework",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rs1",
+          "layerName": "remote_sensing",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".cs1",
+            ".uf1"
+          ]
+        },
+        {
+          "id": "rs2",
+          "layerName": "remote_sensing",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".cs2"
+          ]
+        },
+        {
+          "id": "dm1",
+          "layerName": "degradation_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".rs1",
+            ".uf2"
+          ]
+        },
+        {
+          "id": "dm2",
+          "layerName": "degradation_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".rs2"
+          ]
+        },
+        {
+          "id": "dm3",
+          "layerName": "degradation_model",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".rs1",
+            ".rs2"
+          ]
+        },
+        {
+          "id": "iv1",
+          "layerName": "intervention",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".dm1",
+            ".dm2"
+          ]
+        },
+        {
+          "id": "iv2",
+          "layerName": "intervention",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".dm3",
+            ".uf1"
+          ]
+        },
+        {
+          "id": "pj1",
+          "layerName": "projection",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".iv1",
+            ".iv2"
+          ]
+        }
+      ]
+    }
+  }
+]

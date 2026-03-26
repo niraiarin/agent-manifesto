@@ -1,0 +1,152 @@
+{
+  "namespace": "TestCoverage.S17",
+  "layers": [
+    {
+      "name": "traveler_safety",
+      "ordValue": 4,
+      "definition": "旅行者の安全・法的制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "external_service",
+      "ordValue": 3,
+      "definition": "航空会社・ホテルAPI等への外部依存",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "preference",
+      "ordValue": 2,
+      "definition": "ユーザの旅行嗜好・予算設定",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "recommendation",
+      "ordValue": 1,
+      "definition": "AIが生成するプラン提案・最適化",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "ts1",
+      "layerName": "traveler_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ts2",
+      "layerName": "traveler_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "es1",
+      "layerName": "external_service",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "es2",
+      "layerName": "external_service",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "ts1"
+      ]
+    },
+    {
+      "id": "pref1",
+      "layerName": "preference",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "ts1"
+      ]
+    },
+    {
+      "id": "pref2",
+      "layerName": "preference",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "ts2",
+        "es1"
+      ]
+    },
+    {
+      "id": "pref3",
+      "layerName": "preference",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        "es2"
+      ]
+    },
+    {
+      "id": "rec1",
+      "layerName": "recommendation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "pref1",
+        "es1"
+      ]
+    },
+    {
+      "id": "rec2",
+      "layerName": "recommendation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "pref2"
+      ]
+    },
+    {
+      "id": "rec3",
+      "layerName": "recommendation",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "pref3",
+        "es2"
+      ]
+    },
+    {
+      "id": "rec4",
+      "layerName": "recommendation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "rec1"
+      ]
+    }
+  ]
+}

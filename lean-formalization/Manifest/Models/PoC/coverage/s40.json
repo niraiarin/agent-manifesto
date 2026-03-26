@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "insurance_regulation",
+      "definition": "保険業法・個人情報保護法・料率算定基準の法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "actuarial_standard",
+      "definition": "アクチュアリー基準・リスク評価手法・公平性要件",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "scoring_model",
+      "definition": "運転スコアリングモデル・特徴量設計・閾値設定",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "product_config",
+      "definition": "商品設定・割引率・通知・レポート形式",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "rate_filing_compliance",
+      "layerName": "insurance_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "driver_data_privacy",
+      "layerName": "insurance_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "loss_ratio_target",
+      "layerName": "actuarial_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "risk_factor_fairness",
+      "layerName": "actuarial_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "credibility_weighting_model",
+      "layerName": "actuarial_standard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "driving_behavior_score",
+      "layerName": "scoring_model",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "trip_segmentation_algorithm",
+      "layerName": "scoring_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "harsh_event_detection",
+      "layerName": "scoring_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "premium_discount_schedule",
+      "layerName": "product_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "driver_feedback_frequency",
+      "layerName": "product_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "renewal_pricing_algorithm",
+      "layerName": "product_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

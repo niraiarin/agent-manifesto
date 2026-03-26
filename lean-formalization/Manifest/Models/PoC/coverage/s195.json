@@ -1,0 +1,246 @@
+{
+  "namespace": "Scenario195",
+  "layers": [
+    {
+      "name": "lifeCritical",
+      "ordValue": 5,
+      "definition": "クルーの生命に直結する不変条件。違反はミッション中止。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "宇宙環境の物理的制約。変更不可能。",
+      "derivedFrom": [
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "logistics",
+      "ordValue": 3,
+      "definition": "補給・在庫に関するリソース制約。補給サイクルに依存。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "operations",
+      "ordValue": 2,
+      "definition": "地上管制が設定する運用方針。ミッションフェーズで変動。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIが自律的に調整する最適化戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "運用データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "life1",
+      "layerName": "lifeCritical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "life2",
+      "layerName": "lifeCritical",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "life3",
+      "layerName": "lifeCritical",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".life1"
+      ]
+    },
+    {
+      "id": "phy1",
+      "layerName": "physics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physics",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "log1",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".life2"
+      ]
+    },
+    {
+      "id": "log2",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".phy2"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operations",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".life1",
+        ".phy1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operations",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".log1",
+        ".log2"
+      ]
+    },
+    {
+      "id": "opr3",
+      "layerName": "operations",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".life3",
+        ".phy1"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".life2",
+        ".life3"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".log1",
+        ".log2",
+        ".phy2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".life1",
+        ".opr1"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".opr2",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".opr1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt3",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opr3",
+        ".opt5"
+      ]
+    }
+  ]
+}

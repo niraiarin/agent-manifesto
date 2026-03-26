@@ -1,0 +1,234 @@
+{
+  "namespace": "Scenario199",
+  "layers": [
+    {
+      "name": "lunarPhysics",
+      "ordValue": 4,
+      "definition": "月面環境の物理法則。変更不可能。",
+      "derivedFrom": [
+        "C1",
+        "C6",
+        "C7"
+      ]
+    },
+    {
+      "name": "structural",
+      "ordValue": 3,
+      "definition": "構造安全性の工学的要件。物理法則から導出。",
+      "derivedFrom": [
+        "C1",
+        "C6",
+        "C7",
+        "H3"
+      ]
+    },
+    {
+      "name": "logistics",
+      "ordValue": 2,
+      "definition": "資材・通信のリソース制約。技術進歩で変動しうる。",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "construction",
+      "ordValue": 1,
+      "definition": "建設手法と自律ロボットの運用方針。",
+      "derivedFrom": [
+        "C2",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "実証が必要な技術的仮説。",
+      "derivedFrom": [
+        "H1",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "lph1",
+      "layerName": "lunarPhysics",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lph2",
+      "layerName": "lunarPhysics",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lph3",
+      "layerName": "lunarPhysics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "str1",
+      "layerName": "structural",
+      "justification": [
+        "C1",
+        "H3"
+      ],
+      "dependencies": [
+        ".lph3"
+      ]
+    },
+    {
+      "id": "str2",
+      "layerName": "structural",
+      "justification": [
+        "C6",
+        "C7"
+      ],
+      "dependencies": [
+        ".lph1",
+        ".lph2"
+      ]
+    },
+    {
+      "id": "str3",
+      "layerName": "structural",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".lph2",
+        ".lph3",
+        ".str1"
+      ]
+    },
+    {
+      "id": "lgs1",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lgs2",
+      "layerName": "logistics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lgs3",
+      "layerName": "logistics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".str2",
+        ".lgs1"
+      ]
+    },
+    {
+      "id": "con1",
+      "layerName": "construction",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".lgs2"
+      ]
+    },
+    {
+      "id": "con2",
+      "layerName": "construction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".str1",
+        ".str2",
+        ".lgs1"
+      ]
+    },
+    {
+      "id": "con3",
+      "layerName": "construction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".lgs2",
+        ".con1"
+      ]
+    },
+    {
+      "id": "con4",
+      "layerName": "construction",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".lgs2",
+        ".con2"
+      ]
+    },
+    {
+      "id": "con5",
+      "layerName": "construction",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".str3",
+        ".con2",
+        ".con3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".lgs1",
+        ".con2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".str1",
+        ".str3"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".con5",
+        ".hyp1"
+      ]
+    }
+  ]
+}

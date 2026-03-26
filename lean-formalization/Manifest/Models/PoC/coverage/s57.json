@@ -1,0 +1,242 @@
+{
+  "namespace": "SmartIrrigation",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "水資源の過剰使用を防ぎ、地域の水利権を遵守する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "作物への水不足による枯死を防ぐことが最優先"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "農家が最終的な灌漑スケジュールを承認する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "土壌水分センサーと気象データを統合する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "灌漑コストを前年比10%削減する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "有機農法の基準を満たす水源のみを使用する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "センサー精度が根本的に限界に達した場合",
+        "content": "土壌水分センサーの測定誤差は5%以内"
+      },
+      {
+        "id": "H2",
+        "basis": "C4",
+        "refutation": "気候モデルが根本的に変化した場合",
+        "content": "3日先までの降雨予測は灌漑計画に有効"
+      },
+      {
+        "id": "H3",
+        "basis": "C2,C5",
+        "refutation": "水価格が極端に変動した場合",
+        "content": "点滴灌漑は散水灌漑より30%節水可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C1",
+        "refutation": "水利権制度が廃止された場合",
+        "content": "地下水位のモニタリングで持続可能性を評価可能"
+      },
+      {
+        "id": "H5",
+        "basis": "H2",
+        "refutation": "衛星データの信頼性が低下した場合",
+        "content": "衛星画像による作物ストレス検出が補助的に有効"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "resource",
+      "ordValue": 3,
+      "definition": "水資源・法規制に関する不変条件",
+      "derivedFrom": [
+        "C1",
+        "C6"
+      ]
+    },
+    {
+      "name": "cropSafety",
+      "ordValue": 2,
+      "definition": "作物保全に関する制約",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "planning",
+      "ordValue": 1,
+      "definition": "灌漑計画の運用方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化する制御戦略",
+      "derivedFrom": [
+        "H1",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "res1",
+      "layerName": "resource",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "res2",
+      "layerName": "resource",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "crop1",
+      "layerName": "cropSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "res1"
+      ]
+    },
+    {
+      "id": "crop2",
+      "layerName": "cropSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "crop3",
+      "layerName": "cropSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "res2"
+      ]
+    },
+    {
+      "id": "plan1",
+      "layerName": "planning",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        "crop1"
+      ]
+    },
+    {
+      "id": "plan2",
+      "layerName": "planning",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        "crop1",
+        "res1"
+      ]
+    },
+    {
+      "id": "plan3",
+      "layerName": "planning",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "crop2"
+      ]
+    },
+    {
+      "id": "plan4",
+      "layerName": "planning",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "crop3"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "plan1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "res1",
+        "plan2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "plan1",
+        "plan3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        "plan4"
+      ]
+    }
+  ]
+}

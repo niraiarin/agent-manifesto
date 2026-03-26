@@ -1,0 +1,1508 @@
+[
+  {
+    "scenario_id": 21,
+    "project": "株式市場リアルタイム分析ダッシュボード",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "market_constraint",
+          "definition": "金融規制・法的制約。変更不可",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "data_postulate",
+          "definition": "市場データ取得の前提。外部取引所APIに依存",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "analysis_principle",
+          "definition": "分析ロジックの設計原則。変更可能だが影響大",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "display_hypothesis",
+          "definition": "UI表示の仮説。ユーザーフィードバックで変更",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "regulatory_compliance",
+          "layerName": "market_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_insider_trading_facilitation",
+          "layerName": "market_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "realtime_data_available",
+          "layerName": "data_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "api_latency_under_100ms",
+          "layerName": "data_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "technical_indicator_accuracy",
+          "layerName": "analysis_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "anomaly_detection_threshold",
+          "layerName": "analysis_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "chart_refresh_rate",
+          "layerName": "display_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "color_scheme_for_alerts",
+          "layerName": "display_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dashboard_layout",
+          "layerName": "display_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "risk_warning_display",
+          "layerName": "market_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "historical_data_retention",
+          "layerName": "data_postulate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 22,
+    "project": "多言語翻訳チャットボット",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 10,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "ethical_constraint",
+          "definition": "倫理・プライバシー制約。翻訳の中立性とデータ保護",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "linguistic_postulate",
+          "definition": "言語学的前提。対応言語と翻訳品質の基盤",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "interaction_principle",
+          "definition": "対話設計の原則。UXとコンテキスト管理",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "feature_hypothesis",
+          "definition": "機能仮説。検証により変更可能",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "translation_neutrality",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "user_data_privacy",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "supported_language_pairs",
+          "layerName": "linguistic_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "translation_quality_baseline",
+          "layerName": "linguistic_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "context_window_size",
+          "layerName": "interaction_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fallback_to_human_translator",
+          "layerName": "interaction_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "slang_handling",
+          "layerName": "feature_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "emoji_translation",
+          "layerName": "feature_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "conversation_summary",
+          "layerName": "feature_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_harmful_content_translation",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 23,
+    "project": "電力グリッド需給予測 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "grid_safety_constraint",
+          "definition": "電力系統の安全制約。停電防止・周波数維持は絶対",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "physical_postulate",
+          "definition": "物理法則・電力工学の前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "regulatory_principle",
+          "definition": "電力市場規制と運用ルール",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "forecast_boundary",
+          "definition": "予測モデルの境界条件",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "tuning_hypothesis",
+          "definition": "パラメータ調整の仮説。実運用データで検証",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "renewable_priority_dispatch (regulatory_principle, ord=3) depends on solar_forecast_accuracy (tuning_hypothesis, ord=0)",
+          "explanation": "再エネ優先給電ルール（規制層 ord=3）が太陽光発電予測精度（仮説層 ord=0）に依存。依存先の ord が依存元より低いため単調性違反",
+          "resolution": "H4由来のため LLM が自律修正: solar_forecast_accuracy を forecast_boundary (ord=2) に昇格。ただし regulatory_principle (ord=3) への依存であるため ord=3 以上が必要 → regulatory_principle に昇格",
+          "fix_applied": true,
+          "fixed_assignment": {
+            "proposition": "solar_forecast_accuracy",
+            "layerName": "regulatory_principle",
+            "justification": [
+              "H4",
+              "C5"
+            ]
+          }
+        }
+      ],
+      "propositions": [
+        {
+          "id": "frequency_stability",
+          "layerName": "grid_safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "blackout_prevention",
+          "layerName": "grid_safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "kirchhoff_laws",
+          "layerName": "physical_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "thermal_limits",
+          "layerName": "physical_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "market_clearing_rules",
+          "layerName": "regulatory_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "renewable_priority_dispatch",
+          "layerName": "regulatory_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "weather_dependency",
+          "layerName": "forecast_boundary",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "demand_seasonality",
+          "layerName": "forecast_boundary",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "solar_forecast_accuracy",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "wind_ramp_prediction",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ev_charging_impact",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reserve_margin_calculation",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 24,
+    "project": "自動車整備予測メンテナンス AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 10,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "safety_constraint",
+          "definition": "車両安全に関わる制約。整備不良による事故防止",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "vehicle_postulate",
+          "definition": "車両工学の前提。部品劣化モデルとセンサーデータ",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "maintenance_principle",
+          "definition": "整備計画の原則。コストと安全のバランス",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "scheduling_hypothesis",
+          "definition": "スケジューリングの仮説。運用データで調整",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "brake_system_priority",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "recall_compliance",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "obd_data_availability",
+          "layerName": "vehicle_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "component_degradation_model",
+          "layerName": "vehicle_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cost_optimization_target",
+          "layerName": "maintenance_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "preventive_vs_reactive_ratio",
+          "layerName": "maintenance_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "oil_change_interval",
+          "layerName": "scheduling_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "tire_wear_prediction",
+          "layerName": "scheduling_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "seasonal_maintenance_window",
+          "layerName": "scheduling_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "parts_inventory_forecast",
+          "layerName": "maintenance_principle",
+          "justification": [
+            "C4",
+            "H2",
+            "H3"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 25,
+    "project": "子育て支援 AI アドバイザー",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "child_safety_constraint",
+          "definition": "子どもの安全と権利の保護。絶対的制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "developmental_postulate",
+          "definition": "発達心理学・小児医学の科学的知見",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "parenting_principle",
+          "definition": "育児方針の原則。家庭の価値観を尊重",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "advice_hypothesis",
+          "definition": "具体的アドバイスの仮説。エビデンスで更新",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "emergency_escalation",
+          "layerName": "child_safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_medical_diagnosis",
+          "layerName": "child_safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "age_appropriate_milestones",
+          "layerName": "developmental_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "attachment_theory_basis",
+          "layerName": "developmental_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "respect_cultural_diversity",
+          "layerName": "parenting_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "parent_autonomy",
+          "layerName": "parenting_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "evidence_based_only",
+          "layerName": "parenting_principle",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sleep_training_method",
+          "layerName": "advice_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "screen_time_recommendation",
+          "layerName": "advice_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "feeding_schedule_suggestion",
+          "layerName": "advice_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "developmental_delay_alert",
+          "layerName": "child_safety_constraint",
+          "justification": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 26,
+    "project": "サプライチェーン最適化 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "compliance_constraint",
+          "definition": "法規制・契約上の制約。輸出管理・品質基準",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "logistics_postulate",
+          "definition": "物流・在庫管理の前提条件",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "optimization_principle",
+          "definition": "最適化の設計原則。コスト・リードタイム・リスクのバランス",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "parameter_hypothesis",
+          "definition": "最適化パラメータの仮説。実運用で調整",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "export_control_compliance",
+          "layerName": "compliance_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "quality_standard_adherence",
+          "layerName": "compliance_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "lead_time_variability",
+          "layerName": "logistics_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "multi_tier_supplier_visibility",
+          "layerName": "logistics_postulate",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safety_stock_policy",
+          "layerName": "optimization_principle",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "single_source_risk_mitigation",
+          "layerName": "optimization_principle",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reorder_point_calculation",
+          "layerName": "parameter_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "demand_forecast_horizon",
+          "layerName": "parameter_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "transport_mode_selection",
+          "layerName": "parameter_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "disruption_scenario_modeling",
+          "layerName": "optimization_principle",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "customs_clearance_time",
+          "layerName": "logistics_postulate",
+          "justification": [
+            "C1",
+            "C3"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 27,
+    "project": "スポーツ選手パフォーマンス分析 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "athlete_safety_constraint",
+          "definition": "選手の健康・安全に関する制約。怪我予防が最優先",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "sports_science_postulate",
+          "definition": "スポーツ科学・運動生理学の前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "coaching_principle",
+          "definition": "コーチングの原則。データと経験のバランス",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "metric_hypothesis",
+          "definition": "パフォーマンス指標の仮説。シーズンデータで検証",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "injury_risk_threshold",
+          "layerName": "athlete_safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "anti_doping_compliance",
+          "layerName": "athlete_safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "biomechanical_model",
+          "layerName": "sports_science_postulate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "physiological_load_monitoring",
+          "layerName": "sports_science_postulate",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "coach_override_authority",
+          "layerName": "coaching_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "training_periodization",
+          "layerName": "coaching_principle",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sprint_speed_benchmark",
+          "layerName": "metric_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fatigue_index_formula",
+          "layerName": "metric_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "match_readiness_score",
+          "layerName": "metric_hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "recovery_protocol",
+          "layerName": "sports_science_postulate",
+          "justification": [
+            "C1",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "tactical_pattern_detection",
+          "layerName": "coaching_principle",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 28,
+    "project": "気象予報精度改善 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "physical_law_constraint",
+          "definition": "大気物理の基本法則。熱力学・流体力学は不変",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "observational_postulate",
+          "definition": "観測データの前提。観測網とデータ品質",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C2",
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "modeling_principle",
+          "definition": "数値モデリングの原則。解像度とパラメタリゼーション",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "verification_boundary",
+          "definition": "検証の境界条件。精度評価の枠組み",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H4"
+          ]
+        },
+        {
+          "name": "tuning_hypothesis",
+          "definition": "チューニングの仮説。実験で調整",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "navier_stokes_basis",
+          "layerName": "physical_law_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "thermodynamic_consistency",
+          "layerName": "physical_law_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "observation_network_coverage",
+          "layerName": "observational_postulate",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "satellite_data_quality",
+          "layerName": "observational_postulate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "grid_resolution_target",
+          "layerName": "modeling_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "convection_parameterization",
+          "layerName": "modeling_principle",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "forecast_skill_score",
+          "layerName": "verification_boundary",
+          "justification": [
+            "C5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ensemble_spread_calibration",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ml_postprocessing_weight",
+          "layerName": "tuning_hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data_assimilation_cycle",
+          "layerName": "observational_postulate",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "boundary_condition_update",
+          "layerName": "modeling_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 29,
+    "project": "介護施設見守り AI",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "resident_safety_constraint",
+          "definition": "入居者の生命・尊厳の保護。絶対的制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "privacy_postulate",
+          "definition": "プライバシー・個人情報保護の前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "care_principle",
+          "definition": "介護の原則。人間の介護者との協働",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "monitoring_boundary",
+          "definition": "見守りの境界条件。センサーと判定基準",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C7",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "alert_hypothesis",
+          "definition": "アラート設定の仮説。運用で調整",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "_monotonicity_violations": [
+        {
+          "violation": "staff_notification_protocol (care_principle, ord=3) depends on vital_sign_anomaly_level (alert_hypothesis, ord=0)",
+          "explanation": "介護スタッフへの通知プロトコル（介護原則層 ord=3）がバイタルサイン異常レベル（仮説層 ord=0）に依存。依存先の ord が依存元より低いため単調性違反",
+          "resolution": "H5由来のため LLM が自律修正: vital_sign_anomaly_level を monitoring_boundary (ord=2) に昇格。ただし care_principle (ord=3) への依存なので ord=3 以上が必要 → care_principle に昇格",
+          "fix_applied": true,
+          "fixed_assignment": {
+            "proposition": "vital_sign_anomaly_level",
+            "layerName": "care_principle",
+            "justification": [
+              "H5",
+              "C5"
+            ]
+          }
+        }
+      ],
+      "propositions": [
+        {
+          "id": "fall_detection_immediate",
+          "layerName": "resident_safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dignity_preservation",
+          "layerName": "resident_safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "camera_placement_consent",
+          "layerName": "privacy_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data_retention_policy",
+          "layerName": "privacy_postulate",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "staff_notification_protocol",
+          "layerName": "care_principle",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "human_verification_required",
+          "layerName": "care_principle",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sensor_coverage_map",
+          "layerName": "monitoring_boundary",
+          "justification": [
+            "C7",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "nighttime_monitoring_mode",
+          "layerName": "monitoring_boundary",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "wandering_alert_threshold",
+          "layerName": "alert_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "vital_sign_anomaly_level",
+          "layerName": "alert_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "emergency_call_trigger",
+          "layerName": "resident_safety_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "family_notification_rule",
+          "layerName": "care_principle",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 30,
+    "project": "クラウドコスト最適化 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "sla_constraint",
+          "definition": "SLA・可用性の制約。コスト削減でサービス品質を犠牲にしない",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "infrastructure_postulate",
+          "definition": "クラウドインフラの前提。マルチクラウド・料金体系",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "optimization_principle",
+          "definition": "コスト最適化の原則。自動化とガバナンスのバランス",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "sizing_hypothesis",
+          "definition": "サイジング・リザベーションの仮説。利用実績で調整",
+          "ordValue": 0,
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "availability_guarantee",
+          "layerName": "sla_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "disaster_recovery_rpo",
+          "layerName": "sla_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "multi_cloud_strategy",
+          "layerName": "infrastructure_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pricing_model_awareness",
+          "layerName": "infrastructure_postulate",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "auto_scaling_policy",
+          "layerName": "optimization_principle",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "cost_anomaly_detection",
+          "layerName": "optimization_principle",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "rightsizing_recommendation",
+          "layerName": "sizing_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reserved_instance_ratio",
+          "layerName": "sizing_hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "spot_instance_tolerance",
+          "layerName": "sizing_hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "budget_alert_threshold",
+          "layerName": "optimization_principle",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "idle_resource_cleanup",
+          "layerName": "sizing_hypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

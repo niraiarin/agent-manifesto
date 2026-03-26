@@ -1,0 +1,3121 @@
+[
+  {
+    "scenario_id": 81,
+    "project": "害虫発生予測 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 18,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "PestPrediction",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 3,
+          "definition": "農薬散布安全基準・法規制に基づく不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 2,
+          "definition": "気象・土壌・害虫生態に関する外部依存前提",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "農家が設定する運用方針・閾値",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の予測モデル仮説",
+          "derivedFrom": [
+            "H4",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env3",
+          "layerName": "environment",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            "safe2",
+            "env1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "safe3"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "env2"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "env3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "env1",
+            "env2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol1",
+            "pol2"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "env3",
+            "pol4"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol3",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp3",
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H7"
+          ],
+          "dependencies": [
+            "pol5",
+            "hyp1"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "農薬散布量は法定上限を超えてはならない"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "食品安全基準の残留農薬値を遵守する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "散布判断の最終権限は農家にある"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "予測結果は72時間以内の精度を保証範囲とする"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "有機農法圃場では化学農薬の提案を禁止する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "C4",
+            "refutation": "気象データAPIが長期停止した場合",
+            "content": "気象データは外部APIから安定的に取得できる"
+          },
+          {
+            "id": "H2",
+            "basis": "C4,外部知識",
+            "refutation": "新種害虫の侵入で既存モデルが無効化",
+            "content": "害虫の発生パターンは過去データから予測可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C3",
+            "refutation": "農家が閾値設定を放棄した場合",
+            "content": "散布閾値は農家が作物ごとに適切に設定する"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "モデル精度が50%以下に低下",
+            "content": "機械学習モデルの予測精度は実用水準を維持する"
+          },
+          {
+            "id": "H5",
+            "basis": "外部知識",
+            "refutation": "土壌センサーの故障率が30%超過",
+            "content": "土壌湿度データはセンサーから取得可能"
+          },
+          {
+            "id": "H6",
+            "basis": "C3,H4",
+            "refutation": "農家が予測を完全無視する運用",
+            "content": "予測結果に基づく散布計画は農家の意思決定を支援する"
+          },
+          {
+            "id": "H7",
+            "basis": "H2,H5",
+            "refutation": "気候変動で過去パターンが完全崩壊",
+            "content": "季節性パターンは害虫発生の主要予測因子である"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 82,
+    "project": "AR ショッピングアシスタント AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 17,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "ARShopping",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 3,
+          "definition": "個人情報保護・景品表示法に基づく不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "platform",
+          "ordValue": 2,
+          "definition": "ARデバイス・ネットワーク等の外部依存前提",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "店舗・ブランドが設定する表示方針",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証のUX・推薦仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "plat1",
+          "layerName": "platform",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "plat2",
+          "layerName": "platform",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "plat3",
+          "layerName": "platform",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe2",
+            "plat1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "safe3"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            "plat2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "plat1",
+            "pol1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "pol2",
+            "pol3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "plat3",
+            "pol4"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            "hyp2",
+            "hyp3"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol1",
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp4",
+            "hyp5"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "ユーザーの顔・体型データは端末内処理のみで外部送信しない"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "価格表示は景品表示法に準拠し誤認を招かない"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "AR表示の最終的なON/OFF権限はユーザーにある"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "推薦商品にはスポンサー表示を明示する"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "未成年ユーザーへの年齢制限商品表示を禁止する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "ARデバイスの普及率が想定以下",
+            "content": "ARデバイスのカメラ精度は商品認識に十分である"
+          },
+          {
+            "id": "H2",
+            "basis": "外部知識",
+            "refutation": "5G/Wi-Fiが店舗内で不安定",
+            "content": "店舗内ネットワーク帯域はAR描画に十分"
+          },
+          {
+            "id": "H3",
+            "basis": "C3,H1",
+            "refutation": "ユーザーがAR表示を煩わしく感じる",
+            "content": "AR商品オーバーレイは購買意思決定を促進する"
+          },
+          {
+            "id": "H4",
+            "basis": "C4,H2",
+            "refutation": "推薦精度が低くユーザー離脱",
+            "content": "購買履歴ベースの推薦は店頭でも有効"
+          },
+          {
+            "id": "H5",
+            "basis": "外部知識",
+            "refutation": "端末処理能力の不足でリアルタイム不可",
+            "content": "端末のGPU性能はリアルタイムAR描画に十分"
+          },
+          {
+            "id": "H6",
+            "basis": "H1,H3",
+            "refutation": "バーチャル試着の精度不足で返品率増加",
+            "content": "バーチャル試着は返品率を低減する"
+          },
+          {
+            "id": "H7",
+            "basis": "H3,H4",
+            "refutation": "情報過多でユーザーが選択疲労",
+            "content": "関連商品のAR表示はクロスセルを促進する"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 83,
+    "project": "血液検査異常検知 AI",
+    "num_c": 6,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 20,
+    "num_deps": 30,
+    "model_spec": {
+      "namespace": "BloodTestAnomaly",
+      "layers": [
+        {
+          "name": "regulatory",
+          "ordValue": 4,
+          "definition": "医療法・薬機法・IVD規制に基づく絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C6"
+          ]
+        },
+        {
+          "name": "clinical",
+          "ordValue": 3,
+          "definition": "臨床ガイドラインに基づく医学的前提",
+          "derivedFrom": [
+            "C3",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "operational",
+          "ordValue": 2,
+          "definition": "検査機関の運用方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "model",
+          "ordValue": 1,
+          "definition": "異常検知モデルの設計判断",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の検出性能仮説",
+          "derivedFrom": [
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "reg1",
+          "layerName": "regulatory",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulatory",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg3",
+          "layerName": "regulatory",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "clin1",
+          "layerName": "clinical",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            "reg1"
+          ]
+        },
+        {
+          "id": "clin2",
+          "layerName": "clinical",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "reg2"
+          ]
+        },
+        {
+          "id": "clin3",
+          "layerName": "clinical",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "op1",
+          "layerName": "operational",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "reg1",
+            "clin1"
+          ]
+        },
+        {
+          "id": "op2",
+          "layerName": "operational",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "reg3"
+          ]
+        },
+        {
+          "id": "op3",
+          "layerName": "operational",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "clin2"
+          ]
+        },
+        {
+          "id": "op4",
+          "layerName": "operational",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            "reg2",
+            "clin3"
+          ]
+        },
+        {
+          "id": "mod1",
+          "layerName": "model",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "clin1",
+            "op1"
+          ]
+        },
+        {
+          "id": "mod2",
+          "layerName": "model",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "op2",
+            "op3"
+          ]
+        },
+        {
+          "id": "mod3",
+          "layerName": "model",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "clin2",
+            "op4"
+          ]
+        },
+        {
+          "id": "mod4",
+          "layerName": "model",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "mod1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "mod1",
+            "mod2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            "mod3",
+            "mod4"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "viol1",
+          "layerName": "model",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "viol2",
+          "layerName": "clinical",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "op3"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            "hyp2",
+            "hyp3"
+          ]
+        }
+      ],
+      "monotonicity_violations": [
+        {
+          "from": "viol1",
+          "to": "hyp1",
+          "from_layer": "model",
+          "from_ord": 1,
+          "to_layer": "hypothesis",
+          "to_ord": 0,
+          "description": "model層(ord=1)の命題viol1がhypothesis層(ord=0)の命題hyp1に依存: 依存先のordが依存元より低い",
+          "resolution": "viol1をhypothesis層に降格するか、hyp1をmodel層に昇格"
+        },
+        {
+          "from": "viol2",
+          "to": "op3",
+          "from_layer": "clinical",
+          "from_ord": 3,
+          "to_layer": "operational",
+          "to_ord": 2,
+          "description": "clinical層(ord=3)の命題viol2がoperational層(ord=2)の命題op3に依存: 依存先のordが依存元より低い",
+          "resolution": "viol2をoperational層に降格するか、op3をclinical層に昇格"
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "異常検知結果は医師の最終判断なしに患者に通知しない"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "偽陰性率を1%未満に維持する（見逃し防止優先）"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "異常値の定義は国際臨床ガイドラインに準拠する"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "24時間以内に全検体の結果を返す"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "個人の検査履歴は5年間保持し比較可能とする"
+          },
+          {
+            "id": "C6",
+            "source": "humanDecision",
+            "content": "患者データの匿名化なしの二次利用を禁止する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "C3,外部知識",
+            "refutation": "ガイドラインが大幅改定された場合",
+            "content": "基準値範囲は年齢・性別で十分に層別化されている"
+          },
+          {
+            "id": "H2",
+            "basis": "C2,外部知識",
+            "refutation": "新規バイオマーカーの発見で既存指標が陳腐化",
+            "content": "既存の血液検査項目で主要疾患の早期検出が可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C4",
+            "refutation": "検査機器の故障率が想定を超過",
+            "content": "自動分析装置のスループットは処理要件を満たす"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "訓練データにバイアスが存在",
+            "content": "過去の検査データで訓練した異常検知モデルは汎化する"
+          },
+          {
+            "id": "H5",
+            "basis": "C5,H3",
+            "refutation": "データ形式の非互換が蓄積",
+            "content": "時系列比較により個人の経年変化を検出可能"
+          },
+          {
+            "id": "H6",
+            "basis": "H2,H4",
+            "refutation": "多変量解析の次元の呪いで精度劣化",
+            "content": "複数項目の組合せ異常は単項目より検出感度が高い"
+          },
+          {
+            "id": "H7",
+            "basis": "H4,H6",
+            "refutation": "実臨床でのモデル精度が検証環境を大幅に下回る",
+            "content": "深層学習ベースの異常検知は従来統計手法を上回る"
+          },
+          {
+            "id": "H8",
+            "basis": "H5,H6",
+            "refutation": "季節変動等の交絡因子で偽陽性が増大",
+            "content": "経年変化と急性変化の区別は自動化可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 84,
+    "project": "自動車リコール影響分析 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "RecallAnalysis",
+      "layers": [
+        {
+          "name": "regulation",
+          "ordValue": 3,
+          "definition": "道路運送車両法・リコール届出に基づく法的義務",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "supply_chain",
+          "ordValue": 2,
+          "definition": "部品サプライチェーン・車両登録データの外部依存",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "メーカーが設定する優先順位・通知方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の影響範囲推定仮説",
+          "derivedFrom": [
+            "H4",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg3",
+          "layerName": "regulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sc1",
+          "layerName": "supply_chain",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sc2",
+          "layerName": "supply_chain",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sc3",
+          "layerName": "supply_chain",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "reg1"
+          ]
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "reg1",
+            "reg2"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "reg3",
+            "sc1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "sc2"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            "sc3"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "reg2",
+            "sc1",
+            "sc2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "sc1",
+            "sc2",
+            "pol1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol2",
+            "pol3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "pol4",
+            "pol5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            "hyp3",
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp5",
+            "hyp6"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "安全に関わる不具合は発見後30日以内に国交省へ届出する"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "対象車両の所有者全員に確実に通知する義務がある"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "リコール対象部品のトレーサビリティを完全に確保する"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "安全リスクの高い車両から優先的に対応する"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "修理完了率を95%以上に維持する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "C3,外部知識",
+            "refutation": "部品メーカーが倒産しデータ消失",
+            "content": "部品供給元のデータベースは照会可能な状態にある"
+          },
+          {
+            "id": "H2",
+            "basis": "C2,外部知識",
+            "refutation": "中古車転売で所有者追跡不能",
+            "content": "車両登録データから現在の所有者を特定可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C4,H1",
+            "refutation": "修理拠点のキャパシティ不足",
+            "content": "地域別の修理対応キャパシティは推定可能"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "部品ロット番号の記録が不完全",
+            "content": "部品ロット情報から影響車両を網羅的に特定可能"
+          },
+          {
+            "id": "H5",
+            "basis": "C1,外部知識",
+            "refutation": "類似不具合のDB構造が変更",
+            "content": "過去のリコール事例データベースは参照可能"
+          },
+          {
+            "id": "H6",
+            "basis": "H2,H4",
+            "refutation": "地域間の車両移動パターンが想定外",
+            "content": "地域別の影響台数は登録データから推定可能"
+          },
+          {
+            "id": "H7",
+            "basis": "H3,H6",
+            "refutation": "部品在庫が全国的に枯渇",
+            "content": "修理部品の在庫・調達リードタイムは予測可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 85,
+    "project": "ポッドキャスト要約 AI",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 3,
+    "num_props": 15,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "PodcastSummary",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 2,
+          "definition": "著作権法・引用ルールに基づく不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "プラットフォーム・配信者が設定する要約方針",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の要約品質・ユーザー体験仮説",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            "safe2"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "safe3"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "safe1",
+            "safe2"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            "safe3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "pol1",
+            "pol2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "pol3",
+            "pol4"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp3"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp5",
+            "hyp6"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "要約は原著作物の引用範囲内に留め、全文書き起こしは行わない"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "配信者のオプトアウト要求には即時対応する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "要約に含まれる発言は文脈を歪めない"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "要約の長さは原音声の10%以内とする"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "C2,外部知識",
+            "refutation": "音声認識精度が言語・方言で大幅に低下",
+            "content": "音声認識モデルは主要言語で十分な精度を持つ"
+          },
+          {
+            "id": "H2",
+            "basis": "C3,H1",
+            "refutation": "話者分離が不正確で発言の帰属を誤る",
+            "content": "複数話者の分離・識別は実用水準で可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C1,H1",
+            "refutation": "専門用語の多い分野で要約品質が著しく低下",
+            "content": "ドメイン特化なしでも汎用要約は有用"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H3",
+            "refutation": "ユーザーが要約より原音声を常に好む",
+            "content": "要約はポッドキャスト発見・選択を促進する"
+          },
+          {
+            "id": "H5",
+            "basis": "H2,H3",
+            "refutation": "重要な議論のニュアンスが失われる",
+            "content": "キーポイント抽出は全体要約より有用"
+          },
+          {
+            "id": "H6",
+            "basis": "H1,H2",
+            "refutation": "タイムスタンプ精度が不十分",
+            "content": "要約からの原音声該当箇所へのリンクは実現可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 86,
+    "project": "ダム管理支援 AI",
+    "num_c": 6,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 21,
+    "num_deps": 32,
+    "model_spec": {
+      "namespace": "DamManagement",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 4,
+          "definition": "河川法・ダム操作規則に基づく絶対安全条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "hydrology",
+          "ordValue": 3,
+          "definition": "水文学的前提・気象外部依存",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "operational",
+          "ordValue": 2,
+          "definition": "管理者が設定する運用基準",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "C6",
+            "H3"
+          ]
+        },
+        {
+          "name": "prediction",
+          "ordValue": 1,
+          "definition": "流入量予測・貯水位最適化モデル",
+          "derivedFrom": [
+            "H4",
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の長期運用仮説",
+          "derivedFrom": [
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "saf1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "saf3",
+          "layerName": "safety",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hyd1",
+          "layerName": "hydrology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "hyd2",
+          "layerName": "hydrology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "saf1"
+          ]
+        },
+        {
+          "id": "hyd3",
+          "layerName": "hydrology",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "op1",
+          "layerName": "operational",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "saf1",
+            "saf2"
+          ]
+        },
+        {
+          "id": "op2",
+          "layerName": "operational",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "saf3",
+            "hyd1"
+          ]
+        },
+        {
+          "id": "op3",
+          "layerName": "operational",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            "hyd2"
+          ]
+        },
+        {
+          "id": "op4",
+          "layerName": "operational",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "saf2",
+            "hyd3"
+          ]
+        },
+        {
+          "id": "op5",
+          "layerName": "operational",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            "hyd1",
+            "hyd2"
+          ]
+        },
+        {
+          "id": "pred1",
+          "layerName": "prediction",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyd1",
+            "op1"
+          ]
+        },
+        {
+          "id": "pred2",
+          "layerName": "prediction",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "op2",
+            "op3"
+          ]
+        },
+        {
+          "id": "pred3",
+          "layerName": "prediction",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyd3",
+            "op4"
+          ]
+        },
+        {
+          "id": "pred4",
+          "layerName": "prediction",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            "pred1",
+            "pred2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            "pred1",
+            "pred3"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            "pred4"
+          ]
+        },
+        {
+          "id": "viol1",
+          "layerName": "operational",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "pred2"
+          ]
+        },
+        {
+          "id": "viol2",
+          "layerName": "hydrology",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "op5"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "pred5",
+          "layerName": "prediction",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "op5",
+            "pred4"
+          ]
+        }
+      ],
+      "monotonicity_violations": [
+        {
+          "from": "viol1",
+          "to": "pred2",
+          "from_layer": "operational",
+          "from_ord": 2,
+          "to_layer": "prediction",
+          "to_ord": 1,
+          "description": "operational層(ord=2)の命題viol1がprediction層(ord=1)の命題pred2に依存: 依存先のordが依存元より低い",
+          "resolution": "viol1をprediction層に降格するか、pred2をoperational層に昇格"
+        },
+        {
+          "from": "viol2",
+          "to": "op5",
+          "from_layer": "hydrology",
+          "from_ord": 3,
+          "to_layer": "operational",
+          "to_ord": 2,
+          "description": "hydrology層(ord=3)の命題viol2がoperational層(ord=2)の命題op5に依存: 依存先のordが依存元より低い",
+          "resolution": "viol2をoperational層に降格するか、op5をhydrology層に昇格"
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "放流操作は人間の最終承認なしに実行しない"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "設計洪水流量を超える場合は非常用洪水吐きを開放する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "下流域住民への放流通知は操作の30分前に行う"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "利水・治水の優先順位は季節と水位で決定する"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "堆砂量の年間計測を実施し貯水容量を更新する"
+          },
+          {
+            "id": "C6",
+            "source": "humanDecision",
+            "content": "環境放流量の最低基準を下回らない"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "気象庁のデータ配信が長期停止",
+            "content": "気象レーダーと雨量計データはリアルタイムで取得可能"
+          },
+          {
+            "id": "H2",
+            "basis": "H1,外部知識",
+            "refutation": "流域の土地利用変化で流出係数が大幅変動",
+            "content": "流域の降雨-流出モデルは過去データで校正済み"
+          },
+          {
+            "id": "H3",
+            "basis": "C4,H1",
+            "refutation": "ゲート設備の老朽化で応答遅延",
+            "content": "ゲート操作の応答時間は制御要件を満たす"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "ゲリラ豪雨の頻度増加で予測精度が低下",
+            "content": "6時間先までの流入量予測は実用精度を持つ"
+          },
+          {
+            "id": "H5",
+            "basis": "外部知識",
+            "refutation": "水位計の測定誤差が許容範囲を超過",
+            "content": "貯水位センサーの精度は管理基準を満たす"
+          },
+          {
+            "id": "H6",
+            "basis": "C5,H2",
+            "refutation": "異常堆砂で有効貯水量が急減",
+            "content": "堆砂進行は線形近似で中期予測可能"
+          },
+          {
+            "id": "H7",
+            "basis": "H4,H6",
+            "refutation": "複数ダムの連携最適化が局所最適に陥る",
+            "content": "上下流ダムの連携放流最適化は単独運用より効率的"
+          },
+          {
+            "id": "H8",
+            "basis": "H4,H7",
+            "refutation": "気候変動で過去データの代表性が失われる",
+            "content": "長期の貯水池運用計画はシミュレーションで最適化可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 87,
+    "project": "中古車査定 AI",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 3,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "UsedCarAppraisal",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 2,
+          "definition": "古物営業法・消費者契約法に基づく不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "market",
+          "ordValue": 1,
+          "definition": "中古車市場・車両状態の前提と運用方針",
+          "derivedFrom": [
+            "C4",
+            "H1",
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の査定精度・価格予測仮説",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mkt1",
+          "layerName": "market",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mkt2",
+          "layerName": "market",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "mkt3",
+          "layerName": "market",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe2"
+          ]
+        },
+        {
+          "id": "mkt4",
+          "layerName": "market",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "safe3",
+            "mkt1"
+          ]
+        },
+        {
+          "id": "mkt5",
+          "layerName": "market",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            "mkt1",
+            "mkt2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "mkt1",
+            "mkt2"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "mkt3",
+            "mkt4"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "mkt5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp3"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp5",
+            "hyp6"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "査定価格の根拠を顧客に説明可能な形で提示する"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "事故歴・修復歴は必ず開示し査定に反映する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "最終査定価格の決定権は査定士にある"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "査定有効期間は7日間とする"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "オークション相場データのAPI停止",
+            "content": "中古車オークション相場データはリアルタイムで参照可能"
+          },
+          {
+            "id": "H2",
+            "basis": "C2,H1",
+            "refutation": "事故歴DBのカバレッジ不足",
+            "content": "車両の事故歴・整備歴はデータベースから取得可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C3,H1",
+            "refutation": "AIと査定士の判断乖離が常態化",
+            "content": "AI査定は査定士の参考価格として有用"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "希少車種でデータ不足により精度低下",
+            "content": "過去取引データから車種別の価格予測が可能"
+          },
+          {
+            "id": "H5",
+            "basis": "H1,H3",
+            "refutation": "外装・内装の主観評価が画像認識で再現不能",
+            "content": "車両画像から外装・内装の状態をスコアリング可能"
+          },
+          {
+            "id": "H6",
+            "basis": "H1,H4",
+            "refutation": "EV化の加速でICE車の残価予測が困難",
+            "content": "市場トレンドから将来の残価率を予測可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 88,
+    "project": "物流倉庫温度管理 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "WarehouseTemp",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 3,
+          "definition": "食品衛生法・HACCP基準に基づく温度管理の絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 2,
+          "definition": "外気温・設備性能等の外部依存前提",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "倉庫管理者が設定する運用方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の省エネ・予測制御仮説",
+          "derivedFrom": [
+            "H4",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env3",
+          "layerName": "environment",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe1",
+            "safe2"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "safe3",
+            "env1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "env2"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "C5"
+          ],
+          "dependencies": [
+            "env3"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "safe2",
+            "env1",
+            "env2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "env1",
+            "pol1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol2",
+            "pol3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "pol4",
+            "pol5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            "hyp3",
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp5",
+            "hyp6"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "冷蔵品は常時0-10℃、冷凍品は-18℃以下を維持する"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "温度逸脱が15分以上継続した場合は即時アラートを発報する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "温度記録は1分間隔で5年間保存する"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "電力コスト削減より温度維持を優先する"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "設備故障時の手動切替手順を常時維持する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "気象予報APIの精度が著しく低い地域",
+            "content": "外気温予報データは24時間先まで取得可能"
+          },
+          {
+            "id": "H2",
+            "basis": "外部知識",
+            "refutation": "冷凍機の経年劣化で性能が大幅低下",
+            "content": "冷凍機の冷却能力はカタログスペックを維持している"
+          },
+          {
+            "id": "H3",
+            "basis": "C4,H1,H2",
+            "refutation": "入出荷頻度が予想を大幅に超過",
+            "content": "ドア開閉頻度と熱負荷の関係はモデル化可能"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H3",
+            "refutation": "予測制御が不安定化し温度逸脱を誘発",
+            "content": "外気温予測に基づく先行冷却で省エネが可能"
+          },
+          {
+            "id": "H5",
+            "basis": "C3,外部知識",
+            "refutation": "センサー故障の検知遅延",
+            "content": "温度センサーの精度は±0.5℃以内を維持"
+          },
+          {
+            "id": "H6",
+            "basis": "H2,H3",
+            "refutation": "ゾーン間の熱干渉が想定以上",
+            "content": "倉庫内の温度分布はゾーン別に独立制御可能"
+          },
+          {
+            "id": "H7",
+            "basis": "H3,H4",
+            "refutation": "複数ゾーンの同時制御で制御干渉が発生",
+            "content": "入出荷スケジュールと連動した温度制御は実現可能"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 89,
+    "project": "裁判判例検索 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 17,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "CaseLawSearch",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 3,
+          "definition": "弁護士法・裁判所規則に基づく法的制約",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "legal_data",
+          "ordValue": 2,
+          "definition": "判例データベース・法令情報の外部依存前提",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "法律事務所が設定する検索・利用方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の検索精度・関連性判定仮説",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data1",
+          "layerName": "legal_data",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data2",
+          "layerName": "legal_data",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "safe2"
+          ]
+        },
+        {
+          "id": "data3",
+          "layerName": "legal_data",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe1",
+            "data1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "safe3",
+            "data2"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "data3"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "safe1",
+            "safe2"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            "data1",
+            "data2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "data1",
+            "pol1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol2",
+            "pol3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "pol4",
+            "pol5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "hyp3"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp4",
+            "hyp5"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "検索結果は法的助言ではなく参考情報であることを明示する"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "非公開判例・係属中事件の情報は取り扱わない"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "検索結果の最終的な法的判断は弁護士が行う"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "関連判例は最新から時系列順に提示する"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "判例の引用形式は裁判所の公式形式に準拠する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "判例DBの網羅性が不十分な法域が存在",
+            "content": "主要判例データベースは公開判例を網羅している"
+          },
+          {
+            "id": "H2",
+            "basis": "C2,H1",
+            "refutation": "法改正で過去判例の有効性判定が困難",
+            "content": "判例の有効性（変更・破棄の有無）は追跡可能"
+          },
+          {
+            "id": "H3",
+            "basis": "H1,H2",
+            "refutation": "法律用語の多義性でセマンティック検索が誤動作",
+            "content": "自然言語クエリから法的争点を正確に抽出可能"
+          },
+          {
+            "id": "H4",
+            "basis": "C1,外部知識",
+            "refutation": "類似度スコアが法的関連性と乖離",
+            "content": "判例の類似度計算は法的論点ベースで実用的"
+          },
+          {
+            "id": "H5",
+            "basis": "H3,H4",
+            "refutation": "専門分野ごとの判例構造の違いで汎化失敗",
+            "content": "分野横断的な判例検索は単一分野検索より有用"
+          },
+          {
+            "id": "H6",
+            "basis": "H2,H3",
+            "refutation": "判例の要旨自動抽出が重要論点を欠落",
+            "content": "判例要旨の自動生成は弁護士の初期調査を効率化する"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "scenario_id": 90,
+    "project": "太陽光パネル劣化診断 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 18,
+    "num_deps": 25,
+    "model_spec": {
+      "namespace": "SolarDegradation",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 3,
+          "definition": "電気事業法・FIT制度に基づく保安義務",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 2,
+          "definition": "日射量・気象・パネル特性の外部依存前提",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "発電事業者が設定する保守方針",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の劣化予測・最適保守仮説",
+          "derivedFrom": [
+            "H4",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "constraint",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            "safe1"
+          ]
+        },
+        {
+          "id": "env3",
+          "layerName": "environment",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            "safe1",
+            "safe2"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "safe3",
+            "env1"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            "env2",
+            "env3"
+          ]
+        },
+        {
+          "id": "pol4",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            "env1"
+          ]
+        },
+        {
+          "id": "pol5",
+          "layerName": "policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            "safe2",
+            "env2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "env1",
+            "env2",
+            "pol1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            "pol2",
+            "pol3"
+          ]
+        },
+        {
+          "id": "hyp3",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "pol4",
+            "pol5"
+          ]
+        },
+        {
+          "id": "hyp4",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            "hyp1",
+            "hyp2"
+          ]
+        },
+        {
+          "id": "hyp5",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            "hyp1"
+          ]
+        },
+        {
+          "id": "hyp6",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6",
+            "H7"
+          ],
+          "dependencies": [
+            "hyp3",
+            "hyp4"
+          ]
+        },
+        {
+          "id": "hyp7",
+          "layerName": "hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            "hyp5",
+            "hyp6"
+          ]
+        }
+      ],
+      "assumptions": {
+        "C": [
+          {
+            "id": "C1",
+            "source": "humanDecision",
+            "content": "地絡・漏電リスクのあるパネルは即時停止・隔離する"
+          },
+          {
+            "id": "C2",
+            "source": "humanDecision",
+            "content": "定期点検は電気事業法の頻度要件を遵守する"
+          },
+          {
+            "id": "C3",
+            "source": "humanDecision",
+            "content": "発電量データは30分単位で20年間保存する"
+          },
+          {
+            "id": "C4",
+            "source": "humanDecision",
+            "content": "劣化診断結果に基づく交換判断は人間が行う"
+          },
+          {
+            "id": "C5",
+            "source": "humanDecision",
+            "content": "パネル交換の費用対効果は残存FIT期間で評価する"
+          }
+        ],
+        "H": [
+          {
+            "id": "H1",
+            "basis": "外部知識",
+            "refutation": "日射量データの空間解像度が不足",
+            "content": "気象庁の日射量データは発電量推定に十分な精度"
+          },
+          {
+            "id": "H2",
+            "basis": "C2,H1",
+            "refutation": "パネルメーカーごとの劣化曲線データが非公開",
+            "content": "パネルのI-V特性測定データから劣化率を定量化可能"
+          },
+          {
+            "id": "H3",
+            "basis": "C4,H2",
+            "refutation": "ホットスポット検出の赤外線カメラ精度が不十分",
+            "content": "赤外線サーモグラフィによるホットスポット検出は実用的"
+          },
+          {
+            "id": "H4",
+            "basis": "H1,H2",
+            "refutation": "PID劣化等の突発的劣化モードが予測不能",
+            "content": "経年劣化の進行速度は過去データから予測可能"
+          },
+          {
+            "id": "H5",
+            "basis": "外部知識",
+            "refutation": "ストリング単位のモニタリング装置未設置",
+            "content": "パネル単位の発電量モニタリングは技術的に可能"
+          },
+          {
+            "id": "H6",
+            "basis": "H2,H3",
+            "refutation": "汚れ・影の影響と劣化の区別が困難",
+            "content": "劣化要因の分離（汚れ/影/経年劣化/故障）は自動化可能"
+          },
+          {
+            "id": "H7",
+            "basis": "H4,H6",
+            "refutation": "保守コストモデルの精度が不十分",
+            "content": "最適なパネル交換タイミングはLCOE最小化で決定可能"
+          }
+        ]
+      }
+    }
+  }
+]

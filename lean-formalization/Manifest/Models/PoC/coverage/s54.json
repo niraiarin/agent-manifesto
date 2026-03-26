@@ -1,0 +1,235 @@
+{
+  "namespace": "TranslationSubtitle",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "字幕は映像と200ms以内に同期する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "差別的・攻撃的表現を自動フィルタリングする"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "翻訳品質のレビューは人間の翻訳者が最終確認する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "対応言語は日英中韓の4言語から開始する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "著作権のある素材の翻訳には権利者の許諾を必要とする"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "字幕のフォーマットはSRT/VTT標準に準拠する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C1",
+        "refutation": "リアルタイム処理が不要な用途が主流になった場合",
+        "content": "音声認識のレイテンシは100ms以内に収まる"
+      },
+      {
+        "id": "H2",
+        "basis": "C4",
+        "refutation": "言語モデルの統一が進んだ場合",
+        "content": "言語ペアごとに専用モデルが必要"
+      },
+      {
+        "id": "H3",
+        "basis": "C2",
+        "refutation": "フィルタリング基準が文化圏で統一された場合",
+        "content": "不適切表現の基準は文化圏によって異なる"
+      },
+      {
+        "id": "H4",
+        "basis": "C3",
+        "refutation": "AI翻訳が人間を恒常的に上回った場合",
+        "content": "専門用語はドメイン辞書で補完する"
+      },
+      {
+        "id": "H5",
+        "basis": "C1,H1",
+        "refutation": "ストリーミング技術の根本的変化",
+        "content": "バッファリングにより字幕の安定表示が可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "compliance",
+      "ordValue": 3,
+      "definition": "法規制・倫理に関わる不変条件",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "standard",
+      "ordValue": 2,
+      "definition": "業界標準・フォーマット準拠",
+      "derivedFrom": [
+        "C1",
+        "C4",
+        "C6"
+      ]
+    },
+    {
+      "name": "quality",
+      "ordValue": 1,
+      "definition": "翻訳品質に関する運用方針",
+      "derivedFrom": [
+        "C3",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化する処理戦略",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "comp1",
+      "layerName": "compliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "comp2",
+      "layerName": "compliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std3",
+      "layerName": "standard",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "qual1",
+      "layerName": "quality",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "comp1"
+      ]
+    },
+    {
+      "id": "qual2",
+      "layerName": "quality",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "comp1",
+        "std2"
+      ]
+    },
+    {
+      "id": "qual3",
+      "layerName": "quality",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "std2"
+      ]
+    },
+    {
+      "id": "qual4",
+      "layerName": "quality",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "comp2"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "std1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "std2",
+        "qual3"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "std1",
+        "opt1"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "std3"
+      ]
+    }
+  ]
+}

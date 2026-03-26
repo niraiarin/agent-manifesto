@@ -1,0 +1,174 @@
+{
+  "namespace": "Scenario257",
+  "layers": [
+    {
+      "name": "volcanology",
+      "ordValue": 3,
+      "definition": "火山学と海洋物理の法則に基づく不変制約。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "authority",
+      "ordValue": 2,
+      "definition": "海上保安庁・予知連の権限と法的制約。",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "analysis",
+      "ordValue": 1,
+      "definition": "監視・分析手法の設計判断。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説。監視データとの照合で検証が必要。",
+      "derivedFrom": [
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "vol1",
+      "layerName": "volcanology",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "vol2",
+      "layerName": "volcanology",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "vol3",
+      "layerName": "volcanology",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aut1",
+      "layerName": "authority",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "aut2",
+      "layerName": "authority",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".vol1"
+      ]
+    },
+    {
+      "id": "aut3",
+      "layerName": "authority",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".aut1"
+      ]
+    },
+    {
+      "id": "anl1",
+      "layerName": "analysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".vol1",
+        ".vol3"
+      ]
+    },
+    {
+      "id": "anl2",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".vol2",
+        ".aut2"
+      ]
+    },
+    {
+      "id": "anl3",
+      "layerName": "analysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".aut1",
+        ".aut3"
+      ]
+    },
+    {
+      "id": "anl4",
+      "layerName": "analysis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".anl1",
+        ".anl2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".anl2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".anl4",
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".anl3",
+        ".vol2"
+      ]
+    }
+  ]
+}

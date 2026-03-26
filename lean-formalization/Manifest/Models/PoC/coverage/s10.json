@@ -1,0 +1,276 @@
+{
+  "namespace": "TestCoverage.S10",
+  "layers": [
+    {
+      "name": "WorkerSafety",
+      "ordValue": 7,
+      "definition": "作業員の生命・身体の安全。労安法の最上位義務",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LegalCompliance",
+      "ordValue": 6,
+      "definition": "労働安全衛生法・建設業法の遵守",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "SiteProtocol",
+      "ordValue": 5,
+      "definition": "現場固有の安全手順・作業標準",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "HazardDetection",
+      "ordValue": 4,
+      "definition": "危険検知アルゴリズムのパラメータ",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "EquipmentMonitoring",
+      "ordValue": 3,
+      "definition": "重機・設備の稼働状態監視ルール",
+      "derivedFrom": [
+        "C4",
+        "H5"
+      ]
+    },
+    {
+      "name": "WorkflowScheduling",
+      "ordValue": 2,
+      "definition": "作業スケジュール・動線管理の最適化",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "ReportingFormat",
+      "ordValue": 1,
+      "definition": "報告書・ダッシュボードの表示形式",
+      "derivedFrom": [
+        "C5",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s10_p01",
+      "layerName": "WorkerSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s10_p02",
+      "layerName": "WorkerSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s10_p03",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s10_p01"
+      ]
+    },
+    {
+      "id": "s10_p04",
+      "layerName": "LegalCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s10_p02"
+      ]
+    },
+    {
+      "id": "s10_p05",
+      "layerName": "SiteProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s10_p03"
+      ]
+    },
+    {
+      "id": "s10_p06",
+      "layerName": "SiteProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s10_p04"
+      ]
+    },
+    {
+      "id": "s10_p07",
+      "layerName": "SiteProtocol",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "s10_p03",
+        "s10_p04"
+      ]
+    },
+    {
+      "id": "s10_p08",
+      "layerName": "HazardDetection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s10_p05"
+      ]
+    },
+    {
+      "id": "s10_p09",
+      "layerName": "HazardDetection",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s10_p06"
+      ]
+    },
+    {
+      "id": "s10_p10",
+      "layerName": "HazardDetection",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s10_p05",
+        "s10_p07"
+      ]
+    },
+    {
+      "id": "s10_p11",
+      "layerName": "EquipmentMonitoring",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s10_p08"
+      ]
+    },
+    {
+      "id": "s10_p12",
+      "layerName": "EquipmentMonitoring",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s10_p09"
+      ]
+    },
+    {
+      "id": "s10_p13",
+      "layerName": "EquipmentMonitoring",
+      "justification": [
+        "C4",
+        "H5"
+      ],
+      "dependencies": [
+        "s10_p08",
+        "s10_p10"
+      ]
+    },
+    {
+      "id": "s10_p14",
+      "layerName": "WorkflowScheduling",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "s10_p11"
+      ]
+    },
+    {
+      "id": "s10_p15",
+      "layerName": "WorkflowScheduling",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "s10_p12"
+      ]
+    },
+    {
+      "id": "s10_p16",
+      "layerName": "WorkflowScheduling",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        "s10_p11",
+        "s10_p13"
+      ]
+    },
+    {
+      "id": "s10_p17",
+      "layerName": "ReportingFormat",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s10_p14"
+      ]
+    },
+    {
+      "id": "s10_p18",
+      "layerName": "ReportingFormat",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "s10_p15"
+      ]
+    },
+    {
+      "id": "s10_p19",
+      "layerName": "ReportingFormat",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        "s10_p16"
+      ]
+    },
+    {
+      "id": "s10_p20",
+      "layerName": "ReportingFormat",
+      "justification": [
+        "C5",
+        "H8"
+      ],
+      "dependencies": [
+        "s10_p17",
+        "s10_p18"
+      ]
+    }
+  ]
+}

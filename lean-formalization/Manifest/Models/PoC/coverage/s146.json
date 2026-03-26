@@ -1,0 +1,375 @@
+{
+  "namespace": "TestCoverage.S146",
+  "layers": [
+    {
+      "name": "EthicalBoundary",
+      "ordValue": 5,
+      "definition": "表現の自由・名誉毀損に関する法的・倫理的限界",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "PrivacyObligation",
+      "ordValue": 4,
+      "definition": "個人情報・プライバシー保護の義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "DetectionCriteria",
+      "ordValue": 3,
+      "definition": "炎上判定の基準。批判と炎上の区別に関する方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ResponseGuideline",
+      "ordValue": 2,
+      "definition": "検知後の対応手順・エスカレーションルール",
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "SentimentAnalysis",
+      "ordValue": 1,
+      "definition": "感情分析・トレンド検出の技術的手法",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ExperimentalSignal",
+      "ordValue": 0,
+      "definition": "未検証の炎上兆候シグナル。試験的に監視",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s146_p01",
+      "layerName": "EthicalBoundary",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s146_p02",
+      "layerName": "PrivacyObligation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s146_p01"
+      ]
+    },
+    {
+      "id": "s146_p03",
+      "layerName": "PrivacyObligation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s146_p01"
+      ]
+    },
+    {
+      "id": "s146_p04",
+      "layerName": "PrivacyObligation",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s146_p05",
+      "layerName": "DetectionCriteria",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s146_p02"
+      ]
+    },
+    {
+      "id": "s146_p06",
+      "layerName": "DetectionCriteria",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s146_p03"
+      ]
+    },
+    {
+      "id": "s146_p07",
+      "layerName": "DetectionCriteria",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s146_p02",
+        ".s146_p04"
+      ]
+    },
+    {
+      "id": "s146_p08",
+      "layerName": "ResponseGuideline",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s146_p05"
+      ]
+    },
+    {
+      "id": "s146_p09",
+      "layerName": "ResponseGuideline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s146_p06"
+      ]
+    },
+    {
+      "id": "s146_p10",
+      "layerName": "ResponseGuideline",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s146_p05",
+        ".s146_p07"
+      ]
+    },
+    {
+      "id": "s146_p11",
+      "layerName": "ResponseGuideline",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s146_p16"
+      ]
+    },
+    {
+      "id": "s146_p12",
+      "layerName": "SentimentAnalysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s146_p08"
+      ]
+    },
+    {
+      "id": "s146_p13",
+      "layerName": "SentimentAnalysis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s146_p09"
+      ]
+    },
+    {
+      "id": "s146_p14",
+      "layerName": "SentimentAnalysis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s146_p08",
+        ".s146_p10"
+      ]
+    },
+    {
+      "id": "s146_p15",
+      "layerName": "ExperimentalSignal",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s146_p12"
+      ]
+    },
+    {
+      "id": "s146_p16",
+      "layerName": "ExperimentalSignal",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s146_p13"
+      ]
+    },
+    {
+      "id": "s146_p17",
+      "layerName": "ExperimentalSignal",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s146_p14",
+        ".s146_p15"
+      ]
+    },
+    {
+      "id": "s146_p18",
+      "layerName": "ExperimentalSignal",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s146_p16"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "正当な批判・意見表明と炎上は区別し、表現の自由を侵害しない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "個人を特定する情報の収集は行わない。投稿の匿名性を保持する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "監視対象はクライアント企業に関連するキーワードのみに限定する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "炎上の定義は投稿量の急増とネガティブ感情の組合せとする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検知から広報チームへの通知は15分以内を目標とする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "ポジティブな話題の急増(バズ)と炎上を投稿量だけでは区別できない場合"
+        }
+      },
+      "content": "投稿量の時系列異常検知とネガティブ感情比率の組合せで炎上を検知できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "深夜・休日に広報担当者が不在で15分以内の対応が困難な場合"
+        }
+      },
+      "content": "炎上レベルに応じた段階的エスカレーション(自動通知→電話→緊急会議)が有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "皮肉・比喩表現が感情分析の精度を著しく低下させる場合"
+        }
+      },
+      "content": "BERTベースの感情分析が日本語SNS投稿のネガティブ検出に有効"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "リツイート数の急増が炎上でなくポジティブなバイラルである場合"
+        }
+      },
+      "content": "投稿のリツイート・引用リツイートの連鎖パターンが炎上拡散の予測に有用"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "画像・動画のOCR精度が低くテキスト抽出が不十分な場合"
+        }
+      },
+      "content": "画像内テキストのOCR解析が文字のみの監視では見逃すコンテンツを補完する"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "まとめサイトの炎上増幅効果が一時的なトレンドにすぎない場合"
+        }
+      },
+      "content": "まとめサイトへの転載を検知することで炎上の二次拡散を早期に捕捉できる"
+    }
+  ]
+}

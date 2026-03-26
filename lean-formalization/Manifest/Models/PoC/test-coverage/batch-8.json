@@ -1,0 +1,1726 @@
+[
+  {
+    "scenario_id": 71,
+    "project": "遺伝子解析レポート AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "biomedical_constraint",
+          "definition": "医学的・遺伝学的に確立された事実と倫理基準",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "analysis_postulate",
+          "definition": "解析手法の前提となる統計的・生物学的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "reporting_principle",
+          "definition": "レポート生成の原則（可読性・正確性・情報量のバランス）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C6",
+            "H2"
+          ]
+        },
+        {
+          "name": "presentation_design",
+          "definition": "UI/可視化・表現レベルの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_eee714",
+          "layerName": "biomedical_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ef1fe6",
+          "layerName": "biomedical_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ClinVarACM_7cdc4b",
+          "layerName": "biomedical_constraint",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "VUS_5b7e00",
+          "layerName": "biomedical_constraint",
+          "justification": [
+            "C2",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_818f8c",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8162c9",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f395ad",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c01f50",
+          "layerName": "reporting_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a2ac40",
+          "layerName": "reporting_principle",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a41f63",
+          "layerName": "reporting_principle",
+          "justification": [
+            "C6",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8bf11f",
+          "layerName": "presentation_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "IGV_119541",
+          "layerName": "presentation_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "PDFA_5ba337",
+          "layerName": "presentation_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_85c0a2",
+          "layerName": "presentation_design",
+          "justification": [
+            "H5",
+            "C4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 72,
+    "project": "ホテル料金ダイナミックプライシング AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "revenue_constraint",
+          "definition": "収益管理の不変制約（法規制・契約上限・最低料金）",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "demand_postulate",
+          "definition": "需要予測の前提となる統計的・市場的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "pricing_principle",
+          "definition": "価格決定の原則（公平性・透明性・競争力）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "adjustment_design",
+          "definition": "価格調整の実装レベルの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_abdd49",
+          "layerName": "revenue_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "OTA_cdaaaf",
+          "layerName": "revenue_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3c7a9f",
+          "layerName": "revenue_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9c403d",
+          "layerName": "demand_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_fc7690",
+          "layerName": "demand_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_eb27c1",
+          "layerName": "demand_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_62cdb6",
+          "layerName": "pricing_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_175104",
+          "layerName": "pricing_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3b3160",
+          "layerName": "pricing_principle",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9ac64b",
+          "layerName": "adjustment_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_5119d5",
+          "layerName": "adjustment_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e53603",
+          "layerName": "adjustment_design",
+          "justification": [
+            "H5",
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_fb0eac",
+          "layerName": "adjustment_design",
+          "justification": [
+            "H4",
+            "C1"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 73,
+    "project": "廃棄物分別ロボット AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "safety_constraint",
+          "definition": "人体安全・環境汚染防止の不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "recognition_postulate",
+          "definition": "画像認識・素材判定の前提となる仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "sorting_principle",
+          "definition": "分別ルールの原則（自治体基準・汚染度判定）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "operation_design",
+          "definition": "ロボット動作・ライン制御の設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_864d79",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8102a4",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_06e30c",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_dc9d15",
+          "layerName": "recognition_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4fedcf",
+          "layerName": "recognition_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_aa746c",
+          "layerName": "recognition_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_2cd30c",
+          "layerName": "sorting_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_dcfbc9",
+          "layerName": "sorting_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b64e6a",
+          "layerName": "sorting_principle",
+          "justification": [
+            "H2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_991650",
+          "layerName": "operation_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0ca9a0",
+          "layerName": "operation_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c30e66",
+          "layerName": "operation_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ecaf66",
+          "layerName": "operation_design",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 74,
+    "project": "eスポーツコーチング AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "competitive_constraint",
+          "definition": "競技規則・アンチチート・選手の健康に関する不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "analysis_postulate",
+          "definition": "対戦データ分析・メタゲーム推定の前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "coaching_principle",
+          "definition": "コーチングの原則（個別適応・段階的改善・メンタル考慮）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "feedback_design",
+          "definition": "フィードバック表示・練習メニューの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "API_b3b226",
+          "layerName": "competitive_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_73c0ff",
+          "layerName": "competitive_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b124c1",
+          "layerName": "competitive_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_cc3ead",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f8bf4f",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f8cbb6",
+          "layerName": "analysis_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4c4b29",
+          "layerName": "coaching_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_fb6b0e",
+          "layerName": "coaching_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a190bc",
+          "layerName": "coaching_principle",
+          "justification": [
+            "H2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_95bd5c",
+          "layerName": "feedback_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1fcc4d",
+          "layerName": "feedback_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ddad77",
+          "layerName": "feedback_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c94b67",
+          "layerName": "feedback_design",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 75,
+    "project": "パイプライン漏洩検知 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 20,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "safety_constraint",
+          "definition": "人命・環境に関わる安全上の不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulatory_postulate",
+          "definition": "法規制・基準への準拠前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "detection_principle",
+          "definition": "漏洩検知アルゴリズムの原則（感度・特異度・応答時間）",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "monitoring_boundary",
+          "definition": "センサー網・通信インフラの制約条件",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "alert_design",
+          "definition": "アラート通知・対応フローの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "_monotonicity_feedback": {
+        "initial_violations": [
+          {
+            "violation": "誤報率KPIの自動チューニング (alert_design, ord=1) が 検知感度最優先 (safety_constraint, ord=5) に影響を与える依存",
+            "detail": "H6 の自動チューニングが C2 由来の安全制約を間接的に変更する可能性",
+            "resolution": "H6 に安全制約の感度下限を侵食しない条件を追加。refutation を更新し、自動チューニング範囲を安全マージン外に限定する制約を alert_design 層内で明記",
+            "type": "H_only",
+            "action": "H6 の反証条件を厳格化。命題「誤報率のKPIを月次で追跡し閾値を自動チューニングする」に「ただし安全制約の感度下限は維持」を追記"
+          }
+        ],
+        "post_fix_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "prop_c5b707",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_18d100",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_cf7447",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_5b5940",
+          "layerName": "regulatory_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "API_99d60b",
+          "layerName": "regulatory_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3f6911",
+          "layerName": "detection_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_21dca5",
+          "layerName": "detection_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c98b18",
+          "layerName": "detection_principle",
+          "justification": [
+            "H2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ms_f0fb3d",
+          "layerName": "monitoring_boundary",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4f76c1",
+          "layerName": "monitoring_boundary",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "DTS_aabe30",
+          "layerName": "monitoring_boundary",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d3bbc6",
+          "layerName": "alert_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "KPI_da254c",
+          "layerName": "alert_design",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_442e2b",
+          "layerName": "alert_design",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d1092f",
+          "layerName": "alert_design",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 76,
+    "project": "レシピ生成 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "safety_constraint",
+          "definition": "食品安全・アレルギー・宗教的食事制限の不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "nutrition_postulate",
+          "definition": "栄養学的な前提（推奨摂取量・栄養バランス）",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "recipe_principle",
+          "definition": "レシピ生成の原則（実現可能性・味の整合性・季節性）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "presentation_design",
+          "definition": "レシピの表示・手順説明の設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_98e98c",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_6cd4be",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d8ae0a",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "PFC_593d24",
+          "layerName": "nutrition_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3f74f5",
+          "layerName": "nutrition_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_069bf0",
+          "layerName": "nutrition_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c3fc9b",
+          "layerName": "recipe_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a32ea3",
+          "layerName": "recipe_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_729537",
+          "layerName": "recipe_principle",
+          "justification": [
+            "H2",
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_121b78",
+          "layerName": "presentation_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b174b3",
+          "layerName": "presentation_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e076af",
+          "layerName": "presentation_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "AI_f777cc",
+          "layerName": "presentation_design",
+          "justification": [
+            "H5",
+            "C4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 77,
+    "project": "航空機エンジン故障予測 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "airworthiness_constraint",
+          "definition": "耐空性・航空安全に関する絶対的制約（人命直結）",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulatory_postulate",
+          "definition": "航空局規制・整備基準への準拠前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "prediction_principle",
+          "definition": "故障予測アルゴリズムの原則（精度・リードタイム・説明可能性）",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "data_boundary",
+          "definition": "センサーデータ・運航データの制約条件",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H3"
+          ]
+        },
+        {
+          "name": "maintenance_design",
+          "definition": "整備計画・通知フローの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_6b2b0d",
+          "layerName": "airworthiness_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a4d658",
+          "layerName": "airworthiness_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ADSB_aa7896",
+          "layerName": "airworthiness_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "EASAFAA_5a5c5c",
+          "layerName": "regulatory_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "MSG_c0eb2b",
+          "layerName": "regulatory_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_102cdf",
+          "layerName": "prediction_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b0963d",
+          "layerName": "prediction_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0ef57c",
+          "layerName": "prediction_principle",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "FADEC_2dbc11",
+          "layerName": "data_boundary",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a479ed",
+          "layerName": "data_boundary",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ca534b",
+          "layerName": "data_boundary",
+          "justification": [
+            "H3",
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "MROAPI_5d1c52",
+          "layerName": "maintenance_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_bca176",
+          "layerName": "maintenance_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_40c509",
+          "layerName": "maintenance_design",
+          "justification": [
+            "H5",
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_754363",
+          "layerName": "maintenance_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 78,
+    "project": "マンション管理組合支援 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "legal_constraint",
+          "definition": "区分所有法・管理規約に基づく法的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "financial_postulate",
+          "definition": "管理費・修繕積立金の財務的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "governance_principle",
+          "definition": "合意形成・情報公開の運営原則",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "tool_design",
+          "definition": "支援ツールのUI・通知・帳票の設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_ac22b2",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a0411d",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b195fe",
+          "layerName": "legal_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1c578b",
+          "layerName": "financial_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_10ff56",
+          "layerName": "financial_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_21478e",
+          "layerName": "financial_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_aba16c",
+          "layerName": "governance_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e55adc",
+          "layerName": "governance_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c1b45a",
+          "layerName": "governance_principle",
+          "justification": [
+            "H2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_858c91",
+          "layerName": "tool_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b7bbe2",
+          "layerName": "tool_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_540e69",
+          "layerName": "tool_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f34109",
+          "layerName": "tool_design",
+          "justification": [
+            "H5",
+            "C1"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 79,
+    "project": "感染症拡散シミュレーション AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 22,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "ethical_constraint",
+          "definition": "公衆衛生倫理・プライバシー・差別防止の不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "epidemiological_postulate",
+          "definition": "疫学モデルの前提（感染力・潜伏期間・免疫動態）",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "simulation_principle",
+          "definition": "シミュレーションの原則（不確実性表現・シナリオ比較・検証可能性）",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "data_boundary",
+          "definition": "データソース・粒度・更新頻度の制約条件",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C6",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "visualization_design",
+          "definition": "可視化・レポート・意思決定支援の設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "_monotonicity_feedback": {
+        "initial_violations": [
+          {
+            "violation": "移動データのモバイル位置情報利用 (data_boundary, ord=2) が 個人情報匿名化の制約 (ethical_constraint, ord=5) に依存",
+            "detail": "H4 は C1（匿名化必須）に依存するが、data_boundary (ord=2) から ethical_constraint (ord=5) への依存は単調性を満たす（依存先が依存元以上）ため正常。ただし、H4 の匿名集計が C2（差別防止）の要件も満たすかが未検証",
+            "resolution": "再検証の結果、data_boundary → ethical_constraint の依存方向は単調性を満たしている。実際の違反は visualization_design の地理的ヒートマップ (ord=1) が差別防止 (ethical_constraint, ord=5) に直接関わるにもかかわらず、visualization_design 層に配置されている点。H5 の命題に C2 への準拠条件を追記し、表示粒度を市区町村レベル以上に限定する制約を追加",
+            "type": "H_only",
+            "action": "H5 の反証条件と命題内容を更新。地理的ヒートマップの表示粒度を市区町村レベル以上に限定し、小地域の特定を防止する条件を明記"
+          }
+        ],
+        "post_fix_violations": 0
+      },
+      "propositions": [
+        {
+          "id": "prop_b7342f",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8ccb9a",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_6c10c0",
+          "layerName": "ethical_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "R_9867a5",
+          "layerName": "epidemiological_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_7a64f4",
+          "layerName": "epidemiological_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_7d1c75",
+          "layerName": "epidemiological_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_dc2b1b",
+          "layerName": "simulation_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8e78db",
+          "layerName": "simulation_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_48a3ca",
+          "layerName": "simulation_principle",
+          "justification": [
+            "H2",
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reportingd_f1e209",
+          "layerName": "data_boundary",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_878c8f",
+          "layerName": "data_boundary",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_132910",
+          "layerName": "data_boundary",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ca9ce4",
+          "layerName": "visualization_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "beforeafter_89a941",
+          "layerName": "visualization_design",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_63b546",
+          "layerName": "visualization_design",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f2003e",
+          "layerName": "visualization_design",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 80,
+    "project": "自動車デザイン AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "regulatory_constraint",
+          "definition": "車両安全基準・環境規制の不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "engineering_postulate",
+          "definition": "空力・構造・製造性の工学的前提",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "design_principle",
+          "definition": "デザインの原則（ブランドアイデンティティ・人間工学・美的調和）",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "rendering_design",
+          "definition": "レンダリング・プレゼンテーションの設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "NCAP_2a730d",
+          "layerName": "regulatory_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_945e4d",
+          "layerName": "regulatory_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ce7271",
+          "layerName": "regulatory_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "Cd_8f86a1",
+          "layerName": "engineering_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_415844",
+          "layerName": "engineering_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_52d4f6",
+          "layerName": "engineering_postulate",
+          "justification": [
+            "H1",
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "DNA_e9d32e",
+          "layerName": "design_principle",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_16d4d0",
+          "layerName": "design_principle",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_38a9fe",
+          "layerName": "design_principle",
+          "justification": [
+            "H2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "K_68d54e",
+          "layerName": "rendering_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1f369c",
+          "layerName": "rendering_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "CFD_f6ddd6",
+          "layerName": "rendering_design",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "VR_361d9e",
+          "layerName": "rendering_design",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

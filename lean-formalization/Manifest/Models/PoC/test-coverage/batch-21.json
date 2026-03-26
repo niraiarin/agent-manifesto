@@ -1,0 +1,1799 @@
+[
+  {
+    "scenario_id": 201,
+    "project": "手術室空気清浄度監視 AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "OperatingRoomAirQuality",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 4,
+          "definition": "患者安全に直結する絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 3,
+          "definition": "法規制・ガイドライン要件",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 2,
+          "definition": "外部環境依存（HVAC・外気等）",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "policy",
+          "ordValue": 1,
+          "definition": "運用方針（閾値設定・アラート頻度）",
+          "derivedFrom": [
+            "C4",
+            "H4"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "safety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "reg1",
+          "layerName": "regulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".safe1"
+          ]
+        },
+        {
+          "id": "reg2",
+          "layerName": "regulation",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".safe2"
+          ]
+        },
+        {
+          "id": "env1",
+          "layerName": "environment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "env2",
+          "layerName": "environment",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".env1"
+          ]
+        },
+        {
+          "id": "pol1",
+          "layerName": "policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".reg1",
+            ".env1"
+          ]
+        },
+        {
+          "id": "pol2",
+          "layerName": "policy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".safe3",
+            ".env2"
+          ]
+        },
+        {
+          "id": "pol3",
+          "layerName": "policy",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            ".reg2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".pol1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 202,
+    "project": "競艇予測 AI",
+    "num_c": 4,
+    "num_h": 7,
+    "num_layers": 6,
+    "num_props": 13,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "BoatRacePrediction",
+      "layers": [
+        {
+          "name": "constraint",
+          "ordValue": 5,
+          "definition": "法的・倫理的絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "physics",
+          "ordValue": 4,
+          "definition": "物理法則・水面力学",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "environment",
+          "ordValue": 3,
+          "definition": "気象・潮流等の外部環境",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "racer",
+          "ordValue": 2,
+          "definition": "選手・モーター特性",
+          "derivedFrom": [
+            "C3",
+            "H5"
+          ]
+        },
+        {
+          "name": "strategy",
+          "ordValue": 1,
+          "definition": "賭け戦略・資金管理",
+          "derivedFrom": [
+            "C4",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "con1",
+          "layerName": "constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "con2",
+          "layerName": "constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phy1",
+          "layerName": "physics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phy2",
+          "layerName": "physics",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".phy1"
+          ]
+        },
+        {
+          "id": "envr1",
+          "layerName": "environment",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "envr2",
+          "layerName": "environment",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".phy1"
+          ]
+        },
+        {
+          "id": "rac1",
+          "layerName": "racer",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".envr1"
+          ]
+        },
+        {
+          "id": "rac2",
+          "layerName": "racer",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".phy2",
+            ".envr2"
+          ]
+        },
+        {
+          "id": "str1",
+          "layerName": "strategy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".con1",
+            ".rac1"
+          ]
+        },
+        {
+          "id": "str2",
+          "layerName": "strategy",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".con2",
+            ".rac2"
+          ]
+        },
+        {
+          "id": "str3",
+          "layerName": "strategy",
+          "justification": [
+            "C4",
+            "H6"
+          ],
+          "dependencies": [
+            ".str1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".str3"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 203,
+    "project": "産業用ロボットアーム校正 AI",
+    "num_c": 3,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "RobotArmCalibration",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 3,
+          "definition": "作業者安全・衝突防止の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "physics",
+          "ordValue": 2,
+          "definition": "物理モデル・運動学制約",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "calibration",
+          "ordValue": 1,
+          "definition": "校正手順・精度ポリシー",
+          "derivedFrom": [
+            "C3",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe3",
+          "layerName": "safety",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys1",
+          "layerName": "physics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys2",
+          "layerName": "physics",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".phys1"
+          ]
+        },
+        {
+          "id": "phys3",
+          "layerName": "physics",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".safe1"
+          ]
+        },
+        {
+          "id": "cal1",
+          "layerName": "calibration",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".safe2",
+            ".phys1"
+          ]
+        },
+        {
+          "id": "cal2",
+          "layerName": "calibration",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".phys2",
+            ".phys3"
+          ]
+        },
+        {
+          "id": "cal3",
+          "layerName": "calibration",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".safe3"
+          ]
+        },
+        {
+          "id": "cal4",
+          "layerName": "calibration",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            ".cal1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".cal2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 204,
+    "project": "自閉症スペクトラム早期検出 AI",
+    "num_c": 5,
+    "num_h": 8,
+    "num_layers": 7,
+    "num_props": 14,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "ASDEarlyDetection",
+      "layers": [
+        {
+          "name": "ethics",
+          "ordValue": 6,
+          "definition": "倫理的絶対制約（誤判定の影響）",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "clinical",
+          "ordValue": 5,
+          "definition": "臨床エビデンスに基づく医学的前提",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 4,
+          "definition": "医療機器規制・個人情報保護",
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "data",
+          "ordValue": 3,
+          "definition": "データ収集・品質の外部依存",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "early_detection",
+          "ordValue": 2,
+          "definition": "早期検出アルゴリズム・閾値",
+          "derivedFrom": [
+            "C5",
+            "H5"
+          ]
+        },
+        {
+          "name": "ux",
+          "ordValue": 1,
+          "definition": "保護者・専門家向けUI設計",
+          "derivedFrom": [
+            "H6",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "eth1",
+          "layerName": "ethics",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eth2",
+          "layerName": "ethics",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "clin1",
+          "layerName": "clinical",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".eth1"
+          ]
+        },
+        {
+          "id": "clin2",
+          "layerName": "clinical",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".eth2"
+          ]
+        },
+        {
+          "id": "regu1",
+          "layerName": "regulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".eth1",
+            ".eth2"
+          ]
+        },
+        {
+          "id": "regu2",
+          "layerName": "regulation",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".clin1"
+          ]
+        },
+        {
+          "id": "dat1",
+          "layerName": "data",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".regu1"
+          ]
+        },
+        {
+          "id": "dat2",
+          "layerName": "data",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dat3",
+          "layerName": "data",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "scr1",
+          "layerName": "early_detection",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".clin1",
+            ".dat1"
+          ]
+        },
+        {
+          "id": "scr2",
+          "layerName": "early_detection",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".dat3"
+          ]
+        },
+        {
+          "id": "ux1",
+          "layerName": "ux",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".scr1",
+            ".eth1"
+          ]
+        },
+        {
+          "id": "ux2",
+          "layerName": "ux",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".regu2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 205,
+    "project": "太陽風予測 AI",
+    "num_c": 3,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "SolarWindPrediction",
+      "layers": [
+        {
+          "name": "physics",
+          "ordValue": 4,
+          "definition": "太陽物理の基本法則",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "observation",
+          "ordValue": 3,
+          "definition": "観測データ・衛星依存",
+          "derivedFrom": [
+            "C1",
+            "H3"
+          ]
+        },
+        {
+          "name": "model",
+          "ordValue": 2,
+          "definition": "予測モデル・パラメータ",
+          "derivedFrom": [
+            "C2",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "operation",
+          "ordValue": 1,
+          "definition": "運用方針・警報閾値",
+          "derivedFrom": [
+            "C3",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "phys1",
+          "layerName": "physics",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "phys2",
+          "layerName": "physics",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "obs1",
+          "layerName": "observation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "obs2",
+          "layerName": "observation",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".phys1"
+          ]
+        },
+        {
+          "id": "obs3",
+          "layerName": "observation",
+          "justification": [
+            "C1",
+            "H3"
+          ],
+          "dependencies": [
+            ".phys2"
+          ]
+        },
+        {
+          "id": "mod1",
+          "layerName": "model",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".phys1",
+            ".obs1"
+          ]
+        },
+        {
+          "id": "mod2",
+          "layerName": "model",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".obs2",
+            ".obs3"
+          ]
+        },
+        {
+          "id": "mod3",
+          "layerName": "model",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".phys2"
+          ]
+        },
+        {
+          "id": "opr1",
+          "layerName": "operation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".mod1"
+          ]
+        },
+        {
+          "id": "opr2",
+          "layerName": "operation",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".mod2",
+            ".mod3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".opr1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 206,
+    "project": "食品テクスチャ評価 AI",
+    "num_c": 3,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "FoodTextureEvaluation",
+      "layers": [
+        {
+          "name": "standard",
+          "ordValue": 3,
+          "definition": "食品安全基準・規格の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "sensor",
+          "ordValue": 2,
+          "definition": "センサー・測定系の外部依存",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "evaluation",
+          "ordValue": 1,
+          "definition": "評価アルゴリズム・判定基準",
+          "derivedFrom": [
+            "C3",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "std1",
+          "layerName": "standard",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "std2",
+          "layerName": "standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sns1",
+          "layerName": "sensor",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sns2",
+          "layerName": "sensor",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".sns1"
+          ]
+        },
+        {
+          "id": "sns3",
+          "layerName": "sensor",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".std1"
+          ]
+        },
+        {
+          "id": "evl1",
+          "layerName": "evaluation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".std1",
+            ".sns1"
+          ]
+        },
+        {
+          "id": "evl2",
+          "layerName": "evaluation",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".std2",
+            ".sns2"
+          ]
+        },
+        {
+          "id": "evl3",
+          "layerName": "evaluation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".sns3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".evl1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 207,
+    "project": "鳥類渡り経路予測 AI",
+    "num_c": 3,
+    "num_h": 8,
+    "num_layers": 6,
+    "num_props": 12,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "BirdMigrationPrediction",
+      "layers": [
+        {
+          "name": "ecology",
+          "ordValue": 5,
+          "definition": "生態学的基本法則・保全制約",
+          "derivedFrom": [
+            "C1",
+            "H1"
+          ]
+        },
+        {
+          "name": "geography",
+          "ordValue": 4,
+          "definition": "地理・地形的制約",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "climate",
+          "ordValue": 3,
+          "definition": "気象・気候の外部依存",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "migration",
+          "ordValue": 2,
+          "definition": "渡り経路予測モデル",
+          "derivedFrom": [
+            "C2",
+            "H6"
+          ]
+        },
+        {
+          "name": "alert",
+          "ordValue": 1,
+          "definition": "警報・通知ポリシー",
+          "derivedFrom": [
+            "C3",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "eco1",
+          "layerName": "ecology",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "eco2",
+          "layerName": "ecology",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "geo1",
+          "layerName": "geography",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "geo2",
+          "layerName": "geography",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".eco1"
+          ]
+        },
+        {
+          "id": "clm1",
+          "layerName": "climate",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "clm2",
+          "layerName": "climate",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".geo1"
+          ]
+        },
+        {
+          "id": "clm3",
+          "layerName": "climate",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "route1",
+          "layerName": "migration",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".eco1",
+            ".geo2",
+            ".clm1"
+          ]
+        },
+        {
+          "id": "route2",
+          "layerName": "migration",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".clm3"
+          ]
+        },
+        {
+          "id": "alt1",
+          "layerName": "alert",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".route1"
+          ]
+        },
+        {
+          "id": "alt2",
+          "layerName": "alert",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".route1",
+            ".clm2"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 208,
+    "project": "地下埋設管路劣化診断 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 6,
+    "num_props": 13,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "UndergroundPipeDegradation",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 5,
+          "definition": "公共安全・災害防止の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 4,
+          "definition": "法規制・検査基準",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "geotechnical",
+          "ordValue": 3,
+          "definition": "地質・土壌条件の外部依存",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "diagnosis",
+          "ordValue": 2,
+          "definition": "劣化診断モデル・検査手法",
+          "derivedFrom": [
+            "C4",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "maintenance",
+          "ordValue": 1,
+          "definition": "保全計画・優先順位付け",
+          "derivedFrom": [
+            "C5",
+            "H6"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "safe2",
+          "layerName": "safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "regu1",
+          "layerName": "regulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".safe1"
+          ]
+        },
+        {
+          "id": "regu2",
+          "layerName": "regulation",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".safe2"
+          ]
+        },
+        {
+          "id": "geo1",
+          "layerName": "geotechnical",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "geo2",
+          "layerName": "geotechnical",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".geo1"
+          ]
+        },
+        {
+          "id": "diag1",
+          "layerName": "diagnosis",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".regu1",
+            ".geo1"
+          ]
+        },
+        {
+          "id": "diag2",
+          "layerName": "diagnosis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".geo2"
+          ]
+        },
+        {
+          "id": "diag3",
+          "layerName": "diagnosis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".regu2",
+            ".diag1"
+          ]
+        },
+        {
+          "id": "mnt1",
+          "layerName": "maintenance",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".safe1",
+            ".diag1"
+          ]
+        },
+        {
+          "id": "mnt2",
+          "layerName": "maintenance",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".diag2",
+            ".diag3"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".mnt1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 209,
+    "project": "eラーニング離脱予測 AI",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "ELearningDropoutPrediction",
+      "layers": [
+        {
+          "name": "privacy",
+          "ordValue": 4,
+          "definition": "個人情報保護・プライバシーの絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "pedagogy",
+          "ordValue": 3,
+          "definition": "教育学的前提・学習理論",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "data",
+          "ordValue": 2,
+          "definition": "学習データ・プラットフォーム依存",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "prediction",
+          "ordValue": 1,
+          "definition": "離脱予測モデル・介入戦略",
+          "derivedFrom": [
+            "C4",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prv1",
+          "layerName": "privacy",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prv2",
+          "layerName": "privacy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ped1",
+          "layerName": "pedagogy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".prv1"
+          ]
+        },
+        {
+          "id": "ped2",
+          "layerName": "pedagogy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "dat1",
+          "layerName": "data",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".prv2"
+          ]
+        },
+        {
+          "id": "dat2",
+          "layerName": "data",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".ped1"
+          ]
+        },
+        {
+          "id": "dat3",
+          "layerName": "data",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prd1",
+          "layerName": "prediction",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".ped1",
+            ".dat1"
+          ]
+        },
+        {
+          "id": "prd2",
+          "layerName": "prediction",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".dat2",
+            ".dat3"
+          ]
+        },
+        {
+          "id": "prd3",
+          "layerName": "prediction",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".ped2",
+            ".dat1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".prd1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 210,
+    "project": "潮力発電最適化 AI",
+    "num_c": 4,
+    "num_h": 8,
+    "num_layers": 7,
+    "num_props": 13,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TidalPowerOptimization",
+      "layers": [
+        {
+          "name": "safety",
+          "ordValue": 6,
+          "definition": "設備・人員安全の絶対制約",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "regulation",
+          "ordValue": 5,
+          "definition": "環境規制・漁業権等の法的制約",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "oceanography",
+          "ordValue": 4,
+          "definition": "海洋物理・潮汐モデル",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "engineering",
+          "ordValue": 3,
+          "definition": "タービン設計・構造工学制約",
+          "derivedFrom": [
+            "C3",
+            "H4"
+          ]
+        },
+        {
+          "name": "grid",
+          "ordValue": 2,
+          "definition": "送電網・系統連系の外部依存",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        },
+        {
+          "name": "optimization",
+          "ordValue": 1,
+          "definition": "発電最適化アルゴリズム",
+          "derivedFrom": [
+            "C4",
+            "H7"
+          ]
+        },
+        {
+          "name": "hypothesis",
+          "ordValue": 0,
+          "definition": "未検証の仮説",
+          "derivedFrom": [
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "safe1",
+          "layerName": "safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "regu1",
+          "layerName": "regulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".safe1"
+          ]
+        },
+        {
+          "id": "regu2",
+          "layerName": "regulation",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ocn1",
+          "layerName": "oceanography",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ocn2",
+          "layerName": "oceanography",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".ocn1"
+          ]
+        },
+        {
+          "id": "eng1",
+          "layerName": "engineering",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".safe1",
+            ".ocn1"
+          ]
+        },
+        {
+          "id": "eng2",
+          "layerName": "engineering",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".regu1",
+            ".ocn2"
+          ]
+        },
+        {
+          "id": "grd1",
+          "layerName": "grid",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "grd2",
+          "layerName": "grid",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".eng1",
+            ".grd1"
+          ]
+        },
+        {
+          "id": "opt1",
+          "layerName": "optimization",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".eng2",
+            ".grd2"
+          ]
+        },
+        {
+          "id": "opt2",
+          "layerName": "optimization",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".ocn2",
+            ".grd1"
+          ]
+        },
+        {
+          "id": "hyp1",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".opt1"
+          ]
+        },
+        {
+          "id": "hyp2",
+          "layerName": "hypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]
