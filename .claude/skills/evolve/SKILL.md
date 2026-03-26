@@ -500,13 +500,13 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（49回実行データ、Run 49 で更新。全54 JSONLエントリ独立集計） |
+| 仮説 | 反証条件 | 現状評価（50回実行データ、Run 50 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。51回 success / 3回 observation。Verifier pass rate 全期間 73.0%（138/189）、直近5 entries 75.9%（22/29）。Run 49 は 6/6 PASS（全項目通過） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。51回 success / 3回 observation。Verifier pass rate 全期間 73.0%（138/189）、直近5 entries 75.9%（22/29）。Run 50 は 3/3 PASS（全項目通過） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=251。compression 4.05x（405%）。V4 blocked=0 の Goodhart 懸念は継続 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=253。compression 4.08x（408%）。V4 blocked=0 の Goodhart 懸念は継続 |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間178改善統合（113 conservative extension, 63 compatible change, 0 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 6 件（run 39, 41, 42, 45, 46, 47）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 7 件（run 39, 41, 42, 45, 46, 47, 49）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト $3.13-$5.90/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

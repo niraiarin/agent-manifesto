@@ -841,4 +841,116 @@ theorem structureDependsOn_asymmetric :
   unfold structureDependsOn at *
   exact absurd (Nat.lt_trans hab hba) (Nat.lt_irrefl _)
 
+-- ============================================================
+-- Proposition-Level Dependency Graph — D13 基盤
+-- ============================================================
+
+/-!
+## 命題レベルの依存グラフ
+
+structureDependsOn は StructureKind の5段階優先度に基づく。
+これは「構造の種類」間の依存であり、個別の命題（T1, E1, P2 等）間の
+依存は表現できない。
+
+D13（前提否定の影響波及定理）は命題レベルの依存を前提とする。
+ここでは命題の識別子と依存関係の型を定義する。
+-/
+
+/-- マニフェスト命題のカテゴリ。T/E/P/L/D の5層。 -/
+inductive PropositionCategory where
+  | constraint         -- T: 拘束条件
+  | empiricalPostulate -- E: 経験的公準
+  | principle          -- P: 基盤原理
+  | boundary           -- L: 境界条件
+  | designTheorem      -- D: 設計定理
+  deriving BEq, Repr
+
+/-- 命題の識別子。マニフェストの全命題を列挙する。 -/
+inductive PropositionId where
+  -- T: 拘束条件
+  | t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8
+  -- E: 経験的公準
+  | e1 | e2
+  -- P: 基盤原理
+  | p1 | p2 | p3 | p4 | p5 | p6
+  -- L: 境界条件
+  | l1 | l2 | l3 | l4 | l5 | l6
+  -- D: 設計定理
+  | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13
+  deriving BEq, Repr
+
+/-- 命題のカテゴリを返す。 -/
+def PropositionId.category : PropositionId → PropositionCategory
+  | .t1 | .t2 | .t3 | .t4 | .t5 | .t6 | .t7 | .t8 => .constraint
+  | .e1 | .e2 => .empiricalPostulate
+  | .p1 | .p2 | .p3 | .p4 | .p5 | .p6 => .principle
+  | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
+  | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
+  | .d9 | .d10 | .d11 | .d12 | .d13 => .designTheorem
+
+/-- 命題の直接依存先を返す。マニフェストの導出構造をエンコード。
+
+    各命題が何に依存しているかの定義。
+    T は根ノード（依存なし）、D は葉ノード（多くの依存を持つ）。 -/
+def PropositionId.dependencies : PropositionId → List PropositionId
+  -- T: 根ノード（独立）
+  | .t1 | .t2 | .t3 | .t4 | .t5 | .t6 | .t7 | .t8 => []
+  -- E: T に部分的に依存
+  | .e1 => [.t4]
+  | .e2 => []
+  -- P: T/E から導出
+  | .p1 => [.e2]
+  | .p2 => [.t4, .e1]
+  | .p3 => [.t1, .t2]
+  | .p4 => [.t5, .t7]
+  | .p5 => [.t4]
+  | .p6 => [.t3, .t7, .t8]
+  -- L: T/E/P に依存
+  | .l1 => [.p1, .t6]
+  | .l2 => [.t1, .t3, .t4]
+  | .l3 => [.t6, .t7]
+  | .l4 => [.t6, .p1, .d8]
+  | .l5 => []  -- 環境依存（外部）
+  | .l6 => [.t6, .p3]
+  -- D: T/E/P/L から導出
+  | .d1 => [.p5, .l1, .l2, .l3, .l4, .l5, .l6]
+  | .d2 => [.e1, .p2]
+  | .d3 => [.p4, .t5]
+  | .d4 => [.p3]
+  | .d5 => [.t8, .p4, .p6]
+  | .d6 => [.d3]
+  | .d7 => [.p1]
+  | .d8 => [.e2]
+  | .d9 => [.p3]
+  | .d10 => [.t1, .t2]
+  | .d11 => [.t3, .d1, .d3]
+  | .d12 => [.p6, .t3, .t7, .t8]
+  | .d13 => [.p3, .t5]
+
+/-- 命題が別の命題に直接依存する。 -/
+def propositionDependsOn (a b : PropositionId) : Bool :=
+  a.dependencies.contains b
+
+/-- T（拘束条件）は根ノード: 何にも依存しない。 -/
+theorem constraints_are_roots :
+  ∀ (p : PropositionId),
+    p.category = .constraint → p.dependencies = [] := by
+  intro p hp; cases p <;> simp [PropositionId.category] at hp <;> rfl
+
+/-- PropositionCategory の認識論的強度順序。
+    T > E > P。L と D は P 以下。 -/
+def PropositionCategory.strength : PropositionCategory → Nat
+  | .constraint         => 5
+  | .empiricalPostulate => 4
+  | .principle          => 3
+  | .boundary           => 2
+  | .designTheorem      => 1
+
+/-- 依存は認識論的強度の降順: 依存先は依存元以上の強度を持つ。
+    （D13 の波及方向の根拠: 上流の変更が下流に影響する） -/
+axiom dependency_respects_strength :
+  ∀ (a b : PropositionId),
+    propositionDependsOn a b = true →
+    b.category.strength ≥ a.category.strength
+
 end Manifest

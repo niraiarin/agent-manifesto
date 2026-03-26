@@ -7,10 +7,14 @@
 METRICS_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo .)/.claude/metrics"
 mkdir -p "$METRICS_DIR"
 
+INPUT=$(cat)
+SESSION=$(echo "$INPUT" | jq -r '.session_id // ""' 2>/dev/null)
+SESSION=${SESSION:-""}
+
 # セッション開始時に前回のメトリクスサマリを生成
 if [ -f "$METRICS_DIR/tool-usage.jsonl" ]; then
   TOTAL=$(wc -l < "$METRICS_DIR/tool-usage.jsonl" | tr -d ' ')
-  echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"event\":\"session_summary\",\"total_tool_calls\":$TOTAL}" >> "$METRICS_DIR/sessions.jsonl"
+  echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"event\":\"session_summary\",\"total_tool_calls\":$TOTAL,\"session_id\":\"$SESSION\"}" >> "$METRICS_DIR/sessions.jsonl"
 fi
 
 exit 0
