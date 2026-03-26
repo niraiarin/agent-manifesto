@@ -109,6 +109,12 @@ grep -q "反証条件" "$HYP" && pass "Hypothesizer references refutation" || fa
 grep -q "読み取り専用" "$HYP" && pass "Hypothesizer is read-only" || fail "Hypothesizer missing read-only constraint"
 ! grep -q "Edit\|Write" "$HYP" && pass "Hypothesizer has no Edit/Write tools" || fail "Hypothesizer should not have Edit/Write"
 
+# Hypothesizer 品質ゲート (obs-3-A, obs-3-B)
+grep -q "事前検証チェックリスト\|Pre-Proposal Verification" "$HYP" && pass "Hypothesizer has pre-proposal verification checklist" || fail "Hypothesizer missing pre-proposal verification checklist"
+grep -q "繰り返し提案の段階的抑止\|1 回 reject 後\|2 回以上 reject 後" "$HYP" && pass "Hypothesizer has repeated-proposal suppression rule" || fail "Hypothesizer missing repeated-proposal suppression rule"
+grep -q "trivially-true.*回避\|trivially-true 定理の回避" "$HYP" && pass "Hypothesizer has trivially-true avoidance" || fail "Hypothesizer missing trivially-true avoidance"
+grep -q "L1 行動空間制約\|hooks.*変更不可\|settings.json.*変更不可" "$HYP" && pass "Hypothesizer has L1 action space constraint" || fail "Hypothesizer missing L1 action space constraint"
+
 # Integrator
 INT=".claude/agents/integrator/AGENT.md"
 grep -q "^name: integrator" "$INT" && pass "Integrator has name" || fail "Integrator missing name"
@@ -513,6 +519,37 @@ grep -q "non_manifest_all_ops_permitted" "$PROCEDURE_LEAN" && pass "Lean trace: 
 grep -q "empty_world_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: empty_world_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: empty_world_no_contraction_affected not found in Procedure.lean"
 grep -q "manifest_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: manifest_no_contraction_affected not found in Procedure.lean"
 grep -q "contraction_affected_trans" "$PROCEDURE_LEAN" && pass "Lean trace: contraction_affected_trans exists in Procedure.lean" || fail "Lean trace: contraction_affected_trans not found in Procedure.lean"
+
+echo ""
+
+# ============================================================
+# Section 14: D5 三層断裂修正の維持確認
+# ============================================================
+echo "--- Section 14: D5 Traceability Maintenance ---"
+
+LEAN_TRACE="$BASE/.claude/skills/evolve/references/lean-traceability.md"
+DESIGN_IMPL_PLAN="$BASE/.claude/skills/design-implementation-plan/SKILL.md"
+FORMAL_DERIV="$BASE/.claude/skills/formal-derivation/SKILL.md"
+
+# lean-traceability.md 存在確認
+echo -n "  lean-traceability.md exists... "
+[ -f "$LEAN_TRACE" ] && pass "lean-traceability.md exists" || fail "lean-traceability.md missing at .claude/skills/evolve/references/lean-traceability.md"
+
+# Gap 列の存在確認
+echo -n "  lean-traceability.md has Gap column... "
+grep -q "Gap\|ギャップ" "$LEAN_TRACE" 2>/dev/null && pass "Gap column exists" || fail "Gap column missing in lean-traceability.md"
+
+# FAIL loopback エントリの存在確認
+echo -n "  lean-traceability.md has FAIL loopback entry... "
+grep -q "loopback\|FAIL.*ループバック\|ループバック.*FAIL" "$LEAN_TRACE" 2>/dev/null && pass "FAIL loopback entry exists" || fail "FAIL loopback entry missing in lean-traceability.md"
+
+# /design-implementation-plan D5 traceability チェックリスト存在確認
+echo -n "  /design-implementation-plan has D5 traceability checklist... "
+grep -q "D5.*トレーサビリティ\|traceability.*D5\|D5.*traceability\|逆引き可能\|三者間.*対応.*D5\|D5.*形式仕様.*テスト" "$DESIGN_IMPL_PLAN" 2>/dev/null && pass "D5 traceability checklist exists in design-implementation-plan" || fail "D5 traceability checklist missing in design-implementation-plan"
+
+# /formal-derivation Step 4d 逆方向トレーサビリティ存在確認
+echo -n "  /formal-derivation has Step 4d reverse traceability... "
+grep -q "Step 4d\|逆方向トレーサビリティ\|reverse.*traceability\|traceability.*reverse" "$FORMAL_DERIV" 2>/dev/null && pass "Step 4d reverse traceability exists in formal-derivation" || fail "Step 4d reverse traceability missing in formal-derivation"
 
 echo ""
 

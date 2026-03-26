@@ -749,21 +749,21 @@ instance : SelfGoverning CompatibilityClass where
   canClassifyUpdate _ _ := True
 
 -- ============================================================
--- 構造的整合性 — Section 4 の階層構造の形式化
+-- 構造的整合性 — Section 8（構造的整合性）の形式化
 -- ============================================================
 
 /-!
 ## 構造的整合性（Structural Coherence）
 
 公理の体系、及びそれらに準拠した成果物は半順序関係にある。
-manifesto.md Section 4 の階層構造（最上位使命 > 進化方向層 > 現実制約層）を
+manifesto.md Section 8 の構造間半順序（manifest > designConvention > skill > test > document）を
 StructureKind の優先度として形式化する。
 
 D4（フェーズ順序）、D5（仕様→テスト→実装）、D6（境界→緩和策→変数）は
 全てこの半順序の個別インスタンスである。
 -/
 
-/-- StructureKind の優先度。manifesto Section 4 の階層構造を反映。
+/-- StructureKind の優先度。manifesto Section 8 の半順序を反映。
     manifest > designConvention > skill > test > document。 -/
 def StructureKind.priority : StructureKind → Nat
   | .manifest          => 5

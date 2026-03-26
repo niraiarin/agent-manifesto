@@ -321,6 +321,20 @@ Step 1: 根本原因を分類する:
 - **assumption_error**: 前提条件の誤り（互換性分類の誤り、行動空間外等）
 - **precondition_error**: 先行フェーズの成果物が不十分
 
+**failure_subtype（任意の細分類、evolve-history.jsonl の rejected エントリに記録可）:**
+
+| failure_subtype | 親 failure_type | 説明 |
+|----------------|----------------|------|
+| `H_no_pre_verification` | hypothesis_error | 事前検証チェックリスト未実施（ファイル未読・数値未確認等） |
+| `H_trivially_true` | hypothesis_error | trivially-true 定理の提案（rfl 証明・定義の直接展開等） |
+| `H_redundancy_check` | hypothesis_error | 既存定義・既存制約との重複確認不足 |
+| `H_impl_specification` | hypothesis_error | 実装手順の具体性不足（位置・内容が曖昧） |
+| `H_repeated_failure` | hypothesis_error | 同一改善案の繰り返し提案（段階的抑止ルール違反） |
+| `O_data_quality` | observation_error | 観察データの品質問題（手動カウント誤り・パス誤り等） |
+
+> 注記: append-only 規約のため、旧エントリには failure_subtype がない。
+> Observer のクエリは null チェックを含めること（下記 Observer AGENT.md 参照）。
+
 Step 2: ループバック判定（EvolveSkill.lean `loopbackTarget`）:
 - observation_error → Observer を再起動し、当該項目を再観察（Phase 1）
 - hypothesis_error → Hypothesizer を再起動し、正確なデータで再設計（Phase 2）
