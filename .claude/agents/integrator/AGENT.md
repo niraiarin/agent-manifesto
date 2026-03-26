@@ -145,7 +145,7 @@ EOF
 - resolved した deferred: `status` を `"resolved"` に、`resolved_in_run` を設定
 - abandoned した deferred: `status` を `"abandoned"` に、`abandoned_in_run` を設定
 - 新規 open の deferred: `items` に追加
-- `last_updated_run` を現在の run 番号に更新
+- `last_updated_run` を現在の run 番号に更新（deferred に状態変化がなかった場合でも必ず更新する）
 
 ```bash
 # 正規化テーブルの open 件数確認
