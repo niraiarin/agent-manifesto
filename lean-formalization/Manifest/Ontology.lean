@@ -1002,7 +1002,7 @@ inductive PropositionId where
   -- L: 境界条件
   | l1 | l2 | l3 | l4 | l5 | l6
   -- D: 設計定理
-  | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13
+  | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
   deriving BEq, Repr
 
 /-- 命題のカテゴリを返す。 -/
@@ -1012,7 +1012,7 @@ def PropositionId.category : PropositionId → PropositionCategory
   | .p1 | .p2 | .p3 | .p4 | .p5 | .p6 => .principle
   | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
   | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
-  | .d9 | .d10 | .d11 | .d12 | .d13 => .designTheorem
+  | .d9 | .d10 | .d11 | .d12 | .d13 | .d14 => .designTheorem
 
 /-- 命題の直接依存先を返す。マニフェストの導出構造をエンコード。
 
@@ -1052,6 +1052,7 @@ def PropositionId.dependencies : PropositionId → List PropositionId
   | .d11 => [.t3, .d1, .d3]
   | .d12 => [.p6, .t3, .t7, .t8]
   | .d13 => [.p3, .t5]
+  | .d14 => [.p6, .t7, .t8]
 
 /-- 命題が別の命題に直接依存する。 -/
 def propositionDependsOn (a b : PropositionId) : Bool :=
