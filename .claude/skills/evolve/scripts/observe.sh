@@ -119,9 +119,13 @@ V7_FILE="$METRICS_DIR/v7-tasks.jsonl"
 SESSIONS_FILE="$METRICS_DIR/sessions.jsonl"
 
 # V5: Proposal Accuracy (approved / total)
+# PRIMARY: jq-based (authoritative)
+# CROSSCHECK: grep-based (schema drift detection)
 if [ -f "$V5_FILE" ]; then
-  V5_APPROVED=$(grep -c '"result":"approved"' "$V5_FILE" 2>/dev/null || echo "0")
-  V5_TOTAL=$(wc -l < "$V5_FILE" | tr -d ' ')
+  V5_APPROVED=$(jq -r 'select(.result == "approved") | .result' "$V5_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  V5_APPROVED=${V5_APPROVED:-0}
+  V5_TOTAL=$(wc -l < "$V5_FILE" 2>/dev/null | tr -d ' ')
+  V5_TOTAL=${V5_TOTAL:-0}
   if [ "$V5_TOTAL" -gt 0 ] 2>/dev/null; then
     V5_RATE=$((V5_APPROVED * 100 / V5_TOTAL))
   else
@@ -133,17 +137,17 @@ else
   V5_RATE=0
 fi
 
-# V5 jq crosscheck (detect schema drift)
+# V5 grep crosscheck (detect schema drift)
 if [ -f "$V5_FILE" ]; then
-  V5_JQ_APPROVED=$(jq -r 'select(.result == "approved") | .result' "$V5_FILE" 2>/dev/null | wc -l | tr -d ' ')
-  V5_JQ_APPROVED=${V5_JQ_APPROVED:-0}
-  if [ "$V5_APPROVED" -ne "$V5_JQ_APPROVED" ] 2>/dev/null; then
+  V5_GREP_APPROVED=$(grep -c '"result":"approved"' "$V5_FILE" 2>/dev/null || echo 0)
+  V5_GREP_APPROVED=${V5_GREP_APPROVED:-0}
+  if [ "$V5_APPROVED" -ne "$V5_GREP_APPROVED" ] 2>/dev/null; then
     V5_SCHEMA_DRIFT="true"
   else
     V5_SCHEMA_DRIFT="false"
   fi
 else
-  V5_JQ_APPROVED=0
+  V5_GREP_APPROVED=0
   V5_SCHEMA_DRIFT="false"
 fi
 
