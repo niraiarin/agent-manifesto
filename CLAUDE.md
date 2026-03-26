@@ -76,7 +76,7 @@
 ## Build & Test Commands
 
 - `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
-- `bash tests/test-all.sh` — run all 244 acceptance tests (Phase 1–5)
+- `bash tests/test-all.sh` — run all 247 acceptance tests (Phase 1–5)
 - `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l` — count axioms
 - `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
 

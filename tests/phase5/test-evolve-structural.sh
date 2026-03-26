@@ -390,6 +390,28 @@ print(count)
 echo -n "  No orphan forward-references in notes... "
 if [ "${ORPHAN_COUNT:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($ORPHAN_COUNT orphans)"; FAIL=$((FAIL+1)); fi
 
+# Run ID uniqueness (SKILL.md invariant: 1 Run につき 1 エントリのみ)
+DUPE_RUNS=$(python3 -c "
+import json, sys
+runs = []
+with open('$HISTORY') as f:
+    for line in f:
+        line = line.strip()
+        if not line: continue
+        try:
+            rec = json.loads(line)
+            r = rec.get('run')
+            if r is not None:
+                runs.append(r)
+        except:
+            pass
+from collections import Counter
+dupes = [r for r, c in Counter(runs).items() if c > 1 and r is not None]
+print(len(dupes))
+" 2>/dev/null)
+echo -n "  No duplicate run IDs in evolve-history... "
+if [ "${DUPE_RUNS:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($DUPE_RUNS duplicate run IDs)"; FAIL=$((FAIL+1)); fi
+
 echo ""
 
 # ============================================================

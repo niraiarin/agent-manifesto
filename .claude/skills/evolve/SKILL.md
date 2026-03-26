@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 172 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 247 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -540,14 +540,14 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（51回実行データ、Run 51 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（61回実行データ、Run 61 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。51回 success / 3回 observation。Verifier pass rate 全期間 73.0%（138/189）、直近5 entries 75.9%（22/29）。Run 50 は 3/3 PASS（全項目通過） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。60回 success / 1回 partial / 3回 observation。Verifier pass rate: Run 60 は 5/8 PASS（62.5%）。Run 60 FAIL 1件は hypothesis_error (H_wrong_premise) |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=253。compression 4.08x（408%）。V4 blocked=0 の Goodhart 懸念は継続 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間178改善統合（113 conservative extension, 63 compatible change, 0 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 8 件（run 39, 41, 42, 45, 46, 47, 49, 50）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト 3.13-5.90 USD/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 評価準備中。7 データポイント: mean 1.07 USD/improvement (range 0.64-3.94 USD)。Run 46 外れ値 (3.94 USD) は findings:improvements 比率 12:1 に起因。evolve-history.jsonl に cost フィールド追加済み（Run 51）。10 件以上で傾向評価実施予定 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=273。compression 4.33x（433%）。V4 blocked=0 の Goodhart 懸念は継続 |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間183改善統合（Run 60 まで）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。10 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60）。session cost: mean 4.47 USD, median 4.77 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 7/10 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。10 データポイント: CPI mean 1.23 USD/improvement, median 1.00 USD (range 0.03-3.94 USD)。前半5 runs (39-46) CPI mean 1.42 USD → 後半5 runs (47-60) CPI mean 1.04 USD（26.8% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 
