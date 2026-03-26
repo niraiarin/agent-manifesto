@@ -95,6 +95,14 @@
 - `grep -oP` (Perl regex) unavailable on macOS. Use POSIX alternatives
 - Plugin hooks: use `${CLAUDE_PLUGIN_ROOT}/hooks/` for portable paths
 
+## Research Process
+
+実装前の技術的リサーチには Gate-Driven Research Workflow を使う:
+- `docs/research/workflow/research-workflow.md` — ワークフロー定義（P3 ライフサイクルの運用インスタンス）
+- Gap Analysis → Parent Issue → Sub-Issues (with Gates) → Worktree 隔離実験
+- Gate 判定: PASS（統合）/ CONDITIONAL（子 issue で再帰）/ FAIL（退役）
+- 閾値は実験前に設定（確証バイアス防止、D3 可観測性先行）
+
 ## Development Process
 
 - Step 0 before implementation: spec research (0a) + prior art (0b) + PoC (0c)
