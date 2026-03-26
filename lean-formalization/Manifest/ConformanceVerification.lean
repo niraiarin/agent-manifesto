@@ -1,9 +1,9 @@
-import Manifest.Procedure
-import Manifest.Terminology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 import Manifest.Observable
 import Manifest.Meta
+import Manifest.Terminology
+import Manifest.Procedure
 
 /-!
 # 準拠検証: Lean 文書群の手順書・用語リファレンスへの準拠
