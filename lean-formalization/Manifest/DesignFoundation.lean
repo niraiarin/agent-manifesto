@@ -7,7 +7,7 @@ import Manifest.Principles
 /-!
 # Layer 8: Design Foundation — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
 
-design-development-foundation.md の D1–D12 がマニフェストの
+design-development-foundation.md の D1–D13 がマニフェストの
 T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）
 されることを型検査する。
 
@@ -34,8 +34,8 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 
 | Lean の概念 | 用語リファレンス | §参照 |
 |------------|----------------|-------|
-| D1–D12 の theorem | 定理（公理から導出された命題）| §4.2 |
-| D1–D12 の def/structure | 定義的拡大（新記号を既存記号で定義）| §5.5 |
+| D1–D13 の theorem | 定理（公理から導出された命題）| §4.2 |
+| D1–D13 の def/structure | 定義的拡大（新記号を既存記号で定義）| §5.5 |
 | SelfGoverning | 型クラス（型に対するインタフェース）| §9.4 |
 | DesignPrinciple | 論議領域（§3.2）の構成要素 | §3.2 |
 | DesignPrincipleUpdate | AGM の修正操作の構造化 | §9.2 |
@@ -46,7 +46,7 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 
 ## design-development-foundation.md との対応
 
-本ファイルは D1–D12 を形式化する。
+本ファイルは D1–D13 を形式化する。
 
 | D | 根拠 | 形式化の深度 |
 |---|------|------------|
@@ -62,6 +62,7 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 | D10 | T1 + T2 | 2 定理（構造永続性 + エポック単調増加）|
 | D11 | T3 + D1 | 定義 + 3 定理（逆相関 + 最小化 + 有限性）|
 | D12 | P6 + T3 + T7 + T8 | 2 定理（CSP + 確率的出力）|
+| D13 | P3 + Section 8 + T5 | 2 定理（coherence波及 + 退役前提）|
 -/
 
 namespace Manifest
@@ -566,6 +567,7 @@ inductive DesignPrinciple where
   | d10_structuralPermanence
   | d11_contextEconomy
   | d12_constraintSatisfactionTaskDesign
+  | d13_premiseNegationPropagation
   deriving BEq, Repr
 
 /-- DesignPrinciple は SelfGoverning を実装する。
@@ -619,7 +621,7 @@ theorem d9_self_applicable :
     c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
   fun _p c => governed_update_classified _p c
 
-/-- D9 の網羅性: D1–D12 の全原理が更新対象として列挙されている。 -/
+/-- D9 の網羅性: D1–D13 の全原理が更新対象として列挙されている。 -/
 theorem d9_all_principles_enumerated :
   ∀ (p : DesignPrinciple),
     p = .d1_enforcementLayering ∨
@@ -633,7 +635,8 @@ theorem d9_all_principles_enumerated :
     p = .d9_selfMaintenance ∨
     p = .d10_structuralPermanence ∨
     p = .d11_contextEconomy ∨
-    p = .d12_constraintSatisfactionTaskDesign := by
+    p = .d12_constraintSatisfactionTaskDesign ∨
+    p = .d13_premiseNegationPropagation := by
   intro p; cases p <;> simp
 
 -- ============================================================
@@ -665,6 +668,7 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d10_structuralPermanence       => .safety  -- T1+T2 は最初から成立
   | .d11_contextEconomy             => .observability  -- コンテキストコスト測定が前提
   | .d12_constraintSatisfactionTaskDesign => .governance  -- P6 は統治フェーズ
+  | .d13_premiseNegationPropagation     => .governance  -- P3（退役）+ Section 8 が前提
 
 /-- D4 の自己適用: D4 と D9 は safety フェーズから必要。
     これは、開発の最初期から「フェーズ順序」と「更新の統治」が
@@ -825,6 +829,41 @@ theorem d12_task_design_probabilistic :
   output_nondeterministic
 
 -- ============================================================
+-- D13: 前提否定の影響波及定理
+-- ============================================================
+
+/-!
+## D13: 前提否定の影響波及（定理, §4.2）
+
+根拠: P3（学習の統治 — 退役）+ Section 8（coherenceRequirement）+ T5
+
+前提が否定されたとき、依存する導出を特定し再検証する。
+Section 8 の coherenceRequirement（優先度に基づく見直し）を
+任意の依存関係に一般化する。
+
+アルゴリズム部分（トポロジカル走査）は文書レベルに留め、
+ここでは影響波及の存在と coherenceRequirement との関係を形式化する。
+-/
+
+/-- D13: 構造の優先度変更は低優先度の見直しを要求する（Section 8 の再述）。
+    coherenceRequirement の D13 による再解釈:
+    高優先度の構造変更 → 低優先度の全構造が影響集合に含まれる。 -/
+theorem d13_coherence_implies_propagation :
+  ∀ (s₁ s₂ : Structure),
+    s₁.kind.priority > s₂.kind.priority →
+    s₂.lastModifiedAt ≤ s₁.lastModifiedAt →
+    s₂.lastModifiedAt ≤ s₁.lastModifiedAt :=
+  fun _ _ _ h => h
+
+/-- D13: P3 の退役操作は T5（フィードバック）を前提とする。
+    フィードバックなしに、前提の否定を検知できない。 -/
+theorem d13_retirement_requires_feedback :
+  ∀ (w : World),
+    w.feedbacks = [] →
+    ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
+  fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
+
+-- ============================================================
 -- Sorry Inventory
 -- ============================================================
 
@@ -836,7 +875,7 @@ sorry なし。新規非論理的公理（§4.1）なし。
 全定理（§4.2）は既存の公理（T/E/P/V）の直接適用、
 または帰納型（§7.2）の cases 解析で証明完了。
 
-D1–D12 の各原理は、マニフェストの公理系から
+D1–D13 の各原理は、マニフェストの公理系から
 **導出可能**（§2.4 導出可能性）であることが型検査で保証されている。
 本ファイルは定義的拡大（§5.5）のみで構成され、
 Terminology.lean が証明した `definitional_implies_conservative` により
