@@ -7,7 +7,7 @@ import Manifest.Principles
 /-!
 # Layer 8: Design Foundation — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
 
-design-development-foundation.md の D1–D13 がマニフェストの
+design-development-foundation.md の D1–D14 がマニフェストの
 T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）
 されることを型検査する。
 
@@ -46,7 +46,7 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 
 ## design-development-foundation.md との対応
 
-本ファイルは D1–D13 を形式化する。
+本ファイルは D1–D14 を形式化する。
 
 | D | 根拠 | 形式化の深度 |
 |---|------|------------|
@@ -63,6 +63,7 @@ D はメタレベル（§5.6 メタ理論）の設計原理であり、
 | D11 | T3 + D1 | 定義 + 3 定理（逆相関 + 最小化 + 有限性）|
 | D12 | P6 + T3 + T7 + T8 | 2 定理（CSP + 確率的出力）|
 | D13 | P3 + Section 8 + T5 | 2 定理（coherence波及 + 退役前提）|
+| D14 | P6 + T7 + T8 | 1 定理（検証順序の制約充足性）|
 -/
 
 namespace Manifest
@@ -568,6 +569,7 @@ inductive DesignPrinciple where
   | d11_contextEconomy
   | d12_constraintSatisfactionTaskDesign
   | d13_premiseNegationPropagation
+  | d14_verificationOrderConstraint
   deriving BEq, Repr
 
 /-- DesignPrinciple は SelfGoverning を実装する。
@@ -636,7 +638,8 @@ theorem d9_all_principles_enumerated :
     p = .d10_structuralPermanence ∨
     p = .d11_contextEconomy ∨
     p = .d12_constraintSatisfactionTaskDesign ∨
-    p = .d13_premiseNegationPropagation := by
+    p = .d13_premiseNegationPropagation ∨
+    p = .d14_verificationOrderConstraint := by
   intro p; cases p <;> simp
 
 -- ============================================================
@@ -669,6 +672,7 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d11_contextEconomy             => .observability  -- コンテキストコスト測定が前提
   | .d12_constraintSatisfactionTaskDesign => .governance  -- P6 は統治フェーズ
   | .d13_premiseNegationPropagation     => .governance  -- P3（退役）+ Section 8 が前提
+  | .d14_verificationOrderConstraint   => .governance  -- P6 + T7 + T8 が前提
 
 /-- D4 の自己適用: D4 と D9 は safety フェーズから必要。
     これは、開発の最初期から「フェーズ順序」と「更新の統治」が
@@ -869,7 +873,7 @@ def allPropositions : List PropositionId :=
    .e1, .e2,
    .p1, .p2, .p3, .p4, .p5, .p6,
    .l1, .l2, .l3, .l4, .l5, .l6,
-   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13]
+   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14]
 
 /-- 命題 s に直接依存する命題の集合（逆方向のエッジ）。
     dependencies は「何に依存するか」、dependents は「何が自分に依存しているか」。 -/
@@ -952,6 +956,42 @@ theorem manifest_has_widest_impact :
     D1-D13 の依存先が存在することの証明。 -/
 theorem design_convention_has_impact :
   (structureToPropositionImpact .designConvention).length > 0 := by native_decide
+
+-- ============================================================
+-- D14: 検証順序の制約充足性定理
+-- ============================================================
+
+/-!
+## D14: 検証順序の制約充足性（定理, §4.2）
+
+根拠: P6（制約充足）+ T7（リソース有限性）+ T8（精度水準）
+
+有限リソース下では検証順序が結果に影響する。
+順序の選択は P6 の制約充足問題に含まれる。
+D12 の拡張。
+
+### 公理系が定めないもの
+
+D14 は「検証順序が重要」を導出するが、最適な順序の決定方法は導出しない。
+情報利得、リスク順（fail-fast）、コスト順はいずれも D14 を満たすモデル。
+具体的な方法の選択は L6（設計規約）レベル。
+-/
+
+/-- D14: リソースが有限（T7）かつ精度要求がある（T8）とき、
+    タスク戦略の実行可能性は制約充足の範囲内（D12 の再述）。
+    検証順序の選択はこの制約充足問題の一部。 -/
+theorem d14_verification_order_is_csp :
+  ∀ (task : Task) (agent : Agent),
+    agent.contextWindow.capacity > 0 →
+    task.resourceBudget ≤ globalResourceBound →
+    task.precisionRequired.required > 0 →
+    ∀ (s : TaskStrategy),
+      s.task = task →
+      strategyFeasible s agent →
+      s.contextUsage ≤ agent.contextWindow.capacity ∧
+      s.resourceUsage ≤ globalResourceBound ∧
+      s.achievedPrecision > 0 :=
+  task_is_constraint_satisfaction
 
 -- ============================================================
 -- Sorry Inventory
