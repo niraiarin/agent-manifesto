@@ -2,6 +2,7 @@ import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 import Manifest.Observable
+import Manifest.ObservableDesign
 
 /-!
 # Meta-theoretic: Meta — 公理系のメタ性質（メタ理論, 用語リファレンス §5.6）

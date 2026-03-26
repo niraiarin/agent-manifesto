@@ -2,6 +2,7 @@ import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 import Manifest.Observable
+import Manifest.ObservableDesign
 
 /-!
 # Epistemic Layer: principle (strength 3) — P1–P6 定理の導出（手順書 Phase 2）

@@ -4,6 +4,7 @@ import Manifest.EmpiricalPostulates
 import Manifest.Principles
 import Manifest.Workflow
 import Manifest.Observable
+import Manifest.ObservableDesign
 import Manifest.Meta
 import Manifest.Evolution
 import Manifest.DesignFoundation
@@ -38,7 +39,8 @@ import Manifest.EpistemicLayer
 | 5 | **Axioms** | T1–T8 拘束条件（T₀, 根ノード, 縮小不可） |
 | 4 | **EmpiricalPostulates** | E1–E2 経験的公準（反証可能） |
 | 3 | **Principles** | P1–P6 基盤原理（T+E から導出） |
-| 2-1 | **Observable** | V1–V7 可観測変数 + トレードオフ + Goodhart 防御 |
+| 2 | **Observable** | V1–V7 可観測変数（基盤: opaque 定義 + 可測性 axiom） |
+| 1 | **ObservableDesign** | トレードオフ + Goodhart 防御 + 投資サイクル |
 | 1 | **DesignFoundation** | D1–D14 設計開発基礎論 |
 
 ### Tier C: メタ理論・応用
