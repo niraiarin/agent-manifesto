@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 47,
+  "last_updated_run": 49,
   "items": {
     "v4-goodhart-hook": {
       "status": "abandoned",
@@ -166,9 +166,9 @@
     "h5-ccusage-cost-analysis": {
       "status": "open",
       "reason": "dependencyBlocked",
-      "blocked_by": "有効 session_id データ 10 件以上の蓄積（現在 5 件: run 39, 41, 42, 45, 46。統計的傾向確認の最小サンプル数）",
+      "blocked_by": "有効 session_id データ 10 件以上の蓄積（現在 6 件: run 39, 41, 42, 45, 46, 47。統計的傾向確認の最小サンプル数）",
       "opened_in_run": 41,
-      "note": "H5 仮説の実証データ分析。ccusage session の projectPath 末尾 UUID で session_id と照合可能（Run 44 で実証）。予備データ: サブエージェントコスト $3.13-$5.90/run（3 データポイント）。run 40,43 は session_id=unknown で照合不可。"
+      "note": "H5 仮説の実証データ分析。ccusage session の projectPath 末尾 UUID で session_id と照合可能（Run 44 で実証）。予備データ: サブエージェントコスト $3.13-$5.90/run（3 データポイント）。run 40,43 は session_id=unknown で照合不可。閾値 10 件の根拠: 慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ。"
     },
     "t3-llm-terminology": {
       "status": "resolved",

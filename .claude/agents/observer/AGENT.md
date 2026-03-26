@@ -214,6 +214,8 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 
 **過去の誤検知履歴（注意）**: resolved 済み deferred を open と誤報告した事例が 3 回ある（section8-lean-theorems: run 36, run 48）。deferred-status.json の status フィールドを必ず確認すること。上記の正しいクエリを使用し、status フィールドで確実にフィルタリングすること。
 
+**deferred_jsonl_quality はレガシーメトリクス**: observe.sh の deferred_jsonl_quality フィールドは改善候補にすべきでないレガシーメトリクス。deferred-status.json が正規ソース。
+
 ## 制約
 
 - **観察のみ**: 仮説化・提案は行わない（P3 ライフサイクルの順序を守る）

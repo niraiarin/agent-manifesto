@@ -119,6 +119,10 @@ V7_FILE="$METRICS_DIR/v7-tasks.jsonl"
 SESSIONS_FILE="$METRICS_DIR/sessions.jsonl"
 
 # V5: Proposal Accuracy (approved / total)
+# v5-approvals.jsonl schema: {"timestamp":..., "event":"v5_approval", "result":"approved"|"rejected", "session":...}
+# Written by: .claude/hooks/p4-v5-approval-tracker.sh (UserPromptSubmit hook)
+# Mapping: .result == "approved" → V5_APPROVED count, total lines → V5_TOTAL
+# 計測単位: UserPromptSubmit hook が承認パターンに一致した応答数
 # PRIMARY: jq-based (authoritative)
 # CROSSCHECK: grep-based (schema drift detection)
 if [ -f "$V5_FILE" ]; then
@@ -138,6 +142,8 @@ else
 fi
 
 # V5 grep crosscheck (detect schema drift)
+# jq-based (PRIMARY) と grep-based (CROSSCHECK) の不一致はスキーマドリフトを示す
+# 不一致時: v5-approvals.jsonl のフォーマットが変化した可能性。schema_drift=true を出力
 if [ -f "$V5_FILE" ]; then
   V5_GREP_APPROVED=$(grep -c '"result":"approved"' "$V5_FILE" 2>/dev/null || echo 0)
   V5_GREP_APPROVED=${V5_GREP_APPROVED:-0}
@@ -357,6 +363,12 @@ fi
 echo "  \"deferred_open\": $DEFERRED_OPEN,"
 
 # JSONL deferred duplication metric (legacy data quality indicator)
+# 目的: JSONL の append-only 累積方式により同一 ID が複数 run に出現することの定量的記録
+# 解釈: total_entries と unique_ids の差分が大きいほど重複度が高い
+#       これは設計上の帰結であり異常ではない（各 run が状態スナップショットを記録）
+# 用途: deferred-status.json が正規ソースであることの裏付けデータ
+#       分析・改善判断には使用しない（legacy_audit_metric）
+# 注意: open 件数の確認には deferred_open フィールドを使用すること
 if [ -f "$HISTORY_FILE" ]; then
   DEFERRED_TOTAL=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
   DEFERRED_UNIQUE=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | sort -u | wc -l | tr -d ' ')
@@ -364,6 +376,6 @@ else
   DEFERRED_TOTAL=0
   DEFERRED_UNIQUE=0
 fi
-echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE}"
+echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE, \"note\": \"legacy_audit_metric: not_for_analysis. See SKILL.md Step 0\"}"
 
 echo "}"

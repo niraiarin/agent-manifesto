@@ -89,9 +89,21 @@ Observer が検出した退役候補を処理する:
 2. breakingChange で無効化された知識の退役
 3. 退役を MEMORY.md から除去（またはアーカイブ）
 
-### Step 5: evolve 実行記録の保存（notes 必須、標準スキーマ準拠）
+### Step 5a: session_id の取得（H5 コスト追跡用）
+
+**以下のコマンドを Bash ツールで必ず先に実行し、出力された UUID をメモせよ。**
+この値を Step 5b の session_id フィールドに使用する。
+
+```bash
+tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // "unknown"'
+```
+
+取得した UUID が `^[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+$` 形式でない場合は `"unknown"` を使用する。
+
+### Step 5b: evolve 実行記録の保存（notes 必須、標準スキーマ準拠）
 
 以下の標準スキーマに従って記録する。**全フィールドが必須。値が不明な場合は 0 または null を記入。省略不可。**
+`session_id` には Step 5a で取得した UUID を代入すること。
 
 ```json
 {
@@ -117,9 +129,7 @@ Observer が検出した退役候補を処理する:
 
 ```bash
 # 実行記録を保存（次回の Observer が参照）
-# session_id: 現在セッションの UUID（H5 per-evolve コスト追跡用）
-SESSION_ID=$(tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // empty' 2>/dev/null)
-if ! echo "$SESSION_ID" | grep -qE '^[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+-[0-9a-f]+$'; then SESSION_ID="unknown"; fi
+# session_id: Step 5a で取得した UUID を $SESSION_ID に代入済みであること
 cat >> .claude/metrics/evolve-history.jsonl << EOF
 {"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
@@ -127,7 +137,7 @@ EOF
 
 **notes/deferred 整合性制約**: notes に前方参照（「次回」「蓄積待ち」「可能になる」等）を書く場合、対応する deferred エントリを必ず登録すること。notes だけに未完了タスクを書いて deferred を空にすると、テスト（Section 10）が FAIL する。
 
-### Step 5b: deferred-status.json の更新
+### Step 5c: deferred-status.json の更新
 
 **注意**: deferred-status.json が deferred 状態の唯一の正規ソース。evolve-history.jsonl の deferred フィールドは当該 run 時点のスナップショットであり、現在の状態を反映しない。
 
