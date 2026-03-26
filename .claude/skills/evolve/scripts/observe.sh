@@ -309,7 +309,7 @@ else
 fi
 echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\" },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
-echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"jq_crosscheck\": $V5_JQ_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
+echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
 MEMORY_DIR="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory"
 V6_MEMORY_ENTRIES=$(grep -c "^- \[" "$MEMORY_MD" 2>/dev/null || echo "0")
@@ -354,6 +354,16 @@ if [ -f "$DEFERRED_FILE" ]; then
 else
   DEFERRED_OPEN="[]"
 fi
-echo "  \"deferred_open\": $DEFERRED_OPEN"
+echo "  \"deferred_open\": $DEFERRED_OPEN,"
+
+# JSONL deferred duplication metric (legacy data quality indicator)
+if [ -f "$HISTORY_FILE" ]; then
+  DEFERRED_TOTAL=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  DEFERRED_UNIQUE=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | sort -u | wc -l | tr -d ' ')
+else
+  DEFERRED_TOTAL=0
+  DEFERRED_UNIQUE=0
+fi
+echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE}"
 
 echo "}"

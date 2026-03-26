@@ -200,6 +200,9 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 
 # Note: deferred-status.json が唯一の正規ソース（run 18 で導入）。
 # JSONL フォールバックは legacy ノイズの原因（run 17 observation_error）のため廃止。
+# 分析上の注意: run 1-17 の JSONL deferred フィールドは累積スナップショット方式で
+# 書き込まれており、同一 ID が複数 run に重複出現する（全 96 件中 76 件が重複）。
+# JSONL deferred を集計・分析に使用しないこと。
 ```
 
 前回の結果がある場合、Observer にコンテキストとして渡す。

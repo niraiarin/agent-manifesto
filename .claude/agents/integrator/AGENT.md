@@ -110,6 +110,7 @@ Observer が検出した退役候補を処理する:
   },
   "v_changes": {},
   "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],
+  "// deferred note": "当該 run で状態が変化した deferred のみ記録。累積スナップショットは記録しない（deferred-status.json が正規ソース）",
   "notes": "次回への引き継ぎ事項（必須）"
 }
 ```
@@ -127,6 +128,8 @@ EOF
 **notes/deferred 整合性制約**: notes に前方参照（「次回」「蓄積待ち」「可能になる」等）を書く場合、対応する deferred エントリを必ず登録すること。notes だけに未完了タスクを書いて deferred を空にすると、テスト（Section 10）が FAIL する。
 
 ### Step 5b: deferred-status.json の更新
+
+**注意**: deferred-status.json が deferred 状態の唯一の正規ソース。evolve-history.jsonl の deferred フィールドは当該 run 時点のスナップショットであり、現在の状態を反映しない。
 
 `.claude/metrics/deferred-status.json` が存在する場合、以下を更新:
 - resolved した deferred: `status` を `"resolved"` に、`resolved_in_run` を設定

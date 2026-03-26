@@ -212,6 +212,8 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 - `status = "resolved"` の項目: 既に解決済み。改善候補に含めない
 - `status = "abandoned"` の項目: 放棄済み。改善候補に含めない
 
+**過去の誤検知履歴（注意）**: resolved 済み deferred を open と誤報告した事例が 3 回ある（section8-lean-theorems: run 36, run 48）。deferred-status.json の status フィールドを必ず確認すること。上記の正しいクエリを使用し、status フィールドで確実にフィルタリングすること。
+
 ## 制約
 
 - **観察のみ**: 仮説化・提案は行わない（P3 ライフサイクルの順序を守る）
