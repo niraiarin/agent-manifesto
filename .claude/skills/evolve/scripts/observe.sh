@@ -267,8 +267,11 @@ fi
 if [ -f "$TOOL_LOG" ]; then
   V4_PASSED=$(grep -c '"tool":"Bash"' "$TOOL_LOG" 2>/dev/null || true)
   V4_PASSED=${V4_PASSED:-0}
-  V4_BLOCKED=$(grep -c '"event":"gate_blocked"' "$TOOL_LOG" 2>/dev/null || true)
+  V4_BLOCKED_ALL=$(grep -c '"event":"gate_blocked"' "$TOOL_LOG" 2>/dev/null || true)
+  V4_BLOCKED_ALL=${V4_BLOCKED_ALL:-0}
+  V4_BLOCKED=$(jq -s '[.[] | select(.event == "gate_blocked" and .session_id != "unknown")] | length' "$TOOL_LOG" 2>/dev/null || echo "0")
   V4_BLOCKED=${V4_BLOCKED:-0}
+  V4_BLOCKED_EXCLUDED=$((V4_BLOCKED_ALL - V4_BLOCKED))
   V4_TOTAL=$((V4_PASSED + V4_BLOCKED))
   if [ "$V4_TOTAL" -gt 0 ] 2>/dev/null; then
     V4_RATE=$((V4_PASSED * 100 / V4_TOTAL))
@@ -278,6 +281,7 @@ if [ -f "$TOOL_LOG" ]; then
 else
   V4_PASSED=0
   V4_BLOCKED=0
+  V4_BLOCKED_EXCLUDED=0
   V4_TOTAL=0
   V4_RATE=100
 fi
@@ -494,7 +498,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
 fi
 echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"gate pass rate implementation OR operational correlation evidence (T6)\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
-echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
+echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"blocked_excluded\": $V4_BLOCKED_EXCLUDED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
 MEMORY_DIR="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory"
