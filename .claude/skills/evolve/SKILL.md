@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 247 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 248 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -323,19 +323,28 @@ Step 1: 根本原因を分類する:
 
 **failure_subtype（任意の細分類、evolve-history.jsonl の rejected エントリに記録可）:**
 
-| failure_subtype | 親 failure_type | 説明 |
-|----------------|----------------|------|
-| `H_no_pre_verification` | hypothesis_error | 事前検証チェックリスト未実施（ファイル未読・数値未確認等） |
-| `H_trivially_true` | hypothesis_error | trivially-true 定理の提案（rfl 証明・定義の直接展開等） |
-| `H_redundancy_check` | hypothesis_error | 既存定義・既存制約との重複確認不足 |
-| `H_impl_specification` | hypothesis_error | 実装手順の具体性不足（位置・内容が曖昧） |
-| `H_repeated_failure` | hypothesis_error | 同一改善案の繰り返し提案（段階的抑止ルール違反） |
-| `H_wrong_premise` | hypothesis_error | 概念の誤適用・所有権の誤認識・カテゴリエラー（過去の決定との矛盾を含む） |
-| `H_technical_validation` | hypothesis_error | スクリプト・コマンドの技術的妥当性未検証（構文エラー・型不整合・ゼロ除算等） |
-| `O_data_quality` | observation_error | 観察データの品質問題（手動カウント誤り・パス誤り等） |
+| failure_subtype | 親 failure_type | 説明 | 推定基準の例 |
+|----------------|----------------|------|------------|
+| `H_no_pre_verification` | hypothesis_error | 事前検証チェックリスト未実施（ファイル未読・数値未確認等） | FAIL 理由に「ファイルを確認していない」「読んでいない」が含まれる |
+| `H_trivially_true` | hypothesis_error | trivially-true 定理の提案（rfl 証明・定義の直接展開等） | FAIL 理由に「trivially true」「rfl」「定義の展開」が含まれる |
+| `H_redundancy_check` | hypothesis_error | 既存定義・既存制約との重複確認不足 | FAIL 理由に「既に存在する」「重複」「既存の」が含まれる |
+| `H_impl_specification` | hypothesis_error | 実装手順の具体性不足（位置・内容が曖昧） | FAIL 理由に「曖昧」「位置不明」「具体性不足」が含まれる |
+| `H_repeated_failure` | hypothesis_error | 同一改善案の繰り返し提案（段階的抑止ルール違反） | FAIL 理由に「繰り返し」「前回も」「同一案」が含まれる |
+| `H_wrong_premise` | hypothesis_error | 概念の誤適用・所有権の誤認識・カテゴリエラー（過去の決定との矛盾を含む） | FAIL 理由に「前提が誤り」「捏造」「存在しないフィールド」「矛盾」が含まれる |
+| `H_technical_validation` | hypothesis_error | スクリプト・コマンドの技術的妥当性未検証（構文エラー・型不整合・ゼロ除算等） | FAIL 理由に「構文エラー」「型不整合」「コマンドが失敗」が含まれる |
+| `O_data_quality` | observation_error | 観察データの品質問題（手動カウント誤り・パス誤り等） | FAIL 理由に「手動カウント」「数値が不一致」「パスが誤り」が含まれる |
 
 > 注記: append-only 規約のため、旧エントリには failure_subtype がない。
 > Observer のクエリは null チェックを含めること（下記 Observer AGENT.md 参照）。
+
+**none エントリの推定分類（Observer 向けガイダンス）:**
+- Observer は failure_subtype が null/none のエントリについて、FAIL 理由テキストから上記「推定基準の例」を参照し推定分類を試みてよい
+- 推定結果は Observer の出力（観察レポート）にのみ含める。JSONL の遡及修正は append-only 規約により禁止
+- 推定は `(推定)` を明示して確定値と区別すること（例: `failure_subtype: H_wrong_premise (推定)`）
+
+**Hypothesizer 向けガイダンス（failure_subtype 活用）:**
+- 同一 failure_subtype に該当する改善案を提案する場合、evolve-history.jsonl の該当 FAIL エントリを事前確認し、繰り返し失敗の回避策を明示すること
+- 特に `H_repeated_failure` は段階的抑止ルール（SKILL.md Step 2）に違反するため提案前に必ず過去の FAIL 履歴を確認すること
 
 Step 2: ループバック判定（EvolveSkill.lean `loopbackTarget`）:
 - observation_error → Observer を再起動し、当該項目を再観察（Phase 1）
@@ -540,12 +549,12 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（62回実行データ、Run 62 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（63回実行データ、Run 63 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。61回 success / 1回 partial / 3回 observation。Verifier pass rate: Run 61 は 4/4 PASS（100%）。全期間 186/248 PASS（75%） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。62回 success / 1回 partial / 3回 observation。Verifier pass rate: Run 62 は 4/4 PASS（100%）。全期間 190/252 PASS（75%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=288。compression 4.57x（457%）。V4 blocked=0 の Goodhart 懸念は継続 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間231改善統合（150 conservative extension, 78 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間235改善統合（153 conservative extension, 79 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。10 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60）。session cost: mean 4.47 USD, median 4.77 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 7/10 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
 | H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。10 データポイント: CPI mean 1.23 USD/improvement, median 1.00 USD (range 0.03-3.94 USD)。前半5 runs (39-46) CPI mean 1.42 USD → 後半5 runs (47-60) CPI mean 1.04 USD（26.8% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
 

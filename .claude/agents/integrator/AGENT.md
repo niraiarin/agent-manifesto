@@ -59,6 +59,19 @@ export PATH="$HOME/.elan/bin:$PATH" && cd lean-formalization && lake build Manif
 cd /path/to/agent-manifesto && bash tests/test-all.sh
 ```
 
+### 仮説テーブル更新時の照合手順
+
+SKILL.md の仮説テーブル（H1, H3, H4 等）に数値を転記する場合、
+必ず observe.sh の hypothesis_table_stats 出力を参照し、
+手動カウントではなくスクリプト出力の値を使用すること。
+
+確認すべき値:
+- H1: h1_verifier.pass, h1_verifier.fail, h1_verifier.pass_rate_percent
+- H4: h4_compatibility.total, 内訳（conservative_extension, compatible_change, breaking_change, other）
+- H5: h5_valid_uuids
+
+注: この手順は feedback_hypothesis_autocount.md の知見に基づく。
+
 ### Step 3: git commit（互換性分類付き）
 
 P3 hook が互換性分類の存在を強制する。

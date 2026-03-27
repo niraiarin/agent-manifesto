@@ -525,22 +525,6 @@ else
 fi
 echo "  \"deferred_open\": $DEFERRED_OPEN,"
 
-# JSONL deferred duplication metric (legacy data quality indicator)
-# 目的: JSONL の append-only 累積方式により同一 ID が複数 run に出現することの定量的記録
-# 解釈: total_entries と unique_ids の差分が大きいほど重複度が高い
-#       これは設計上の帰結であり異常ではない（各 run が状態スナップショットを記録）
-# 用途: deferred-status.json が正規ソースであることの裏付けデータ
-#       分析・改善判断には使用しない（legacy_audit_metric）
-# 注意: open 件数の確認には deferred_open フィールドを使用すること
-if [ -f "$HISTORY_FILE" ]; then
-  DEFERRED_TOTAL=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
-  DEFERRED_UNIQUE=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | sort -u | wc -l | tr -d ' ')
-else
-  DEFERRED_TOTAL=0
-  DEFERRED_UNIQUE=0
-fi
-echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE, \"note\": \"legacy_audit_metric: not_for_analysis. See SKILL.md Step 0\"},"
-
 # --- 仮説テーブル自動集計（evolve-history.jsonl からの権威的カウント） ---
 # H1: Verifier pass/fail 全期間合計（.phases.verifier フィールド対応エントリのみ）
 # H4: 互換性クラス別改善件数（.improvements[].compatibility）
