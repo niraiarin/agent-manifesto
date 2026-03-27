@@ -378,15 +378,34 @@ for line in open('$HISTORY'):
             last_by_run[run] = rec
     except:
         pass
+# deferred-status.json の解消済みアイテムを取得
+# evolve-history.jsonl の deferred は「当該 run で状態変化した deferred のみ」記録。
+# notes が deferred-status.json の既存アイテムを参照している場合、
+# そのアイテムが後続 run で resolved されていれば orphan ではない。
+resolved_later = set()
+deferred_status_path = '$BASE/.claude/metrics/deferred-status.json'
+try:
+    with open(deferred_status_path) as f:
+        ds = json.load(f)
+    items = ds.get('items', {})
+    # items can be dict (id->item) or list
+    item_list = items.values() if isinstance(items, dict) else items
+    for item in item_list:
+        if isinstance(item, dict) and item.get('status') in ('resolved', 'abandoned'):
+            resolved_later.add(item.get('resolved_in_run') or item.get('abandoned_in_run') or 0)
+except:
+    pass
 count = 0
-for rec in last_by_run.values():
+for run, rec in last_by_run.items():
     notes = rec.get('notes', '')
     deferred = rec.get('deferred', [])
     if not notes or not isinstance(deferred, list):
         continue
     has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
     has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
-    if has_forward_ref and not has_resolution_marker and len(deferred) == 0:
+    # notes の前方参照が後続 run で解消されている場合は orphan でない
+    later_resolved = any(r >= run for r in resolved_later)
+    if has_forward_ref and not has_resolution_marker and len(deferred) == 0 and not later_resolved:
         count += 1
 print(count)
 " 2>/dev/null)
