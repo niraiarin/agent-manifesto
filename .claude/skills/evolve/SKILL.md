@@ -435,21 +435,38 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 
 ## 品質指標（AxiomQuality.lean と接続）
 
-各 evolve 実行で以下を計測し、改善を定量化する:
+各 evolve 実行で以下を計測し、改善を定量化する。
+指標は **最適化指標**（改善を目指す）と **ガバナンス指標**（観測のみ、最適化対象にしない）に分離される。
+ガバナンス指標を直接の改善目標にしてはならない（Goodhart 耐性、R2 #86）。
+
+### 最適化指標（Hypothesizer が改善を提案してよい）
 
 | 指標 | 計測方法 | 改善方向 |
 |------|---------|---------|
-| axiom count | `grep -r "^axiom " --include="*.lean"` | → (不要な増加を避ける) |
-| theorem count | `grep -r "^theorem " --include="*.lean"` | ↑ |
-| sorry count | `grep -r "sorry" --include="*.lean"` | ↓ (0 を維持) |
-| warning count | `lake build 2>&1 \| grep warning` | ↓ (0 を維持) |
-| test pass rate | `bash tests/test-all.sh` | ↑ (100% を維持) |
+| theorem delta/run | evolve-history.jsonl .lean.theorems 差分 | ↑ |
+| test delta/run | evolve-history.jsonl .tests.passed 差分 | ↑ |
+| verifier pass rate | .phases.verifier pass/(pass+fail) | ↑ |
 | compression ratio | axiomCount の定義より | ↑ |
-| De Bruijn factor | AxiomQuality.lean より | → (4.0 前後が健全) |
-| V1-V7 | /metrics スキル | 各 V に応じた改善方向 |
-| V5（注記） | v5-approvals.jsonl（UserPromptSubmit hook）の承認率。H1 Verifier pass rate とは異なる指標。計測単位: UserPromptSubmit hook が承認パターンに一致した応答数 | ↑ |
-| ccusage (T7) | `bunx ccusage daily --json --offline` | 定量的コスト観測 |
+| V5（注記） | v5-approvals.jsonl（UserPromptSubmit hook）の承認率。H1 Verifier pass rate とは異なる指標 | ↑ |
 | cost/improvement (T7) | evolve-history.jsonl `cost.cost_per_improvement_usd` | ↓（効率向上） |
+
+### ガバナンス指標（観測のみ — Hypothesizer は直接の改善目標にしない）
+
+| 指標 | 計測方法 | 期待値 | ガバナンス理由 |
+|------|---------|--------|---------------|
+| test pass count (絶対数) | `bash tests/test-all.sh` | 248+ | 直接最適化すると自明なテスト追加を誘発 |
+| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 63 (安定) | 不要な公理追加は形式系を弱める |
+| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 288+ (増加) | delta は最適化、絶対数はガバナンス |
+| sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
+| warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
+| De Bruijn factor | AxiomQuality.lean より | ≈4.0 | 直接最適化すると冗長な証明を誘発 |
+| V2 (context efficiency) | tool-usage.jsonl | stable | hub 変数。最適化すると V1,V3 が劣化 |
+| ccusage (T7) | `bunx ccusage daily --json --offline` | 観測 | コスト観測は直接最適化しない |
+
+### 交差検証ルール
+
+最適化指標（theorem delta 等）が改善を示しているのにガバナンス指標（絶対数）が
+横ばいまたは低下している場合、Goodhart 圧力を疑い調査する。
 
 ## 終了条件
 

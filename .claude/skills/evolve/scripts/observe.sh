@@ -282,7 +282,8 @@ else
   V4_RATE=100
 fi
 
-# V1: Skill Quality — provisional proxy (not benchmark.json-based)
+# V1: Skill Quality — GQM-based measurement (benchmark.json schema)
+# Q3 (operational stability): evolve success rate (reclassified from primary to process metric)
 SKILL_COUNT=$(find "$BASE/.claude/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
 EVOLVE_SUCCESS=0
 EVOLVE_TOTAL_RUNS=0
@@ -303,8 +304,125 @@ if [ "${SORRY_COUNT:-0}" -gt 0 ] 2>/dev/null; then
   LEAN_HEALTH=0
 fi
 
+# Q1 (structural contribution): theorem delta and test delta per run
+V1_THEOREM_DELTA=0
+V1_TEST_DELTA=0
+V1_THEOREM_DELTA_AVG=0
+V1_TEST_DELTA_AVG=0
+if [ -f "$HISTORY_FILE" ]; then
+  # Calculate deltas between consecutive runs from evolve-history.jsonl
+  V1_THEOREM_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.theorems != null)]
+    | if length > 1 then
+        .[-1].lean.theorems - .[-2].lean.theorems
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_TEST_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null)]
+    | if length > 1 then
+        .[-1].tests.passed - .[-2].tests.passed
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Rolling average over last 10 runs (x100 scale for integer arithmetic)
+  V1_THEOREM_DELTA_AVG=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.theorems != null)]
+    | if length > 1 then
+        [range(1; length) as $i | (.[($i)].lean.theorems - .[($i) - 1].lean.theorems)]
+        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_TEST_DELTA_AVG=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null)]
+    | if length > 1 then
+        [range(1; length) as $i | (.[($i)].tests.passed - .[($i) - 1].tests.passed)]
+        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+fi
+V1_THEOREM_DELTA=${V1_THEOREM_DELTA:-0}
+V1_TEST_DELTA=${V1_TEST_DELTA:-0}
+V1_THEOREM_DELTA_AVG=${V1_THEOREM_DELTA_AVG:-0}
+V1_TEST_DELTA_AVG=${V1_TEST_DELTA_AVG:-0}
+
+# Q2 (verification quality): verifier pass rate and rejected count
+V1_VERIFIER_PASS=0
+V1_VERIFIER_FAIL=0
+V1_VERIFIER_RATE=0
+V1_REJECTED_COUNT=0
+V1_REJECTED_AVG=0
+if [ -f "$HISTORY_FILE" ]; then
+  V1_VERIFIER_PASS=$(jq -s '[.[] | select(.result != "observation") | .phases.verifier.pass_count // 0] | add // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_VERIFIER_FAIL=$(jq -s '[.[] | select(.result != "observation") | .phases.verifier.fail_count // 0] | add // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_VERIFIER_TOTAL=$((V1_VERIFIER_PASS + V1_VERIFIER_FAIL))
+  if [ "$V1_VERIFIER_TOTAL" -gt 0 ] 2>/dev/null; then
+    V1_VERIFIER_RATE=$((V1_VERIFIER_PASS * 100 / V1_VERIFIER_TOTAL))
+  fi
+  V1_REJECTED_COUNT=$(jq -s '[.[] | select(.result != "observation")] | .[-1].rejected | length // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Rolling average rejected count over last 10 runs
+  V1_REJECTED_AVG=$(jq -s '
+    [.[] | select(.result != "observation") | (.rejected | length // 0)]
+    | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+fi
+V1_VERIFIER_PASS=${V1_VERIFIER_PASS:-0}
+V1_VERIFIER_FAIL=${V1_VERIFIER_FAIL:-0}
+V1_VERIFIER_RATE=${V1_VERIFIER_RATE:-0}
+V1_REJECTED_COUNT=${V1_REJECTED_COUNT:-0}
+V1_REJECTED_AVG=${V1_REJECTED_AVG:-0}
+
+# Non-triviality score (R5): 0-4 based on structural conditions met
+NTS_C1=0; NTS_C2=0; NTS_C3=0; NTS_C4=0
+if [ "$V1_THEOREM_DELTA" -gt 0 ] 2>/dev/null; then NTS_C1=1; fi
+if [ "$V1_TEST_DELTA" -gt 0 ] 2>/dev/null; then NTS_C2=1; fi
+# C3: axiom delta != 0
+NTS_AXIOM_DELTA=0
+if [ -f "$HISTORY_FILE" ]; then
+  NTS_AXIOM_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.axioms != null)]
+    | if length > 1 then .[-1].lean.axioms - .[-2].lean.axioms else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  NTS_AXIOM_DELTA=${NTS_AXIOM_DELTA:-0}
+fi
+if [ "$NTS_AXIOM_DELTA" -ne 0 ] 2>/dev/null; then NTS_C3=1; fi
+# C4: verifier pass >= 2 in last run
+NTS_LAST_VERIFIER_PASS=0
+if [ -f "$HISTORY_FILE" ]; then
+  NTS_LAST_VERIFIER_PASS=$(jq -s '[.[] | select(.result != "observation")] | .[-1].phases.verifier.pass_count // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  NTS_LAST_VERIFIER_PASS=${NTS_LAST_VERIFIER_PASS:-0}
+fi
+if [ "$NTS_LAST_VERIFIER_PASS" -ge 2 ] 2>/dev/null; then NTS_C4=1; fi
+NTS_SCORE=$((NTS_C1 + NTS_C2 + NTS_C3 + NTS_C4))
+if [ "$NTS_SCORE" -ge 3 ]; then NTS_LABEL="substantial"
+elif [ "$NTS_SCORE" -ge 1 ]; then NTS_LABEL="moderate"
+else NTS_LABEL="trivial"
+fi
+
+# Saturation detection (R6): consecutive zero-delta runs for test count
+SAT_CONSECUTIVE=0
+if [ -f "$HISTORY_FILE" ]; then
+  SAT_CONSECUTIVE=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
+    if length > 1 then
+      [range(length-1; 0; -1) | select(.[.] == .[.-1])] | length
+      | if . > (input | length - 2) then (input | length - 1) else . end
+    else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Simpler approach: count trailing identical values
+  SAT_CONSECUTIVE=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
+    . as $a | $a[-1] as $last |
+    [range(length-1; -1; -1) | select($a[.] == $last)] |
+    length - 1
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  SAT_CONSECUTIVE=${SAT_CONSECUTIVE:-0}
+fi
+if [ "$SAT_CONSECUTIVE" -ge 10 ] 2>/dev/null; then SAT_STATUS="alert"
+elif [ "$SAT_CONSECUTIVE" -ge 5 ] 2>/dev/null; then SAT_STATUS="warning"
+else SAT_STATUS="ok"
+fi
+
 echo "  \"v1_v7\": {"
-echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"benchmark.json implementation OR operational correlation evidence (T6)\" },"
+echo "    \"v1_skill_quality\": { \"gqm_version\": \"0.1.0\", \"q1_structural_contribution\": { \"theorem_delta_last_run\": $V1_THEOREM_DELTA, \"test_delta_last_run\": $V1_TEST_DELTA, \"theorem_delta_avg_10r\": $V1_THEOREM_DELTA_AVG, \"test_delta_avg_10r\": $V1_TEST_DELTA_AVG }, \"q2_verification_quality\": { \"verifier_pass_total\": $V1_VERIFIER_PASS, \"verifier_fail_total\": $V1_VERIFIER_FAIL, \"verifier_pass_rate\": $V1_VERIFIER_RATE, \"rejected_last_run\": $V1_REJECTED_COUNT, \"rejected_avg_10r\": $V1_REJECTED_AVG }, \"q3_operational_stability\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0} }, \"non_triviality\": { \"score\": $NTS_SCORE, \"label\": \"$NTS_LABEL\", \"c1_theorem_growth\": $NTS_C1, \"c2_test_growth\": $NTS_C2, \"c3_axiom_change\": $NTS_C3, \"c4_multi_verification\": $NTS_C4 }, \"saturation\": { \"test_consecutive_zero_delta\": $SAT_CONSECUTIVE, \"status\": \"$SAT_STATUS\" }, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"benchmark.json GQM metrics validated against structural outcomes (T6)\" },"
 # V2 trend semantics: compare recent_avg (median of last 10 session deltas)
 # against cumulative_avg (filtered full-history mean) as baseline.
 # divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
