@@ -95,7 +95,7 @@ def currentProfile : AxiomSystemProfile :=
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
     structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
-    theoremCount     := 288  -- 全モジュール合計
+    theoremCount     := 291  -- 全モジュール合計
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -106,9 +106,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 63 := by rfl
 
-/-- 現在の公理系の定理数は 288。 -/
+/-- 現在の公理系の定理数は 291。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 288 := by rfl
+  currentProfile.theoremCount = 291 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -150,7 +150,7 @@ def currentTheoremDistribution : TheoremDistribution :=
   { ontologyM              := 20  -- +4: D4/D5/D6 半順序型クラスインスタンス (Run 61 追加)
     axiomsM                := 0
     empiricalPostulatesM   := 0
-    observableM            := 23
+    observableM            := 26  -- +3: 品質優先順位定理 (G1b-1 #91)
     principlesM            := 14
     metaM                  := 12  -- theorem_distribution_consistent を含む
     terminologyM           := 23
