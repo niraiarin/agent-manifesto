@@ -1,0 +1,339 @@
+{
+  "namespace": "QuantumErrorCorrection",
+  "layers": [
+    {
+      "name": "quantum_axiom",
+      "ordValue": 6,
+      "definition": "量子力学の基本公理。ユニタリ発展・測定公理・重ね合わせ原理",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "error_theory",
+      "ordValue": 5,
+      "definition": "量子エラーの数学的理論。Knill-Laflamme 条件・閾値定理",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "code_family",
+      "ordValue": 4,
+      "definition": "エラー訂正符号族。Surface code/Steane code 等の確立された構成",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "decoder",
+      "ordValue": 3,
+      "definition": "デコーダアルゴリズム。MWPM/Union-Find/ML デコーダ",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "hardware_model",
+      "ordValue": 2,
+      "definition": "物理キュビット特性。ノイズモデル・接続性・ゲート忠実度",
+      "derivedFrom": [
+        "C3",
+        "H6"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "リアルタイム訂正最適化。レイテンシ・リソース割当",
+      "derivedFrom": [
+        "C5",
+        "H7",
+        "H8"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "次世代符号・量子 LDPC・フォールトトレランス閾値改善の仮説",
+      "derivedFrom": [
+        "H9"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "qax_unitary",
+      "layerName": "quantum_axiom",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "qax_measurement",
+      "layerName": "quantum_axiom",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "qax_no_cloning",
+      "layerName": "quantum_axiom",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "err_knill_laflamme",
+      "layerName": "error_theory",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".qax_unitary",
+        ".qax_measurement"
+      ]
+    },
+    {
+      "id": "err_threshold",
+      "layerName": "error_theory",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".err_knill_laflamme"
+      ]
+    },
+    {
+      "id": "err_pauli_channel",
+      "layerName": "error_theory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".qax_unitary"
+      ]
+    },
+    {
+      "id": "code_surface",
+      "layerName": "code_family",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".err_knill_laflamme",
+        ".qax_no_cloning"
+      ]
+    },
+    {
+      "id": "code_steane",
+      "layerName": "code_family",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".err_knill_laflamme"
+      ]
+    },
+    {
+      "id": "code_distance",
+      "layerName": "code_family",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".err_threshold",
+        ".code_surface"
+      ]
+    },
+    {
+      "id": "code_logical_op",
+      "layerName": "code_family",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".code_surface",
+        ".code_steane"
+      ]
+    },
+    {
+      "id": "dec_mwpm",
+      "layerName": "decoder",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".code_surface",
+        ".err_pauli_channel"
+      ]
+    },
+    {
+      "id": "dec_union_find",
+      "layerName": "decoder",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".code_surface"
+      ]
+    },
+    {
+      "id": "dec_ml",
+      "layerName": "decoder",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".dec_mwpm",
+        ".err_pauli_channel"
+      ]
+    },
+    {
+      "id": "dec_belief_prop",
+      "layerName": "decoder",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".code_steane",
+        ".err_pauli_channel"
+      ]
+    },
+    {
+      "id": "hw_noise_model",
+      "layerName": "hardware_model",
+      "justification": [
+        "C3",
+        "H6"
+      ],
+      "dependencies": [
+        ".err_pauli_channel"
+      ]
+    },
+    {
+      "id": "hw_connectivity",
+      "layerName": "hardware_model",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".code_surface"
+      ]
+    },
+    {
+      "id": "hw_gate_fidelity",
+      "layerName": "hardware_model",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".err_threshold",
+        ".hw_noise_model"
+      ]
+    },
+    {
+      "id": "hw_readout",
+      "layerName": "hardware_model",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".qax_measurement",
+        ".hw_noise_model"
+      ]
+    },
+    {
+      "id": "opt_latency",
+      "layerName": "optimization",
+      "justification": [
+        "C5",
+        "H7"
+      ],
+      "dependencies": [
+        ".dec_mwpm",
+        ".dec_union_find",
+        ".hw_connectivity"
+      ]
+    },
+    {
+      "id": "opt_resource",
+      "layerName": "optimization",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".code_distance",
+        ".hw_gate_fidelity"
+      ]
+    },
+    {
+      "id": "opt_adaptive",
+      "layerName": "optimization",
+      "justification": [
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".dec_ml",
+        ".hw_noise_model",
+        ".opt_latency"
+      ]
+    },
+    {
+      "id": "opt_schedule",
+      "layerName": "optimization",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".opt_resource",
+        ".opt_latency"
+      ]
+    },
+    {
+      "id": "opt_calibration",
+      "layerName": "optimization",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".hw_gate_fidelity",
+        ".hw_readout"
+      ]
+    },
+    {
+      "id": "hyp_qldpc",
+      "layerName": "hypothesis",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".code_distance",
+        ".err_threshold"
+      ]
+    },
+    {
+      "id": "hyp_ft_threshold",
+      "layerName": "hypothesis",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".err_threshold",
+        ".opt_adaptive",
+        ".hw_gate_fidelity"
+      ]
+    }
+  ]
+}

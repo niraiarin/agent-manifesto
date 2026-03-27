@@ -1,0 +1,334 @@
+{
+  "namespace": "Scenario217",
+  "layers": [
+    {
+      "name": "physical",
+      "ordValue": 6,
+      "definition": "クレーンの物理的制約。荷重・構造限界で不変。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "safety",
+      "ordValue": 5,
+      "definition": "安全規制による制約。法規で強制。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "environmental",
+      "ordValue": 4,
+      "definition": "気象・環境条件。自然法則で決定。",
+      "derivedFrom": [
+        "C6"
+      ]
+    },
+    {
+      "name": "external",
+      "ordValue": 3,
+      "definition": "外部スケジュールへの依存。自律制御できない。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "governance",
+      "ordValue": 2,
+      "definition": "運用統治ルール。管理方針で変更可能。",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "最適化アルゴリズムの設計方針。技術で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実運用データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phy1",
+      "layerName": "physical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy2"
+      ]
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".phy2"
+      ]
+    },
+    {
+      "id": "env1",
+      "layerName": "environmental",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "env2",
+      "layerName": "environmental",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".saf2"
+      ]
+    },
+    {
+      "id": "ext1",
+      "layerName": "external",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".env1"
+      ]
+    },
+    {
+      "id": "ext2",
+      "layerName": "external",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".saf3"
+      ]
+    },
+    {
+      "id": "ext3",
+      "layerName": "external",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".env2"
+      ]
+    },
+    {
+      "id": "gov1",
+      "layerName": "governance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf2"
+      ]
+    },
+    {
+      "id": "gov2",
+      "layerName": "governance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".ext1"
+      ]
+    },
+    {
+      "id": "gov3",
+      "layerName": "governance",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".ext1",
+        ".ext2"
+      ]
+    },
+    {
+      "id": "gov4",
+      "layerName": "governance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".ext3"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".saf2",
+        ".gov1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ext1",
+        ".gov2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".gov1",
+        ".gov3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".env1",
+        ".env2",
+        ".gov4"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".saf3",
+        ".ext2",
+        ".gov3"
+      ]
+    },
+    {
+      "id": "opt6",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".env2",
+        ".ext3"
+      ]
+    },
+    {
+      "id": "opt7",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".gov1",
+        ".opt1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt4",
+        ".opt6"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt2",
+        ".opt5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".opt3"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt7"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "layers": [
+    {
+      "name": "ethical_constraint",
+      "definition": "倫理・プライバシー制約。翻訳の中立性とデータ保護",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "linguistic_postulate",
+      "definition": "言語学的前提。対応言語と翻訳品質の基盤",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "interaction_principle",
+      "definition": "対話設計の原則。UXとコンテキスト管理",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "feature_hypothesis",
+      "definition": "機能仮説。検証により変更可能",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "translation_neutrality",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "user_data_privacy",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "supported_language_pairs",
+      "layerName": "linguistic_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "translation_quality_baseline",
+      "layerName": "linguistic_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "context_window_size",
+      "layerName": "interaction_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fallback_to_human_translator",
+      "layerName": "interaction_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "slang_handling",
+      "layerName": "feature_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "emoji_translation",
+      "layerName": "feature_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "conversation_summary",
+      "layerName": "feature_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_harmful_content_translation",
+      "layerName": "ethical_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    }
+  ]
+}

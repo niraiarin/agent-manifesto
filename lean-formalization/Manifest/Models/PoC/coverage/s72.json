@@ -1,0 +1,153 @@
+{
+  "layers": [
+    {
+      "name": "revenue_constraint",
+      "definition": "収益管理の不変制約（法規制・契約上限・最低料金）",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "demand_postulate",
+      "definition": "需要予測の前提となる統計的・市場的仮定",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "pricing_principle",
+      "definition": "価格決定の原則（公平性・透明性・競争力）",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "adjustment_design",
+      "definition": "価格調整の実装レベルの設計判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_abdd49",
+      "layerName": "revenue_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "OTA_cdaaaf",
+      "layerName": "revenue_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3c7a9f",
+      "layerName": "revenue_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_9c403d",
+      "layerName": "demand_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_fc7690",
+      "layerName": "demand_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_eb27c1",
+      "layerName": "demand_postulate",
+      "justification": [
+        "H1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_62cdb6",
+      "layerName": "pricing_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_175104",
+      "layerName": "pricing_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_3b3160",
+      "layerName": "pricing_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_9ac64b",
+      "layerName": "adjustment_design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_5119d5",
+      "layerName": "adjustment_design",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_e53603",
+      "layerName": "adjustment_design",
+      "justification": [
+        "H5",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_fb0eac",
+      "layerName": "adjustment_design",
+      "justification": [
+        "H4",
+        "C1"
+      ],
+      "dependencies": []
+    }
+  ]
+}

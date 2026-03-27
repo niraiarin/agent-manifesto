@@ -1,0 +1,196 @@
+{
+  "namespace": "AGVFleetControl",
+  "layers": [
+    {
+      "name": "collision_safety",
+      "ordValue": 7,
+      "definition": "衝突・接触防止の絶対不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "system_liveness",
+      "ordValue": 6,
+      "definition": "デッドロック回避・緊急停止の生存性保証",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "comm_resilience",
+      "ordValue": 5,
+      "definition": "通信途絶時のフェイルセーフ",
+      "derivedFrom": [
+        "C5"
+      ]
+    },
+    {
+      "name": "production_rule",
+      "ordValue": 4,
+      "definition": "製造ラインの搬送優先度ルール",
+      "derivedFrom": [
+        "C6"
+      ]
+    },
+    {
+      "name": "path_planning",
+      "ordValue": 3,
+      "definition": "経路計画・予約アルゴリズムの設計",
+      "derivedFrom": [
+        "H1"
+      ]
+    },
+    {
+      "name": "perception_method",
+      "ordValue": 2,
+      "definition": "人間検知・障害物認識の手法",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "optimization_model",
+      "ordValue": 1,
+      "definition": "搬送順序最適化の仮説",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "no_agv_collision",
+      "layerName": "collision_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "human_safe_zone",
+      "layerName": "collision_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_deadlock",
+      "layerName": "system_liveness",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".no_agv_collision"
+      ]
+    },
+    {
+      "id": "instant_estop",
+      "layerName": "system_liveness",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".no_agv_collision",
+        ".human_safe_zone"
+      ]
+    },
+    {
+      "id": "comm_loss_stop",
+      "layerName": "comm_resilience",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".instant_estop"
+      ]
+    },
+    {
+      "id": "dual_radio",
+      "layerName": "comm_resilience",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".comm_loss_stop"
+      ]
+    },
+    {
+      "id": "line_priority",
+      "layerName": "production_rule",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".no_deadlock"
+      ]
+    },
+    {
+      "id": "spatiotemporal_rsv",
+      "layerName": "path_planning",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".no_deadlock",
+        ".no_agv_collision"
+      ]
+    },
+    {
+      "id": "dynamic_replan",
+      "layerName": "path_planning",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".spatiotemporal_rsv",
+        ".human_safe_zone"
+      ]
+    },
+    {
+      "id": "lidar_camera_fusion",
+      "layerName": "perception_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".human_safe_zone"
+      ]
+    },
+    {
+      "id": "occlusion_handling",
+      "layerName": "perception_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".lidar_camera_fusion"
+      ]
+    },
+    {
+      "id": "mip_scheduling",
+      "layerName": "optimization_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".line_priority",
+        ".spatiotemporal_rsv"
+      ]
+    },
+    {
+      "id": "realtime_heuristic",
+      "layerName": "optimization_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".mip_scheduling"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "namespace": "FloodWarning",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "人命保護が最優先。偽陰性（見逃し）を最小化する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "避難指示の最終発令権限は自治体首長にある"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "警報発令から避難完了まで最低2時間を確保する"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "気象庁データとリアルタイム水位センサーを統合する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "誤警報率が高すぎると住民の信頼を失う"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "過去50年分の水害データを学習に使用する"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "通信断時でもローカルで警報判断できる"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "センサーの全面的故障",
+        "content": "水位センサーは10分間隔で正確なデータを送信する"
+      },
+      {
+        "id": "H2",
+        "basis": "C6",
+        "refutation": "気候変動で過去データの分布が無効化された場合",
+        "content": "過去の水害パターンは将来の予測に有効"
+      },
+      {
+        "id": "H3",
+        "basis": "C1,C5",
+        "refutation": "完全な予測精度が達成された場合",
+        "content": "偽陽性（空振り）は偽陰性より許容される"
+      },
+      {
+        "id": "H4",
+        "basis": "C3",
+        "refutation": "都市構造の根本的変化",
+        "content": "流域の地形・土地利用は短期的に不変"
+      },
+      {
+        "id": "H5",
+        "basis": "C4,H1",
+        "refutation": "衛星観測が主流になった場合",
+        "content": "降雨量と水位の相関モデルは統計的に安定"
+      },
+      {
+        "id": "H6",
+        "basis": "C7",
+        "refutation": "5G等で通信断が解消された場合",
+        "content": "エッジデバイスで軽量モデルを実行可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "lifeSafety",
+      "ordValue": 3,
+      "definition": "人命に直結する不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "dataSource",
+      "ordValue": 2,
+      "definition": "観測・データに関する外部依存",
+      "derivedFrom": [
+        "C4",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "予測モデル・アルゴリズムの方針",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "adaptation",
+      "ordValue": 0,
+      "definition": "環境変化への適応戦略",
+      "derivedFrom": [
+        "H4",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "life1",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "life2",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "life3",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "data1",
+      "layerName": "dataSource",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "data2",
+      "layerName": "dataSource",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data3",
+      "layerName": "dataSource",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "life3"
+      ]
+    },
+    {
+      "id": "data4",
+      "layerName": "dataSource",
+      "justification": [
+        "C7",
+        "H6"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        "data1",
+        "data2"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        "life1",
+        "data1"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "data1",
+        "data3"
+      ]
+    },
+    {
+      "id": "pred4",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "life2"
+      ]
+    },
+    {
+      "id": "adap1",
+      "layerName": "adaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "pred1",
+        "data2"
+      ]
+    },
+    {
+      "id": "adap2",
+      "layerName": "adaptation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "data4",
+        "pred3"
+      ]
+    },
+    {
+      "id": "adap3",
+      "layerName": "adaptation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "pred1"
+      ]
+    },
+    {
+      "id": "adap4",
+      "layerName": "adaptation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "pred2",
+        "life3"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "description": "シナリオ53: 意図的単調性違反を含む初版。pred4(prediction,ord=1)がlife2(lifeSafety,ord=3)に依存 — これは合法(依存先>=依存元)。違反を導入: adap4(adaptation,ord=0)がlife3(lifeSafety,ord=3)に直接依存 — これも合法。実際の違反: pred2の偽陰性許容方針(prediction,ord=1)がlife1(lifeSafety,ord=3)に依存するのは合法だが、もしlife1をpredictionに誤分類すると違反が発生する。",
+    "initial_violation": "life1をprediction(ord=1)に誤分類した場合、data1(dataSource,ord=2)がlife1(prediction,ord=1)に依存し、ord(依存先)=1 < ord(依存元)=2 で違反",
+    "resolution": "life1はlifeSafety(ord=3)が正しい。人命最優先は予測方針ではなく不変条件。H由来ではなくC1由来のため修正はLLM自律で可能(分類ミスの修正)。上記の最終版では修正済み。"
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "namespace": "TestCoverage.S182",
+  "layers": [
+    {
+      "name": "PublicSafety",
+      "ordValue": 3,
+      "definition": "来場者の安全確保に関する不変制約。群衆事故防止が最優先",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EventRegulation",
+      "ordValue": 2,
+      "definition": "消防法・条例に基づく規制。主催者判断で細部は調整可能",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "OperationalDesign",
+      "ordValue": 1,
+      "definition": "運営上の設計選択。会場レイアウトや動線に依存",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 0,
+      "definition": "予測精度に関する未検証の仮説。実地データで検証が必要",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s182_p01",
+      "layerName": "PublicSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s182_p02",
+      "layerName": "PublicSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s182_p03",
+      "layerName": "EventRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s182_p01"
+      ]
+    },
+    {
+      "id": "s182_p04",
+      "layerName": "EventRegulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s182_p01",
+        ".s182_p02"
+      ]
+    },
+    {
+      "id": "s182_p05",
+      "layerName": "EventRegulation",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s182_p02"
+      ]
+    },
+    {
+      "id": "s182_p06",
+      "layerName": "OperationalDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s182_p03"
+      ]
+    },
+    {
+      "id": "s182_p07",
+      "layerName": "OperationalDesign",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s182_p04"
+      ]
+    },
+    {
+      "id": "s182_p08",
+      "layerName": "OperationalDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s182_p03",
+        ".s182_p05"
+      ]
+    },
+    {
+      "id": "s182_p09",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s182_p06"
+      ]
+    },
+    {
+      "id": "s182_p10",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s182_p07",
+        ".s182_p08"
+      ]
+    },
+    {
+      "id": "s182_p11",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s182_p06"
+      ]
+    },
+    {
+      "id": "s182_p12",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s182_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "群衆密度が危険水準を超えた場合、即座にアラートを発する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "避難経路の確保と誘導判断は人間のスタッフが最終決定する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "消防法に基づく最大収容人数を超えないよう管理する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "監視カメラとLiDARセンサーを併用して群衆密度を計測する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "来場者数の予測には過去5年分の実績データを使用する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "会場が屋内で風の影響を受けない場合"
+        }
+      },
+      "content": "風向きの変化により群衆の移動パターンが急変するため、気象データとの連携が必要"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "LiDARが夜間の花火煙で計測精度が低下する場合"
+        }
+      },
+      "content": "カメラとLiDARのセンサーフュージョンにより夜間でも高精度な密度推定が可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "会場レイアウトが毎年大幅に変更される場合"
+        }
+      },
+      "content": "過去の動線データから渋滞ポイントを事前予測し、スタッフ配置を最適化できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "H1"
+          ],
+          "refutation": "天候急変時の来場者行動が過去パターンと乖離する場合"
+        }
+      },
+      "content": "時系列モデルによるリアルタイム来場者数予測の精度が80%以上に達する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H2",
+            "H3"
+          ],
+          "refutation": "花火終了後の一斉退場パターンが予測不能な場合"
+        }
+      },
+      "content": "退場時の群衆流を分散させるための段階的退場誘導アルゴリズムが有効"
+    }
+  ]
+}

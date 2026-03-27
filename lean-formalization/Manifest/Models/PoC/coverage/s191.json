@@ -1,0 +1,209 @@
+{
+  "namespace": "Scenario191",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "核融合の物理法則に基づく不変条件。覆すには物理学の革新が必要。",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "炉壁・機器保護のための安全境界。ハードウェアで強制。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "物理学者チームが設定する運転パラメータ。実験ごとに変更可能。",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "control",
+      "ordValue": 1,
+      "definition": "AIが自律的に調整する制御戦略。物理モデルに基づく。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実験データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phys1",
+      "layerName": "physics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys2",
+      "layerName": "physics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys3",
+      "layerName": "physics",
+      "justification": [
+        "C2",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".phys1"
+      ]
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".phys1",
+        ".phys2"
+      ]
+    },
+    {
+      "id": "safe3",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".phys3"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operational",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".safe2"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operational",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".safe1",
+        ".safe3"
+      ]
+    },
+    {
+      "id": "ctrl1",
+      "layerName": "control",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".safe1",
+        ".safe2",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "ctrl2",
+      "layerName": "control",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phys2",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "ctrl3",
+      "layerName": "control",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".safe3",
+        ".ctrl1"
+      ]
+    },
+    {
+      "id": "ctrl4",
+      "layerName": "control",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".phys3",
+        ".ops3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ctrl1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops2",
+        ".ctrl3"
+      ]
+    }
+  ]
+}

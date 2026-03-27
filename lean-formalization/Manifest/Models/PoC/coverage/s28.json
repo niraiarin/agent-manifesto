@@ -1,0 +1,145 @@
+{
+  "layers": [
+    {
+      "name": "physical_law_constraint",
+      "definition": "大気物理の基本法則。熱力学・流体力学は不変",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "observational_postulate",
+      "definition": "観測データの前提。観測網とデータ品質",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "modeling_principle",
+      "definition": "数値モデリングの原則。解像度とパラメタリゼーション",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "verification_boundary",
+      "definition": "検証の境界条件。精度評価の枠組み",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    },
+    {
+      "name": "tuning_hypothesis",
+      "definition": "チューニングの仮説。実験で調整",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "navier_stokes_basis",
+      "layerName": "physical_law_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "thermodynamic_consistency",
+      "layerName": "physical_law_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "observation_network_coverage",
+      "layerName": "observational_postulate",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "satellite_data_quality",
+      "layerName": "observational_postulate",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "grid_resolution_target",
+      "layerName": "modeling_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "convection_parameterization",
+      "layerName": "modeling_principle",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "forecast_skill_score",
+      "layerName": "verification_boundary",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ensemble_spread_calibration",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ml_postprocessing_weight",
+      "layerName": "tuning_hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data_assimilation_cycle",
+      "layerName": "observational_postulate",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "boundary_condition_update",
+      "layerName": "modeling_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    }
+  ]
+}

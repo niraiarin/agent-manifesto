@@ -1,0 +1,131 @@
+{
+  "layers": [
+    {
+      "name": "grid_safety",
+      "definition": "電力系統の安全・安定に関する不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "regulatory_standard",
+      "definition": "電力市場・規制に関する要件",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "forecast_quality",
+      "definition": "予測精度に関する基準",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "definition": "運用方針に関するルール",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "model_selection",
+      "definition": "予測モデル・手法の選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_03178e",
+      "layerName": "grid_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_0f3f24",
+      "layerName": "grid_safety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f72a2b",
+      "layerName": "regulatory_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_b6682a",
+      "layerName": "forecast_quality",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_fbe3c0",
+      "layerName": "forecast_quality",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_4d86a3",
+      "layerName": "operational_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f4cf63",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ML_34695d",
+      "layerName": "model_selection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "GBDT_779429",
+      "layerName": "model_selection",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "PI_15057f",
+      "layerName": "forecast_quality",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

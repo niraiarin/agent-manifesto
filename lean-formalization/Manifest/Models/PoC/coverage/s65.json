@@ -1,0 +1,153 @@
+{
+  "layers": [
+    {
+      "name": "safety_law",
+      "definition": "公共安全に関する法的・物理的不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "inspection_standard",
+      "definition": "点検基準・診断精度に関する要件",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "engineering_rule",
+      "definition": "工学的な判断ルール",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "data_policy",
+      "definition": "データ取得・管理に関する制約",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "model_choice",
+      "definition": "モデル・手法の選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "description": "「劣化予測にはPINNを使用する」がmodel_choice(ord=1)ではなくinspection_standard(ord=4)に割り当てられている。この命題はH4(model_choiceレベルの推論)に依存しているが、inspection_standard(ord=4)に配置されたため、model_choice(ord=1)のH3に依存する命題と同格扱いになり、engineering_rule(ord=3)の命題がinspection_standard(ord=4)の命題に依存する経路で単調性違反が発生する。",
+    "violating_assignment": {
+      "proposition": "劣化予測には物理インフォームドニューラルネットワークを使用する",
+      "assigned_layer": "inspection_standard",
+      "assigned_ord": 4,
+      "should_be": "model_choice",
+      "should_be_ord": 1
+    },
+    "fix_applied": "H由来のためLLMが自律修正: inspection_standard(ord=4)からmodel_choice(ord=1)に降格",
+    "fixed_assignment": {
+      "proposition": "劣化予測には物理インフォームドニューラルネットワークを使用する",
+      "layerName": "model_choice",
+      "justification": [
+        "H4",
+        "H5"
+      ]
+    }
+  },
+  "propositions": [
+    {
+      "id": "prop_53fa17",
+      "layerName": "safety_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_dd4cb3",
+      "layerName": "safety_law",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_210633",
+      "layerName": "inspection_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_19aa9c",
+      "layerName": "inspection_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ASR_048a45",
+      "layerName": "engineering_rule",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f80f23",
+      "layerName": "engineering_rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mmpixel_f48a9b",
+      "layerName": "data_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_2b7216",
+      "layerName": "data_policy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d9bbad",
+      "layerName": "model_choice",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_c9b59b",
+      "layerName": "inspection_standard",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "namespace": "TestCoverage.S7",
+  "layers": [
+    {
+      "name": "CopyrightCompliance",
+      "ordValue": 4,
+      "definition": "著作権法遵守。既存楽曲の無断利用禁止",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "MusicTheory",
+      "ordValue": 3,
+      "definition": "音楽理論的整合性。和声法・対位法の基本ルール",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "StyleAdaptation",
+      "ordValue": 2,
+      "definition": "ジャンル・スタイルへの適応ルール",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "CreativeExpression",
+      "ordValue": 1,
+      "definition": "創造的表現のパラメータ。ユーザーの好みに応じて変動",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s7_p01",
+      "layerName": "CopyrightCompliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s7_p02",
+      "layerName": "CopyrightCompliance",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s7_p03",
+      "layerName": "MusicTheory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s7_p01"
+      ]
+    },
+    {
+      "id": "s7_p04",
+      "layerName": "MusicTheory",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s7_p02"
+      ]
+    },
+    {
+      "id": "s7_p05",
+      "layerName": "StyleAdaptation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s7_p03"
+      ]
+    },
+    {
+      "id": "s7_p06",
+      "layerName": "StyleAdaptation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s7_p04"
+      ]
+    },
+    {
+      "id": "s7_p07",
+      "layerName": "CreativeExpression",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s7_p05"
+      ]
+    },
+    {
+      "id": "s7_p08",
+      "layerName": "CreativeExpression",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s7_p06"
+      ]
+    },
+    {
+      "id": "s7_p09",
+      "layerName": "CreativeExpression",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s7_p05",
+        "s7_p06"
+      ]
+    },
+    {
+      "id": "s7_p10",
+      "layerName": "StyleAdaptation",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s7_p07"
+      ]
+    },
+    {
+      "id": "s7_p11",
+      "layerName": "MusicTheory",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s7_p01",
+        "s7_p02"
+      ]
+    },
+    {
+      "id": "s7_p12",
+      "layerName": "CopyrightCompliance",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        "s7_p03"
+      ]
+    },
+    {
+      "id": "s7_p13",
+      "layerName": "CreativeExpression",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "s7_p07",
+        "s7_p08"
+      ]
+    }
+  ]
+}

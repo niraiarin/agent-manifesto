@@ -1,0 +1,238 @@
+{
+  "namespace": "Scenario273",
+  "layers": [
+    {
+      "name": "geophysics",
+      "ordValue": 4,
+      "definition": "地球物理学的制約。断層の物理的挙動に基づく不変条件。",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "societal",
+      "ordValue": 3,
+      "definition": "社会的責任に関わる制約。誤報防止と情報公開。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "expert",
+      "ordValue": 2,
+      "definition": "専門家が設定するモデルパラメータ。地質調査の更新で変化。",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "analysis",
+      "ordValue": 1,
+      "definition": "AIが自律的に行うデータ分析手法。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。観測データの蓄積で確認。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "geo1",
+      "layerName": "geophysics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo2",
+      "layerName": "geophysics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geo3",
+      "layerName": "geophysics",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "soc1",
+      "layerName": "societal",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "soc2",
+      "layerName": "societal",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".soc1"
+      ]
+    },
+    {
+      "id": "soc3",
+      "layerName": "societal",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".soc2"
+      ]
+    },
+    {
+      "id": "exp1",
+      "layerName": "expert",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".geo2",
+        ".geo3"
+      ]
+    },
+    {
+      "id": "exp2",
+      "layerName": "expert",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".geo1",
+        ".soc2"
+      ]
+    },
+    {
+      "id": "exp3",
+      "layerName": "expert",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".exp1"
+      ]
+    },
+    {
+      "id": "ana1",
+      "layerName": "analysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".geo1",
+        ".exp1"
+      ]
+    },
+    {
+      "id": "ana2",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".soc2",
+        ".exp2"
+      ]
+    },
+    {
+      "id": "ana3",
+      "layerName": "analysis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".ana1",
+        ".ana2"
+      ]
+    },
+    {
+      "id": "ana4",
+      "layerName": "analysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".geo3",
+        ".exp3"
+      ]
+    },
+    {
+      "id": "ana5",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".soc3",
+        ".ana3"
+      ]
+    },
+    {
+      "id": "ana6",
+      "layerName": "analysis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".exp2",
+        ".ana4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".soc3",
+        ".ana1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ana5",
+        ".ana6"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ana3"
+      ]
+    }
+  ]
+}

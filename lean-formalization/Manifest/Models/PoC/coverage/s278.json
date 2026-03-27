@@ -1,0 +1,190 @@
+{
+  "namespace": "Scenario278",
+  "layers": [
+    {
+      "name": "clinical",
+      "ordValue": 3,
+      "definition": "臨床基準と医師の判断権限。医学的根拠に基づく不変条件。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "neonatal",
+      "ordValue": 2,
+      "definition": "新生児の保護に関わる制約。倫理・プライバシーを含む。",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "algorithm",
+      "ordValue": 1,
+      "definition": "AIの判定アルゴリズム。技術進歩で改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "臨床データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "cln1",
+      "layerName": "clinical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cln2",
+      "layerName": "clinical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cln3",
+      "layerName": "clinical",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".cln1"
+      ]
+    },
+    {
+      "id": "neo1",
+      "layerName": "neonatal",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".cln1"
+      ]
+    },
+    {
+      "id": "neo2",
+      "layerName": "neonatal",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".cln2"
+      ]
+    },
+    {
+      "id": "neo3",
+      "layerName": "neonatal",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".cln3"
+      ]
+    },
+    {
+      "id": "neo4",
+      "layerName": "neonatal",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".neo1",
+        ".neo3"
+      ]
+    },
+    {
+      "id": "alg1",
+      "layerName": "algorithm",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cln1",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "alg2",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".neo1",
+        ".neo2"
+      ]
+    },
+    {
+      "id": "alg3",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg2"
+      ]
+    },
+    {
+      "id": "alg4",
+      "layerName": "algorithm",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cln3",
+        ".neo4"
+      ]
+    },
+    {
+      "id": "alg5",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".alg2",
+        ".alg4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".neo2",
+        ".alg1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".alg3",
+        ".alg5"
+      ]
+    }
+  ]
+}

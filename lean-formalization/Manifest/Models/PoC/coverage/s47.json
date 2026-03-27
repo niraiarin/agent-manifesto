@@ -1,0 +1,144 @@
+{
+  "layers": [
+    {
+      "name": "biological_constraint",
+      "definition": "植物の生理学的限界・安全基準・食品衛生法の制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "growth_model",
+      "definition": "光合成効率・成長曲線・環境応答に関する経験的モデル",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "control_policy",
+      "definition": "環境制御アルゴリズム・収穫タイミング・異常時対応方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "actuator_parameter",
+      "definition": "LED照度・温湿度設定値・養液濃度など直接制御パラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "biological_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "biological_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t7",
+      "layerName": "biological_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "growth_model",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "growth_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "growth_model",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p4",
+      "layerName": "control_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "control_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "control_policy",
+      "justification": [
+        "C4",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l3",
+      "layerName": "control_policy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "actuator_parameter",
+      "justification": [
+        "C5",
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d3",
+      "layerName": "actuator_parameter",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

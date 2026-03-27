@@ -1,0 +1,311 @@
+{
+  "namespace": "TestCoverage.S183",
+  "layers": [
+    {
+      "name": "EnvironmentalConstraint",
+      "ordValue": 3,
+      "definition": "海洋環境・漁業規制に関する不変前提",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BiologicalEvidence",
+      "ordValue": 2,
+      "definition": "海藻の生育に関する科学的知見。新データで更新されうる",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "CultivationDesign",
+      "ordValue": 1,
+      "definition": "養殖手法・設備の設計選択。コスト・効率のトレードオフ",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "GrowthHypothesis",
+      "ordValue": 0,
+      "definition": "収穫量・品質に関する未検証仮説。実地試験で確認が必要",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s183_p01",
+      "layerName": "EnvironmentalConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s183_p02",
+      "layerName": "EnvironmentalConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s183_p03",
+      "layerName": "BiologicalEvidence",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s183_p01"
+      ]
+    },
+    {
+      "id": "s183_p04",
+      "layerName": "BiologicalEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s183_p01"
+      ]
+    },
+    {
+      "id": "s183_p05",
+      "layerName": "BiologicalEvidence",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s183_p01",
+        ".s183_p02"
+      ]
+    },
+    {
+      "id": "s183_p06",
+      "layerName": "CultivationDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s183_p03"
+      ]
+    },
+    {
+      "id": "s183_p07",
+      "layerName": "CultivationDesign",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s183_p04"
+      ]
+    },
+    {
+      "id": "s183_p08",
+      "layerName": "CultivationDesign",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s183_p03",
+        ".s183_p05"
+      ]
+    },
+    {
+      "id": "s183_p09",
+      "layerName": "CultivationDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s183_p04"
+      ]
+    },
+    {
+      "id": "s183_p10",
+      "layerName": "GrowthHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s183_p06"
+      ]
+    },
+    {
+      "id": "s183_p11",
+      "layerName": "GrowthHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s183_p07",
+        ".s183_p08"
+      ]
+    },
+    {
+      "id": "s183_p12",
+      "layerName": "GrowthHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s183_p09"
+      ]
+    },
+    {
+      "id": "s183_p13",
+      "layerName": "GrowthHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s183_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "養殖海域の水温・塩分濃度・日照量はセンサーでリアルタイム計測可能"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "漁業権の範囲内で養殖を行い、環境アセスメント基準を遵守する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ワカメ・コンブ等の対象海藻の適正水温帯は既知の科学知見に基づく"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "養殖ロープの配置間隔と深度は調整可能な設計パラメータ"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "収穫時期の最終判断は養殖業者が行う"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "海流パターンが年間で安定しており栄養塩供給が一定の場合"
+        }
+      },
+      "content": "海流の季節変動が栄養塩の供給量を変化させ、生育速度に影響する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C2"
+          ],
+          "refutation": "養殖海域に競合する海洋生物がいない場合"
+        }
+      },
+      "content": "付着生物（フジツボ等）の繁殖が養殖海藻の成長を阻害する可能性がある"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "養殖設備が強い潮流に耐えられず物理的制約が支配的な場合"
+        }
+      },
+      "content": "ロープ間隔の最適化により単位面積あたりの収穫量を最大化できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "深度による水温差が小さい海域の場合"
+        }
+      },
+      "content": "養殖深度を水温層に合わせて動的調整することで品質が向上する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "H1"
+          ],
+          "refutation": "気候変動により過去データの予測力が低下する場合"
+        }
+      },
+      "content": "過去の環境データから最適収穫タイミングを予測するモデルが構築可能"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H3",
+            "H4"
+          ],
+          "refutation": "海藻種間の相互作用が単一種モデルを無効にする場合"
+        }
+      },
+      "content": "多品種の混合養殖が単一品種より全体収穫量を向上させる"
+    }
+  ]
+}

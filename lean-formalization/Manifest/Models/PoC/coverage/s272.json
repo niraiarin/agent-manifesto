@@ -1,0 +1,166 @@
+{
+  "namespace": "Scenario272",
+  "layers": [
+    {
+      "name": "standard",
+      "ordValue": 3,
+      "definition": "茶業界の確立された分類体系と鑑定権限。不変。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 2,
+      "definition": "組合が年度ごとに改定する等級基準。変更は人間主導。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "method",
+      "ordValue": 1,
+      "definition": "AIの判定手法。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。運用データで確認が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std3",
+      "layerName": "standard",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".std1"
+      ]
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".std1",
+        ".std2"
+      ]
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg2"
+      ]
+    },
+    {
+      "id": "met1",
+      "layerName": "method",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".std2",
+        ".reg1"
+      ]
+    },
+    {
+      "id": "met2",
+      "layerName": "method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg2"
+      ]
+    },
+    {
+      "id": "met3",
+      "layerName": "method",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".met1",
+        ".met2"
+      ]
+    },
+    {
+      "id": "met4",
+      "layerName": "method",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".std3",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".met1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".met3",
+        ".met4"
+      ]
+    }
+  ]
+}

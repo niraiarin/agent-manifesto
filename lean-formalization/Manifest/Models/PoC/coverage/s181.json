@@ -1,0 +1,373 @@
+{
+  "namespace": "TestCoverage.S181",
+  "layers": [
+    {
+      "name": "SafetyAbsolute",
+      "ordValue": 4,
+      "definition": "人命に直結する安全不変条件。地雷探知の偽陰性は許容不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryMandate",
+      "ordValue": 3,
+      "definition": "国際人道法・オタワ条約に基づく法的義務",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "FieldProtocol",
+      "ordValue": 2,
+      "definition": "現場運用の手順規則。地形や気象条件に応じて調整可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "TacticalDesign",
+      "ordValue": 1,
+      "definition": "ロボットの制御・探知アルゴリズム設計。技術進歩で更新",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "Hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の技術的仮説。フィールドテストで検証が必要",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s181_p01",
+      "layerName": "SafetyAbsolute",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s181_p02",
+      "layerName": "SafetyAbsolute",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s181_p03",
+      "layerName": "SafetyAbsolute",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s181_p04",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s181_p01"
+      ]
+    },
+    {
+      "id": "s181_p05",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s181_p02"
+      ]
+    },
+    {
+      "id": "s181_p06",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s181_p01",
+        ".s181_p03"
+      ]
+    },
+    {
+      "id": "s181_p07",
+      "layerName": "FieldProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s181_p04"
+      ]
+    },
+    {
+      "id": "s181_p08",
+      "layerName": "FieldProtocol",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s181_p05"
+      ]
+    },
+    {
+      "id": "s181_p09",
+      "layerName": "FieldProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s181_p04",
+        ".s181_p06"
+      ]
+    },
+    {
+      "id": "s181_p10",
+      "layerName": "TacticalDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s181_p07"
+      ]
+    },
+    {
+      "id": "s181_p11",
+      "layerName": "FieldProtocol",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s181_p14"
+      ]
+    },
+    {
+      "id": "s181_p12",
+      "layerName": "TacticalDesign",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s181_p08",
+        ".s181_p09"
+      ]
+    },
+    {
+      "id": "s181_p13",
+      "layerName": "TacticalDesign",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s181_p07"
+      ]
+    },
+    {
+      "id": "s181_p14",
+      "layerName": "Hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s181_p10"
+      ]
+    },
+    {
+      "id": "s181_p15",
+      "layerName": "Hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s181_p12"
+      ]
+    },
+    {
+      "id": "s181_p16",
+      "layerName": "Hypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s181_p13",
+        ".s181_p14"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "地雷探知の偽陰性率はゼロでなければならない。人間の安全が最優先"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ロボットが除去を行う前に、人間のオペレーターが最終確認を行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "オタワ条約および国際人道法の規定に準拠する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "探知・除去作業は定められた安全距離を確保した上で実施する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "通信途絶時はロボットを即座に停止させる（フェイルセーフ）"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "地雷原の地形データは事前に衛星・ドローンで取得済み"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "国際法の改正により除去手順の要件が変更された場合"
+        }
+      },
+      "content": "除去作業の記録・報告義務は条約上の法的要件として遵守すべき"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C6"
+          ],
+          "refutation": "事前地形データの精度が現場実態と大きく乖離する場合"
+        }
+      },
+      "content": "事前地形データに基づくルートプランニングにより安全距離を最適化できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C6"
+          ],
+          "refutation": "金属探知以外のセンサー（GPR等）が主要探知手段になる場合"
+        }
+      },
+      "content": "マルチセンサー融合（金属探知+GPR+赤外線）が単一センサーより検出率を向上させる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "ロボットの自律制御が人間の遠隔操作より安全な場合"
+        }
+      },
+      "content": "遠隔操作モードと自律モードの切り替えを動的に行うことで柔軟性を確保できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "LiDARが砂漠環境で十分な精度を出せない場合"
+        }
+      },
+      "content": "リアルタイムLiDARマッピングが事前データの補正に有効"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "H3"
+          ],
+          "refutation": "強化学習がシミュレーション環境と実環境の差異で失敗する場合"
+        }
+      },
+      "content": "強化学習により探知パターンを地雷タイプごとに最適化できる"
+    },
+    {
+      "id": "H7",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H4",
+            "H5"
+          ],
+          "refutation": "群制御の通信オーバーヘッドが許容範囲を超える場合"
+        }
+      },
+      "content": "複数ロボットの協調作業（スウォーム）により除去効率が線形以上に向上する"
+    }
+  ]
+}

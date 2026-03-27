@@ -1,11 +1,12 @@
 import Manifest.Ontology
 import Manifest.Axioms
 import Manifest.EmpiricalPostulates
-import Manifest.Observable
 import Manifest.Principles
+import Manifest.Observable
+import Manifest.ObservableDesign
 
 /-!
-# Layer 8: Design Foundation — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
+# Epistemic Layer: designTheorem (strength 1) — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
 
 design-development-foundation.md の D1–D14 がマニフェストの
 T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）

@@ -1,0 +1,161 @@
+{
+  "namespace": "TestScenario.S263",
+  "description": "ダム堆砂量予測 AI",
+  "layers": [
+    {
+      "name": "hydraulic_law",
+      "ordValue": 4,
+      "definition": "水理学・土砂水理の基本法則。連続方程式・運動方程式",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "dam_constraint",
+      "ordValue": 3,
+      "definition": "ダム構造・運用の物理的制約。堆砂容量・排砂設備仕様",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "sediment_model",
+      "ordValue": 2,
+      "definition": "堆砂予測モデル。流出土砂量推定・堆積分布計算",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 1,
+      "definition": "排砂運用最適化。フラッシング・浚渫計画",
+      "derivedFrom": [
+        "H3",
+        "C4"
+      ]
+    },
+    {
+      "name": "forecast",
+      "ordValue": 0,
+      "definition": "将来予測・気候変動影響の仮説",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "hl1",
+      "layerName": "hydraulic_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hl2",
+      "layerName": "hydraulic_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dc1",
+      "layerName": "dam_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".hl1"
+      ]
+    },
+    {
+      "id": "dc2",
+      "layerName": "dam_constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dc3",
+      "layerName": "dam_constraint",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".hl2"
+      ]
+    },
+    {
+      "id": "sm1",
+      "layerName": "sediment_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".hl1",
+        ".dc1"
+      ]
+    },
+    {
+      "id": "sm2",
+      "layerName": "sediment_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".dc2",
+        ".dc3"
+      ]
+    },
+    {
+      "id": "sm3",
+      "layerName": "sediment_model",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".sm1"
+      ]
+    },
+    {
+      "id": "op1",
+      "layerName": "operational",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".sm1",
+        ".dc1"
+      ]
+    },
+    {
+      "id": "op2",
+      "layerName": "operational",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".sm2"
+      ]
+    },
+    {
+      "id": "fc1",
+      "layerName": "forecast",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".sm3",
+        ".op1"
+      ]
+    }
+  ]
+}

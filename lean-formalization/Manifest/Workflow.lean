@@ -2,7 +2,7 @@ import Manifest.Ontology
 import Manifest.Axioms
 
 /-!
-# Layer 6: Workflow — 学習ライフサイクルとゲート（定義的拡大）
+# Meta-theoretic: Workflow — 学習ライフサイクルとゲート（定義的拡大）
 
 P3（学習の統治）の統治ライフサイクルを型として表現する。
 本ファイルは論議領域（用語リファレンス §3.2）の定義的拡大（§5.5）であり、

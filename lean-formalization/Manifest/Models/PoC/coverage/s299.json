@@ -1,0 +1,147 @@
+{
+  "namespace": "AntarcticIceSheetMonitoring",
+  "layers": [
+    {
+      "name": "scientific_rigor",
+      "ordValue": 5,
+      "definition": "不確実性定量化・補正適用の科学的厳密性",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "institutional_consistency",
+      "ordValue": 4,
+      "definition": "GRACE-FO連続性・IPCC整合の制度的要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "error_budget",
+      "ordValue": 3,
+      "definition": "誤差配分・GIA不確実性の評価方針",
+      "derivedFrom": [
+        "H1"
+      ]
+    },
+    {
+      "name": "inversion_method",
+      "ordValue": 2,
+      "definition": "重力場逆解析手法の選択",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "sensor_model",
+      "ordValue": 1,
+      "definition": "衛星センサー特性の仮説",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "uncertainty_required",
+      "layerName": "scientific_rigor",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gia_correction",
+      "layerName": "scientific_rigor",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "grace_fo_continuity",
+      "layerName": "institutional_consistency",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".uncertainty_required"
+      ]
+    },
+    {
+      "id": "ipcc_reconcile",
+      "layerName": "institutional_consistency",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".uncertainty_required"
+      ]
+    },
+    {
+      "id": "gia_dominance",
+      "layerName": "error_budget",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".gia_correction",
+        ".uncertainty_required"
+      ]
+    },
+    {
+      "id": "error_partition",
+      "layerName": "error_budget",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".gia_dominance"
+      ]
+    },
+    {
+      "id": "mascon_analysis",
+      "layerName": "inversion_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".gia_correction",
+        ".error_partition"
+      ]
+    },
+    {
+      "id": "regularization_tune",
+      "layerName": "inversion_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".mascon_analysis"
+      ]
+    },
+    {
+      "id": "kbr_precision",
+      "layerName": "sensor_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".grace_fo_continuity"
+      ]
+    },
+    {
+      "id": "accelerometer_noise",
+      "layerName": "sensor_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".kbr_precision"
+      ]
+    }
+  ]
+}

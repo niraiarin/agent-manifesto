@@ -1,0 +1,137 @@
+{
+  "layers": [
+    {
+      "name": "compliance_constraint",
+      "definition": "法規制・契約上の制約。輸出管理・品質基準",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "logistics_postulate",
+      "definition": "物流・在庫管理の前提条件",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "optimization_principle",
+      "definition": "最適化の設計原則。コスト・リードタイム・リスクのバランス",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "parameter_hypothesis",
+      "definition": "最適化パラメータの仮説。実運用で調整",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "export_control_compliance",
+      "layerName": "compliance_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "quality_standard_adherence",
+      "layerName": "compliance_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lead_time_variability",
+      "layerName": "logistics_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "multi_tier_supplier_visibility",
+      "layerName": "logistics_postulate",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safety_stock_policy",
+      "layerName": "optimization_principle",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "single_source_risk_mitigation",
+      "layerName": "optimization_principle",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reorder_point_calculation",
+      "layerName": "parameter_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "demand_forecast_horizon",
+      "layerName": "parameter_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "transport_mode_selection",
+      "layerName": "parameter_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "disruption_scenario_modeling",
+      "layerName": "optimization_principle",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "customs_clearance_time",
+      "layerName": "logistics_postulate",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    }
+  ]
+}

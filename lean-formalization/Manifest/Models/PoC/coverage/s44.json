@@ -1,0 +1,134 @@
+{
+  "layers": [
+    {
+      "name": "content_regulation",
+      "definition": "年齢制限・著作権・コンテンツポリシーなど法的・倫理的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "user_behavior",
+      "definition": "ユーザーの視聴パターン・嗜好モデルに関する経験的仮定",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "recommendation_policy",
+      "definition": "推薦アルゴリズム選択・多様性バランス・フィルタリング方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "display_parameter",
+      "definition": "表示件数・ランキング重み・A/Bテストパラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "content_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "content_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "content_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "user_behavior",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "user_behavior",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "user_behavior",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "recommendation_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "recommendation_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "recommendation_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "display_parameter",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "display_parameter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

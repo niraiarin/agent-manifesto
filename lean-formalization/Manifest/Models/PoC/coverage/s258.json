@@ -1,0 +1,335 @@
+{
+  "namespace": "Scenario258",
+  "layers": [
+    {
+      "name": "ethics",
+      "ordValue": 6,
+      "definition": "利用者の自律性と尊厳に関わる倫理的制約。不可侵。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "safety",
+      "ordValue": 5,
+      "definition": "転倒・衝突防止に関わる安全設計制約。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "accessibility",
+      "ordValue": 4,
+      "definition": "障害特性に応じたアクセシビリティ要件。白杖との共存前提。",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "hardware",
+      "ordValue": 3,
+      "definition": "デバイスのハードウェア制約。バッテリー・センサー仕様。",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "interaction",
+      "ordValue": 2,
+      "definition": "利用者とのインタラクション設計。利用者テストに基づく改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIモデルの最適化戦略。技術進歩に応じて改善可能。",
+      "derivedFrom": [
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。フィールドテストで検証が必要。",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".eth2"
+      ]
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "acc1",
+      "layerName": "accessibility",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "acc2",
+      "layerName": "accessibility",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".saf2"
+      ]
+    },
+    {
+      "id": "acc3",
+      "layerName": "accessibility",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".acc1",
+        ".acc2"
+      ]
+    },
+    {
+      "id": "hw1",
+      "layerName": "hardware",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "hw2",
+      "layerName": "hardware",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf3"
+      ]
+    },
+    {
+      "id": "hw3",
+      "layerName": "hardware",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".hw1",
+        ".hw2"
+      ]
+    },
+    {
+      "id": "int1",
+      "layerName": "interaction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".acc1"
+      ]
+    },
+    {
+      "id": "int2",
+      "layerName": "interaction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".acc3"
+      ]
+    },
+    {
+      "id": "int3",
+      "layerName": "interaction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".acc2",
+        ".hw3"
+      ]
+    },
+    {
+      "id": "int4",
+      "layerName": "interaction",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".int1",
+        ".int2"
+      ]
+    },
+    {
+      "id": "int5",
+      "layerName": "interaction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".int3",
+        ".int4"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".hw1",
+        ".hw2",
+        ".hw3"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".hw3",
+        ".int2"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".acc1",
+        ".saf1"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H4"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt3",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".int4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".int5",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".opt4",
+        ".opt5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2"
+      ]
+    }
+  ]
+}

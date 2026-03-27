@@ -1,0 +1,169 @@
+{
+  "namespace": "Scenario286",
+  "layers": [
+    {
+      "name": "heritage",
+      "ordValue": 3,
+      "definition": "文化財保護の法的・倫理的原則。不可侵。",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "practice",
+      "ordValue": 2,
+      "definition": "修復師の判断と記録手順。専門知識に基づく。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "analysis",
+      "ordValue": 1,
+      "definition": "AI分析手法の設計判断。技術進歩で改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実物での検証が必要。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "her1",
+      "layerName": "heritage",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "her2",
+      "layerName": "heritage",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "her3",
+      "layerName": "heritage",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prc1",
+      "layerName": "practice",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".her1"
+      ]
+    },
+    {
+      "id": "prc2",
+      "layerName": "practice",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".her1",
+        ".her2"
+      ]
+    },
+    {
+      "id": "prc3",
+      "layerName": "practice",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".prc1",
+        ".prc2"
+      ]
+    },
+    {
+      "id": "anl1",
+      "layerName": "analysis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".her2",
+        ".prc2"
+      ]
+    },
+    {
+      "id": "anl2",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".her3",
+        ".prc2"
+      ]
+    },
+    {
+      "id": "anl3",
+      "layerName": "analysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".prc1",
+        ".prc3"
+      ]
+    },
+    {
+      "id": "anl4",
+      "layerName": "analysis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".anl1",
+        ".anl2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".anl1",
+        ".anl4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".anl2",
+        ".anl3"
+      ]
+    }
+  ]
+}

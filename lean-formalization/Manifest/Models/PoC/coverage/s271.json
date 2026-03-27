@@ -1,0 +1,229 @@
+{
+  "namespace": "Scenario271",
+  "layers": [
+    {
+      "name": "orbital",
+      "ordValue": 4,
+      "definition": "軌道力学・物理法則に基づく不変条件。変更不可。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "mission",
+      "ordValue": 3,
+      "definition": "ミッション要件。衛星設計時に確定し、運用中は原則変更しない。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "ground",
+      "ordValue": 2,
+      "definition": "地上局が管理する運用パラメータ。パスごとに更新可能。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "onboard",
+      "ordValue": 1,
+      "definition": "衛星が自律的に最適化するオンボード制御戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "運用データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "orb1",
+      "layerName": "orbital",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "orb2",
+      "layerName": "orbital",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "orb3",
+      "layerName": "orbital",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mis1",
+      "layerName": "mission",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".orb1"
+      ]
+    },
+    {
+      "id": "mis2",
+      "layerName": "mission",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".orb2"
+      ]
+    },
+    {
+      "id": "mis3",
+      "layerName": "mission",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".orb1",
+        ".orb3"
+      ]
+    },
+    {
+      "id": "mis4",
+      "layerName": "mission",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".mis1"
+      ]
+    },
+    {
+      "id": "gnd1",
+      "layerName": "ground",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".mis1"
+      ]
+    },
+    {
+      "id": "gnd2",
+      "layerName": "ground",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".mis2",
+        ".mis3"
+      ]
+    },
+    {
+      "id": "gnd3",
+      "layerName": "ground",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".gnd1"
+      ]
+    },
+    {
+      "id": "onb1",
+      "layerName": "onboard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".orb1",
+        ".mis1"
+      ]
+    },
+    {
+      "id": "onb2",
+      "layerName": "onboard",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".gnd1",
+        ".gnd2"
+      ]
+    },
+    {
+      "id": "onb3",
+      "layerName": "onboard",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".orb2",
+        ".mis4"
+      ]
+    },
+    {
+      "id": "onb4",
+      "layerName": "onboard",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".onb1",
+        ".onb2"
+      ]
+    },
+    {
+      "id": "onb5",
+      "layerName": "onboard",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".orb3",
+        ".gnd3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".onb1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".onb3",
+        ".onb4"
+      ]
+    }
+  ]
+}

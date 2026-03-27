@@ -1,0 +1,185 @@
+{
+  "namespace": "TestCoverage.S104",
+  "layers": [
+    {
+      "name": "ArchivalIntegrity",
+      "ordValue": 5,
+      "definition": "原本の保全・非破壊原則。文化財保護法に基づく不変制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "PaleographicPrinciple",
+      "ordValue": 4,
+      "definition": "古文書学の確立された読解原則",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "HistoricalContext",
+      "ordValue": 3,
+      "definition": "歴史学的文脈に基づく解釈の枠組み",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "DigitizationMethod",
+      "ordValue": 2,
+      "definition": "撮影・画像処理の技術的手法選択",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "OCRHypothesis",
+      "ordValue": 1,
+      "definition": "文字認識精度・自動解読に関する技術的仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s104_p01",
+      "layerName": "ArchivalIntegrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s104_p02",
+      "layerName": "ArchivalIntegrity",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s104_p03",
+      "layerName": "PaleographicPrinciple",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s104_p01"
+      ]
+    },
+    {
+      "id": "s104_p04",
+      "layerName": "PaleographicPrinciple",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s104_p01",
+        ".s104_p02"
+      ]
+    },
+    {
+      "id": "s104_p05",
+      "layerName": "HistoricalContext",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s104_p03"
+      ]
+    },
+    {
+      "id": "s104_p06",
+      "layerName": "HistoricalContext",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s104_p03",
+        ".s104_p04"
+      ]
+    },
+    {
+      "id": "s104_p07",
+      "layerName": "DigitizationMethod",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s104_p05"
+      ]
+    },
+    {
+      "id": "s104_p08",
+      "layerName": "DigitizationMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s104_p01"
+      ]
+    },
+    {
+      "id": "s104_p09",
+      "layerName": "DigitizationMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s104_p05",
+        ".s104_p06"
+      ]
+    },
+    {
+      "id": "s104_p10",
+      "layerName": "OCRHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s104_p07"
+      ]
+    },
+    {
+      "id": "s104_p11",
+      "layerName": "OCRHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s104_p08"
+      ]
+    },
+    {
+      "id": "s104_p12",
+      "layerName": "OCRHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s104_p09",
+        ".s104_p10"
+      ]
+    },
+    {
+      "id": "s104_p13",
+      "layerName": "OCRHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s104_p07",
+        ".s104_p11"
+      ]
+    }
+  ]
+}

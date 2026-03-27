@@ -1,0 +1,244 @@
+{
+  "namespace": "TestCoverage.S145",
+  "layers": [
+    {
+      "name": "TrafficSafety",
+      "ordValue": 2,
+      "definition": "道路交通の安全に直結する制約。故障時の安全確保が最優先",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "MaintenancePolicy",
+      "ordValue": 1,
+      "definition": "保守運用のポリシー。予算・人員に応じて調整可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 0,
+      "definition": "故障予測モデルの仮説。実運用データで検証が必要",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s145_p01",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s145_p02",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s145_p03",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s145_p04",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s145_p01"
+      ]
+    },
+    {
+      "id": "s145_p05",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s145_p02"
+      ]
+    },
+    {
+      "id": "s145_p06",
+      "layerName": "MaintenancePolicy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s145_p01",
+        ".s145_p03"
+      ]
+    },
+    {
+      "id": "s145_p07",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s145_p04"
+      ]
+    },
+    {
+      "id": "s145_p08",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s145_p05"
+      ]
+    },
+    {
+      "id": "s145_p09",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s145_p04",
+        ".s145_p06"
+      ]
+    },
+    {
+      "id": "s145_p10",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s145_p07",
+        ".s145_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "信号機故障時は全方向赤点滅に切り替えるフェイルセーフ機構が必須"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "故障検知から現場対応までの目標時間は30分以内"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "LED信号機と従来型電球信号機の両方が対象"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "保守作業員の人数は固定。予防保守の優先順位付けが必要"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "信号制御器のログデータは過去5年分が蓄積されている"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C4"
+          ],
+          "refutation": "地方部では移動距離が長く30分以内の対応が物理的に不可能な場合"
+        }
+      },
+      "content": "故障確率の高い信号機を事前に特定し巡回ルートに組み込むことで対応時間を短縮できる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "旧型信号機のログフォーマットが統一されておらずデータ統合が困難な場合"
+        }
+      },
+      "content": "LED信号機と電球型で異なる故障パターンを別モデルで学習すべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "過去データに含まれない新型故障モードが出現する場合"
+        }
+      },
+      "content": "制御器ログの電圧変動パターンから故障の72時間前予測が可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "気象データと故障の相関が地域ごとに大きく異なる場合"
+        }
+      },
+      "content": "気温・湿度・日照時間の気象データと故障率に有意な相関がある"
+    }
+  ]
+}

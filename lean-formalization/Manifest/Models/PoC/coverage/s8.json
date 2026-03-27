@@ -1,0 +1,206 @@
+{
+  "namespace": "TestCoverage.S8",
+  "layers": [
+    {
+      "name": "LegalAccuracy",
+      "ordValue": 5,
+      "definition": "法的正確性。誤った法解釈は許容不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "Confidentiality",
+      "ordValue": 4,
+      "definition": "守秘義務。弁護士・依頼者間の秘密保持",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "JurisdictionalRule",
+      "ordValue": 3,
+      "definition": "管轄固有の法的ルール。地域により異なる",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "DocumentConvention",
+      "ordValue": 2,
+      "definition": "文書作成の慣行・書式ルール",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "StylePreference",
+      "ordValue": 1,
+      "definition": "事務所・弁護士個人の文体の好み",
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s8_p01",
+      "layerName": "LegalAccuracy",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s8_p02",
+      "layerName": "LegalAccuracy",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s8_p03",
+      "layerName": "Confidentiality",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s8_p01"
+      ]
+    },
+    {
+      "id": "s8_p04",
+      "layerName": "Confidentiality",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s8_p02"
+      ]
+    },
+    {
+      "id": "s8_p05",
+      "layerName": "Confidentiality",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        "s8_p01",
+        "s8_p02"
+      ]
+    },
+    {
+      "id": "s8_p06",
+      "layerName": "JurisdictionalRule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s8_p03"
+      ]
+    },
+    {
+      "id": "s8_p07",
+      "layerName": "JurisdictionalRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s8_p04"
+      ]
+    },
+    {
+      "id": "s8_p08",
+      "layerName": "JurisdictionalRule",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        "s8_p03",
+        "s8_p05"
+      ]
+    },
+    {
+      "id": "s8_p09",
+      "layerName": "DocumentConvention",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s8_p06"
+      ]
+    },
+    {
+      "id": "s8_p10",
+      "layerName": "DocumentConvention",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s8_p07"
+      ]
+    },
+    {
+      "id": "s8_p11",
+      "layerName": "DocumentConvention",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        "s8_p06",
+        "s8_p08"
+      ]
+    },
+    {
+      "id": "s8_p12",
+      "layerName": "StylePreference",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s8_p09"
+      ]
+    },
+    {
+      "id": "s8_p13",
+      "layerName": "StylePreference",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s8_p10"
+      ]
+    },
+    {
+      "id": "s8_p14",
+      "layerName": "StylePreference",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "s8_p11"
+      ]
+    },
+    {
+      "id": "s8_p15",
+      "layerName": "StylePreference",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        "s8_p12",
+        "s8_p13"
+      ]
+    }
+  ]
+}

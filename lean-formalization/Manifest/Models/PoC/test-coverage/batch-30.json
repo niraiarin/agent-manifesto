@@ -1,0 +1,2229 @@
+[
+  {
+    "phase0": {
+      "vision": "地層処分場の核廃棄物容器を数万年単位で監視し、漏洩・腐食・地質変動を早期検知するAI。人間世代を超える時間軸で安全を保証する。",
+      "stakeholders": "原子力規制委員会、地元自治体住民、将来世代",
+      "priority": "放射性物質の漏洩防止が最優先。誤報は許容するが見逃しは許容しない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "放射性物質の漏洩は絶対に見逃してはならない（偽陰性ゼロ方針）"
+        },
+        {
+          "id": "C2",
+          "content": "センサー系は冗長構成でなければならない"
+        },
+        {
+          "id": "C3",
+          "content": "人間による最終判断権は維持する（ただし数万年後の人間の存在は不確実）"
+        },
+        {
+          "id": "C4",
+          "content": "国際原子力機関(IAEA)の基準に適合する"
+        },
+        {
+          "id": "C5",
+          "content": "警報発報時は自動的に封じ込め措置を起動する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "閾値は保守的（感度最大）に設定すべき",
+          "refutation": "偽陽性コストが封じ込め措置コストを上回る場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2,C3",
+          "content": "センサー劣化モデルは10年単位で再校正が必要",
+          "refutation": "自己校正センサー技術が確立された場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "数万年後は自律判断モードに移行する設計が必要",
+          "refutation": "人間文明が継続し監視体制が維持される場合"
+        },
+        {
+          "id": "H4",
+          "basis": "外部知識",
+          "content": "地質変動は数百年周期で再評価すべき",
+          "refutation": "地質学的知見が根本的に更新された場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: auto_seal(封じ込め自動起動)がsensor_integrity(センサー健全性)に依存するが、auto_sealの方がordValueが高い層にある",
+          "from": "auto_seal (safety_invariant, ord=5)",
+          "to": "sensor_integrity (sensor_model, ord=2)",
+          "fix": "H由来 — auto_sealをoperational_policyに降格、またはsensor_integrityをsafety_invariantに昇格"
+        }
+      ]
+    },
+    "scenario_id": 291,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "NuclearWasteMonitoring",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 5,
+          "definition": "放射性物質封じ込めに関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C5"
+          ]
+        },
+        {
+          "name": "regulatory_standard",
+          "ordValue": 4,
+          "definition": "IAEA基準・国内法規制への適合要件",
+          "derivedFrom": [
+            "C4"
+          ]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 3,
+          "definition": "監視運用方針・警報基準",
+          "derivedFrom": [
+            "C2",
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "sensor_model",
+          "ordValue": 2,
+          "definition": "センサー劣化・校正モデル",
+          "derivedFrom": [
+            "H2",
+            "H4"
+          ]
+        },
+        {
+          "name": "prediction_hypothesis",
+          "ordValue": 1,
+          "definition": "地質変動・腐食進行の予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "no_false_negative",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "containment_integrity",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C1",
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "auto_seal",
+          "layerName": "safety_invariant",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".sensor_integrity"
+          ]
+        },
+        {
+          "id": "iaea_compliance",
+          "layerName": "regulatory_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".no_false_negative"
+          ]
+        },
+        {
+          "id": "reporting_format",
+          "layerName": "regulatory_standard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".iaea_compliance"
+          ]
+        },
+        {
+          "id": "redundant_sensors",
+          "layerName": "operational_policy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".containment_integrity"
+          ]
+        },
+        {
+          "id": "alert_threshold",
+          "layerName": "operational_policy",
+          "justification": [
+            "C1",
+            "H1"
+          ],
+          "dependencies": [
+            ".no_false_negative",
+            ".iaea_compliance"
+          ]
+        },
+        {
+          "id": "human_override",
+          "layerName": "operational_policy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".containment_integrity"
+          ]
+        },
+        {
+          "id": "sensor_integrity",
+          "layerName": "sensor_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".redundant_sensors"
+          ]
+        },
+        {
+          "id": "calibration_cycle",
+          "layerName": "sensor_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".sensor_integrity"
+          ]
+        },
+        {
+          "id": "geological_reeval",
+          "layerName": "prediction_hypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".sensor_integrity"
+          ]
+        },
+        {
+          "id": "autonomous_mode",
+          "layerName": "prediction_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".human_override",
+            ".sensor_integrity"
+          ]
+        }
+      ]
+    },
+    "project": "核廃棄物貯蔵監視 AI"
+  },
+  {
+    "phase0": {
+      "vision": "伝統的な和紙漉きの技法をセンサーとAIで記録・解析し、暗黙知を形式知に変換して後継者育成を支援する。",
+      "stakeholders": "和紙職人、文化財保護機関、後継者候補",
+      "priority": "職人の技を損なわずに記録すること。AIが職人に指示することはない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "職人の手技が最上位。AIは記録・解析の補助に徹する"
+        },
+        {
+          "id": "C2",
+          "content": "撮影・センシングは作業を妨げない配置にする"
+        },
+        {
+          "id": "C3",
+          "content": "記録データの所有権は職人に帰属する"
+        },
+        {
+          "id": "C4",
+          "content": "技法の公開範囲は職人が決定する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "動作解析は非接触センサーが望ましい",
+          "refutation": "ウェアラブルセンサーの方が精度が高い場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C1,C2",
+          "content": "水温・繊維密度が品質に強く相関する",
+          "refutation": "職人の経験則と異なる因子が支配的な場合"
+        },
+        {
+          "id": "H3",
+          "basis": "外部知識",
+          "content": "動画からの骨格推定で手の動きを定量化できる",
+          "refutation": "和紙漉きの微細動作が推定精度を超える場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 292,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "WashiCraftAnalysis",
+      "layers": [
+        {
+          "name": "craft_authority",
+          "ordValue": 4,
+          "definition": "職人の技と判断が最上位である不変原則",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "ethical_boundary",
+          "ordValue": 3,
+          "definition": "データ所有権・公開範囲の倫理的制約",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "sensing_policy",
+          "ordValue": 2,
+          "definition": "センシング配置・方式の運用方針",
+          "derivedFrom": [
+            "C2",
+            "H1"
+          ]
+        },
+        {
+          "name": "analysis_method",
+          "ordValue": 1,
+          "definition": "解析手法・モデルの選択",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "artisan_primacy",
+          "layerName": "craft_authority",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_ai_instruction",
+          "layerName": "craft_authority",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "data_ownership",
+          "layerName": "ethical_boundary",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".artisan_primacy"
+          ]
+        },
+        {
+          "id": "disclosure_control",
+          "layerName": "ethical_boundary",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".artisan_primacy",
+            ".data_ownership"
+          ]
+        },
+        {
+          "id": "non_intrusive_sensor",
+          "layerName": "sensing_policy",
+          "justification": [
+            "C2",
+            "H1"
+          ],
+          "dependencies": [
+            ".artisan_primacy"
+          ]
+        },
+        {
+          "id": "camera_placement",
+          "layerName": "sensing_policy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".non_intrusive_sensor"
+          ]
+        },
+        {
+          "id": "water_temp_model",
+          "layerName": "analysis_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".non_intrusive_sensor"
+          ]
+        },
+        {
+          "id": "skeleton_estimation",
+          "layerName": "analysis_method",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".camera_placement"
+          ]
+        },
+        {
+          "id": "fiber_density_corr",
+          "layerName": "analysis_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".water_temp_model"
+          ]
+        }
+      ]
+    },
+    "project": "和紙漉き技術解析 AI"
+  },
+  {
+    "phase0": {
+      "vision": "台風や低気圧による高潮をリアルタイムで予測し、沿岸地域の避難判断を支援するAI。予測リードタイムを最大化しつつ精度を担保する。",
+      "stakeholders": "気象庁、沿岸自治体防災担当、住民",
+      "priority": "避難判断の遅延を防ぐことが最優先。過大予測は許容するが過小予測は許容しない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "過小予測（実際より低い高潮を予測）は許容しない"
+        },
+        {
+          "id": "C2",
+          "content": "予測リードタイムは最低6時間を確保する"
+        },
+        {
+          "id": "C3",
+          "content": "避難指示の最終判断は自治体首長が行う"
+        },
+        {
+          "id": "C4",
+          "content": "気象庁の公式予報との整合性を維持する"
+        },
+        {
+          "id": "C5",
+          "content": "予測の不確実性は幅として必ず提示する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C2",
+          "content": "アンサンブル予測の上位パーセンタイルを採用すべき",
+          "refutation": "アンサンブル自体のバイアスが系統的に過大な場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C4",
+          "content": "気象庁GPVデータを初期値として利用する",
+          "refutation": "独自観測網が十分に整備された場合"
+        },
+        {
+          "id": "H3",
+          "basis": "外部知識",
+          "content": "潮位偏差は非線形結合で増幅される",
+          "refutation": "線形重ね合わせで十分な精度が得られる場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C5",
+          "content": "信頼区間はブートストラップ法で推定する",
+          "refutation": "ベイズ推定の方が適切な不確実性表現を与える場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 293,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "StormSurgePrediction",
+      "layers": [
+        {
+          "name": "safety_constraint",
+          "ordValue": 6,
+          "definition": "人命に関わる予測下限保証",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "institutional_rule",
+          "ordValue": 5,
+          "definition": "気象庁・自治体との制度的整合",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "forecast_standard",
+          "ordValue": 4,
+          "definition": "予測品質・リードタイム基準",
+          "derivedFrom": [
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "data_pipeline",
+          "ordValue": 3,
+          "definition": "入力データ・前処理の方式",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "ensemble_config",
+          "ordValue": 2,
+          "definition": "アンサンブル構成・統計処理の選択",
+          "derivedFrom": [
+            "H1",
+            "H4"
+          ]
+        },
+        {
+          "name": "physics_model",
+          "ordValue": 1,
+          "definition": "物理モデル・非線形効果の仮説",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "no_underpredict",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mayor_authority",
+          "layerName": "institutional_rule",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".no_underpredict"
+          ]
+        },
+        {
+          "id": "jma_consistency",
+          "layerName": "institutional_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".no_underpredict"
+          ]
+        },
+        {
+          "id": "lead_time_6h",
+          "layerName": "forecast_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".no_underpredict",
+            ".jma_consistency"
+          ]
+        },
+        {
+          "id": "uncertainty_band",
+          "layerName": "forecast_standard",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".no_underpredict"
+          ]
+        },
+        {
+          "id": "gpv_initial",
+          "layerName": "data_pipeline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".jma_consistency"
+          ]
+        },
+        {
+          "id": "tide_gauge_feed",
+          "layerName": "data_pipeline",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".lead_time_6h"
+          ]
+        },
+        {
+          "id": "upper_percentile",
+          "layerName": "ensemble_config",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".uncertainty_band",
+            ".gpv_initial"
+          ]
+        },
+        {
+          "id": "bootstrap_ci",
+          "layerName": "ensemble_config",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".uncertainty_band"
+          ]
+        },
+        {
+          "id": "nonlinear_coupling",
+          "layerName": "physics_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".gpv_initial",
+            ".tide_gauge_feed"
+          ]
+        },
+        {
+          "id": "wave_setup_effect",
+          "layerName": "physics_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".nonlinear_coupling"
+          ]
+        },
+        {
+          "id": "surge_wind_drag",
+          "layerName": "physics_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".nonlinear_coupling",
+            ".upper_percentile"
+          ]
+        }
+      ]
+    },
+    "project": "高潮予測 AI"
+  },
+  {
+    "phase0": {
+      "vision": "義手装着者に自然な触覚フィードバックを提供するAI。圧力・温度・質感を神経刺激パターンに変換し、日常生活の質を向上させる。",
+      "stakeholders": "義手装着者、リハビリ医師、義肢装具士",
+      "priority": "安全性（過剰刺激による痛み防止）が最優先。自然さは二の次"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "神経刺激強度には絶対上限を設ける（痛み閾値の80%以下）"
+        },
+        {
+          "id": "C2",
+          "content": "装着者がいつでも即座にフィードバックを停止できる"
+        },
+        {
+          "id": "C3",
+          "content": "個人ごとのキャリブレーションが必須"
+        },
+        {
+          "id": "C4",
+          "content": "医師の処方なしに刺激パラメータの上限変更はできない"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C3",
+          "content": "感覚順応により長時間使用で閾値が変化する",
+          "refutation": "閾値が安定している個人が大多数の場合"
+        },
+        {
+          "id": "H2",
+          "basis": "外部知識",
+          "content": "振動子による触覚提示が神経刺激より安全",
+          "refutation": "神経直接刺激の方が自然な感覚を生む場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "機械学習で個人の感覚マップを構築できる",
+          "refutation": "個人差が大きすぎてモデル化不可能な場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 294,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "ProstheticTactileFeedback",
+      "layers": [
+        {
+          "name": "neuro_safety",
+          "ordValue": 5,
+          "definition": "神経刺激の安全上限に関する不変制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "medical_governance",
+          "ordValue": 4,
+          "definition": "医師の処方・監督に関する制度的要件",
+          "derivedFrom": [
+            "C4"
+          ]
+        },
+        {
+          "name": "calibration_protocol",
+          "ordValue": 3,
+          "definition": "個人キャリブレーションの手順・基準",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "stimulation_design",
+          "ordValue": 2,
+          "definition": "刺激パターン生成の設計判断",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "learning_hypothesis",
+          "ordValue": 1,
+          "definition": "感覚マップ学習の仮説",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "pain_ceiling",
+          "layerName": "neuro_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "emergency_stop",
+          "layerName": "neuro_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_param_override",
+          "layerName": "medical_governance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".pain_ceiling"
+          ]
+        },
+        {
+          "id": "physician_approval",
+          "layerName": "medical_governance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".pain_ceiling",
+            ".emergency_stop"
+          ]
+        },
+        {
+          "id": "individual_calib",
+          "layerName": "calibration_protocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".pain_ceiling",
+            ".physician_approval"
+          ]
+        },
+        {
+          "id": "adaptation_monitor",
+          "layerName": "calibration_protocol",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".individual_calib"
+          ]
+        },
+        {
+          "id": "recalib_trigger",
+          "layerName": "calibration_protocol",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".adaptation_monitor",
+            ".no_param_override"
+          ]
+        },
+        {
+          "id": "vibrotactile_pref",
+          "layerName": "stimulation_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".individual_calib"
+          ]
+        },
+        {
+          "id": "pattern_encoding",
+          "layerName": "stimulation_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".vibrotactile_pref",
+            ".pain_ceiling"
+          ]
+        },
+        {
+          "id": "sensory_map_ml",
+          "layerName": "learning_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".individual_calib",
+            ".pattern_encoding"
+          ]
+        },
+        {
+          "id": "transfer_learning",
+          "layerName": "learning_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".sensory_map_ml"
+          ]
+        }
+      ]
+    },
+    "project": "義手触覚フィードバック AI"
+  },
+  {
+    "phase0": {
+      "vision": "太陽のコロナ質量放出(CME)を早期検知・到達時刻予測し、人工衛星・電力網・航空機への影響を事前警告するAI。",
+      "stakeholders": "宇宙天気予報センター、衛星運用者、電力会社、航空管制",
+      "priority": "見逃しの防止が最優先。予測到達時刻の精度は段階的に改善"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "CME発生の見逃しは許容しない（感度優先）"
+        },
+        {
+          "id": "C2",
+          "content": "NICTの宇宙天気情報との整合性を保つ"
+        },
+        {
+          "id": "C3",
+          "content": "到達時刻予測の不確実性を必ず付与する"
+        },
+        {
+          "id": "C4",
+          "content": "衛星・電力・航空の3分野に同時配信する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "SDO/SOHO画像のリアルタイム解析が検知の主手段",
+          "refutation": "地上磁場観測の方が早期検知に優れる場合"
+        },
+        {
+          "id": "H2",
+          "basis": "外部知識",
+          "content": "CME速度はドラッグベースモデルで予測可能",
+          "refutation": "CME間相互作用が支配的で単純モデルが破綻する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "到達時刻の不確実性は過去イベント統計から推定",
+          "refutation": "太陽活動周期により統計的性質が変化する場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 295,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "CMEPrediction",
+      "layers": [
+        {
+          "name": "detection_invariant",
+          "ordValue": 4,
+          "definition": "CME見逃し防止の不変制約",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "coordination_rule",
+          "ordValue": 3,
+          "definition": "NICT連携・多分野配信の制度ルール",
+          "derivedFrom": [
+            "C2",
+            "C4"
+          ]
+        },
+        {
+          "name": "forecast_spec",
+          "ordValue": 2,
+          "definition": "予測精度・不確実性表示の品質基準",
+          "derivedFrom": [
+            "C3",
+            "H3"
+          ]
+        },
+        {
+          "name": "model_choice",
+          "ordValue": 1,
+          "definition": "検知・伝搬モデルの選択仮説",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "no_miss_cme",
+          "layerName": "detection_invariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "sensitivity_max",
+          "layerName": "detection_invariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "nict_alignment",
+          "layerName": "coordination_rule",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".no_miss_cme"
+          ]
+        },
+        {
+          "id": "multi_sector_push",
+          "layerName": "coordination_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".no_miss_cme"
+          ]
+        },
+        {
+          "id": "arrival_uncertainty",
+          "layerName": "forecast_spec",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            ".nict_alignment"
+          ]
+        },
+        {
+          "id": "historical_stats",
+          "layerName": "forecast_spec",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".arrival_uncertainty"
+          ]
+        },
+        {
+          "id": "sdo_soho_pipeline",
+          "layerName": "model_choice",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".sensitivity_max"
+          ]
+        },
+        {
+          "id": "drag_based_model",
+          "layerName": "model_choice",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".arrival_uncertainty",
+            ".sdo_soho_pipeline"
+          ]
+        }
+      ]
+    },
+    "project": "コロナ質量放出予測 AI"
+  },
+  {
+    "phase0": {
+      "vision": "日本刀の鍛造工程でAIが温度分布をリアルタイム計測し、刀匠に最適なタイミングを提示する。鍛冶の判断を補助するが置き換えない。",
+      "stakeholders": "刀匠、刀剣研究者、文化庁",
+      "priority": "刀匠の勘と経験を最上位とし、AIは情報提供に徹する"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "刀匠の判断がAI提示より常に優先される"
+        },
+        {
+          "id": "C2",
+          "content": "計測機器は鍛造作業を妨げてはならない"
+        },
+        {
+          "id": "C3",
+          "content": "温度データは刀匠の許可なく外部公開しない"
+        },
+        {
+          "id": "C4",
+          "content": "各流派の技法差を尊重し、単一の最適解を押し付けない"
+        },
+        {
+          "id": "C5",
+          "content": "火花・煙による計測ノイズを考慮する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C2",
+          "content": "赤外線サーモグラフィが非接触計測の最適手段",
+          "refutation": "鍛造時の輻射が計測を妨害する場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C1,C4",
+          "content": "流派ごとの温度プロファイルをテンプレート化できる",
+          "refutation": "同一流派内でも個人差が大きすぎる場合"
+        },
+        {
+          "id": "H3",
+          "basis": "外部知識",
+          "content": "炭素含有量と温度の関係から焼入れ適温を推定可能",
+          "refutation": "伝統的な玉鋼の不均質性がモデル化を困難にする場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C5",
+          "content": "煙・火花はフィルタリングアルゴリズムで除去可能",
+          "refutation": "物理的遮蔽の方が信頼性が高い場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 296,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "SwordForgingTempControl",
+      "layers": [
+        {
+          "name": "master_authority",
+          "ordValue": 6,
+          "definition": "刀匠の判断・経験が最上位である不変原則",
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "cultural_boundary",
+          "ordValue": 5,
+          "definition": "流派尊重・データ権限の文化的制約",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "workspace_rule",
+          "ordValue": 4,
+          "definition": "作業環境への非干渉ルール",
+          "derivedFrom": [
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "measurement_method",
+          "ordValue": 3,
+          "definition": "計測方式・ノイズ処理の設計",
+          "derivedFrom": [
+            "H1",
+            "H4"
+          ]
+        },
+        {
+          "name": "analysis_model",
+          "ordValue": 2,
+          "definition": "温度解析・プロファイルモデル",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "material_hypothesis",
+          "ordValue": 1,
+          "definition": "玉鋼特性に関する仮説",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "smith_overrides",
+          "layerName": "master_authority",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_single_optimum",
+          "layerName": "cultural_boundary",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".smith_overrides"
+          ]
+        },
+        {
+          "id": "data_confidential",
+          "layerName": "cultural_boundary",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".smith_overrides"
+          ]
+        },
+        {
+          "id": "non_interference",
+          "layerName": "workspace_rule",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".smith_overrides"
+          ]
+        },
+        {
+          "id": "smoke_tolerance",
+          "layerName": "workspace_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".non_interference"
+          ]
+        },
+        {
+          "id": "ir_thermography",
+          "layerName": "measurement_method",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".non_interference",
+            ".smoke_tolerance"
+          ]
+        },
+        {
+          "id": "noise_filter",
+          "layerName": "measurement_method",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".smoke_tolerance"
+          ]
+        },
+        {
+          "id": "school_profile",
+          "layerName": "analysis_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".no_single_optimum",
+            ".ir_thermography"
+          ]
+        },
+        {
+          "id": "quench_temp_est",
+          "layerName": "analysis_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".ir_thermography"
+          ]
+        },
+        {
+          "id": "tamahagane_model",
+          "layerName": "material_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".quench_temp_est"
+          ]
+        },
+        {
+          "id": "carbon_variance",
+          "layerName": "material_hypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".tamahagane_model",
+            ".school_profile"
+          ]
+        }
+      ]
+    },
+    "project": "刀剣鍛造温度制御 AI"
+  },
+  {
+    "phase0": {
+      "vision": "白化したサンゴ礁の回復を支援するAI。水温・酸性度・生物多様性をモニタリングし、移植候補地の選定と再生戦略を提案する。",
+      "stakeholders": "海洋研究機構、環境省、地元漁協、ダイビング事業者",
+      "priority": "既存の健全なサンゴ礁を損なわないことが最優先。再生速度より安全性"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "既存の健全なサンゴ礁への悪影響を禁止する"
+        },
+        {
+          "id": "C2",
+          "content": "移植は在来種のみ。外来種の導入は禁止"
+        },
+        {
+          "id": "C3",
+          "content": "漁業権との両立を確保する"
+        },
+        {
+          "id": "C4",
+          "content": "水温上昇トレンドは不可逆的前提とする"
+        },
+        {
+          "id": "C5",
+          "content": "モニタリングデータは公開する（オープンサイエンス）"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C4",
+          "content": "耐熱性サンゴ株の選抜が再生の鍵",
+          "refutation": "遺伝的多様性の減少が長期リスクとなる場合"
+        },
+        {
+          "id": "H2",
+          "basis": "外部知識",
+          "content": "海流シミュレーションで幼生分散を予測できる",
+          "refutation": "微細海流の変動が予測精度を無効化する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C5",
+          "content": "衛星画像+水中ドローンで広域モニタリング可能",
+          "refutation": "濁度が高い海域では精度が不十分な場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 297,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "CoralReefRegeneration",
+      "layers": [
+        {
+          "name": "ecological_constraint",
+          "ordValue": 5,
+          "definition": "既存生態系保護の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "socio_legal_rule",
+          "ordValue": 4,
+          "definition": "漁業権・データ公開の社会法的ルール",
+          "derivedFrom": [
+            "C3",
+            "C5"
+          ]
+        },
+        {
+          "name": "environmental_premise",
+          "ordValue": 3,
+          "definition": "気候変動の不可逆的前提",
+          "derivedFrom": [
+            "C4"
+          ]
+        },
+        {
+          "name": "regen_strategy",
+          "ordValue": 2,
+          "definition": "再生戦略の設計判断",
+          "derivedFrom": [
+            "H1"
+          ]
+        },
+        {
+          "name": "monitoring_method",
+          "ordValue": 1,
+          "definition": "モニタリング手法の仮説",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "do_no_harm",
+          "layerName": "ecological_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "native_only",
+          "layerName": "ecological_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "fishing_rights",
+          "layerName": "socio_legal_rule",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".do_no_harm"
+          ]
+        },
+        {
+          "id": "open_data",
+          "layerName": "socio_legal_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "warming_irreversible",
+          "layerName": "environmental_premise",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "heat_tolerant_select",
+          "layerName": "regen_strategy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".warming_irreversible",
+            ".native_only"
+          ]
+        },
+        {
+          "id": "transplant_site_rank",
+          "layerName": "regen_strategy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".do_no_harm",
+            ".fishing_rights",
+            ".warming_irreversible"
+          ]
+        },
+        {
+          "id": "larval_dispersion",
+          "layerName": "monitoring_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".transplant_site_rank"
+          ]
+        },
+        {
+          "id": "satellite_drone_mon",
+          "layerName": "monitoring_method",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".open_data"
+          ]
+        },
+        {
+          "id": "bleaching_index",
+          "layerName": "monitoring_method",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".satellite_drone_mon",
+            ".warming_irreversible"
+          ]
+        }
+      ]
+    },
+    "project": "サンゴ礁再生計画 AI"
+  },
+  {
+    "phase0": {
+      "vision": "人工透析中の患者状態をリアルタイム監視し、血圧低下・不均衡症候群の兆候を早期検知して看護師・医師に警告するAI。",
+      "stakeholders": "透析患者、腎臓内科医、透析室看護師",
+      "priority": "患者安全（急変の見逃し防止）が最優先。誤報は許容するが見逃しは許容しない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "急変（血圧急降下、不整脈）の見逃しは許容しない"
+        },
+        {
+          "id": "C2",
+          "content": "AIは警告のみ。治療判断は医師が行う"
+        },
+        {
+          "id": "C3",
+          "content": "患者の透析履歴を考慮した個別化モニタリングが必須"
+        },
+        {
+          "id": "C4",
+          "content": "透析装置メーカーの仕様範囲内で動作する"
+        },
+        {
+          "id": "C5",
+          "content": "医療機器規制(PMDAクラスII相当)に適合する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C3",
+          "content": "血圧トレンドの傾き変化が急変の先行指標",
+          "refutation": "突発的な急変に先行指標がない場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C3",
+          "content": "過去の透析セッションデータからパターン学習可能",
+          "refutation": "透析条件の変更が頻繁で履歴が無効化する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "外部知識",
+          "content": "心拍変動(HRV)解析で自律神経失調を検知可能",
+          "refutation": "透析中のノイズがHRV解析を困難にする場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C4",
+          "content": "既存透析装置のセンサーデータで十分",
+          "refutation": "追加センサーなしでは精度不足の場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: bp_trend_model(血圧トレンドモデル)が no_miss_acute(急変見逃し禁止)に依存するが、bp_trend_modelの方がordValueが高い層にある",
+          "from": "bp_trend_model (clinical_evidence, ord=5)",
+          "to": "no_miss_acute (patient_safety, ord=4)",
+          "fix": "H由来 — bp_trend_modelをprediction_modelに降格、またはno_miss_acuteをclinical_evidenceに昇格"
+        }
+      ]
+    },
+    "scenario_id": 298,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "DialysisMonitoring",
+      "layers": [
+        {
+          "name": "clinical_evidence",
+          "ordValue": 5,
+          "definition": "臨床エビデンスに基づく医学的知見",
+          "derivedFrom": [
+            "H1"
+          ]
+        },
+        {
+          "name": "patient_safety",
+          "ordValue": 4,
+          "definition": "患者安全に関する不変制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "PMDA規制・装置仕様への適合",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "clinical_protocol",
+          "ordValue": 2,
+          "definition": "個別化モニタリングの臨床プロトコル",
+          "derivedFrom": [
+            "C3"
+          ]
+        },
+        {
+          "name": "prediction_model",
+          "ordValue": 1,
+          "definition": "予測アルゴリズム・特徴量選択の仮説",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "no_miss_acute",
+          "layerName": "patient_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "alert_only",
+          "layerName": "patient_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "bp_trend_model",
+          "layerName": "clinical_evidence",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".no_miss_acute"
+          ]
+        },
+        {
+          "id": "pmda_class2",
+          "layerName": "regulatory_compliance",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".no_miss_acute",
+            ".alert_only"
+          ]
+        },
+        {
+          "id": "device_spec_limit",
+          "layerName": "regulatory_compliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".pmda_class2"
+          ]
+        },
+        {
+          "id": "patient_history",
+          "layerName": "clinical_protocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".no_miss_acute",
+            ".device_spec_limit"
+          ]
+        },
+        {
+          "id": "session_baseline",
+          "layerName": "clinical_protocol",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".patient_history"
+          ]
+        },
+        {
+          "id": "pattern_learner",
+          "layerName": "prediction_model",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".patient_history",
+            ".session_baseline"
+          ]
+        },
+        {
+          "id": "hrv_analysis",
+          "layerName": "prediction_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".device_spec_limit"
+          ]
+        },
+        {
+          "id": "existing_sensor_ok",
+          "layerName": "prediction_model",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".device_spec_limit"
+          ]
+        },
+        {
+          "id": "ensemble_alert",
+          "layerName": "prediction_model",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".pattern_learner",
+            ".hrv_analysis",
+            ".bp_trend_model"
+          ]
+        }
+      ]
+    },
+    "project": "透析モニタリング AI"
+  },
+  {
+    "phase0": {
+      "vision": "GRACE衛星重力データと現地観測を統合し、南極氷床の質量変化を高精度で推定するAI。海面上昇予測の精度向上に寄与する。",
+      "stakeholders": "国立極地研究所、IPCC、沿岸国政府",
+      "priority": "長期トレンドの信頼性が最重要。短期ノイズに惑わされない堅牢な推定"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "推定の不確実性範囲を必ず付与する"
+        },
+        {
+          "id": "C2",
+          "content": "GRACE後継機(GRACE-FO)データとの連続性を保つ"
+        },
+        {
+          "id": "C3",
+          "content": "IPCCの既存推定と矛盾する場合は根拠を明示する"
+        },
+        {
+          "id": "C4",
+          "content": "氷河等圧縮補正(GIA)を必ず適用する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C4",
+          "content": "GIAモデルの不確実性が全体誤差の支配項",
+          "refutation": "衛星軌道誤差やエイリアシングが支配的な場合"
+        },
+        {
+          "id": "H2",
+          "basis": "外部知識",
+          "content": "Mascon解析がSH解析より空間分解能で優位",
+          "refutation": "正則化パラメータへの依存が結果を不安定にする場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C2",
+          "content": "GRACE-FOのK-band測距精度向上が推定を改善",
+          "refutation": "加速度計ノイズが改善分を相殺する場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 299,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "AntarcticIceSheetMonitoring",
+      "layers": [
+        {
+          "name": "scientific_rigor",
+          "ordValue": 5,
+          "definition": "不確実性定量化・補正適用の科学的厳密性",
+          "derivedFrom": [
+            "C1",
+            "C4"
+          ]
+        },
+        {
+          "name": "institutional_consistency",
+          "ordValue": 4,
+          "definition": "GRACE-FO連続性・IPCC整合の制度的要件",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "error_budget",
+          "ordValue": 3,
+          "definition": "誤差配分・GIA不確実性の評価方針",
+          "derivedFrom": [
+            "H1"
+          ]
+        },
+        {
+          "name": "inversion_method",
+          "ordValue": 2,
+          "definition": "重力場逆解析手法の選択",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "sensor_model",
+          "ordValue": 1,
+          "definition": "衛星センサー特性の仮説",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "uncertainty_required",
+          "layerName": "scientific_rigor",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "gia_correction",
+          "layerName": "scientific_rigor",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "grace_fo_continuity",
+          "layerName": "institutional_consistency",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".uncertainty_required"
+          ]
+        },
+        {
+          "id": "ipcc_reconcile",
+          "layerName": "institutional_consistency",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".uncertainty_required"
+          ]
+        },
+        {
+          "id": "gia_dominance",
+          "layerName": "error_budget",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".gia_correction",
+            ".uncertainty_required"
+          ]
+        },
+        {
+          "id": "error_partition",
+          "layerName": "error_budget",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".gia_dominance"
+          ]
+        },
+        {
+          "id": "mascon_analysis",
+          "layerName": "inversion_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".gia_correction",
+            ".error_partition"
+          ]
+        },
+        {
+          "id": "regularization_tune",
+          "layerName": "inversion_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".mascon_analysis"
+          ]
+        },
+        {
+          "id": "kbr_precision",
+          "layerName": "sensor_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".grace_fo_continuity"
+          ]
+        },
+        {
+          "id": "accelerometer_noise",
+          "layerName": "sensor_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".kbr_precision"
+          ]
+        }
+      ]
+    },
+    "project": "南極氷床質量変化監視 AI"
+  },
+  {
+    "phase0": {
+      "vision": "工場内の無人搬送車(AGV)群を協調制御し、搬送効率を最大化しつつ衝突・デッドロックを防止するAI。",
+      "stakeholders": "製造ライン管理者、安全管理者、保全担当",
+      "priority": "衝突防止が最優先。効率はその次。デッドロック回避も安全に含む"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "AGV同士の衝突は絶対に防止する"
+        },
+        {
+          "id": "C2",
+          "content": "人間作業者との接触を防止する（安全領域の確保）"
+        },
+        {
+          "id": "C3",
+          "content": "デッドロック状態に陥らない"
+        },
+        {
+          "id": "C4",
+          "content": "緊急停止は個別AGVレベルで即座に実行可能"
+        },
+        {
+          "id": "C5",
+          "content": "通信途絶時はAGVは安全停止する"
+        },
+        {
+          "id": "C6",
+          "content": "搬送優先度は製造ラインの要求に従う"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C3",
+          "content": "時空間グラフでの経路予約がデッドロック防止に有効",
+          "refutation": "動的障害物が多すぎて予約が頻繁に無効化される場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "LiDAR+カメラのセンサーフュージョンで人間検知が可能",
+          "refutation": "倉庫内の遮蔽が死角を生む場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C6",
+          "content": "搬送順序のオンライン最適化はMIPで定式化可能",
+          "refutation": "問題規模が大きすぎてリアルタイム解法が困難な場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C5",
+          "content": "5G/WiFi6のデュアル通信で途絶リスクを低減可能",
+          "refutation": "電磁ノイズが両方の通信を同時に妨害する場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 300,
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 0,
+    "num_props": 0,
+    "num_deps": 0,
+    "model_spec": {
+      "namespace": "AGVFleetControl",
+      "layers": [
+        {
+          "name": "collision_safety",
+          "ordValue": 7,
+          "definition": "衝突・接触防止の絶対不変制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "system_liveness",
+          "ordValue": 6,
+          "definition": "デッドロック回避・緊急停止の生存性保証",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "comm_resilience",
+          "ordValue": 5,
+          "definition": "通信途絶時のフェイルセーフ",
+          "derivedFrom": [
+            "C5"
+          ]
+        },
+        {
+          "name": "production_rule",
+          "ordValue": 4,
+          "definition": "製造ラインの搬送優先度ルール",
+          "derivedFrom": [
+            "C6"
+          ]
+        },
+        {
+          "name": "path_planning",
+          "ordValue": 3,
+          "definition": "経路計画・予約アルゴリズムの設計",
+          "derivedFrom": [
+            "H1"
+          ]
+        },
+        {
+          "name": "perception_method",
+          "ordValue": 2,
+          "definition": "人間検知・障害物認識の手法",
+          "derivedFrom": [
+            "H2"
+          ]
+        },
+        {
+          "name": "optimization_model",
+          "ordValue": 1,
+          "definition": "搬送順序最適化の仮説",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "no_agv_collision",
+          "layerName": "collision_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "human_safe_zone",
+          "layerName": "collision_safety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "no_deadlock",
+          "layerName": "system_liveness",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".no_agv_collision"
+          ]
+        },
+        {
+          "id": "instant_estop",
+          "layerName": "system_liveness",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".no_agv_collision",
+            ".human_safe_zone"
+          ]
+        },
+        {
+          "id": "comm_loss_stop",
+          "layerName": "comm_resilience",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".instant_estop"
+          ]
+        },
+        {
+          "id": "dual_radio",
+          "layerName": "comm_resilience",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".comm_loss_stop"
+          ]
+        },
+        {
+          "id": "line_priority",
+          "layerName": "production_rule",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".no_deadlock"
+          ]
+        },
+        {
+          "id": "spatiotemporal_rsv",
+          "layerName": "path_planning",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".no_deadlock",
+            ".no_agv_collision"
+          ]
+        },
+        {
+          "id": "dynamic_replan",
+          "layerName": "path_planning",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".spatiotemporal_rsv",
+            ".human_safe_zone"
+          ]
+        },
+        {
+          "id": "lidar_camera_fusion",
+          "layerName": "perception_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".human_safe_zone"
+          ]
+        },
+        {
+          "id": "occlusion_handling",
+          "layerName": "perception_method",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".lidar_camera_fusion"
+          ]
+        },
+        {
+          "id": "mip_scheduling",
+          "layerName": "optimization_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".line_priority",
+            ".spatiotemporal_rsv"
+          ]
+        },
+        {
+          "id": "realtime_heuristic",
+          "layerName": "optimization_model",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".mip_scheduling"
+          ]
+        }
+      ]
+    },
+    "project": "無人搬送車群制御 AI"
+  }
+]

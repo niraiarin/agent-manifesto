@@ -1,0 +1,215 @@
+{
+  "namespace": "Scenario240",
+  "layers": [
+    {
+      "name": "flightSafety",
+      "ordValue": 4,
+      "definition": "飛行安全の絶対条件。重心エンベロープと構造限界。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "hazmat",
+      "ordValue": 3,
+      "definition": "IATA危険物規則と温度管理制約。国際規制。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "cargoReq",
+      "ordValue": 2,
+      "definition": "貨物の運用要件。承認プロセスと時間制約。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIによる積載配置の最適化戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の最適化・工学的仮説。運用データで検証が必要。",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "fs1",
+      "layerName": "flightSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fs2",
+      "layerName": "flightSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hz1",
+      "layerName": "hazmat",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".fs1"
+      ]
+    },
+    {
+      "id": "hz2",
+      "layerName": "hazmat",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".fs1",
+        ".fs2"
+      ]
+    },
+    {
+      "id": "hz3",
+      "layerName": "hazmat",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".fs2"
+      ]
+    },
+    {
+      "id": "cr1",
+      "layerName": "cargoReq",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".fs1",
+        ".hz1"
+      ]
+    },
+    {
+      "id": "cr2",
+      "layerName": "cargoReq",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".hz2"
+      ]
+    },
+    {
+      "id": "cr3",
+      "layerName": "cargoReq",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".hz1",
+        ".hz3"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".fs1",
+        ".fs2",
+        ".cr1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".hz1",
+        ".hz2",
+        ".hz3",
+        ".cr3"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".cr2",
+        ".cr3"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".opt2",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".opt2",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".opt3",
+        ".opt5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "namespace": "TestCoverage.S173",
+  "layers": [
+    {
+      "name": "PhysicalSafety",
+      "ordValue": 5,
+      "definition": "人身事故防止に関わる安全制約。道路交通法に準拠",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "VehicleRegulation",
+      "ordValue": 4,
+      "definition": "車両基準・型式認証に関わる法規制",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ParkingPolicy",
+      "ordValue": 3,
+      "definition": "駐車場運用のルール。施設管理者の方針",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "ControlAlgorithm",
+      "ordValue": 2,
+      "definition": "経路計画・制御アルゴリズムの設計選択",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "SensorHypothesis",
+      "ordValue": 1,
+      "definition": "センサー性能に関する未検証の仮説",
+      "derivedFrom": [
+        "C6",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s173_p01",
+      "layerName": "PhysicalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s173_p02",
+      "layerName": "PhysicalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s173_p03",
+      "layerName": "PhysicalSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s173_p04",
+      "layerName": "VehicleRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s173_p01"
+      ]
+    },
+    {
+      "id": "s173_p05",
+      "layerName": "VehicleRegulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s173_p02"
+      ]
+    },
+    {
+      "id": "s173_p06",
+      "layerName": "ParkingPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s173_p04"
+      ]
+    },
+    {
+      "id": "s173_p07",
+      "layerName": "ParkingPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s173_p04",
+        ".s173_p05"
+      ]
+    },
+    {
+      "id": "s173_p08",
+      "layerName": "ParkingPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s173_p03"
+      ]
+    },
+    {
+      "id": "s173_p09",
+      "layerName": "ControlAlgorithm",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s173_p06"
+      ]
+    },
+    {
+      "id": "s173_p10",
+      "layerName": "ControlAlgorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s173_p07"
+      ]
+    },
+    {
+      "id": "s173_p11",
+      "layerName": "ControlAlgorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s173_p06",
+        ".s173_p08"
+      ]
+    },
+    {
+      "id": "s173_p12",
+      "layerName": "SensorHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s173_p09"
+      ]
+    },
+    {
+      "id": "s173_p13",
+      "layerName": "SensorHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s173_p10"
+      ]
+    },
+    {
+      "id": "s173_p14",
+      "layerName": "SensorHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s173_p11"
+      ]
+    },
+    {
+      "id": "s173_p15",
+      "layerName": "SensorHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s173_p09",
+        ".s173_p12"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "歩行者との接触事故はゼロでなければならない。衝突回避は最優先"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ドライバーはいつでも手動介入できなければならない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "自動駐車機能は国土交通省の型式認証を取得する必要がある"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "駐車場の白線・区画情報は施設管理者から提供される"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "駐車経路は最短距離よりも安全マージンを優先して計画する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "超音波センサーとカメラの両方を搭載する予定"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "型式認証の要件が改定された場合、準拠基準が変わる"
+        }
+      },
+      "content": "UN-R79（自動操舵に関する国連規則）への準拠が型式認証の前提条件"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "白線が劣化・消失している駐車場では区画認識精度が低下する"
+        }
+      },
+      "content": "白線認識にはセマンティックセグメンテーションが有効"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "狭小区画では安全マージンの確保と駐車可能性がトレードオフになる"
+        }
+      },
+      "content": "RRTアルゴリズムで安全マージンを制約として経路計画可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "動的障害物（歩行者・他車両）が多い場合、静的経路計画では不十分"
+        }
+      },
+      "content": "静的環境（駐車場）ではオフライン経路計画が効率的"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "雨天・夜間でカメラ性能が大幅に低下する場合"
+        }
+      },
+      "content": "超音波センサーとカメラの冗長構成で悪天候時にも検知精度を維持可能"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C6"
+          ],
+          "refutation": "LiDARの価格低下により超音波センサーより優位になる場合"
+        }
+      },
+      "content": "近距離（5m以内）の障害物検知では超音波センサーがカメラより高精度"
+    }
+  ]
+}

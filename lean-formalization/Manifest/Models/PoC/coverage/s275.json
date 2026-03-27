@@ -1,0 +1,217 @@
+{
+  "namespace": "Scenario275",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "海洋物理と気象の自然法則。変更不可。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "IMO Polar Codeと環境規制。国際合意に基づく。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "operational",
+      "ordValue": 2,
+      "definition": "船長と運航会社の運用判断。航海ごとに設定。",
+      "derivedFrom": [
+        "C2",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "AIの予測・最適化手法。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。航海データで確認。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phy1",
+      "layerName": "physics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg2"
+      ]
+    },
+    {
+      "id": "opr1",
+      "layerName": "operational",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "opr2",
+      "layerName": "operational",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "opr3",
+      "layerName": "operational",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".reg3"
+      ]
+    },
+    {
+      "id": "opr4",
+      "layerName": "operational",
+      "justification": [
+        "C2",
+        "C6"
+      ],
+      "dependencies": [
+        ".opr1",
+        ".opr3"
+      ]
+    },
+    {
+      "id": "prd1",
+      "layerName": "prediction",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".phy1",
+        ".phy2",
+        ".reg1"
+      ]
+    },
+    {
+      "id": "prd2",
+      "layerName": "prediction",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phy2",
+        ".opr2"
+      ]
+    },
+    {
+      "id": "prd3",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".reg2",
+        ".opr4"
+      ]
+    },
+    {
+      "id": "prd4",
+      "layerName": "prediction",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".prd1",
+        ".prd2"
+      ]
+    },
+    {
+      "id": "prd5",
+      "layerName": "prediction",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".prd2",
+        ".prd3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".prd3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".prd4",
+        ".prd5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "namespace": "ELearningDropoutPrediction",
+  "layers": [
+    {
+      "name": "privacy",
+      "ordValue": 4,
+      "definition": "個人情報保護・プライバシーの絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "pedagogy",
+      "ordValue": 3,
+      "definition": "教育学的前提・学習理論",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "data",
+      "ordValue": 2,
+      "definition": "学習データ・プラットフォーム依存",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 1,
+      "definition": "離脱予測モデル・介入戦略",
+      "derivedFrom": [
+        "C4",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prv1",
+      "layerName": "privacy",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prv2",
+      "layerName": "privacy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ped1",
+      "layerName": "pedagogy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".prv1"
+      ]
+    },
+    {
+      "id": "ped2",
+      "layerName": "pedagogy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dat1",
+      "layerName": "data",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".prv2"
+      ]
+    },
+    {
+      "id": "dat2",
+      "layerName": "data",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".ped1"
+      ]
+    },
+    {
+      "id": "dat3",
+      "layerName": "data",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prd1",
+      "layerName": "prediction",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".ped1",
+        ".dat1"
+      ]
+    },
+    {
+      "id": "prd2",
+      "layerName": "prediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dat2",
+        ".dat3"
+      ]
+    },
+    {
+      "id": "prd3",
+      "layerName": "prediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".ped2",
+        ".dat1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".prd1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    }
+  ]
+}

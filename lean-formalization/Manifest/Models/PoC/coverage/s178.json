@@ -1,0 +1,274 @@
+{
+  "namespace": "TestCoverage.S178",
+  "layers": [
+    {
+      "name": "SafetyStandard",
+      "ordValue": 4,
+      "definition": "建築基準法・エレベーター安全規格に基づく安全基準",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "MaintenanceEvidence",
+      "ordValue": 3,
+      "definition": "保守実績から得られた経験則",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictionDesign",
+      "ordValue": 2,
+      "definition": "予測モデルの設計選択",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "CostHypothesis",
+      "ordValue": 1,
+      "definition": "コスト効果に関する未検証の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s178_p01",
+      "layerName": "SafetyStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s178_p02",
+      "layerName": "SafetyStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s178_p03",
+      "layerName": "MaintenanceEvidence",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s178_p01"
+      ]
+    },
+    {
+      "id": "s178_p04",
+      "layerName": "MaintenanceEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s178_p01",
+        ".s178_p02"
+      ]
+    },
+    {
+      "id": "s178_p05",
+      "layerName": "PredictionDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s178_p03"
+      ]
+    },
+    {
+      "id": "s178_p06",
+      "layerName": "PredictionDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s178_p03",
+        ".s178_p04"
+      ]
+    },
+    {
+      "id": "s178_p07",
+      "layerName": "PredictionDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s178_p04"
+      ]
+    },
+    {
+      "id": "s178_p08",
+      "layerName": "CostHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s178_p05"
+      ]
+    },
+    {
+      "id": "s178_p09",
+      "layerName": "CostHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s178_p06"
+      ]
+    },
+    {
+      "id": "s178_p10",
+      "layerName": "CostHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s178_p07"
+      ]
+    },
+    {
+      "id": "s178_p11",
+      "layerName": "CostHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s178_p05",
+        ".s178_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "エレベーターの安全性は建築基準法施行令129条に定められた基準を満たさなければならない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "故障予測の結果に関わらず、法定点検は省略できない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "過去10年分の保守記録と故障履歴がデータベースに蓄積されている"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "振動センサーとモーター電流センサーのデータをリアルタイムで取得する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "予測に基づく予防保守で保守コストの削減を目指す"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "保守記録のデータ品質（記録漏れ・分類の不統一）が低い場合"
+        }
+      },
+      "content": "ワイブル分布で主要部品の故障時期を統計的に推定可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "振動パターンが故障モードと1対1に対応しない場合"
+        }
+      },
+      "content": "振動の周波数スペクトル変化がベアリング劣化の早期指標になる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "異なるメーカー・機種間でモデルの転用ができない場合"
+        }
+      },
+      "content": "LSTMで時系列センサーデータから故障までの残存寿命を予測可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "予防保守の頻度増加がコスト削減効果を相殺する場合"
+        }
+      },
+      "content": "故障前の予防交換により緊急停止件数を50%削減可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "部品の在庫管理コストが予測精度に見合わない場合"
+        }
+      },
+      "content": "故障予測に基づく部品の事前発注で在庫最適化が可能"
+    }
+  ]
+}

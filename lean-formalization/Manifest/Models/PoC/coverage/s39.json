@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "environmental_regulation",
+      "definition": "海洋汚染防止法・国際海事条約に基づく法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "monitoring_standard",
+      "definition": "汚染物質検出基準・測定精度・校正要件",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "detection_method",
+      "definition": "検出アルゴリズム・データフュージョン・空間分析",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "operational_config",
+      "definition": "運用設定・アラート・レポート・ログ管理",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "marpol_compliance",
+      "layerName": "environmental_regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pollution_reporting_obligation",
+      "layerName": "environmental_regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "contaminant_detection_limit",
+      "layerName": "monitoring_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sensor_accuracy_requirement",
+      "layerName": "monitoring_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "baseline_water_quality_model",
+      "layerName": "monitoring_standard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "oil_spill_detection_algorithm",
+      "layerName": "detection_method",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "multi_sensor_fusion_method",
+      "layerName": "detection_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "spatial_interpolation_model",
+      "layerName": "detection_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "alert_priority_classification",
+      "layerName": "operational_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "buoy_maintenance_schedule",
+      "layerName": "operational_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data_archive_retention",
+      "layerName": "operational_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

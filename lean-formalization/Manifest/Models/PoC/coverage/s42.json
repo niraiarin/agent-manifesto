@@ -1,0 +1,170 @@
+{
+  "layers": [
+    {
+      "name": "legal_constraint",
+      "definition": "個人情報保護法・生体情報規制など法的に不変の制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "biometric_assumption",
+      "definition": "顔認証精度・生体情報の特性に関する経験的前提",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "access_policy",
+      "definition": "入退室ポリシー・認証フロー・フォールバック手順",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "operational_param",
+      "definition": "認証閾値・カメラ設定・照合速度などの運用パラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "_monotonicity_violations": [
+    {
+      "violation": "l3 (operational_param, ord=1) depends on t6 (legal_constraint, ord=4) via l3→[t6,t7]",
+      "detail": "l3 は t6, t7 に依存するが、l3 を operational_param (ord=1) に割り当てている。依存先 t6 は legal_constraint (ord=4) であり ord(dep)=4 >= ord(src)=1 なのでこれは OK。しかし l3 の本来の boundary (ord=2) より低い operational_param (ord=1) に割り当てたため、d1→l3 の依存で d1 (operational_param, ord=1) → l3 (operational_param, ord=1) は成立するが、意味論的に l3 を過小評価している。",
+      "resolution": "H5 の推論を修正: l3 を access_policy (ord=2) に昇格。H5 はLLM推論のみに基づくため自律修正可能。",
+      "status": "detected_and_fixed_by_llm"
+    }
+  ],
+  "_fix_applied": "l3 を operational_param (ord=1) から access_policy (ord=2) に昇格。d8 の依存先 e2 (biometric_assumption, ord=3) >= d8 (access_policy, ord=2) で単調性維持。",
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "legal_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "legal_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "legal_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t7",
+      "layerName": "legal_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "biometric_assumption",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "biometric_assumption",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "biometric_assumption",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "access_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "access_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "access_policy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l2",
+      "layerName": "access_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l3",
+      "layerName": "operational_param",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "operational_param",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "access_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,357 @@
+{
+  "namespace": "TestCoverage.S174",
+  "layers": [
+    {
+      "name": "BioethicsConstraint",
+      "ordValue": 6,
+      "definition": "生命倫理・個人情報保護に関する不変制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ScientificBasis",
+      "ordValue": 5,
+      "definition": "微生物学・ゲノム科学の確立された知見",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "ClinicalEvidence",
+      "ordValue": 4,
+      "definition": "臨床研究で裏付けられたエビデンス",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalysisPipeline",
+      "ordValue": 3,
+      "definition": "解析パイプラインの設計選択",
+      "derivedFrom": [
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "InterpretationModel",
+      "ordValue": 2,
+      "definition": "解析結果の解釈モデル。データに基づく調整可能",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "ClinicalHypothesis",
+      "ordValue": 1,
+      "definition": "臨床応用に関する未検証の仮説",
+      "derivedFrom": [
+        "C5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s174_p01",
+      "layerName": "BioethicsConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s174_p02",
+      "layerName": "ScientificBasis",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s174_p01"
+      ]
+    },
+    {
+      "id": "s174_p03",
+      "layerName": "ScientificBasis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s174_p01"
+      ]
+    },
+    {
+      "id": "s174_p04",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s174_p02"
+      ]
+    },
+    {
+      "id": "s174_p05",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s174_p02",
+        ".s174_p03"
+      ]
+    },
+    {
+      "id": "s174_p06",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s174_p03"
+      ]
+    },
+    {
+      "id": "s174_p07",
+      "layerName": "AnalysisPipeline",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s174_p04"
+      ]
+    },
+    {
+      "id": "s174_p08",
+      "layerName": "AnalysisPipeline",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s174_p05"
+      ]
+    },
+    {
+      "id": "s174_p09",
+      "layerName": "AnalysisPipeline",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s174_p04",
+        ".s174_p06"
+      ]
+    },
+    {
+      "id": "s174_p10",
+      "layerName": "InterpretationModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s174_p07"
+      ]
+    },
+    {
+      "id": "s174_p11",
+      "layerName": "InterpretationModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s174_p08"
+      ]
+    },
+    {
+      "id": "s174_p12",
+      "layerName": "InterpretationModel",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s174_p07",
+        ".s174_p09"
+      ]
+    },
+    {
+      "id": "s174_p13",
+      "layerName": "ClinicalHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s174_p10"
+      ]
+    },
+    {
+      "id": "s174_p14",
+      "layerName": "ClinicalHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s174_p11"
+      ]
+    },
+    {
+      "id": "s174_p15",
+      "layerName": "ClinicalHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s174_p12"
+      ]
+    },
+    {
+      "id": "s174_p16",
+      "layerName": "ClinicalHypothesis",
+      "justification": [
+        "C5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s174_p10",
+        ".s174_p13"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "患者の腸内細菌データは個人の遺伝情報に準じる機微情報であり、匿名化と同意取得が必須"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "16S rRNA遺伝子解析が微生物叢の同定に用いられる標準手法である"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "腸内細菌叢の多様性低下は複数の疾患リスクと関連することが臨床研究で示されている"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "解析パイプラインはQIIME2をベースに構築する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "解析結果は臨床医が治療方針の参考にするが、診断そのものには使用しない"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "ショットガンメタゲノミクスの方が種レベルの解像度が高い場合"
+        }
+      },
+      "content": "16S rRNAのV3-V4領域が細菌分類に最も情報量が多い"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "多様性指標だけでは疾患特異性が低い場合"
+        }
+      },
+      "content": "Shannon多様性指数とSimpson指数の組み合わせで腸内環境の健全性を評価可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "QIIME2のDADA2がデータ品質によりノイズ除去に失敗する場合"
+        }
+      },
+      "content": "DADA2によるノイズ除去でASV（Amplicon Sequence Variant）の精度が向上する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "機械学習モデルが過学習しサンプル外の予測精度が低い場合"
+        }
+      },
+      "content": "Random Forestで疾患関連菌種の特徴量重要度を推定可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C3"
+          ],
+          "refutation": "PCoAの次元削減で重要な構造情報が失われる場合"
+        }
+      },
+      "content": "PCoA（主座標分析）で個体間の微生物叢の類似性を可視化できる"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "個別化された食事指導の効果が統計的に検証されていない場合"
+        }
+      },
+      "content": "微生物叢プロファイルに基づく個別化された食事指導が健康改善に寄与する"
+    }
+  ]
+}

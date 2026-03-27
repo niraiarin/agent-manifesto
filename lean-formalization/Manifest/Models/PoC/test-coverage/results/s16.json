@@ -1,0 +1,162 @@
+{
+  "namespace": "TestCoverage.S16",
+  "layers": [
+    {
+      "name": "health_safety",
+      "ordValue": 4,
+      "definition": "公衆衛生・安全基準の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "sensor_infra",
+      "ordValue": 3,
+      "definition": "センサー・通信インフラの物理制約",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "monitoring_policy",
+      "ordValue": 2,
+      "definition": "管理者が設定する監視・通報方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "anomaly_detection",
+      "ordValue": 1,
+      "definition": "AIが自動判定する異常検知・予測",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "hs1",
+      "layerName": "health_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "hs2",
+      "layerName": "health_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "si1",
+      "layerName": "sensor_infra",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "si2",
+      "layerName": "sensor_infra",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "hs1"
+      ]
+    },
+    {
+      "id": "si3",
+      "layerName": "sensor_infra",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "mp1",
+      "layerName": "monitoring_policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "hs1",
+        "si1"
+      ]
+    },
+    {
+      "id": "mp2",
+      "layerName": "monitoring_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "hs2",
+        "si2"
+      ]
+    },
+    {
+      "id": "mp3",
+      "layerName": "monitoring_policy",
+      "justification": [
+        "C3",
+        "H4"
+      ],
+      "dependencies": [
+        "si3"
+      ]
+    },
+    {
+      "id": "ad1",
+      "layerName": "anomaly_detection",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "mp1",
+        "si1"
+      ]
+    },
+    {
+      "id": "ad2",
+      "layerName": "anomaly_detection",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "mp2"
+      ]
+    },
+    {
+      "id": "ad3",
+      "layerName": "anomaly_detection",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        "mp3",
+        "si3"
+      ]
+    },
+    {
+      "id": "ad4",
+      "layerName": "anomaly_detection",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "ad1"
+      ]
+    }
+  ]
+}

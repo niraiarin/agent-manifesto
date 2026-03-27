@@ -1,0 +1,207 @@
+{
+  "namespace": "TestCoverage.S106",
+  "layers": [
+    {
+      "name": "MaritimeLaw",
+      "ordValue": 5,
+      "definition": "海上運送法・国際海事条約。法的義務として不変",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "CustomsCompliance",
+      "ordValue": 4,
+      "definition": "通関手続き・関税法規。各国規制に基づく",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "CarrierContract",
+      "ordValue": 3,
+      "definition": "船会社との契約条件。商業的合意に基づく",
+      "derivedFrom": [
+        "C3",
+        "H2"
+      ]
+    },
+    {
+      "name": "RoutingOptimization",
+      "ordValue": 2,
+      "definition": "航路最適化・ETA予測の運用ルール",
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "VisibilityHypothesis",
+      "ordValue": 1,
+      "definition": "リアルタイム可視化・異常検知の技術的仮説",
+      "derivedFrom": [
+        "C5",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s106_p01",
+      "layerName": "MaritimeLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s106_p02",
+      "layerName": "MaritimeLaw",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s106_p03",
+      "layerName": "CustomsCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s106_p01"
+      ]
+    },
+    {
+      "id": "s106_p04",
+      "layerName": "CustomsCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s106_p01",
+        ".s106_p02"
+      ]
+    },
+    {
+      "id": "s106_p05",
+      "layerName": "CarrierContract",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s106_p03"
+      ]
+    },
+    {
+      "id": "s106_p06",
+      "layerName": "CarrierContract",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s106_p03",
+        ".s106_p04"
+      ]
+    },
+    {
+      "id": "s106_p07",
+      "layerName": "CarrierContract",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s106_p04"
+      ]
+    },
+    {
+      "id": "s106_p08",
+      "layerName": "RoutingOptimization",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s106_p05"
+      ]
+    },
+    {
+      "id": "s106_p09",
+      "layerName": "RoutingOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s106_p06"
+      ]
+    },
+    {
+      "id": "s106_p10",
+      "layerName": "RoutingOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s106_p05",
+        ".s106_p07"
+      ]
+    },
+    {
+      "id": "s106_p11",
+      "layerName": "VisibilityHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s106_p08"
+      ]
+    },
+    {
+      "id": "s106_p12",
+      "layerName": "VisibilityHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s106_p09"
+      ]
+    },
+    {
+      "id": "s106_p13",
+      "layerName": "VisibilityHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s106_p10"
+      ]
+    },
+    {
+      "id": "s106_p14",
+      "layerName": "VisibilityHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s106_p11",
+        ".s106_p12"
+      ]
+    },
+    {
+      "id": "s106_p15",
+      "layerName": "VisibilityHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s106_p08",
+        ".s106_p13"
+      ]
+    }
+  ]
+}

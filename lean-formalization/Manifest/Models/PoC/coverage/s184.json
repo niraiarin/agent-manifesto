@@ -1,0 +1,326 @@
+{
+  "namespace": "TestCoverage.S184",
+  "layers": [
+    {
+      "name": "LegalFramework",
+      "ordValue": 4,
+      "definition": "国際法・文化財保護法に基づく法的義務。変更不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ProvenanceStandard",
+      "ordValue": 3,
+      "definition": "来歴調査の業界標準。学術的合意に基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "InvestigativeMethod",
+      "ordValue": 2,
+      "definition": "調査手法の設計選択。技術の進歩で更新可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "DetectionAlgorithm",
+      "ordValue": 1,
+      "definition": "画像照合・パターン認識のアルゴリズム設計",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "MatchHypothesis",
+      "ordValue": 0,
+      "definition": "照合精度に関する未検証仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s184_p01",
+      "layerName": "LegalFramework",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s184_p02",
+      "layerName": "LegalFramework",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s184_p03",
+      "layerName": "ProvenanceStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s184_p01"
+      ]
+    },
+    {
+      "id": "s184_p04",
+      "layerName": "ProvenanceStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s184_p01",
+        ".s184_p02"
+      ]
+    },
+    {
+      "id": "s184_p05",
+      "layerName": "InvestigativeMethod",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s184_p03"
+      ]
+    },
+    {
+      "id": "s184_p06",
+      "layerName": "InvestigativeMethod",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s184_p03"
+      ]
+    },
+    {
+      "id": "s184_p07",
+      "layerName": "InvestigativeMethod",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s184_p03",
+        ".s184_p04"
+      ]
+    },
+    {
+      "id": "s184_p08",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s184_p05"
+      ]
+    },
+    {
+      "id": "s184_p09",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s184_p06"
+      ]
+    },
+    {
+      "id": "s184_p10",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s184_p05",
+        ".s184_p07"
+      ]
+    },
+    {
+      "id": "s184_p11",
+      "layerName": "DetectionAlgorithm",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s184_p06"
+      ]
+    },
+    {
+      "id": "s184_p12",
+      "layerName": "MatchHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s184_p08"
+      ]
+    },
+    {
+      "id": "s184_p13",
+      "layerName": "MatchHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s184_p09",
+        ".s184_p10"
+      ]
+    },
+    {
+      "id": "s184_p14",
+      "layerName": "MatchHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s184_p11"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "INTERPOL盗難美術品データベースとの照合は法的に必須"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "文化財の返還請求は関係国の法的手続きに従う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "来歴（プロヴナンス）調査は売買記録・展示記録を時系列で追跡する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "オンラインオークション・ギャラリーサイトを自動クロールして監視する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ダークウェブ上の取引も監視対象に含める"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "画像の類似度照合にはディープラーニングベースの手法を使用する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "デジタル来歴管理が未普及で紙ベースが主流の地域がある場合"
+        }
+      },
+      "content": "ブロックチェーンによる来歴管理が改竄防止に有効"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "匿名化技術により画像の照合が困難になる場合"
+        }
+      },
+      "content": "ウェブクロールと画像照合の組み合わせにより盗難品の流通を早期検知可能"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "修復・改変された美術品でCNNの精度が著しく低下する場合"
+        }
+      },
+      "content": "CNNベースの特徴抽出により部分的な修復や角度変化に対しても堅牢な照合が可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C6"
+          ],
+          "refutation": "低解像度画像が大半を占めるサイトでの精度が不十分な場合"
+        }
+      },
+      "content": "超解像技術を前処理に適用することで低解像度画像からの照合精度が向上する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H3",
+            "H4"
+          ],
+          "refutation": "訓練データが西洋美術に偏り、非西洋美術で精度が低下する場合"
+        }
+      },
+      "content": "転移学習により少量の盗難美術品画像から高精度な識別モデルを構築できる"
+    }
+  ]
+}

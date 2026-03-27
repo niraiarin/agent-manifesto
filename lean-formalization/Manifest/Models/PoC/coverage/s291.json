@@ -1,0 +1,173 @@
+{
+  "namespace": "NuclearWasteMonitoring",
+  "layers": [
+    {
+      "name": "safety_invariant",
+      "ordValue": 5,
+      "definition": "放射性物質封じ込めに関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "regulatory_standard",
+      "ordValue": 4,
+      "definition": "IAEA基準・国内法規制への適合要件",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "ordValue": 3,
+      "definition": "監視運用方針・警報基準",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "sensor_model",
+      "ordValue": 2,
+      "definition": "センサー劣化・校正モデル",
+      "derivedFrom": [
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "prediction_hypothesis",
+      "ordValue": 1,
+      "definition": "地質変動・腐食進行の予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "no_false_negative",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "containment_integrity",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "auto_seal",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".sensor_integrity"
+      ]
+    },
+    {
+      "id": "iaea_compliance",
+      "layerName": "regulatory_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".no_false_negative"
+      ]
+    },
+    {
+      "id": "reporting_format",
+      "layerName": "regulatory_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".iaea_compliance"
+      ]
+    },
+    {
+      "id": "redundant_sensors",
+      "layerName": "operational_policy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".containment_integrity"
+      ]
+    },
+    {
+      "id": "alert_threshold",
+      "layerName": "operational_policy",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".no_false_negative",
+        ".iaea_compliance"
+      ]
+    },
+    {
+      "id": "human_override",
+      "layerName": "operational_policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".containment_integrity"
+      ]
+    },
+    {
+      "id": "sensor_integrity",
+      "layerName": "sensor_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".redundant_sensors"
+      ]
+    },
+    {
+      "id": "calibration_cycle",
+      "layerName": "sensor_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".sensor_integrity"
+      ]
+    },
+    {
+      "id": "geological_reeval",
+      "layerName": "prediction_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".sensor_integrity"
+      ]
+    },
+    {
+      "id": "autonomous_mode",
+      "layerName": "prediction_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".human_override",
+        ".sensor_integrity"
+      ]
+    }
+  ]
+}

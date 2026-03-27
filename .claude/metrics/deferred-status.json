@@ -11,11 +11,12 @@
       "note": "Run 60 で SKILL.md に backfill 例外を明記し、observe.sh に ccusage backfill ロジックを追加。8 entries backfilled。"
     },
     "v4-goodhart-hook": {
-      "status": "abandoned",
-      "abandoned_in_run": 13,
+      "status": "resolved",
       "reason": "actionSpaceExceeded",
       "opened_in_run": 7,
-      "note": "hook変更が必要でL4外。7 runs未解決で解消見込みなし"
+      "abandoned_in_run": 13,
+      "resolved_in_run": 63,
+      "note": "Run 13 で abandoned → Run 63 session で人間が L1 hook 変更を承認。PR #76 で l1-safety-check.sh/l1-file-guard.sh に gate_blocked イベント記録を追加。observe.sh の既存 V4 集計ロジックが機能するようになった。"
     },
     "v7-teamwork-concept-redesign": {
       "status": "abandoned",
@@ -180,10 +181,11 @@
       "note": "解消条件到達。10 unique runs with session_cost_usd > 0 (runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60)。mean $4.47/session, median $4.77/session, range $0.15-$8.17。CPI mean $1.23/improvement, median $1.00/improvement。Run 49 ($0.15) は outlier (>2 sigma)。H5/H6 仮説テーブル更新済み。"
     },
     "hook-hallucination-detection": {
-      "status": "open",
+      "status": "resolved",
       "reason": "actionSpaceExceeded",
       "opened_in_run": 54,
-      "note": "Verifier Hook による事実検証の自動実行（Lean定義名・数値引用のリアルタイムチェック）。.claude/hooks/ の変更は人間承認なしに不可（L1）。人間による hooks/ 変更承認が前提。"
+      "note": "WARN mode で導入。G1 PASS (13/13, 0.051s), G2 FAIL (検出率3-6%), 全体 CONDITIONAL。#70 参照。",
+      "resolved_in_run": 63
     },
     "t3-llm-terminology": {
       "status": "resolved",

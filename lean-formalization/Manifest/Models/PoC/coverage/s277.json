@@ -1,0 +1,231 @@
+{
+  "namespace": "Scenario277",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 4,
+      "definition": "ハードウェア安全保護と環境規制。絶対不可侵。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "grid",
+      "ordValue": 3,
+      "definition": "電力系統からの要求。中央給電指令に基づく。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "operations",
+      "ordValue": 2,
+      "definition": "オペレーターの運転管理。燃料切替・メンテナンス。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "AIの燃焼最適化手法。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。運転データで確認。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "saf1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf2",
+      "layerName": "safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "saf3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "grd1",
+      "layerName": "grid",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".saf1"
+      ]
+    },
+    {
+      "id": "grd2",
+      "layerName": "grid",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".saf3"
+      ]
+    },
+    {
+      "id": "ops1",
+      "layerName": "operations",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".grd1"
+      ]
+    },
+    {
+      "id": "ops2",
+      "layerName": "operations",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".saf2"
+      ]
+    },
+    {
+      "id": "ops3",
+      "layerName": "operations",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".ops1",
+        ".ops2"
+      ]
+    },
+    {
+      "id": "opt1",
+      "layerName": "optimization",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".saf1",
+        ".ops1"
+      ]
+    },
+    {
+      "id": "opt2",
+      "layerName": "optimization",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".saf2",
+        ".saf3"
+      ]
+    },
+    {
+      "id": "opt3",
+      "layerName": "optimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".grd1",
+        ".grd2"
+      ]
+    },
+    {
+      "id": "opt4",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".opt1",
+        ".opt2"
+      ]
+    },
+    {
+      "id": "opt5",
+      "layerName": "optimization",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".ops3",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "opt6",
+      "layerName": "optimization",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".opt2",
+        ".opt3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops2",
+        ".opt4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".opt5",
+        ".opt6"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".ops3"
+      ]
+    }
+  ]
+}

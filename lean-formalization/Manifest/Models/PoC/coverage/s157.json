@@ -1,0 +1,243 @@
+{
+  "namespace": "TestCoverage.S157",
+  "layers": [
+    {
+      "name": "WildlifeProtection",
+      "ordValue": 3,
+      "definition": "鳥獣保護法・動物福祉の法的制約。保護種の捕獲禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DetectionSystem",
+      "ordValue": 2,
+      "definition": "センサー・画像認識システムの設計方針",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ResponseProtocol",
+      "ordValue": 1,
+      "definition": "検知後の対応手順と通知方式",
+      "derivedFrom": [
+        "C4",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s157_p01",
+      "layerName": "WildlifeProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s157_p02",
+      "layerName": "WildlifeProtection",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s157_p03",
+      "layerName": "WildlifeProtection",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s157_p04",
+      "layerName": "DetectionSystem",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s157_p01"
+      ]
+    },
+    {
+      "id": "s157_p05",
+      "layerName": "DetectionSystem",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s157_p02"
+      ]
+    },
+    {
+      "id": "s157_p06",
+      "layerName": "DetectionSystem",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s157_p01",
+        ".s157_p03"
+      ]
+    },
+    {
+      "id": "s157_p07",
+      "layerName": "DetectionSystem",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s157_p02"
+      ]
+    },
+    {
+      "id": "s157_p08",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s157_p04"
+      ]
+    },
+    {
+      "id": "s157_p09",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s157_p05",
+        ".s157_p06"
+      ]
+    },
+    {
+      "id": "s157_p10",
+      "layerName": "ResponseProtocol",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s157_p07",
+        ".s157_p08"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "鳥獣保護管理法に基づき、保護種（ツキノワグマ等）の捕殺は許可なく行えない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "忌避装置（超音波・光・音）は動物に永続的な身体的害を与えないものに限定する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "赤外線カメラとトレイルカメラを農地周辺に設置し、24時間監視する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検知時は農家のスマートフォンに即時通知し、写真付きで種別を報告する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "赤外線カメラだけで十分な精度が得られる場合"
+        }
+      },
+      "content": "夜間のイノシシ・シカ識別にはYOLO系の物体検出モデルが赤外線画像で有効"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C3"
+          ],
+          "refutation": "対象種がイノシシ・シカのみの場合"
+        }
+      },
+      "content": "保護種と有害鳥獣の自動分類が必須。誤分類時は保守的に保護種扱いにすべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "カメラの電力供給が安定している場合"
+        }
+      },
+      "content": "太陽光パネル+バッテリーによるオフグリッド運用が山間部では必要"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C2"
+          ],
+          "refutation": "人手による追い払いが常に可能な場合"
+        }
+      },
+      "content": "検知→忌避装置自動起動→人間への通知の段階的対応が効率的"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "侵入パターンの分析が不要な場合"
+        }
+      },
+      "content": "侵入時刻・頻度・方向のログから侵入経路を推定し、重点防御地点を提案できる"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "layers": [
+    {
+      "name": "regulatory_constraint",
+      "definition": "電波法規・国際条約に基づく不変制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "safety_requirement",
+      "definition": "安全・緊急通信に関する要件",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "qos_standard",
+      "definition": "通信品質に関する基準",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "allocation_policy",
+      "definition": "帯域配分に関する方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "optimization_method",
+      "definition": "最適化手法の選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "description": "「干渉計算にはビームパターンのフーリエ解析を使用する」がoptimization_method(ord=1)ではなくqos_standard(ord=3)に割り当てられている。H5はH3(optimization_methodレベル)を根拠としているため、optimization_method(ord=1)の命題がqos_standard(ord=3)の命題に依存する方向で単調性に違反する。依存先(qos_standard, ord=3)が依存元(optimization_method, ord=1)より高い層にあるのは正常だが、干渉計算手法自体はH由来の実装判断であるためqos_standard(ord=3)への配置が不適切。",
+    "violating_assignment": {
+      "proposition": "干渉計算にはビームパターンのフーリエ解析を使用する",
+      "assigned_layer": "qos_standard",
+      "assigned_ord": 3,
+      "should_be": "optimization_method",
+      "should_be_ord": 1
+    },
+    "fix_applied": "H由来のためLLMが自律修正: qos_standard(ord=3)からoptimization_method(ord=1)に降格",
+    "fixed_assignment": {
+      "proposition": "干渉計算にはビームパターンのフーリエ解析を使用する",
+      "layerName": "optimization_method",
+      "justification": [
+        "H5"
+      ]
+    }
+  },
+  "propositions": [
+    {
+      "id": "ITU_f73a11",
+      "layerName": "regulatory_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_a71e3a",
+      "layerName": "regulatory_constraint",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_826ef4",
+      "layerName": "safety_requirement",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "SLA_54bb2d",
+      "layerName": "qos_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_923aef",
+      "layerName": "qos_standard",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_bbafe8",
+      "layerName": "allocation_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_ea0baa",
+      "layerName": "allocation_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_03b3eb",
+      "layerName": "optimization_method",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "LSTM_4cd0f5",
+      "layerName": "optimization_method",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_755b34",
+      "layerName": "qos_standard",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

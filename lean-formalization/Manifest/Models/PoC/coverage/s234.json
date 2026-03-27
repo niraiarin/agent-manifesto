@@ -1,0 +1,196 @@
+{
+  "namespace": "Scenario234",
+  "layers": [
+    {
+      "name": "judicial",
+      "ordValue": 4,
+      "definition": "司法制度・裁判所規則による絶対的制約。AIが変更不可。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "privacy",
+      "ordValue": 3,
+      "definition": "個人情報保護とプライバシー権の保障。法的義務。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "editorial",
+      "ordValue": 2,
+      "definition": "要約の編集方針と品質基準。免責事項の明示。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "processing",
+      "ordValue": 1,
+      "definition": "音声認識・NLP・要約生成の技術的処理戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の技術的仮説。実データで検証が必要。",
+      "derivedFrom": [
+        "H1"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "jud1",
+      "layerName": "judicial",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "jud2",
+      "layerName": "judicial",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "jud3",
+      "layerName": "judicial",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "priv1",
+      "layerName": "privacy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".jud1"
+      ]
+    },
+    {
+      "id": "priv2",
+      "layerName": "privacy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".jud1",
+        ".jud2"
+      ]
+    },
+    {
+      "id": "edit1",
+      "layerName": "editorial",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".jud1",
+        ".priv1"
+      ]
+    },
+    {
+      "id": "edit2",
+      "layerName": "editorial",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".priv2"
+      ]
+    },
+    {
+      "id": "edit3",
+      "layerName": "editorial",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".jud3",
+        ".priv1"
+      ]
+    },
+    {
+      "id": "proc1",
+      "layerName": "processing",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".jud2",
+        ".edit1"
+      ]
+    },
+    {
+      "id": "proc2",
+      "layerName": "processing",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".priv1",
+        ".priv2"
+      ]
+    },
+    {
+      "id": "proc3",
+      "layerName": "processing",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".edit1",
+        ".edit3"
+      ]
+    },
+    {
+      "id": "proc4",
+      "layerName": "processing",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".proc1",
+        ".proc3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".proc1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".proc2",
+        ".proc4"
+      ]
+    }
+  ]
+}

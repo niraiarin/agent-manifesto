@@ -1,0 +1,168 @@
+{
+  "namespace": "Scenario239",
+  "layers": [
+    {
+      "name": "geological",
+      "ordValue": 3,
+      "definition": "地質学的不変条件。帯水層の物理特性と地下水力学。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "regulatory",
+      "ordValue": 2,
+      "definition": "ISO品質基準、環境保全義務、既存構造物保護。",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "exploration",
+      "ordValue": 1,
+      "definition": "AIによる探査データ解析と候補地点推定の戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の地球物理学的仮説。フィールドデータで検証が必要。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "geol1",
+      "layerName": "geological",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geol2",
+      "layerName": "geological",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "regu1",
+      "layerName": "regulatory",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".geol1"
+      ]
+    },
+    {
+      "id": "regu2",
+      "layerName": "regulatory",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".geol1",
+        ".geol2"
+      ]
+    },
+    {
+      "id": "regu3",
+      "layerName": "regulatory",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".geol2"
+      ]
+    },
+    {
+      "id": "expl1",
+      "layerName": "exploration",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".geol1",
+        ".regu2"
+      ]
+    },
+    {
+      "id": "expl2",
+      "layerName": "exploration",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".regu1",
+        ".regu2"
+      ]
+    },
+    {
+      "id": "expl3",
+      "layerName": "exploration",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".regu3"
+      ]
+    },
+    {
+      "id": "expl4",
+      "layerName": "exploration",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".expl1",
+        ".expl2"
+      ]
+    },
+    {
+      "id": "expl5",
+      "layerName": "exploration",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".regu1",
+        ".expl3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".expl1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".expl4",
+        ".expl5"
+      ]
+    }
+  ]
+}

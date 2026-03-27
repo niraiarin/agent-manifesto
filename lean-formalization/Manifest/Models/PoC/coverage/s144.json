@@ -1,0 +1,263 @@
+{
+  "namespace": "TestCoverage.S144",
+  "layers": [
+    {
+      "name": "AnalyticalStandard",
+      "ordValue": 3,
+      "definition": "分析化学の基準。計量トレーサビリティ・標準試料に基づく",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BiologicalKnowledge",
+      "ordValue": 2,
+      "definition": "植物生理学・生化学の確立された知見",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "MethodSelection",
+      "ordValue": 1,
+      "definition": "分析手法の選択。機器・コスト・目的に応じて変更可能",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictiveModel",
+      "ordValue": 0,
+      "definition": "成分予測モデルの仮説。サンプルデータで検証が必要",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s144_p01",
+      "layerName": "AnalyticalStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s144_p02",
+      "layerName": "AnalyticalStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s144_p03",
+      "layerName": "BiologicalKnowledge",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s144_p01"
+      ]
+    },
+    {
+      "id": "s144_p04",
+      "layerName": "BiologicalKnowledge",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s144_p01",
+        ".s144_p02"
+      ]
+    },
+    {
+      "id": "s144_p05",
+      "layerName": "MethodSelection",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s144_p03"
+      ]
+    },
+    {
+      "id": "s144_p06",
+      "layerName": "MethodSelection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s144_p04"
+      ]
+    },
+    {
+      "id": "s144_p07",
+      "layerName": "MethodSelection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s144_p03",
+        ".s144_p04"
+      ]
+    },
+    {
+      "id": "s144_p08",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s144_p05"
+      ]
+    },
+    {
+      "id": "s144_p09",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s144_p06"
+      ]
+    },
+    {
+      "id": "s144_p10",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s144_p05",
+        ".s144_p07"
+      ]
+    },
+    {
+      "id": "s144_p11",
+      "layerName": "PredictiveModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s144_p08",
+        ".s144_p09"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "成分定量はISO/IEC 17025認定に準拠した手順で行う"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "標準試料との比較による校正を毎回実施する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ポリフェノール・テルペン・アルカロイドが主要分析対象"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "近赤外分光法(NIR)による非破壊分析を一次スクリーニングに使用する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "未知の二次代謝産物が主要成分と干渉する場合"
+        }
+      },
+      "content": "主要3成分群の定量で植物の機能性評価の80%をカバーできる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "NIRの波長分解能が不十分で類似成分の識別ができない場合"
+        }
+      },
+      "content": "NIRスペクトルからPLS回帰で主要成分を同時定量できる"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "水分含量の変動がNIR測定に大きな影響を与える場合"
+        }
+      },
+      "content": "前処理(乾燥・粉砕)の標準化によりNIR測定の再現性が向上する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "品種間の化学的多様性が大きすぎてモデルの汎化が困難な場合"
+        }
+      },
+      "content": "深層学習によるスペクトル解析がPLS回帰より高い予測精度を達成する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "サンプル前処理のばらつきが転移学習の精度を低下させる場合"
+        }
+      },
+      "content": "異なる植物種間での転移学習が少量サンプルでの予測を可能にする"
+    }
+  ]
+}

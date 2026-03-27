@@ -1,0 +1,256 @@
+{
+  "namespace": "TestCoverage.S108",
+  "layers": [
+    {
+      "name": "PassengerSafety",
+      "ordValue": 7,
+      "definition": "乗客の安全確保。過密状態での事故防止は最優先",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "TransportRegulation",
+      "ordValue": 6,
+      "definition": "鉄道営業法・国交省基準。法定遵守事項",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "OperationalConstraint",
+      "ordValue": 5,
+      "definition": "ダイヤ・車両運用の物理的制約",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "DemandPattern",
+      "ordValue": 4,
+      "definition": "乗客需要パターンの経験則。過去データに基づく",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "InformationPolicy",
+      "ordValue": 3,
+      "definition": "混雑情報の公開方針。利用者コミュニケーション",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictionModel",
+      "ordValue": 2,
+      "definition": "混雑予測モデルの選択・パラメータ調整",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "BehaviorHypothesis",
+      "ordValue": 1,
+      "definition": "混雑情報提供による旅客行動変容の仮説",
+      "derivedFrom": [
+        "C6",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s108_p01",
+      "layerName": "PassengerSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s108_p02",
+      "layerName": "TransportRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s108_p01"
+      ]
+    },
+    {
+      "id": "s108_p03",
+      "layerName": "TransportRegulation",
+      "justification": [
+        "C2",
+        "C1"
+      ],
+      "dependencies": [
+        ".s108_p01"
+      ]
+    },
+    {
+      "id": "s108_p04",
+      "layerName": "OperationalConstraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s108_p02"
+      ]
+    },
+    {
+      "id": "s108_p05",
+      "layerName": "OperationalConstraint",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s108_p02",
+        ".s108_p03"
+      ]
+    },
+    {
+      "id": "s108_p06",
+      "layerName": "DemandPattern",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s108_p04"
+      ]
+    },
+    {
+      "id": "s108_p07",
+      "layerName": "DemandPattern",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s108_p04",
+        ".s108_p05"
+      ]
+    },
+    {
+      "id": "s108_p08",
+      "layerName": "DemandPattern",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s108_p05"
+      ]
+    },
+    {
+      "id": "s108_p09",
+      "layerName": "InformationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s108_p06"
+      ]
+    },
+    {
+      "id": "s108_p10",
+      "layerName": "InformationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s108_p07"
+      ]
+    },
+    {
+      "id": "s108_p11",
+      "layerName": "InformationPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s108_p06",
+        ".s108_p08"
+      ]
+    },
+    {
+      "id": "s108_p12",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s108_p09"
+      ]
+    },
+    {
+      "id": "s108_p13",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s108_p10"
+      ]
+    },
+    {
+      "id": "s108_p14",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s108_p09",
+        ".s108_p11"
+      ]
+    },
+    {
+      "id": "s108_p15",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s108_p12"
+      ]
+    },
+    {
+      "id": "s108_p16",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s108_p13"
+      ]
+    },
+    {
+      "id": "s108_p17",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s108_p14"
+      ]
+    },
+    {
+      "id": "s108_p18",
+      "layerName": "BehaviorHypothesis",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".s108_p15",
+        ".s108_p16"
+      ]
+    }
+  ]
+}

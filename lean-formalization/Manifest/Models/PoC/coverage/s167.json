@@ -1,0 +1,219 @@
+{
+  "namespace": "TestScenario.S167",
+  "description": "不発弾探査 AI — 意図的単調性違反あり（confidenceFromReport→gridMapOutput: detectionMethodology(3)→reportingFormat(0)）",
+  "layers": [
+    {
+      "name": "personnelSafety",
+      "ordValue": 5,
+      "definition": "探査員・周辺住民の生命安全。最優先不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "explosivePhysics",
+      "ordValue": 4,
+      "definition": "爆発物の物理化学的特性と劣化モデル",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "detectionMethodology",
+      "ordValue": 3,
+      "definition": "地中探査手法の選定基準と信頼度",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "siteAssessment",
+      "ordValue": 2,
+      "definition": "探査現場の地質・環境条件評価",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "disposalProtocol",
+      "ordValue": 1,
+      "definition": "発見時の処理手順と避難計画",
+      "derivedFrom": [
+        "C3",
+        "H5"
+      ]
+    },
+    {
+      "name": "reportingFormat",
+      "ordValue": 0,
+      "definition": "探査結果の記録・報告フォーマット",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safeDistanceRule",
+      "layerName": "personnelSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "evacuationPlan",
+      "layerName": "personnelSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "noTouchPolicy",
+      "layerName": "personnelSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fuzeTypeCatalog",
+      "layerName": "explosivePhysics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".safeDistanceRule"
+      ]
+    },
+    {
+      "id": "corrosionModel",
+      "layerName": "explosivePhysics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".fuzeTypeCatalog"
+      ]
+    },
+    {
+      "id": "blastRadiusCalc",
+      "layerName": "explosivePhysics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".safeDistanceRule",
+        ".fuzeTypeCatalog"
+      ]
+    },
+    {
+      "id": "magnetometerSpec",
+      "layerName": "detectionMethodology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".fuzeTypeCatalog"
+      ]
+    },
+    {
+      "id": "gprPenetration",
+      "layerName": "detectionMethodology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".magnetometerSpec"
+      ]
+    },
+    {
+      "id": "multiSensorFusion",
+      "layerName": "detectionMethodology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".magnetometerSpec",
+        ".gprPenetration"
+      ]
+    },
+    {
+      "id": "soilClassification",
+      "layerName": "siteAssessment",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".gprPenetration"
+      ]
+    },
+    {
+      "id": "waterTableDepth",
+      "layerName": "siteAssessment",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".soilClassification"
+      ]
+    },
+    {
+      "id": "historicalBombingMap",
+      "layerName": "siteAssessment",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".fuzeTypeCatalog",
+        ".soilClassification"
+      ]
+    },
+    {
+      "id": "eodCallProtocol",
+      "layerName": "disposalProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".evacuationPlan",
+        ".blastRadiusCalc"
+      ]
+    },
+    {
+      "id": "insituNeutralize",
+      "layerName": "disposalProtocol",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".corrosionModel",
+        ".eodCallProtocol"
+      ]
+    },
+    {
+      "id": "gridMapOutput",
+      "layerName": "reportingFormat",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".multiSensorFusion",
+        ".historicalBombingMap"
+      ]
+    },
+    {
+      "id": "confidenceFromReport",
+      "layerName": "detectionMethodology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".gridMapOutput"
+      ]
+    }
+  ]
+}

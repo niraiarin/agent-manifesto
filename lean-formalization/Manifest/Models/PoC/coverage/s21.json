@@ -1,0 +1,135 @@
+{
+  "layers": [
+    {
+      "name": "market_constraint",
+      "definition": "金融規制・法的制約。変更不可",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "data_postulate",
+      "definition": "市場データ取得の前提。外部取引所APIに依存",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "analysis_principle",
+      "definition": "分析ロジックの設計原則。変更可能だが影響大",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "display_hypothesis",
+      "definition": "UI表示の仮説。ユーザーフィードバックで変更",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "regulatory_compliance",
+      "layerName": "market_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "no_insider_trading_facilitation",
+      "layerName": "market_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "realtime_data_available",
+      "layerName": "data_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "api_latency_under_100ms",
+      "layerName": "data_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "technical_indicator_accuracy",
+      "layerName": "analysis_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "anomaly_detection_threshold",
+      "layerName": "analysis_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "chart_refresh_rate",
+      "layerName": "display_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "color_scheme_for_alerts",
+      "layerName": "display_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dashboard_layout",
+      "layerName": "display_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "risk_warning_display",
+      "layerName": "market_constraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "historical_data_retention",
+      "layerName": "data_postulate",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    }
+  ]
+}

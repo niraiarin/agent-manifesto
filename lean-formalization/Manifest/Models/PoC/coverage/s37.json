@@ -1,0 +1,153 @@
+{
+  "layers": [
+    {
+      "name": "electoral_law",
+      "definition": "選挙法・政治資金規正法・報道規制に基づく法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "methodological_rigor",
+      "definition": "統計的手法の厳密性・サンプリング基準・バイアス補正",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "analysis_framework",
+      "definition": "分析フレームワーク・可視化方針・予測モデル",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "presentation_config",
+      "definition": "表示設定・更新頻度・レポート形式",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C7",
+        "H3"
+      ]
+    }
+  ],
+  "_monotonicity_violations": [
+    {
+      "violation": "media_embargo_compliance_check (presentation_config, ord=1) depends on election_silence_period (electoral_law, ord=4)",
+      "detail": "メディアエンバーゴ遵守チェック(ord=1)が選挙沈黙期間(ord=4)に依存しているが、依存先の方がordが高い。依存元のordが依存先以上でなければならないが、1 < 4 で単調性違反。",
+      "involved_assumptions": [
+        "H4",
+        "C1"
+      ],
+      "resolution": "H4はC1に根拠を持つため人間確認が必要。選択肢: (a) media_embargo_compliance_checkをelectoral_law(ord=4)に昇格、(b) 依存関係を間接化し中間層を経由させる",
+      "status": "unresolved_requires_phase3"
+    }
+  ],
+  "propositions": [
+    {
+      "id": "election_silence_period",
+      "layerName": "electoral_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "political_neutrality_obligation",
+      "layerName": "electoral_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sampling_methodology",
+      "layerName": "methodological_rigor",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "margin_of_error_standard",
+      "layerName": "methodological_rigor",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "demographic_weighting_model",
+      "layerName": "methodological_rigor",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sentiment_analysis_framework",
+      "layerName": "analysis_framework",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prediction_model_selection",
+      "layerName": "analysis_framework",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "geographic_breakdown_method",
+      "layerName": "analysis_framework",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "confidence_interval_display",
+      "layerName": "presentation_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "update_frequency_setting",
+      "layerName": "presentation_config",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "media_embargo_compliance_check",
+      "layerName": "presentation_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "historical_comparison_view",
+      "layerName": "presentation_config",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

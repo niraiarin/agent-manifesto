@@ -1,0 +1,127 @@
+{
+  "layers": [
+    {
+      "name": "safety_constraint",
+      "definition": "車両安全に関わる制約。整備不良による事故防止",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "vehicle_postulate",
+      "definition": "車両工学の前提。部品劣化モデルとセンサーデータ",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "maintenance_principle",
+      "definition": "整備計画の原則。コストと安全のバランス",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "scheduling_hypothesis",
+      "definition": "スケジューリングの仮説。運用データで調整",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "brake_system_priority",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "recall_compliance",
+      "layerName": "safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "obd_data_availability",
+      "layerName": "vehicle_postulate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "component_degradation_model",
+      "layerName": "vehicle_postulate",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cost_optimization_target",
+      "layerName": "maintenance_principle",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "preventive_vs_reactive_ratio",
+      "layerName": "maintenance_principle",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "oil_change_interval",
+      "layerName": "scheduling_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tire_wear_prediction",
+      "layerName": "scheduling_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "seasonal_maintenance_window",
+      "layerName": "scheduling_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "parts_inventory_forecast",
+      "layerName": "maintenance_principle",
+      "justification": [
+        "C4",
+        "H2",
+        "H3"
+      ],
+      "dependencies": []
+    }
+  ]
+}

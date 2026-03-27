@@ -1,0 +1,179 @@
+{
+  "namespace": "Scenario274",
+  "layers": [
+    {
+      "name": "medical",
+      "ordValue": 3,
+      "definition": "医療安全と薬事規制。歯科医師の判断権限を含む。",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "patient",
+      "ordValue": 2,
+      "definition": "患者固有の口腔条件と要望。ケースごとに異なる。",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "design",
+      "ordValue": 1,
+      "definition": "AIの設計最適化手法。技術進歩で改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "臨床データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med3",
+      "layerName": "medical",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pat1",
+      "layerName": "patient",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "pat2",
+      "layerName": "patient",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "pat3",
+      "layerName": "patient",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".pat1",
+        ".pat2"
+      ]
+    },
+    {
+      "id": "des1",
+      "layerName": "design",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".med2",
+        ".pat1"
+      ]
+    },
+    {
+      "id": "des2",
+      "layerName": "design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".pat2",
+        ".pat3"
+      ]
+    },
+    {
+      "id": "des3",
+      "layerName": "design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".med2",
+        ".pat1"
+      ]
+    },
+    {
+      "id": "des4",
+      "layerName": "design",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".des1",
+        ".des3"
+      ]
+    },
+    {
+      "id": "des5",
+      "layerName": "design",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".des1",
+        ".des2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".des2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".des4",
+        ".des5"
+      ]
+    }
+  ]
+}

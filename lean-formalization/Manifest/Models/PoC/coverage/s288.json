@@ -1,0 +1,272 @@
+{
+  "namespace": "Scenario288",
+  "layers": [
+    {
+      "name": "ethics",
+      "ordValue": 5,
+      "definition": "患者の権利と倫理に関する不可侵の原則。",
+      "derivedFrom": [
+        "C5"
+      ]
+    },
+    {
+      "name": "medical",
+      "ordValue": 4,
+      "definition": "医療行為としての法的基準と診断権限の所在。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 3,
+      "definition": "臨床プロトコルと安全基準。医療チームが設定。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "device",
+      "ordValue": 2,
+      "definition": "センサーデバイスの物理的制約と装着条件。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "algorithm",
+      "ordValue": 1,
+      "definition": "AI分析アルゴリズムの設計判断。データで改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。臨床データで検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".eth2"
+      ]
+    },
+    {
+      "id": "cln1",
+      "layerName": "clinical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "cln2",
+      "layerName": "clinical",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med1",
+        ".med2"
+      ]
+    },
+    {
+      "id": "cln3",
+      "layerName": "clinical",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".cln1",
+        ".cln2"
+      ]
+    },
+    {
+      "id": "dev1",
+      "layerName": "device",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".cln2"
+      ]
+    },
+    {
+      "id": "dev2",
+      "layerName": "device",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".cln1",
+        ".cln3"
+      ]
+    },
+    {
+      "id": "dev3",
+      "layerName": "device",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".dev1",
+        ".dev2"
+      ]
+    },
+    {
+      "id": "alg1",
+      "layerName": "algorithm",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".dev1",
+        ".dev2"
+      ]
+    },
+    {
+      "id": "alg2",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".cln2",
+        ".dev1"
+      ]
+    },
+    {
+      "id": "alg3",
+      "layerName": "algorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".med1",
+        ".cln1",
+        ".dev3"
+      ]
+    },
+    {
+      "id": "alg4",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg2"
+      ]
+    },
+    {
+      "id": "alg5",
+      "layerName": "algorithm",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".alg2",
+        ".alg3"
+      ]
+    },
+    {
+      "id": "alg6",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".alg4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".alg5",
+        ".alg6"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp2",
+        ".hyp3"
+      ]
+    }
+  ]
+}

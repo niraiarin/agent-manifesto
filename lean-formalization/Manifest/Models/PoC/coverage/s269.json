@@ -1,0 +1,181 @@
+{
+  "namespace": "TestScenario.S269",
+  "description": "砂漠化進行監視 AI",
+  "layers": [
+    {
+      "name": "climate_science",
+      "ordValue": 5,
+      "definition": "気候学・土壌学の基本法則。水収支・蒸発散",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "unccd_framework",
+      "ordValue": 4,
+      "definition": "国連砂漠化対処条約（UNCCD）の指標体系",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "remote_sensing",
+      "ordValue": 3,
+      "definition": "衛星リモートセンシングの物理モデル。NDVI・土壌水分指標",
+      "derivedFrom": [
+        "H1",
+        "C4"
+      ]
+    },
+    {
+      "name": "degradation_model",
+      "ordValue": 2,
+      "definition": "土地劣化評価モデル。LDN指標・生産性動態",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "intervention",
+      "ordValue": 1,
+      "definition": "緑化・土壌保全介入の効果推定",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "projection",
+      "ordValue": 0,
+      "definition": "砂漠化進行の将来予測仮説",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "cs1",
+      "layerName": "climate_science",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cs2",
+      "layerName": "climate_science",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "uf1",
+      "layerName": "unccd_framework",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".cs1"
+      ]
+    },
+    {
+      "id": "uf2",
+      "layerName": "unccd_framework",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rs1",
+      "layerName": "remote_sensing",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cs1",
+        ".uf1"
+      ]
+    },
+    {
+      "id": "rs2",
+      "layerName": "remote_sensing",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".cs2"
+      ]
+    },
+    {
+      "id": "dm1",
+      "layerName": "degradation_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".rs1",
+        ".uf2"
+      ]
+    },
+    {
+      "id": "dm2",
+      "layerName": "degradation_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rs2"
+      ]
+    },
+    {
+      "id": "dm3",
+      "layerName": "degradation_model",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".rs1",
+        ".rs2"
+      ]
+    },
+    {
+      "id": "iv1",
+      "layerName": "intervention",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".dm1",
+        ".dm2"
+      ]
+    },
+    {
+      "id": "iv2",
+      "layerName": "intervention",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".dm3",
+        ".uf1"
+      ]
+    },
+    {
+      "id": "pj1",
+      "layerName": "projection",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".iv1",
+        ".iv2"
+      ]
+    }
+  ]
+}

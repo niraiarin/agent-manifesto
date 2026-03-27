@@ -1,0 +1,210 @@
+{
+  "namespace": "TestCoverage.S152",
+  "layers": [
+    {
+      "name": "DataInfrastructure",
+      "ordValue": 3,
+      "definition": "気象観測・花粉計測の物理的基盤。変更不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PredictionModel",
+      "ordValue": 2,
+      "definition": "予測アルゴリズムとパラメータ設計。データに基づき改善可能",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "DeliveryFormat",
+      "ordValue": 1,
+      "definition": "予測結果の配信方式と表示形式",
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s152_p01",
+      "layerName": "DataInfrastructure",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s152_p02",
+      "layerName": "DataInfrastructure",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s152_p03",
+      "layerName": "PredictionModel",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s152_p01"
+      ]
+    },
+    {
+      "id": "s152_p04",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s152_p01",
+        ".s152_p02"
+      ]
+    },
+    {
+      "id": "s152_p05",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s152_p02"
+      ]
+    },
+    {
+      "id": "s152_p06",
+      "layerName": "DeliveryFormat",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s152_p03"
+      ]
+    },
+    {
+      "id": "s152_p07",
+      "layerName": "DeliveryFormat",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s152_p04"
+      ]
+    },
+    {
+      "id": "s152_p08",
+      "layerName": "DeliveryFormat",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s152_p05",
+        ".s152_p06"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "気象庁のアメダスデータ（風向・風速・気温・降水量）をリアルタイムで取得できる"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "全国の花粉観測装置（ダーラム法・自動計測器）の計測データを使用する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "予測は市区町村単位で3日先まで提供する"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "予測結果はスマートフォンアプリとWebで配信する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C2"
+          ],
+          "refutation": "花粉飛散が気象条件に依存しない（温室栽培のような閉鎖環境）場合"
+        }
+      },
+      "content": "気温の積算と降水パターンが花粉飛散開始日の予測に最も寄与する"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2"
+          ],
+          "refutation": "衛星画像やLiDARによる広域花粉観測が実用化された場合"
+        }
+      },
+      "content": "地上観測データの空間補間にはクリギング法が適している"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C4"
+          ],
+          "refutation": "ユーザが時間帯別の詳細情報を求めない場合"
+        }
+      },
+      "content": "時間帯別（朝・昼・夕・夜）の飛散量表示がユーザ行動変容に有効"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "プッシュ通知がユーザに煩わしいと感じられる場合"
+        }
+      },
+      "content": "個人の花粉症重症度に応じたアラート閾値のカスタマイズが必要"
+    }
+  ]
+}

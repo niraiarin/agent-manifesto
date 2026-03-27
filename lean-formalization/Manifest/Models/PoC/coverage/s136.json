@@ -1,0 +1,255 @@
+{
+  "namespace": "TestCoverage.S136",
+  "layers": [
+    {
+      "name": "BusinessRule",
+      "ordValue": 3,
+      "definition": "景品表示法・特商法等の法的制約と事業方針",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "RecommendationLogic",
+      "ordValue": 2,
+      "definition": "推薦アルゴリズムの設計。ABテストで改善",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "EngagementHypothesis",
+      "ordValue": 1,
+      "definition": "視聴者行動に関する仮説。実データで検証",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s136_p01",
+      "layerName": "BusinessRule",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s136_p02",
+      "layerName": "BusinessRule",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s136_p03",
+      "layerName": "BusinessRule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s136_p04",
+      "layerName": "RecommendationLogic",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s136_p01"
+      ]
+    },
+    {
+      "id": "s136_p05",
+      "layerName": "RecommendationLogic",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s136_p02"
+      ]
+    },
+    {
+      "id": "s136_p06",
+      "layerName": "RecommendationLogic",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s136_p01",
+        ".s136_p03"
+      ]
+    },
+    {
+      "id": "s136_p07",
+      "layerName": "RecommendationLogic",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s136_p03"
+      ]
+    },
+    {
+      "id": "s136_p08",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s136_p04"
+      ]
+    },
+    {
+      "id": "s136_p09",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s136_p05",
+        ".s136_p06"
+      ]
+    },
+    {
+      "id": "s136_p10",
+      "layerName": "EngagementHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s136_p07"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "景品表示法に基づく優良誤認・有利誤認を防止する表示基準を遵守する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "推薦商品の在庫数をリアルタイムで反映し、在庫切れ商品は推薦しない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "配信者の商品紹介コンテンツとの整合性を保つ推薦を行う"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "視聴者のコメント内容をリアルタイム解析して興味を推定する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "購買履歴に基づく協調フィルタリングを基本アルゴリズムとする"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "コメントの多くがスパムやノイズで有意な興味推定ができない場合"
+        }
+      },
+      "content": "自然言語処理によるコメント感情分析が購買意欲の指標になる"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "ライブコマース特有の衝動買い行動が協調フィルタリングの前提を崩す場合"
+        }
+      },
+      "content": "視聴中の行動（滞在時間・クリック）が静的プロファイルより予測力が高い"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H1"
+          ],
+          "refutation": "配信者のカリスマ性が商品属性より購買に影響する場合"
+        }
+      },
+      "content": "商品カテゴリと視聴者セグメントのマッチングが推薦精度を決定する"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "H2"
+          ],
+          "refutation": "限定感の演出がユーザー体験を損なう場合"
+        }
+      },
+      "content": "タイムセール・限定価格の提示タイミングがコンバージョン率に大きく影響する"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "同時配信中に多すぎる推薦がかえって選択麻痺を起こす場合"
+        }
+      },
+      "content": "配信者の話題転換に同期した推薦切り替えが効果的"
+    }
+  ]
+}

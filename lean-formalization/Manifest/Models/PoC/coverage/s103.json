@@ -1,0 +1,166 @@
+{
+  "namespace": "TestCoverage.S103",
+  "layers": [
+    {
+      "name": "TrafficSafety",
+      "ordValue": 4,
+      "definition": "道路交通法に基づく安全規制。法的に違反不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "MunicipalRegulation",
+      "ordValue": 3,
+      "definition": "自治体の条例・駐車規制。地域ルールに基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "FleetOperation",
+      "ordValue": 2,
+      "definition": "車両配置・充電管理の運用ルール",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DemandPrediction",
+      "ordValue": 1,
+      "definition": "需要予測・価格最適化の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s103_p01",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s103_p02",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s103_p03",
+      "layerName": "MunicipalRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s103_p01"
+      ]
+    },
+    {
+      "id": "s103_p04",
+      "layerName": "MunicipalRegulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s103_p01",
+        ".s103_p02"
+      ]
+    },
+    {
+      "id": "s103_p05",
+      "layerName": "FleetOperation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s103_p03"
+      ]
+    },
+    {
+      "id": "s103_p06",
+      "layerName": "FleetOperation",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s103_p04"
+      ]
+    },
+    {
+      "id": "s103_p07",
+      "layerName": "FleetOperation",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s103_p03",
+        ".s103_p04"
+      ]
+    },
+    {
+      "id": "s103_p08",
+      "layerName": "DemandPrediction",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s103_p05"
+      ]
+    },
+    {
+      "id": "s103_p09",
+      "layerName": "DemandPrediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s103_p06"
+      ]
+    },
+    {
+      "id": "s103_p10",
+      "layerName": "DemandPrediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s103_p07"
+      ]
+    },
+    {
+      "id": "s103_p11",
+      "layerName": "TrafficSafety",
+      "justification": [
+        "C1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s103_p09"
+      ]
+    },
+    {
+      "id": "s103_p12",
+      "layerName": "DemandPrediction",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s103_p08",
+        ".s103_p10"
+      ]
+    }
+  ]
+}

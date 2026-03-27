@@ -1,0 +1,205 @@
+{
+  "namespace": "TestCoverage.S1",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 5,
+      "definition": "人命に関わる安全制約。いかなる状況でも違反不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 4,
+      "definition": "法令・規制への準拠。外部権威に基づく",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ServicePolicy",
+      "ordValue": 3,
+      "definition": "サービス品質に関するポリシー。事業判断で変更可能",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "OptimizationRule",
+      "ordValue": 2,
+      "definition": "配車効率の最適化ルール。データに基づき調整可能",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "UserPreference",
+      "ordValue": 1,
+      "definition": "乗客の好みに基づく調整。個別に変動する",
+      "derivedFrom": [
+        "C5",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s1_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s1_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s1_p03",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s1_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s1_p01"
+      ]
+    },
+    {
+      "id": "s1_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s1_p02"
+      ]
+    },
+    {
+      "id": "s1_p06",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        "s1_p01",
+        "s1_p03"
+      ]
+    },
+    {
+      "id": "s1_p07",
+      "layerName": "ServicePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s1_p04"
+      ]
+    },
+    {
+      "id": "s1_p08",
+      "layerName": "ServicePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s1_p05"
+      ]
+    },
+    {
+      "id": "s1_p09",
+      "layerName": "ServicePolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        "s1_p04",
+        "s1_p06"
+      ]
+    },
+    {
+      "id": "s1_p10",
+      "layerName": "OptimizationRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s1_p07"
+      ]
+    },
+    {
+      "id": "s1_p11",
+      "layerName": "OptimizationRule",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s1_p08",
+        "s1_p09"
+      ]
+    },
+    {
+      "id": "s1_p12",
+      "layerName": "OptimizationRule",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s1_p07"
+      ]
+    },
+    {
+      "id": "s1_p13",
+      "layerName": "UserPreference",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s1_p10"
+      ]
+    },
+    {
+      "id": "s1_p14",
+      "layerName": "UserPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s1_p11"
+      ]
+    },
+    {
+      "id": "s1_p15",
+      "layerName": "UserPreference",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "s1_p12",
+        "s1_p13"
+      ]
+    }
+  ]
+}

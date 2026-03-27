@@ -1,7 +1,7 @@
 import Manifest.Ontology
 
 /-!
-# Layer 2: Constraints (T1–T8) — 基底理論 T₀
+# Epistemic Layer: constraint (strength 5) — T1–T8 基底理論 T₀
 
 マニフェストの拘束条件を Lean の非論理的公理（用語リファレンス §4.1）として
 形式化する。

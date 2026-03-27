@@ -1,0 +1,201 @@
+{
+  "namespace": "NoisePollution",
+  "layers": [
+    {
+      "name": "legal_standard",
+      "ordValue": 3,
+      "definition": "環境基準法・騒音規制法に基づく測定基準。法的拘束力あり",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "acoustic_model",
+      "ordValue": 2,
+      "definition": "音響伝搬モデル・周波数分析の物理的知見",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "measurement",
+      "ordValue": 1,
+      "definition": "センサー設置・キャリブレーション・レポート生成の運用方針",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H5"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 0,
+      "definition": "騒音源特定・影響範囲予測の未検証推論",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "law_db_limit",
+      "layerName": "legal_standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "law_time_zone",
+      "layerName": "legal_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "law_report_fmt",
+      "layerName": "legal_standard",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "acou_propagation",
+      "layerName": "acoustic_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "acou_freq_weight",
+      "layerName": "acoustic_model",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".law_db_limit"
+      ]
+    },
+    {
+      "id": "acou_reflection",
+      "layerName": "acoustic_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".acou_propagation"
+      ]
+    },
+    {
+      "id": "acou_source_sep",
+      "layerName": "acoustic_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".acou_propagation",
+        ".acou_freq_weight"
+      ]
+    },
+    {
+      "id": "meas_sensor_place",
+      "layerName": "measurement",
+      "justification": [
+        "C3",
+        "H5"
+      ],
+      "dependencies": [
+        ".law_db_limit",
+        ".acou_propagation"
+      ]
+    },
+    {
+      "id": "meas_calibration",
+      "layerName": "measurement",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".law_report_fmt"
+      ]
+    },
+    {
+      "id": "meas_continuous",
+      "layerName": "measurement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".law_time_zone",
+        ".meas_sensor_place"
+      ]
+    },
+    {
+      "id": "meas_alert",
+      "layerName": "measurement",
+      "justification": [
+        "C5",
+        "H5"
+      ],
+      "dependencies": [
+        ".law_db_limit",
+        ".acou_freq_weight"
+      ]
+    },
+    {
+      "id": "pred_source_id",
+      "layerName": "prediction",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".acou_source_sep",
+        ".meas_continuous"
+      ]
+    },
+    {
+      "id": "pred_impact_map",
+      "layerName": "prediction",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".acou_reflection",
+        ".meas_sensor_place"
+      ]
+    },
+    {
+      "id": "pred_trend",
+      "layerName": "prediction",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".pred_source_id",
+        ".pred_impact_map"
+      ]
+    },
+    {
+      "id": "pred_mitigation",
+      "layerName": "prediction",
+      "justification": [
+        "H7",
+        "C6"
+      ],
+      "dependencies": [
+        ".pred_impact_map",
+        ".law_db_limit"
+      ]
+    }
+  ]
+}

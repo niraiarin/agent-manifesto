@@ -1,0 +1,152 @@
+{
+  "namespace": "TestCoverage.S19",
+  "layers": [
+    {
+      "name": "medical_safety",
+      "ordValue": 4,
+      "definition": "医学的安全・禁忌事項の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "physiology",
+      "ordValue": 3,
+      "definition": "運動生理学の外部知識・前提",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "user_goal",
+      "ordValue": 2,
+      "definition": "ユーザが設定する目標・制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "program",
+      "ordValue": 1,
+      "definition": "AIが生成するトレーニングプログラム",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "ms1",
+      "layerName": "medical_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "ms2",
+      "layerName": "medical_safety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy1",
+      "layerName": "physiology",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physiology",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "ms1"
+      ]
+    },
+    {
+      "id": "ug1",
+      "layerName": "user_goal",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "ms1",
+        "phy1"
+      ]
+    },
+    {
+      "id": "ug2",
+      "layerName": "user_goal",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "ms2"
+      ]
+    },
+    {
+      "id": "ug3",
+      "layerName": "user_goal",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        "phy2"
+      ]
+    },
+    {
+      "id": "prg1",
+      "layerName": "program",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "ug1",
+        "phy1"
+      ]
+    },
+    {
+      "id": "prg2",
+      "layerName": "program",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "ug2"
+      ]
+    },
+    {
+      "id": "prg3",
+      "layerName": "program",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "ug3",
+        "phy2"
+      ]
+    },
+    {
+      "id": "prg4",
+      "layerName": "program",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "prg1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "namespace": "CoralReefRegeneration",
+  "layers": [
+    {
+      "name": "ecological_constraint",
+      "ordValue": 5,
+      "definition": "既存生態系保護の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "socio_legal_rule",
+      "ordValue": 4,
+      "definition": "漁業権・データ公開の社会法的ルール",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "environmental_premise",
+      "ordValue": 3,
+      "definition": "気候変動の不可逆的前提",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "regen_strategy",
+      "ordValue": 2,
+      "definition": "再生戦略の設計判断",
+      "derivedFrom": [
+        "H1"
+      ]
+    },
+    {
+      "name": "monitoring_method",
+      "ordValue": 1,
+      "definition": "モニタリング手法の仮説",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "do_no_harm",
+      "layerName": "ecological_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "native_only",
+      "layerName": "ecological_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fishing_rights",
+      "layerName": "socio_legal_rule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".do_no_harm"
+      ]
+    },
+    {
+      "id": "open_data",
+      "layerName": "socio_legal_rule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "warming_irreversible",
+      "layerName": "environmental_premise",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "heat_tolerant_select",
+      "layerName": "regen_strategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".warming_irreversible",
+        ".native_only"
+      ]
+    },
+    {
+      "id": "transplant_site_rank",
+      "layerName": "regen_strategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".do_no_harm",
+        ".fishing_rights",
+        ".warming_irreversible"
+      ]
+    },
+    {
+      "id": "larval_dispersion",
+      "layerName": "monitoring_method",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".transplant_site_rank"
+      ]
+    },
+    {
+      "id": "satellite_drone_mon",
+      "layerName": "monitoring_method",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".open_data"
+      ]
+    },
+    {
+      "id": "bleaching_index",
+      "layerName": "monitoring_method",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".satellite_drone_mon",
+        ".warming_irreversible"
+      ]
+    }
+  ]
+}

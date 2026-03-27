@@ -1,0 +1,281 @@
+{
+  "namespace": "Scenario279",
+  "layers": [
+    {
+      "name": "cryosphere",
+      "ordValue": 5,
+      "definition": "凍土の物理学的制約。熱力学法則に基づく不変条件。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "ethics",
+      "ordValue": 4,
+      "definition": "先住民の権利と国際データ公開義務。倫理的不可侵。",
+      "derivedFrom": [
+        "C1",
+        "C5"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 3,
+      "definition": "政策判断に影響する不確実性管理。社会的責任。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "science",
+      "ordValue": 2,
+      "definition": "気候科学者が管理するモデルパラメータ。研究進展で更新。",
+      "derivedFrom": [
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "technique",
+      "ordValue": 1,
+      "definition": "AIのデータ処理・予測手法。改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "検証待ちの仮説。フィールドデータで確認。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "cry1",
+      "layerName": "cryosphere",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cry2",
+      "layerName": "cryosphere",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth3",
+      "layerName": "ethics",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".eth2"
+      ]
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eth1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".eth3"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": [
+        ".pol1",
+        ".pol2"
+      ]
+    },
+    {
+      "id": "sci1",
+      "layerName": "science",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".cry1",
+        ".pol2"
+      ]
+    },
+    {
+      "id": "sci2",
+      "layerName": "science",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".pol2",
+        ".pol3"
+      ]
+    },
+    {
+      "id": "sci3",
+      "layerName": "science",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".sci1",
+        ".sci2"
+      ]
+    },
+    {
+      "id": "tec1",
+      "layerName": "technique",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cry1",
+        ".cry2"
+      ]
+    },
+    {
+      "id": "tec2",
+      "layerName": "technique",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".pol1",
+        ".sci1"
+      ]
+    },
+    {
+      "id": "tec3",
+      "layerName": "technique",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".tec1",
+        ".tec2"
+      ]
+    },
+    {
+      "id": "tec4",
+      "layerName": "technique",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".cry2",
+        ".sci3"
+      ]
+    },
+    {
+      "id": "tec5",
+      "layerName": "technique",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".sci2",
+        ".tec3"
+      ]
+    },
+    {
+      "id": "tec6",
+      "layerName": "technique",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".tec1",
+        ".tec4"
+      ]
+    },
+    {
+      "id": "tec7",
+      "layerName": "technique",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".pol3",
+        ".tec5"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".eth2",
+        ".tec1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".tec6",
+        ".tec7"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".sci3",
+        ".tec3"
+      ]
+    }
+  ]
+}

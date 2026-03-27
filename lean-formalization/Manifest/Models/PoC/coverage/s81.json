@@ -1,0 +1,297 @@
+{
+  "namespace": "PestPrediction",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 3,
+      "definition": "農薬散布安全基準・法規制に基づく不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 2,
+      "definition": "気象・土壌・害虫生態に関する外部依存前提",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H5"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "農家が設定する運用方針・閾値",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の予測モデル仮説",
+      "derivedFrom": [
+        "H4",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "constraint",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env3",
+      "layerName": "environment",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "safe1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        "safe2",
+        "env1"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "safe3"
+      ]
+    },
+    {
+      "id": "pol4",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "env2"
+      ]
+    },
+    {
+      "id": "pol5",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "env3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "env1",
+        "env2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "pol1",
+        "pol2"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "env3",
+        "pol4"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "hyp1"
+      ]
+    },
+    {
+      "id": "hyp5",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "pol3",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "hyp6",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        "hyp3",
+        "hyp4"
+      ]
+    },
+    {
+      "id": "hyp7",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4",
+        "H7"
+      ],
+      "dependencies": [
+        "pol5",
+        "hyp1"
+      ]
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "農薬散布量は法定上限を超えてはならない"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "食品安全基準の残留農薬値を遵守する"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "散布判断の最終権限は農家にある"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "予測結果は72時間以内の精度を保証範囲とする"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "有機農法圃場では化学農薬の提案を禁止する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "気象データAPIが長期停止した場合",
+        "content": "気象データは外部APIから安定的に取得できる"
+      },
+      {
+        "id": "H2",
+        "basis": "C4,外部知識",
+        "refutation": "新種害虫の侵入で既存モデルが無効化",
+        "content": "害虫の発生パターンは過去データから予測可能"
+      },
+      {
+        "id": "H3",
+        "basis": "C3",
+        "refutation": "農家が閾値設定を放棄した場合",
+        "content": "散布閾値は農家が作物ごとに適切に設定する"
+      },
+      {
+        "id": "H4",
+        "basis": "H1,H2",
+        "refutation": "モデル精度が50%以下に低下",
+        "content": "機械学習モデルの予測精度は実用水準を維持する"
+      },
+      {
+        "id": "H5",
+        "basis": "外部知識",
+        "refutation": "土壌センサーの故障率が30%超過",
+        "content": "土壌湿度データはセンサーから取得可能"
+      },
+      {
+        "id": "H6",
+        "basis": "C3,H4",
+        "refutation": "農家が予測を完全無視する運用",
+        "content": "予測結果に基づく散布計画は農家の意思決定を支援する"
+      },
+      {
+        "id": "H7",
+        "basis": "H2,H5",
+        "refutation": "気候変動で過去パターンが完全崩壊",
+        "content": "季節性パターンは害虫発生の主要予測因子である"
+      }
+    ]
+  }
+}

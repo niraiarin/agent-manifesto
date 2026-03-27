@@ -1,0 +1,230 @@
+{
+  "namespace": "Scenario218",
+  "layers": [
+    {
+      "name": "medical",
+      "ordValue": 4,
+      "definition": "医療機器規制・データ保護法。法的に強制。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "ethics",
+      "ordValue": 3,
+      "definition": "公平性・非差別の倫理要件。社会的規範。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "clinical",
+      "ordValue": 2,
+      "definition": "臨床的精度・表示基準。エビデンスで設定。",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "algorithm",
+      "ordValue": 1,
+      "definition": "検出アルゴリズムの設計方針。技術進歩で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。臨床試験で検証が必要。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "med1",
+      "layerName": "medical",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med2",
+      "layerName": "medical",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "med3",
+      "layerName": "medical",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "eth1",
+      "layerName": "ethics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med1"
+      ]
+    },
+    {
+      "id": "eth2",
+      "layerName": "ethics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med1",
+        ".med2"
+      ]
+    },
+    {
+      "id": "eth3",
+      "layerName": "ethics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".med3"
+      ]
+    },
+    {
+      "id": "clin1",
+      "layerName": "clinical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".med1",
+        ".eth1"
+      ]
+    },
+    {
+      "id": "clin2",
+      "layerName": "clinical",
+      "justification": [
+        "C2",
+        "C5"
+      ],
+      "dependencies": [
+        ".eth2"
+      ]
+    },
+    {
+      "id": "clin3",
+      "layerName": "clinical",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".med3",
+        ".eth3"
+      ]
+    },
+    {
+      "id": "clin4",
+      "layerName": "clinical",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".eth2"
+      ]
+    },
+    {
+      "id": "alg1",
+      "layerName": "algorithm",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".eth1",
+        ".clin1"
+      ]
+    },
+    {
+      "id": "alg2",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".clin1",
+        ".clin2"
+      ]
+    },
+    {
+      "id": "alg3",
+      "layerName": "algorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".med2",
+        ".clin3"
+      ]
+    },
+    {
+      "id": "alg4",
+      "layerName": "algorithm",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".clin4"
+      ]
+    },
+    {
+      "id": "alg5",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".eth2",
+        ".clin2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".alg1",
+        ".alg4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H4",
+        "H3"
+      ],
+      "dependencies": [
+        ".alg3",
+        ".alg5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "namespace": "TestCoverage.S140",
+  "layers": [
+    {
+      "name": "QualityStandard",
+      "ordValue": 5,
+      "definition": "半導体品質規格（IEC/SEMI）に基づく不変基準",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ProcessConstraint",
+      "ordValue": 4,
+      "definition": "製造プロセスの物理的制約。装置仕様に依存",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "InspectionDesign",
+      "ordValue": 3,
+      "definition": "検査手法の設計選択。技術進歩で更新可能",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "ClassificationModel",
+      "ordValue": 2,
+      "definition": "欠陥分類モデルの選択。精度データで改善",
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    },
+    {
+      "name": "YieldHypothesis",
+      "ordValue": 1,
+      "definition": "歩留まり改善の仮説。量産データで検証",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s140_p01",
+      "layerName": "QualityStandard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s140_p02",
+      "layerName": "QualityStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s140_p03",
+      "layerName": "QualityStandard",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s140_p04",
+      "layerName": "ProcessConstraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s140_p01"
+      ]
+    },
+    {
+      "id": "s140_p05",
+      "layerName": "ProcessConstraint",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s140_p01",
+        ".s140_p02"
+      ]
+    },
+    {
+      "id": "s140_p06",
+      "layerName": "InspectionDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s140_p04"
+      ]
+    },
+    {
+      "id": "s140_p07",
+      "layerName": "InspectionDesign",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s140_p04",
+        ".s140_p05"
+      ]
+    },
+    {
+      "id": "s140_p08",
+      "layerName": "InspectionDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s140_p05"
+      ]
+    },
+    {
+      "id": "s140_p09",
+      "layerName": "ClassificationModel",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s140_p06"
+      ]
+    },
+    {
+      "id": "s140_p10",
+      "layerName": "ClassificationModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s140_p07"
+      ]
+    },
+    {
+      "id": "s140_p11",
+      "layerName": "ClassificationModel",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s140_p06",
+        ".s140_p08"
+      ]
+    },
+    {
+      "id": "s140_p12",
+      "layerName": "YieldHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s140_p09"
+      ]
+    },
+    {
+      "id": "s140_p13",
+      "layerName": "YieldHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s140_p10"
+      ]
+    },
+    {
+      "id": "s140_p14",
+      "layerName": "YieldHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s140_p09",
+        ".s140_p11"
+      ]
+    },
+    {
+      "id": "s140_p15",
+      "layerName": "YieldHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s140_p03"
+      ]
+    },
+    {
+      "id": "s140_p16",
+      "layerName": "YieldHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s140_p10",
+        ".s140_p12"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "SEMI規格に基づく欠陥密度の許容基準（D0）を満たす必要がある"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "キラー欠陥（歩留まりに直結）と非キラー欠陥の分類が必須"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "検査対象は7nm以下の先端プロセスで、微細パターンの検出限界に近い"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "光学式検査装置（ブライトフィールド/ダークフィールド）を主力とする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "電子線検査（eBeam）を光学検査の補完として導入する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "欠陥分類は深層学習ベースのADC（Automatic Defect Classification）で行う"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "EUVリソグラフィの確率的欠陥が従来の検出手法では捕捉できない場合"
+        }
+      },
+      "content": "先端プロセスでは確率的欠陥が支配的になり、統計的検出手法が必要"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "C5"
+          ],
+          "refutation": "eBeam検査のスループットがインライン検査に不十分な場合"
+        }
+      },
+      "content": "光学検査でスクリーニングし、eBeamで詳細分析する二段階検査が最適"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "新規欠陥タイプが既存学習データに含まれず分類精度が低下する場合"
+        }
+      },
+      "content": "CNNベースのADCで欠陥タイプの自動分類精度95%以上を達成できる"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C1",
+            "C6"
+          ],
+          "refutation": "欠陥密度と歩留まりの関係が非線形で単純なモデルでは予測できない場合"
+        }
+      },
+      "content": "欠陥密度マップとプロセスパラメータの相関分析で歩留まり予測が可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C6"
+          ],
+          "refutation": "キラー欠陥と非キラー欠陥の境界が製品・用途によって変動する場合"
+        }
+      },
+      "content": "欠陥のキラー判定を確率モデル化し、歩留まりへの影響度で優先順位付けできる"
+    }
+  ]
+}

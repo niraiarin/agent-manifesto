@@ -1,0 +1,168 @@
+{
+  "layers": [
+    {
+      "name": "constraint",
+      "definition": "軌道力学・宇宙法の不変前提。",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "empirical",
+      "definition": "追跡データ・衝突統計から得られた経験則。",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "principle",
+      "definition": "運用ポリシー・意思決定基準。",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "design",
+      "definition": "回避アルゴリズムの設計選択。",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "definition": "検証待ちの技術仮説。",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "detected": true,
+    "description": "「モンテカルロ法で衝突確率を評価」(design, ord=1) が「衝突確率10^-4を回避マヌーバのトリガー閾値とする」(principle, ord=2) に依存するが、依存先の衝突確率閾値（principle, ord=2）は依存元（design, ord=1）より高い強度を持つため単調性は満たされる。一方、「衝突確率の閾値は国際的コンセンサスに基づく」(principle, ord=2) が「AI自律回避が地上管制より迅速な判断を下せる」(hypothesis, ord=0) に依存する形で設計されていた場合に違反が発生。実際の違反: 「燃料消費を最小化する回避軌道を選択」(principle, ord=2) が「ランバート問題の解法で回避軌道を計算」(design, ord=1) に依存。依存先(design, ord=1) < 依存元(principle, ord=2) で単調性違反。",
+    "violating_edge": {
+      "from": "燃料消費を最小化する回避軌道を選択",
+      "from_layer": "principle",
+      "from_ord": 2,
+      "to": "ランバート問題の解法で回避軌道を計算",
+      "to_layer": "design",
+      "to_ord": 1
+    },
+    "resolution": {
+      "action": "demote",
+      "detail": "H4由来（LLM推論のみ、C関与なし）のため、LLMが自律的に修正。「燃料消費を最小化する回避軌道を選択」の依存先をランバート問題の解法ではなく、軌道力学(constraint)に直接依存させる形にリモデル。あるいは、「燃料消費を最小化する回避軌道を選択」をprinciple(ord=2)からdesign(ord=1)に降格。運用ポリシーとしての燃料最小化原則は、実装手段（ランバート解法）に依存するため、設計選択として扱うのが適切。",
+      "updated_assignment": {
+        "proposition": "燃料消費を最小化する回避軌道を選択",
+        "layerName": "design",
+        "justification": [
+          "C6",
+          "H4"
+        ]
+      }
+    },
+    "post_resolution_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "prop_504ed7",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f5d4b6",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "OST_837bea",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "TLE_58e965",
+      "layerName": "empirical",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_b75fc4",
+      "layerName": "empirical",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_f67d42",
+      "layerName": "principle",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_ae58dc",
+      "layerName": "principle",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_2780aa",
+      "layerName": "design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_0cce41",
+      "layerName": "design",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "AI_b6b1d9",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_65502e",
+      "layerName": "principle",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": []
+    }
+  ]
+}

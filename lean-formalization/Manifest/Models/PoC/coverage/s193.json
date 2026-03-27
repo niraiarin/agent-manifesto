@@ -1,0 +1,216 @@
+{
+  "namespace": "Scenario193",
+  "layers": [
+    {
+      "name": "environment",
+      "ordValue": 4,
+      "definition": "深海環境の物理的制約。人間が変更できない。",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "環境保護と安全に関する規制的制約。",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "mission",
+      "ordValue": 2,
+      "definition": "オペレーターが設定するミッションパラメータ。",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "autonomy",
+      "ordValue": 1,
+      "definition": "ロボットが自律的に最適化する行動戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "運用データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "env1",
+      "layerName": "environment",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "env2",
+      "layerName": "environment",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C2",
+        "C5"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "mis1",
+      "layerName": "mission",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".reg2"
+      ]
+    },
+    {
+      "id": "mis2",
+      "layerName": "mission",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "mis3",
+      "layerName": "mission",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".mis1",
+        ".mis2"
+      ]
+    },
+    {
+      "id": "aut1",
+      "layerName": "autonomy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".env1",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "aut2",
+      "layerName": "autonomy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg2",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "aut3",
+      "layerName": "autonomy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".env2",
+        ".mis1"
+      ]
+    },
+    {
+      "id": "aut4",
+      "layerName": "autonomy",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".env1",
+        ".env2",
+        ".aut1"
+      ]
+    },
+    {
+      "id": "aut5",
+      "layerName": "autonomy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".mis3",
+        ".aut2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".mis2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".aut5",
+        ".hyp1"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".aut1",
+        ".aut3"
+      ]
+    }
+  ]
+}

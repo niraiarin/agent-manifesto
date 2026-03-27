@@ -1,0 +1,286 @@
+{
+  "namespace": "CaseLawSearch",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 3,
+      "definition": "弁護士法・裁判所規則に基づく法的制約",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "legal_data",
+      "ordValue": 2,
+      "definition": "判例データベース・法令情報の外部依存前提",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "policy",
+      "ordValue": 1,
+      "definition": "法律事務所が設定する検索・利用方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の検索精度・関連性判定仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "safe1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe3",
+      "layerName": "constraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data1",
+      "layerName": "legal_data",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "data2",
+      "layerName": "legal_data",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "safe2"
+      ]
+    },
+    {
+      "id": "data3",
+      "layerName": "legal_data",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "pol1",
+      "layerName": "policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "safe1",
+        "data1"
+      ]
+    },
+    {
+      "id": "pol2",
+      "layerName": "policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "safe3",
+        "data2"
+      ]
+    },
+    {
+      "id": "pol3",
+      "layerName": "policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "data3"
+      ]
+    },
+    {
+      "id": "pol4",
+      "layerName": "policy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "safe1",
+        "safe2"
+      ]
+    },
+    {
+      "id": "pol5",
+      "layerName": "policy",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        "data1",
+        "data2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "data1",
+        "pol1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "pol2",
+        "pol3"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "pol4",
+        "pol5"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "hyp1",
+        "hyp2"
+      ]
+    },
+    {
+      "id": "hyp5",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "hyp3"
+      ]
+    },
+    {
+      "id": "hyp6",
+      "layerName": "hypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        "hyp4",
+        "hyp5"
+      ]
+    }
+  ],
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "検索結果は法的助言ではなく参考情報であることを明示する"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "非公開判例・係属中事件の情報は取り扱わない"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "検索結果の最終的な法的判断は弁護士が行う"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "関連判例は最新から時系列順に提示する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "判例の引用形式は裁判所の公式形式に準拠する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "外部知識",
+        "refutation": "判例DBの網羅性が不十分な法域が存在",
+        "content": "主要判例データベースは公開判例を網羅している"
+      },
+      {
+        "id": "H2",
+        "basis": "C2,H1",
+        "refutation": "法改正で過去判例の有効性判定が困難",
+        "content": "判例の有効性（変更・破棄の有無）は追跡可能"
+      },
+      {
+        "id": "H3",
+        "basis": "H1,H2",
+        "refutation": "法律用語の多義性でセマンティック検索が誤動作",
+        "content": "自然言語クエリから法的争点を正確に抽出可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C1,外部知識",
+        "refutation": "類似度スコアが法的関連性と乖離",
+        "content": "判例の類似度計算は法的論点ベースで実用的"
+      },
+      {
+        "id": "H5",
+        "basis": "H3,H4",
+        "refutation": "専門分野ごとの判例構造の違いで汎化失敗",
+        "content": "分野横断的な判例検索は単一分野検索より有用"
+      },
+      {
+        "id": "H6",
+        "basis": "H2,H3",
+        "refutation": "判例の要旨自動抽出が重要論点を欠落",
+        "content": "判例要旨の自動生成は弁護士の初期調査を効率化する"
+      }
+    ]
+  }
+}

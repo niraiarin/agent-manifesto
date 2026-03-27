@@ -1,0 +1,437 @@
+[
+  {
+    "scenario_id": 91,
+    "project": "養殖魚健康監視 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "プロジェクトの不変前提。人間が覆さない限り変わらない。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "データに基づく経験則。新データで更新されうる。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "設計上の選択。トレードオフに応じて変更可能。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "未検証の仮説。運用を通じて検証が必要。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "水温・溶存酸素はセンサーで計測可能", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "魚病は早期発見が鍵", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "行動パターンの異常は疾病の前兆", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "カメラ映像解析で行動異常を検知", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "異常検知閾値は季節で変動", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "アラートは養殖業者のスマホに通知", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "投薬判断は人間が行う", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "水質データと行動データの相関が疾病予測精度を向上させる", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "深層学習モデルは魚種ごとに再学習が必要", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "養殖場にはセンサー（水温・溶存酸素・pH）が設置済みで、リアルタイムデータが取得できる" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "投薬・処置の最終判断は必ず養殖業者が行う。AIは提案のみ" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "魚の遊泳行動の変化は疾病の兆候として経験的に知られている" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "水中カメラの映像をAIで解析する方式を採用する" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "アラートはスマートフォンアプリで受け取りたい" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "季節変動がない養殖環境（室内循環式等）では無効" } }, "content": "異常検知の閾値は水温の季節変動に合わせて動的に調整すべき" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "水中カメラの画質が不十分な場合、音響センサー等の代替手段が必要" } }, "content": "カメラ映像からの行動解析には物体追跡アルゴリズムが必要" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C1","C3"], "refutation": "水質と行動の相関が統計的に有意でない場合" } }, "content": "水質データと行動データのマルチモーダル融合が予測精度を向上させる" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C3","C4"], "refutation": "汎用モデルが魚種間で転移学習可能な場合" } }, "content": "深層学習モデルは魚種ごとの行動パターンの違いにより再学習が必要" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 92,
+    "project": "空調フィルター交換予測 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "建物・設備の物理的制約。変更不可。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "運用データから導かれる経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "システム設計上の選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "フィルターの圧力差はセンサーで計測可能", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "交換判断はビル管理者が最終決定", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "圧力差の増加速度はフィルター劣化と相関", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "予測モデルは線形回帰で十分", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "交換推奨はメールで管理者に通知", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "外気の粉塵濃度がフィルター寿命に影響", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "複数フィルターの一括交換が効率的", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "湿度がフィルター目詰まりを加速させる", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "AI予測と定期交換のコスト比較で30%削減可能", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "空調機には差圧センサーが設置済みで、フィルター前後の圧力差をリアルタイムで取得できる" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "フィルター交換の最終判断はビル管理者が行う。AIは推奨時期を提示するのみ" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "圧力差の経時的な増加がフィルター劣化の指標として使われている" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "初期段階ではシンプルなモデルから始めたい" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "通知はメールで管理者に送りたい" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "空調が完全密閉環境にあり外気の影響を受けない場合" } }, "content": "外気の粉塵濃度（PM2.5等）がフィルター寿命の変動要因になる" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "非線形な劣化パターン（急激な目詰まり等）が頻発する場合" } }, "content": "線形回帰は初期段階として妥当だが、非線形モデルへの移行パスを確保すべき" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C1","C3"], "refutation": "湿度センサーのデータが利用不可な場合" } }, "content": "高湿度環境ではフィルターの目詰まり速度が加速する可能性がある" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C2","C4"], "refutation": "定期交換のコストが既に最適化されている場合" } }, "content": "予測ベースの交換により定期交換比で30%のコスト削減が期待できる" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 93,
+    "project": "特許侵害分析 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "法的・制度的に不変の前提。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "判例・実務から得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "分析システムの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証が必要な技術的仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "特許侵害の最終判断は弁理士・弁護士が行う", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "特許請求項のクレーム解釈は法的に定義された手続き", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "類似特許の検索精度は再現率が重要", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "クレームチャート自動生成で分析工数を削減", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "分析結果はPDFレポートで出力", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "均等論の適用判断はAIの苦手領域", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "技術分野ごとのファインチューニングが必要", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "LLMによるクレーム要素分解が人間の分析を補助できる", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "多言語特許の自動翻訳精度が分析精度のボトルネック", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "特許侵害の判断は法的責任を伴うため、最終判断は必ず専門家（弁理士・弁護士）が行う" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "クレーム解釈は特許法に基づく法的手続きであり、AIが独自に解釈を確定してはならない" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "見落としのコストが高いため、類似特許検索は再現率（recall）を重視する" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "クレームチャートの自動生成で弁理士の分析工数を削減したい" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "分析結果はPDFレポートとして出力し、クライアントに提出可能な形式にする" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C2","C3"], "refutation": "均等論の判断基準が形式化され、AIが定量的に判定可能になった場合" } }, "content": "均等論（doctrine of equivalents）の適用判断は文脈依存性が高く、AIの自動判断は困難" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "クレーム要素の自動分解精度が90%未満の場合" } }, "content": "LLMによるクレーム要素の自動分解がチャート生成の前段階として有効" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C4","H2"], "refutation": "専門家がAI生成のクレーム分解を信頼しない場合" } }, "content": "LLMのクレーム要素分解は人間の分析の下書きとして補助的に使える" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C3"], "refutation": "対象特許が単一言語に限定される場合" } }, "content": "多言語特許（特に中国語・韓国語）の翻訳精度が分析全体のボトルネックになる" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 94,
+    "project": "避雷針設置最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "法規・物理法則に基づく不変前提。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "落雷データ・設置実績から得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "最適化アルゴリズムの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの最適化仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "JIS A 4201の保護角法に準拠", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "建物の構造強度が設置位置を制約", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "過去の落雷分布データが設置優先度に影響", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "3Dモデル上でのシミュレーションで保護範囲を可視化", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "設置案は施工業者向けにCAD出力", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "地形の起伏が落雷確率に影響", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "コスト最小化と保護率最大化のパレート最適を提示", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "気候変動で落雷パターンが変化する可能性", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "複数建物間の相互遮蔽効果が最適化を複雑にする", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "避雷針の設置はJIS A 4201（建築物等の雷保護）に準拠する必要がある" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "避雷針の設置位置は建物の構造強度による制約を受ける" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "過去10年の落雷データを使って地域ごとの落雷リスクを評価する" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "3Dモデル上で保護範囲をシミュレーションし、最適な設置位置を提案する" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "出力は施工業者が使えるCADフォーマットで提供する" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "平坦な都市部で地形の影響が無視できる場合" } }, "content": "地形（標高・起伏）が落雷の空間分布に有意な影響を与える" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "BIMモデルが利用できず2D図面のみの場合" } }, "content": "BIM連携により3Dモデルの自動生成が可能" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C3"], "refutation": "過去の落雷パターンが将来も安定している場合" } }, "content": "気候変動により落雷頻度・分布が変化し、定期的なモデル更新が必要になる" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C1","C4"], "refutation": "対象が単独建物のみの場合" } }, "content": "複数建物が近接する場合、建物間の相互遮蔽効果が最適化問題を複雑にする" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 95,
+    "project": "盲導犬訓練支援 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "動物福祉・訓練基準の不変前提。", "ordValue": 3, "derivedFrom": ["C1","C2","C3"] },
+        { "name": "empirical", "definition": "訓練データ・行動科学の経験則。", "ordValue": 2, "derivedFrom": ["C4","H1","H2"] },
+        { "name": "design", "definition": "AIシステムの設計選択。", "ordValue": 1, "derivedFrom": ["C5","C6","H3"] },
+        { "name": "hypothesis", "definition": "検証待ちの仮説。", "ordValue": 0, "derivedFrom": ["H4","H5"] }
+      ],
+      "assignments": [
+        { "proposition": "犬の福祉が最優先", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "訓練プログラムは認定訓練士が最終決定", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "訓練基準は国際盲導犬連盟(IGDF)に準拠", "layerName": "constraint", "justification": ["C3"] },
+        { "proposition": "犬の性格・適性は個体差が大きい", "layerName": "empirical", "justification": ["C4","H1"] },
+        { "proposition": "ストレスサインの自動検出で訓練強度を調整", "layerName": "empirical", "justification": ["H2"] },
+        { "proposition": "ウェアラブルセンサーで犬の生体データを取得", "layerName": "design", "justification": ["C5","H3"] },
+        { "proposition": "訓練進捗はダッシュボードで可視化", "layerName": "design", "justification": ["C6"] },
+        { "proposition": "犬種別の訓練適性スコアリング", "layerName": "hypothesis", "justification": ["H4"] },
+        { "proposition": "AIが提案する訓練メニューは訓練士より効率的", "layerName": "hypothesis", "justification": ["H5"] },
+        { "proposition": "センサーデータの精度は訓練判断に十分", "layerName": "design", "justification": ["H3"] },
+        { "proposition": "訓練強度の自動調整は犬の福祉基準内で行う", "layerName": "constraint", "justification": ["C1","H2"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "犬の身体的・精神的福祉が常に最優先。訓練効率より福祉を重視する" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "個々の犬の訓練プログラムは認定訓練士が最終的に決定する" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "訓練基準はIGDF（国際盲導犬連盟）のガイドラインに準拠する" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "犬の性格・適性には大きな個体差があり、画一的な訓練は機能しない" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "ウェアラブルセンサーを犬に装着して心拍数・活動量を計測する" },
+        { "id": "C6", "source": { "humanDecision": { "phase": 1, "question": "Q6", "date": "2026-03-26" } }, "content": "訓練進捗はダッシュボードで訓練士が確認できるようにする" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C4"], "refutation": "全犬種で行動パターンが均一な場合" } }, "content": "犬種ごとの気質傾向データベースが個体差予測の基盤になる" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C1","C5"], "refutation": "センサーでストレスサインを検出できない場合" } }, "content": "心拍変動(HRV)パターンから犬のストレスレベルを推定できる" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C5"], "refutation": "ウェアラブルセンサーの精度が訓練判断に不十分な場合" } }, "content": "現行のウェアラブルセンサーは訓練判断に必要な精度を持つ" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C4","H1"], "refutation": "個体差が犬種差より支配的で犬種別スコアリングが無意味な場合" } }, "content": "犬種別の訓練適性スコアリングが候補犬の選定を効率化できる" },
+        { "id": "H5", "source": { "llmInference": { "basis": ["C4","H2"], "refutation": "訓練士の直感がAIの最適化より一貫して優れている場合" } }, "content": "AIによる個体適応型訓練メニューの提案が訓練効率を向上させる" }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「ストレスサインの自動検出で訓練強度を調整」(empirical, ord=2) が「センサーデータの精度は訓練判断に十分」(design, ord=1) に依存するが、依存先(design, ord=1) < 依存元(empirical, ord=2) で単調性違反",
+        "violating_edge": {
+          "from": "ストレスサインの自動検出で訓練強度を調整",
+          "from_layer": "empirical",
+          "from_ord": 2,
+          "to": "センサーデータの精度は訓練判断に十分",
+          "to_layer": "design",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "promote",
+          "detail": "H3由来（LLM推論のみ）のため、LLMが自律的に修正。「センサーデータの精度は訓練判断に十分」をdesign(ord=1)からempirical(ord=2)に昇格。根拠: センサー精度は経験的に検証可能な事実であり、設計選択ではなく経験的前提として扱うのが適切。",
+          "updated_assignment": { "proposition": "センサーデータの精度は訓練判断に十分", "layerName": "empirical", "justification": ["H3","C5"] }
+        },
+        "post_resolution_violations": 0
+      }
+    }
+  },
+  {
+    "scenario_id": 96,
+    "project": "コンクリート強度予測 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "建築基準法・JIS規格に基づく不変前提。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "配合・養生データから得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "予測モデルの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "28日強度はJIS A 1108に基づく圧縮試験で確認", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "配合設計は構造設計者が最終承認", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "水セメント比が強度の支配的因子", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "勾配ブースティングで28日強度を予測", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "予測結果は配合設計支援画面に表示", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "養生温度履歴が初期強度発現に影響", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "混和材の種類ごとにモデルパラメータを調整", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "3日強度から28日強度を高精度予測可能", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "AIモデルがAbrams則を超える予測精度を達成", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "コンクリートの28日圧縮強度はJIS A 1108に基づく試験で最終確認される" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "配合設計の最終承認は構造設計者が行い、AI予測は参考値として使用する" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "水セメント比がコンクリート強度の最も支配的な因子である" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "予測モデルは解釈可能性を重視し、勾配ブースティングを採用する" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "予測結果は配合設計を支援するUI上に表示する" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "養生温度が管理されて一定の場合" } }, "content": "養生温度履歴（マチュリティ）が初期強度発現速度に有意に影響する" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "線形モデルで十分な精度が得られる場合" } }, "content": "勾配ブースティングは非線形相互作用を捉えるため、コンクリート強度予測に適する" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C3","H1"], "refutation": "3日強度と28日強度の相関が配合によって大きく変動する場合" } }, "content": "3日強度からの28日強度予測が可能であり、早期品質管理に活用できる" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C3","C4"], "refutation": "Abrams則が対象範囲で十分な精度を持つ場合" } }, "content": "機械学習モデルが古典的なAbrams則を超える予測精度を達成する可能性がある" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 97,
+    "project": "選手移籍市場分析 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "リーグ規則・契約法に基づく不変前提。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "過去の移籍データ・市場動向から得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "分析モデルの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの市場分析仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "移籍交渉はクラブの強化部が最終判断", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "FFP（Financial Fair Play）規則を遵守", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "選手の市場価値はパフォーマンスと年齢に強く相関", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "類似選手クラスタリングで代替候補を提示", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "分析結果はスカウティングレポート形式で出力", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "怪我履歴が市場価値を大きく変動させる", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "契約残存期間がバーゲニングパワーに直結", "layerName": "empirical", "justification": ["C3"] },
+        { "proposition": "SNSセンチメント分析が移籍確率予測に寄与", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "エージェントのネットワーク分析で移籍先予測が向上", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "移籍交渉の最終決定はクラブの強化部長が行う。AIは分析材料の提供のみ" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "FFP規則の範囲内で移籍金・年俸を設定する必要がある" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "選手の市場価値評価にはパフォーマンス指標（xG, xA等）と年齢を重視する" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "ターゲット選手と類似するプロファイルの選手をクラスタリングで提示したい" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "分析結果はスカウティングレポートの形式でPDF出力する" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "怪我からの完全回復が市場で信用される場合" } }, "content": "重傷の履歴は市場価値の大幅な下落要因となり、モデルに組み込む必要がある" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "単純な統計比較で十分な場合" } }, "content": "多次元のプレースタイル指標を用いたクラスタリングが類似選手発見に有効" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C3","C4"], "refutation": "SNSデータがノイズだらけで信頼できない場合" } }, "content": "SNSのセンチメント分析が移籍確率の予測精度を向上させる可能性がある" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C1"], "refutation": "エージェント情報が非公開で取得不可能な場合" } }, "content": "選手エージェントのネットワーク分析から移籍先の予測精度が向上する可能性がある" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 98,
+    "project": "自動倉庫ピッキング最適化 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "物理的・安全上の不変制約。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "出荷データ・作業実績から得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "最適化アルゴリズムの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの最適化仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "ロボットの移動速度は安全基準で上限あり", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "人間作業者との協働エリアでは速度制限を強化", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "ABC分析に基づく商品配置が出荷効率に影響", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "巡回セールスマン問題の近似解法でルート最適化", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "WMSとリアルタイム連携で在庫情報を同期", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "季節変動で出荷頻度が変わり再配置が必要", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "バッチピッキングとシングルピッキングの動的切替", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "強化学習がヒューリスティクスを超えるルート最適化を達成", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "複数ロボットの協調でスループットが線形以上に向上", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "ロボットの移動速度は安全基準（ISO 3691-4）に基づく上限がある" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "人間作業者との協働エリアではロボットの速度をさらに制限する" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "商品の出荷頻度に基づくABC分析で棚配置を最適化している" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "ピッキングルートの最適化を行い、ロボットの総移動距離を最小化したい" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "倉庫管理システム（WMS）とリアルタイムで在庫データを連携する" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C3"], "refutation": "出荷パターンが年間通じて安定している場合" } }, "content": "季節変動により商品の出荷頻度が変わるため、棚配置の定期的な再最適化が必要" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "倉庫レイアウトが単純で最適経路が自明な場合" } }, "content": "TSP近似解法（2-opt, Or-Tools等）がピッキングルート最適化に有効" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C4","H2"], "refutation": "ヒューリスティクスが実用上十分な精度を持つ場合" } }, "content": "深層強化学習による動的ルーティングがヒューリスティクスを超える可能性がある" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C1","C4"], "refutation": "ロボット間の干渉・待機時間が協調の利得を打ち消す場合" } }, "content": "複数ロボットの協調制御によりスループットが台数に対して超線形に向上する" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 99,
+    "project": "海底ケーブル障害検知 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "通信インフラの物理的・規制的制約。", "ordValue": 3, "derivedFrom": ["C1","C2"] },
+        { "name": "empirical", "definition": "障害データ・海洋環境から得られた経験則。", "ordValue": 2, "derivedFrom": ["C3","H1"] },
+        { "name": "design", "definition": "検知システムの設計選択。", "ordValue": 1, "derivedFrom": ["C4","C5","H2"] },
+        { "name": "hypothesis", "definition": "検証待ちの技術仮説。", "ordValue": 0, "derivedFrom": ["H3","H4"] }
+      ],
+      "assignments": [
+        { "proposition": "OTDR測定は定期的に実施されている", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "障害発生時の修理手配は人間オペレーターが判断", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "障害の80%は船舶の錨による外的損傷", "layerName": "empirical", "justification": ["C3","H1"] },
+        { "proposition": "OTDR波形の異常検知に畳み込みネットワークを使用", "layerName": "design", "justification": ["C4","H2"] },
+        { "proposition": "障害位置はGIS上にマッピングして表示", "layerName": "design", "justification": ["C5"] },
+        { "proposition": "海水温変動がファイバー信号特性に影響", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "AIS船舶位置データとの相関で予防検知", "layerName": "design", "justification": ["C4"] },
+        { "proposition": "DAS（分布型音響センシング）で船舶接近をリアルタイム検知可能", "layerName": "hypothesis", "justification": ["H3"] },
+        { "proposition": "量子暗号通信の導入が障害検知精度に影響する", "layerName": "hypothesis", "justification": ["H4"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "OTDR（光時間領域反射測定）は定期的に実施されており、既存のデータ基盤がある" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "修理船の手配や障害対応の最終判断は人間のオペレーターが行う" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "海底ケーブル障害の約80%は船舶の錨や底引き網による外的損傷が原因" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "OTDR波形データからの異常検知をAIで自動化したい" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "障害推定位置をGIS（地理情報システム）上に表示したい" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C1","C3"], "refutation": "海底ケーブルが深海に敷設されており環境変動の影響が無視できる場合" } }, "content": "海水温の変動がファイバーの信号伝搬特性に影響し、季節的なベースライン補正が必要" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C4"], "refutation": "OTDR波形が単純で閾値ベースの検出で十分な場合" } }, "content": "1D-CNNがOTDR波形パターンの異常検知に適している" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C3","C4"], "refutation": "DASの導入コストが高すぎる場合" } }, "content": "分布型音響センシング（DAS）を既存ファイバーに適用し、船舶の接近をリアルタイムで検知できる" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C1"], "refutation": "量子暗号通信が海底ケーブルに適用されない場合" } }, "content": "量子暗号通信の商用化により、ファイバー信号特性が変わり障害検知モデルの更新が必要になる" }
+      ]
+    }
+  },
+  {
+    "scenario_id": 100,
+    "project": "宇宙デブリ回避 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 11,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        { "name": "constraint", "definition": "軌道力学・宇宙法の不変前提。", "ordValue": 4, "derivedFrom": ["C1","C2","C3"] },
+        { "name": "empirical", "definition": "追跡データ・衝突統計から得られた経験則。", "ordValue": 3, "derivedFrom": ["C4","H1"] },
+        { "name": "principle", "definition": "運用ポリシー・意思決定基準。", "ordValue": 2, "derivedFrom": ["C5","C6","H2"] },
+        { "name": "design", "definition": "回避アルゴリズムの設計選択。", "ordValue": 1, "derivedFrom": ["H3","H4"] },
+        { "name": "hypothesis", "definition": "検証待ちの技術仮説。", "ordValue": 0, "derivedFrom": ["H5"] }
+      ],
+      "assignments": [
+        { "proposition": "軌道力学（ケプラー方程式）は物理法則", "layerName": "constraint", "justification": ["C1"] },
+        { "proposition": "回避マヌーバの最終承認は地上管制官", "layerName": "constraint", "justification": ["C2"] },
+        { "proposition": "宇宙活動法・OST（宇宙条約）を遵守", "layerName": "constraint", "justification": ["C3"] },
+        { "proposition": "TLE（二行軌道要素）の精度は72時間で大幅に劣化", "layerName": "empirical", "justification": ["C4","H1"] },
+        { "proposition": "太陽活動が大気抵抗を通じて軌道予測精度に影響", "layerName": "empirical", "justification": ["H1"] },
+        { "proposition": "衝突確率10^-4を回避マヌーバのトリガー閾値とする", "layerName": "principle", "justification": ["C5","H2"] },
+        { "proposition": "燃料消費を最小化する回避軌道を選択", "layerName": "principle", "justification": ["C6"] },
+        { "proposition": "モンテカルロ法で衝突確率を評価", "layerName": "design", "justification": ["H3"] },
+        { "proposition": "ランバート問題の解法で回避軌道を計算", "layerName": "design", "justification": ["H4"] },
+        { "proposition": "AI自律回避が地上管制より迅速な判断を下せる", "layerName": "hypothesis", "justification": ["H5"] },
+        { "proposition": "衝突確率の閾値は国際的コンセンサスに基づく", "layerName": "principle", "justification": ["C5","H2"] }
+      ],
+      "assumptions": [
+        { "id": "C1", "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-03-26" } }, "content": "軌道力学（ケプラー方程式・摂動理論）は物理法則であり変更不可" },
+        { "id": "C2", "source": { "humanDecision": { "phase": 1, "question": "Q2", "date": "2026-03-26" } }, "content": "回避マヌーバの実行は地上管制官の最終承認を必要とする" },
+        { "id": "C3", "source": { "humanDecision": { "phase": 1, "question": "Q3", "date": "2026-03-26" } }, "content": "宇宙活動法および宇宙条約（OST）の規定を遵守する" },
+        { "id": "C4", "source": { "humanDecision": { "phase": 1, "question": "Q4", "date": "2026-03-26" } }, "content": "TLE（二行軌道要素）は公開データとして利用可能だが、時間経過で精度が劣化する" },
+        { "id": "C5", "source": { "humanDecision": { "phase": 1, "question": "Q5", "date": "2026-03-26" } }, "content": "衝突確率が10^-4を超えた場合に回避マヌーバを検討する（NASAの基準に準拠）" },
+        { "id": "C6", "source": { "humanDecision": { "phase": 1, "question": "Q6", "date": "2026-03-26" } }, "content": "衛星の燃料は有限であり、回避マヌーバの燃料消費を最小化する必要がある" },
+        { "id": "H1", "source": { "llmInference": { "basis": ["C4"], "refutation": "太陽活動が低い時期で大気抵抗の変動が無視できる場合" } }, "content": "太陽活動（F10.7指数）が大気抵抗を変動させ、LEO衛星の軌道予測精度に大きく影響する" },
+        { "id": "H2", "source": { "llmInference": { "basis": ["C5"], "refutation": "国際的に異なる閾値が合意された場合" } }, "content": "衝突確率10^-4は現時点での国際的コンセンサスだが、デブリ環境の悪化で引き下げられる可能性がある" },
+        { "id": "H3", "source": { "llmInference": { "basis": ["C4","H1"], "refutation": "解析的手法で衝突確率が十分な精度で計算可能な場合" } }, "content": "モンテカルロ法による衝突確率評価がTLEの不確実性を適切にモデル化する" },
+        { "id": "H4", "source": { "llmInference": { "basis": ["C1","C6"], "refutation": "低推力連続推進など非インパルス的マヌーバの場合" } }, "content": "ランバート問題の効率的な解法により最適な回避軌道を計算できる" },
+        { "id": "H5", "source": { "llmInference": { "basis": ["C2","H3"], "refutation": "地上管制の応答速度が十分に速い場合" } }, "content": "接近が72時間以内の緊急ケースでは、AIの自律的な回避判断が地上管制より迅速" }
+      ],
+      "_monotonicity_violation": {
+        "detected": true,
+        "description": "「モンテカルロ法で衝突確率を評価」(design, ord=1) が「衝突確率10^-4を回避マヌーバのトリガー閾値とする」(principle, ord=2) に依存するが、依存先の衝突確率閾値（principle, ord=2）は依存元（design, ord=1）より高い強度を持つため単調性は満たされる。一方、「衝突確率の閾値は国際的コンセンサスに基づく」(principle, ord=2) が「AI自律回避が地上管制より迅速な判断を下せる」(hypothesis, ord=0) に依存する形で設計されていた場合に違反が発生。実際の違反: 「燃料消費を最小化する回避軌道を選択」(principle, ord=2) が「ランバート問題の解法で回避軌道を計算」(design, ord=1) に依存。依存先(design, ord=1) < 依存元(principle, ord=2) で単調性違反。",
+        "violating_edge": {
+          "from": "燃料消費を最小化する回避軌道を選択",
+          "from_layer": "principle",
+          "from_ord": 2,
+          "to": "ランバート問題の解法で回避軌道を計算",
+          "to_layer": "design",
+          "to_ord": 1
+        },
+        "resolution": {
+          "action": "demote",
+          "detail": "H4由来（LLM推論のみ、C関与なし）のため、LLMが自律的に修正。「燃料消費を最小化する回避軌道を選択」の依存先をランバート問題の解法ではなく、軌道力学(constraint)に直接依存させる形にリモデル。あるいは、「燃料消費を最小化する回避軌道を選択」をprinciple(ord=2)からdesign(ord=1)に降格。運用ポリシーとしての燃料最小化原則は、実装手段（ランバート解法）に依存するため、設計選択として扱うのが適切。",
+          "updated_assignment": { "proposition": "燃料消費を最小化する回避軌道を選択", "layerName": "design", "justification": ["C6","H4"] }
+        },
+        "post_resolution_violations": 0
+      }
+    }
+  }
+]

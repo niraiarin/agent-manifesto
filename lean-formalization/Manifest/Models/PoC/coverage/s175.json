@@ -1,0 +1,251 @@
+{
+  "namespace": "TestCoverage.S175",
+  "layers": [
+    {
+      "name": "PhysicsLaw",
+      "ordValue": 4,
+      "definition": "流体力学の基本法則。変更不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "UrbanRegulation",
+      "ordValue": 3,
+      "definition": "都市計画・建築基準法に基づく環境評価基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "SimulationDesign",
+      "ordValue": 2,
+      "definition": "シミュレーション手法の設計選択",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ValidationHypothesis",
+      "ordValue": 1,
+      "definition": "検証精度に関する未検証の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s175_p01",
+      "layerName": "PhysicsLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s175_p02",
+      "layerName": "PhysicsLaw",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s175_p03",
+      "layerName": "UrbanRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s175_p01"
+      ]
+    },
+    {
+      "id": "s175_p04",
+      "layerName": "UrbanRegulation",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s175_p01",
+        ".s175_p02"
+      ]
+    },
+    {
+      "id": "s175_p05",
+      "layerName": "SimulationDesign",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s175_p03"
+      ]
+    },
+    {
+      "id": "s175_p06",
+      "layerName": "SimulationDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s175_p03",
+        ".s175_p04"
+      ]
+    },
+    {
+      "id": "s175_p07",
+      "layerName": "SimulationDesign",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s175_p04"
+      ]
+    },
+    {
+      "id": "s175_p08",
+      "layerName": "ValidationHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s175_p05"
+      ]
+    },
+    {
+      "id": "s175_p09",
+      "layerName": "ValidationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s175_p06",
+        ".s175_p07"
+      ]
+    },
+    {
+      "id": "s175_p10",
+      "layerName": "ValidationHypothesis",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s175_p05",
+        ".s175_p06"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "ナビエ・ストークス方程式が風の流れのシミュレーションの基礎である"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "建物形状は3D CADデータから取得し、周辺建物も含めてモデル化する"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "環境アセスメントの風環境評価基準（村上基準）に適合させる必要がある"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "計算コストを抑えるためにRANSモデルを基本手法とする"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "シミュレーション結果は風洞実験データと照合して精度を検証する"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "村上基準が改訂された場合、評価閾値が変わる"
+        }
+      },
+      "content": "歩行者レベル（地上1.5m）の風速が評価の主要ターゲット"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "RANSでは渦の非定常性を捉えられず精度が不十分な場合"
+        }
+      },
+      "content": "k-εモデルが都市風のRANSシミュレーションに最も広く検証されている"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C2",
+            "C4"
+          ],
+          "refutation": "複雑な建物形状ではメッシュ品質の確保が困難な場合"
+        }
+      },
+      "content": "非構造メッシュで複雑な建物形状を効率的に離散化可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "風洞実験のスケール効果が大きく実スケールとの乖離がある場合"
+        }
+      },
+      "content": "1/400スケールの風洞実験データとの相関係数0.9以上が達成可能"
+    }
+  ]
+}

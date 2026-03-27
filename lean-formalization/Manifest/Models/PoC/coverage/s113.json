@@ -1,0 +1,250 @@
+{
+  "namespace": "EVChargingPlacement",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 4,
+      "definition": "電力法規・都市計画法・建築基準。法的に不変な制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "ordValue": 3,
+      "definition": "送電網容量・変電所位置など既存インフラの物理的制約",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "demand_model",
+      "ordValue": 2,
+      "definition": "EV 普及率・充電パターンの需要モデル。データに基づく推定",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "optimization",
+      "ordValue": 1,
+      "definition": "配置最適化アルゴリズムの戦略パラメータ",
+      "derivedFrom": [
+        "C6",
+        "H6",
+        "H7"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の需要予測・技術トレンド仮説",
+      "derivedFrom": [
+        "H8",
+        "H9"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg_grid_code",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg_zoning",
+      "layerName": "regulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg_safety",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "infra_grid_cap",
+      "layerName": "infrastructure",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".reg_grid_code"
+      ]
+    },
+    {
+      "id": "infra_land",
+      "layerName": "infrastructure",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".reg_zoning"
+      ]
+    },
+    {
+      "id": "infra_substation",
+      "layerName": "infrastructure",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dem_ev_adoption",
+      "layerName": "demand_model",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "dem_charge_pattern",
+      "layerName": "demand_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".dem_ev_adoption"
+      ]
+    },
+    {
+      "id": "dem_peak_load",
+      "layerName": "demand_model",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".infra_grid_cap",
+        ".dem_charge_pattern"
+      ]
+    },
+    {
+      "id": "dem_spatial",
+      "layerName": "demand_model",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".infra_land"
+      ]
+    },
+    {
+      "id": "opt_coverage",
+      "layerName": "optimization",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".dem_spatial",
+        ".reg_zoning"
+      ]
+    },
+    {
+      "id": "opt_cost",
+      "layerName": "optimization",
+      "justification": [
+        "C6",
+        "H7"
+      ],
+      "dependencies": [
+        ".infra_substation",
+        ".dem_peak_load"
+      ]
+    },
+    {
+      "id": "opt_queue",
+      "layerName": "optimization",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".dem_charge_pattern"
+      ]
+    },
+    {
+      "id": "opt_equity",
+      "layerName": "optimization",
+      "justification": [
+        "C7",
+        "H7"
+      ],
+      "dependencies": [
+        ".dem_spatial",
+        ".opt_coverage"
+      ]
+    },
+    {
+      "id": "opt_phasing",
+      "layerName": "optimization",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".opt_cost",
+        ".opt_coverage",
+        ".dem_ev_adoption"
+      ]
+    },
+    {
+      "id": "hyp_v2g",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".infra_grid_cap",
+        ".opt_cost"
+      ]
+    },
+    {
+      "id": "hyp_wireless",
+      "layerName": "hypothesis",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".opt_coverage"
+      ]
+    },
+    {
+      "id": "hyp_fast_charge",
+      "layerName": "regulation",
+      "justification": [
+        "H9"
+      ],
+      "dependencies": [
+        ".hyp_wireless"
+      ]
+    },
+    {
+      "id": "hyp_autonomous",
+      "layerName": "hypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".dem_charge_pattern",
+        ".opt_queue"
+      ]
+    }
+  ]
+}

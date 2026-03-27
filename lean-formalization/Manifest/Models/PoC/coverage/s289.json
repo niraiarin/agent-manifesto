@@ -1,0 +1,193 @@
+{
+  "namespace": "Scenario289",
+  "layers": [
+    {
+      "name": "legal",
+      "ordValue": 3,
+      "definition": "国際法・国内法の法的枠組みと先住民の権利。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "observation",
+      "ordValue": 2,
+      "definition": "衛星・ドローンの観測インフラと制約。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "detection",
+      "ordValue": 1,
+      "definition": "AI検出アルゴリズムの設計判断。データで改善可能。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実フィールドで検証が必要。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "leg1",
+      "layerName": "legal",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "leg2",
+      "layerName": "legal",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "leg3",
+      "layerName": "legal",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "leg4",
+      "layerName": "legal",
+      "justification": [
+        "C1",
+        "C4"
+      ],
+      "dependencies": [
+        ".leg1",
+        ".leg3"
+      ]
+    },
+    {
+      "id": "obs1",
+      "layerName": "observation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".leg2"
+      ]
+    },
+    {
+      "id": "obs2",
+      "layerName": "observation",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".leg1"
+      ]
+    },
+    {
+      "id": "obs3",
+      "layerName": "observation",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".obs1",
+        ".obs2"
+      ]
+    },
+    {
+      "id": "det1",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".obs1",
+        ".obs3"
+      ]
+    },
+    {
+      "id": "det2",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".leg2",
+        ".leg4",
+        ".obs2"
+      ]
+    },
+    {
+      "id": "det3",
+      "layerName": "detection",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".obs2",
+        ".obs3"
+      ]
+    },
+    {
+      "id": "det4",
+      "layerName": "detection",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".det1",
+        ".det3"
+      ]
+    },
+    {
+      "id": "det5",
+      "layerName": "detection",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".det2",
+        ".det4"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".det1",
+        ".det4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".det2",
+        ".det5"
+      ]
+    }
+  ]
+}

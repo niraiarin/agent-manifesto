@@ -1,0 +1,325 @@
+{
+  "namespace": "TestCoverage.S172",
+  "layers": [
+    {
+      "name": "SafetyMandate",
+      "ordValue": 5,
+      "definition": "人命保護に関わる安全義務。気象庁の警報基準に準拠",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "GeophysicalLaw",
+      "ordValue": 4,
+      "definition": "積雪力学・気象学の法則。自然科学的根拠",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ObservationProtocol",
+      "ordValue": 3,
+      "definition": "観測手順と判定基準。現場の運用規定",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "SensorFusion",
+      "ordValue": 2,
+      "definition": "センサーデータ統合の設計選択",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "FieldHypothesis",
+      "ordValue": 1,
+      "definition": "現場データに基づく未検証の仮説",
+      "derivedFrom": [
+        "C6",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s172_p01",
+      "layerName": "SafetyMandate",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s172_p02",
+      "layerName": "SafetyMandate",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s172_p03",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s172_p01"
+      ]
+    },
+    {
+      "id": "s172_p04",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s172_p01",
+        ".s172_p02"
+      ]
+    },
+    {
+      "id": "s172_p05",
+      "layerName": "GeophysicalLaw",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s172_p02"
+      ]
+    },
+    {
+      "id": "s172_p06",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s172_p03"
+      ]
+    },
+    {
+      "id": "s172_p07",
+      "layerName": "ObservationProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s172_p04"
+      ]
+    },
+    {
+      "id": "s172_p08",
+      "layerName": "SensorFusion",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s172_p06"
+      ]
+    },
+    {
+      "id": "s172_p09",
+      "layerName": "SensorFusion",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s172_p07",
+        ".s172_p12"
+      ]
+    },
+    {
+      "id": "s172_p10",
+      "layerName": "SensorFusion",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s172_p06",
+        ".s172_p07"
+      ]
+    },
+    {
+      "id": "s172_p11",
+      "layerName": "FieldHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s172_p08"
+      ]
+    },
+    {
+      "id": "s172_p12",
+      "layerName": "FieldHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s172_p08"
+      ]
+    },
+    {
+      "id": "s172_p13",
+      "layerName": "FieldHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s172_p09",
+        ".s172_p10"
+      ]
+    },
+    {
+      "id": "s172_p14",
+      "layerName": "FieldHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s172_p10"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "雪崩警報は人命に直結するため、偽陰性（見逃し）を最小化しなければならない"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "最終的な避難指示の発令は自治体の防災担当者が行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "積雪の層構造（弱層の存在）が雪崩発生の主要因である"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "観測データは気象庁AMeDASと現地積雪観測所から取得する"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "複数センサーのデータを統合して危険度を評価したい"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "スキー場運営者にもリアルタイムで危険度情報を提供したい"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "湿雪雪崩など弱層以外の要因が支配的な地域では適用が限定的"
+        }
+      },
+      "content": "弱層の形成は気温の日較差と降雪パターンから推定可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4"
+          ],
+          "refutation": "AMeDASの観測点密度が低い山岳地域では空間補間の精度が不十分"
+        }
+      },
+      "content": "AMeDASデータは10分間隔で取得可能であり、リアルタイム性は十分"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "センサー間のデータ形式が統一されていない場合、前処理コストが大きい"
+        }
+      },
+      "content": "積雪深・気温・風速・降水量の4変数で危険度の80%を説明可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C5"
+          ],
+          "refutation": "過去の雪崩データが少ない地域では統計的妥当性が低い"
+        }
+      },
+      "content": "過去30年分の雪崩発生データとの照合で検証精度を確保できる"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "スキー場ごとに地形が大きく異なり汎用モデルが適用困難な場合"
+        }
+      },
+      "content": "スキー場ごとの地形データを組み込むことで予測精度が向上する"
+    }
+  ]
+}

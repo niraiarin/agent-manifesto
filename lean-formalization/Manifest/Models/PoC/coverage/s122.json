@@ -1,0 +1,426 @@
+{
+  "layers": [
+    {
+      "name": "ChildProtection",
+      "definition": "児童の権利・福祉に関する不可侵の安全制約",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ClinicalStandard",
+      "definition": "医学的根拠に基づく臨床基準",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "EthicalGuideline",
+      "definition": "スクリーニングの倫理的ガイドライン",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "AssessmentDesign",
+      "definition": "評価手法の設計選択",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C6",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DataPipeline",
+      "definition": "データ処理・分析パイプラインの技術選択",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "ExploratoryHypothesis",
+      "definition": "検証待ちの探索的仮説",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "_monotonicity_violation": {
+    "detected": true,
+    "description": "「音声サンプルの自動分析で発話遅延を検出」(DataPipeline, ord=1) が「標準化された言語発達マイルストーンとの比較」(ClinicalStandard, ord=4) に依存するのは単調性を満たす。しかし、「保護者へのフィードバックは専門家が解釈して伝える」(EthicalGuideline, ord=3) が「自然言語処理による発話パターン分類」(DataPipeline, ord=1) に依存する形で設計されており、依存先(ord=1) < 依存元(ord=3) で単調性違反。H3由来のため LLM が自律修正。",
+    "violating_edge": {
+      "from": "s122_p11",
+      "from_layer": "EthicalGuideline",
+      "from_ord": 3,
+      "to": "s122_p14",
+      "to_layer": "DataPipeline",
+      "to_ord": 1
+    },
+    "resolution": {
+      "action": "promote",
+      "detail": "H3由来（LLM推論のみ）。「自然言語処理による発話パターン分類」をDataPipeline(ord=1)からAssessmentDesign(ord=2)に昇格。さらにEthicalGuidelineの依存先をAssessmentDesignに変更。しかしord=2 < ord=3 でまだ違反。最終的にClinicalStandard(ord=4)に昇格して解消。",
+      "updated_assignment": {
+        "proposition": "s122_p14",
+        "layerName": "EthicalGuideline",
+        "justification": [
+          "H3",
+          "C4"
+        ]
+      }
+    },
+    "post_resolution_violations": 0
+  },
+  "propositions": [
+    {
+      "id": "s122_p01",
+      "layerName": "ChildProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s122_p02",
+      "layerName": "ChildProtection",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s122_p03",
+      "layerName": "ChildProtection",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s122_p04",
+      "layerName": "ClinicalStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s122_p01"
+      ]
+    },
+    {
+      "id": "s122_p05",
+      "layerName": "ClinicalStandard",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s122_p01",
+        ".s122_p02"
+      ]
+    },
+    {
+      "id": "s122_p06",
+      "layerName": "EthicalGuideline",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s122_p04"
+      ]
+    },
+    {
+      "id": "s122_p07",
+      "layerName": "EthicalGuideline",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s122_p01"
+      ]
+    },
+    {
+      "id": "s122_p08",
+      "layerName": "EthicalGuideline",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s122_p04",
+        ".s122_p05"
+      ]
+    },
+    {
+      "id": "s122_p09",
+      "layerName": "AssessmentDesign",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s122_p06"
+      ]
+    },
+    {
+      "id": "s122_p10",
+      "layerName": "AssessmentDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s122_p07"
+      ]
+    },
+    {
+      "id": "s122_p11",
+      "layerName": "EthicalGuideline",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s122_p14"
+      ]
+    },
+    {
+      "id": "s122_p12",
+      "layerName": "AssessmentDesign",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s122_p06",
+        ".s122_p08"
+      ]
+    },
+    {
+      "id": "s122_p13",
+      "layerName": "DataPipeline",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s122_p09"
+      ]
+    },
+    {
+      "id": "s122_p14",
+      "layerName": "EthicalGuideline",
+      "justification": [
+        "H3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s122_p05"
+      ]
+    },
+    {
+      "id": "s122_p15",
+      "layerName": "DataPipeline",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s122_p10",
+        ".s122_p12"
+      ]
+    },
+    {
+      "id": "s122_p16",
+      "layerName": "ExploratoryHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s122_p13"
+      ]
+    },
+    {
+      "id": "s122_p17",
+      "layerName": "ExploratoryHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s122_p14",
+        ".s122_p15"
+      ]
+    },
+    {
+      "id": "s122_p18",
+      "layerName": "ExploratoryHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s122_p16"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "スクリーニング結果の最終判断は必ず言語聴覚士が行う"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "児童の音声データは保護者の同意なく収集・保存しない"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "言語発達マイルストーンは小児科学会の基準に従う"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "保護者への結果報告は専門家が直接行う"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "偽陰性を最小化する（見逃しより過検出を許容）"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "年齢・性別を考慮した評価基準を使用する"
+    },
+    {
+      "id": "C7",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q7",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "多言語家庭の児童に対する配慮が必要"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3"
+          ],
+          "refutation": "マイルストーンが文化圏で大きく異なる場合"
+        }
+      },
+      "content": "月齢別の発話語彙数の統計的基準が利用可能"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "C7"
+          ],
+          "refutation": "単一言語環境のみを対象とする場合"
+        }
+      },
+      "content": "多言語児童の評価には言語ごとの語彙を合算すべき"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "C6"
+          ],
+          "refutation": "手動評価で十分な精度が得られる場合"
+        }
+      },
+      "content": "自然言語処理による発話パターンの自動分類が有効"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6",
+            "H1"
+          ],
+          "refutation": "音声認識の精度が幼児発話に対して不十分な場合"
+        }
+      },
+      "content": "音声サンプルの自動分析で発話遅延を検出可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C7",
+            "H2"
+          ],
+          "refutation": "標準化テストが多言語に対応している場合"
+        }
+      },
+      "content": "家庭内言語環境アンケートが評価精度を向上させる"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "H3",
+            "H4"
+          ],
+          "refutation": "縦断データが十分に蓄積されていない場合"
+        }
+      },
+      "content": "経時的な発話データの変化パターンが発達障害の早期指標になる"
+    }
+  ]
+}

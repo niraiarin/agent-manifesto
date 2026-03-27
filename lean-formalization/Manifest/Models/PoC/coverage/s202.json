@@ -1,0 +1,184 @@
+{
+  "namespace": "BoatRacePrediction",
+  "layers": [
+    {
+      "name": "constraint",
+      "ordValue": 5,
+      "definition": "法的・倫理的絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "物理法則・水面力学",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "environment",
+      "ordValue": 3,
+      "definition": "気象・潮流等の外部環境",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "racer",
+      "ordValue": 2,
+      "definition": "選手・モーター特性",
+      "derivedFrom": [
+        "C3",
+        "H5"
+      ]
+    },
+    {
+      "name": "strategy",
+      "ordValue": 1,
+      "definition": "賭け戦略・資金管理",
+      "derivedFrom": [
+        "C4",
+        "H6"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の仮説",
+      "derivedFrom": [
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "con1",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "con2",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy1",
+      "layerName": "physics",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phy2",
+      "layerName": "physics",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "envr1",
+      "layerName": "environment",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "envr2",
+      "layerName": "environment",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".phy1"
+      ]
+    },
+    {
+      "id": "rac1",
+      "layerName": "racer",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".envr1"
+      ]
+    },
+    {
+      "id": "rac2",
+      "layerName": "racer",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".phy2",
+        ".envr2"
+      ]
+    },
+    {
+      "id": "str1",
+      "layerName": "strategy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".con1",
+        ".rac1"
+      ]
+    },
+    {
+      "id": "str2",
+      "layerName": "strategy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".con2",
+        ".rac2"
+      ]
+    },
+    {
+      "id": "str3",
+      "layerName": "strategy",
+      "justification": [
+        "C4",
+        "H6"
+      ],
+      "dependencies": [
+        ".str1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".str3"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "layers": [
+    {
+      "name": "athlete_safety_constraint",
+      "definition": "選手の健康・安全に関する制約。怪我予防が最優先",
+      "ordValue": 5,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "sports_science_postulate",
+      "definition": "スポーツ科学・運動生理学の前提",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "coaching_principle",
+      "definition": "コーチングの原則。データと経験のバランス",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "metric_hypothesis",
+      "definition": "パフォーマンス指標の仮説。シーズンデータで検証",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "injury_risk_threshold",
+      "layerName": "athlete_safety_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "anti_doping_compliance",
+      "layerName": "athlete_safety_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "biomechanical_model",
+      "layerName": "sports_science_postulate",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "physiological_load_monitoring",
+      "layerName": "sports_science_postulate",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "coach_override_authority",
+      "layerName": "coaching_principle",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "training_periodization",
+      "layerName": "coaching_principle",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "sprint_speed_benchmark",
+      "layerName": "metric_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fatigue_index_formula",
+      "layerName": "metric_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "match_readiness_score",
+      "layerName": "metric_hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "recovery_protocol",
+      "layerName": "sports_science_postulate",
+      "justification": [
+        "C1",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "tactical_pattern_detection",
+      "layerName": "coaching_principle",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

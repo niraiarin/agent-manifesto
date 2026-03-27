@@ -1,0 +1,247 @@
+{
+  "namespace": "TestCoverage.S2",
+  "layers": [
+    {
+      "name": "PatientSafety",
+      "ordValue": 6,
+      "definition": "患者の生命・健康に直結する安全制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "MedicalEthics",
+      "ordValue": 5,
+      "definition": "医療倫理・守秘義務。法的・倫理的義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "ClinicalEvidence",
+      "ordValue": 4,
+      "definition": "エビデンスに基づく臨床判断基準",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "InstitutionalPolicy",
+      "ordValue": 3,
+      "definition": "病院の運用ポリシー。組織判断で変更可能",
+      "derivedFrom": [
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "WorkflowOptimization",
+      "ordValue": 2,
+      "definition": "業務効率化ルール。現場データに基づき調整",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "UIPreference",
+      "ordValue": 1,
+      "definition": "医師個人のインターフェース設定",
+      "derivedFrom": [
+        "C6",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s2_p01",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s2_p02",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s2_p03",
+      "layerName": "MedicalEthics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "s2_p01"
+      ]
+    },
+    {
+      "id": "s2_p04",
+      "layerName": "MedicalEthics",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "s2_p01"
+      ]
+    },
+    {
+      "id": "s2_p05",
+      "layerName": "MedicalEthics",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        "s2_p01",
+        "s2_p02"
+      ]
+    },
+    {
+      "id": "s2_p06",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "s2_p03"
+      ]
+    },
+    {
+      "id": "s2_p07",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "s2_p04"
+      ]
+    },
+    {
+      "id": "s2_p08",
+      "layerName": "ClinicalEvidence",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        "s2_p03",
+        "s2_p05"
+      ]
+    },
+    {
+      "id": "s2_p09",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "s2_p06"
+      ]
+    },
+    {
+      "id": "s2_p10",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "s2_p07"
+      ]
+    },
+    {
+      "id": "s2_p11",
+      "layerName": "InstitutionalPolicy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        "s2_p06",
+        "s2_p08"
+      ]
+    },
+    {
+      "id": "s2_p12",
+      "layerName": "WorkflowOptimization",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "s2_p09"
+      ]
+    },
+    {
+      "id": "s2_p13",
+      "layerName": "WorkflowOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "s2_p10"
+      ]
+    },
+    {
+      "id": "s2_p14",
+      "layerName": "WorkflowOptimization",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "s2_p09",
+        "s2_p11"
+      ]
+    },
+    {
+      "id": "s2_p15",
+      "layerName": "UIPreference",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "s2_p12"
+      ]
+    },
+    {
+      "id": "s2_p16",
+      "layerName": "UIPreference",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "s2_p13"
+      ]
+    },
+    {
+      "id": "s2_p17",
+      "layerName": "UIPreference",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        "s2_p14"
+      ]
+    },
+    {
+      "id": "s2_p18",
+      "layerName": "UIPreference",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        "s2_p15",
+        "s2_p16"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "namespace": "Scenario213",
+  "layers": [
+    {
+      "name": "standard",
+      "ordValue": 2,
+      "definition": "業界基準・品質要件。顧客契約で固定。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "strategy",
+      "ordValue": 1,
+      "definition": "品質推定の技術戦略。モデル進化で変更可能。",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実験で検証が必要。",
+      "derivedFrom": [
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "std1",
+      "layerName": "standard",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std2",
+      "layerName": "standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std3",
+      "layerName": "standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "std4",
+      "layerName": "standard",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "str1",
+      "layerName": "strategy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".std1"
+      ]
+    },
+    {
+      "id": "str2",
+      "layerName": "strategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".std2"
+      ]
+    },
+    {
+      "id": "str3",
+      "layerName": "strategy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".std1",
+        ".std2"
+      ]
+    },
+    {
+      "id": "str4",
+      "layerName": "strategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".std2",
+        ".std3"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".str4"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".std4",
+        ".str1"
+      ]
+    }
+  ]
+}

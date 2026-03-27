@@ -1,0 +1,186 @@
+{
+  "namespace": "HandwrittenMathOCR",
+  "layers": [
+    {
+      "name": "math_syntax",
+      "ordValue": 3,
+      "definition": "数学記法の構文規則。LaTeX/MathML 仕様に基づく不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "recognition_model",
+      "ordValue": 2,
+      "definition": "ストローク認識・記号分類の学習済みモデル知見",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "pipeline",
+      "ordValue": 1,
+      "definition": "前処理・セグメンテーション・後処理のパイプライン構成",
+      "derivedFrom": [
+        "C3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "未検証の認識改善仮説",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "syn_latex_valid",
+      "layerName": "math_syntax",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "syn_operator_prec",
+      "layerName": "math_syntax",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "syn_structure",
+      "layerName": "math_syntax",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rec_cnn_base",
+      "layerName": "recognition_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rec_spatial",
+      "layerName": "recognition_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".rec_cnn_base"
+      ]
+    },
+    {
+      "id": "rec_context",
+      "layerName": "recognition_model",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".syn_operator_prec"
+      ]
+    },
+    {
+      "id": "rec_augment",
+      "layerName": "recognition_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".rec_cnn_base"
+      ]
+    },
+    {
+      "id": "pip_segment",
+      "layerName": "pipeline",
+      "justification": [
+        "C3",
+        "H4"
+      ],
+      "dependencies": [
+        ".rec_spatial"
+      ]
+    },
+    {
+      "id": "pip_postproc",
+      "layerName": "pipeline",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".syn_latex_valid",
+        ".rec_context"
+      ]
+    },
+    {
+      "id": "pip_feedback",
+      "layerName": "pipeline",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".pip_segment",
+        ".pip_postproc"
+      ]
+    },
+    {
+      "id": "pip_realtime",
+      "layerName": "pipeline",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".rec_cnn_base"
+      ]
+    },
+    {
+      "id": "pip_batch",
+      "layerName": "pipeline",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".pip_segment",
+        ".syn_structure"
+      ]
+    },
+    {
+      "id": "hyp_transformer",
+      "layerName": "hypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".rec_cnn_base",
+        ".rec_spatial"
+      ]
+    },
+    {
+      "id": "hyp_few_shot",
+      "layerName": "hypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".rec_augment",
+        ".pip_feedback"
+      ]
+    }
+  ]
+}

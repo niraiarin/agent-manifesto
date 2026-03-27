@@ -1,0 +1,163 @@
+{
+  "namespace": "Scenario231",
+  "layers": [
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "法定排出基準と報告義務。外部規制により固定。",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "instrument",
+      "ordValue": 2,
+      "definition": "計測機器の精度と校正に基づく信頼性基盤。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "analysis",
+      "ordValue": 1,
+      "definition": "AIが行う分析・予測戦略。運転条件に応じて調整可能。",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。実測データで検証が必要。",
+      "derivedFrom": [
+        "H1"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "reg3",
+      "layerName": "regulation",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "inst1",
+      "layerName": "instrument",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "inst2",
+      "layerName": "instrument",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg2"
+      ]
+    },
+    {
+      "id": "inst3",
+      "layerName": "instrument",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg3"
+      ]
+    },
+    {
+      "id": "anl1",
+      "layerName": "analysis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".inst1"
+      ]
+    },
+    {
+      "id": "anl2",
+      "layerName": "analysis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg2",
+        ".inst2"
+      ]
+    },
+    {
+      "id": "anl3",
+      "layerName": "analysis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".inst1",
+        ".inst3"
+      ]
+    },
+    {
+      "id": "anl4",
+      "layerName": "analysis",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".anl1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".inst1",
+        ".inst2"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".anl3"
+      ]
+    }
+  ]
+}

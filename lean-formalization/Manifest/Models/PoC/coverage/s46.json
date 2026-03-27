@@ -1,0 +1,144 @@
+{
+  "layers": [
+    {
+      "name": "tax_law",
+      "definition": "税法・国税通則法・会計基準など法的に不変の制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "accounting_practice",
+      "definition": "一般的な経理実務・帳簿慣行に関する経験的前提",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "advisory_policy",
+      "definition": "提案の出し方・免責事項・税理士連携の方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ui_parameter",
+      "definition": "入力フォーム設計・計算精度・表示フォーマット",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "tax_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "tax_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "tax_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "accounting_practice",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "accounting_practice",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "accounting_practice",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "advisory_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "advisory_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "advisory_policy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l2",
+      "layerName": "advisory_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "ui_parameter",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "ui_parameter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

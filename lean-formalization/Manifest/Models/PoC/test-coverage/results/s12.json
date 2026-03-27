@@ -1,0 +1,150 @@
+{
+  "namespace": "TestCoverage.S12",
+  "layers": [
+    {
+      "name": "fairness",
+      "ordValue": 4,
+      "definition": "公平性・不正防止の不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "platform",
+      "ordValue": 3,
+      "definition": "プラットフォーム基盤への依存",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "rule",
+      "ordValue": 2,
+      "definition": "運営が設定するマッチングルール",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "tuning",
+      "ordValue": 1,
+      "definition": "AIが自動調整するマッチングパラメータ",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "fair1",
+      "layerName": "fairness",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "fair2",
+      "layerName": "fairness",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "plat1",
+      "layerName": "platform",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "plat2",
+      "layerName": "platform",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "rul1",
+      "layerName": "rule",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "fair1"
+      ]
+    },
+    {
+      "id": "rul2",
+      "layerName": "rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "fair2",
+        "plat1"
+      ]
+    },
+    {
+      "id": "rul3",
+      "layerName": "rule",
+      "justification": [
+        "C3",
+        "H3"
+      ],
+      "dependencies": [
+        "fair1"
+      ]
+    },
+    {
+      "id": "tun1",
+      "layerName": "tuning",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "rul1",
+        "plat1"
+      ]
+    },
+    {
+      "id": "tun2",
+      "layerName": "tuning",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "rul2"
+      ]
+    },
+    {
+      "id": "tun3",
+      "layerName": "tuning",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        "rul3",
+        "plat2"
+      ]
+    },
+    {
+      "id": "tun4",
+      "layerName": "tuning",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "tun1"
+      ]
+    }
+  ]
+}

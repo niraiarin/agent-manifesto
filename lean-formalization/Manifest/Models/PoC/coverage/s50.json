@@ -1,0 +1,134 @@
+{
+  "layers": [
+    {
+      "name": "brand_ethics",
+      "definition": "ボディポジティブ・多様性配慮・著作権など倫理的・法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "fashion_knowledge",
+      "definition": "色彩理論・体型別スタイリング・トレンド分析の経験的前提",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "styling_policy",
+      "definition": "提案ロジック・パーソナライズ方針・在庫連携ルール",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "display_parameter",
+      "definition": "提案表示数・画像サイズ・ソート順などのUIパラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "brand_ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "brand_ethics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "brand_ethics",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "fashion_knowledge",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "fashion_knowledge",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "fashion_knowledge",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "styling_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "styling_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "styling_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "display_parameter",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "display_parameter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

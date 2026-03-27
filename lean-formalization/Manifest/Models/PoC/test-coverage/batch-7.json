@@ -1,0 +1,1348 @@
+[
+  {
+    "scenario_id": 61,
+    "project": "議事録自動生成 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "core_constraint",
+          "definition": "システムの存在意義に関わる不変前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "quality_postulate",
+          "definition": "品質・正確性に関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "operational_rule",
+          "definition": "運用上の制約・ルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "H2"
+          ]
+        },
+        {
+          "name": "design_choice",
+          "definition": "実装上の設計判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_8eabe0",
+          "layerName": "core_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_84540b",
+          "layerName": "core_constraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f2d035",
+          "layerName": "quality_postulate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1828e0",
+          "layerName": "operational_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e0e735",
+          "layerName": "core_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "Markdown_528f8f",
+          "layerName": "design_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_dc3a9f",
+          "layerName": "design_choice",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_7da1da",
+          "layerName": "operational_rule",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8e5115",
+          "layerName": "quality_postulate",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 62,
+    "project": "駐車場空き検知 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "core_constraint",
+          "definition": "検知の目的と安全に関わる不変前提",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "accuracy_postulate",
+          "definition": "精度・信頼性に関する経験的仮定",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "operational_rule",
+          "definition": "運用・設置に関する制約",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "design_choice",
+          "definition": "技術的な実装判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_1e422f",
+          "layerName": "core_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_61c95f",
+          "layerName": "core_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f7029c",
+          "layerName": "accuracy_postulate",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_75ee94",
+          "layerName": "accuracy_postulate",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a0f2c2",
+          "layerName": "operational_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "UI_9a0dc5",
+          "layerName": "operational_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "YOLOv_0f5469",
+          "layerName": "design_choice",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_701822",
+          "layerName": "design_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_32606a",
+          "layerName": "design_choice",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 63,
+    "project": "化学反応シミュレーション AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 10,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "physical_law",
+          "definition": "物理法則・化学法則に基づく不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "safety_constraint",
+          "definition": "安全に関する絶対的制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C2"
+          ]
+        },
+        {
+          "name": "accuracy_requirement",
+          "definition": "精度・信頼性に関する要件",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "domain_rule",
+          "definition": "対象領域の運用ルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "implementation_choice",
+          "definition": "実装手法の選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_7f6630",
+          "layerName": "physical_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_94524a",
+          "layerName": "physical_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_104185",
+          "layerName": "safety_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d07ffe",
+          "layerName": "accuracy_requirement",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_90d1e0",
+          "layerName": "accuracy_requirement",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "GHS_d4f7d4",
+          "layerName": "domain_rule",
+          "justification": [
+            "C2",
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_3d827d",
+          "layerName": "domain_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "DFTBLYPG_d80a1f",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "NEB_bce94a",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ML_a2085f",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 64,
+    "project": "カスタマーサポート自動応答 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 8,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "service_constraint",
+          "definition": "顧客対応の絶対的な制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "quality_standard",
+          "definition": "応対品質に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "escalation_rule",
+          "definition": "エスカレーション・運用ルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "response_design",
+          "definition": "応答の設計・実装判断",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_298d8a",
+          "layerName": "service_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_feb32d",
+          "layerName": "service_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d869b6",
+          "layerName": "quality_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_69a961",
+          "layerName": "quality_standard",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_65d467",
+          "layerName": "escalation_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1644b2",
+          "layerName": "escalation_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "FAQRAG_8b5697",
+          "layerName": "response_design",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_188cf7",
+          "layerName": "response_design",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "API_d15bf0",
+          "layerName": "response_design",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 65,
+    "project": "橋梁劣化診断 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 10,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "safety_law",
+          "definition": "公共安全に関する法的・物理的不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "inspection_standard",
+          "definition": "点検基準・診断精度に関する要件",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "engineering_rule",
+          "definition": "工学的な判断ルール",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "data_policy",
+          "definition": "データ取得・管理に関する制約",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C5",
+            "H2"
+          ]
+        },
+        {
+          "name": "model_choice",
+          "definition": "モデル・手法の選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "description": "「劣化予測にはPINNを使用する」がmodel_choice(ord=1)ではなくinspection_standard(ord=4)に割り当てられている。この命題はH4(model_choiceレベルの推論)に依存しているが、inspection_standard(ord=4)に配置されたため、model_choice(ord=1)のH3に依存する命題と同格扱いになり、engineering_rule(ord=3)の命題がinspection_standard(ord=4)の命題に依存する経路で単調性違反が発生する。",
+        "violating_assignment": {
+          "proposition": "劣化予測には物理インフォームドニューラルネットワークを使用する",
+          "assigned_layer": "inspection_standard",
+          "assigned_ord": 4,
+          "should_be": "model_choice",
+          "should_be_ord": 1
+        },
+        "fix_applied": "H由来のためLLMが自律修正: inspection_standard(ord=4)からmodel_choice(ord=1)に降格",
+        "fixed_assignment": {
+          "proposition": "劣化予測には物理インフォームドニューラルネットワークを使用する",
+          "layerName": "model_choice",
+          "justification": [
+            "H4",
+            "H5"
+          ]
+        }
+      },
+      "propositions": [
+        {
+          "id": "prop_53fa17",
+          "layerName": "safety_law",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_dd4cb3",
+          "layerName": "safety_law",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_210633",
+          "layerName": "inspection_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_19aa9c",
+          "layerName": "inspection_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ASR_048a45",
+          "layerName": "engineering_rule",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f80f23",
+          "layerName": "engineering_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "mmpixel_f48a9b",
+          "layerName": "data_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_2b7216",
+          "layerName": "data_policy",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_d9bbad",
+          "layerName": "model_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c9b59b",
+          "layerName": "inspection_standard",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 66,
+    "project": "動画コンテンツ自動編集 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "content_integrity",
+          "definition": "コンテンツの意図と品質に関する不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "creative_standard",
+          "definition": "クリエイティブ品質に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "workflow_rule",
+          "definition": "編集ワークフロー上のルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "technique_choice",
+          "definition": "編集技法・ツールの選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_1a3300",
+          "layerName": "content_integrity",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b87ec2",
+          "layerName": "content_integrity",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_937c56",
+          "layerName": "creative_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0e37de",
+          "layerName": "creative_standard",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a4ebce",
+          "layerName": "workflow_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_5a346e",
+          "layerName": "workflow_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_086436",
+          "layerName": "technique_choice",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "TransNetV_dbf9aa",
+          "layerName": "technique_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "BGM_74b9ef",
+          "layerName": "technique_choice",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 67,
+    "project": "ワインソムリエ AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "knowledge_integrity",
+          "definition": "ワイン知識の正確性に関する不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "recommendation_quality",
+          "definition": "推薦品質に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "service_rule",
+          "definition": "サービス提供上のルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "algorithm_choice",
+          "definition": "アルゴリズム・モデルの選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_44d981",
+          "layerName": "knowledge_integrity",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4c0061",
+          "layerName": "knowledge_integrity",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_21c007",
+          "layerName": "recommendation_quality",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ea7298",
+          "layerName": "recommendation_quality",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ac66cd",
+          "layerName": "service_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_868e5e",
+          "layerName": "service_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f2f850",
+          "layerName": "algorithm_choice",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_8711e8",
+          "layerName": "algorithm_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_474dbc",
+          "layerName": "service_rule",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 68,
+    "project": "衛星通信帯域割当 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 10,
+    "num_deps": 10,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "regulatory_constraint",
+          "definition": "電波法規・国際条約に基づく不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "safety_requirement",
+          "definition": "安全・緊急通信に関する要件",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C2"
+          ]
+        },
+        {
+          "name": "qos_standard",
+          "definition": "通信品質に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "allocation_policy",
+          "definition": "帯域配分に関する方針",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "optimization_method",
+          "definition": "最適化手法の選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "_monotonicity_violation": {
+        "description": "「干渉計算にはビームパターンのフーリエ解析を使用する」がoptimization_method(ord=1)ではなくqos_standard(ord=3)に割り当てられている。H5はH3(optimization_methodレベル)を根拠としているため、optimization_method(ord=1)の命題がqos_standard(ord=3)の命題に依存する方向で単調性に違反する。依存先(qos_standard, ord=3)が依存元(optimization_method, ord=1)より高い層にあるのは正常だが、干渉計算手法自体はH由来の実装判断であるためqos_standard(ord=3)への配置が不適切。",
+        "violating_assignment": {
+          "proposition": "干渉計算にはビームパターンのフーリエ解析を使用する",
+          "assigned_layer": "qos_standard",
+          "assigned_ord": 3,
+          "should_be": "optimization_method",
+          "should_be_ord": 1
+        },
+        "fix_applied": "H由来のためLLMが自律修正: qos_standard(ord=3)からoptimization_method(ord=1)に降格",
+        "fixed_assignment": {
+          "proposition": "干渉計算にはビームパターンのフーリエ解析を使用する",
+          "layerName": "optimization_method",
+          "justification": [
+            "H5"
+          ]
+        }
+      },
+      "propositions": [
+        {
+          "id": "ITU_f73a11",
+          "layerName": "regulatory_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_a71e3a",
+          "layerName": "regulatory_constraint",
+          "justification": [
+            "C1",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_826ef4",
+          "layerName": "safety_requirement",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "SLA_54bb2d",
+          "layerName": "qos_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_923aef",
+          "layerName": "qos_standard",
+          "justification": [
+            "C3",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_bbafe8",
+          "layerName": "allocation_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_ea0baa",
+          "layerName": "allocation_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_03b3eb",
+          "layerName": "optimization_method",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "LSTM_4cd0f5",
+          "layerName": "optimization_method",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_755b34",
+          "layerName": "qos_standard",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 69,
+    "project": "学校出欠管理 AI",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "privacy_constraint",
+          "definition": "児童生徒の個人情報保護に関する不変制約",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "accuracy_standard",
+          "definition": "出欠記録の正確性に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "operational_rule",
+          "definition": "学校運用上のルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "implementation_choice",
+          "definition": "技術的実装の選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_e5da8d",
+          "layerName": "privacy_constraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_1b87cc",
+          "layerName": "privacy_constraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_9c5df4",
+          "layerName": "accuracy_standard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_e8015a",
+          "layerName": "accuracy_standard",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_c963de",
+          "layerName": "operational_rule",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_58387b",
+          "layerName": "operational_rule",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ArcFace_f2b931",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ONNXRu_862f73",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_72de01",
+          "layerName": "implementation_choice",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 70,
+    "project": "再生可能エネルギー発電予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 10,
+    "num_deps": 9,
+    "model_spec": {
+      "layers": [
+        {
+          "name": "grid_safety",
+          "definition": "電力系統の安全・安定に関する不変制約",
+          "ordValue": 5,
+          "derivedFrom": [
+            "C1"
+          ]
+        },
+        {
+          "name": "regulatory_standard",
+          "definition": "電力市場・規制に関する要件",
+          "ordValue": 4,
+          "derivedFrom": [
+            "C2"
+          ]
+        },
+        {
+          "name": "forecast_quality",
+          "definition": "予測精度に関する基準",
+          "ordValue": 3,
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "operational_policy",
+          "definition": "運用方針に関するルール",
+          "ordValue": 2,
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "model_selection",
+          "definition": "予測モデル・手法の選択",
+          "ordValue": 1,
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "prop_03178e",
+          "layerName": "grid_safety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_0f3f24",
+          "layerName": "grid_safety",
+          "justification": [
+            "C1",
+            "H1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f72a2b",
+          "layerName": "regulatory_standard",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_b6682a",
+          "layerName": "forecast_quality",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_fbe3c0",
+          "layerName": "forecast_quality",
+          "justification": [
+            "C3",
+            "H2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_4d86a3",
+          "layerName": "operational_policy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "prop_f4cf63",
+          "layerName": "operational_policy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "ML_34695d",
+          "layerName": "model_selection",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "GBDT_779429",
+          "layerName": "model_selection",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "PI_15057f",
+          "layerName": "forecast_quality",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": []
+        }
+      ]
+    }
+  }
+]

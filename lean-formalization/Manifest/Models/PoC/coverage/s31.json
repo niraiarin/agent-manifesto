@@ -1,0 +1,132 @@
+{
+  "layers": [
+    {
+      "name": "physical_law",
+      "definition": "物理法則・軌道力学に基づく不変の制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "sensor_calibration",
+      "definition": "センサーの較正基準と精度保証",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "analysis_policy",
+      "definition": "画像解析アルゴリズムの選定・パラメータ方針",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "operational_config",
+      "definition": "運用上の設定・閾値・レポート形式",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "orbital_mechanics_invariant",
+      "layerName": "physical_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "spectral_band_definition",
+      "layerName": "physical_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "radiometric_calibration",
+      "layerName": "sensor_calibration",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "atmospheric_correction_model",
+      "layerName": "sensor_calibration",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "change_detection_algorithm",
+      "layerName": "analysis_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "classification_taxonomy",
+      "layerName": "analysis_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "minimum_resolution_threshold",
+      "layerName": "analysis_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "cloud_masking_strategy",
+      "layerName": "operational_config",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "revisit_frequency_target",
+      "layerName": "operational_config",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "alert_threshold_config",
+      "layerName": "operational_config",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "report_format_standard",
+      "layerName": "operational_config",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": []
+    }
+  ]
+}

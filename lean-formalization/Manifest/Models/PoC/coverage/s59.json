@@ -1,0 +1,257 @@
+{
+  "namespace": "WildfireDetection",
+  "assumptions": {
+    "C": [
+      {
+        "id": "C1",
+        "source": "humanDecision",
+        "content": "人命と集落の保護が最優先"
+      },
+      {
+        "id": "C2",
+        "source": "humanDecision",
+        "content": "誤検知よりも見逃しを防ぐ（偽陰性最小化）"
+      },
+      {
+        "id": "C3",
+        "source": "humanDecision",
+        "content": "消防機関への通報は自動で行い、出動判断は人間が行う"
+      },
+      {
+        "id": "C4",
+        "source": "humanDecision",
+        "content": "衛星画像・地上カメラ・IoTセンサーを統合する"
+      },
+      {
+        "id": "C5",
+        "source": "humanDecision",
+        "content": "通信断時でもエッジデバイスで検知を継続する"
+      },
+      {
+        "id": "C6",
+        "source": "humanDecision",
+        "content": "検知から通報まで5分以内を目標とする"
+      },
+      {
+        "id": "C7",
+        "source": "humanDecision",
+        "content": "自然保護区の生態系への影響を考慮する"
+      }
+    ],
+    "H": [
+      {
+        "id": "H1",
+        "basis": "C4",
+        "refutation": "衛星の更新頻度が大幅に向上した場合",
+        "content": "地上カメラの検知速度は衛星より速い（リアルタイム）"
+      },
+      {
+        "id": "H2",
+        "basis": "C2",
+        "refutation": "完全な検知精度が達成された場合",
+        "content": "煙の色・動きパターンで火災と霧・雲を区別可能"
+      },
+      {
+        "id": "H3",
+        "basis": "C4,C5",
+        "refutation": "6G等で通信断が解消された場合",
+        "content": "エッジAIで軽量火災検知モデルを実行可能"
+      },
+      {
+        "id": "H4",
+        "basis": "C7",
+        "refutation": "保全方針が変更された場合",
+        "content": "制御燃焼のスケジュールを検知除外リストで管理可能"
+      },
+      {
+        "id": "H5",
+        "basis": "C6",
+        "refutation": "消防インフラが根本的に変化した場合",
+        "content": "風向き・地形データから延焼予測が可能"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "name": "lifeSafety",
+      "ordValue": 3,
+      "definition": "人命・集落保護の不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "sensor",
+      "ordValue": 2,
+      "definition": "センサー・通信に関する外部依存",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "name": "detection",
+      "ordValue": 1,
+      "definition": "検知アルゴリズムの運用方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "prediction",
+      "ordValue": 0,
+      "definition": "AIが自律的に最適化する延焼予測",
+      "derivedFrom": [
+        "H3",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "life1",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "life2",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "life3",
+      "layerName": "lifeSafety",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "sen1",
+      "layerName": "sensor",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        "life2"
+      ]
+    },
+    {
+      "id": "sen2",
+      "layerName": "sensor",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        "life1"
+      ]
+    },
+    {
+      "id": "sen3",
+      "layerName": "sensor",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        "life3"
+      ]
+    },
+    {
+      "id": "sen4",
+      "layerName": "sensor",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "det1",
+      "layerName": "detection",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        "sen1"
+      ]
+    },
+    {
+      "id": "det2",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "sen1",
+        "life2"
+      ]
+    },
+    {
+      "id": "det3",
+      "layerName": "detection",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        "sen4"
+      ]
+    },
+    {
+      "id": "det4",
+      "layerName": "detection",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        "sen2"
+      ]
+    },
+    {
+      "id": "pred1",
+      "layerName": "prediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "det1",
+        "sen3"
+      ]
+    },
+    {
+      "id": "pred2",
+      "layerName": "prediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        "sen2",
+        "det4"
+      ]
+    },
+    {
+      "id": "pred3",
+      "layerName": "prediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        "det2",
+        "det3"
+      ]
+    }
+  ]
+}

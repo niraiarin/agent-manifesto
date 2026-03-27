@@ -1,0 +1,289 @@
+{
+  "namespace": "Scenario196",
+  "layers": [
+    {
+      "name": "welfare",
+      "ordValue": 6,
+      "definition": "動物福祉の絶対原則。全ての活動はこの制約下にある。",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "genetics",
+      "ordValue": 5,
+      "definition": "遺伝的多様性の維持に関する生物学的制約。",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "veterinary",
+      "ordValue": 4,
+      "definition": "獣医学的判断の権限と安全基準。",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "regulation",
+      "ordValue": 3,
+      "definition": "国際的な種保存規制。外部依存。",
+      "derivedFrom": [
+        "C4"
+      ]
+    },
+    {
+      "name": "monitoring",
+      "ordValue": 2,
+      "definition": "データ収集の方法論的制約。非侵襲性が前提。",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "algorithm",
+      "ordValue": 1,
+      "definition": "AIが最適化する分析・推奨アルゴリズム。",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "ordValue": 0,
+      "definition": "運用データで検証が必要な仮説。",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "wel1",
+      "layerName": "welfare",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "wel2",
+      "layerName": "welfare",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "gen1",
+      "layerName": "genetics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".wel1"
+      ]
+    },
+    {
+      "id": "gen2",
+      "layerName": "genetics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".wel1",
+        ".wel2"
+      ]
+    },
+    {
+      "id": "vet1",
+      "layerName": "veterinary",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".wel1"
+      ]
+    },
+    {
+      "id": "vet2",
+      "layerName": "veterinary",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".gen1",
+        ".wel2"
+      ]
+    },
+    {
+      "id": "vet3",
+      "layerName": "veterinary",
+      "justification": [
+        "C1",
+        "C3"
+      ],
+      "dependencies": [
+        ".vet1"
+      ]
+    },
+    {
+      "id": "reg1",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".gen1",
+        ".gen2"
+      ]
+    },
+    {
+      "id": "reg2",
+      "layerName": "regulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".vet2"
+      ]
+    },
+    {
+      "id": "mon1",
+      "layerName": "monitoring",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".wel1",
+        ".wel2"
+      ]
+    },
+    {
+      "id": "mon2",
+      "layerName": "monitoring",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".mon1"
+      ]
+    },
+    {
+      "id": "mon3",
+      "layerName": "monitoring",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".vet3",
+        ".mon1"
+      ]
+    },
+    {
+      "id": "algo1",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".gen1",
+        ".gen2",
+        ".reg1"
+      ]
+    },
+    {
+      "id": "algo2",
+      "layerName": "algorithm",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".mon2",
+        ".mon3"
+      ]
+    },
+    {
+      "id": "algo3",
+      "layerName": "algorithm",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".vet1",
+        ".mon2"
+      ]
+    },
+    {
+      "id": "algo4",
+      "layerName": "algorithm",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".algo1",
+        ".algo2"
+      ]
+    },
+    {
+      "id": "algo5",
+      "layerName": "algorithm",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".reg1",
+        ".reg2",
+        ".algo1"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".reg1"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".algo4",
+        ".algo5"
+      ]
+    },
+    {
+      "id": "hyp3",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".algo3"
+      ]
+    },
+    {
+      "id": "hyp4",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".hyp1",
+        ".hyp2"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "layers": [
+    {
+      "name": "service_constraint",
+      "definition": "顧客対応の絶対的な制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "quality_standard",
+      "definition": "応対品質に関する基準",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "escalation_rule",
+      "definition": "エスカレーション・運用ルール",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "response_design",
+      "definition": "応答の設計・実装判断",
+      "ordValue": 1,
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_298d8a",
+      "layerName": "service_constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_feb32d",
+      "layerName": "service_constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_d869b6",
+      "layerName": "quality_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_69a961",
+      "layerName": "quality_standard",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_65d467",
+      "layerName": "escalation_rule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_1644b2",
+      "layerName": "escalation_rule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "FAQRAG_8b5697",
+      "layerName": "response_design",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_188cf7",
+      "layerName": "response_design",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "API_d15bf0",
+      "layerName": "response_design",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

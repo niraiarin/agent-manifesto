@@ -1,0 +1,117 @@
+{
+  "layers": [
+    {
+      "name": "constraint",
+      "definition": "建築基準法・JIS規格に基づく不変前提。",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "empirical",
+      "definition": "配合・養生データから得られた経験則。",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "design",
+      "definition": "予測モデルの設計選択。",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2"
+      ]
+    },
+    {
+      "name": "hypothesis",
+      "definition": "検証待ちの仮説。",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "JISA_e88377",
+      "layerName": "constraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_b29279",
+      "layerName": "constraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_106776",
+      "layerName": "empirical",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_83e151",
+      "layerName": "design",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_9e3711",
+      "layerName": "design",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_56c679",
+      "layerName": "empirical",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_71ef35",
+      "layerName": "design",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "prop_bf79fd",
+      "layerName": "hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "AIAbrams_56e217",
+      "layerName": "hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

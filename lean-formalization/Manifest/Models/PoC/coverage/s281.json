@@ -1,0 +1,222 @@
+{
+  "namespace": "Scenario281",
+  "layers": [
+    {
+      "name": "physics",
+      "ordValue": 4,
+      "definition": "加速器物理学に基づく不変条件。粒子ビームの基本力学。",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "safety",
+      "ordValue": 3,
+      "definition": "放射線安全・機器保護のインターロック。法的・物理的に強制。",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "experiment",
+      "ordValue": 2,
+      "definition": "物理学者グループが設定する実験パラメータ。ランごとに変更。",
+      "derivedFrom": [
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "control",
+      "ordValue": 1,
+      "definition": "AIが自律的に調整するビーム制御戦略。",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "hyp",
+      "ordValue": 0,
+      "definition": "未検証の仮説。運転データで検証が必要。",
+      "derivedFrom": [
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "phys1",
+      "layerName": "physics",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys2",
+      "layerName": "physics",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "phys3",
+      "layerName": "physics",
+      "justification": [
+        "C2",
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "safe1",
+      "layerName": "safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".phys1"
+      ]
+    },
+    {
+      "id": "safe2",
+      "layerName": "safety",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".phys2"
+      ]
+    },
+    {
+      "id": "safe3",
+      "layerName": "safety",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".phys1",
+        ".phys3"
+      ]
+    },
+    {
+      "id": "exp1",
+      "layerName": "experiment",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe1"
+      ]
+    },
+    {
+      "id": "exp2",
+      "layerName": "experiment",
+      "justification": [
+        "C3",
+        "C5"
+      ],
+      "dependencies": [
+        ".safe2",
+        ".safe3"
+      ]
+    },
+    {
+      "id": "exp3",
+      "layerName": "experiment",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".safe1",
+        ".safe2"
+      ]
+    },
+    {
+      "id": "ctrl1",
+      "layerName": "control",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".phys2",
+        ".exp1"
+      ]
+    },
+    {
+      "id": "ctrl2",
+      "layerName": "control",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".safe3",
+        ".ctrl1"
+      ]
+    },
+    {
+      "id": "ctrl3",
+      "layerName": "control",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".exp1",
+        ".exp2"
+      ]
+    },
+    {
+      "id": "ctrl4",
+      "layerName": "control",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".safe2",
+        ".exp3"
+      ]
+    },
+    {
+      "id": "ctrl5",
+      "layerName": "control",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".phys3",
+        ".ctrl2"
+      ]
+    },
+    {
+      "id": "hyp1",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ctrl1",
+        ".ctrl5"
+      ]
+    },
+    {
+      "id": "hyp2",
+      "layerName": "hyp",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".ctrl3",
+        ".ctrl4"
+      ]
+    }
+  ]
+}

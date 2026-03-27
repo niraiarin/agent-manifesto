@@ -1,0 +1,373 @@
+{
+  "layers": [
+    {
+      "name": "StructuralSafety",
+      "definition": "構造力学的安全基準。橋梁の健全性に直結する不可侵制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InspectionStandard",
+      "definition": "点検基準・規格。国土交通省の定期点検要領に基づく",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "MonitoringDesign",
+      "definition": "モニタリングシステムの設計選択",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalysisMethod",
+      "definition": "振動解析手法の技術選択。精度と実装の難易度",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "DeteriorationModel",
+      "definition": "劣化予測モデルの仮説。長期データで検証が必要",
+      "ordValue": 0,
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s129_p01",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s129_p02",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s129_p03",
+      "layerName": "StructuralSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s129_p04",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s129_p01"
+      ]
+    },
+    {
+      "id": "s129_p05",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s129_p01",
+        ".s129_p02"
+      ]
+    },
+    {
+      "id": "s129_p06",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s129_p03"
+      ]
+    },
+    {
+      "id": "s129_p07",
+      "layerName": "MonitoringDesign",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s129_p04"
+      ]
+    },
+    {
+      "id": "s129_p08",
+      "layerName": "MonitoringDesign",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s129_p05"
+      ]
+    },
+    {
+      "id": "s129_p09",
+      "layerName": "MonitoringDesign",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s129_p04",
+        ".s129_p06"
+      ]
+    },
+    {
+      "id": "s129_p10",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s129_p07"
+      ]
+    },
+    {
+      "id": "s129_p11",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s129_p08"
+      ]
+    },
+    {
+      "id": "s129_p12",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s129_p07",
+        ".s129_p09"
+      ]
+    },
+    {
+      "id": "s129_p13",
+      "layerName": "DeteriorationModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s129_p10"
+      ]
+    },
+    {
+      "id": "s129_p14",
+      "layerName": "DeteriorationModel",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s129_p11"
+      ]
+    },
+    {
+      "id": "s129_p15",
+      "layerName": "DeteriorationModel",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s129_p12",
+        ".s129_p13"
+      ]
+    },
+    {
+      "id": "s129_p16",
+      "layerName": "AnalysisMethod",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s129_p09"
+      ]
+    },
+    {
+      "id": "s129_p17",
+      "layerName": "DeteriorationModel",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s129_p16"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q1",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "固有振動数の変化が一定閾値を超えた場合は通行制限を検討する"
+    },
+    {
+      "id": "C2",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q2",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "橋梁の健全性判定の最終判断は橋梁技術者が行う"
+    },
+    {
+      "id": "C3",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q3",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "5年ごとの定期点検（目視・打音）を補完する位置づけ"
+    },
+    {
+      "id": "C4",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q4",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "損傷度評価はI～IVの4段階（国交省基準）"
+    },
+    {
+      "id": "C5",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q5",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "加速度センサーを橋梁の主要部材に設置する"
+    },
+    {
+      "id": "C6",
+      "source": {
+        "humanDecision": {
+          "phase": 1,
+          "question": "Q6",
+          "date": "2026-03-26"
+        }
+      },
+      "content": "振動データは100Hzサンプリングで24時間連続取得"
+    },
+    {
+      "id": "H1",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5"
+          ],
+          "refutation": "MEMSセンサーの精度が構造ヘルスモニタリングに不十分な場合"
+        }
+      },
+      "content": "MEMS加速度センサーが橋梁モニタリングにコスト効果的"
+    },
+    {
+      "id": "H2",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6"
+          ],
+          "refutation": "通信インフラが整備されていない山間部の場合"
+        }
+      },
+      "content": "エッジ処理でデータ量を削減し、異常時のみクラウドに送信"
+    },
+    {
+      "id": "H3",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C6"
+          ],
+          "refutation": "車両通行による振動が支配的で環境振動の分離が困難な場合"
+        }
+      },
+      "content": "操作モーダル解析（OMA）で車両荷重なしに固有振動数を同定可能"
+    },
+    {
+      "id": "H4",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C5",
+            "C6",
+            "H1"
+          ],
+          "refutation": "センサー数が不足しモード形状の推定が困難な場合"
+        }
+      },
+      "content": "複数センサーの相関分析で損傷位置の推定が可能"
+    },
+    {
+      "id": "H5",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C3",
+            "H3"
+          ],
+          "refutation": "固有振動数の変化と劣化の相関が非線形で予測困難な場合"
+        }
+      },
+      "content": "固有振動数の経年変化トレンドから次回点検までの劣化進行を予測可能"
+    },
+    {
+      "id": "H6",
+      "source": {
+        "llmInference": {
+          "basis": [
+            "C4",
+            "H4"
+          ],
+          "refutation": "気温・湿度の影響が劣化の影響より大きい場合"
+        }
+      },
+      "content": "温度補正を行った振動特性の変化が損傷度IIIへの遷移を予測できる"
+    }
+  ]
+}

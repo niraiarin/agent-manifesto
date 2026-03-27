@@ -1,0 +1,167 @@
+{
+  "namespace": "TestCoverage.S110",
+  "layers": [
+    {
+      "name": "MaterialSafety",
+      "ordValue": 4,
+      "definition": "材料の安全性・有害物質規制。RoHS/REACH等の法的要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EngineeringStandard",
+      "ordValue": 3,
+      "definition": "JIS/ISO準拠の寸法精度・強度基準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ProcessParameter",
+      "ordValue": 2,
+      "definition": "印刷パラメータの最適化ルール。材料・形状に依存",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DefectPrediction",
+      "ordValue": 1,
+      "definition": "欠陥予測・品質改善の技術的仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s110_p01",
+      "layerName": "MaterialSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s110_p02",
+      "layerName": "MaterialSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s110_p03",
+      "layerName": "EngineeringStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s110_p01"
+      ]
+    },
+    {
+      "id": "s110_p04",
+      "layerName": "EngineeringStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s110_p01",
+        ".s110_p02"
+      ]
+    },
+    {
+      "id": "s110_p05",
+      "layerName": "EngineeringStandard",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s110_p02"
+      ]
+    },
+    {
+      "id": "s110_p06",
+      "layerName": "ProcessParameter",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s110_p03"
+      ]
+    },
+    {
+      "id": "s110_p07",
+      "layerName": "ProcessParameter",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s110_p04"
+      ]
+    },
+    {
+      "id": "s110_p08",
+      "layerName": "ProcessParameter",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s110_p03",
+        ".s110_p05"
+      ]
+    },
+    {
+      "id": "s110_p09",
+      "layerName": "DefectPrediction",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s110_p06"
+      ]
+    },
+    {
+      "id": "s110_p10",
+      "layerName": "DefectPrediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s110_p07"
+      ]
+    },
+    {
+      "id": "s110_p11",
+      "layerName": "DefectPrediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s110_p06",
+        ".s110_p08"
+      ]
+    },
+    {
+      "id": "s110_p12",
+      "layerName": "DefectPrediction",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s110_p09",
+        ".s110_p10"
+      ]
+    }
+  ]
+}

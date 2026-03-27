@@ -1,0 +1,144 @@
+{
+  "layers": [
+    {
+      "name": "privacy_law",
+      "definition": "プライバシー保護法・肖像権・監視カメラ設置基準など法的制約",
+      "ordValue": 4,
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "detection_capability",
+      "definition": "物体検出・行動認識モデルの精度と限界に関する経験的前提",
+      "ordValue": 3,
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "alert_policy",
+      "definition": "異常行動の定義・通報基準・人間確認フロー",
+      "ordValue": 2,
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "camera_parameter",
+      "definition": "カメラ配置・解像度・録画保持期間などの運用パラメータ",
+      "ordValue": 1,
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "t1",
+      "layerName": "privacy_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t4",
+      "layerName": "privacy_law",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "t6",
+      "layerName": "privacy_law",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e1",
+      "layerName": "detection_capability",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "e2",
+      "layerName": "detection_capability",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p1",
+      "layerName": "detection_capability",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p2",
+      "layerName": "alert_policy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "p5",
+      "layerName": "alert_policy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l1",
+      "layerName": "alert_policy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "l2",
+      "layerName": "alert_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d1",
+      "layerName": "camera_parameter",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "d8",
+      "layerName": "camera_parameter",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": []
+    }
+  ]
+}

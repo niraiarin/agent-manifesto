@@ -1,0 +1,221 @@
+{
+  "namespace": "TestScenario.S166",
+  "description": "食肉トレーサビリティ AI",
+  "layers": [
+    {
+      "name": "foodSafetyLaw",
+      "ordValue": 5,
+      "definition": "食品衛生法・HACCP義務に基づく安全基準",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "traceabilityStandard",
+      "ordValue": 4,
+      "definition": "ISO 22005準拠のトレーサビリティ要件",
+      "derivedFrom": [
+        "C2",
+        "H1"
+      ]
+    },
+    {
+      "name": "supplyChainIntegrity",
+      "ordValue": 3,
+      "definition": "サプライチェーン各段階のデータ完全性保証",
+      "derivedFrom": [
+        "H2"
+      ]
+    },
+    {
+      "name": "qualityGrading",
+      "ordValue": 2,
+      "definition": "品質等級判定と格付けロジック",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "consumerInterface",
+      "ordValue": 1,
+      "definition": "消費者向け産地・履歴情報の提示方式",
+      "derivedFrom": [
+        "H5"
+      ]
+    },
+    {
+      "name": "analyticsLayer",
+      "ordValue": 0,
+      "definition": "流通効率化・需要予測のための分析",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "haccpCompliance",
+      "layerName": "foodSafetyLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "recallCapability",
+      "layerName": "foodSafetyLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "coldChainIntegrity",
+      "layerName": "foodSafetyLaw",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "lotIdentification",
+      "layerName": "traceabilityStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".haccpCompliance"
+      ]
+    },
+    {
+      "id": "originCertification",
+      "layerName": "traceabilityStandard",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".lotIdentification"
+      ]
+    },
+    {
+      "id": "slaughterRecord",
+      "layerName": "traceabilityStandard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".haccpCompliance",
+        ".lotIdentification"
+      ]
+    },
+    {
+      "id": "transportLog",
+      "layerName": "supplyChainIntegrity",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".coldChainIntegrity",
+        ".lotIdentification"
+      ]
+    },
+    {
+      "id": "tamperDetection",
+      "layerName": "supplyChainIntegrity",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".transportLog"
+      ]
+    },
+    {
+      "id": "blockchainAnchor",
+      "layerName": "supplyChainIntegrity",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".tamperDetection",
+        ".originCertification"
+      ]
+    },
+    {
+      "id": "marblingScore",
+      "layerName": "qualityGrading",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".slaughterRecord"
+      ]
+    },
+    {
+      "id": "agingDuration",
+      "layerName": "qualityGrading",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".coldChainIntegrity",
+        ".marblingScore"
+      ]
+    },
+    {
+      "id": "gradeLabelAssign",
+      "layerName": "qualityGrading",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".marblingScore",
+        ".agingDuration"
+      ]
+    },
+    {
+      "id": "qrCodeDisplay",
+      "layerName": "consumerInterface",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".blockchainAnchor",
+        ".gradeLabelAssign"
+      ]
+    },
+    {
+      "id": "allergenDisclosure",
+      "layerName": "consumerInterface",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".haccpCompliance",
+        ".qrCodeDisplay"
+      ]
+    },
+    {
+      "id": "demandForecast",
+      "layerName": "analyticsLayer",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".transportLog",
+        ".gradeLabelAssign"
+      ]
+    },
+    {
+      "id": "wasteReduction",
+      "layerName": "analyticsLayer",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".demandForecast",
+        ".agingDuration"
+      ]
+    }
+  ]
+}

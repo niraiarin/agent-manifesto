@@ -1,6 +1,6 @@
-import Manifest.Workflow
 import Manifest.Evolution
 import Manifest.DesignFoundation
+import Manifest.Workflow
 
 /-!
 # /evolve スキルの形式的評価 (Γ ⊢ φ)
