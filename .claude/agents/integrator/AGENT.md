@@ -125,6 +125,7 @@ Observer が検出した退役候補を処理する:
     "integrator": {"commits_count": 0, "model": "sonnet"}
   },
   "v_changes": {},
+  "benchmark": {"non_triviality_score": 0, "non_triviality_label": "trivial|moderate|substantial", "saturation_consecutive": 0, "saturation_status": "ok|warning|alert"},
   "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],
   "// deferred note": "当該 run で状態が変化した deferred のみ記録。累積スナップショットは記録しない（deferred-status.json が正規ソース）",
   "notes": "次回への引き継ぎ事項（必須）"

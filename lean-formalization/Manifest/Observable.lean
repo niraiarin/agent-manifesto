@@ -133,11 +133,24 @@ inductive ProxyMaturityLevel where
   | formal : ProxyMaturityLevel
   deriving BEq, Repr, DecidableEq
 
-/-- V1 の現在の proxy 成熟度。benchmark.json 未実装のため provisional。 -/
-def v1ProxyMaturity : ProxyMaturityLevel := .provisional
+/-- V1 の現在の proxy 成熟度。
+    provisional → formal (2026-03-27, #77):
+    - GQM チェーン定義済み (R1 #85): Q1 structural contribution, Q2 verification quality, Q3 operational stability
+    - benchmark.json に正式スキーマ実装済み (G1 #78)
+    - observe.sh で自動計測 (G2 #79)
+    - 63 runs の後ろ向き検証で全 metric が仮説を充足
+    - Goodhart 5 層防御: ガバナンス指標 (R2), 相関監視 (R3), 非自明性ゲート (R5), 飽和検出 (R6), bias レビュー義務 (G1b-2)
+    - 旧 proxy (success_rate) は新 benchmark と無相関 (r=0.006-0.069) であることを確認 (G3 #80) -/
+def v1ProxyMaturity : ProxyMaturityLevel := .formal
 
-/-- V3 の現在の proxy 成熟度。ゲート合格率未実装のため provisional。 -/
-def v3ProxyMaturity : ProxyMaturityLevel := .provisional
+/-- V3 の現在の proxy 成熟度。
+    provisional → formal (2026-03-27, #77):
+    - GQM チェーン定義済み (R1 #85): Q1 acceptance criteria, Q2 structural integrity, Q3 error trend
+    - benchmark.json に正式スキーマ実装済み (G1 #78)
+    - observe.sh で自動計測 (G2 #79)
+    - 旧 proxy (test_pass_rate) は分散 0 で品質信号として無効であることを確認 (G3 #80)
+    - hallucination proxy (Run 54+) が error trend の新指標として機能 -/
+def v3ProxyMaturity : ProxyMaturityLevel := .formal
 
 -- ============================================================
 -- V1–V7: 最適化変数
