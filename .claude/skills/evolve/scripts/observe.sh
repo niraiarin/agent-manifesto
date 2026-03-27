@@ -15,9 +15,9 @@ echo "{"
 # --- Lean 品質指標 ---
 if [ -d "$LEAN_DIR/Manifest" ]; then
   AXIOM_COUNT=$(grep -r "^axiom [a-zA-Z_]" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
-  THEOREM_COUNT=$(grep -r "^theorem " "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
-  SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
-  MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" 2>/dev/null | wc -l | tr -d ' ')
+  THEOREM_COUNT=$(grep -r "^theorem " "$LEAN_DIR/Manifest/" --include="*.lean" --exclude-dir=Models 2>/dev/null | wc -l | tr -d ' ')
+  SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" --exclude-dir=Models 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
+  MODULE_COUNT=$(find "$LEAN_DIR/Manifest" -name "*.lean" -not -path "*/Models/*" 2>/dev/null | wc -l | tr -d ' ')
   # warnings (lake build output)
   WARNING_COUNT=$(cd "$LEAN_DIR" && lake build Manifest 2>&1 | grep -c "warning" || true)
   WARNING_COUNT=${WARNING_COUNT:-0}
@@ -28,7 +28,7 @@ if [ -d "$LEAN_DIR/Manifest" ]; then
     COMPRESSION_RATIO=0
   fi
   # De Bruijn factor (formal_lines * 100 / informal_lines, 100x scale)
-  FORMAL_LINES=$(find "$LEAN_DIR/Manifest" -name "*.lean" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
+  FORMAL_LINES=$(find "$LEAN_DIR/Manifest" -name "*.lean" -not -path "*/Models/*" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
   FORMAL_LINES=${FORMAL_LINES:-0}
   # test-axiom-quality.sh と統一: 4 ファイル（manifesto + docs 3 ファイル）
   INFORMAL_LINES=$(cat "$BASE/manifesto.md" "$BASE/docs/design-development-foundation.md" "$BASE/docs/formal-derivation-procedure.md" "$BASE/docs/mathematical-logic-terminology.md" 2>/dev/null | wc -l | tr -d ' ')
