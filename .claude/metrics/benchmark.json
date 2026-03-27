@@ -281,6 +281,45 @@
       "note": "Longest historical plateau was 20 runs at 165 tests. Current growth rate (last 10 runs avg 3.3 tests/run) suggests saturation is not imminent."
     }
   },
+  "priority_bias": {
+    "_description": "V1-V7 間の優先順位は静的に導出不可能 (G1b-1 #91 証明済み)。priority(V_i, V_j) = g(f(t), bias(t)) モデルに従い、bias(t) は T6 権限を持つ主体が設定する。このセクションは bias(t) のスナップショットであり、必ず陳腐化する。",
+    "_source": "G1b-2 (#92)",
+    "_model": "priority(V_i, V_j) = g(f(t), bias(t)) where f(t) = system state function, bias(t) = priority bias function",
+    "_authority": "T6 delegated to AI (2026-03-27)",
+    "current_snapshot": {
+      "timestamp": "2026-03-27",
+      "run_at_decision": 63,
+      "bias_setter": "AI (delegated by human via T6)",
+      "f_t_observations": {
+        "system_phase": "stable operation — defect absence achieved, non-triviality is next bottleneck",
+        "theorem_growth_rate": "2.0/run (last 10) — decelerating",
+        "test_growth_rate": "4.1/run (last 10) — still active",
+        "verifier_pass_rate": "75% — stable",
+        "success_rate": "98% — saturated",
+        "test_pass_rate": "99-100% — near saturation",
+        "r3_correlation_trend": "weakening for theorem-related pairs"
+      },
+      "priority_order": [
+        {"rank": 1, "variable": "V3", "reason": "proxy graduation is the project goal (#77). defect absence achieved but proxy still provisional"},
+        {"rank": 2, "variable": "V1", "reason": "GQM redefined (R1) but quality definition pending confirmation"},
+        {"rank": 3, "variable": "V4", "reason": "100% = Goodhart example. gate_blocked logging not implemented. signal non-functional"},
+        {"rank": 4, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
+        {"rank": 5, "variable": "V5", "reason": "secondary to V1/V3 proxy graduation"},
+        {"rank": 6, "variable": "V6", "reason": "secondary to V1/V3 proxy graduation"},
+        {"rank": 7, "variable": "V7", "reason": "secondary to V1/V3 proxy graduation"}
+      ]
+    },
+    "review_policy": {
+      "description": "bias(t) is a function of time and WILL become stale. Mandatory review triggers:",
+      "triggers": [
+        {"condition": "V1 or V3 proxy graduates to formal", "action": "Re-evaluate full priority order"},
+        {"condition": "Saturation alert (R6) fires", "action": "Re-evaluate affected V's priority"},
+        {"condition": "20 runs elapsed since last review (next: Run 83)", "action": "Full bias(t) re-evaluation"},
+        {"condition": "Human explicitly requests re-evaluation", "action": "Full bias(t) re-evaluation"}
+      ],
+      "next_mandatory_review": "Run 83 or V1/V3 formal graduation, whichever comes first"
+    }
+  },
   "deprecated_proxies": {
     "v1_skill_invocation_rate": {
       "reason": "Measures 'are skills used?' not 'are skills producing quality outputs?' — GQM goal-question mismatch",

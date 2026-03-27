@@ -468,6 +468,23 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 最適化指標（theorem delta 等）が改善を示しているのにガバナンス指標（絶対数）が
 横ばいまたは低下している場合、Goodhart 圧力を疑い調査する。
 
+### V1-V7 優先順位 (bias(t) スナップショット)
+
+V1-V7 間の優先順位は静的に導出不可能（G1b-1 #91 Lean 証明済み）。
+`priority(V_i, V_j) = g(f(t), bias(t))` モデルに従い、bias(t) は T6 権限を持つ
+主体（人間 or 委譲先 AI）が設定する。現在の bias(t₀):
+
+**V3 > V1 > V4 > V2 > V5 > V6 > V7** (設定: 2026-03-27, Run 63)
+
+根拠: V1/V3 の proxy formal graduation (#77) がプロジェクト目標。
+詳細は `benchmark.json` の `priority_bias` セクションを参照。
+
+**レビュー義務**: bias(t) は時間の関数であり必ず陳腐化する。以下で再評価:
+- V1 or V3 が formal に昇格した時
+- 飽和警告 (R6) 発動時
+- 20 runs 経過（次回: Run 83）
+- 人間が明示的に要求した時
+
 ## 終了条件
 
 ### 正常終了

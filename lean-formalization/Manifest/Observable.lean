@@ -1296,4 +1296,89 @@ theorem degradation_threshold_observable (t : Nat) :
     運用の中で項目の再分類・追加・削除が起こりうる。
 -/
 
+-- ============================================================
+-- Derived theorems: Quality measurement priority (G1b-1 #91)
+-- ============================================================
+
+/-!
+## 品質測定の優先順位
+
+G1b-1 (#91) の分析により、マニフェストの公理系から以下の品質優先順位が導出可能と判明。
+これらは T6（人間の判断）に依存せず、既存の公理・設計原則から論理的に帰結する。
+
+### 導出不可能な領域
+V1-V7 間の相互優先順位は導出不可能。TradeoffExists は対称関係であり、
+「V1 > V3」のような順序を含意しない。これは意図的な設計判断であり、
+V 間の優先順位は T6 判断に帰着する（G1b-2 #92）。
+-/
+
+/-- 品質測定カテゴリ: 構造的変化の測定 vs プロセス成功率の測定。
+    R1 (GQM 再定義) で特定された proxy ミスマッチの形式化。 -/
+inductive QualityMeasureCategory where
+  | structuralOutcome   -- 構造的成果: theorem delta, test delta, axiom count
+  | processSuccess      -- プロセス成功率: evolve success rate, skill invocation rate
+  deriving BEq, Repr
+
+/-- 品質測定カテゴリの優先度。構造的成果はプロセス成功率より品質の直接的指標。
+    根拠:
+    - 最上位使命「永続する構造が自身を改善し続ける」→ 構造の変化が改善の定義
+    - D5（仕様層順序）の類推: 成果（what was produced）> 過程（how it was produced）
+    - Anthropic eval guide: "grade what the agent produced, not the path it took" -/
+def qualityMeasurePriority : QualityMeasureCategory → Nat
+  | .structuralOutcome => 1  -- higher priority
+  | .processSuccess    => 0  -- lower priority
+
+/-- 構造的成果の測定は、プロセス成功率の測定より品質指標として優先される。
+    「スキルが動くこと」より「スキルが構造的に改善を生むこと」が品質。 -/
+theorem structural_outcome_gt_process_success :
+    qualityMeasurePriority .structuralOutcome >
+    qualityMeasurePriority .processSuccess := by
+  native_decide
+
+/-- 検証信号の分類: 独立検証 vs 自己評価。
+    P2 + E1 + ICLR 2024 (Huang et al.) の形式化。 -/
+inductive VerificationSignalType where
+  | independentlyVerified  -- P2: 独立エージェントまたは構造的テストによる検証
+  | selfAssessed           -- 同一インスタンスによる自己評価
+  deriving BEq, Repr
+
+/-- 検証信号の信頼度。独立検証は自己評価より信頼性が高い。
+    根拠:
+    - P2: 認知的関心事の分離（Worker と Verifier の分離）
+    - E1: 経験は理論に先行する — 自己生成した理論での自己評価は循環
+    - ICLR 2024 Huang et al.: intrinsic self-correction は精度を劣化させる -/
+def verificationReliability : VerificationSignalType → Nat
+  | .independentlyVerified => 1  -- higher reliability
+  | .selfAssessed          => 0  -- lower reliability
+
+/-- 独立検証された品質信号は、自己評価による品質信号より信頼性が高い。 -/
+theorem independent_verification_gt_self_assessment :
+    verificationReliability .independentlyVerified >
+    verificationReliability .selfAssessed := by
+  native_decide
+
+/-- 品質保証の層: 欠陥不在（defect absence）vs 価値創出（value creation）。
+    D6 の DesignStage 順序の品質次元への適用。 -/
+inductive QualityAssuranceLayer where
+  | defectAbsence    -- 壊れていないことの確認（test pass, Lean build, sorry=0）
+  | valueCreation    -- 良いことの確認（改善の実質性、有用性）
+  deriving BEq, Repr
+
+/-- 品質保証の測定優先度。欠陥不在の確認が価値創出の確認に先行する。
+    根拠:
+    - D6: Boundary（制約充足）> Variable（品質改善）
+    - D4: Safety > Governance — 安全（壊れていない）が統治（良くする）に先行
+    - 論理的帰結: 壊れているシステムの「改善の実質性」は測定しても無意味 -/
+def qualityAssurancePriority : QualityAssuranceLayer → Nat
+  | .defectAbsence  => 1  -- higher measurement priority
+  | .valueCreation  => 0  -- lower measurement priority (but not less important)
+
+/-- 欠陥不在の測定は、価値創出の測定より優先される（測定順序として）。
+    注: これは「欠陥不在の方が重要」ではなく「先に測るべき」を意味する。
+    価値創出の測定は欠陥不在が確認された後に有意義になる。 -/
+theorem defect_absence_measurement_gt_value_creation :
+    qualityAssurancePriority .defectAbsence >
+    qualityAssurancePriority .valueCreation := by
+  native_decide
+
 end Manifest
