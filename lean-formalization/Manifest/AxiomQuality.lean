@@ -52,13 +52,13 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 316 theorems / 63 axioms = 501 (= 5.01x) -/
+    例: 338 theorems / 63 axioms = 536 (= 5.36x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
-/-- 現在の公理系の圧縮比は 426 (= 4.26x)。 -/
+/-- 現在の公理系の圧縮比は 536 (= 5.36x)。 -/
 theorem current_compression :
-  compressionRatio currentProfile = 501 := by rfl
+  compressionRatio currentProfile = 536 := by rfl
 
 /-- 圧縮比 ≥ 200 (= 2.0x) は暫定的な健全条件 (H7)。 -/
 theorem current_compression_healthy :
@@ -346,7 +346,7 @@ inductive QualitySignal where
 /-- 現在の公理系の静的品質プロファイル（axiom count ベース）。
     fan-in/fan-out/coverage は動的計測が必要なため含まない。 -/
 def currentQuality : QualityProfile :=
-  { compressionRatio := compressionRatio currentProfile  -- 432 (= 4.32x)
+  { compressionRatio := compressionRatio currentProfile  -- 457 (= 4.57x)
     coveragePercent  := 100  -- grep 近似: 60/60 axioms referenced (Run 27: v4/v7_goodhart now used by goodhart_no_perfect_proxy)
     axiomFreePercent := 0    -- 動的計測で確定すべき値（暫定 0）
     sorryCount       := currentProfile.sorryCount }       -- 0

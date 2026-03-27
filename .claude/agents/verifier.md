@@ -49,8 +49,21 @@ When reviewing critical-risk changes (L1, safety, permissions), always state:
    - Security issues (L1 violations)
    - Test coverage gaps
    - Manifest compliance (D1-D9)
-3. Assess the risk level of the change
-4. Output a structured verdict
+   - Lean theorem quality (when proposal includes Lean theorems):
+     - Is the theorem provable by `rfl` alone (definitional equality)?
+     - Is the conclusion a direct restatement of the premise (definitional unfolding)?
+     - Is the theorem substantially identical to an existing theorem (name/parameter reordering only)?
+     - Does the theorem merely assert numeric literal comparisons (e.g., `4 > 2`)?
+     - If any of the above: FAIL with reason "trivially-true (H_trivially_true)"
+3. **Verify factual claims** (P3: knowledge governance requires accuracy):
+   - File paths: confirm existence with Glob or Read before accepting claims
+   - Lean theorem/definition names: confirm with Grep in lean-formalization/
+   - Numeric citations: verify axiom count, theorem count, test count against actual files
+     - Axiom count: `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l`
+     - Theorem count: `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l`
+     - Test count: count test cases in tests/ directory
+4. Assess the risk level of the change
+5. Output a structured verdict
 
 ## Output Format
 
@@ -60,5 +73,9 @@ EVALUATOR INDEPENDENCE: met|not met (state which conditions are satisfied)
 VERDICT: PASS|FAIL
 ISSUES:
 - (list of issues, or "none")
+FACTUAL ACCURACY:
+- file_paths: verified|unverified|(list of issues)
+- lean_names: verified|unverified|(list of issues)
+- numeric_claims: verified|unverified|(list of issues)
 RECOMMENDATION: (brief recommendation)
 ```

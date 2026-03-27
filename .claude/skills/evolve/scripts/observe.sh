@@ -177,20 +177,51 @@ else
 fi
 
 # V2: Context Efficiency — primary: recent_avg (delta-based), baseline: cumulative_avg
+# cumulative_avg = mean of all session deltas with delta > MIN_SESSION_DELTA (full history).
+# raw_cumulative_avg = total_tool_calls / session_count (legacy, kept for transition period).
 if [ -f "$SESSIONS_FILE" ]; then
   SESSION_COUNT=$(wc -l < "$SESSIONS_FILE" | tr -d ' ')
+  # raw_cumulative_avg: legacy value (TOOL_CALLS / SESSION_COUNT), kept for transition comparison
   if [ "$SESSION_COUNT" -gt 0 ] 2>/dev/null && [ "$TOOL_CALLS" -gt 0 ] 2>/dev/null; then
-    V2_CALLS_PER_SESSION=$((TOOL_CALLS / SESSION_COUNT))
+    V2_RAW_CUMULATIVE=$((TOOL_CALLS / SESSION_COUNT))
   else
-    V2_CALLS_PER_SESSION=0
+    V2_RAW_CUMULATIVE=0
   fi
   # Compute per-session deltas from consecutive total_tool_calls values
   # V2 uses MEDIAN of recent deltas (robust to outliers like evolve sessions).
   # V2_RECENT_AVG = median of last 10 session deltas (primary metric).
-  # V2_CALLS_PER_SESSION = total_tool_calls / session_count (cumulative baseline).
+  # V2_CALLS_PER_SESSION = mean of all filtered deltas (full history, microSession-excluded baseline).
   # These are DIFFERENT values. Do not confuse them.
+  # MIN_SESSION_DELTA: micro-sessions (e.g., single /metrics invocations) with <= this
+  # delta are excluded from V2 median and cumulative_avg to prevent downward bias.
+  MIN_SESSION_DELTA=3
   V2_RECENT_AVG=0
+  V2_CALLS_PER_SESSION=0
+  RAW_DELTA_COUNT=0
+  FILTERED_DELTA_COUNT=0
+  ALL_FILTERED_SUM=0
+  ALL_FILTERED_COUNT=0
   if [ "$SESSION_COUNT" -gt 1 ] 2>/dev/null; then
+    # --- Full history pass: compute cumulative_avg from all deltas (filtered) ---
+    ALL_TOTALS=$(jq -r '.total_tool_calls // empty' "$SESSIONS_FILE" 2>/dev/null)
+    PREV_FULL=""
+    for T in $ALL_TOTALS; do
+      if [ -n "$PREV_FULL" ] 2>/dev/null; then
+        D=$((T - PREV_FULL))
+        if [ "$D" -ge 0 ] 2>/dev/null; then
+          # Exclude micro-sessions from cumulative_avg
+          if [ "$D" -gt "$MIN_SESSION_DELTA" ] 2>/dev/null; then
+            ALL_FILTERED_SUM=$((ALL_FILTERED_SUM + D))
+            ALL_FILTERED_COUNT=$((ALL_FILTERED_COUNT + 1))
+          fi
+        fi
+      fi
+      PREV_FULL=$T
+    done
+    if [ "$ALL_FILTERED_COUNT" -gt 0 ] 2>/dev/null; then
+      V2_CALLS_PER_SESSION=$((ALL_FILTERED_SUM / ALL_FILTERED_COUNT))
+    fi
+    # --- Recent pass: compute recent_avg from last 10 deltas (filtered) ---
     # Extract last 11 total_tool_calls to compute 10 deltas
     TOTALS=$(tail -11 "$SESSIONS_FILE" | jq -r '.total_tool_calls // empty' 2>/dev/null)
     PREV=""
@@ -199,7 +230,12 @@ if [ -f "$SESSIONS_FILE" ]; then
       if [ -n "$PREV" ] 2>/dev/null; then
         D=$((T - PREV))
         if [ "$D" -ge 0 ] 2>/dev/null; then
-          DELTAS+=("$D")
+          RAW_DELTA_COUNT=$((RAW_DELTA_COUNT + 1))
+          # Skip micro-sessions (delta <= MIN_SESSION_DELTA)
+          if [ "$D" -gt "$MIN_SESSION_DELTA" ] 2>/dev/null; then
+            DELTAS+=("$D")
+            FILTERED_DELTA_COUNT=$((FILTERED_DELTA_COUNT + 1))
+          fi
         fi
       fi
       PREV=$T
@@ -217,9 +253,11 @@ if [ -f "$SESSIONS_FILE" ]; then
         V2_RECENT_AVG=${SORTED[$MID]}
       fi
     fi
+    # Edge case: all deltas filtered → V2_RECENT_AVG stays 0 (not an error)
   fi
 else
   SESSION_COUNT=0
+  V2_RAW_CUMULATIVE=0
   V2_CALLS_PER_SESSION=0
   V2_RECENT_AVG=0
 fi
@@ -244,7 +282,8 @@ else
   V4_RATE=100
 fi
 
-# V1: Skill Quality — provisional proxy (not benchmark.json-based)
+# V1: Skill Quality — GQM-based measurement (benchmark.json schema)
+# Q3 (operational stability): evolve success rate (reclassified from primary to process metric)
 SKILL_COUNT=$(find "$BASE/.claude/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
 EVOLVE_SUCCESS=0
 EVOLVE_TOTAL_RUNS=0
@@ -265,11 +304,131 @@ if [ "${SORRY_COUNT:-0}" -gt 0 ] 2>/dev/null; then
   LEAN_HEALTH=0
 fi
 
+# Q1 (structural contribution): theorem delta and test delta per run
+V1_THEOREM_DELTA=0
+V1_TEST_DELTA=0
+V1_THEOREM_DELTA_AVG=0
+V1_TEST_DELTA_AVG=0
+if [ -f "$HISTORY_FILE" ]; then
+  # Calculate deltas between consecutive runs from evolve-history.jsonl
+  V1_THEOREM_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.theorems != null)]
+    | if length > 1 then
+        .[-1].lean.theorems - .[-2].lean.theorems
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_TEST_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null)]
+    | if length > 1 then
+        .[-1].tests.passed - .[-2].tests.passed
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Rolling average over last 10 runs (x100 scale for integer arithmetic)
+  V1_THEOREM_DELTA_AVG=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.theorems != null)]
+    | if length > 1 then
+        [range(1; length) as $i | (.[($i)].lean.theorems - .[($i) - 1].lean.theorems)]
+        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_TEST_DELTA_AVG=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null)]
+    | if length > 1 then
+        [range(1; length) as $i | (.[($i)].tests.passed - .[($i) - 1].tests.passed)]
+        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+      else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+fi
+V1_THEOREM_DELTA=${V1_THEOREM_DELTA:-0}
+V1_TEST_DELTA=${V1_TEST_DELTA:-0}
+V1_THEOREM_DELTA_AVG=${V1_THEOREM_DELTA_AVG:-0}
+V1_TEST_DELTA_AVG=${V1_TEST_DELTA_AVG:-0}
+
+# Q2 (verification quality): verifier pass rate and rejected count
+V1_VERIFIER_PASS=0
+V1_VERIFIER_FAIL=0
+V1_VERIFIER_RATE=0
+V1_REJECTED_COUNT=0
+V1_REJECTED_AVG=0
+if [ -f "$HISTORY_FILE" ]; then
+  V1_VERIFIER_PASS=$(jq -s '[.[] | select(.result != "observation") | .phases.verifier.pass_count // 0] | add // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_VERIFIER_FAIL=$(jq -s '[.[] | select(.result != "observation") | .phases.verifier.fail_count // 0] | add // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_VERIFIER_TOTAL=$((V1_VERIFIER_PASS + V1_VERIFIER_FAIL))
+  if [ "$V1_VERIFIER_TOTAL" -gt 0 ] 2>/dev/null; then
+    V1_VERIFIER_RATE=$((V1_VERIFIER_PASS * 100 / V1_VERIFIER_TOTAL))
+  fi
+  V1_REJECTED_COUNT=$(jq -s '[.[] | select(.result != "observation")] | .[-1].rejected | length // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Rolling average rejected count over last 10 runs
+  V1_REJECTED_AVG=$(jq -s '
+    [.[] | select(.result != "observation") | (.rejected | length // 0)]
+    | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+fi
+V1_VERIFIER_PASS=${V1_VERIFIER_PASS:-0}
+V1_VERIFIER_FAIL=${V1_VERIFIER_FAIL:-0}
+V1_VERIFIER_RATE=${V1_VERIFIER_RATE:-0}
+V1_REJECTED_COUNT=${V1_REJECTED_COUNT:-0}
+V1_REJECTED_AVG=${V1_REJECTED_AVG:-0}
+
+# Non-triviality score (R5): 0-4 based on structural conditions met
+NTS_C1=0; NTS_C2=0; NTS_C3=0; NTS_C4=0
+if [ "$V1_THEOREM_DELTA" -gt 0 ] 2>/dev/null; then NTS_C1=1; fi
+if [ "$V1_TEST_DELTA" -gt 0 ] 2>/dev/null; then NTS_C2=1; fi
+# C3: axiom delta != 0
+NTS_AXIOM_DELTA=0
+if [ -f "$HISTORY_FILE" ]; then
+  NTS_AXIOM_DELTA=$(jq -s '
+    [.[] | select(.result != "observation" and .lean.axioms != null)]
+    | if length > 1 then .[-1].lean.axioms - .[-2].lean.axioms else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  NTS_AXIOM_DELTA=${NTS_AXIOM_DELTA:-0}
+fi
+if [ "$NTS_AXIOM_DELTA" -ne 0 ] 2>/dev/null; then NTS_C3=1; fi
+# C4: verifier pass >= 2 in last run
+NTS_LAST_VERIFIER_PASS=0
+if [ -f "$HISTORY_FILE" ]; then
+  NTS_LAST_VERIFIER_PASS=$(jq -s '[.[] | select(.result != "observation")] | .[-1].phases.verifier.pass_count // 0' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  NTS_LAST_VERIFIER_PASS=${NTS_LAST_VERIFIER_PASS:-0}
+fi
+if [ "$NTS_LAST_VERIFIER_PASS" -ge 2 ] 2>/dev/null; then NTS_C4=1; fi
+NTS_SCORE=$((NTS_C1 + NTS_C2 + NTS_C3 + NTS_C4))
+if [ "$NTS_SCORE" -ge 3 ]; then NTS_LABEL="substantial"
+elif [ "$NTS_SCORE" -ge 1 ]; then NTS_LABEL="moderate"
+else NTS_LABEL="trivial"
+fi
+
+# Saturation detection (R6): consecutive zero-delta runs for test count
+SAT_CONSECUTIVE=0
+if [ -f "$HISTORY_FILE" ]; then
+  SAT_CONSECUTIVE=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
+    if length > 1 then
+      [range(length-1; 0; -1) | select(.[.] == .[.-1])] | length
+      | if . > (input | length - 2) then (input | length - 1) else . end
+    else 0 end
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  # Simpler approach: count trailing identical values
+  SAT_CONSECUTIVE=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
+    . as $a | $a[-1] as $last |
+    [range(length-1; -1; -1) | select($a[.] == $last)] |
+    length - 1
+  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  SAT_CONSECUTIVE=${SAT_CONSECUTIVE:-0}
+fi
+if [ "$SAT_CONSECUTIVE" -ge 10 ] 2>/dev/null; then SAT_STATUS="alert"
+elif [ "$SAT_CONSECUTIVE" -ge 5 ] 2>/dev/null; then SAT_STATUS="warning"
+else SAT_STATUS="ok"
+fi
+
 echo "  \"v1_v7\": {"
-echo "    \"v1_skill_quality\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0}, \"note\": \"provisional_proxy\" },"
+echo "    \"v1_skill_quality\": { \"gqm_version\": \"0.1.0\", \"q1_structural_contribution\": { \"theorem_delta_last_run\": $V1_THEOREM_DELTA, \"test_delta_last_run\": $V1_TEST_DELTA, \"theorem_delta_avg_10r\": $V1_THEOREM_DELTA_AVG, \"test_delta_avg_10r\": $V1_TEST_DELTA_AVG }, \"q2_verification_quality\": { \"verifier_pass_total\": $V1_VERIFIER_PASS, \"verifier_fail_total\": $V1_VERIFIER_FAIL, \"verifier_pass_rate\": $V1_VERIFIER_RATE, \"rejected_last_run\": $V1_REJECTED_COUNT, \"rejected_avg_10r\": $V1_REJECTED_AVG }, \"q3_operational_stability\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0} }, \"non_triviality\": { \"score\": $NTS_SCORE, \"label\": \"$NTS_LABEL\", \"c1_theorem_growth\": $NTS_C1, \"c2_test_growth\": $NTS_C2, \"c3_axiom_change\": $NTS_C3, \"c4_multi_verification\": $NTS_C4 }, \"saturation\": { \"test_consecutive_zero_delta\": $SAT_CONSECUTIVE, \"status\": \"$SAT_STATUS\" }, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\" },"
 # V2 trend semantics: compare recent_avg (median of last 10 session deltas)
-# against cumulative_avg (total_tool_calls / session_count) as baseline.
+# against cumulative_avg (filtered full-history mean) as baseline.
 # divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
+# NOTE: V2 is a hub variable with tradeoffs against V1,V3,V5,V6,V7 (tradeoff_context_is_hub).
+# divergence_percent > 100% is NOT necessarily a problem: evolve sessions (large tool usage)
+# drive recent_avg upward. Rising divergence with rising evolve depth is expected behavior.
 V2_TREND="stable"
 V2_DIVERGENCE=0
 if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
@@ -284,7 +443,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
   fi
   V2_DIVERGENCE=$(( (V2_RECENT_AVG - V2_CALLS_PER_SESSION) * 100 / V2_CALLS_PER_SESSION ))
 fi
-echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\" },"
+echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"raw_cumulative_avg\": ${V2_RAW_CUMULATIVE:-0}, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 # V3 fix_ratio proxy の制限: このパターンは "[fix]:" や "fix:" で始まるコミットのみにマッチする。
 # "[evolve] Fix ..." のようにプレフィックスが異なる形式はマッチしない。
@@ -313,7 +472,28 @@ if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -e
 else
   V3_BASELINE_MET="false"
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"note\": \"provisional_proxy: fix_ratio_by_prefix + test_pass_rate\" },"
+# V3 hallucination_proxy: rejected[].failure_type の集計
+# 注意: failure_type フィールドは Run 54 から標準化開始。
+# データが蓄積されるまで全指標値は 0 になる（設計上の帰結であり異常ではない）。
+V3_HALL_OBS=0
+V3_HALL_HYP=0
+V3_HALL_ASS=0
+V3_HALL_PRE=0
+V3_HALL_LOOPBACK_TOTAL=0
+V3_HALL_REJECTED_TOTAL=0
+if [ -f "$HISTORY_FILE" ]; then
+  V3_HALL_OBS=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
+  V3_HALL_HYP=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
+  V3_HALL_ASS=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^assumption_error$"; } || true)
+  V3_HALL_PRE=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^precondition_error$"; } || true)
+  V3_HALL_OBS=${V3_HALL_OBS:-0}
+  V3_HALL_HYP=${V3_HALL_HYP:-0}
+  V3_HALL_ASS=${V3_HALL_ASS:-0}
+  V3_HALL_PRE=${V3_HALL_PRE:-0}
+  V3_HALL_LOOPBACK_TOTAL=$({ jq -r '.rejected[]?.loopback_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}'; } || echo 0)
+  V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
+fi
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"proxy_classification\": \"provisional\", \"graduation_criteria\": \"gate pass rate implementation OR operational correlation evidence (T6)\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
@@ -335,7 +515,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
 echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
-echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_note\": \"single_agent_operation: teammate field requires multi-agent or human collaboration\" }"
+echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_status\": \"suppressed_single_agent\" }"
 echo "  },"
 
 # --- T7: コスト計測（ccusage） ---
@@ -352,6 +532,76 @@ if command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
 else
   echo "  \"ccusage\": {\"error\": \"ccusage not available\"},"
 fi
+
+# --- ccusage backfill: session_cost_usd の遡及補完 ---
+# SKILL.md backfill 例外に基づく: null フィールドのみ補完、非 null は上書きしない
+EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
+BACKFILL_RESULT='{"backfilled": 0, "note": "skipped"}'
+if [ -f "$EVOLVE_HISTORY" ] && (command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1); then
+  CCUSAGE_CMD=""
+  if command -v bunx >/dev/null 2>&1; then
+    CCUSAGE_CMD="bunx ccusage"
+  else
+    CCUSAGE_CMD="npx ccusage@latest"
+  fi
+  CCUSAGE_SESSIONS=$($CCUSAGE_CMD session --json --offline --mode calculate 2>/dev/null || echo '{"sessions":[]}')
+  BACKFILL_RESULT=$(python3 -c "
+import json, sys, os, tempfile, re
+
+UUID_RE = re.compile(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')
+history_path = os.path.expandvars('$EVOLVE_HISTORY')
+sessions_raw = sys.stdin.read()
+
+# Build UUID -> totalCost map from ccusage sessions (projectPath contains UUID)
+uuid_cost = {}
+try:
+    data = json.loads(sessions_raw)
+    sessions = data.get('sessions', []) if isinstance(data, dict) else data
+    for s in sessions:
+        pp = s.get('projectPath', '')
+        if '/' in pp:
+            uuid = pp.split('/')[-1]
+            if UUID_RE.match(uuid):
+                uuid_cost[uuid] = uuid_cost.get(uuid, 0) + s.get('totalCost', 0)
+except: pass
+
+if not uuid_cost:
+    print(json.dumps({'backfilled': 0, 'note': 'no ccusage session data with UUID'}))
+    sys.exit(0)
+
+# Read and backfill
+lines = open(history_path).readlines()
+updated = 0
+new_lines = []
+for line in lines:
+    try:
+        rec = json.loads(line.strip())
+        cost = rec.get('cost') or {}
+        sid = rec.get('session_id', '')
+        if (cost.get('session_cost_usd') is None
+            and isinstance(sid, str) and UUID_RE.match(sid) and sid in uuid_cost):
+            cost['session_cost_usd'] = round(uuid_cost[sid], 2)
+            imps = cost.get('improvements_count') or len(rec.get('improvements', []))
+            if imps and imps > 0:
+                cost['cost_per_improvement_usd'] = round(uuid_cost[sid] / imps, 2)
+            rec['cost'] = cost
+            new_lines.append(json.dumps(rec, ensure_ascii=False) + '\n')
+            updated += 1
+        else:
+            new_lines.append(line)
+    except:
+        new_lines.append(line)
+
+if updated > 0:
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(history_path))
+    with os.fdopen(fd, 'w') as f:
+        f.writelines(new_lines)
+    os.replace(tmp, history_path)
+
+print(json.dumps({'backfilled': updated, 'uuid_matches_available': len(uuid_cost)}))
+" <<< "$CCUSAGE_SESSIONS" 2>/dev/null || echo '{"backfilled": 0, "error": "backfill script failed"}')
+fi
+echo "  \"backfill_result\": $BACKFILL_RESULT,"
 
 # --- evolve コスト効率サマリ（evolve-history.jsonl から集計） ---
 EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
@@ -393,22 +643,6 @@ else
 fi
 echo "  \"deferred_open\": $DEFERRED_OPEN,"
 
-# JSONL deferred duplication metric (legacy data quality indicator)
-# 目的: JSONL の append-only 累積方式により同一 ID が複数 run に出現することの定量的記録
-# 解釈: total_entries と unique_ids の差分が大きいほど重複度が高い
-#       これは設計上の帰結であり異常ではない（各 run が状態スナップショットを記録）
-# 用途: deferred-status.json が正規ソースであることの裏付けデータ
-#       分析・改善判断には使用しない（legacy_audit_metric）
-# 注意: open 件数の確認には deferred_open フィールドを使用すること
-if [ -f "$HISTORY_FILE" ]; then
-  DEFERRED_TOTAL=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
-  DEFERRED_UNIQUE=$(jq -r '.deferred[]?.id // empty' "$HISTORY_FILE" 2>/dev/null | sort -u | wc -l | tr -d ' ')
-else
-  DEFERRED_TOTAL=0
-  DEFERRED_UNIQUE=0
-fi
-echo "  \"deferred_jsonl_quality\": {\"total_entries\": $DEFERRED_TOTAL, \"unique_ids\": $DEFERRED_UNIQUE, \"note\": \"legacy_audit_metric: not_for_analysis. See SKILL.md Step 0\"},"
-
 # --- 仮説テーブル自動集計（evolve-history.jsonl からの権威的カウント） ---
 # H1: Verifier pass/fail 全期間合計（.phases.verifier フィールド対応エントリのみ）
 # H4: 互換性クラス別改善件数（.improvements[].compatibility）
@@ -441,10 +675,11 @@ if [ -f "$HISTORY_FILE" ]; then
   H4_OTHER=${H4_OTHER:-0}
   H4_TOTAL=$((H4_CONSERVATIVE + H4_COMPATIBLE + H4_BREAKING + H4_OTHER))
 
-  # H5: 有効 UUID session_id 件数（UUID v4 パターン: 8-4-4-4-12 の hex 文字列）
-  # POSIX 互換 grep（grep -oP 非対応の macOS 向け: -E で代替）
+  # H5: ユニーク有効 UUID session_id 件数（UUID v4 パターン: 8-4-4-4-12 の hex 文字列）
+  # sort -u で重複除外: 同一 session_id が複数エントリに出現するケースに対応
   H5_VALID_UUIDS=$({ jq -r '.session_id // empty' "$HISTORY_FILE" 2>/dev/null | \
-    grep -cE '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; } || true)
+    grep -E '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' | \
+    sort -u | wc -l | tr -d ' '; } || true)
   H5_VALID_UUIDS=${H5_VALID_UUIDS:-0}
 else
   MAX_RUN=0

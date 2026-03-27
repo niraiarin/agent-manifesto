@@ -62,6 +62,18 @@
             "command": "bash .claude/hooks/l1-file-guard.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          "bash .claude/hooks/hallucination-check.sh"
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          "bash .claude/hooks/hallucination-check.sh"
+        ]
       }
     ],
     "PostToolUse": [

@@ -1,13 +1,22 @@
 {
   "schema_version": 1,
-  "last_updated_run": 50,
+  "last_updated_run": 63,
   "items": {
+    "observe-sh-backfill": {
+      "status": "resolved",
+      "reason": "dependencyBlocked",
+      "blocked_by": "SKILL.md L392-394 append-only 不変条件の修正が前提",
+      "opened_in_run": 59,
+      "resolved_in_run": 60,
+      "note": "Run 60 で SKILL.md に backfill 例外を明記し、observe.sh に ccusage backfill ロジックを追加。8 entries backfilled。"
+    },
     "v4-goodhart-hook": {
-      "status": "abandoned",
-      "abandoned_in_run": 13,
+      "status": "resolved",
       "reason": "actionSpaceExceeded",
       "opened_in_run": 7,
-      "note": "hook変更が必要でL4外。7 runs未解決で解消見込みなし"
+      "abandoned_in_run": 13,
+      "resolved_in_run": 63,
+      "note": "Run 13 で abandoned → Run 63 session で人間が L1 hook 変更を承認。PR #76 で l1-safety-check.sh/l1-file-guard.sh に gate_blocked イベント記録を追加。observe.sh の既存 V4 集計ロジックが機能するようになった。"
     },
     "v7-teamwork-concept-redesign": {
       "status": "abandoned",
@@ -164,11 +173,19 @@
       "note": "T4（出力の非決定性）が全ての計算エージェントに成り立つかの検討。temperature=0 + 決定論的推論エンジンでの反例可能性。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 35 で公理カード根拠を精緻化済み（temperature=0 でも浮動小数点非決定性は残存）。Lean 形式化は ∃ 量化で全エージェント普遍性を主張しておらず安全。manifesto.md 自然言語との乖離は manifesto-scope-declaration の Scope テーブルに含まれる。"
     },
     "h5-ccusage-cost-analysis": {
-      "status": "open",
+      "status": "resolved",
       "reason": "dependencyBlocked",
-      "blocked_by": "有効 session_id データ 10 件以上の蓄積（現在 8 件: run 39, 41, 42, 45, 46, 47, 49, 50。統計的傾向確認の最小サンプル数）",
+      "blocked_by": "有効 session_id データ 10 件以上の蓄積",
       "opened_in_run": 41,
-      "note": "H5 仮説の実証データ分析。ccusage session の projectPath 末尾 UUID で session_id と照合可能（Run 44 で実証）。予備データ: サブエージェントコスト $3.13-$5.90/run（3 データポイント）。run 40,43 は session_id=unknown で照合不可。閾値 10 件の根拠: 慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ。"
+      "resolved_in_run": 61,
+      "note": "解消条件到達。10 unique runs with session_cost_usd > 0 (runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60)。mean $4.47/session, median $4.77/session, range $0.15-$8.17。CPI mean $1.23/improvement, median $1.00/improvement。Run 49 ($0.15) は outlier (>2 sigma)。H5/H6 仮説テーブル更新済み。"
+    },
+    "hook-hallucination-detection": {
+      "status": "resolved",
+      "reason": "actionSpaceExceeded",
+      "opened_in_run": 54,
+      "note": "WARN mode で導入。G1 PASS (13/13, 0.051s), G2 FAIL (検出率3-6%), 全体 CONDITIONAL。#70 参照。",
+      "resolved_in_run": 63
     },
     "t3-llm-terminology": {
       "status": "resolved",

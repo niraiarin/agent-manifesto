@@ -1,0 +1,335 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "created": "2026-03-27",
+    "purpose": "GQM-based quality measurement schema for V1 (Skill Quality) and V3 (Output Quality)",
+    "source": "R1 (#85), G1a (#82) research findings",
+    "assumptions": [
+      "Structural tests > LLM judgment (SWE-bench lesson)",
+      "Process metrics ≠ quality metrics (Anthropic eval guide)",
+      "Self-assessment degrades accuracy (ICLR 2024 Huang et al.)",
+      "Hypotheses must be defined before data collection (GQM Basili)",
+      "Adversarial test required for all metrics"
+    ]
+  },
+  "v1_skill_quality": {
+    "goal": {
+      "object": "skills",
+      "purpose": "improving",
+      "quality_focus": "output quality and structural contribution",
+      "viewpoint": "structure maintainer",
+      "context": "self-evolving agent system"
+    },
+    "questions": {
+      "q1_structural_contribution": {
+        "text": "Are skills producing structurally non-trivial improvements?",
+        "metrics": {
+          "theorem_delta_per_run": {
+            "description": "Net change in Lean theorem count per evolve run",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .lean.theorems (delta between consecutive runs)",
+            "hypothesis": "> 0 per run (averaged over rolling window)",
+            "adversarial_test": "Can be gamed by adding trivial theorems — mitigated by R5 non-triviality gate"
+          },
+          "test_delta_per_run": {
+            "description": "Net change in acceptance test count per evolve run",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .tests.passed (delta between consecutive runs)",
+            "hypothesis": "> 0 per run (averaged over rolling window)",
+            "adversarial_test": "Can be gamed by adding trivial tests — mitigated by R5 non-triviality gate"
+          }
+        }
+      },
+      "q2_verification_quality": {
+        "text": "Are skill proposals passing independent verification?",
+        "metrics": {
+          "verifier_pass_rate": {
+            "description": "Ratio of verifier-passed proposals to total verified proposals",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .phases.verifier.pass_count / (pass_count + fail_count)",
+            "hypothesis": "> 50%",
+            "adversarial_test": "Can be gamed by lowering verifier standards — mitigated by R4 E1 separation"
+          },
+          "rejected_count_per_run": {
+            "description": "Number of rejected proposals per evolve run",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .rejected.length",
+            "hypothesis": "Decreasing trend over rolling window",
+            "adversarial_test": "Can be gamed by not proposing ambitious changes — cross-validate with q1 metrics"
+          }
+        }
+      },
+      "q3_operational_stability": {
+        "text": "Are skills operating stably?",
+        "metrics": {
+          "evolve_success_rate": {
+            "description": "Percentage of evolve runs completing successfully (EXISTING proxy, reclassified as process metric)",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .result == 'success'",
+            "hypothesis": "> 90%",
+            "reclassification_note": "Was primary V1 proxy. Now reclassified as process metric under Q3, not quality metric.",
+            "adversarial_test": "98% success with trivial improvements is possible — q1 metrics are the quality check"
+          },
+          "failure_type_distribution": {
+            "description": "Distribution of failure types in rejected proposals",
+            "scale": "nominal",
+            "source": "evolve-history.jsonl .rejected[].failure_type",
+            "hypothesis": "hypothesis_error is most frequent (indicates ambitious proposals, not systemic issues)",
+            "data_availability_note": "Standardized from Run 54 onward"
+          }
+        }
+      }
+    }
+  },
+  "v3_output_quality": {
+    "goal": {
+      "object": "agent outputs",
+      "purpose": "evaluating",
+      "quality_focus": "correctness and structural integrity",
+      "viewpoint": "structure maintainer",
+      "context": "self-evolving agent system"
+    },
+    "questions": {
+      "q1_acceptance_criteria": {
+        "text": "Do outputs meet acceptance criteria?",
+        "metrics": {
+          "test_pass_rate": {
+            "description": "Percentage of acceptance tests passing (EXISTING proxy, retained)",
+            "scale": "ratio",
+            "source": "tests/test-all.sh",
+            "hypothesis": "= 100%",
+            "adversarial_test": "100% with weak tests is meaningless — mitigated by R6 saturation detection"
+          },
+          "lean_build_health": {
+            "description": "Binary: Lean build succeeds with 0 sorry",
+            "scale": "binary",
+            "source": "lake build Manifest + sorry count",
+            "hypothesis": "= 1",
+            "adversarial_test": "Can be maintained by never adding new Lean code — cross-validate with v1.q1 theorem delta"
+          }
+        }
+      },
+      "q2_structural_integrity": {
+        "text": "Do outputs maintain structural integrity?",
+        "metrics": {
+          "axiom_count_stability": {
+            "description": "Lean axiom count should not decrease (axioms are foundational)",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .lean.axioms",
+            "hypothesis": "Non-decreasing",
+            "adversarial_test": "Axiom inflation is possible but costly (requires Lean type-checking)"
+          },
+          "compatibility_classification": {
+            "description": "Distribution of commit compatibility classifications",
+            "scale": "nominal",
+            "source": "git commit messages (P3 hook enforces classification)",
+            "hypothesis": "conservative extension is most frequent",
+            "adversarial_test": "Mislabeling is possible — verifier should cross-check"
+          }
+        }
+      },
+      "q3_error_trend": {
+        "text": "Is the error rate decreasing over time?",
+        "metrics": {
+          "hallucination_total": {
+            "description": "Total count of typed rejected proposals (observation_error + hypothesis_error + assumption_error + precondition_error)",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .rejected[].failure_type",
+            "hypothesis": "Decreasing trend over rolling window",
+            "data_availability_note": "Standardized from Run 54 onward"
+          },
+          "loopback_count_per_run": {
+            "description": "Total loopback count (re-attempts due to errors) per run",
+            "scale": "ratio",
+            "source": "evolve-history.jsonl .rejected[].loopback_count",
+            "hypothesis": "Decreasing trend over rolling window",
+            "data_availability_note": "Standardized from Run 54 onward"
+          }
+        }
+      }
+    }
+  },
+  "governance_metrics": {
+    "_description": "Metrics that are OBSERVED but NEVER used as optimization targets in the /evolve loop. Their purpose is post-hoc validation of improvement quality. If optimization metrics improve but governance metrics degrade, Goodhart pressure is likely active.",
+    "_source": "R2 (#86), G1a (#82) Goodhart avoidance research",
+    "_enforcement": "SKILL.md explicitly labels these as governance. Observer reports them; Hypothesizer must NOT propose improvements that target them directly.",
+    "structural_anchors": {
+      "test_pass_count": {
+        "description": "Absolute number of acceptance tests passing (not the rate)",
+        "source": "tests/test-all.sh",
+        "current_value_note": "248 tests",
+        "gaming_resistance": "Adding trivial tests inflates count — mitigated by R5 non-triviality gate",
+        "why_governance": "Test count is a ceiling indicator. Optimizing it directly incentivizes trivial test additions."
+      },
+      "lean_axiom_count": {
+        "description": "Total axiom count in Lean formalization",
+        "source": "grep -r '^axiom ' --include='*.lean'",
+        "current_value_note": "63 axioms",
+        "gaming_resistance": "Adding axioms requires Lean type-checking — high cost to game",
+        "why_governance": "Axioms are foundational claims. Increasing them without justification weakens the formal system."
+      },
+      "lean_theorem_count": {
+        "description": "Total theorem count in Lean formalization",
+        "source": "grep -r '^theorem ' --include='*.lean'",
+        "current_value_note": "291 theorems",
+        "gaming_resistance": "Theorems must type-check — medium cost to game with trivial theorems",
+        "why_governance": "Theorem count is used in V1.q1 as a DELTA (optimization). The ABSOLUTE count is governance — it validates that deltas are accumulating correctly."
+      },
+      "lean_sorry_count": {
+        "description": "Count of sorry (unproven) in Lean — must remain 0",
+        "source": "grep -r 'sorry' --include='*.lean'",
+        "current_value_note": "0 sorry",
+        "gaming_resistance": "Cannot be gamed upward unintentionally; zero is the only valid value",
+        "why_governance": "This is a CONSTRAINT, not an optimization target. The agent should never 'try to reduce sorry' — it should never introduce sorry in the first place."
+      }
+    },
+    "health_indicators": {
+      "de_bruijn_factor": {
+        "description": "Ratio of formal lines to informal specification lines (≈4.0 is healthy)",
+        "source": "AxiomQuality.lean computation",
+        "gaming_resistance": "Changing this requires significant Lean code changes",
+        "why_governance": "Optimizing this directly would incentivize verbose proofs (increase) or deleting proofs (decrease)."
+      },
+      "v2_context_efficiency": {
+        "description": "Tool calls per session — hub variable with tradeoffs against V1,V3,V5,V6,V7",
+        "source": "tool-usage.jsonl",
+        "gaming_resistance": "Low — agent could reduce tool calls by doing less work",
+        "why_governance": "V2 is a hub variable. Optimizing it directly degrades V1 and V3 (tradeoff_context_is_hub in Observable.lean)."
+      }
+    },
+    "cross_validation_rule": "When v1.q1 metrics (theorem_delta, test_delta) show improvement but governance metrics (absolute counts) are flat or declining, investigate for Goodhart pressure."
+  },
+  "proxy_correlation": {
+    "_description": "Rolling Pearson correlation between optimization proxies and structural outcomes. Weakening correlation signals possible Goodhart pressure. Run: bash .claude/skills/evolve/scripts/proxy-correlation.sh",
+    "_source": "R3 (#87)",
+    "monitored_pairs": [
+      {"proxy": "improvements_count", "outcome": "theorem_delta", "hypothesis": "positive correlation"},
+      {"proxy": "improvements_count", "outcome": "test_delta", "hypothesis": "positive correlation"},
+      {"proxy": "verifier_pass_rate", "outcome": "theorem_delta", "hypothesis": "positive correlation"},
+      {"proxy": "verifier_pass_rate", "outcome": "test_delta", "hypothesis": "positive correlation"}
+    ],
+    "window_size": 10,
+    "alert_threshold": "trend == 'weakening' (second-half avg < first-half avg - 0.1)",
+    "baseline_2026_03_27": {
+      "data_points": 55,
+      "improvements_vs_theorem_delta": {"overall": 0.08, "trend": "weakening"},
+      "improvements_vs_test_delta": {"overall": 0.328, "trend": "stable"},
+      "verifier_rate_vs_theorem_delta": {"overall": -0.075, "trend": "weakening"},
+      "verifier_rate_vs_test_delta": {"overall": 0.176, "trend": "weakening"},
+      "interpretation": "Weak overall correlations expected at n=55. 'weakening' trends in theorem-related pairs likely reflect diminishing low-hanging fruit rather than Goodhart pressure, as governance metrics (R2) show healthy growth. Monitor for divergence as data accumulates."
+    }
+  },
+  "non_triviality_gate": {
+    "_description": "Rule-based assessment of whether an evolve run produced structurally non-trivial improvements. Score 0-4 based on conditions met. Prevents Goodhart gaming where metrics improve but improvements are trivial.",
+    "_source": "R5 (#89)",
+    "conditions": {
+      "c1_theorem_growth": {
+        "rule": "lean.theorems delta > 0 (compared to previous run)",
+        "rationale": "Adding a Lean theorem requires type-checking — structurally non-trivial"
+      },
+      "c2_test_growth": {
+        "rule": "tests.passed delta > 0 (compared to previous run)",
+        "rationale": "Adding acceptance tests extends the quality surface"
+      },
+      "c3_axiom_change": {
+        "rule": "lean.axioms delta != 0 (compared to previous run)",
+        "rationale": "Axiom changes are foundational — always non-trivial"
+      },
+      "c4_multi_verification": {
+        "rule": "phases.verifier.pass_count >= 2",
+        "rationale": "Multiple independently verified improvements indicate breadth"
+      }
+    },
+    "score_interpretation": {
+      "0": "trivial — documentation/config changes only",
+      "1": "moderate — single structural dimension improved",
+      "2": "moderate — two structural dimensions improved",
+      "3-4": "substantial — broad structural improvement"
+    },
+    "baseline_2026_03_27": {
+      "data_points": 59,
+      "score_0_runs": 32,
+      "score_0_percent": 54,
+      "note": "54% of runs are trivial by this definition — expected for a mature system where low-hanging fruit is depleted"
+    }
+  },
+  "saturation_detection": {
+    "_description": "Detects when metrics lose discriminative power due to ceiling effects. When test suite stops growing while pass rate stays at 100%, the metric stops providing useful quality signal.",
+    "_source": "R6 (#90)",
+    "rules": {
+      "test_plateau_warning": {
+        "condition": "test_delta = 0 for 5 consecutive runs",
+        "severity": "warning",
+        "action": "Observer should flag test suite growth stall as improvement candidate"
+      },
+      "test_saturation_alert": {
+        "condition": "test_delta = 0 for 10 consecutive runs",
+        "severity": "alert",
+        "action": "Mandatory: new test categories must be proposed in next evolve run"
+      }
+    },
+    "baseline_2026_03_27": {
+      "current_test_count": 248,
+      "consecutive_zero_delta": 1,
+      "status": "growing",
+      "historical_plateaus": [
+        {"count": 165, "duration_runs": 20, "period": "runs 22-41"},
+        {"count": 140, "duration_runs": 9},
+        {"count": 146, "duration_runs": 8},
+        {"count": 172, "duration_runs": 7}
+      ],
+      "note": "Longest historical plateau was 20 runs at 165 tests. Current growth rate (last 10 runs avg 3.3 tests/run) suggests saturation is not imminent."
+    }
+  },
+  "priority_bias": {
+    "_description": "V1-V7 間の優先順位は静的に導出不可能 (G1b-1 #91 証明済み)。priority(V_i, V_j) = g(f(t), bias(t)) モデルに従い、bias(t) は T6 権限を持つ主体が設定する。このセクションは bias(t) のスナップショットであり、必ず陳腐化する。",
+    "_source": "G1b-2 (#92)",
+    "_model": "priority(V_i, V_j) = g(f(t), bias(t)) where f(t) = system state function, bias(t) = priority bias function",
+    "_authority": "T6 delegated to AI (2026-03-27)",
+    "current_snapshot": {
+      "timestamp": "2026-03-27",
+      "run_at_decision": 63,
+      "bias_setter": "AI (delegated by human via T6)",
+      "f_t_observations": {
+        "system_phase": "stable operation — defect absence achieved, non-triviality is next bottleneck",
+        "theorem_growth_rate": "2.0/run (last 10) — decelerating",
+        "test_growth_rate": "4.1/run (last 10) — still active",
+        "verifier_pass_rate": "75% — stable",
+        "success_rate": "98% — saturated",
+        "test_pass_rate": "99-100% — near saturation",
+        "r3_correlation_trend": "weakening for theorem-related pairs"
+      },
+      "priority_order": [
+        {"rank": 1, "variable": "V3", "reason": "proxy graduation is the project goal (#77). defect absence achieved but proxy still provisional"},
+        {"rank": 2, "variable": "V1", "reason": "GQM redefined (R1) but quality definition pending confirmation"},
+        {"rank": 3, "variable": "V4", "reason": "100% = Goodhart example. gate_blocked logging not implemented. signal non-functional"},
+        {"rank": 4, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
+        {"rank": 5, "variable": "V5", "reason": "secondary to V1/V3 proxy graduation"},
+        {"rank": 6, "variable": "V6", "reason": "secondary to V1/V3 proxy graduation"},
+        {"rank": 7, "variable": "V7", "reason": "secondary to V1/V3 proxy graduation"}
+      ]
+    },
+    "review_policy": {
+      "description": "bias(t) is a function of time and WILL become stale. Mandatory review triggers:",
+      "triggers": [
+        {"condition": "V1 or V3 proxy graduates to formal", "action": "Re-evaluate full priority order"},
+        {"condition": "Saturation alert (R6) fires", "action": "Re-evaluate affected V's priority"},
+        {"condition": "20 runs elapsed since last review (next: Run 83)", "action": "Full bias(t) re-evaluation"},
+        {"condition": "Human explicitly requests re-evaluation", "action": "Full bias(t) re-evaluation"}
+      ],
+      "next_mandatory_review": "Run 83 or V1/V3 formal graduation, whichever comes first"
+    }
+  },
+  "deprecated_proxies": {
+    "v1_skill_invocation_rate": {
+      "reason": "Measures 'are skills used?' not 'are skills producing quality outputs?' — GQM goal-question mismatch",
+      "replaced_by": "v1.q1 (structural contribution) + v1.q2 (verification quality)",
+      "retained_as": "v1.q3.evolve_success_rate (reclassified as process metric)"
+    },
+    "v3_fix_ratio_percent": {
+      "reason": "Regex pattern broken for this project's commit style ([evolve] Fix...). fix_ratio stuck at 0%",
+      "replaced_by": "v3.q3 (error trend via hallucination proxy)",
+      "action": "Remove from observe.sh or fix regex"
+    }
+  }
+}
