@@ -234,6 +234,9 @@ as a non-logical axiom within the formal system.
     Content: V1 (skill quality) is measurable
     Basis: with/without comparison via benchmark.json exists as a measurement procedure
     Source: Ontology.lean V1 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for skill quality is in principle unconstructible -/
 axiom v1_measurable : Measurable skillQuality
 
@@ -242,6 +245,9 @@ axiom v1_measurable : Measurable skillQuality
     Content: V2 (context efficiency) is measurable
     Basis: the ratio of task completion rate to consumed token count exists as a measurement procedure
     Source: Ontology.lean V2 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for context efficiency is in principle unconstructible -/
 axiom v2_measurable : Measurable contextEfficiency
 
@@ -250,6 +256,9 @@ axiom v2_measurable : Measurable contextEfficiency
     Content: V3 (output quality) is measurable
     Basis: gate pass rate and review finding count exist as measurement procedures
     Source: Ontology.lean V3 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for output quality is in principle unconstructible -/
 axiom v3_measurable : Measurable outputQuality
 
@@ -258,6 +267,9 @@ axiom v3_measurable : Measurable outputQuality
     Content: V4 (gate pass rate) is measurable
     Basis: pass/fail statistics exist as a measurement procedure
     Source: Ontology.lean V4 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for gate pass rate is in principle unconstructible -/
 axiom v4_measurable : Measurable gatePassRate
 
@@ -266,6 +278,9 @@ axiom v4_measurable : Measurable gatePassRate
     Content: V5 (proposal accuracy) is measurable
     Basis: human approval/rejection rate exists as a measurement procedure
     Source: Ontology.lean V5 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for proposal accuracy is in principle unconstructible -/
 axiom v5_measurable : Measurable proposalAccuracy
 
@@ -274,6 +289,9 @@ axiom v5_measurable : Measurable proposalAccuracy
     Content: V6 (knowledge structure quality) is measurable
     Basis: context restoration speed and retirement target detection rate exist as measurement procedures
     Source: Ontology.lean V6 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for knowledge structure quality is in principle unconstructible -/
 axiom v6_measurable : Measurable knowledgeStructureQuality
 
@@ -282,6 +300,9 @@ axiom v6_measurable : Measurable knowledgeStructureQuality
     Content: V7 (task design efficiency) is measurable
     Basis: task completion rate / consumed resource ratio exists as a measurement procedure
     Source: Ontology.lean V7 definition
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for task design efficiency is in principle unconstructible -/
 axiom v7_measurable : Measurable taskDesignEfficiency
 
@@ -324,6 +345,9 @@ def systemHealthy (threshold : Nat) (w : World) : Prop :=
              Indirectly observed from investment behavior (fluctuations in resource allocation)
     Basis: trust is concretized as investment behavior (resource allocation fluctuations)
     Source: manifesto.md Section 6
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for trust level is in principle unconstructible -/
 axiom trust_measurable :
   ∀ (agent : Agent), Measurable (trustLevel agent)
@@ -333,6 +357,9 @@ axiom trust_measurable :
     Content: degradationLevel is measurable. Computed from temporal changes in V1–V7
     Basis: if V1–V7 are Measurable, their rate of change is also computable
     Source: design of P4 (observability of degradation)
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: if it is shown that a measurement procedure for degradation level is in principle unconstructible -/
 axiom degradation_measurable : Measurable degradationLevel
 

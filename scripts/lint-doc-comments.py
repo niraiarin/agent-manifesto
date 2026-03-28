@@ -219,7 +219,8 @@ def lint_file(filepath):
 
                 # A1/A2/A3: Axiom card checks
                 if "[Axiom Card]" in doc_text:
-                    for field in ["Layer:", "Content:", "Basis:", "Source:"]:
+                    for field in ["Layer:", "Content:", "Basis:", "Source:",
+                                  "Adopted:", "Last validated:", "Review cycle:"]:
                         if field not in doc_text:
                             violations.append(Violation(
                                 filename, decl_doc_start, "A2", "warning",

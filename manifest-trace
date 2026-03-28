@@ -123,9 +123,9 @@ parse_lean_dependencies() {
   echo "$result"
 }
 
-# Lean の [Axiom Card] doc comment から Basis/Source/Layer を抽出
+# Lean の [Axiom Card] doc comment から Basis/Source/Layer/鮮度メタデータを抽出
 # 出力: JSON Lines — 1行1公理カード
-# {"proposition":"T1","axiom":"session_bounded","layer":"...","content":"...","basis":"...","source":"...","refutation":"...","file":"Axioms.lean"}
+# {"proposition":"T1","axiom":"session_bounded","layer":"...","basis":"...","source":"...","adopted":"2026-03-22","last_validated":"2026-03-28","review_cycle":"12m",...}
 parse_lean_evidence() {
   if [[ -n "$_EVIDENCE_CACHE" ]]; then
     echo "$_EVIDENCE_CACHE"
@@ -161,7 +161,7 @@ parse_lean_evidence() {
             result = lines[i]
             continue
           }
-          if (found && lines[i] ~ /^[[:space:]]*(Layer|Content|Basis|Source|Refutation condition):/) {
+          if (found && lines[i] ~ /^[[:space:]]*(Layer|Content|Basis|Source|Adopted|Last validated|Review cycle|Refutation condition):/) {
             found = 0
             continue
           }
@@ -197,13 +197,17 @@ parse_lean_evidence() {
         content = extract_field(card, "Content")
         basis = extract_field(card, "Basis")
         source = extract_field(card, "Source")
+        adopted = extract_field(card, "Adopted")
+        last_validated = extract_field(card, "Last validated")
+        review_cycle = extract_field(card, "Review cycle")
         refutation = extract_field(card, "Refutation condition")
         prop_id = extract_prop_id(source)
 
         if (prop_id != "") {
-          printf "{\"proposition\":\"%s\",\"axiom\":\"%s\",\"layer\":\"%s\",\"content\":\"%s\",\"basis\":\"%s\",\"source\":\"%s\",\"refutation\":\"%s\",\"file\":\"%s\"}\n", \
+          printf "{\"proposition\":\"%s\",\"axiom\":\"%s\",\"layer\":\"%s\",\"content\":\"%s\",\"basis\":\"%s\",\"source\":\"%s\",\"adopted\":\"%s\",\"last_validated\":\"%s\",\"review_cycle\":\"%s\",\"refutation\":\"%s\",\"file\":\"%s\"}\n", \
             json_escape(prop_id), json_escape(axiom_name), json_escape(layer), \
             json_escape(content), json_escape(basis), json_escape(source), \
+            json_escape(adopted), json_escape(last_validated), json_escape(review_cycle), \
             json_escape(refutation), json_escape(file)
         }
       }
@@ -634,7 +638,7 @@ cmd_json() {
           depends_on:  [$deps[] | select(.child == $pid) | .parent],
           depended_by: [$deps[] | select(.parent == $pid) | .child],
           artifacts: [$matching[] | {id, type, path, scope, enforces}],
-          evidence: [$evid[] | select(.proposition == $pid) | {axiom, layer, basis, source, refutation, file}],
+          evidence: [$evid[] | select(.proposition == $pid) | {axiom, layer, basis, source, adopted, last_validated, review_cycle, refutation, file}],
           coverage: {
             total: ($matching | length),
             by_type: $by_type,
@@ -1054,6 +1058,80 @@ cmd_selfcheck() {
     echo -e "  ${GREEN}✓ 根ノード検証 OK / 強度単調性 OK / DAG 閉路なし${NC}"
   fi
   errors=$((errors + struct_errors))
+
+  echo ""
+
+  # --- 検査 8: 根拠の鮮度チェック ---
+  # Axiom Card の Last validated + Review cycle から期限切れを検出
+  echo -e "${CYAN}検査 8: 根拠の鮮度チェック（Axiom Card 鮮度メタデータ）${NC}"
+
+  local today
+  today=$(date +%Y-%m-%d)
+
+  # evidence を JSON 配列として一括処理
+  local evidence_all
+  evidence_all=$(parse_lean_evidence | grep -v '^$' | jq -s '.')
+  local total_cards
+  total_cards=$(echo "$evidence_all" | jq 'length')
+
+  # jq で期限切れ判定: review_cycle の月数を加算して today と比較
+  # jq 内で日付計算: YYYY-MM-DD + Nm の簡易計算
+  local freshness_report
+  freshness_report=$(echo "$evidence_all" | jq -r --arg today "$today" '
+    def add_months(date_str; months):
+      (date_str | split("-")) as $parts |
+      ($parts[0] | tonumber) as $y |
+      ($parts[1] | tonumber) as $m |
+      ($parts[2]) as $d |
+      (($m - 1 + months) % 12 + 1) as $new_m |
+      ($y + (($m - 1 + months) / 12 | floor)) as $new_y |
+      "\($new_y)-\($new_m | tostring | if length < 2 then "0" + . else . end)-\($d)";
+
+    .[] |
+    if (.last_validated == "" or .last_validated == null or .review_cycle == "" or .review_cycle == null) then
+      "MISSING\t\(.proposition)/\(.axiom)"
+    else
+      (.review_cycle | gsub("m$"; "") | tonumber) as $months |
+      add_months(.last_validated; $months) as $next_review |
+      if $today > $next_review then
+        "EXPIRED\t\(.proposition)/\(.axiom)\t\(.last_validated)\t\($next_review)"
+      else
+        "OK\t\(.proposition)/\(.axiom)\t\(.last_validated)\t\($next_review)"
+      end
+    end
+  ')
+
+  local expired_count=0
+  local missing_count=0
+  local ok_count=0
+
+  while IFS=$'\t' read -r status name last_val next_rev; do
+    case "$status" in
+      EXPIRED)
+        echo -e "  ${RED}✗ ${name}${NC}: 期限切れ（last validated: ${last_val}, next review: ${next_rev}）"
+        expired_count=$((expired_count + 1))
+        ;;
+      MISSING)
+        echo -e "  ${YELLOW}⚠ ${name}${NC}: 鮮度メタデータなし"
+        missing_count=$((missing_count + 1))
+        ;;
+      OK)
+        ok_count=$((ok_count + 1))
+        ;;
+    esac
+  done <<< "$freshness_report"
+
+  if [[ "$expired_count" -eq 0 && "$missing_count" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ 全 ${total_cards} 件の Axiom Card が鮮度基準内${NC}"
+  else
+    if [[ "$missing_count" -gt 0 ]]; then
+      echo -e "  ${YELLOW}(${missing_count} 件は鮮度メタデータなし — 警告のみ)${NC}"
+    fi
+    if [[ "$expired_count" -gt 0 ]]; then
+      echo -e "  ${RED}${expired_count} 件が期限切れ — 再評価が必要${NC}"
+      errors=$((errors + expired_count))
+    fi
+  fi
 
   echo ""
 

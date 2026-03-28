@@ -64,6 +64,9 @@ E1 is decomposed into three axioms:
     Basis: A principle repeatedly demonstrated in scientific peer review,
           financial auditing, software testing, etc.
     Source: manifesto.md E1 "Verification Requires Independence"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: If self-verification is demonstrated to have detection power
               equal to external verification (e.g., realization of complete self-awareness) -/
 axiom verification_requires_independence :
@@ -80,6 +83,9 @@ axiom verification_requires_independence :
     Basis: Due to T4 (probabilistic output), the bias of the same process
           affects both generation and evaluation, structurally degrading detection power.
     Source: manifesto.md E1 + Principles.lean e1b_from_e1a proves derivation from E1a
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: Same as the refutation condition for E1a -/
 axiom no_self_verification :
   ∀ (agent : Agent) (action : Action) (w : World),
@@ -96,6 +102,9 @@ axiom no_self_verification :
           audit firm rotation requirements, etc.
     Source: manifesto.md E1 "When a process with the same biases handles both
             generation and evaluation, detection power degrades"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: If it is demonstrated that bias correlation has no effect on detection power -/
 axiom shared_bias_reduces_detection :
   ∀ (a b : Agent) (action : Action) (w : World),
@@ -134,6 +143,9 @@ and vulnerability) becomes subject to revision.
     Basis: It has been repeatedly observed across all tools that capability enables
           both positive and negative outcomes (Terminology Reference §9.1 empirical propositions).
     Source: manifesto.md E2 "Capability Growth Is Inseparable from Risk Growth"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 6m
     Refutation condition: If means to increase capability while completely containing risk
               are discovered (e.g., a perfect sandbox)
 
