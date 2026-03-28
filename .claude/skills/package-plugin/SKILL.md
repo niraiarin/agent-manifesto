@@ -46,9 +46,55 @@ bash .claude/skills/package-plugin/scripts/package.sh {{args}}
 7. README.md を自動生成（コンポーネント数を自動カウント）
 8. 検証: JSON 妥当性、参照整合性、絶対パスの不在
 
+## artifact-manifest.json テンプレート
+
+パッケージに `artifact-manifest.json` テンプレートを同梱する。
+外部プロジェクトが `manifest-trace --manifest=<path>` で突合に使用する。
+
+テンプレートは本リポジトリの `artifact-manifest.json` から propositions を継承し、
+パッケージに含まれるコンポーネントを artifacts として登録する:
+
+```json
+{
+  "version": "0.2.0",
+  "parent": "agent-manifesto",
+  "scopes": ["plugin"],
+  "propositions": ["T1", "T2", ...],
+  "artifacts": [
+    {
+      "id": "plugin-hook:<name>",
+      "type": "hook",
+      "path": ".claude/hooks/<name>.sh",
+      "refs": ["L1", "T6"],
+      "scope": "plugin"
+    }
+  ]
+}
+```
+
+### 生成ルール
+
+1. `propositions` は本リポジトリの全 36 命題をコピー
+2. `artifacts` はパッケージに含まれる各コンポーネントから自動生成:
+   - hook → `plugin-hook:<name>` (refs は hook 内のコメントから抽出、なければ空)
+   - rule → `plugin-rule:<name>` (refs は rule 内の命題 ID から抽出)
+   - skill → `plugin-skill:<name>`
+   - agent → `plugin-agent:<name>`
+3. `scope` は全て `"plugin"`
+4. refs の自動抽出: ファイル内の `T[0-9]+|E[0-9]+|P[0-9]+|L[0-9]+|D[0-9]+` パターン
+
+### manifest-trace との突合
+
+```bash
+# 外部プロジェクトで実行
+manifest-trace --manifest=path/to/plugin/artifact-manifest.json coverage
+manifest-trace --manifest=path/to/plugin/artifact-manifest.json --scope=plugin health
+```
+
 ## D9 自己適用
 
 このスキル自身の更新:
 - .claude/ に新しいコンポーネント種別が追加された場合、scripts/package.sh を更新
 - plugin.json のスキーマが変わった場合、スクリプトの生成部分を更新
 - 新しい検証項目が必要になった場合、スクリプトの検証セクションに追加
+- artifact-manifest.json のスキーマが変わった場合、テンプレート生成を更新
