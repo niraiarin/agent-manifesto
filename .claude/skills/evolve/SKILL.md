@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 172 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 249 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -321,6 +321,31 @@ Step 1: 根本原因を分類する:
 - **assumption_error**: 前提条件の誤り（互換性分類の誤り、行動空間外等）
 - **precondition_error**: 先行フェーズの成果物が不十分
 
+**failure_subtype（任意の細分類、evolve-history.jsonl の rejected エントリに記録可）:**
+
+| failure_subtype | 親 failure_type | 説明 | 推定基準の例 |
+|----------------|----------------|------|------------|
+| `H_no_pre_verification` | hypothesis_error | 事前検証チェックリスト未実施（ファイル未読・数値未確認等） | FAIL 理由に「ファイルを確認していない」「読んでいない」が含まれる |
+| `H_trivially_true` | hypothesis_error | trivially-true 定理の提案（rfl 証明・定義の直接展開等） | FAIL 理由に「trivially true」「rfl」「定義の展開」が含まれる |
+| `H_redundancy_check` | hypothesis_error | 既存定義・既存制約との重複確認不足 | FAIL 理由に「既に存在する」「重複」「既存の」が含まれる |
+| `H_impl_specification` | hypothesis_error | 実装手順の具体性不足（位置・内容が曖昧） | FAIL 理由に「曖昧」「位置不明」「具体性不足」が含まれる |
+| `H_repeated_failure` | hypothesis_error | 同一改善案の繰り返し提案（段階的抑止ルール違反） | FAIL 理由に「繰り返し」「前回も」「同一案」が含まれる |
+| `H_wrong_premise` | hypothesis_error | 概念の誤適用・所有権の誤認識・カテゴリエラー（過去の決定との矛盾を含む） | FAIL 理由に「前提が誤り」「捏造」「存在しないフィールド」「矛盾」が含まれる |
+| `H_technical_validation` | hypothesis_error | スクリプト・コマンドの技術的妥当性未検証（構文エラー・型不整合・ゼロ除算等） | FAIL 理由に「構文エラー」「型不整合」「コマンドが失敗」が含まれる |
+| `O_data_quality` | observation_error | 観察データの品質問題（手動カウント誤り・パス誤り等） | FAIL 理由に「手動カウント」「数値が不一致」「パスが誤り」が含まれる |
+
+> 注記: append-only 規約のため、旧エントリには failure_subtype がない。
+> Observer のクエリは null チェックを含めること（下記 Observer AGENT.md 参照）。
+
+**none エントリの推定分類（Observer 向けガイダンス）:**
+- Observer は failure_subtype が null/none のエントリについて、FAIL 理由テキストから上記「推定基準の例」を参照し推定分類を試みてよい
+- 推定結果は Observer の出力（観察レポート）にのみ含める。JSONL の遡及修正は append-only 規約により禁止
+- 推定は `(推定)` を明示して確定値と区別すること（例: `failure_subtype: H_wrong_premise (推定)`）
+
+**Hypothesizer 向けガイダンス（failure_subtype 活用）:**
+- 同一 failure_subtype に該当する改善案を提案する場合、evolve-history.jsonl の該当 FAIL エントリを事前確認し、繰り返し失敗の回避策を明示すること
+- 特に `H_repeated_failure` は段階的抑止ルール（SKILL.md Step 2）に違反するため提案前に必ず過去の FAIL 履歴を確認すること
+
 Step 2: ループバック判定（EvolveSkill.lean `loopbackTarget`）:
 - observation_error → Observer を再起動し、当該項目を再観察（Phase 1）
 - hypothesis_error → Hypothesizer を再起動し、正確なデータで再設計（Phase 2）
@@ -371,7 +396,16 @@ Integrator は以下を実行:
 2. `lake build Manifest` で Lean ビルド成功を確認
 3. `bash tests/test-all.sh` でテスト全通過を確認
 4. git commit（互換性分類付き）
-5. evolve-history.jsonl に記録（以下の `cost` フィールドを含む）
+5. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
+6. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
+
+**evolve-history.jsonl 記録の不変条件:**
+- evolve-history.jsonl には 1 Run につき 1 エントリのみ追加する。暫定記録は行わない。
+- 記録は全フェーズ完了後（Phase 4: git commit 後）に 1 回のみ実行する。
+- **backfill 例外**: 既存エントリの null フィールドを事後補完する操作（例: observe.sh による session_cost_usd の ccusage 照合補完）は、エントリの追加ではなくフィールド更新であり、ファイルの行数は変わらない。上記の不変条件に該当しない。backfill は以下の条件を全て満たす場合にのみ許可される:
+  1. 対象フィールドの現在値が null であること（非 null フィールドの上書きは禁止）
+  2. 補完値の出典が検証可能であること（例: ccusage session の projectPath 末尾 UUID と session_id の照合）
+  3. backfill の実行記録が observe.sh の出力に含まれること（P4 可観測性）
 
 **コスト効率記録フォーマット（T7 可観測性）:**
 evolve-history.jsonl の各エントリに以下のフィールドを追加:
@@ -401,21 +435,55 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 
 ## 品質指標（AxiomQuality.lean と接続）
 
-各 evolve 実行で以下を計測し、改善を定量化する:
+各 evolve 実行で以下を計測し、改善を定量化する。
+指標は **最適化指標**（改善を目指す）と **ガバナンス指標**（観測のみ、最適化対象にしない）に分離される。
+ガバナンス指標を直接の改善目標にしてはならない（Goodhart 耐性、R2 #86）。
+
+### 最適化指標（Hypothesizer が改善を提案してよい）
 
 | 指標 | 計測方法 | 改善方向 |
 |------|---------|---------|
-| axiom count | `grep -r "^axiom " --include="*.lean"` | → (不要な増加を避ける) |
-| theorem count | `grep -r "^theorem " --include="*.lean"` | ↑ |
-| sorry count | `grep -r "sorry" --include="*.lean"` | ↓ (0 を維持) |
-| warning count | `lake build 2>&1 \| grep warning` | ↓ (0 を維持) |
-| test pass rate | `bash tests/test-all.sh` | ↑ (100% を維持) |
+| theorem delta/run | evolve-history.jsonl .lean.theorems 差分 | ↑ |
+| test delta/run | evolve-history.jsonl .tests.passed 差分 | ↑ |
+| verifier pass rate | .phases.verifier pass/(pass+fail) | ↑ |
 | compression ratio | axiomCount の定義より | ↑ |
-| De Bruijn factor | AxiomQuality.lean より | → (4.0 前後が健全) |
-| V1-V7 | /metrics スキル | 各 V に応じた改善方向 |
-| V5（注記） | v5-approvals.jsonl（UserPromptSubmit hook）の承認率。H1 Verifier pass rate とは異なる指標。計測単位: UserPromptSubmit hook が承認パターンに一致した応答数 | ↑ |
-| ccusage (T7) | `bunx ccusage daily --json --offline` | 定量的コスト観測 |
+| V5（注記） | v5-approvals.jsonl（UserPromptSubmit hook）の承認率。H1 Verifier pass rate とは異なる指標 | ↑ |
 | cost/improvement (T7) | evolve-history.jsonl `cost.cost_per_improvement_usd` | ↓（効率向上） |
+
+### ガバナンス指標（観測のみ — Hypothesizer は直接の改善目標にしない）
+
+| 指標 | 計測方法 | 期待値 | ガバナンス理由 |
+|------|---------|--------|---------------|
+| test pass count (絶対数) | `bash tests/test-all.sh` | 249+ | 直接最適化すると自明なテスト追加を誘発 |
+| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 63 (安定) | 不要な公理追加は形式系を弱める |
+| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 338+ (増加) | delta は最適化、絶対数はガバナンス |
+| sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
+| warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
+| De Bruijn factor | AxiomQuality.lean より | ≈4.0 | 直接最適化すると冗長な証明を誘発 |
+| V2 (context efficiency) | tool-usage.jsonl | stable | hub 変数。最適化すると V1,V3 が劣化 |
+| ccusage (T7) | `bunx ccusage daily --json --offline` | 観測 | コスト観測は直接最適化しない |
+
+### 交差検証ルール
+
+最適化指標（theorem delta 等）が改善を示しているのにガバナンス指標（絶対数）が
+横ばいまたは低下している場合、Goodhart 圧力を疑い調査する。
+
+### V1-V7 優先順位 (bias(t) スナップショット)
+
+V1-V7 間の優先順位は静的に導出不可能（G1b-1 #91 Lean 証明済み）。
+`priority(V_i, V_j) = g(f(t), bias(t))` モデルに従い、bias(t) は T6 権限を持つ
+主体（人間 or 委譲先 AI）が設定する。現在の bias(t₀):
+
+**V3 > V1 > V4 > V2 > V5 > V6 > V7** (設定: 2026-03-27, Run 63)
+
+根拠: V1/V3 の proxy formal graduation (#77) がプロジェクト目標。
+詳細は `benchmark.json` の `priority_bias` セクションを参照。
+
+**レビュー義務**: bias(t) は時間の関数であり必ず陳腐化する。以下で再評価:
+- V1 or V3 が formal に昇格した時
+- 飽和警告 (R6) 発動時
+- 20 runs 経過（次回: Run 83）
+- 人間が明示的に要求した時
 
 ## 終了条件
 
@@ -515,14 +583,14 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（51回実行データ、Run 51 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（65回実行データ、Run 66 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。51回 success / 3回 observation。Verifier pass rate 全期間 73.0%（138/189）、直近5 entries 75.9%（22/29）。Run 50 は 3/3 PASS（全項目通過） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。65回 success / 1回 partial / 3回 observation。Verifier pass rate: 全期間 202/265 PASS（76%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=62、theorems=253。compression 4.08x（408%）。V4 blocked=0 の Goodhart 懸念は継続 |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間178改善統合（113 conservative extension, 63 compatible change, 0 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 検証準備中。有効 UUID は 8 件（run 39, 41, 42, 45, 46, 47, 49, 50）。ccusage session の projectPath フィールド末尾 UUID で session_id と照合可能（サブエージェントコスト 3.13-5.90 USD/run、3 データポイント）。10 件以上（慣習的な小標本最小要件。統計的導出ではなくヒューリスティック。Run 44 で 3→10 に引き上げ）の有効データ蓄積後に H5 評価を実施予定 |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 評価準備中。7 データポイント: mean 1.07 USD/improvement (range 0.64-3.94 USD)。Run 46 外れ値 (3.94 USD) は findings:improvements 比率 12:1 に起因。evolve-history.jsonl に cost フィールド追加済み（Run 51）。10 件以上で傾向評価実施予定 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=338。compression 5.37x（537%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間247改善統合（156 conservative extension, 88 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。13 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63）。session cost: mean 4.34 USD, median 4.68 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 10/13 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。13 データポイント: CPI mean 1.15 USD/improvement, median 1.03 USD (range 0.03-3.94 USD)。前半5 runs (39-46) CPI mean 1.42 USD → 後半8 runs (47-63) CPI mean 0.99 USD（30.7% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

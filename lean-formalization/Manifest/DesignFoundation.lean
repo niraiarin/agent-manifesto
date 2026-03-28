@@ -364,6 +364,55 @@ theorem d4_phase_completion_persists :
   structure_accumulates
 
 -- ============================================================
+-- D4: DevelopmentPhase 半順序型クラスインスタンス（Run 61 追加）
+-- ============================================================
+
+/-!
+## DevelopmentPhase の半順序インスタンス
+
+manifesto.md Section 8 が「D4/D5/D6 は半順序のインスタンスである」と主張する。
+StructureKind (Ontology.lean) の先例に倣い、Nat ベースの順序関数から
+LE/LT インスタンスと半順序 4 性質定理を導出する。
+-/
+
+/-- DevelopmentPhase の順序関数。phaseDependency（二項 Prop）とは別に、
+    Nat による全順序を定義する。D4 のフェーズ順序を反映。 -/
+def developmentPhaseOrder : DevelopmentPhase → Nat
+  | .safety        => 0
+  | .verification  => 1
+  | .observability => 2
+  | .governance    => 3
+  | .equilibrium   => 4
+
+/-- 順序関数は単射（異なるフェーズは異なる順序値）。 -/
+theorem developmentPhaseOrder_injective :
+  ∀ (p₁ p₂ : DevelopmentPhase),
+    developmentPhaseOrder p₁ = developmentPhaseOrder p₂ → p₁ = p₂ := by
+  intro p₁ p₂; cases p₁ <;> cases p₂ <;> simp [developmentPhaseOrder]
+
+instance : LE DevelopmentPhase := ⟨fun a b => developmentPhaseOrder a ≤ developmentPhaseOrder b⟩
+instance : LT DevelopmentPhase := ⟨fun a b => developmentPhaseOrder a < developmentPhaseOrder b⟩
+
+/-- 半順序の反射律: p ≤ p。 -/
+theorem developmentPhase_le_refl : ∀ (p : DevelopmentPhase), p ≤ p :=
+  fun p => Nat.le_refl (developmentPhaseOrder p)
+
+/-- 半順序の推移律: p₁ ≤ p₂ かつ p₂ ≤ p₃ ならば p₁ ≤ p₃。 -/
+theorem developmentPhase_le_trans :
+    ∀ (p₁ p₂ p₃ : DevelopmentPhase), p₁ ≤ p₂ → p₂ ≤ p₃ → p₁ ≤ p₃ := by
+  intro _p₁ _p₂ _p₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
+
+/-- 半順序の反対称律: p₁ ≤ p₂ かつ p₂ ≤ p₁ ならば p₁ = p₂。 -/
+theorem developmentPhase_le_antisymm :
+    ∀ (p₁ p₂ : DevelopmentPhase), p₁ ≤ p₂ → p₂ ≤ p₁ → p₁ = p₂ :=
+  fun p₁ p₂ h₁₂ h₂₁ => developmentPhaseOrder_injective p₁ p₂ (Nat.le_antisymm h₁₂ h₂₁)
+
+/-- LT と LE の整合性: p₁ < p₂ ↔ p₁ ≤ p₂ かつ ¬(p₂ ≤ p₁)。 -/
+theorem developmentPhase_lt_iff_le_not_le :
+    ∀ (p₁ p₂ : DevelopmentPhase), p₁ < p₂ ↔ p₁ ≤ p₂ ∧ ¬(p₂ ≤ p₁) := by
+  intro _p₁ _p₂; exact Nat.lt_iff_le_not_le
+
+-- ============================================================
 -- D5: 仕様・テスト・実装の三層対応
 -- ============================================================
 
@@ -420,6 +469,38 @@ theorem d5_structural_test_deterministic :
   constructor <;> rfl
 
 -- ============================================================
+-- D5: SpecLayer 半順序型クラスインスタンス（Run 61 追加）
+-- ============================================================
+
+/-- 順序関数は単射（異なる層は異なる順序値）。 -/
+theorem specLayerOrder_injective :
+  ∀ (l₁ l₂ : SpecLayer),
+    specLayerOrder l₁ = specLayerOrder l₂ → l₁ = l₂ := by
+  intro l₁ l₂; cases l₁ <;> cases l₂ <;> simp [specLayerOrder]
+
+instance : LE SpecLayer := ⟨fun a b => specLayerOrder a ≤ specLayerOrder b⟩
+instance : LT SpecLayer := ⟨fun a b => specLayerOrder a < specLayerOrder b⟩
+
+/-- 半順序の反射律: l ≤ l。 -/
+theorem specLayer_le_refl : ∀ (l : SpecLayer), l ≤ l :=
+  fun l => Nat.le_refl (specLayerOrder l)
+
+/-- 半順序の推移律: l₁ ≤ l₂ かつ l₂ ≤ l₃ ならば l₁ ≤ l₃。 -/
+theorem specLayer_le_trans :
+    ∀ (l₁ l₂ l₃ : SpecLayer), l₁ ≤ l₂ → l₂ ≤ l₃ → l₁ ≤ l₃ := by
+  intro _l₁ _l₂ _l₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
+
+/-- 半順序の反対称律: l₁ ≤ l₂ かつ l₂ ≤ l₁ ならば l₁ = l₂。 -/
+theorem specLayer_le_antisymm :
+    ∀ (l₁ l₂ : SpecLayer), l₁ ≤ l₂ → l₂ ≤ l₁ → l₁ = l₂ :=
+  fun l₁ l₂ h₁₂ h₂₁ => specLayerOrder_injective l₁ l₂ (Nat.le_antisymm h₁₂ h₂₁)
+
+/-- LT と LE の整合性: l₁ < l₂ ↔ l₁ ≤ l₂ かつ ¬(l₂ ≤ l₁)。 -/
+theorem specLayer_lt_iff_le_not_le :
+    ∀ (l₁ l₂ : SpecLayer), l₁ < l₂ ↔ l₁ ≤ l₂ ∧ ¬(l₂ ≤ l₁) := by
+  intro _l₁ _l₂; exact Nat.lt_iff_le_not_le
+
+-- ============================================================
 -- D6: 三段設計（境界→緩和策→変数）
 -- ============================================================
 
@@ -469,6 +550,38 @@ theorem d6_no_reverse :
   ∀ (s : DesignStage),
     designStageOrder .identifyBoundary ≤ designStageOrder s := by
   intro s; cases s <;> simp [designStageOrder]
+
+-- ============================================================
+-- D6: DesignStage 半順序型クラスインスタンス（Run 61 追加）
+-- ============================================================
+
+/-- 順序関数は単射（異なるステージは異なる順序値）。 -/
+theorem designStageOrder_injective :
+  ∀ (s₁ s₂ : DesignStage),
+    designStageOrder s₁ = designStageOrder s₂ → s₁ = s₂ := by
+  intro s₁ s₂; cases s₁ <;> cases s₂ <;> simp [designStageOrder]
+
+instance : LE DesignStage := ⟨fun a b => designStageOrder a ≤ designStageOrder b⟩
+instance : LT DesignStage := ⟨fun a b => designStageOrder a < designStageOrder b⟩
+
+/-- 半順序の反射律: s ≤ s。 -/
+theorem designStage_le_refl : ∀ (s : DesignStage), s ≤ s :=
+  fun s => Nat.le_refl (designStageOrder s)
+
+/-- 半順序の推移律: s₁ ≤ s₂ かつ s₂ ≤ s₃ ならば s₁ ≤ s₃。 -/
+theorem designStage_le_trans :
+    ∀ (s₁ s₂ s₃ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₃ → s₁ ≤ s₃ := by
+  intro _s₁ _s₂ _s₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
+
+/-- 半順序の反対称律: s₁ ≤ s₂ かつ s₂ ≤ s₁ ならば s₁ = s₂。 -/
+theorem designStage_le_antisymm :
+    ∀ (s₁ s₂ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₁ → s₁ = s₂ :=
+  fun s₁ s₂ h₁₂ h₂₁ => designStageOrder_injective s₁ s₂ (Nat.le_antisymm h₁₂ h₂₁)
+
+/-- LT と LE の整合性: s₁ < s₂ ↔ s₁ ≤ s₂ かつ ¬(s₂ ≤ s₁)。 -/
+theorem designStage_lt_iff_le_not_le :
+    ∀ (s₁ s₂ : DesignStage), s₁ < s₂ ↔ s₁ ≤ s₂ ∧ ¬(s₂ ≤ s₁) := by
+  intro _s₁ _s₂; exact Nat.lt_iff_le_not_le
 
 -- ============================================================
 -- D7: 信頼の非対称性

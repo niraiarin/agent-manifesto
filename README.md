@@ -39,6 +39,23 @@
 - 境界条件 **L1–L6**: エージェントの行動空間の壁（Ontology.lean）
 - 可観測変数 **V1–V7**: 壁の中で構造が動かせるレバー（Observable.lean）
 
+#### 主要モジュール
+
+| モジュール | 内容 |
+|-----------|------|
+| `Ontology.lean` | 境界条件 L1–L6、型定義、半順序公理 |
+| `Observable.lean` | 変数 V1–V7 の定義、proxy 成熟度（V1/V3 formal 昇格済み） |
+| `ObservableDesign.lean` | V1–V7 の設計特性、運用閾値、Goodhart 耐性 |
+| `DesignFoundation.lean` | 設計開発基礎論 D1–D9 の形式化 |
+| `EpistemicLayer.lean` | 認識論的層（GQM, Goodhart 5層防御, proxy 卒業条件） |
+| `EvolveSkill.lean` | /evolve スキルの準拠性証明（φ₁–φ₁₇） |
+| `FormalDerivationSkill.lean` | 形式的導出スキルの準拠性証明 |
+| `Evolution.lean` | 互換性分類の合成、静止の不健全性 |
+| `Workflow.lean` | 学習ライフサイクル、統合ゲート条件 |
+| `Procedure.lean` | T₀ 縮小禁止、修正の安全性順序 |
+| `AxiomQuality.lean` | De Bruijn factor、公理品質指標 |
+| `Meta.lean` | モジュール別定理分布（SSOT） |
+
 ```bash
 export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ```
@@ -61,7 +78,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 ## 参照実装 — Claude Code 上の運用ワークフロー
 
-理論を Claude Code 上で実際に運用するための構成。9 スキル、12 フック、5 エージェント、216 テスト。
+理論を Claude Code 上で実際に運用するための構成。9 スキル、12 フック、5 エージェント、249 テスト。
 
 ### ワークフロー全体図
 
@@ -202,9 +219,10 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 │       ├── Ontology.lean                 #   L1-L6 境界条件
 │       ├── Observable.lean               #   V1-V7 可観測変数
 │       ├── DesignFoundation.lean         #   D1-D9 設計定理
+│       ├── EpistemicLayer.lean           #   認識論的層
 │       ├── Workflow.lean                 #   P3 学習ライフサイクル
 │       └── Evolution.lean               #   互換性代数
-├── tests/                                # 受入テスト (216 scenarios, Phase 1-5)
+├── tests/                                # 受入テスト (249 scenarios, Phase 1-5)
 ├── .claude/
 │   ├── skills/                           #   9 スキル (上記参照)
 │   ├── hooks/                            #   12 フック (上記参照)
@@ -229,16 +247,16 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ## テスト
 
 ```bash
-bash tests/test-all.sh    # 全 216 受入テスト (Phase 1-5)
+bash tests/test-all.sh    # 全 249 受入テスト (Phase 1-5)
 ```
 
-| Phase | 対象 | 内容 |
-|-------|------|------|
-| 1 | L1 安全 | Hook 登録、破壊的操作ブロック、秘密情報検出 |
-| 2 | P2 検証 | Verifier エージェント、検証トークン、TTL 強制 |
-| 3 | P4 可観測 | メトリクス収集、V1–V7 測定可能性 |
-| 4 | P3 統治 | 互換性分類、学習ライフサイクル、deferred 追跡 |
-| 5 | 動的機能 | /research ゲート、/evolve 全サイクル、公理品質 |
+| Phase | 対象 | テスト数 | 内容 |
+|-------|------|---------|------|
+| 1 | L1 安全 | 2 | Hook 登録、破壊的操作ブロック |
+| 2 | P2 検証 | 2 | Verifier エージェント、検証スキル |
+| 3 | P4 可観測 | 2 | メトリクス収集、V1–V7 定義 |
+| 4 | P3 統治 | 2 | 互換性分類、知識ライフサイクル |
+| 5 | 構造品質 | 241 | 公理品質、evolve 構造、Lean 整合性、回帰テスト |
 
 ## ライセンス
 

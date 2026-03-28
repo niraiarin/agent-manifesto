@@ -109,6 +109,23 @@ grep -q "反証条件" "$HYP" && pass "Hypothesizer references refutation" || fa
 grep -q "読み取り専用" "$HYP" && pass "Hypothesizer is read-only" || fail "Hypothesizer missing read-only constraint"
 ! grep -q "Edit\|Write" "$HYP" && pass "Hypothesizer has no Edit/Write tools" || fail "Hypothesizer should not have Edit/Write"
 
+# Hypothesizer 品質ゲート (obs-3-A, obs-3-B)
+grep -q "事前検証チェックリスト\|Pre-Proposal Verification" "$HYP" && pass "Hypothesizer has pre-proposal verification checklist" || fail "Hypothesizer missing pre-proposal verification checklist"
+grep -q "繰り返し提案の段階的抑止\|1 回 reject 後\|2 回以上 reject 後" "$HYP" && pass "Hypothesizer has repeated-proposal suppression rule" || fail "Hypothesizer missing repeated-proposal suppression rule"
+grep -q "trivially-true.*回避\|trivially-true 定理の回避" "$HYP" && pass "Hypothesizer has trivially-true avoidance" || fail "Hypothesizer missing trivially-true avoidance"
+grep -q "L1 行動空間制約\|hooks.*変更不可\|settings.json.*変更不可" "$HYP" && pass "Hypothesizer has L1 action space constraint" || fail "Hypothesizer missing L1 action space constraint"
+
+# Verifier Lean quality gate (obs-3)
+VER=".claude/agents/verifier.md"
+grep -q "trivially-true\|trivial.*theorem\|rfl.*alone\|definitional.*unfolding" "$VER" && pass "Verifier has Lean trivially-true detection" || fail "Verifier missing Lean trivially-true detection"
+
+# failure_subtype definitions (obs-4)
+grep -q "H_wrong_premise" "$SKILL" && pass "SKILL.md has H_wrong_premise subtype" || fail "SKILL.md missing H_wrong_premise subtype"
+grep -q "H_technical_validation" "$SKILL" && pass "SKILL.md has H_technical_validation subtype" || fail "SKILL.md missing H_technical_validation subtype"
+# Hypothesizer checklist E, F (obs-4)
+grep -q "概念の妥当性検証" "$HYP" && pass "Hypothesizer has checklist E (concept validation)" || fail "Hypothesizer missing checklist E"
+grep -q "技術的実装の妥当性検証" "$HYP" && pass "Hypothesizer has checklist F (technical validation)" || fail "Hypothesizer missing checklist F"
+
 # Integrator
 INT=".claude/agents/integrator/AGENT.md"
 grep -q "^name: integrator" "$INT" && pass "Integrator has name" || fail "Integrator missing name"
@@ -191,6 +208,12 @@ grep -q "FAIL.*分析\|ループバック\|loopback" "$SKILL" && pass "Lean trac
 # retirement -> observation (サイクル循環)
 grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "Lean trace: retirement -> observation (cycle in SKILL.md)" || fail "Lean trace: retirement -> observation cycle not covered in SKILL.md"
 
+# Workflow.lean 追加定理（Run 55 Gap 解消: no_self_knowledge_transition, knowledge_full_cycle_exists, feedback_precedes_improvement）
+WORKFLOW_LEAN_PATH="lean-formalization/Manifest/Workflow.lean"
+grep -q "no_self_knowledge_transition" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: no_self_knowledge_transition exists in Workflow.lean" || fail "Lean trace: no_self_knowledge_transition not found in Workflow.lean"
+grep -q "knowledge_full_cycle_exists" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: knowledge_full_cycle_exists exists in Workflow.lean" || fail "Lean trace: knowledge_full_cycle_exists not found in Workflow.lean"
+grep -q "feedback_precedes_improvement" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: feedback_precedes_improvement exists in Workflow.lean" || fail "Lean trace: feedback_precedes_improvement not found in Workflow.lean"
+
 echo ""
 
 # ============================================================
@@ -247,6 +270,9 @@ grep -q "evolve_skill_compliant" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: Evolv
 
 # φ₆: Conservative strategy safe
 grep -q "conservative_strategy_safe" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₆ conservative_strategy_safe" || fail "Lean trace: EvolveSkill φ₆ conservative_strategy_safe"
+
+# φ₁₁系: Untracked forward reference violates D3
+grep -q "untracked_forward_reference_violates_d3" "$EVOLVE_SKILL_LEAN" && pass "Lean trace: EvolveSkill φ₁₁系 untracked_forward_reference_violates_d3" || fail "Lean trace: EvolveSkill φ₁₁系 untracked_forward_reference_violates_d3"
 
 echo ""
 
@@ -333,31 +359,80 @@ HISTORY="$BASE/.claude/metrics/evolve-history.jsonl"
 # 前方参照キーワードを含む notes が deferred=[] のエントリを検出
 # Run 41 で制約を導入。それ以降の新規エントリのみ検証対象。
 # 過去エントリの遡及修正は append-only 規約に反するため除外。
+#
+# 同一 Run ID に複数エントリがある場合（暫定記録と確定記録が混在）、
+# 最終エントリ（ファイル末尾側）のみを orphan 検証対象とする。
+# 根拠: SKILL.md Step 5 不変条件「1 Run につき 1 エントリのみ」だが、
+#       移行期に暫定エントリが存在する場合の後方互換性を確保するため。
 ORPHAN_COUNT=$(python3 -c "
 import json, sys
 FORWARD_KEYWORDS = ['次回', '次の evolve', 'next run', 'next evolve', '蓄積待ち', '蓄積され次第', '可能になる', 'が必要', 'TODO', 'remaining']
 ENFORCEMENT_START = 41
-count = 0
+# 同一 Run ID は最終エントリのみ対象（暫定記録を除外）
+last_by_run = {}
 for line in open('$HISTORY'):
     try:
         rec = json.loads(line.strip())
         run = rec.get('run')
-        if run is None or run < ENFORCEMENT_START:
-            continue
-        notes = rec.get('notes', '')
-        deferred = rec.get('deferred', [])
-        if not notes or not isinstance(deferred, list):
-            continue
-        has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
-        has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
-        if has_forward_ref and not has_resolution_marker and len(deferred) == 0:
-            count += 1
+        if run is not None and run >= ENFORCEMENT_START:
+            last_by_run[run] = rec
     except:
         pass
+# deferred-status.json の解消済みアイテムを取得
+# evolve-history.jsonl の deferred は「当該 run で状態変化した deferred のみ」記録。
+# notes が deferred-status.json の既存アイテムを参照している場合、
+# そのアイテムが後続 run で resolved されていれば orphan ではない。
+resolved_later = set()
+deferred_status_path = '$BASE/.claude/metrics/deferred-status.json'
+try:
+    with open(deferred_status_path) as f:
+        ds = json.load(f)
+    items = ds.get('items', {})
+    # items can be dict (id->item) or list
+    item_list = items.values() if isinstance(items, dict) else items
+    for item in item_list:
+        if isinstance(item, dict) and item.get('status') in ('resolved', 'abandoned'):
+            resolved_later.add(item.get('resolved_in_run') or item.get('abandoned_in_run') or 0)
+except:
+    pass
+count = 0
+for run, rec in last_by_run.items():
+    notes = rec.get('notes', '')
+    deferred = rec.get('deferred', [])
+    if not notes or not isinstance(deferred, list):
+        continue
+    has_forward_ref = any(k in notes for k in FORWARD_KEYWORDS)
+    has_resolution_marker = any(k in notes for k in ['確認完了', '解消', '解決', 'resolved', 'completed'])
+    # notes の前方参照が後続 run で解消されている場合は orphan でない
+    later_resolved = any(r >= run for r in resolved_later)
+    if has_forward_ref and not has_resolution_marker and len(deferred) == 0 and not later_resolved:
+        count += 1
 print(count)
 " 2>/dev/null)
 echo -n "  No orphan forward-references in notes... "
 if [ "${ORPHAN_COUNT:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($ORPHAN_COUNT orphans)"; FAIL=$((FAIL+1)); fi
+
+# Run ID uniqueness (SKILL.md invariant: 1 Run につき 1 エントリのみ)
+DUPE_RUNS=$(python3 -c "
+import json, sys
+runs = []
+with open('$HISTORY') as f:
+    for line in f:
+        line = line.strip()
+        if not line: continue
+        try:
+            rec = json.loads(line)
+            r = rec.get('run')
+            if r is not None:
+                runs.append(r)
+        except:
+            pass
+from collections import Counter
+dupes = [r for r, c in Counter(runs).items() if c > 1 and r is not None]
+print(len(dupes))
+" 2>/dev/null)
+echo -n "  No duplicate run IDs in evolve-history... "
+if [ "${DUPE_RUNS:-0}" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($DUPE_RUNS duplicate run IDs)"; FAIL=$((FAIL+1)); fi
 
 echo ""
 
@@ -442,6 +517,108 @@ echo -n "  manifesto.md Section 8 (Structural Coherence) exists... "
 grep -q "構造的整合性\|Structural Coherence" "$MANIFESTO" && \
   pass "Section 8 exists" || \
   fail "Section 8 missing"
+
+# ============================================================
+# Section 12: StructureKind LE/LT インスタンスと半順序性質定理
+# ============================================================
+echo "--- Section 12: StructureKind LE/LT Instances ---"
+
+# LE インスタンスの存在
+echo -n "  StructureKind LE instance exists... "
+grep -q "^instance : LE StructureKind" "$ONTOLOGY" && \
+  pass "StructureKind LE instance" || \
+  fail "StructureKind LE instance missing"
+
+# LT インスタンスの存在
+echo -n "  StructureKind LT instance exists... "
+grep -q "^instance : LT StructureKind" "$ONTOLOGY" && \
+  pass "StructureKind LT instance" || \
+  fail "StructureKind LT instance missing"
+
+# 半順序性質: 反射律
+echo -n "  structureKind_le_refl theorem exists... "
+grep -q "^theorem structureKind_le_refl" "$ONTOLOGY" && \
+  pass "structureKind_le_refl" || \
+  fail "structureKind_le_refl missing"
+
+# 半順序性質: 推移律
+echo -n "  structureKind_le_trans theorem exists... "
+grep -q "^theorem structureKind_le_trans" "$ONTOLOGY" && \
+  pass "structureKind_le_trans" || \
+  fail "structureKind_le_trans missing"
+
+# 半順序性質: 反対称律（priority_injective から導出）
+echo -n "  structureKind_le_antisymm theorem exists... "
+grep -q "^theorem structureKind_le_antisymm" "$ONTOLOGY" && \
+  pass "structureKind_le_antisymm" || \
+  fail "structureKind_le_antisymm missing"
+
+# LT と LE の整合性
+echo -n "  structureKind_lt_iff_le_not_le theorem exists... "
+grep -q "^theorem structureKind_lt_iff_le_not_le" "$ONTOLOGY" && \
+  pass "structureKind_lt_iff_le_not_le" || \
+  fail "structureKind_lt_iff_le_not_le missing"
+
+echo ""
+
+# ============================================================
+# Section 13: Procedure.lean AGM Bridge 定理 Traceability（Run 56 Gap 解消）
+# ============================================================
+echo "--- Section 13: Procedure.lean AGM Bridge Theorems ---"
+
+PROCEDURE_LEAN="$BASE/lean-formalization/Manifest/Procedure.lean"
+
+grep -q "manifest_contraction_forbidden'" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_contraction_forbidden' exists in Procedure.lean" || fail "Lean trace: manifest_contraction_forbidden' not found in Procedure.lean"
+grep -q "manifest_revision_forbidden" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_revision_forbidden exists in Procedure.lean" || fail "Lean trace: manifest_revision_forbidden not found in Procedure.lean"
+grep -q "non_manifest_all_ops_permitted" "$PROCEDURE_LEAN" && pass "Lean trace: non_manifest_all_ops_permitted exists in Procedure.lean" || fail "Lean trace: non_manifest_all_ops_permitted not found in Procedure.lean"
+grep -q "empty_world_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: empty_world_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: empty_world_no_contraction_affected not found in Procedure.lean"
+grep -q "manifest_no_contraction_affected" "$PROCEDURE_LEAN" && pass "Lean trace: manifest_no_contraction_affected exists in Procedure.lean" || fail "Lean trace: manifest_no_contraction_affected not found in Procedure.lean"
+grep -q "contraction_affected_trans" "$PROCEDURE_LEAN" && pass "Lean trace: contraction_affected_trans exists in Procedure.lean" || fail "Lean trace: contraction_affected_trans not found in Procedure.lean"
+
+echo ""
+
+# ============================================================
+# Section 14: D5 三層断裂修正の維持確認
+# ============================================================
+echo "--- Section 14: D5 Traceability Maintenance ---"
+
+LEAN_TRACE="$BASE/.claude/skills/evolve/references/lean-traceability.md"
+DESIGN_IMPL_PLAN="$BASE/.claude/skills/design-implementation-plan/SKILL.md"
+FORMAL_DERIV="$BASE/.claude/skills/formal-derivation/SKILL.md"
+
+# lean-traceability.md 存在確認
+echo -n "  lean-traceability.md exists... "
+[ -f "$LEAN_TRACE" ] && pass "lean-traceability.md exists" || fail "lean-traceability.md missing at .claude/skills/evolve/references/lean-traceability.md"
+
+# Gap 列の存在確認
+echo -n "  lean-traceability.md has Gap column... "
+grep -q "Gap\|ギャップ" "$LEAN_TRACE" 2>/dev/null && pass "Gap column exists" || fail "Gap column missing in lean-traceability.md"
+
+# FAIL loopback エントリの存在確認
+echo -n "  lean-traceability.md has FAIL loopback entry... "
+grep -q "loopback\|FAIL.*ループバック\|ループバック.*FAIL" "$LEAN_TRACE" 2>/dev/null && pass "FAIL loopback entry exists" || fail "FAIL loopback entry missing in lean-traceability.md"
+
+# /design-implementation-plan D5 traceability チェックリスト存在確認
+echo -n "  /design-implementation-plan has D5 traceability checklist... "
+grep -q "D5.*トレーサビリティ\|traceability.*D5\|D5.*traceability\|逆引き可能\|三者間.*対応.*D5\|D5.*形式仕様.*テスト" "$DESIGN_IMPL_PLAN" 2>/dev/null && pass "D5 traceability checklist exists in design-implementation-plan" || fail "D5 traceability checklist missing in design-implementation-plan"
+
+# lean-traceability.md 逆方向マッピングセクション存在確認
+echo -n "  lean-traceability.md has reverse mapping section... "
+grep -q "逆方向マッピング" "$LEAN_TRACE" 2>/dev/null && pass "reverse mapping section exists" || fail "reverse mapping section missing in lean-traceability.md"
+
+# 主要 Lean 定義名が lean-traceability.md に参照されていることの確認
+echo -n "  lean-traceability.md references key Lean definitions... "
+MISSING_DEFS=0
+for def in validPhaseTransition integrationGateCondition evolve_skill_compliant breaking_change_dominates t0_contraction_forbidden; do
+  grep -q "$def" "$LEAN_TRACE" 2>/dev/null || MISSING_DEFS=$((MISSING_DEFS + 1))
+done
+[ "$MISSING_DEFS" -eq 0 ] && pass "all key definitions referenced" || fail "$MISSING_DEFS key definitions missing from lean-traceability.md"
+
+# /formal-derivation Step 4d 逆方向トレーサビリティ存在確認
+echo -n "  /formal-derivation has Step 4d reverse traceability... "
+grep -q "Step 4d\|逆方向トレーサビリティ\|reverse.*traceability\|traceability.*reverse" "$FORMAL_DERIV" 2>/dev/null && pass "Step 4d reverse traceability exists in formal-derivation" || fail "Step 4d reverse traceability missing in formal-derivation"
+
+echo ""
 
 # ============================================================
 # スキル変数展開の安全性（全 SKILL.md 対象）

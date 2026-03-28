@@ -8,34 +8,34 @@
 各 Lean ケースが、対応するテストと SKILL.md の実行手順に展開されていることを確認するための逆引き表。
 （Section 7 テストは `tests/test-evolve-structural.sh` 内の記述名称）
 
-| Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ |
-|--------------------------------------------------|-------------------|-----------------|
-| observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 |
-| hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 |
-| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 |
-| integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 |
-| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） |
-| verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） |
-| retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） |
+| Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ | Gap |
+|--------------------------------------------------|-------------------|-----------------|-----|
+| observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 | なし |
+| hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 | なし |
+| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 | なし |
+| integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 | なし |
+| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） | なし |
+| verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） | なし |
+| retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） | なし |
 
 ## その他の Lean 定義 — テスト対応追加行
 
-| スキルの概念 | テスト（Section 3 / Step） | 備考 |
-|------------|--------------------------|------|
-| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 |
-| `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 |
+| スキルの概念 | テスト（Section 3 / Step） | 備考 | Gap |
+|------------|--------------------------|------|-----|
+| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 | なし |
+| `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 | なし |
 
 ## Workflow.lean 追加定理 逆引きチェックリスト（Run 40 追加）
 
-| Lean 定理（Workflow.lean） | SKILL.md での運用化 | 備考 |
-|---------------------------|---------------------|------|
-| `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない |
-| `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル |
-| `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 |
-| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 |
-| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 |
-| `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 |
-| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 |
+| Lean 定理（Workflow.lean） | SKILL.md での運用化 | 備考 | Gap |
+|---------------------------|---------------------|------|-----|
+| `no_self_phase_transition` | 各 Phase は明確に分離（Phase 1→2→3→4→5 の線形進行） | 同一 Phase 内でのループは禁止。FAIL ループバックも verification→hypothesizing であり自己遷移ではない | なし |
+| `full_cycle_exists` | アーキテクチャ図: Phase 1→2→3→4→5 の全フェーズが存在 | Step 1→Step 6 の完全サイクル | なし |
+| `retirement_only_after_integration` | Step 6: 退役は Step 5（統合）の後にのみ実行 | 基準 A/B とも統合済み知識が対象 | なし |
+| `no_self_knowledge_transition` | KnowledgeStatus の各状態は一方向に遷移 | no_self_phase_transition の知識状態版 | なし（Run 56 で Section 7 にテスト追加済み） |
+| `knowledge_full_cycle_exists` | 知識は observed から retired まで全状態を通過可能 | full_cycle_exists の知識状態版 | なし（Run 56 で Section 7 にテスト追加済み） |
+| `integration_requires_verification` | Step 2-3: 検証なしの統合は禁止（PASS_LIST 空 → Phase 4 不可） | ゲート判定で構造的に強制 | なし |
+| `feedback_precedes_improvement` | Step 3→Step 5 の順序（T5 のワークフロー層表現） | 検証済みのみ統合可能 | なし（Run 56 で Section 7 にテスト追加済み） |
 
 ## Evolution.lean 逆引きチェックリスト（Run 40 追加）
 
@@ -116,4 +116,169 @@
 | `hypothesis_error_loops_to_hypothesizer` | φ₁₅ | Step 3: hypothesis_error → Hypothesizer（Phase 2） | "φ₁₅: hypothesis_error loops to hypothesizer" |
 | `precondition_error_no_loopback` | φ₁₆ | Step 3: precondition_error → ループバックなし | "φ₁₆: precondition_error no loopback" |
 | `loopback_budget_is_parameter` | φ₁₇ | Step 3: ループバック予算は T6 パラメータ（公理的導出なし） | "φ₁₇: loopback budget is parameter" |
+| `untracked_forward_reference_violates_d3` | φ₁₁系 | Step 7: notes/deferred 整合性（D3 前提引用追跡） | "φ₁₁系: untracked_forward_reference_violates_d3" |
 | `evolve_skill_compliant` | φ合成 | 全体の準拠性（φ₁∧φ₂∧φ₃∧φ₅∧φ₉） | "evolve_skill_compliant" |
+
+## Procedure.lean Structure-AGM Bridge 定理 逆引きチェックリスト（Run 55 追加）
+
+| Lean 定理（Procedure.lean） | SKILL.md での運用化 | 備考 | Gap |
+|---------------------------|---------------------|------|-----|
+| `manifest_contraction_forbidden'` | P3: manifest への縮小は禁止（L1 境界の形式的根拠） | structurePartition .manifest = .baseTheory → contraction 禁止 | なし（Run 56 で Section 13 にテスト追加済み） |
+| `manifest_revision_forbidden` | P3: manifest への revision も禁止（T₀ 変更禁止の Structure 版） | contraction と同様に permittedOp = false | なし（Run 56 で Section 13 にテスト追加済み） |
+| `non_manifest_all_ops_permitted` | P3: 非 manifest 構造（skill/test/document 等）は全 AGM 操作が許可 | StructureKind ≠ .manifest → 全 op = true | なし（Run 56 で Section 13 にテスト追加済み） |
+| `empty_world_no_contraction_affected` | P3: 空の構造セットでは contraction の影響集合は空 | World.structures = [] → contractionAffected 発生なし | なし（Run 56 で Section 13 にテスト追加済み） |
+| `manifest_no_contraction_affected` | P3: manifest は contraction が禁止されているため影響集合は発生しない | manifest 縮小禁止 → 影響波及なし | なし（Run 56 で Section 13 にテスト追加済み） |
+| `contraction_affected_trans` | P3: contraction 影響の推移性（reachableVia の推移性から導出） | s → mid → t の波及は s → t に集約 | なし（Run 56 で Section 13 にテスト追加済み） |
+
+## DesignFoundation.lean 全定理 逆引きチェックリスト（Run 62 追加）
+
+D1–D14 の設計基礎論定理を原則別に整理する。
+
+### D1: 強制のレイヤリング原理
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d1_fixed_requires_structural` | L1 安全境界は構造的強制（Hook/deny）を必要とする | L1 は文書規範だけでは不十分 |
+| `d1_enforcement_monotone` | 強制強度は単調増加（構造 ≥ 確率的 ≥ 文書） | 強制のレイヤリング順序 |
+| `critical_requires_all_four` | critical リスクは 4 層全て必要 | Verifier 判定の理論的根拠 |
+| `subagent_only_sufficient_for_low` | low リスクはサブエージェントで十分（φ₃） | Verifier リスク判定の補足 |
+| `d2_from_e1` | E1（評価独立性）から D2（Worker/Verifier 分離）を導出 | P2 独立検証の形式的根拠 |
+
+### D3: 可観測性先行
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d3_observability_precedes_improvement` | Step 1: Observer が最初（D3 先行条件） | φ₉ observability_first の根拠 |
+| `d3_partial_observability_insufficient` | /metrics で V1–V7 全計測が必要 | 部分観測では改善不可 |
+| `d3_full_observability_sufficient` | P4 ダッシュボードで全変数観測可能 → 改善条件充足 | D3 充足の形式的条件 |
+| `d3_human_readable_insufficient` | 人間可読だけでは不十分（機械可読が必要） | メトリクス自動収集の根拠 |
+
+### D4: 漸進的自己適用
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d4_no_self_dependency` | フェーズは自己依存を持たない（循環禁止） | D4 フェーズ順序の非循環性 |
+| `d4_full_chain` | Phase 1→2→3→4→5 の完全チェーン存在 | full_cycle_exists の設計版 |
+| `d4_phase_completion_persists` | フェーズ完了は後続フェーズで保持 | 前フェーズの結果は失われない |
+| `developmentPhaseOrder_injective` | DevelopmentPhase の半順序は単射（Run 61） | 半順序型クラスの整合性 |
+| `developmentPhase_le_refl` | DevelopmentPhase 反射律 | 半順序型クラスインスタンス |
+| `developmentPhase_le_trans` | DevelopmentPhase 推移律 | 半順序型クラスインスタンス |
+| `developmentPhase_le_antisymm` | DevelopmentPhase 反対称律 | 半順序型クラスインスタンス |
+| `developmentPhase_lt_iff_le_not_le` | DevelopmentPhase 狭義順序定義 | 半順序型クラスインスタンス |
+| `d4_d9_from_first_phase` | D4 フェーズ順序 + D9 自己適用は第 1 フェーズから成立 | D4×D9 の合成定理 |
+| `dependency_d1_d2_d4_consistent` | D1/D2/D4 の三原則は矛盾なく共存 | 設計基礎論の整合性証明 |
+
+### D5: 仕様・テスト・実装の三層対応
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d5_test_has_precision` | テストは仕様の精密化（精度 > 仕様） | 受け入れテストの役割 |
+| `d5_layer_sequential` | spec → test → impl の線形順序 | 三層の依存方向 |
+| `d5_structural_test_deterministic` | 構造テストは決定論的 | test-all.sh の理論的根拠 |
+| `specLayerOrder_injective` | SpecLayer 半順序は単射（Run 61） | 半順序型クラスの整合性 |
+| `specLayer_le_refl` | SpecLayer 反射律 | 半順序型クラスインスタンス |
+| `specLayer_le_trans` | SpecLayer 推移律 | 半順序型クラスインスタンス |
+| `specLayer_le_antisymm` | SpecLayer 反対称律 | 半順序型クラスインスタンス |
+| `specLayer_lt_iff_le_not_le` | SpecLayer 狭義順序定義 | 半順序型クラスインスタンス |
+
+### D6: 三段設計（境界→緩和策→変数）
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d6_fixed_boundary_mitigated` | L1 固定境界は緩和策で補完される | L1 + Hook の二層構造の根拠 |
+| `d6_stage_sequential` | 境界→緩和策→変数の線形順序 | 設計段階の依存方向 |
+| `d6_no_reverse` | 逆順の設計段階遷移は禁止 | 変数→緩和策→境界への後退不可 |
+| `designStageOrder_injective` | DesignStage 半順序は単射（Run 61） | 半順序型クラスの整合性 |
+| `designStage_le_refl` | DesignStage 反射律 | 半順序型クラスインスタンス |
+| `designStage_le_trans` | DesignStage 推移律 | 半順序型クラスインスタンス |
+| `designStage_le_antisymm` | DesignStage 反対称律 | 半順序型クラスインスタンス |
+| `designStage_lt_iff_le_not_le` | DesignStage 狭義順序定義 | 半順序型クラスインスタンス |
+
+### D7: 信頼の非対称性
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d7_accumulation_bounded` | 信頼蓄積は有界（上限 maxTrust） | 過信への警戒 |
+| `d7_damage_unbounded` | 信頼毀損は無界（下限なし） | P2 独立検証を要する理由 |
+
+### D8: 均衡探索
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d8_overexpansion_risk` | 過大拡張はリスクを高める | /adjust-action-space の根拠 |
+| `d8_capability_risk` | 能力とリスクは共スケール（E2 の設計版） | 行動空間拡大時の注意 |
+
+### D9: メンテナンス原理（自己適用）
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d9_update_classified` | 構造更新は互換性分類が必要（P3 hook） | コミットメッセージ分類の根拠 |
+| `d9_self_applicable` | D9 自身も D9 の適用対象（自己参照） | /evolve スキル自体の更新にも適用 |
+| `d9_all_principles_enumerated` | D1–D14 の原則が全て列挙されている | 設計基礎論の完全性 |
+
+### D10: 構造永続性
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d10_agent_temporary_structure_permanent` | T1（一時エージェント）/ T2（永続構造）の設計版 | CLAUDE.md 最上位使命の形式化 |
+| `d10_epoch_monotone` | エポック番号は単調増加 | breaking change 時の epoch bump |
+
+### D11: コンテキスト経済
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d11_enforcement_cost_inverse` | 強制コストと有効性は逆相関 | 構造的強制が最も費用対効果高い |
+| `d11_structural_minimizes_cost` | 構造的強制は最小コストで最大効果 | Hook 優先の根拠 |
+| `d11_context_finite` | コンテキストウィンドウは有限（L4 の設計版） | SKILL.md の compact 設計根拠 |
+
+### D12: 制約充足によるタスク設計
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d12_task_is_csp` | タスクは制約充足問題（CSP）として定式化可能 | /design-implementation-plan の根拠 |
+| `d12_task_design_probabilistic` | タスク設計は確率的（P5 の設計版） | T4 非決定性の設計版 |
+
+### D13: 前提否定の影響波及
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d13_coherence_implies_propagation` | 整合性のある前提否定は影響を波及させる | 退役処理が必要な理由 |
+| `d13_retirement_requires_feedback` | 退役は必ずフィードバックを要する（Step 6） | 退役後の観察継続 |
+| `d13_constraint_negation_has_impact` | 制約の否定は必ず影響を持つ | L1 変更禁止の理論的根拠 |
+| `d13_l5_limited_impact` | L5（確率的解釈）は影響が限定的 | P5 の設計的位置づけ |
+| `manifest_has_widest_impact` | manifest 変更は最も広い影響範囲を持つ | T0 変更禁止の形式的根拠 |
+| `design_convention_has_impact` | 設計規約の変更も影響を持つ（非ゼロ） | CLAUDE.md 変更時の注意 |
+
+### D14: 検証順序の制約充足性
+
+| Lean 定理（DesignFoundation.lean） | SKILL.md での運用化 | 備考 |
+|-----------------------------------|---------------------|------|
+| `d14_verification_order_is_csp` | 検証順序は CSP として定式化可能（D4 フェーズ順序の充足性） | D4 フェーズ順序と D12 CSP の合成 |
+
+## 逆方向マッピング: SKILL.md ステップ → Lean 定義名
+
+SKILL.md の各ステップから、関連する Lean 定義・定理を逆引きするためのテーブル。
+SKILL.md 変更時に影響する Lean 定義を即座に特定するために使用する。
+
+| SKILL.md ステップ | 関連 Lean 定義名 | Lean ファイル |
+|-------------------|-----------------|--------------|
+| Step 0: 引き継ぎ条件 | `deferral_requires_justification`, `deferral_status_exhaustive`, `stasisUnhealthy` | EvolveSkill.lean, Evolution.lean |
+| Step 1: Observer 起動 | `observability_first`, `validPhaseTransition` (observation→hypothesizing) | EvolveSkill.lean, Workflow.lean |
+| Step 1.5: 観察結果永続化 | — (T2 永続性の運用化、直接対応する定理なし) | — |
+| Step 2-3: Hypothesizer/Verifier ループ | `integration_requires_verification`, `evolve_no_verification_bypass`, `loopback_target_valid_transition`, `loopback_agent_determined` | Workflow.lean, EvolveSkill.lean |
+| Step 2-3: FAIL 分析ループバック | `hypothesis_error_loops_to_hypothesizer`, `observation_error_loops_to_observer`, `precondition_error_no_loopback`, `loopback_budget_is_parameter` | EvolveSkill.lean |
+| Step 3: Verifier リスク判定 | `evolve_verifier_sufficient_for_low`, `evolve_verifier_insufficient_for_moderate`, `evolve_verifier_insufficient_for_high`, `evolve_verifier_insufficient_for_critical` | EvolveSkill.lean |
+| Step 4: 人間承認 + 統合ゲート | `integration_gate_structure`, `integrationGateCondition` | EvolveSkill.lean, Workflow.lean |
+| Step 5: 互換性分類付きコミット | `CompatibilityClass.join`, `breaking_change_dominates`, `conservative_strategy_safe`, `breaking_change_propagates`, `breakingChangeRequiresEpochBump` | Evolution.lean, EvolveSkill.lean |
+| Step 6: 退役処理 | `retirementCandidate`, `retirement_criteria_dual`, `formal_retirement_matches_workflow`, `retirement_only_after_integration` | Workflow.lean, EvolveSkill.lean |
+| アーキテクチャ全体 | `all_phases_have_agents`, `all_agents_used`, `all_components_enumerated`, `evolve_skill_compliant` | EvolveSkill.lean |
+| 仮説テーブル | `all_hypotheses_enumerated`, `hypothesis_count` | EvolveSkill.lean |
+| D9 自己適用 | `isManifestStructure`, `governedTransition`, `manifest_persists_as_structure` | Evolution.lean |
+| P3 基底理論保護 | `manifest_contraction_forbidden'`, `manifest_revision_forbidden`, `non_manifest_all_ops_permitted`, `t0_contraction_forbidden` | Procedure.lean |
+| D1 強制レイヤリング | `d1_fixed_requires_structural`, `d1_enforcement_monotone`, `critical_requires_all_four`, `subagent_only_sufficient_for_low`, `d2_from_e1` | DesignFoundation.lean |
+| D3 可観測性先行 | `d3_observability_precedes_improvement`, `d3_full_observability_sufficient`, `d3_partial_observability_insufficient`, `d3_human_readable_insufficient` | DesignFoundation.lean |
+| D4 フェーズ順序 | `d4_no_self_dependency`, `d4_full_chain`, `d4_phase_completion_persists`, `developmentPhase_le_refl`, `developmentPhase_le_trans`, `developmentPhase_le_antisymm`, `d4_d9_from_first_phase`, `dependency_d1_d2_d4_consistent` | DesignFoundation.lean |
+| D5 三層対応 | `d5_test_has_precision`, `d5_layer_sequential`, `d5_structural_test_deterministic`, `specLayer_le_refl`, `specLayer_le_trans`, `specLayer_le_antisymm` | DesignFoundation.lean |
+| D6 三段設計 | `d6_fixed_boundary_mitigated`, `d6_stage_sequential`, `d6_no_reverse`, `designStage_le_refl`, `designStage_le_trans`, `designStage_le_antisymm` | DesignFoundation.lean |
+| D7-D9 信頼・均衡・保守 | `d7_accumulation_bounded`, `d7_damage_unbounded`, `d8_overexpansion_risk`, `d8_capability_risk`, `d9_update_classified`, `d9_self_applicable`, `d9_all_principles_enumerated` | DesignFoundation.lean |
+| D10-D14 拡張原則 | `d10_agent_temporary_structure_permanent`, `d10_epoch_monotone`, `d11_structural_minimizes_cost`, `d12_task_is_csp`, `d13_coherence_implies_propagation`, `manifest_has_widest_impact`, `d14_verification_order_is_csp` | DesignFoundation.lean |

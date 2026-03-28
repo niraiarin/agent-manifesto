@@ -93,6 +93,39 @@ def Measurable (m : World → Nat) : Prop :=
   ∃ f : World → Nat, ∀ w, f w = m w
 
 -- ============================================================
+-- Proxy 成熟度分類
+-- ============================================================
+
+/-- Proxy 成熟度段階。observe.sh の各 V proxy に分類を付与する。
+    - provisional: 暫定代理指標。正式測定方法が未実装。
+    - established: 安定代理指標。運用上の十分性が確認済み（T6 判断）。
+    - formal: 正式測定方法が実装済み。-/
+inductive ProxyMaturityLevel where
+  | provisional : ProxyMaturityLevel
+  | established : ProxyMaturityLevel
+  | formal : ProxyMaturityLevel
+  deriving BEq, Repr, DecidableEq
+
+/-- V1 の現在の proxy 成熟度。
+    provisional → formal (2026-03-27, #77):
+    - GQM チェーン定義済み (R1 #85): Q1 structural contribution, Q2 verification quality, Q3 operational stability
+    - benchmark.json に正式スキーマ実装済み (G1 #78)
+    - observe.sh で自動計測 (G2 #79)
+    - 63 runs の後ろ向き検証で全 metric が仮説を充足
+    - Goodhart 5 層防御: ガバナンス指標 (R2), 相関監視 (R3), 非自明性ゲート (R5), 飽和検出 (R6), bias レビュー義務 (G1b-2)
+    - 旧 proxy (success_rate) は新 benchmark と無相関 (r=0.006-0.069) であることを確認 (G3 #80) -/
+def v1ProxyMaturity : ProxyMaturityLevel := .formal
+
+/-- V3 の現在の proxy 成熟度。
+    provisional → formal (2026-03-27, #77):
+    - GQM チェーン定義済み (R1 #85): Q1 acceptance criteria, Q2 structural integrity, Q3 error trend
+    - benchmark.json に正式スキーマ実装済み (G1 #78)
+    - observe.sh で自動計測 (G2 #79)
+    - 旧 proxy (test_pass_rate) は分散 0 で品質信号として無効であることを確認 (G3 #80)
+    - hallucination proxy (Run 54+) が error trend の新指標として機能 -/
+def v3ProxyMaturity : ProxyMaturityLevel := .formal
+
+-- ============================================================
 -- V1–V7: 最適化変数
 -- ============================================================
 
@@ -100,23 +133,38 @@ def Measurable (m : World → Nat) : Prop :=
     測定方法: benchmark.json (with/without 比較)。
     関連境界条件: L2（学習データ断絶の緩和）, L5（スキルシステム）。
     observe.sh proxy: evolve_success_rate（成功run比率）, lean_health（sorry=0判定）,
-    skill_count（スキルファイル数）。分類: provisional_proxy（benchmark.json 未実装）。 -/
+    skill_count（スキルファイル数）。
+    proxy 成熟度分類:
+    - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
+    - established_proxy: 安定代理指標。運用上十分と判断。
+    - formal_measurement: 正式測定方法が実装済み。
+    V1 proxy は formal_measurement に昇格済み (2026-03-27, #77)。benchmark.json GQM スキーマで測定。 -/
 opaque skillQuality : World → Nat
 
 /-- V2: コンテキスト効率。有限コンテキストの活用度。
     測定方法: タスク完了率 / 消費トークン数。
     関連境界条件: L2（コンテキスト有限性）, L3（トークン予算）。
     observe.sh proxy: recent_avg（直近10セッションデルタ中央値、primary）,
-    cumulative_avg（累積平均、baseline）。
+    cumulative_avg（全履歴マイクロセッション除外平均、baseline）。
     primary_metric: recent_median（中央値ベース、外れ値にロバスト）。
-    運用注記: recent_avg が cumulative_avg の ±20% 以上乖離した場合にトレンド変化と判定。 -/
+    運用注記: recent_avg が cumulative_avg の ±20% 以上乖離した場合にトレンド変化と判定。
+    divergence 解釈: V2 は 5 変数とトレードオフ関係を持つハブ変数（定理 tradeoff_context_is_hub）。
+    evolve セッション（大量ツール使用）が recent_avg を押し上げるため、
+    divergence_percent > 100% は必ずしも問題ではない。
+    evolve の深さと頻度が増すほど recent_avg が上昇する傾向は想定内。 -/
 opaque contextEfficiency : World → Nat
 
 /-- V3: 出力品質。コード・設計・文書の品質。
     測定方法: ゲート合格率、レビュー指摘数。
     関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。
-    observe.sh proxy: fix_ratio_percent（プレフィクスパターン fix/bugfix/hotfix のコミット比率）+
-    test_pass_rate（テスト全通過率）。分類: provisional_proxy（ゲート合格率未実装）。 -/
+    observe.sh proxy: test_pass_rate（テスト全通過率）+
+    hallucination_proxy（rejected[].failure_type 集計）。
+    旧 fix_ratio_percent proxy（コミット prefix 比率）は Run 69 で削除済み。
+    proxy 成熟度分類:
+    - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
+    - established_proxy: 安定代理指標。運用上十分と判断。
+    - formal_measurement: 正式測定方法が実装済み。
+    V3 proxy は formal_measurement に昇格済み (2026-03-27, #77)。benchmark.json GQM スキーマで測定。 -/
 opaque outputQuality : World → Nat
 
 /-- V4: ゲート通過率。各フェーズのゲートを一発で通過する率。
@@ -151,8 +199,8 @@ opaque knowledgeStructureQuality : World → Nat
     関連境界条件: L3（リソース上限）, L6（設計規約）。
     observe.sh proxy: completed（v7-tasks.jsonl タスク完了数）, unique_subjects（ユニーク主題数）,
     teamwork_percent（teammate フィールドあり比率）。
-    運用注記: teamwork_percent は single-agent 運用時は常に 0。マルチエージェント/人間協働が
-    必要なフィールドのため、現在は参考値。 -/
+    運用注記: teamwork_percent は single-agent 運用では suppressed（teamwork_status="suppressed_single_agent"）。
+    マルチエージェント/人間協働が必要なフィールドのため、single-agent 環境では観察報告に含めない。 -/
 opaque taskDesignEfficiency : World → Nat
 
 -- ============================================================
@@ -512,5 +560,90 @@ theorem system_health_observable :
 11. **この分類自体が見直し対象である。** L1–L6, V1–V7の分類は固定的な真実ではなく、
     運用の中で項目の再分類・追加・削除が起こりうる。
 -/
+
+-- ============================================================
+-- Derived theorems: Quality measurement priority (G1b-1 #91)
+-- ============================================================
+
+/-!
+## 品質測定の優先順位
+
+G1b-1 (#91) の分析により、マニフェストの公理系から以下の品質優先順位が導出可能と判明。
+これらは T6（人間の判断）に依存せず、既存の公理・設計原則から論理的に帰結する。
+
+### 導出不可能な領域
+V1-V7 間の相互優先順位は導出不可能。TradeoffExists は対称関係であり、
+「V1 > V3」のような順序を含意しない。これは意図的な設計判断であり、
+V 間の優先順位は T6 判断に帰着する（G1b-2 #92）。
+-/
+
+/-- 品質測定カテゴリ: 構造的変化の測定 vs プロセス成功率の測定。
+    R1 (GQM 再定義) で特定された proxy ミスマッチの形式化。 -/
+inductive QualityMeasureCategory where
+  | structuralOutcome   -- 構造的成果: theorem delta, test delta, axiom count
+  | processSuccess      -- プロセス成功率: evolve success rate, skill invocation rate
+  deriving BEq, Repr
+
+/-- 品質測定カテゴリの優先度。構造的成果はプロセス成功率より品質の直接的指標。
+    根拠:
+    - 最上位使命「永続する構造が自身を改善し続ける」→ 構造の変化が改善の定義
+    - D5（仕様層順序）の類推: 成果（what was produced）> 過程（how it was produced）
+    - Anthropic eval guide: "grade what the agent produced, not the path it took" -/
+def qualityMeasurePriority : QualityMeasureCategory → Nat
+  | .structuralOutcome => 1  -- higher priority
+  | .processSuccess    => 0  -- lower priority
+
+/-- 構造的成果の測定は、プロセス成功率の測定より品質指標として優先される。
+    「スキルが動くこと」より「スキルが構造的に改善を生むこと」が品質。 -/
+theorem structural_outcome_gt_process_success :
+    qualityMeasurePriority .structuralOutcome >
+    qualityMeasurePriority .processSuccess := by
+  native_decide
+
+/-- 検証信号の分類: 独立検証 vs 自己評価。
+    P2 + E1 + ICLR 2024 (Huang et al.) の形式化。 -/
+inductive VerificationSignalType where
+  | independentlyVerified  -- P2: 独立エージェントまたは構造的テストによる検証
+  | selfAssessed           -- 同一インスタンスによる自己評価
+  deriving BEq, Repr
+
+/-- 検証信号の信頼度。独立検証は自己評価より信頼性が高い。
+    根拠:
+    - P2: 認知的関心事の分離（Worker と Verifier の分離）
+    - E1: 経験は理論に先行する — 自己生成した理論での自己評価は循環
+    - ICLR 2024 Huang et al.: intrinsic self-correction は精度を劣化させる -/
+def verificationReliability : VerificationSignalType → Nat
+  | .independentlyVerified => 1  -- higher reliability
+  | .selfAssessed          => 0  -- lower reliability
+
+/-- 独立検証された品質信号は、自己評価による品質信号より信頼性が高い。 -/
+theorem independent_verification_gt_self_assessment :
+    verificationReliability .independentlyVerified >
+    verificationReliability .selfAssessed := by
+  native_decide
+
+/-- 品質保証の層: 欠陥不在（defect absence）vs 価値創出（value creation）。
+    D6 の DesignStage 順序の品質次元への適用。 -/
+inductive QualityAssuranceLayer where
+  | defectAbsence    -- 壊れていないことの確認（test pass, Lean build, sorry=0）
+  | valueCreation    -- 良いことの確認（改善の実質性、有用性）
+  deriving BEq, Repr
+
+/-- 品質保証の測定優先度。欠陥不在の確認が価値創出の確認に先行する。
+    根拠:
+    - D6: Boundary（制約充足）> Variable（品質改善）
+    - D4: Safety > Governance — 安全（壊れていない）が統治（良くする）に先行
+    - 論理的帰結: 壊れているシステムの「改善の実質性」は測定しても無意味 -/
+def qualityAssurancePriority : QualityAssuranceLayer → Nat
+  | .defectAbsence  => 1  -- higher measurement priority
+  | .valueCreation  => 0  -- lower measurement priority (but not less important)
+
+/-- 欠陥不在の測定は、価値創出の測定より優先される（測定順序として）。
+    注: これは「欠陥不在の方が重要」ではなく「先に測るべき」を意味する。
+    価値創出の測定は欠陥不在が確認された後に有意義になる。 -/
+theorem defect_absence_measurement_gt_value_creation :
+    qualityAssurancePriority .defectAbsence >
+    qualityAssurancePriority .valueCreation := by
+  native_decide
 
 end Manifest
