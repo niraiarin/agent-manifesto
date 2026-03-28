@@ -263,7 +263,7 @@ else
 fi
 
 # V4: Gate Pass Rate — Bash tool_use events = passed (PostToolUse only fires after PreToolUse pass)
-# gate_blocked events are not yet instrumented in l1-safety-check.sh (L1 file guard prevents hook edits)
+# gate_blocked events are logged by l1-safety-check.sh and l1-file-guard.sh (PR #76, Run 63)
 if [ -f "$TOOL_LOG" ]; then
   V4_PASSED=$(grep -c '"tool":"Bash"' "$TOOL_LOG" 2>/dev/null || true)
   V4_PASSED=${V4_PASSED:-0}
