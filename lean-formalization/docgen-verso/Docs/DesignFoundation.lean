@@ -11,161 +11,162 @@ set_option linter.verso.markup.emph false
 
 #doc (Manual) "Design Foundation: D1-D14" =>
 
-# Epistemic Layer: designTheorem (strength 1) — 設計開発基礎論の形式化（Γ ⊢ φ の応用）
+# Epistemic Layer - DesignTheorem Strength 1 - Formalization of Design Development Foundation
 
-design-development-foundation.md の D1–D14 がマニフェストの
-T/E/P（前提集合 Γ, 用語リファレンス §2.5）から導出（§2.4 導出可能性）
-されることを型検査する。
+Type-checks that D1–D14 from design-development-foundation.md are
+derivable (§2.4 derivability) from the manifesto's T/E/P
+(premise set Γ, terminology reference §2.5).
 
-## 形式化の性格
+## Nature of the Formalization
 
-本ファイルは Γ に新たな非論理的公理（§4.1）を追加しない。
-すべての D は以下のいずれかとして形式化される:
-- *定義的拡大*（§5.5）: 新しい型・関数の定義。常に保存拡大
-- *定理*（§4.2）: 既存の公理（T/E）から推論規則の適用で導出
+This file does not add new non-logical axioms (§4.1) to Γ.
+Every D is formalized as one of the following:
+- *Definitional extension* (§5.5): Definition of new types/functions. Always a conservative extension
+- *Theorem* (§4.2): Derived from existing axioms (T/E) by application of inference rules
 
-したがって本ファイルは T₀ の定義的拡大 + 定理の集合であり、
-Terminology.lean が証明した `definitional_implies_conservative` により
-保存拡大（§5.5）が保証される。
+Therefore this file is a collection of definitional extensions + theorems over T₀,
+and conservative extension (§5.5) is guaranteed by `definitional_implies_conservative`
+proven in Terminology.lean.
 
-## 設計方針
+## Design Policy
 
-各 D を型（定義的拡大, §5.5）または定理（§4.2）として表現し、
-根拠となる T/E/P の非論理的公理（§4.1）/定理との接続を明示する。
+Each D is expressed as a type (definitional extension, §5.5) or theorem (§4.2),
+with explicit connections to the underlying T/E/P non-logical axioms (§4.1) / theorems.
 
-D はメタレベル（§5.6 メタ理論）の設計原理であり、
-対象レベル（§5.6 対象理論）の非論理的公理とは異なる。
+D's are meta-level (§5.6 metatheory) design principles,
+distinct from object-level (§5.6 object theory) non-logical axioms.
 
-## 用語リファレンスとの対応
+## Correspondence with Terminology Reference
 
 
 :::table +header
 *
-  * Lean の概念
-  * 用語リファレンス
-  * §参照
+  * Lean Concept
+  * Terminology Reference
+  * §Ref
 *
-  * D1–D13 の theorem
-  * 定理（公理から導出された命題）
+  * D1–D13 theorems
+  * Theorems (propositions derived from axioms)
   * §4.2
 *
-  * D1–D13 の def/structure
-  * 定義的拡大（新記号を既存記号で定義）
+  * D1–D13 def/structure
+  * Definitional extensions (new symbols defined via existing symbols)
   * §5.5
 *
   * SelfGoverning
-  * 型クラス（型に対するインタフェース）
+  * Type class (interface for types)
   * §9.4
 *
   * DesignPrinciple
-  * 論議領域（§3.2）の構成要素
+  * Component of the domain of discourse (§3.2)
   * §3.2
 *
   * DesignPrincipleUpdate
-  * AGM の修正操作の構造化
+  * Structuring of AGM revision operations
   * §9.2
 *
   * EnforcementLayer
-  * 強制力の階層。不変条件（§9.3）の実現手段
+  * Hierarchy of enforcement power. Means to realize invariants (§9.3)
   * §9.3
 *
   * DevelopmentPhase
-  * フェーズ間の依存関係は遷移関係（§9.3）に類似
+  * Inter-phase dependencies resemble transition relations (§9.3)
   * §9.3
 *
   * VerificationIndependence
-  * E1（§4.1 非論理的公理）の運用化
+  * Operationalization of E1 (§4.1 non-logical axiom)
   * §4.1
 *
   * CompatibilityClass
-  * 拡大の分類（保存/無矛盾/破壊的）
+  * Classification of extensions (conservative/consistent/breaking)
   * §5.5
 :::
 
 
-## design-development-foundation.md との対応
+## Correspondence with design-development-foundation.md
 
-本ファイルは D1–D14 を形式化する。
+This file formalizes D1–D14.
 
 
 :::table +header
 *
   * D
-  * 根拠
-  * 形式化の深度
+  * Rationale
+  * Formalization Depth
 *
   * D1
   * P5 + L1–L6
-  * 型 + 2 定理
+  * type + 2 theorems
 *
   * D2
   * E1 + P2
-  * 構造体 + 3 定理
+  * structure + 3 theorems
 *
   * D3
   * P4 + T5
-  * 3 定理（3 条件構造は未形式化）
+  * 3 theorems (3-condition structure not formalized)
 *
   * D4
   * Section 7 + P3 + T2
-  * 型 + 5 定理
+  * type + 5 theorems
 *
   * D5
   * T8 + P4 + P6
-  * 型 + 3 定理（三層間関係は未形式化）
+  * type + 3 theorems (inter-layer relations not formalized)
 *
   * D6
   * Ontology/Observable
-  * 3 定理（因果連鎖は未形式化）
+  * 3 theorems (causal chain not formalized)
 *
   * D7
   * Section 6 + P1
-  * 2 定理（蓄積 bounded + 毀損 unbounded）
+  * 2 theorems (accumulation bounded + damage unbounded)
 *
   * D8
   * Section 6 + E2
-  * 2 定理（過剰拡大 + 能力-リスク）
+  * 2 theorems (overexpansion + capability-risk)
 *
   * D9
   * Observable + P3 + Section 7
-  * SelfGoverning + 4 定理
+  * SelfGoverning + 4 theorems
 *
   * D10
   * T1 + T2
-  * 2 定理（構造永続性 + エポック単調増加）
+  * 2 theorems (structural permanence + epoch monotone increase)
 *
   * D11
   * T3 + D1
-  * 定義 + 3 定理（逆相関 + 最小化 + 有限性）
+  * definition + 3 theorems (inverse correlation + minimization + finiteness)
 *
   * D12
   * P6 + T3 + T7 + T8
-  * 2 定理（CSP + 確率的出力）
+  * 2 theorems (CSP + probabilistic output)
 *
   * D13
   * P3 + Section 8 + T5
-  * 2 定理（coherence波及 + 退役前提）
+  * 2 theorems (coherence propagation + retirement premise)
 *
   * D14
   * P6 + T7 + T8
-  * 1 定理（検証順序の制約充足性）
+  * 1 theorem (constraint satisfaction of verification order)
 :::
 
 
-## D1: 強制のレイヤリング（定義的拡大, §5.5）
+## D1 Enforcement Layering
+Definitional Extension, 5.5.
 
-根拠: P5（確率的解釈）+ L1–L6（境界条件の階層）
+Rationale: P5 (probabilistic interpretation) + L1–L6 (hierarchy of boundary conditions)
 
-P5 により、規範的指針は確率的にしか遵守されない。
-したがって、L1（安全）のような絶対制約は
-構造的強制（確率的解釈を受けない）で実装すべき。
+By P5, normative guidelines are only probabilistically complied with.
+Therefore, absolute constraints such as L1 (safety) should be
+implemented via structural enforcement (not subject to probabilistic interpretation).
 
-用語リファレンスとの接続:
-- 構造的強制 → 不変条件（§9.3）: 実行中常に保持される性質
-- 手続的強制 → 事前条件/事後条件（§9.3）: 操作の前後で確認
-- 規範的指針 → P5 により充足可能（§2.2）だが恒真（§2.2）ではない
+Connection with terminology reference:
+- Structural enforcement → Invariant (§9.3): Property that always holds during execution
+- Procedural enforcement → Pre/post-conditions (§9.3): Verified before and after operations
+- Normative guideline → Satisfiable (§2.2) but not valid/tautological (§2.2) by P5
 
-強制レイヤー。強制力の強さを表す。 
+Enforcement layer. Represents the strength of enforcement power. 
 
 *Declaration:* `inductive EnforcementLayer`
 
@@ -177,7 +178,7 @@ inductive EnforcementLayer where
   deriving BEq, Repr
 ```
 
-強制レイヤーの強度順序。structural が最強。 
+Strength ordering of enforcement layers. structural is the strongest. 
 
 *Declaration:* `def EnforcementLayer.strength`
 
@@ -188,10 +189,10 @@ def EnforcementLayer.strength : EnforcementLayer → Nat
   | .normative  => 1
 ```
 
-境界条件に対する最低限必要な強制レイヤー。
-   固定境界（L1, L2）は構造的強制が必要。
-   投資可変境界は手続的強制以上。
-   環境境界は規範的指針でも可。 
+Minimum required enforcement layer for each boundary condition.
+   Fixed boundaries (L1, L2) require structural enforcement.
+   Investment-variable boundaries require procedural enforcement or above.
+   Environmental boundaries may use normative guidelines. 
 
 *Declaration:* `def minimumEnforcement`
 
@@ -202,25 +203,25 @@ def minimumEnforcement : BoundaryLayer → EnforcementLayer
   | .environmental      => .normative
 ```
 
-D1 の根拠: L1（固定境界）には構造的強制が必要。
-   P5（確率的解釈）により、規範的指針では L1 を保証できない。
+Rationale for D1: L1 (fixed boundary) requires structural enforcement.
+   By P5 (probabilistic interpretation), normative guidelines cannot guarantee L1.
 
-   形式化: 固定境界の最低強制レイヤーは structural。 
+   Formalization: The minimum enforcement layer for fixed boundaries is structural. 
 
 *Declaration:* `theorem d1_fixed_requires_structural`
 
 ```
-theorem `d1_fixed_requires_structural` :
+theorem d1_fixed_requires_structural :
   minimumEnforcement .fixed = .structural := by rfl
 ```
 
-D1 の系: 強制レイヤーの強度は境界レイヤーに対して単調。
-   固定 ≥ 投資可変 ≥ 環境 の順で強い強制が要求される。 
+Corollary of D1: Enforcement layer strength is monotone with respect to boundary layers.
+   Enforcement strength required: fixed >= investment-variable >= environmental. 
 
 *Declaration:* `theorem d1_enforcement_monotone`
 
 ```
-theorem `d1_enforcement_monotone` :
+theorem d1_enforcement_monotone :
   (minimumEnforcement .fixed).strength ≥
   (minimumEnforcement .investmentVariable).strength ∧
   (minimumEnforcement .investmentVariable).strength ≥
@@ -228,32 +229,33 @@ theorem `d1_enforcement_monotone` :
   simp [minimumEnforcement, EnforcementLayer.strength]
 ```
 
-## D2: Worker/Verifier 分離（定義的拡大 + 定理, §5.5/§4.2）
+## D2 Worker/Verifier Separation
+Definitional Extension + Theorem, 5.5/4.2.
 
-根拠: E1（検証の独立性, 非論理的公理 §4.1）+ P2（認知的役割分離, 定理 §4.2）
+Rationale: E1 (verification independence, non-logical axiom §4.1) + P2 (cognitive role separation, theorem §4.2)
 
-E1a (`verification_requires_independence`) が直接の根拠。
-E1 は Γ \ T₀（仮説由来）に属し、反証可能（§9.1）。
-E1 が反証された場合、D2 は見直しの対象となる。
+E1a (`verification_requires_independence`) is the direct rationale.
+E1 belongs to Γ \ T₀ (hypothesis-derived) and is falsifiable (§9.1).
+If E1 is falsified, D2 becomes subject to review.
 
-評価検証の独立性の4条件。
+Four conditions for verification independence.
 
-   旧3条件（コンテキスト分離、バイアス非共有、独立起動）はプロセスレベルの
-   独立性のみ。評価者自体の独立性がないと「同じモデルが別コンテキストで
-   同じ間違いをする」問題が残る。
+   The former 3 conditions (context separation, bias non-sharing, independent invocation)
+   covered only process-level independence. Without evaluator independence,
+   the problem of "the same model making the same mistakes in a different context" remains.
 
-   4条件:
-   1. コンテキスト分離: Worker の思考過程・中間状態が Verifier に漏洩しない
-   2. フレーミング非依存: 検証基準が Worker に事後定義されない
-      （旧「バイアス非共有」の精密化。成果物だけでなく、
-      「何を検証すべきか」の枠組みも Worker から独立している）
-   3. 実行の自動性: Worker が検証を回避できない
-      （旧「独立起動」の強化。Worker の裁量に依存しない）
-   4. 評価者の独立: 同一の判断傾向を持たない別の主体が評価する
-      （人間: コンテキストを持たず十分な知識を持つ別人。
-       LLM: 同じコンテキストを持たない別のモデル。
-       同一モデル・別コンテキストは Subagent に相当し、
-       プロセス分離は達成するが評価者の独立は達成しない） 
+   Four conditions:
+   1. Context separation: Worker's reasoning process and intermediate state do not leak to Verifier
+   2. Framing independence: Verification criteria are not post-hoc defined by the Worker
+      (Refinement of former "bias non-sharing". Not only the artifacts,
+      but also the framework of "what should be verified" is independent of the Worker)
+   3. Execution automaticity: Worker cannot bypass verification
+      (Strengthening of former "independent invocation". Does not depend on Worker's discretion)
+   4. Evaluator independence: Evaluation is performed by a separate entity without shared judgment tendencies
+      (Human: A different person without shared context but with sufficient knowledge.
+       LLM: A different model without shared context.
+       Same model with different context corresponds to a Subagent,
+       which achieves process separation but not evaluator independence) 
 
 *Declaration:* `structure VerificationIndependence`
 
@@ -261,24 +263,24 @@ E1 が反証された場合、D2 は見直しの対象となる。
 structure VerificationIndependence where
 ```
 
-Worker の思考過程が Verifier に漏洩しない 
+Worker's reasoning process does not leak to Verifier 
 
 ```
 contextSeparated      : Bool
 ```
 
- Worker の思考過程が Verifier に漏洩しない -/
+ Worker's reasoning process does not leak to Verifier -/
   contextSeparated      : Bool
-  /-- 検証基準が Worker のフレーミングに依存しない -/
+  /-- Verification criteria do not depend on Worker's framing -/
   framingIndependent    : Bool
-  /-- 検証の実行が Worker の裁量に依存しない -/
+  /-- Verification execution does not depend on Worker's discretion -/
   executionAutomatic    : Bool
-  /-- 評価者が Worker と異なる判断傾向を持つ -/
+  /-- Evaluator has different judgment tendencies from Worker -/
   evaluatorIndependent  : Bool
   deriving BEq, Repr
 
-/-- 評価検証のリスクレベル。
-    リスクに応じて必要な独立性の水準が異なる。 
+/-- Verification risk level.
+    The required level of independence varies by risk. 
 
 *Declaration:* `inductive VerificationRisk`
 
@@ -291,29 +293,29 @@ inductive VerificationRisk where
   deriving BEq, Repr
 ```
 
-検証基準が Worker のフレーミングに依存しない 
+Verification criteria do not depend on Worker's framing 
 
 ```
 framingIndependent    : Bool
 ```
 
-検証の実行が Worker の裁量に依存しない 
+Verification execution does not depend on Worker's discretion 
 
 ```
 executionAutomatic    : Bool
 ```
 
-評価者が Worker と異なる判断傾向を持つ 
+Evaluator has different judgment tendencies from Worker 
 
 ```
 evaluatorIndependent  : Bool
 ```
 
-各リスクレベルで必要な独立性条件。
-   critical: 4条件すべて必須（人間または別モデルによる検証）
-   high: 3条件（フレーミング非依存 + 自動実行 + コンテキスト分離）
-   moderate: 2条件（コンテキスト分離 + 自動実行）
-   low: 1条件（コンテキスト分離のみ、Subagent で十分） 
+Required independence conditions for each risk level.
+   critical: All 4 conditions required (verification by human or different model)
+   high: 3 conditions (framing independence + automatic execution + context separation)
+   moderate: 2 conditions (context separation + automatic execution)
+   low: 1 condition (context separation only, Subagent suffices) 
 
 *Declaration:* `def requiredConditions`
 
@@ -325,7 +327,7 @@ def requiredConditions : VerificationRisk → Nat
   | .low      => 1
 ```
 
-独立性条件の充足数を数える。 
+Counts the number of satisfied independence conditions. 
 
 *Declaration:* `def satisfiedConditions`
 
@@ -337,7 +339,7 @@ def satisfiedConditions (vi : VerificationIndependence) : Nat :=
   (if vi.evaluatorIndependent then 1 else 0)
 ```
 
-検証が十分か: 充足条件数 ≥ 要求条件数 
+Whether verification is sufficient: satisfied conditions >= required conditions 
 
 *Declaration:* `def sufficientVerification`
 
@@ -347,22 +349,22 @@ def sufficientVerification
   satisfiedConditions vi ≥ requiredConditions risk
 ```
 
-critical リスクには4条件すべて必要。
-   Subagent（contextSeparated のみ）では不十分。 
+Critical risk requires all four conditions.
+   Subagent (contextSeparated only) is insufficient. 
 
 *Declaration:* `theorem critical_requires_all_four`
 
 ```
-theorem `critical_requires_all_four` :
+theorem critical_requires_all_four :
   requiredConditions .critical = 4 := by rfl
 ```
 
-Subagent のみの検証（コンテキスト分離のみ）は low リスクにのみ十分。 
+Subagent-only verification (context separation only) is sufficient only for low risk. 
 
 *Declaration:* `theorem subagent_only_sufficient_for_low`
 
 ```
-theorem `subagent_only_sufficient_for_low` :
+theorem subagent_only_sufficient_for_low :
   let subagentOnly : VerificationIndependence :=
     { contextSeparated := true
       framingIndependent := false
@@ -373,7 +375,7 @@ theorem `subagent_only_sufficient_for_low` :
   simp [sufficientVerification, satisfiedConditions, requiredConditions]
 ```
 
-旧 validSeparation との後方互換: 旧3条件は新4条件の部分集合。 
+Backward compatibility with former validSeparation: the old 3 conditions are a subset of the new 4 conditions. 
 
 *Declaration:* `def validSeparation`
 
@@ -384,52 +386,53 @@ def validSeparation (vs : VerificationIndependence) : Prop :=
   vs.executionAutomatic = true
 ```
 
-D2 の根拠: E1 から、有効な検証には分離が必要。
-   `verification_requires_independence` の型が
-   gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver を要求する。
+Rationale for D2: From E1, valid verification requires separation.
+   The type of `verification_requires_independence` demands
+   gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver.
    gen.id ≠ ver.id → contextSeparated ∧ evaluatorIndependent
    ¬sharesInternalState → framingIndependent 
 
 *Declaration:* `theorem d2_from_e1`
 
 ```
-theorem `d2_from_e1` :
+theorem d2_from_e1 :
   ∀ (gen ver : Agent) (action : Action) (w : World),
     generates gen action w →
     verifies ver action w →
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver :=
-  `verification_requires_independence`
+  verification_requires_independence
 ```
 
-## D3: 可観測性先行（定理, §4.2）
+## D3 Observability First
+Theorem, 4.2.
 
-根拠: P4（劣化の可観測性, 定理 §4.2）+ T5（フィードバックなしに改善なし, T₀ §4.1）
+Rationale: P4 (observability of degradation, theorem §4.2) + T5 (no improvement without feedback, T₀ §4.1)
 
-T5 (`no_improvement_without_feedback`) が直接の根拠:
-改善にはフィードバックが必要 → フィードバックには観測が必要。
+T5 (`no_improvement_without_feedback`) is the direct rationale:
+Improvement requires feedback → feedback requires observation.
 
-注: design-development-foundation.md は可観測性の 3 条件
-（測定可能, 劣化検知可能, 改善検証可能）を定義するが、
-本形式化では T5 の含意のみ。3 条件の構造化は未実装。
+Note: design-development-foundation.md defines 3 conditions for observability
+(measurable, degradation-detectable, improvement-verifiable), but
+this formalization covers only the implication of T5. Structuring of the 3 conditions is not yet implemented.
 
-D3 の根拠: 改善にはフィードバック（＝観測結果）が先行する。
-   T5 の直接適用。 
+Rationale for D3: Feedback (= observation results) must precede improvement.
+   Direct application of T5. 
 
 *Declaration:* `theorem d3_observability_precedes_improvement`
 
 ```
-theorem `d3_observability_precedes_improvement` :
+theorem d3_observability_precedes_improvement :
   ∀ (w w' : World),
     structureImproved w w' →
     ∃ (f : Feedback), f ∈ w'.feedbacks ∧
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
-  `no_improvement_without_feedback`
+  no_improvement_without_feedback
 ```
 
-検知手段の区別（Run 41 で導入）。
-   「検知可能」の定義を精緻化: 人間可読（humanReadable）と
-   プログラムでクエリ可能（structurallyQueryable）を区別する。
-   D3 条件 2 は structurallyQueryable を要求する。 
+Distinction of detection modes (introduced in Run 41).
+   Refines the definition of "detectable": distinguishes between
+   human-readable (humanReadable) and programmatically queryable (structurallyQueryable).
+   D3 condition 2 requires structurallyQueryable. 
 
 *Declaration:* `inductive DetectionMode`
 
@@ -440,9 +443,9 @@ inductive DetectionMode where
   deriving BEq, Repr
 ```
 
-D3 の可観測性 3 条件（design-development-foundation.md §D3）。
-   各変数 V に対して 3 条件すべてが成立する場合にのみ、
-   V は実効的な最適化対象となる。 
+D3 observability 3 conditions (design-development-foundation.md §D3).
+   Only when all 3 conditions hold for a variable V does
+   V become an effectively optimizable target. 
 
 *Declaration:* `structure ObservabilityConditions`
 
@@ -450,24 +453,24 @@ D3 の可観測性 3 条件（design-development-foundation.md §D3）。
 structure ObservabilityConditions where
 ```
 
-現在値が測定可能か（Measurable, Observable.lean） 
+Whether the current value is measurable (Measurable, Observable.lean) 
 
 ```
 measurable            : Bool
 ```
 
- 現在値が測定可能か（Measurable, Observable.lean） -/
+ Whether the current value is measurable (Measurable, Observable.lean) -/
   measurable            : Bool
-  /-- 劣化が検知可能か（品質崩壊の前に検知できるか） -/
+  /-- Whether degradation is detectable (can it be detected before quality collapse) -/
   degradationDetectable : Bool
-  /-- 劣化検知の手段（structurallyQueryable でなければ実効性がない） -/
+  /-- Detection mode for degradation (ineffective unless structurallyQueryable) -/
   detectionMode         : DetectionMode := .structurallyQueryable
-  /-- 改善が検証可能か（介入の前後で値の変化を比較できるか） -/
+  /-- Whether improvement is verifiable (can value changes be compared before and after intervention) -/
   improvementVerifiable : Bool
   deriving BEq, Repr
 
-/-- 変数が実効的な最適化対象であるかの判定。3 条件すべてが必要。
-    かつ、劣化検知は構造的クエリ可能な形式でなければならない。 
+/-- Determines whether a variable is an effectively optimizable target. All 3 conditions required.
+    Additionally, degradation detection must be in a structurally queryable format. 
 
 *Declaration:* `def effectivelyOptimizable`
 
@@ -477,66 +480,67 @@ def effectivelyOptimizable (c : ObservabilityConditions) : Prop :=
   c.detectionMode = .structurallyQueryable ∧ c.improvementVerifiable = true
 ```
 
-劣化が検知可能か（品質崩壊の前に検知できるか） 
+Whether degradation is detectable (can it be detected before quality collapse) 
 
 ```
 degradationDetectable : Bool
 ```
 
-劣化検知の手段（structurallyQueryable でなければ実効性がない） 
+Detection mode for degradation (ineffective unless structurallyQueryable) 
 
 ```
 detectionMode         : DetectionMode := .structurallyQueryable
 ```
 
-改善が検証可能か（介入の前後で値の変化を比較できるか） 
+Whether improvement is verifiable (can value changes be compared before and after intervention) 
 
 ```
 improvementVerifiable : Bool
 ```
 
-D3: 3 条件のいずれかが欠如した変数は名目上の最適化対象に過ぎない。 
+D3: A variable lacking any of the 3 conditions is merely a nominal optimization target. 
 
 *Declaration:* `theorem d3_partial_observability_insufficient`
 
 ```
-theorem `d3_partial_observability_insufficient` :
+theorem d3_partial_observability_insufficient :
   ¬effectivelyOptimizable ⟨true, true, .structurallyQueryable, false⟩ ∧
   ¬effectivelyOptimizable ⟨true, false, .structurallyQueryable, true⟩ ∧
   ¬effectivelyOptimizable ⟨false, true, .structurallyQueryable, true⟩ := by
   refine ⟨?_, ?_, ?_⟩ <;> simp [effectivelyOptimizable]
 ```
 
-D3: 3 条件すべてが成立し、検知が構造的クエリ可能な場合のみ実効的。 
+D3: Effective only when all 3 conditions hold and detection is structurally queryable. 
 
 *Declaration:* `theorem d3_full_observability_sufficient`
 
 ```
-theorem `d3_full_observability_sufficient` :
+theorem d3_full_observability_sufficient :
   effectivelyOptimizable ⟨true, true, .structurallyQueryable, true⟩ := by
   simp [effectivelyOptimizable]
 ```
 
-D3 精緻化（Run 41）: 人間可読だが構造的にクエリ不可能な検知は不十分。
-   notes に書いただけでは degradationDetectable = true でも実効性がない。 
+D3 refinement (Run 41): Human-readable but structurally non-queryable detection is insufficient.
+   Merely writing in notes is ineffective even if degradationDetectable = true. 
 
 *Declaration:* `theorem d3_human_readable_insufficient`
 
 ```
-theorem `d3_human_readable_insufficient` :
+theorem d3_human_readable_insufficient :
   ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ := by
   simp [effectivelyOptimizable]
 ```
 
-## D4: 漸進的自己適用（定義的拡大 + 定理, §5.5/§4.2）
+## D4 Progressive Self-Application
+Definitional Extension + Theorem, 5.5/4.2.
 
-根拠: Section 7（自己適用）+ P3（学習の統治, 定理 §4.2）+ T2（構造の永続性, T₀ §4.1）
+Rationale: Section 7 (self-application) + P3 (governed learning, theorem §4.2) + T2 (structural permanence, T₀ §4.1)
 
-開発フェーズは順序を持ち、各フェーズの完了は構造に永続する（T2）。
-フェーズ順序は D1–D3 の依存関係から導出される。
-Procedure.lean の `phaseOrder` が同一の順序を形式化済み。
+Development phases have an ordering, and each phase's completion persists in structure (T2).
+The phase ordering is derived from the dependency relationships of D1–D3.
+`phaseOrder` in Procedure.lean formalizes the same ordering.
 
-開発フェーズ。D4 の漸進的自己適用の各段階。 
+Development phase. Each stage of D4's progressive self-application. 
 
 *Declaration:* `inductive DevelopmentPhase`
 
@@ -550,8 +554,8 @@ inductive DevelopmentPhase where
   deriving BEq, Repr
 ```
 
-フェーズ間の依存関係。先行フェーズが完了していないと
-   後続フェーズを開始できない。 
+Inter-phase dependencies. A subsequent phase cannot begin
+   until the preceding phase is complete. 
 
 *Declaration:* `def phaseDependency`
 
@@ -564,23 +568,23 @@ def phaseDependency : DevelopmentPhase → DevelopmentPhase → Prop
   | _,              _              => False
 ```
 
-D4 の根拠: フェーズ順序は厳密（自己遷移なし）。
-   各フェーズは前のフェーズに依存する。 
+Rationale for D4: Phase ordering is strict (no self-transitions).
+   Each phase depends on its preceding phase. 
 
 *Declaration:* `theorem d4_no_self_dependency`
 
 ```
-theorem `d4_no_self_dependency` :
+theorem d4_no_self_dependency :
   ∀ (p : DevelopmentPhase), ¬phaseDependency p p := by
   intro p; cases p <;> simp [phaseDependency]
 ```
 
-完全なフェーズ連鎖が存在する。 
+A complete phase chain exists. 
 
 *Declaration:* `theorem d4_full_chain`
 
 ```
-theorem `d4_full_chain` :
+theorem d4_full_chain :
   phaseDependency .verification .safety ∧
   phaseDependency .observability .verification ∧
   phaseDependency .governance .observability ∧
@@ -588,28 +592,28 @@ theorem `d4_full_chain` :
   refine ⟨?_, ?_, ?_, ?_⟩ <;> trivial
 ```
 
-D4 の T2 接続: フェーズの完了は構造に永続する。
-   `structure_accumulates` から、エポック（フェーズの進行）は
-   不可逆。完了したフェーズは「取り消されない」。 
+D4's connection to T2: Phase completion persists in structure.
+   From `structure_accumulates`, epochs (phase progression) are
+   irreversible. A completed phase is never "undone". 
 
 *Declaration:* `theorem d4_phase_completion_persists`
 
 ```
-theorem `d4_phase_completion_persists` :
+theorem d4_phase_completion_persists :
   ∀ (w w' : World),
     validTransition w w' →
     w.epoch ≤ w'.epoch :=
-  `structure_accumulates`
+  structure_accumulates
 ```
 
-## DevelopmentPhase の半順序インスタンス
+## Partial Order Instance for DevelopmentPhase
 
-manifesto.md Section 8 が「D4/D5/D6 は半順序のインスタンスである」と主張する。
-StructureKind (Ontology.lean) の先例に倣い、Nat ベースの順序関数から
-LE/LT インスタンスと半順序 4 性質定理を導出する。
+manifesto.md Section 8 asserts that "D4/D5/D6 are instances of partial orders".
+Following the precedent of StructureKind (Ontology.lean), we derive
+LE/LT instances and the 4 partial order property theorems from a Nat-based ordering function.
 
-DevelopmentPhase の順序関数。phaseDependency（二項 Prop）とは別に、
-   Nat による全順序を定義する。D4 のフェーズ順序を反映。 
+Ordering function for DevelopmentPhase. Separately from phaseDependency (binary Prop),
+   defines a total order via Nat. Reflects the phase ordering of D4. 
 
 *Declaration:* `def developmentPhaseOrder`
 
@@ -622,61 +626,61 @@ def developmentPhaseOrder : DevelopmentPhase → Nat
   | .equilibrium   => 4
 ```
 
-順序関数は単射（異なるフェーズは異なる順序値）。 
+The ordering function is injective (distinct phases have distinct order values). 
 
 *Declaration:* `theorem developmentPhaseOrder_injective`
 
 ```
-theorem `developmentPhaseOrder_injective` :
+theorem developmentPhaseOrder_injective :
   ∀ (p₁ p₂ : DevelopmentPhase),
     developmentPhaseOrder p₁ = developmentPhaseOrder p₂ → p₁ = p₂ := by
   intro p₁ p₂; cases p₁ <;> cases p₂ <;> simp [developmentPhaseOrder]
 ```
 
-半順序の反射律: p ≤ p。 
+Partial order reflexivity: p <= p. 
 
 *Declaration:* `theorem developmentPhase_le_refl`
 
 ```
-theorem `developmentPhase_le_refl` : ∀ (p : DevelopmentPhase), p ≤ p :=
-  fun p => Nat.`le_refl` (developmentPhaseOrder p)
+theorem developmentPhase_le_refl : ∀ (p : DevelopmentPhase), p ≤ p :=
+  fun p => Nat.le_refl (developmentPhaseOrder p)
 ```
 
-半順序の推移律: p₁ ≤ p₂ かつ p₂ ≤ p₃ ならば p₁ ≤ p₃。 
+Partial order transitivity: if p₁ <= p₂ and p₂ <= p₃ then p₁ <= p₃. 
 
 *Declaration:* `theorem developmentPhase_le_trans`
 
 ```
-theorem `developmentPhase_le_trans` :
+theorem developmentPhase_le_trans :
     ∀ (p₁ p₂ p₃ : DevelopmentPhase), p₁ ≤ p₂ → p₂ ≤ p₃ → p₁ ≤ p₃ := by
-  intro `_p₁` `_p₂` `_p₃` h₁₂ h₂₃; exact Nat.`le_trans` h₁₂ h₂₃
+  intro _p₁ _p₂ _p₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
 ```
 
-半順序の反対称律: p₁ ≤ p₂ かつ p₂ ≤ p₁ ならば p₁ = p₂。 
+Partial order antisymmetry: if p₁ <= p₂ and p₂ <= p₁ then p₁ = p₂. 
 
 *Declaration:* `theorem developmentPhase_le_antisymm`
 
 ```
-theorem `developmentPhase_le_antisymm` :
+theorem developmentPhase_le_antisymm :
     ∀ (p₁ p₂ : DevelopmentPhase), p₁ ≤ p₂ → p₂ ≤ p₁ → p₁ = p₂ :=
-  fun p₁ p₂ h₁₂ h₂₁ => `developmentPhaseOrder_injective` p₁ p₂ (Nat.`le_antisymm` h₁₂ h₂₁)
+  fun p₁ p₂ h₁₂ h₂₁ => developmentPhaseOrder_injective p₁ p₂ (Nat.le_antisymm h₁₂ h₂₁)
 ```
 
-LT と LE の整合性: p₁ < p₂ ↔ p₁ ≤ p₂ かつ ¬(p₂ ≤ p₁)。 
+Consistency of LT and LE: p₁ < p₂ iff p₁ <= p₂ and not (p₂ <= p₁). 
 
 *Declaration:* `theorem developmentPhase_lt_iff_le_not_le`
 
 ```
-theorem `developmentPhase_lt_iff_le_not_le` :
+theorem developmentPhase_lt_iff_le_not_le :
     ∀ (p₁ p₂ : DevelopmentPhase), p₁ < p₂ ↔ p₁ ≤ p₂ ∧ ¬(p₂ ≤ p₁) := by
-  intro `_p₁` `_p₂`; exact Nat.`lt_iff_le_not_le`
+  intro _p₁ _p₂; exact Nat.lt_iff_le_not_le
 ```
 
-## D5: 仕様・テスト・実装の三層
+## D5 Specification Test and Implementation Three-Layer Architecture
 
-根拠: T8（精度水準）+ P4（可観測性）+ P6（制約充足）
+Rationale: T8 (precision level) + P4 (observability) + P6 (constraint satisfaction)
 
-三層表現の種類。 
+Types of the three-layer representation. 
 
 *Declaration:* `inductive SpecLayer`
 
@@ -688,7 +692,7 @@ inductive SpecLayer where
   deriving BEq, Repr
 ```
 
-テストの種類。T4（確率的出力）への対応。 
+Test kinds. Corresponds to T4 (probabilistic output). 
 
 *Declaration:* `inductive TestKind`
 
@@ -699,22 +703,22 @@ inductive TestKind where
   deriving BEq, Repr
 ```
 
-D5 の根拠: T8 により、テストには精度水準がある。
-   精度が 0 のテストは意味がない。 
+Rationale for D5: By T8, tests have precision levels.
+   A test with precision 0 is meaningless. 
 
 *Declaration:* `theorem d5_test_has_precision`
 
 ```
-theorem `d5_test_has_precision` :
+theorem d5_test_has_precision :
   ∀ (task : Task),
     task.precisionRequired.required > 0 :=
-  `task_has_precision`
+  task_has_precision
 ```
 
-三層の対応関係。形式仕様→テスト→実装の順序で構成する。
+Correspondence between the three layers. Composed in the order: formal spec -> test -> implementation.
    design-development-foundation.md D5:
-   「形式仕様 → テスト: 各 axiom/theorem に対して少なくとも1つのテストが存在する」
-   「テスト → 実装: テストが先に存在し、実装がテストを通す」 
+   "Formal spec -> Test: At least one test exists for each axiom/theorem"
+   "Test -> Implementation: Tests exist first, and the implementation passes the tests" 
 
 *Declaration:* `def specLayerOrder`
 
@@ -725,18 +729,18 @@ def specLayerOrder : SpecLayer → Nat
   | .implementation  => 2   -- テストを通す実装を構築
 ```
 
-D5: 三層は厳密に順序づけられている。 
+D5: The three layers are strictly ordered. 
 
 *Declaration:* `theorem d5_layer_sequential`
 
 ```
-theorem `d5_layer_sequential` :
+theorem d5_layer_sequential :
   specLayerOrder .formalSpec < specLayerOrder .acceptanceTest ∧
   specLayerOrder .acceptanceTest < specLayerOrder .implementation := by
   simp [specLayerOrder]
 ```
 
-テストの決定性。構造的テストは決定論的、行動的テストは確率的（T4）。 
+Determinism of tests. Structural tests are deterministic, behavioral tests are probabilistic (T4). 
 
 *Declaration:* `def testDeterministic`
 
@@ -746,89 +750,89 @@ def testDeterministic : TestKind → Bool
   | .behavioral => false   -- 確率的: T4 により結果が変動しうる
 ```
 
-D5 + T4: 構造的テストは決定論的、行動的テストは確率的。 
+D5 + T4: Structural tests are deterministic, behavioral tests are probabilistic. 
 
 *Declaration:* `theorem d5_structural_test_deterministic`
 
 ```
-theorem `d5_structural_test_deterministic` :
+theorem d5_structural_test_deterministic :
   testDeterministic .structural = true ∧
   testDeterministic .behavioral = false := by
   constructor <;> rfl
 ```
 
-順序関数は単射（異なる層は異なる順序値）。 
+The ordering function is injective (distinct layers have distinct order values). 
 
 *Declaration:* `theorem specLayerOrder_injective`
 
 ```
-theorem `specLayerOrder_injective` :
+theorem specLayerOrder_injective :
   ∀ (l₁ l₂ : SpecLayer),
     specLayerOrder l₁ = specLayerOrder l₂ → l₁ = l₂ := by
   intro l₁ l₂; cases l₁ <;> cases l₂ <;> simp [specLayerOrder]
 ```
 
-半順序の反射律: l ≤ l。 
+Partial order reflexivity: l <= l. 
 
 *Declaration:* `theorem specLayer_le_refl`
 
 ```
-theorem `specLayer_le_refl` : ∀ (l : SpecLayer), l ≤ l :=
-  fun l => Nat.`le_refl` (specLayerOrder l)
+theorem specLayer_le_refl : ∀ (l : SpecLayer), l ≤ l :=
+  fun l => Nat.le_refl (specLayerOrder l)
 ```
 
-半順序の推移律: l₁ ≤ l₂ かつ l₂ ≤ l₃ ならば l₁ ≤ l₃。 
+Partial order transitivity: if l₁ <= l₂ and l₂ <= l₃ then l₁ <= l₃. 
 
 *Declaration:* `theorem specLayer_le_trans`
 
 ```
-theorem `specLayer_le_trans` :
+theorem specLayer_le_trans :
     ∀ (l₁ l₂ l₃ : SpecLayer), l₁ ≤ l₂ → l₂ ≤ l₃ → l₁ ≤ l₃ := by
-  intro `_l₁` `_l₂` `_l₃` h₁₂ h₂₃; exact Nat.`le_trans` h₁₂ h₂₃
+  intro _l₁ _l₂ _l₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
 ```
 
-半順序の反対称律: l₁ ≤ l₂ かつ l₂ ≤ l₁ ならば l₁ = l₂。 
+Partial order antisymmetry: if l₁ <= l₂ and l₂ <= l₁ then l₁ = l₂. 
 
 *Declaration:* `theorem specLayer_le_antisymm`
 
 ```
-theorem `specLayer_le_antisymm` :
+theorem specLayer_le_antisymm :
     ∀ (l₁ l₂ : SpecLayer), l₁ ≤ l₂ → l₂ ≤ l₁ → l₁ = l₂ :=
-  fun l₁ l₂ h₁₂ h₂₁ => `specLayerOrder_injective` l₁ l₂ (Nat.`le_antisymm` h₁₂ h₂₁)
+  fun l₁ l₂ h₁₂ h₂₁ => specLayerOrder_injective l₁ l₂ (Nat.le_antisymm h₁₂ h₂₁)
 ```
 
-LT と LE の整合性: l₁ < l₂ ↔ l₁ ≤ l₂ かつ ¬(l₂ ≤ l₁)。 
+Consistency of LT and LE: l₁ < l₂ iff l₁ <= l₂ and not (l₂ <= l₁). 
 
 *Declaration:* `theorem specLayer_lt_iff_le_not_le`
 
 ```
-theorem `specLayer_lt_iff_le_not_le` :
+theorem specLayer_lt_iff_le_not_le :
     ∀ (l₁ l₂ : SpecLayer), l₁ < l₂ ↔ l₁ ≤ l₂ ∧ ¬(l₂ ≤ l₁) := by
-  intro `_l₁` `_l₂`; exact Nat.`lt_iff_le_not_le`
+  intro _l₁ _l₂; exact Nat.lt_iff_le_not_le
 ```
 
-## D6: 三段設計
+## D6 Three-Stage Design
 
-根拠: Ontology.lean/Observable.lean 三段構造（境界→緩和策→変数）
+Rationale: Ontology.lean/Observable.lean three-stage structure (boundary -> mitigation -> variable)
 
-Ontology.lean に BoundaryLayer, BoundaryId, Mitigation が
-既に定義されている。ここではその設計原理を定理として表現する。
+BoundaryLayer, BoundaryId, and Mitigation are already defined in Ontology.lean.
+Here we express the design principles as theorems.
 
-D6 の根拠: 固定境界に対応する変数は緩和策の品質のみ改善可能。 
+Rationale for D6: Variables corresponding to fixed boundaries can only improve mitigation quality. 
 
 *Declaration:* `theorem d6_fixed_boundary_mitigated`
 
 ```
-theorem `d6_fixed_boundary_mitigated` :
+theorem d6_fixed_boundary_mitigated :
   boundaryLayer .ethicsSafety = .fixed ∧
   boundaryLayer .ontological = .fixed := by
   simp [boundaryLayer]
 ```
 
-三段設計の設計フロー。
+Design flow of the three-stage design.
    design-development-foundation.md D6:
-   「境界条件（不変） → 緩和策（設計判断） → 変数（品質指標）」
-   設計は常にこの方向で行い、逆方向は禁止。 
+   "Boundary conditions (invariant) -> Mitigations (design decisions) -> Variables (quality metrics)"
+   Design always proceeds in this direction; the reverse direction is prohibited. 
 
 *Declaration:* `inductive DesignStage`
 
@@ -836,28 +840,28 @@ theorem `d6_fixed_boundary_mitigated` :
 inductive DesignStage where
 ```
 
- 境界条件を識別する（不変。受容するのみ）-/
+ Identify boundary conditions (invariant; only accepted) -/
   | identifyBoundary
-  /-- 緩和策を設計する（L6 に属する設計判断）-/
+  /-- Design mitigations (design decisions belonging to L6) -/
   | designMitigation
-  /-- 変数を定義する（緩和策の効き具合の指標）-/
+  /-- Define variables (metrics for mitigation effectiveness) -/
   | defineVariable
   deriving BEq, Repr, DecidableEq
 
-/-- 三段設計のステージ順序。 -/
+/-- Stage ordering of the three-stage design. -/
 def designStageOrder : DesignStage → Nat
   | .identifyBoundary  => 0
   | .designMitigation  => 1
   | .defineVariable    => 2
 
-/-- D6: 三段設計は厳密に順序づけられている。 -/
+/-- D6: The three-stage design is strictly ordered. -/
 theorem `d6_stage_sequential` :
   designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
   designStageOrder .designMitigation < designStageOrder .defineVariable := by
   simp (designStageOrder)
 
-/-- D6: 逆方向の禁止。変数を直接改善しようとしない（Goodhart's Law の罠）。
-    変数のステージは最後であり、変数から境界条件や緩和策に遡ることはない。 -/
+/-- D6: Reverse direction prohibited. Do not attempt to directly improve variables (Goodhart's Law trap).
+    The variable stage is last; there is no backtracking from variables to boundary conditions or mitigations. -/
 theorem `d6_no_reverse` :
   ∀ (s : DesignStage),
     designStageOrder .identifyBoundary ≤ designStageOrder s := by
@@ -867,7 +871,7 @@ theorem `d6_no_reverse` :
 -- D6: DesignStage 半順序型クラスインスタンス（Run 61 追加）
 -- ============================================================
 
-/-- 順序関数は単射（異なるステージは異なる順序値）。 -/
+/-- The ordering function is injective (distinct stages have distinct order values). -/
 theorem `designStageOrder_injective` :
   ∀ (s₁ s₂ : DesignStage),
     designStageOrder s₁ = designStageOrder s₂ → s₁ = s₂ := by
@@ -876,21 +880,21 @@ theorem `designStageOrder_injective` :
 instance : LE DesignStage := ⟨fun a b => designStageOrder a ≤ designStageOrder b⟩
 instance : LT DesignStage := ⟨fun a b => designStageOrder a < designStageOrder b⟩
 
-/-- 半順序の反射律: s ≤ s。 -/
+/-- Partial order reflexivity: s <= s. -/
 theorem `designStage_le_refl` : ∀ (s : DesignStage), s ≤ s :=
   fun s => Nat.`le_refl` (designStageOrder s)
 
-/-- 半順序の推移律: s₁ ≤ s₂ かつ s₂ ≤ s₃ ならば s₁ ≤ s₃。 -/
+/-- Partial order transitivity: if s₁ <= s₂ and s₂ <= s₃ then s₁ <= s₃. -/
 theorem `designStage_le_trans` :
     ∀ (s₁ s₂ s₃ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₃ → s₁ ≤ s₃ := by
   intro `_s₁` `_s₂` `_s₃` h₁₂ h₂₃; exact Nat.`le_trans` h₁₂ h₂₃
 
-/-- 半順序の反対称律: s₁ ≤ s₂ かつ s₂ ≤ s₁ ならば s₁ = s₂。 -/
+/-- Partial order antisymmetry: if s₁ <= s₂ and s₂ <= s₁ then s₁ = s₂. -/
 theorem `designStage_le_antisymm` :
     ∀ (s₁ s₂ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₁ → s₁ = s₂ :=
   fun s₁ s₂ h₁₂ h₂₁ => `designStageOrder_injective` s₁ s₂ (Nat.`le_antisymm` h₁₂ h₂₁)
 
-/-- LT と LE の整合性: s₁ < s₂ ↔ s₁ ≤ s₂ かつ ¬(s₂ ≤ s₁)。 -/
+/-- Consistency of LT and LE: s₁ < s₂ iff s₁ <= s₂ and not (s₂ <= s₁). -/
 theorem `designStage_lt_iff_le_not_le` :
     ∀ (s₁ s₂ : DesignStage), s₁ < s₂ ↔ s₁ ≤ s₂ ∧ ¬(s₂ ≤ s₁) := by
   intro `_s₁` `_s₂`; exact Nat.`lt_iff_le_not_le`
@@ -900,15 +904,15 @@ theorem `designStage_lt_iff_le_not_le` :
 -- ============================================================
 
 /-!
-## D7: 信頼の非対称性
+## D7 Trust Asymmetry
 
-根拠: Section 6 + P1（共成長）
+Rationale: Section 6 + P1 (co-growth)
 
-蓄積は bounded（`trust_accumulates_gradually`）、
-毀損は unbounded（`trust_decreases_on_materialized_risk`）。
+Accumulation is bounded (`trust_accumulates_gradually`),
+damage is unbounded (`trust_decreases_on_materialized_risk`).
 -/
 
-/-- D7 の根拠: 蓄積は bounded。 -/
+/-- Rationale for D7: Accumulation is bounded. -/
 theorem `d7_accumulation_bounded` :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w ≤ actionSpaceSize agent w' →
@@ -917,7 +921,7 @@ theorem `d7_accumulation_bounded` :
     trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound :=
   `trust_accumulates_gradually`
 
-/-- D7 の根拠: 毀損は unbounded。 -/
+/-- Rationale for D7: Damage is unbounded. -/
 theorem `d7_damage_unbounded` :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
@@ -930,23 +934,23 @@ theorem `d7_damage_unbounded` :
 -- ============================================================
 
 /-!
-## D8: 均衡探索
+## D8 Equilibrium Search
 
-根拠: Section 6 + E2（能力-リスク共成長）
+Rationale: Section 6 + E2 (capability-risk co-scaling)
 
-`overexpansion_reduces_value` により、
-行動空間の拡大が協働価値を減少させるケースが存在する。
+By `overexpansion_reduces_value`,
+there exist cases where expansion of the action space reduces collaborative value.
 -/
 
-/-- D8 の根拠: 過剰拡大は価値を毀損しうる。 -/
+/-- Rationale for D8: Overexpansion can damage value. -/
 theorem `d8_overexpansion_risk` :
   ∃ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' ∧
     collaborativeValue w' < collaborativeValue w :=
   `overexpansion_reduces_value`
 
-/-- D8 の P1 接続: 能力拡大はリスク拡大と不可分。
-    E2 の直接適用。 -/
+/-- D8's connection to P1: Capability expansion is inseparable from risk expansion.
+    Direct application of E2. -/
 theorem `d8_capability_risk` :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
@@ -958,29 +962,30 @@ theorem `d8_capability_risk` :
 -- ============================================================
 
 /-!
-## D9: 分類自体のメンテナンス（定義的拡大 + 定理, §5.5/§4.2）
+## D9 Maintenance of the Classification Itself
+Definitional Extension + Theorem, 5.5/4.2.
 
-根拠: Observable.lean Part IV + P3（学習の統治, 定理 §4.2）+ Section 7（自己適用）
+Rationale: Observable.lean Part IV + P3 (governed learning, theorem §4.2) + Section 7 (self-application)
 
-設計基礎論自体が更新対象であり、更新は P3 の互換性分類に従う。
-これは AGM の修正操作（用語リファレンス §9.2）の構造化:
-- 保守的拡張 = 保存拡大（§5.5）
-- 互換的変更 = 無矛盾な拡大（§5.5）
-- 破壊的変更 = 拡大ではない変更（一部の定理が保存されない）
+The design foundation itself is subject to updates, and updates follow P3's compatibility classification.
+This is a structuring of AGM revision operations (terminology reference §9.2):
+- Conservative extension = conservative extension (§5.5)
+- Compatible change = consistent extension (§5.5)
+- Breaking change = non-extension change (some theorems are not preserved)
 
-### 自己適用の要件
+## Self-Application Requirements
 
-D9 は「分類自体のメンテナンス」を述べる原理であるから、
-D1–D9 自身もまた D9 の適用対象でなければならない（Section 7）。
+Since D9 states the principle of "maintenance of the classification itself",
+D1–D9 themselves must also be subject to D9 (Section 7).
 
-これを型レベル（§7.1 カリー＝ハワード対応）で表現するために:
-1. D1–D9 を DesignPrinciple 型の値としてモデル化する（論議領域 §3.2 の拡張）
-2. DesignPrinciple の更新が CompatibilityClass で分類されることを要求する
-3. SelfGoverning 型クラス（§9.4）で構造的に強制する
+To express this at the type level (§7.1 Curry-Howard correspondence):
+1. Model D1–D9 as values of the DesignPrinciple type (extension of domain of discourse §3.2)
+2. Require that updates to DesignPrinciple are classified by CompatibilityClass
+3. Structurally enforce via the SelfGoverning type class (§9.4)
 -/
 
-/-- 設計原理の識別子。D1–D12 を値として列挙する。
-    これにより D1–D12 自身が「更新される対象」として型レベルで扱える。 -/
+/-- Design principle identifiers. Enumerates D1–D12 as values.
+    This allows D1–D12 themselves to be treated at the type level as "targets of updates". -/
 inductive DesignPrinciple where
   | `d1_enforcementLayering`
   | `d2_workerVerifierSeparation`
@@ -998,36 +1003,35 @@ inductive DesignPrinciple where
   | `d14_verificationOrderConstraint`
   deriving BEq, Repr
 
-/-- DesignPrinciple は SelfGoverning を実装する。
-    これにより、D1–D9 自身が governedUpdate の対象となり、
-    互換性分類なしの更新は型レベルで不正になる。
+/-- DesignPrinciple implements SelfGoverning.
+    This makes D1–D9 themselves subject to governedUpdate,
+    and updates without compatibility classification become type-level errors.
 
-    SelfGoverning を実装しない型は governedUpdate や
-    `governed_update_classified` を使えないため、
-    新しい原理型を定義して SelfGoverning を忘れると
-    型エラーで検出される。 -/
+    Types that do not implement SelfGoverning cannot use governedUpdate or
+    `governed_update_classified`, so defining a new principle type
+    and forgetting to implement SelfGoverning is detected as a type error. -/
 instance : SelfGoverning DesignPrinciple where
   classificationExhaustive := by intro c; cases c <;> simp
   canClassifyUpdate `_` `_` := True
 
-/-- 設計原理の更新イベント。
-    D9 の自己適用: D1–D9 自身の変更も互換性分類を経る。 -/
+/-- Design principle update event.
+    Self-application of D9: Changes to D1–D9 themselves also go through compatibility classification. -/
 structure DesignPrincipleUpdate where
-  /-- 更新対象の原理 
+  /-- The principle being updated 
 
 ```
 principle     : DesignPrinciple
 ```
 
- 境界条件を識別する（不変。受容するのみ）-/
+ Identify boundary conditions (invariant; only accepted) -/
   | identifyBoundary
-  /-- 緩和策を設計する（L6 に属する設計判断）-/
+  /-- Design mitigations (design decisions belonging to L6) -/
   | designMitigation
-  /-- 変数を定義する（緩和策の効き具合の指標）-/
+  /-- Define variables (metrics for mitigation effectiveness) -/
   | defineVariable
   deriving BEq, Repr, DecidableEq
 
-/-- 三段設計のステージ順序。 
+/-- Stage ordering of the three-stage design. 
 
 *Declaration:* `def designStageOrder`
 
@@ -1038,209 +1042,209 @@ def designStageOrder : DesignStage → Nat
   | .defineVariable    => 2
 ```
 
-緩和策を設計する（L6 に属する設計判断）
+Design mitigations (design decisions belonging to L6) 
 
 ```
 | designMitigation
 ```
 
-変数を定義する（緩和策の効き具合の指標）
+Define variables (metrics for mitigation effectiveness) 
 
 ```
 | defineVariable
 ```
 
-D6: 三段設計は厳密に順序づけられている。 
+D6: The three-stage design is strictly ordered. 
 
 *Declaration:* `theorem d6_stage_sequential`
 
 ```
-theorem `d6_stage_sequential` :
+theorem d6_stage_sequential :
   designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
   designStageOrder .designMitigation < designStageOrder .defineVariable := by
   simp [designStageOrder]
 ```
 
-D6: 逆方向の禁止。変数を直接改善しようとしない（Goodhart's Law の罠）。
-   変数のステージは最後であり、変数から境界条件や緩和策に遡ることはない。 
+D6: Reverse direction prohibited. Do not attempt to directly improve variables (Goodhart's Law trap).
+   The variable stage is last; there is no backtracking from variables to boundary conditions or mitigations. 
 
 *Declaration:* `theorem d6_no_reverse`
 
 ```
-theorem `d6_no_reverse` :
+theorem d6_no_reverse :
   ∀ (s : DesignStage),
     designStageOrder .identifyBoundary ≤ designStageOrder s := by
   intro s; cases s <;> simp [designStageOrder]
 ```
 
-順序関数は単射（異なるステージは異なる順序値）。 
+The ordering function is injective (distinct stages have distinct order values). 
 
 *Declaration:* `theorem designStageOrder_injective`
 
 ```
-theorem `designStageOrder_injective` :
+theorem designStageOrder_injective :
   ∀ (s₁ s₂ : DesignStage),
     designStageOrder s₁ = designStageOrder s₂ → s₁ = s₂ := by
   intro s₁ s₂; cases s₁ <;> cases s₂ <;> simp [designStageOrder]
 ```
 
-半順序の反射律: s ≤ s。 
+Partial order reflexivity: s <= s. 
 
 *Declaration:* `theorem designStage_le_refl`
 
 ```
-theorem `designStage_le_refl` : ∀ (s : DesignStage), s ≤ s :=
-  fun s => Nat.`le_refl` (designStageOrder s)
+theorem designStage_le_refl : ∀ (s : DesignStage), s ≤ s :=
+  fun s => Nat.le_refl (designStageOrder s)
 ```
 
-半順序の推移律: s₁ ≤ s₂ かつ s₂ ≤ s₃ ならば s₁ ≤ s₃。 
+Partial order transitivity: if s₁ <= s₂ and s₂ <= s₃ then s₁ <= s₃. 
 
 *Declaration:* `theorem designStage_le_trans`
 
 ```
-theorem `designStage_le_trans` :
+theorem designStage_le_trans :
     ∀ (s₁ s₂ s₃ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₃ → s₁ ≤ s₃ := by
-  intro `_s₁` `_s₂` `_s₃` h₁₂ h₂₃; exact Nat.`le_trans` h₁₂ h₂₃
+  intro _s₁ _s₂ _s₃ h₁₂ h₂₃; exact Nat.le_trans h₁₂ h₂₃
 ```
 
-半順序の反対称律: s₁ ≤ s₂ かつ s₂ ≤ s₁ ならば s₁ = s₂。 
+Partial order antisymmetry: if s₁ <= s₂ and s₂ <= s₁ then s₁ = s₂. 
 
 *Declaration:* `theorem designStage_le_antisymm`
 
 ```
-theorem `designStage_le_antisymm` :
+theorem designStage_le_antisymm :
     ∀ (s₁ s₂ : DesignStage), s₁ ≤ s₂ → s₂ ≤ s₁ → s₁ = s₂ :=
-  fun s₁ s₂ h₁₂ h₂₁ => `designStageOrder_injective` s₁ s₂ (Nat.`le_antisymm` h₁₂ h₂₁)
+  fun s₁ s₂ h₁₂ h₂₁ => designStageOrder_injective s₁ s₂ (Nat.le_antisymm h₁₂ h₂₁)
 ```
 
-LT と LE の整合性: s₁ < s₂ ↔ s₁ ≤ s₂ かつ ¬(s₂ ≤ s₁)。 
+Consistency of LT and LE: s₁ < s₂ iff s₁ <= s₂ and not (s₂ <= s₁). 
 
 *Declaration:* `theorem designStage_lt_iff_le_not_le`
 
 ```
-theorem `designStage_lt_iff_le_not_le` :
+theorem designStage_lt_iff_le_not_le :
     ∀ (s₁ s₂ : DesignStage), s₁ < s₂ ↔ s₁ ≤ s₂ ∧ ¬(s₂ ≤ s₁) := by
-  intro `_s₁` `_s₂`; exact Nat.`lt_iff_le_not_le`
+  intro _s₁ _s₂; exact Nat.lt_iff_le_not_le
 ```
 
-## D7: 信頼の非対称性 (2)
+## D7 Trust Asymmetry Part 2
 
-根拠: Section 6 + P1（共成長）
+Rationale: Section 6 + P1 (co-growth)
 
-蓄積は bounded（`trust_accumulates_gradually`）、
-毀損は unbounded（`trust_decreases_on_materialized_risk`）。
+Accumulation is bounded (`trust_accumulates_gradually`),
+damage is unbounded (`trust_decreases_on_materialized_risk`).
 
-D7 の根拠: 蓄積は bounded。 
+Rationale for D7: Accumulation is bounded. 
 
 *Declaration:* `theorem d7_accumulation_bounded`
 
 ```
-theorem `d7_accumulation_bounded` :
+theorem d7_accumulation_bounded :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w ≤ actionSpaceSize agent w' →
     ¬riskMaterialized agent w' →
     trustLevel agent w ≤ trustLevel agent w' ∧
     trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound :=
-  `trust_accumulates_gradually`
+  trust_accumulates_gradually
 ```
 
-D7 の根拠: 毀損は unbounded。 
+Rationale for D7: Damage is unbounded. 
 
 *Declaration:* `theorem d7_damage_unbounded`
 
 ```
-theorem `d7_damage_unbounded` :
+theorem d7_damage_unbounded :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskMaterialized agent w' →
     trustLevel agent w' < trustLevel agent w :=
-  `trust_decreases_on_materialized_risk`
+  trust_decreases_on_materialized_risk
 ```
 
-## D8: 均衡探索 (2)
+## D8 Equilibrium Search Part 2
 
-根拠: Section 6 + E2（能力-リスク共成長）
+Rationale: Section 6 + E2 (capability-risk co-scaling)
 
-`overexpansion_reduces_value` により、
-行動空間の拡大が協働価値を減少させるケースが存在する。
+By `overexpansion_reduces_value`,
+there exist cases where expansion of the action space reduces collaborative value.
 
-D8 の根拠: 過剰拡大は価値を毀損しうる。 
+Rationale for D8: Overexpansion can damage value. 
 
 *Declaration:* `theorem d8_overexpansion_risk`
 
 ```
-theorem `d8_overexpansion_risk` :
+theorem d8_overexpansion_risk :
   ∃ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' ∧
     collaborativeValue w' < collaborativeValue w :=
-  `overexpansion_reduces_value`
+  overexpansion_reduces_value
 ```
 
-D8 の P1 接続: 能力拡大はリスク拡大と不可分。
-   E2 の直接適用。 
+D8's connection to P1: Capability expansion is inseparable from risk expansion.
+   Direct application of E2. 
 
 *Declaration:* `theorem d8_capability_risk`
 
 ```
-theorem `d8_capability_risk` :
+theorem d8_capability_risk :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskExposure agent w < riskExposure agent w' :=
-  `capability_risk_coscaling`
+  capability_risk_coscaling
 ```
 
-## D9: 分類自体のメンテナンス（定義的拡大 + 定理, §5.5/§4.2） (2)
+## D9 Maintenance of the Classification Itself Part 2
+Definitional Extension + Theorem, 5.5/4.2.
 
-根拠: Observable.lean Part IV + P3（学習の統治, 定理 §4.2）+ Section 7（自己適用）
+Rationale: Observable.lean Part IV + P3 (governed learning, theorem §4.2) + Section 7 (self-application)
 
-設計基礎論自体が更新対象であり、更新は P3 の互換性分類に従う。
-これは AGM の修正操作（用語リファレンス §9.2）の構造化:
-- 保守的拡張 = 保存拡大（§5.5）
-- 互換的変更 = 無矛盾な拡大（§5.5）
-- 破壊的変更 = 拡大ではない変更（一部の定理が保存されない）
+The design foundation itself is subject to updates, and updates follow P3's compatibility classification.
+This is a structuring of AGM revision operations (terminology reference §9.2):
+- Conservative extension = conservative extension (§5.5)
+- Compatible change = consistent extension (§5.5)
+- Breaking change = non-extension change (some theorems are not preserved)
 
-### 自己適用の要件 (2)
+## Self-Application Requirements Part 2
 
-D9 は「分類自体のメンテナンス」を述べる原理であるから、
-D1–D9 自身もまた D9 の適用対象でなければならない（Section 7）。
+Since D9 states the principle of "maintenance of the classification itself",
+D1–D9 themselves must also be subject to D9 (Section 7).
 
-これを型レベル（§7.1 カリー＝ハワード対応）で表現するために:
-1. D1–D9 を DesignPrinciple 型の値としてモデル化する（論議領域 §3.2 の拡張）
-2. DesignPrinciple の更新が CompatibilityClass で分類されることを要求する
-3. SelfGoverning 型クラス（§9.4）で構造的に強制する
+To express this at the type level (§7.1 Curry-Howard correspondence):
+1. Model D1–D9 as values of the DesignPrinciple type (extension of domain of discourse §3.2)
+2. Require that updates to DesignPrinciple are classified by CompatibilityClass
+3. Structurally enforce via the SelfGoverning type class (§9.4)
 
-設計原理の識別子。D1–D12 を値として列挙する。
-   これにより D1–D12 自身が「更新される対象」として型レベルで扱える。 
+Design principle identifiers. Enumerates D1–D12 as values.
+   This allows D1–D12 themselves to be treated at the type level as "targets of updates". 
 
 *Declaration:* `inductive DesignPrinciple`
 
 ```
 inductive DesignPrinciple where
-  | `d1_enforcementLayering`
-  | `d2_workerVerifierSeparation`
-  | `d3_observabilityFirst`
-  | `d4_progressiveSelfApplication`
-  | `d5_specTestImpl`
-  | `d6_boundaryMitigationVariable`
-  | `d7_trustAsymmetry`
-  | `d8_equilibriumSearch`
-  | `d9_selfMaintenance`
-  | `d10_structuralPermanence`
-  | `d11_contextEconomy`
-  | `d12_constraintSatisfactionTaskDesign`
-  | `d13_premiseNegationPropagation`
-  | `d14_verificationOrderConstraint`
+  | d1_enforcementLayering
+  | d2_workerVerifierSeparation
+  | d3_observabilityFirst
+  | d4_progressiveSelfApplication
+  | d5_specTestImpl
+  | d6_boundaryMitigationVariable
+  | d7_trustAsymmetry
+  | d8_equilibriumSearch
+  | d9_selfMaintenance
+  | d10_structuralPermanence
+  | d11_contextEconomy
+  | d12_constraintSatisfactionTaskDesign
+  | d13_premiseNegationPropagation
+  | d14_verificationOrderConstraint
   deriving BEq, Repr
 ```
 
-DesignPrinciple は SelfGoverning を実装する。
-   これにより、D1–D9 自身が governedUpdate の対象となり、
-   互換性分類なしの更新は型レベルで不正になる。
+DesignPrinciple implements SelfGoverning.
+   This makes D1–D9 themselves subject to governedUpdate,
+   and updates without compatibility classification become type-level errors.
 
-   SelfGoverning を実装しない型は governedUpdate や
-   `governed_update_classified` を使えないため、
-   新しい原理型を定義して SelfGoverning を忘れると
-   型エラーで検出される。 
+   Types that do not implement SelfGoverning cannot use governedUpdate or
+   `governed_update_classified`, so defining a new principle type
+   and forgetting to implement SelfGoverning is detected as a type error. 
 
 *Declaration:* `instance :`
 
@@ -1250,8 +1254,8 @@ instance : SelfGoverning DesignPrinciple where
   canClassifyUpdate _ _ := True
 ```
 
-設計原理の更新イベント。
-   D9 の自己適用: D1–D9 自身の変更も互換性分類を経る。 
+Design principle update event.
+   Self-application of D9: Changes to D1–D9 themselves also go through compatibility classification. 
 
 *Declaration:* `structure DesignPrincipleUpdate`
 
@@ -1259,20 +1263,20 @@ instance : SelfGoverning DesignPrinciple where
 structure DesignPrincipleUpdate where
 ```
 
- 更新対象の原理 -/
+ The principle being updated -/
   principle     : DesignPrinciple
-  /-- 更新の互換性分類 -/
+  /-- Compatibility classification of the update -/
   compatibility : CompatibilityClass
-  /-- 更新の根拠（マニフェストの T/E/P への参照） -/
+  /-- Rationale for the update (reference to manifesto's T/E/P) -/
   hasRationale  : Bool
   deriving Repr
 
-/-- D9: 任意の互換性分類は3クラスのいずれかに属する。 
+/-- D9: Any compatibility classification belongs to one of the 3 classes. 
 
 *Declaration:* `theorem d9_update_classified`
 
 ```
-theorem `d9_update_classified` :
+theorem d9_update_classified :
   ∀ (c : CompatibilityClass),
     c = .conservativeExtension ∨
     c = .compatibleChange ∨
@@ -1280,23 +1284,23 @@ theorem `d9_update_classified` :
   intro c; cases c <;> simp
 ```
 
-更新の互換性分類 
+Compatibility classification of the update 
 
 ```
 compatibility : CompatibilityClass
 ```
 
-更新の根拠（マニフェストの T/E/P への参照） 
+Rationale for the update (reference to manifesto's T/E/P) 
 
 ```
 hasRationale  : Bool
 ```
 
-D9 の自己適用: D9 自身の更新も互換性分類を経る。
-   DesignPrincipleUpdate 型がこれを構造的に要求する
-   （compatibility フィールドが必須）。
+Self-application of D9: Updates to D9 itself also go through compatibility classification.
+   The DesignPrincipleUpdate type structurally requires this
+   (the compatibility field is mandatory).
 
-   さらに、更新には根拠が必要（D9: 根拠が失われた原理は再検討対象）。 
+   Furthermore, updates require a rationale (D9: principles that lose their rationale are subject to review). 
 
 *Declaration:* `def governedPrincipleUpdate`
 
@@ -1305,115 +1309,116 @@ def governedPrincipleUpdate (u : DesignPrincipleUpdate) : Prop :=
   u.hasRationale = true
 ```
 
-D9 の自己適用: SelfGoverning typeclass 経由で
-   DesignPrinciple の任意の更新が互換性分類されることを証明。
+Self-application of D9: Proves via the SelfGoverning typeclass that
+   any update to DesignPrinciple is compatibility-classified.
 
-   `governed_update_classified` は SelfGoverning インスタンスが
-   存在する型に対してのみ呼び出せる。DesignPrinciple が
-   SelfGoverning を実装していなければ、この定理は型エラーになる。
-   → 実装忘れが構造的に検出される。 
+   `governed_update_classified` can only be called on types that have a
+   SelfGoverning instance. If DesignPrinciple does not implement
+   SelfGoverning, this theorem becomes a type error.
+   -> Missing implementations are structurally detected. 
 
 *Declaration:* `theorem d9_self_applicable`
 
 ```
-theorem `d9_self_applicable` :
-  ∀ (`_p` : DesignPrinciple) (c : CompatibilityClass),
+theorem d9_self_applicable :
+  ∀ (_p : DesignPrinciple) (c : CompatibilityClass),
     c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
-  fun `_p` c => `governed_update_classified` `_p` c
+  fun _p c => governed_update_classified _p c
 ```
 
-D9 の網羅性: D1–D13 の全原理が更新対象として列挙されている。 
+D9 exhaustiveness: All principles D1–D13 are enumerated as update targets. 
 
 *Declaration:* `theorem d9_all_principles_enumerated`
 
 ```
-theorem `d9_all_principles_enumerated` :
+theorem d9_all_principles_enumerated :
   ∀ (p : DesignPrinciple),
-    p = .`d1_enforcementLayering` ∨
-    p = .`d2_workerVerifierSeparation` ∨
-    p = .`d3_observabilityFirst` ∨
-    p = .`d4_progressiveSelfApplication` ∨
-    p = .`d5_specTestImpl` ∨
-    p = .`d6_boundaryMitigationVariable` ∨
-    p = .`d7_trustAsymmetry` ∨
-    p = .`d8_equilibriumSearch` ∨
-    p = .`d9_selfMaintenance` ∨
-    p = .`d10_structuralPermanence` ∨
-    p = .`d11_contextEconomy` ∨
-    p = .`d12_constraintSatisfactionTaskDesign` ∨
-    p = .`d13_premiseNegationPropagation` ∨
-    p = .`d14_verificationOrderConstraint` := by
+    p = .d1_enforcementLayering ∨
+    p = .d2_workerVerifierSeparation ∨
+    p = .d3_observabilityFirst ∨
+    p = .d4_progressiveSelfApplication ∨
+    p = .d5_specTestImpl ∨
+    p = .d6_boundaryMitigationVariable ∨
+    p = .d7_trustAsymmetry ∨
+    p = .d8_equilibriumSearch ∨
+    p = .d9_selfMaintenance ∨
+    p = .d10_structuralPermanence ∨
+    p = .d11_contextEconomy ∨
+    p = .d12_constraintSatisfactionTaskDesign ∨
+    p = .d13_premiseNegationPropagation ∨
+    p = .d14_verificationOrderConstraint := by
   intro p; cases p <;> simp
 ```
 
-## D4 の自己適用
+## Self-Application of D4
 
-D4（漸進的自己適用）は「開発プロセスが各フェーズまでの準拠を達成する」
-と述べるが、DesignFoundation 自体もこのフェーズに従って開発されるべき。
+D4 (progressive self-application) states that "the development process achieves
+compliance up to each phase", but DesignFoundation itself should also be
+developed following these phases.
 
-DesignFoundation の更新は DevelopmentPhase の文脈で行われ、
-更新されたフェーズの準拠レベルは不可逆に進む（T2: `structure_accumulates`）。
+Updates to DesignFoundation occur in the context of DevelopmentPhase,
+and the compliance level of the updated phase progresses irreversibly (T2: `structure_accumulates`).
 
-D4 の自己適用: 設計基礎論自体がフェーズを持つ。
-   各原理は、それが必要とするフェーズの完了後にのみ適用可能。 
+Self-application of D4: The design foundation itself has phases.
+   Each principle is applicable only after the phase it requires is complete. 
 
 *Declaration:* `def principleRequiredPhase`
 
 ```
 def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
-  | .`d1_enforcementLayering`         => .safety
-  | .`d2_workerVerifierSeparation`    => .verification
-  | .`d3_observabilityFirst`          => .observability
-  | .`d4_progressiveSelfApplication`  => .safety  -- D4 自体は最初から必要
-  | .`d5_specTestImpl`                => .verification
-  | .`d6_boundaryMitigationVariable`  => .observability
-  | .`d7_trustAsymmetry`              => .equilibrium
-  | .`d8_equilibriumSearch`           => .equilibrium
-  | .`d9_selfMaintenance`             => .safety  -- D9 も最初から必要
-  | .`d10_structuralPermanence`       => .safety  -- T1+T2 は最初から成立
-  | .`d11_contextEconomy`             => .observability  -- コンテキストコスト測定が前提
-  | .`d12_constraintSatisfactionTaskDesign` => .governance  -- P6 は統治フェーズ
-  | .`d13_premiseNegationPropagation`     => .governance  -- P3（退役）+ Section 8 が前提
-  | .`d14_verificationOrderConstraint`   => .governance  -- P6 + T7 + T8 が前提
+  | .d1_enforcementLayering         => .safety
+  | .d2_workerVerifierSeparation    => .verification
+  | .d3_observabilityFirst          => .observability
+  | .d4_progressiveSelfApplication  => .safety  -- D4 自体は最初から必要
+  | .d5_specTestImpl                => .verification
+  | .d6_boundaryMitigationVariable  => .observability
+  | .d7_trustAsymmetry              => .equilibrium
+  | .d8_equilibriumSearch           => .equilibrium
+  | .d9_selfMaintenance             => .safety  -- D9 も最初から必要
+  | .d10_structuralPermanence       => .safety  -- T1+T2 は最初から成立
+  | .d11_contextEconomy             => .observability  -- コンテキストコスト測定が前提
+  | .d12_constraintSatisfactionTaskDesign => .governance  -- P6 は統治フェーズ
+  | .d13_premiseNegationPropagation     => .governance  -- P3（退役）+ Section 8 が前提
+  | .d14_verificationOrderConstraint   => .governance  -- P6 + T7 + T8 が前提
 ```
 
-D4 の自己適用: D4 と D9 は safety フェーズから必要。
-   これは、開発の最初期から「フェーズ順序」と「更新の統治」が
-   機能していなければならないことを意味する。 
+Self-application of D4: D4 and D9 are required from the safety phase.
+   This means that "phase ordering" and "governed updates" must be
+   functional from the very beginning of development. 
 
 *Declaration:* `theorem d4_d9_from_first_phase`
 
 ```
-theorem `d4_d9_from_first_phase` :
-  principleRequiredPhase .`d4_progressiveSelfApplication` = .safety ∧
-  principleRequiredPhase .`d9_selfMaintenance` = .safety := by
+theorem d4_d9_from_first_phase :
+  principleRequiredPhase .d4_progressiveSelfApplication = .safety ∧
+  principleRequiredPhase .d9_selfMaintenance = .safety := by
   constructor <;> rfl
 ```
 
-## D1–D9 の依存構造
+## Dependency Structure of D1-D9
 
-D4（漸進的自己適用）のフェーズ順序が
-D1–D3 の依存関係と整合していることを検証する。
+Verifies that D4's (progressive self-application) phase ordering is
+consistent with the dependency relationships of D1–D3.
 
-- Phase 1 (safety) → D1 (L1 は構造的強制)
-- Phase 2 (verification) → D2 (P2 の構造的実現)
-- Phase 3 (observability) → D3 (可観測性先行)
-- Phase 4 (governance) → D3 に依存 (P3 は P4 の後)
-- Phase 5 (equilibrium) → D7, D8 に依存 (信頼・均衡)
+- Phase 1 (safety) -> D1 (L1 requires structural enforcement)
+- Phase 2 (verification) -> D2 (structural realization of P2)
+- Phase 3 (observability) -> D3 (observability first)
+- Phase 4 (governance) -> depends on D3 (P3 comes after P4)
+- Phase 5 (equilibrium) -> depends on D7, D8 (trust and equilibrium)
 
-この依存構造は phaseDependency で表現済み。
-`d4_full_chain` がその存在を証明している。
+This dependency structure is already expressed in phaseDependency.
+`d4_full_chain` proves its existence.
 
-D1–D4 の整合性: D4 のフェーズ順序の最初のステップ（安全→検証）は
-   D1（L1 は構造的強制）と D2（P2 の実現）の順序と一致する。
+Consistency of D1–D4: The first step of D4's phase ordering (safety -> verification)
+   matches the ordering of D1 (L1 requires structural enforcement) and D2 (realization of P2).
 
-   safety が最初 = D1 で L1 を構造的強制にする
-   verification が次 = D2 で P2 を実現する 
+   safety is first = D1 makes L1 structurally enforced
+   verification is next = D2 realizes P2 
 
 *Declaration:* `theorem dependency_d1_d2_d4_consistent`
 
 ```
-theorem `dependency_d1_d2_d4_consistent` :
+theorem dependency_d1_d2_d4_consistent :
   phaseDependency .verification .safety ∧
   minimumEnforcement .fixed = .structural := by
   constructor
@@ -1421,23 +1426,24 @@ theorem `dependency_d1_d2_d4_consistent` :
   · rfl
 ```
 
-## D10: 構造永続性（定理, §4.2）
+## D10 Structural Permanence
+Theorem, 4.2.
 
-根拠: T1（一時性, T₀ §4.1）+ T2（構造の永続性, T₀ §4.1）
+Rationale: T1 (ephemerality, T₀ §4.1) + T2 (structural permanence, T₀ §4.1)
 
-エージェントは一時的（T1）だが構造は永続する（T2）。
-改善の蓄積は構造を通じてのみ可能。
-Principles.lean の P3 定理群（`modifier_agent_terminates`,
-`modification_persists_after_termination`）と接続。
+Agents are ephemeral (T1) but structure persists (T2).
+Accumulation of improvements is possible only through structure.
+Connects with P3 theorem group in Principles.lean (`modifier_agent_terminates`,
+`modification_persists_after_termination`).
 
-D10 の根拠: エージェントのセッションは終了する（T1）が、
-   構造は永続する（T2）。P3a + P3b の合成。
-   `structure_persists` (T2) と `session_bounded` (T1) から。 
+Rationale for D10: Agent sessions terminate (T1), but
+   structure persists (T2). Composition of P3a + P3b.
+   From `structure_persists` (T2) and `session_bounded` (T1). 
 
 *Declaration:* `theorem d10_agent_temporary_structure_permanent`
 
 ```
-theorem `d10_agent_temporary_structure_permanent` :
+theorem d10_agent_temporary_structure_permanent :
   -- T1: セッションは終了する
   (∀ (w : World) (s : Session),
     s ∈ w.sessions →
@@ -1449,30 +1455,31 @@ theorem `d10_agent_temporary_structure_permanent` :
     s ∈ w.sessions → st ∈ w.structures →
     s.status = SessionStatus.terminated →
     validTransition w w' → st ∈ w'.structures) :=
-  ⟨`session_bounded`, `structure_persists`⟩
+  ⟨session_bounded, structure_persists⟩
 ```
 
-D10 の系: 構造への書き戻しが唯一の蓄積手段。
-   エポック（T2: `structure_accumulates`）は単調増加する。 
+Corollary of D10: Writing back to structure is the sole means of accumulation.
+   Epochs (T2: `structure_accumulates`) increase monotonically. 
 
 *Declaration:* `theorem d10_epoch_monotone`
 
 ```
-theorem `d10_epoch_monotone` :
+theorem d10_epoch_monotone :
   ∀ (w w' : World), validTransition w w' → w.epoch ≤ w'.epoch :=
-  `structure_accumulates`
+  structure_accumulates
 ```
 
-## D11: コンテキスト経済（定義的拡大 + 定理, §5.5/§4.2）
+## D11 Context Economy
+Definitional Extension + Theorem, 5.5/4.2.
 
-根拠: T3（コンテキスト有限性, T₀ §4.1）+ D1（強制のレイヤリング）
+Rationale: T3 (context finiteness, T₀ §4.1) + D1 (enforcement layering)
 
-作業メモリ（T3: 処理できる情報量）は有限のリソースであり、
-強制レイヤー（D1）とコンテキストコストは逆相関する:
-構造的強制（低コスト）> 手続的強制（中コスト）> 規範的指針（高コスト）。
+Working memory (T3: amount of information that can be processed) is a finite resource,
+and enforcement layers (D1) and context cost are inversely correlated:
+structural enforcement (low cost) > procedural enforcement (medium cost) > normative guidelines (high cost).
 
-D1 の強制レイヤーに対するコンテキストコスト。
-   値が大きいほどコンテキストを消費する。 
+Context cost for D1's enforcement layers.
+   Higher values consume more context. 
 
 *Declaration:* `def contextCost`
 
@@ -1483,57 +1490,58 @@ def contextCost : EnforcementLayer → Nat
   | .normative  => 2   -- 毎セッション読み込まれ、コンテキストを占有する
 ```
 
-D11: 強制力とコンテキストコストは逆相関する。
-   強制力が高いほどコンテキストコストが低い。 
+D11: Enforcement power and context cost are inversely correlated.
+   Higher enforcement power means lower context cost. 
 
 *Declaration:* `theorem d11_enforcement_cost_inverse`
 
 ```
-theorem `d11_enforcement_cost_inverse` :
+theorem d11_enforcement_cost_inverse :
   contextCost .structural < contextCost .procedural ∧
   contextCost .procedural < contextCost .normative := by
   simp [contextCost]
 ```
 
-D11: 構造的強制への昇格はコンテキストコストを削減する。 
+D11: Promotion to structural enforcement reduces context cost. 
 
 *Declaration:* `theorem d11_structural_minimizes_cost`
 
 ```
-theorem `d11_structural_minimizes_cost` :
+theorem d11_structural_minimizes_cost :
   ∀ (e : EnforcementLayer),
     contextCost .structural ≤ contextCost e := by
   intro e; cases e <;> simp [contextCost]
 ```
 
-D11 + T3: コンテキスト容量は有限であり（T3）、
-   規範的指針の肥大化は V2（コンテキスト効率）を劣化させる。 
+D11 + T3: Context capacity is finite (T3), and
+   bloating of normative guidelines degrades V2 (context efficiency). 
 
 *Declaration:* `theorem d11_context_finite`
 
 ```
-theorem `d11_context_finite` :
+theorem d11_context_finite :
   ∀ (agent : Agent),
     agent.contextWindow.capacity > 0 ∧
     agent.contextWindow.used ≤ agent.contextWindow.capacity :=
-  `context_finite`
+  context_finite
 ```
 
-## D12: 制約充足タスク設計（定理, §4.2）
+## D12 Constraint Satisfaction Task Design
+Theorem, 4.2.
 
-根拠: P6（制約充足, 定理 §4.2）+ T3 + T7 + T8（T₀ §4.1）
+Rationale: P6 (constraint satisfaction, theorem §4.2) + T3 + T7 + T8 (T₀ §4.1)
 
-タスク遂行は制約充足問題。有限の認知空間（T3）、
-有限のリソース（T7）の中で精度要求（T8）を達成する。
-Principles.lean の P6 定理群と接続。
+Task execution is a constraint satisfaction problem. Achieve precision requirements (T8)
+within finite cognitive space (T3) and finite resources (T7).
+Connects with P6 theorem group in Principles.lean.
 
-D12: タスク設計は T3+T7+T8 の制約充足問題。
-   P6a (`task_is_constraint_satisfaction`) の再述。 
+D12: Task design is a constraint satisfaction problem over T3+T7+T8.
+   Restatement of P6a (`task_is_constraint_satisfaction`). 
 
 *Declaration:* `theorem d12_task_is_csp`
 
 ```
-theorem `d12_task_is_csp` :
+theorem d12_task_is_csp :
   ∀ (task : Task) (agent : Agent),
     agent.contextWindow.capacity > 0 →
     task.resourceBudget ≤ globalResourceBound →
@@ -1544,42 +1552,43 @@ theorem `d12_task_is_csp` :
       s.contextUsage ≤ agent.contextWindow.capacity ∧
       s.resourceUsage ≤ globalResourceBound ∧
       s.achievedPrecision > 0 :=
-  `task_is_constraint_satisfaction`
+  task_is_constraint_satisfaction
 ```
 
-D12: タスク設計自体も確率的出力（T4）であり、
-   P2（認知的役割分離）による検証が必要。 
+D12: Task design itself is also probabilistic output (T4),
+   requiring verification through P2 (cognitive role separation). 
 
 *Declaration:* `theorem d12_task_design_probabilistic`
 
 ```
-theorem `d12_task_design_probabilistic` :
+theorem d12_task_design_probabilistic :
   ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
     canTransition agent action w w₁ ∧
     canTransition agent action w w₂ ∧
     w₁ ≠ w₂ :=
-  `output_nondeterministic`
+  output_nondeterministic
 ```
 
-## D13: 前提否定の影響波及（定理, §4.2）
+## D13 Premise Negation Impact Propagation
+Theorem, 4.2.
 
-根拠: P3（学習の統治 — 退役）+ Section 8（coherenceRequirement）+ T5
+Rationale: P3 (governed learning -- retirement) + Section 8 (coherenceRequirement) + T5
 
-前提が否定されたとき、依存する導出を特定し再検証する。
-Section 8 の coherenceRequirement（優先度に基づく見直し）を
-任意の依存関係に一般化する。
+When a premise is negated, identify dependent derivations and re-verify them.
+Generalizes Section 8's coherenceRequirement (priority-based review)
+to arbitrary dependency relationships.
 
-Ontology.lean の PropositionId.dependencies を基盤として、
-影響集合の計算関数と基本性質を定義する。
+Based on PropositionId.dependencies from Ontology.lean,
+defines impact set computation functions and basic properties.
 
-D13: 構造の優先度変更は低優先度の見直しを要求する（Section 8 の再述）。
-   coherenceRequirement の D13 による再解釈:
-   高優先度の構造変更 → 低優先度の全構造が影響集合に含まれる。 
+D13: Priority changes in structure require review of lower-priority items (restatement of Section 8).
+   D13's reinterpretation of coherenceRequirement:
+   High-priority structural change -> all lower-priority structures are included in the impact set. 
 
 *Declaration:* `theorem d13_coherence_implies_propagation`
 
 ```
-theorem `d13_coherence_implies_propagation` :
+theorem d13_coherence_implies_propagation :
   ∀ (s₁ s₂ : Structure),
     s₁.kind.priority > s₂.kind.priority →
     s₂.lastModifiedAt ≤ s₁.lastModifiedAt →
@@ -1587,20 +1596,20 @@ theorem `d13_coherence_implies_propagation` :
   fun _ _ _ h => h
 ```
 
-D13: P3 の退役操作は T5（フィードバック）を前提とする。
-   フィードバックなしに、前提の否定を検知できない。 
+D13: P3's retirement operation presupposes T5 (feedback).
+   Without feedback, negation of premises cannot be detected. 
 
 *Declaration:* `theorem d13_retirement_requires_feedback`
 
 ```
-theorem `d13_retirement_requires_feedback` :
+theorem d13_retirement_requires_feedback :
   ∀ (w : World),
     w.feedbacks = [] →
     ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
   fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
 ```
 
-全命題の列挙。affected の計算で使用。 
+Enumeration of all propositions. Used in affected computation. 
 
 *Declaration:* `def allPropositions`
 
@@ -1613,8 +1622,8 @@ def allPropositions : List PropositionId :=
    .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14]
 ```
 
-命題 s に直接依存する命題の集合（逆方向のエッジ）。
-   dependencies は「何に依存するか」、dependents は「何が自分に依存しているか」。 
+Set of propositions that directly depend on proposition s (reverse edges).
+   dependencies = "what it depends on"; dependents = "what depends on it". 
 
 *Declaration:* `def PropositionId.dependents`
 
@@ -1623,13 +1632,13 @@ def PropositionId.dependents (s : PropositionId) : List PropositionId :=
   allPropositions.filter (fun p => propositionDependsOn p s)
 ```
 
-前提 s が否定されたときの影響集合を計算する。
-   依存グラフの逆方向の推移的閉包。
-   fuel パラメータで停止性を保証（DAG なので depth ≤ 35 で十分）。
+Computes the impact set when premise s is negated.
+   Transitive closure of the reverse dependency graph.
+   The fuel parameter guarantees termination (depth <= 35 suffices since the graph is a DAG).
 
-   *不完全性の限界*: 本関数は PropositionId に列挙された名前付き命題間の
-   波及のみを追跡する。ゲーデルの第一不完全性定理により、名前のない
-   導出的帰結への影響は検出できない（Ontology.lean §6.2 注記参照）。 
+   *Incompleteness limitation*: This function only tracks propagation among
+   named propositions enumerated in PropositionId. By Goedel's first incompleteness theorem,
+   impact on unnamed derivational consequences cannot be detected (see Ontology.lean §6.2 note). 
 
 *Declaration:* `def affected`
 
@@ -1643,49 +1652,49 @@ def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
     (direct ++ transitive).eraseDups
 ```
 
-D13 の操作的定義: 前提の否定に対する影響波及。
-   affected で影響集合を計算し、各命題の再検証が必要であることを表す。 
+Operational definition of D13: Impact propagation upon premise negation.
+   Computes the impact set via affected, representing that each proposition requires re-verification. 
 
 *Declaration:* `def d13_propagation`
 
 ```
-def `d13_propagation` (negated : PropositionId) : List PropositionId :=
+def d13_propagation (negated : PropositionId) : List PropositionId :=
   affected negated
 ```
 
-T（拘束条件）の否定は最大の影響を持つ:
-   T は多くの命題の根拠であるため、影響集合が大きい。 
+Negation of T (constraint) has the largest impact:
+   T is the rationale for many propositions, so the impact set is large. 
 
 *Declaration:* `theorem d13_constraint_negation_has_impact`
 
 ```
-theorem `d13_constraint_negation_has_impact` :
-  (`d13_propagation` .t4).length > 0 := by `native_decide`
+theorem d13_constraint_negation_has_impact :
+  (d13_propagation .t4).length > 0 := by native_decide
 ```
 
-L5（プラットフォーム境界）の否定は D1 にのみ影響する:
-   L5 は環境依存で根ノードに近いため影響が限定的。 
+Negation of L5 (platform boundary) affects only D1:
+   L5 is environment-dependent and close to a root node, so its impact is limited. 
 
 *Declaration:* `theorem d13_l5_limited_impact`
 
 ```
-theorem `d13_l5_limited_impact` :
-  (`d13_propagation` .l5).length ≤ (`d13_propagation` .t4).length := by `native_decide`
+theorem d13_l5_limited_impact :
+  (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
 ```
 
-## StructureKind と PropositionId の対応
+## Correspondence between StructureKind and PropositionId
 
-Structure レベルの半順序（Ontology.lean §構造的整合性）と
-PropositionId レベルの依存グラフ（本ファイル §D13）を接続する。
-「この Structure（ファイル）はどの公理（PropositionId）に依存しているか」
-の問いに答えることで、末端エラーから公理レベルへの遡行を精密化する。
+Connects the Structure-level partial order (Ontology.lean, structural consistency section)
+with the PropositionId-level dependency graph (this file, §D13).
+By answering the question "which axioms (PropositionId) does this Structure (file) depend on?",
+refines the tracing from end-point errors back to the axiom level.
 
-リサーチ文書の ATMS ラベル付けに対応。
+Corresponds to ATMS labeling from the research document.
 
-StructureKind に対応する PropositionId の集合。
-   manifest.md は T1-T8, E1-E2, P1-P6 の全 axioms/postulates/principles を包含する。
-   designConvention は D1-D13 の設計定理を包含する。
-   skill/test/document は個別定義のため空集合（将来の拡張余地）。 
+Set of PropositionIds corresponding to each StructureKind.
+   manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
+   designConvention encompasses design theorems D1-D13.
+   skill/test/document are empty sets due to individual definitions (room for future extension). 
 
 *Declaration:* `def structurePropositions`
 
@@ -1700,9 +1709,9 @@ def structurePropositions : StructureKind → List PropositionId
   | .document         => []
 ```
 
-StructureKind の変更が PropositionId レベルで影響する命題の集合。
-   Structure の変更 → 包含する PropositionId → affected で波及先を計算。
-   二層の依存追跡を一つのパイプラインに統合する。 
+Set of propositions affected at the PropositionId level by changes to a StructureKind.
+   Structure change -> contained PropositionIds -> compute propagation targets via affected.
+   Integrates two-layer dependency tracking into a single pipeline. 
 
 *Declaration:* `def structureToPropositionImpact`
 
@@ -1711,51 +1720,52 @@ def structureToPropositionImpact (k : StructureKind) : List PropositionId :=
   (structurePropositions k).flatMap (fun p => affected p)
 ```
 
-manifest の変更は最大の命題レベル影響を持つ。
-   T1-T8, E1-E2, P1-P6 の全ての依存先に波及する。 
+Changes to manifest have the widest proposition-level impact.
+   Propagates to all dependents of T1-T8, E1-E2, P1-P6. 
 
 *Declaration:* `theorem manifest_has_widest_impact`
 
 ```
-theorem `manifest_has_widest_impact` :
+theorem manifest_has_widest_impact :
   ∀ (k : StructureKind),
     (structureToPropositionImpact k).length ≤
     (structureToPropositionImpact .manifest).length := by
-  intro k; cases k <;> `native_decide`
+  intro k; cases k <;> native_decide
 ```
 
-designConvention の変更は命題レベルで非空の影響を持つ。
-   D1-D13 の依存先が存在することの証明。 
+Changes to designConvention have non-empty proposition-level impact.
+   Proves that dependents of D1-D13 exist. 
 
 *Declaration:* `theorem design_convention_has_impact`
 
 ```
-theorem `design_convention_has_impact` :
-  (structureToPropositionImpact .designConvention).length > 0 := by `native_decide`
+theorem design_convention_has_impact :
+  (structureToPropositionImpact .designConvention).length > 0 := by native_decide
 ```
 
-## D14: 検証順序の制約充足性（定理, §4.2）
+## D14 Constraint Satisfaction of Verification Order
+Theorem, 4.2.
 
-根拠: P6（制約充足）+ T7（リソース有限性）+ T8（精度水準）
+Rationale: P6 (constraint satisfaction) + T7 (resource finiteness) + T8 (precision level)
 
-有限リソース下では検証順序が結果に影響する。
-順序の選択は P6 の制約充足問題に含まれる。
-D12 の拡張。
+Under finite resources, verification order affects outcomes.
+The choice of ordering is included in P6's constraint satisfaction problem.
+Extension of D12.
 
-### 公理系が定めないもの
+## What the Axiom System Does Not Determine
 
-D14 は「検証順序が重要」を導出するが、最適な順序の決定方法は導出しない。
-情報利得、リスク順（fail-fast）、コスト順はいずれも D14 を満たすモデル。
-具体的な方法の選択は L6（設計規約）レベル。
+D14 derives that "verification order matters" but does not derive the optimal ordering method.
+Information gain, risk-order (fail-fast), and cost-order are all models satisfying D14.
+The choice of specific method is at the L6 (design convention) level.
 
-D14: リソースが有限（T7）かつ精度要求がある（T8）とき、
-   タスク戦略の実行可能性は制約充足の範囲内（D12 の再述）。
-   検証順序の選択はこの制約充足問題の一部。 
+D14: When resources are finite (T7) and precision requirements exist (T8),
+   task strategy feasibility is within the scope of constraint satisfaction (restatement of D12).
+   The choice of verification order is part of this constraint satisfaction problem. 
 
 *Declaration:* `theorem d14_verification_order_is_csp`
 
 ```
-theorem `d14_verification_order_is_csp` :
+theorem d14_verification_order_is_csp :
   ∀ (task : Task) (agent : Agent),
     agent.contextWindow.capacity > 0 →
     task.resourceBudget ≤ globalResourceBound →
@@ -1766,52 +1776,54 @@ theorem `d14_verification_order_is_csp` :
       s.contextUsage ≤ agent.contextWindow.capacity ∧
       s.resourceUsage ≤ globalResourceBound ∧
       s.achievedPrecision > 0 :=
-  `task_is_constraint_satisfaction`
+  task_is_constraint_satisfaction
 ```
 
-## Sorry Inventory (DesignFoundation)
+## Sorry Inventory DesignFoundation
 
-sorry なし。新規非論理的公理（§4.1）なし。
+No sorry. No new non-logical axioms (§4.1).
 
-全定理（§4.2）は既存の公理（T/E/P/V）の直接適用、
-または帰納型（§7.2）の cases 解析で証明完了。
+All theorems (§4.2) are proven by direct application of existing axioms (T/E/P/V)
+or by cases analysis on inductive types (§7.2).
 
-D1–D13 の各原理は、マニフェストの公理系から
-*導出可能*（§2.4 導出可能性）であることが型検査で保証されている。
-本ファイルは定義的拡大（§5.5）のみで構成され、
-Terminology.lean が証明した `definitional_implies_conservative` により
-保存拡大が保証される。
+Each principle D1–D13 is guaranteed by type-checking to be
+*derivable* (§2.4 derivability) from the manifesto's axiom system.
+This file consists solely of definitional extensions (§5.5),
+and conservative extension is guaranteed by `definitional_implies_conservative`
+proven in Terminology.lean.
 
-### 既知の形式化ギャップ (2)
+## Known Formalization Gaps
+Sorry Inventory.
 
 
 :::table +header
 *
   * D
-  * ギャップ
-  * 影響
+  * Gap
+  * Impact
 *
   * D3
-  * 可観測性の 3 条件（測定可能/劣化検知/改善検証）が未構造化
-  * 3 定理あるが条件構造は未形式化
+  * The 3 observability conditions (measurable/degradation-detectable/improvement-verifiable) are not structured
+  * 3 theorems exist but the condition structure is not formalized
 *
   * D5
-  * 仕様・テスト・実装の三層間関係が未形式化
-  * 3 定理あるが三層間の推移的依存は未形式化
+  * Inter-layer relations of spec/test/implementation are not formalized
+  * 3 theorems exist but transitive dependencies between layers are not formalized
 *
   * D6
-  * 境界→緩和策→変数の因果連鎖が未形式化
-  * 3 定理あるが因果連鎖は未形式化
+  * Causal chain of boundary -> mitigation -> variable is not formalized
+  * 3 theorems exist but causal chain is not formalized
 :::
 
 
-### Section 7（自己適用）の構造的強制
+## Structural Enforcement of Section 7
+Self-Application.
 
-`SelfGoverning` 型クラス（§9.4, Ontology.lean）により、
-D1–D12 を定義する `DesignPrinciple` 型は以下を満たす:
-- 互換性分類の適用可能性（`canClassifyUpdate`）
-- 分類の網羅性（`classificationExhaustive`）
+Via the `SelfGoverning` type class (§9.4, Ontology.lean),
+the `DesignPrinciple` type defining D1–D12 satisfies:
+- Applicability of compatibility classification (`canClassifyUpdate`)
+- Exhaustiveness of classification (`classificationExhaustive`)
 
-`governed_update_classified` を呼ぶには `[SelfGoverning α]` が
-必要なため、SelfGoverning を実装しない型は自己適用の文脈で
-使用できない → *実装忘れは型エラーとして検出される*。
+Since calling `governed_update_classified` requires `[SelfGoverning α]`,
+types that do not implement SelfGoverning cannot be used in the
+self-application context -> *missing implementations are detected as type errors*.

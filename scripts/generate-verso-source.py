@@ -59,10 +59,8 @@ def postprocess_verso(content):
             result.append(line)
             continue
 
-        # Don't touch headers
-        if stripped.startswith("#"):
-            result.append(line)
-            continue
+        # Headers also need underscore escaping (e.g., T_0 in headings)
+        # but don't escape the # prefix itself
 
         # Escape identifiers with underscores that Verso interprets as emphasis
         # Protect existing backtick spans first
@@ -72,7 +70,8 @@ def postprocess_verso(content):
             return f"\x00BT{len(backtick_spans)-1}\x00"
         escaped = re.sub(r'`[^`]+`', save_bt, line)
 
-        # Wrap bare _ or _word patterns in backticks
+        # Wrap bare _word and word_word patterns in backticks
+        escaped = re.sub(r'(?<![`\w])(\w+_\w+)(?![`\w])', r'`\1`', escaped)
         escaped = re.sub(r'(?<![`\w])(_\w*)(?![`\w])', r'`\1`', escaped)
 
         # Restore backtick spans
@@ -85,18 +84,10 @@ def postprocess_verso(content):
 
 
 def escape_code_for_verso(code):
-    """Escape characters in code blocks that Verso would interpret as markup.
-
-    Inside unnamed ``` blocks, Verso still interprets _ as emphasis.
-    We need to wrap underscored identifiers in backticks.
-    """
-    lines = []
-    for line in code.split("\n"):
-        # Wrap identifiers containing underscores in backticks
-        # Match patterns like _s₁, h₁₂, le_trans, etc.
-        line = re.sub(r'(?<![`\w])(_\w+|\w+_\w+)(?![`\w])', r'`\1`', line)
-        lines.append(line)
-    return "\n".join(lines)
+    """Pass-through: Verso's unnamed ``` blocks do NOT interpret _ as emphasis.
+    No escaping needed for code inside fenced code blocks.
+    (Verified: Verso Parser.lean treats ``` content as raw text.)"""
+    return code
 
 
 def extract_full_declaration(content, after_first_line_pos, first_line):
@@ -436,8 +427,8 @@ def deduplicate_headings(text):
             seen_tags[tag] = seen_tags.get(tag, 0) + 1
             if seen_tags[tag] > 1:
                 # Append ASCII counter to make the tag unique
-                # Use parentheses, not square brackets (Verso treats [] as links)
-                line = f"{prefix} {heading_text} ({seen_tags[tag]})"
+                # Avoid () [] {} — all are Verso special chars
+                line = f"{prefix} {heading_text} Part {seen_tags[tag]}"
         result.append(line)
 
     return "\n".join(result)

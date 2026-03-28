@@ -1,62 +1,62 @@
 import Manifest.Ontology
 
 /-!
-# Epistemic Layer: constraint (strength 5) — T1–T8 基底理論 T₀
+# Epistemic Layer - Constraint Strength 5 - T1-T8 Base Theory T0
 
-マニフェストの拘束条件を Lean の非論理的公理（用語リファレンス §4.1）として
-形式化する。
+The manifesto's binding conditions are formalized as Lean non-logical axioms
+(Terminology Reference §4.1).
 
-## T₀ としての位置づけ（手順書 §2.4）
+## Position as T0
+Procedure 2.4.
 
-T1–T8 は「否定不可能な、技術非依存の事実」であり、
-基底理論 T₀（修正ループで縮小しない公理の集合）を構成する。
-T₀ の所属根拠:
-- T1–T3, T7: 環境由来（ハードウェア制約、計算資源の物理的制約）
-- T4: 自然科学由来（生成過程に内在する非決定性）
-- T5: 自然科学由来（制御理論の基本原理）
-- T6: 契約由来（人間との合意に基づく権限構造）
-- T8: 契約由来（タスク定義の構造的要件）
+T1–T8 are "undeniable, technology-independent facts" that constitute
+the base theory T₀ (the set of axioms that do not shrink under revision loops).
+Basis for T₀ membership:
+- T1–T3, T7: Environment-derived (hardware constraints, physical limits of computational resources)
+- T4: Natural-science-derived (nondeterminism inherent in the generation process)
+- T5: Natural-science-derived (fundamental principle of control theory)
+- T6: Contract-derived (authority structure based on agreement with humans)
+- T8: Contract-derived (structural requirements of task definitions)
 
-Lean の `axiom` として宣言することで、
-証明なしに仮定する命題（用語リファレンス §4.1 非論理的公理）として
-型システムに組み込む。
+By declaring them as Lean `axiom`s, they are incorporated into the type system
+as propositions assumed without proof (Terminology Reference §4.1, non-logical axioms).
 
-## 設計方針
+## Design Policy
 
-各 T は**複数の axiom に分解**されうる。自然言語の T1 が単一の命題に
-対応するとは限らず、形式化の過程でより精密な分解が行われる。
-各 axiom の docstring は公理カード形式（手順書 §2.5）で記載する。
+Each T **may be decomposed into multiple axioms**. A natural-language T1 does not
+necessarily correspond to a single proposition; finer decompositions arise during
+formalization. Each axiom's docstring follows the Axiom Card format (Procedure §2.5).
 
-## T₀ のエンコード方法（手順書 §2.4）
+## Encoding Method for T0
 
-T1–T8 は型定義のみでは表現不能な性質（存在量化、因果関係等）を含むため、
-axiom として宣言する（公理カード必須）。
-型定義で表現可能な部分は Ontology.lean に定義的拡大（用語リファレンス §5.5）
-として配置済み。
+T1–T8 contain properties that cannot be expressed by type definitions alone
+(existential quantification, causal relations, etc.), so they are declared as
+axioms (Axiom Card required). Parts expressible via type definitions are placed
+in Ontology.lean as definitional extensions (Terminology Reference §5.5).
 
-## 対応表
+## Correspondence Table
 
-| axiom 名 | 対応する T | 表現する性質 | T₀ 所属根拠 |
+| axiom name | Corresponding T | Property expressed | T₀ membership basis |
 |-----------|-----------|-------------|------------|
-| `session_bounded` | T1 | セッションは有限時間で終了する | 環境由来 |
-| `no_cross_session_memory` | T1 | セッション間で状態を共有しない | 環境由来 |
-| `session_no_shared_state` | T1 | セッション間で可変状態を共有しない | 環境由来 |
-| `structure_persists` | T2 | 構造はセッション終了後も存在する | 環境由来 |
-| `structure_accumulates` | T2 | 改善は構造に蓄積する | 環境由来 |
-| `context_finite` | T3 | 作業メモリ（処理できる情報量）は有限 | 環境由来 |
-| `context_bounds_action` | T3 | 処理はコンテキスト容量内でのみ可能 | 環境由来 |
-| `output_nondeterministic` | T4 | 同一入力に対し異なる出力がありうる | 自然科学由来 |
-| `no_improvement_without_feedback` | T5 | フィードバックループなしに改善なし | 自然科学由来 |
-| `human_resource_authority` | T6 | 人間がリソースの最終決定者 | 契約由来 |
-| `resource_revocable` | T6 | 人間はリソースを回収できる | 契約由来 |
-| `resource_finite` | T7 | リソースは有限 | 環境由来 |
-| `task_has_precision` | T8 | タスクには精度水準が存在する | 契約由来 |
+| `session_bounded` | T1 | Sessions terminate in finite time | Environment-derived |
+| `no_cross_session_memory` | T1 | No state sharing across sessions | Environment-derived |
+| `session_no_shared_state` | T1 | No mutable state sharing across sessions | Environment-derived |
+| `structure_persists` | T2 | Structure persists after session termination | Environment-derived |
+| `structure_accumulates` | T2 | Improvements accumulate in structure | Environment-derived |
+| `context_finite` | T3 | Working memory (processable information) is finite | Environment-derived |
+| `context_bounds_action` | T3 | Processing is possible only within context capacity | Environment-derived |
+| `output_nondeterministic` | T4 | Different outputs possible for the same input | Natural-science-derived |
+| `no_improvement_without_feedback` | T5 | No improvement without feedback loop | Natural-science-derived |
+| `human_resource_authority` | T6 | Humans are the final decision-makers for resources | Contract-derived |
+| `resource_revocable` | T6 | Humans can revoke resources | Contract-derived |
+| `resource_finite` | T7 | Resources are finite | Environment-derived |
+| `task_has_precision` | T8 | Tasks have a precision level | Contract-derived |
 
-## 用語リファレンスとの対応
+## Correspondence with Terminology Reference
 
-- 公理 → 非論理的公理 (§4.1): 特定の理論に固有の、証明なしに真と仮定する命題
-- T₀ → 基底理論: 外的権威に根拠を持つ非論理的公理の集合（手順書 §2.4）
-- axiom の分解 → 定義的拡大 (§5.5) ではなく、同一概念の精密化
+- Axiom → Non-logical axiom (§4.1): A proposition assumed true without proof, specific to a given theory
+- T₀ → Base theory: A set of non-logical axioms grounded in external authority (Procedure §2.4)
+- Axiom decomposition → Not definitional extension (§5.5), but refinement of the same concept
 -/
 
 namespace Manifest
@@ -66,25 +66,26 @@ namespace Manifest
 -- ============================================================
 
 /-!
-## T1: エージェントセッションは一時的である
+## T1 Agent Sessions Are Ephemeral
 
-「セッション間の記憶はない。連続する『自己』は存在しない。
-  各インスタンスは独立した存在であり、
-  前のインスタンスとの同一性を持たない。」
+"There is no memory across sessions. There is no continuous 'self.'
+  Each instance is an independent entity with no identity
+  shared with previous instances."
 
-T1 は3つの axiom に分解される:
-1. セッションは有限時間で終了する（有界性）
-2. セッション間で状態を共有する手段がない（記憶の非連続性）
-3. 異なるセッション間で可変状態を共有しない（独立性）
+T1 is decomposed into three axioms:
+1. Sessions terminate in finite time (boundedness)
+2. There is no means to share state across sessions (discontinuity of memory)
+3. No mutable state is shared across different sessions (independence)
 -/
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: セッションは有限時間で終了する。
-          すべてのセッションに対して、ある時点で terminated になる
-    根拠: 計算エージェントの実行は有限のリソースを消費するため有限時間で終了する（T7 との関連）。
-          参照例: LLM セッションのタイムアウト、リソース消費上限
-    ソース: manifesto.md T1「セッション間の記憶はない」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Sessions terminate in finite time.
+          For all sessions, they become terminated at some point.
+    Basis: Execution of computational agents consumes finite resources and therefore terminates in finite time (related to T7).
+          Reference examples: LLM session timeouts, resource consumption limits.
+    Source: manifesto.md T1 "There is no memory across sessions"
+    Refutation condition: Not applicable (T₀) -/
 axiom session_bounded :
   ∀ (w : World) (s : Session),
     s ∈ w.sessions →
@@ -92,15 +93,16 @@ axiom session_bounded :
       ∃ (s' : Session), s' ∈ w'.sessions ∧
         s'.id = s.id ∧ s'.status = SessionStatus.terminated
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: セッション間で状態を共有しない。
-          異なるセッション ID を持つ2つのセッションの間で、
-          一方のアクションが他方の観測可能な状態に影響を与えることはない
-    根拠: エフェメラルな計算プロセスはプロセス終了時に内部状態を失う。
-          セッション間の状態分離は実行環境レベルで保証される。
-          参照例: LLM アーキテクチャにおけるセッション分離
-    ソース: manifesto.md T1「連続する『自己』は存在しない」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: No state sharing across sessions.
+          Between two sessions with different session IDs,
+          actions in one cannot affect the observable state of the other.
+    Basis: Ephemeral computational processes lose internal state upon process termination.
+          State isolation across sessions is guaranteed at the execution environment level.
+          Reference example: session isolation in LLM architectures.
+    Source: manifesto.md T1 "There is no continuous 'self'"
+    Refutation condition: Not applicable (T₀) -/
 axiom no_cross_session_memory :
   ∀ (w : World) (e1 e2 : AuditEntry),
     e1 ∈ w.auditLog → e2 ∈ w.auditLog →
@@ -109,13 +111,14 @@ axiom no_cross_session_memory :
     -- （一方の preHash が他方の postHash に依存しない）
     e1.preHash ≠ e2.postHash
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: 異なるセッション間で可変状態を共有しない。
-          同一の AgentId であっても、異なるセッションにおけるインスタンスは
-          直接的に状態を共有しない。影響は構造（T2）を介してのみ間接的に伝播する
-    根拠: セッション間の因果的独立性。各インスタンスは独立した存在
-    ソース: manifesto.md T1「各インスタンスは独立した存在」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: No mutable state sharing across different sessions.
+          Even with the same AgentId, instances in different sessions
+          do not directly share state. Influence propagates only indirectly through structure (T2).
+    Basis: Causal independence across sessions. Each instance is an independent entity.
+    Source: manifesto.md T1 "Each instance is an independent entity"
+    Refutation condition: Not applicable (T₀) -/
 axiom session_no_shared_state :
   ∀ (agent1 agent2 : Agent) (action1 action2 : Action)
     (w w' : World),
@@ -131,25 +134,26 @@ axiom session_no_shared_state :
 -- ============================================================
 
 /-!
-## T2: 構造はエージェントより長く生きる
+## T2 Structure Outlives the Agent
 
-「ドキュメント、テスト、スキル定義、設計規約——
-  これらはセッションが終わっても残る。
-  改善が蓄積する場所は構造の中。」
+"Documents, tests, skill definitions, design conventions —
+  these persist even after the session ends.
+  The place where improvements accumulate is within structure."
 
-T2 は2つの axiom に分解される:
-1. 構造はセッション終了後も存在する（永続性）
-2. 構造は改善を蓄積しうる（蓄積性）
+T2 is decomposed into two axioms:
+1. Structure persists after session termination (persistence)
+2. Structure can accumulate improvements (accumulability)
 -/
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: 構造はセッション終了後も存在する。
-          セッションが terminated になっても、
-          そのセッションで参照された構造は World から消えない
-    根拠: ファイルシステム上の永続性。構造（ドキュメント、テスト等）は
-          セッション外のストレージに存在する
-    ソース: manifesto.md T2「改善が蓄積する場所は構造の中」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Structure persists after session termination.
+          Even when a session becomes terminated,
+          structures referenced by that session do not disappear from the World.
+    Basis: Persistence on the file system. Structures (documents, tests, etc.)
+          reside in storage outside the session.
+    Source: manifesto.md T2 "The place where improvements accumulate is within structure"
+    Refutation condition: Not applicable (T₀) -/
 axiom structure_persists :
   ∀ (w w' : World) (s : Session) (st : Structure),
     s ∈ w.sessions →
@@ -158,13 +162,14 @@ axiom structure_persists :
     validTransition w w' →
     st ∈ w'.structures
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: 構造は改善を蓄積する。
-          エポックが進むにつれて構造が更新されうる（lastModifiedAt が非減少）。
-          T1 との対比: エージェントは一時的だが構造は成長する
-    根拠: バージョン管理システム（git）によるエポックの単調増加保証
-    ソース: manifesto.md T2「構造はエージェントより長く生きる」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Structure accumulates improvements.
+          As epochs advance, structures may be updated (lastModifiedAt is non-decreasing).
+          Contrast with T1: agents are ephemeral, but structure grows.
+    Basis: Monotonic epoch increase guaranteed by version control systems (git).
+    Source: manifesto.md T2 "Structure outlives the agent"
+    Refutation condition: Not applicable (T₀) -/
 axiom structure_accumulates :
   ∀ (w w' : World),
     validTransition w w' →
@@ -175,34 +180,36 @@ axiom structure_accumulates :
 -- ============================================================
 
 /-!
-## T3: 一度に処理できる情報量は有限である
+## T3 The Amount of Information Processable at Once Is Finite
 
-「一度に処理できる情報量に物理的上限がある。
-  エージェントの認知空間の制約。」
+"There is a physical upper limit on the amount of information processable at once.
+  A constraint on the agent's cognitive space."
 
-T3 は2つの axiom に分解される:
-1. 作業メモリ（ContextWindow）の容量は有限（存在性）
-2. 処理は作業メモリ容量内でのみ実行可能（制約性）
+T3 is decomposed into two axioms:
+1. Working memory (ContextWindow) capacity is finite (existence)
+2. Processing is possible only within working memory capacity (constraint)
 -/
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: 作業メモリ（ContextWindow）は有限の容量を持つ。
-          すべてのエージェントの contextWindow.capacity は有界
-    根拠: 計算エージェントの作業メモリ（ワーキングメモリ）は物理的に有限。
-          参照例: LLM のトークン数上限、FSM の状態バッファサイズ
-    ソース: manifesto.md T3「一度に処理できる情報量に物理的上限がある」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Working memory (ContextWindow) has finite capacity.
+          The contextWindow.capacity of all agents is bounded.
+    Basis: The working memory of computational agents is physically finite.
+          Reference examples: LLM token count limits, FSM state buffer sizes.
+    Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once"
+    Refutation condition: Not applicable (T₀) -/
 axiom context_finite :
   ∀ (agent : Agent),
     agent.contextWindow.capacity > 0 ∧
     agent.contextWindow.used ≤ agent.contextWindow.capacity
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: アクションの実行にはコンテキスト内の情報処理が必要。
-          コンテキスト使用量が容量を超える場合、アクションは実行不能
-    根拠: 作業メモリ超過時の処理不能は物理的制約
-    ソース: manifesto.md T3「エージェントの認知空間の制約」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Executing an action requires information processing within the context.
+          When context usage exceeds capacity, the action cannot be executed.
+    Basis: Inability to process when working memory is exceeded is a physical constraint.
+    Source: manifesto.md T3 "A constraint on the agent's cognitive space"
+    Refutation condition: Not applicable (T₀) -/
 axiom context_bounds_action :
   ∀ (agent : Agent) (action : Action) (w : World),
     agent.contextWindow.used > agent.contextWindow.capacity →
@@ -213,29 +220,30 @@ axiom context_bounds_action :
 -- ============================================================
 
 /-!
-## T4: エージェントの出力は確率的である
+## T4 Agent Output Is Stochastic
 
-「同じ入力に対して異なる出力を生成しうる。
-  構造は毎回確率的に解釈される。
-  100%の遵守を前提にした設計は脆い。」
+"Different outputs may be produced for the same input.
+  Structure is interpreted probabilistically each time.
+  Designs that assume 100% compliance are fragile."
 
-`canTransition` は関数ではなく関係として定義されているため（Ontology.lean 参照）、
-同一の (agent, action, w) に対して複数の w' が canTransition を満たしうる。
-T4 は「その複数性が実際に起こりうる」ことを axiom として宣言する。
+Since `canTransition` is defined as a relation rather than a function (see Ontology.lean),
+multiple w' can satisfy canTransition for the same (agent, action, w).
+T4 declares as an axiom that "this multiplicity can actually occur."
 -/
 
-/-- [公理カード]
-    所属: T₀（自然科学由来）
-    内容: 出力の非決定性。同一のエージェント・アクション・ワールド状態に対して、
-          異なる遷移先が存在しうる
-    根拠: エージェントの生成過程に内在する非決定性。サンプリング（温度パラメータ）、
-          浮動小数点演算の非結合性、自己回帰的生成における分岐の不可逆性など、
-          複数の源泉が同一入力に対する異なる出力を可能にする。
-          temperature=0 でも浮動小数点レベルの非決定性は残存しうる
-    ソース: manifesto.md T4「同じ入力に対して異なる出力を生成しうる」
+/-- [Axiom Card]
+    Layer: T₀ (Natural-science-derived)
+    Content: Nondeterminism of output. For the same agent, action, and world state,
+          different transition targets may exist.
+    Basis: Nondeterminism inherent in the agent's generation process. Multiple sources —
+          sampling (temperature parameter), non-associativity of floating-point arithmetic,
+          irreversibility of branching in autoregressive generation — enable different outputs
+          for the same input. Even at temperature=0, floating-point-level nondeterminism may persist.
+    Source: manifesto.md T4 "Different outputs may be produced for the same input"
 
-    `canTransition` が関係（Prop）として定義されているため、
-    Lean の関数の決定性に制約されず、非決定性を自然に表現できる。 -/
+    Since `canTransition` is defined as a relation (Prop),
+    it is not constrained by Lean's function determinism and can naturally express nondeterminism.
+    Refutation condition: Not applicable (T₀) -/
 axiom output_nondeterministic :
   ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
     canTransition agent action w w₁ ∧
@@ -247,26 +255,27 @@ axiom output_nondeterministic :
 -- ============================================================
 
 /-!
-## T5: フィードバックなしに改善は不可能である
+## T5 Improvement Is Impossible Without Feedback
 
-「制御理論の基本。
-  測定→比較→調整のループがなければ、
-  目標への収束は起こらない。」
+"A fundamental of control theory.
+  Without a loop of measurement, comparison, and adjustment,
+  convergence toward the goal does not occur."
 
-T5 はフィードバックの存在が改善の必要条件であることを宣言する。
+T5 declares that the existence of feedback is a necessary condition for improvement.
 -/
 
-/-- 構造が改善されたかどうかの述語（Phase 4+ で Observable として定義）。 -/
+/-- Predicate for whether structure has improved (defined as Observable in Phase 4+). -/
 opaque structureImproved : World → World → Prop
 
-/-- [公理カード]
-    所属: T₀（自然科学由来）
-    内容: 構造の改善にはフィードバックが必要。
-          2つのワールド状態間で構造が改善されたならば、
-          その間にフィードバックが存在する
-    根拠: 制御理論の基本原理。測定→比較→調整のループなしに
-          目標への収束は起こらない
-    ソース: manifesto.md T5「制御理論の基本」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Natural-science-derived)
+    Content: Feedback is required for structural improvement.
+          If structure has improved between two world states,
+          then feedback exists in between.
+    Basis: Fundamental principle of control theory. Without a loop of
+          measurement, comparison, and adjustment, convergence toward the goal does not occur.
+    Source: manifesto.md T5 "A fundamental of control theory"
+    Refutation condition: Not applicable (T₀) -/
 axiom no_improvement_without_feedback :
   ∀ (w w' : World),
     structureImproved w w' →
@@ -278,37 +287,39 @@ axiom no_improvement_without_feedback :
 -- ============================================================
 
 /-!
-## T6: 人間はリソースの最終決定者である
+## T6 Humans Are the Final Decision-Makers for Resources
 
-「計算資源、データアクセス、実行権限——
-  すべて人間が与え、人間が回収しうる。」
+"Computational resources, data access, execution privileges —
+  all are granted by humans and can be revoked by humans."
 
-T6 は2つの axiom に分解される:
-1. リソース割り当ての起源は人間である（権限）
-2. 人間はリソースを回収できる（可逆性）
+T6 is decomposed into two axioms:
+1. The origin of resource allocation is human (authority)
+2. Humans can revoke resources (reversibility)
 -/
 
-/-- エージェントが人間であるかの述語。 -/
+/-- Predicate for whether an agent is human. -/
 def isHuman (agent : Agent) : Prop :=
   agent.role = AgentRole.human
 
-/-- [公理カード]
-    所属: T₀（契約由来）
-    内容: リソース割り当ての起源は人間。
-          すべてのリソース割り当ての grantedBy は人間ロールを持つ
-    根拠: 人間-エージェント協働における権限構造の合意
-    ソース: manifesto.md T6「計算資源、データアクセス、実行権限——すべて人間が与え」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Contract-derived)
+    Content: The origin of resource allocation is human.
+          The grantedBy of all resource allocations holds a human role.
+    Basis: Agreement on authority structure in human-agent collaboration.
+    Source: manifesto.md T6 "Computational resources, data access, execution privileges — all are granted by humans"
+    Refutation condition: Not applicable (T₀) -/
 axiom human_resource_authority :
   ∀ (w : World) (alloc : ResourceAllocation),
     alloc ∈ w.allocations →
     ∃ (human : Agent), isHuman human ∧ human.id = alloc.grantedBy
 
-/-- [公理カード]
-    所属: T₀（契約由来）
-    内容: 人間はリソースを回収できる。
-          任意のリソース割り当てに対して、人間がそれを無効化する遷移が存在する
-    根拠: 人間の最終決定権に関する合意。権限は委譲されても回収可能
-    ソース: manifesto.md T6「人間が回収しうる」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Contract-derived)
+    Content: Humans can revoke resources.
+          For any resource allocation, there exists a transition in which a human invalidates it.
+    Basis: Agreement on human final decision-making authority. Privileges can be delegated but remain revocable.
+    Source: manifesto.md T6 "can be revoked by humans"
+    Refutation condition: Not applicable (T₀) -/
 axiom resource_revocable :
   ∀ (w : World) (alloc : ResourceAllocation),
     alloc ∈ w.allocations →
@@ -322,20 +333,22 @@ axiom resource_revocable :
 -- ============================================================
 
 /-!
-## T7: タスク遂行に利用可能なリソース（時間・エネルギー）は有限である
+## T7 Resources Available for Task Execution Are Finite
+Time and energy.
 
-「T3が認知空間（コンテキスト）の有限性を述べるのに対し、
-  T7は時間的・エネルギー的次元の有限性を述べる。」
+"Whereas T3 states the finiteness of cognitive space (context),
+  T7 states the finiteness in the temporal and energetic dimensions."
 -/
 
-/-- [公理カード]
-    所属: T₀（環境由来）
-    内容: リソースは有限。
-          World 全体のリソース総量は `globalResourceBound` を超えない。
-          ∀-∃ ではなく ∃-∀ の順序で量化し、**全ての** World に対して
-          同一の上限が存在することを保証する（非空虚性, 用語リファレンス §6.4）
-    根拠: 計算資源（CPU、メモリ、API クォータ）の物理的有限性
-    ソース: manifesto.md T7「タスク遂行に利用可能なリソースは有限である」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Environment-derived)
+    Content: Resources are finite.
+          The total resource amount across the entire World does not exceed `globalResourceBound`.
+          Quantified in ∃-∀ order (not ∀-∃), guaranteeing that a single upper bound
+          exists for **all** Worlds (non-vacuity, Terminology Reference §6.4).
+    Basis: Physical finiteness of computational resources (CPU, memory, API quotas).
+    Source: manifesto.md T7 "Resources available for task execution are finite"
+    Refutation condition: Not applicable (T₀) -/
 axiom resource_finite :
   ∀ (w : World),
     (w.allocations.map (·.amount)).foldl (· + ·) 0 ≤ globalResourceBound
@@ -345,19 +358,20 @@ axiom resource_finite :
 -- ============================================================
 
 /-!
-## T8: タスクには達成すべき精度水準が存在する
+## T8 Tasks Have a Precision Level to Be Achieved
 
-「自ら設定する場合も、外部から課される場合もある。
-  精度水準のないタスクは最適化対象にならない。」
+"Whether self-imposed or externally imposed,
+  tasks without a precision level cannot be optimization targets."
 -/
 
-/-- [公理カード]
-    所属: T₀（契約由来）
-    内容: すべてのタスクは精度水準を持つ。
-          精度水準は正の値（0 より大きい）でなければならない。
-          精度水準が 0 のタスクは最適化対象にならない（= タスクとして成立しない）
-    根拠: タスク定義の構造的要件。精度水準のないタスクは最適化不能
-    ソース: manifesto.md T8「自ら設定する場合も、外部から課される場合もある」 -/
+/-- [Axiom Card]
+    Layer: T₀ (Contract-derived)
+    Content: All tasks have a precision level.
+          The precision level must be a positive value (greater than 0).
+          Tasks with a precision level of 0 cannot be optimization targets (= do not constitute valid tasks).
+    Basis: Structural requirement of task definitions. Tasks without a precision level cannot be optimized.
+    Source: manifesto.md T8 "Whether self-imposed or externally imposed"
+    Refutation condition: Not applicable (T₀) -/
 axiom task_has_precision :
   ∀ (task : Task),
     task.precisionRequired.required > 0
@@ -367,18 +381,18 @@ axiom task_has_precision :
 -- ============================================================
 
 /-!
-## Sorry Inventory (Phase 1)
+## Sorry Inventory Phase 1
 
-Phase 1 における `sorry` の一覧:
+List of `sorry` occurrences in Phase 1:
 
-| 場所 | sorry の理由 |
+| Location | Reason for sorry |
 |------|-------------|
-| `Ontology.lean: canTransition` | opaque — Phase 3+ で遷移条件を定義 |
-| `Ontology.lean: globalResourceBound` | opaque — Phase 2+ でドメインに応じて具体化 |
-| `Axioms.lean: structureImproved` | opaque — Phase 4+ で Observable として定義 |
+| `Ontology.lean: canTransition` | opaque — transition conditions to be defined in Phase 3+ |
+| `Ontology.lean: globalResourceBound` | opaque — to be concretized per domain in Phase 2+ |
+| `Axioms.lean: structureImproved` | opaque — to be defined as Observable in Phase 4+ |
 
-axiom は証明なしに仮定する命題なので sorry を含まない。
-Phase 3 で P1–P6 を theorem として導出する際に sorry が発生する。
+Axioms are propositions assumed without proof, so they contain no sorry.
+When P1–P6 are derived as theorems in Phase 3, sorry occurrences will arise.
 -/
 
 end Manifest

@@ -11,199 +11,203 @@ set_option linter.verso.markup.emph false
 
 #doc (Manual) "Empirical Postulates: E1-E2" =>
 
-# Epistemic Layer: empiricalPostulate (strength 4) — E1–E2 前提集合 Γ \ T₀
+# Epistemic Layer - EmpiricalPostulate Strength 4 - E1-E2 Premise Set
 
-経験的公準を Lean の非論理的公理（用語リファレンス §4.1）として形式化する。
+Formalizes empirical postulates as Lean non-logical axioms (Terminology Reference §4.1).
 
-## Γ \ T₀ としての位置づけ（手順書 §2.4）
+## Position as Extension of T0
+Procedure 2.4.
 
-E1–E2 は「繰り返し実証され反例が知られていないが、
-原理的には覆りうる知見」であり、前提集合 Γ の拡大部分（Γ \ T₀）を構成する。
-T₀ との違い: 外的権威（契約、自然法則）ではなく、
-経験的観察に基づく仮説（用語リファレンス §9.1 経験的命題）。
-反証可能性（§9.1）を持ち、AGM の縮小（§9.2）の対象となる。
+E1–E2 are "findings repeatedly demonstrated with no known counterexamples,
+yet in principle refutable," constituting the extended part (Γ \ T₀) of premise set Γ.
+Difference from T₀: based not on external authority (contracts, natural laws)
+but on hypotheses grounded in empirical observation (Terminology Reference §9.1 empirical propositions).
+They possess refutability (§9.1) and are subject to AGM contraction (§9.2).
 
-Lean では T₀ と同じく `axiom` として宣言するが、
-各公理カードに*反証条件*を必須で付与する（手順書 §2.5）。
+In Lean, they are declared as `axiom` just like T₀, but each axiom card
+must include a *refutation condition* (Procedure §2.5).
 
-## T₀ との関係（手順書 §2.4）
+## Relationship to T0
+Procedure 2.4.
 
-Γ は T₀ の拡大（用語リファレンス §5.5）であり、Thm(T₀) ⊆ Thm(Γ)。
-E が反証された場合、E に依拠する P（P1, P2）は見直しの対象となるが、
-T₀ および T₀ のみに依拠する P（P3–P6）は影響を受けない。
-これは拡大の単調性（§2.5 / §5.3）による。
+Γ is an extension of T₀ (Terminology Reference §5.5), so Thm(T₀) ⊆ Thm(Γ).
+If an E is refuted, the P's that depend on it (P1, P2) become subject to revision,
+but T₀ and P's that depend solely on T₀ (P3–P6) are unaffected.
+This follows from the monotonicity of extensions (§2.5 / §5.3).
 
-## 対応表
+## Correspondence Table
 
 
 :::table +header
 *
-  * axiom 名
-  * 対応する E
-  * 表現する性質
-  * Γ \ T₀ 所属根拠
+  * Axiom name
+  * Corresponding E
+  * Expressed property
+  * Γ \ T₀ membership basis
 *
   * `verification_requires_independence`
   * E1
-  * 生成と評価は分離が必要
-  * 仮説由来
+  * Generation and evaluation must be separated
+  * Hypothesis-derived
 *
   * `no_self_verification`
   * E1
-  * 自己検証の禁止
-  * 仮説由来
+  * Prohibition of self-verification
+  * Hypothesis-derived
 *
   * `shared_bias_reduces_detection`
   * E1
-  * 共有バイアスが検出力を低下させる
-  * 仮説由来
+  * Shared bias degrades detection power
+  * Hypothesis-derived
 *
   * `capability_risk_coscaling`
   * E2
-  * 能力の増大はリスクの増大と不可分
-  * 仮説由来
+  * Capability growth is inseparable from risk growth
+  * Hypothesis-derived
 :::
 
 
-## E1: 検証には独立性が必要である
+## E1 Verification Requires Independence
 
-「同一プロセスによる生成と評価は、あらゆる分野（科学の査読、
-  会計監査、ソフトウェアテスト）で構造的に信頼できないことが
-  実証されている。T4（確率的出力）を前提として、同じバイアスを
-  持つプロセスが生成と評価を兼ねると検出力が落ちることが
-  経験的に支持される。」
+"Generation and evaluation by the same process has been demonstrated
+  to be structurally unreliable across all domains (scientific peer review,
+  financial auditing, software testing). Given T4 (probabilistic output),
+  it is empirically supported that when a process with the same biases
+  handles both generation and evaluation, detection power degrades."
 
-E1 は3つの axiom に分解される:
-1. 生成と評価の主体は分離されなければならない（構造的独立性）
-2. 自己検証は許容されない（自己検証の禁止）
-3. 内部状態を共有するエージェント間の検証は検出力が低い（バイアス相関）
+E1 is decomposed into three axioms:
+1. The agents responsible for generation and evaluation must be separated (structural independence)
+2. Self-verification is not permitted (prohibition of self-verification)
+3. Verification between agents sharing internal state has low detection power (bias correlation)
 
-(公理カード)
-   所属: Γ \ T₀（仮説由来）
-   内容: 生成と評価の主体は独立でなければならない。
-         あるアクションを生成したエージェントと、それを検証する
-         エージェントは異なる個体であり、かつ内部状態を共有しない
-   根拠: 科学の査読、会計監査、ソフトウェアテスト等で
-         繰り返し実証されている原則
-   ソース: manifesto.md E1「検証には独立性が必要である」
-   反証条件: 自己検証が外部検証と同等の検出力を持つことが
-             実証された場合（例: 完全な自己認識能力の実現） 
+(Axiom Card)
+   Layer: Γ \ T₀ (Hypothesis-derived)
+   Content: The agents responsible for generation and evaluation must be independent.
+         The agent that generated an action and the agent that verifies it
+         must be distinct individuals that do not share internal state.
+   Basis: A principle repeatedly demonstrated in scientific peer review,
+         financial auditing, software testing, etc.
+   Source: manifesto.md E1 "Verification Requires Independence"
+   Refutation condition: If self-verification is demonstrated to have detection power
+             equal to external verification (e.g., realization of complete self-awareness) 
 
 *Declaration:* `axiom verification_requires_independence`
 
 ```
-axiom `verification_requires_independence` :
+axiom verification_requires_independence :
   ∀ (gen ver : Agent) (action : Action) (w : World),
     generates gen action w →
     verifies ver action w →
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver
 ```
 
-(公理カード)
-   所属: Γ \ T₀（仮説由来）
-   内容: 自己検証の禁止。
-         同一エージェントが生成と検証の両方を行うことはできない。
-         E1a の系（用語リファレンス §4.2 系 corollary）だが、明示的に宣言する
-   根拠: T4（確率的出力）により、同一プロセスのバイアスが
-         生成と評価の双方に影響し、検出力が構造的に低下する
-   ソース: manifesto.md E1 + Principles.lean `e1b_from_e1a` で E1a からの導出を証明済み
-   反証条件: E1a の反証条件と同一 
+(Axiom Card)
+   Layer: Γ \ T₀ (Hypothesis-derived)
+   Content: Prohibition of self-verification.
+         The same agent cannot perform both generation and verification.
+         A corollary of E1a (Terminology Reference §4.2 corollary), but declared explicitly.
+   Basis: Due to T4 (probabilistic output), the bias of the same process
+         affects both generation and evaluation, structurally degrading detection power.
+   Source: manifesto.md E1 + Principles.lean `e1b_from_e1a` proves derivation from E1a
+   Refutation condition: Same as the refutation condition for E1a 
 
 *Declaration:* `axiom no_self_verification`
 
 ```
-axiom `no_self_verification` :
+axiom no_self_verification :
   ∀ (agent : Agent) (action : Action) (w : World),
     generates agent action w →
     ¬verifies agent action w
 ```
 
-(公理カード)
-   所属: Γ \ T₀（仮説由来）
-   内容: 内部状態の共有はバイアスを相関させる。
-         内部状態を共有する2つのエージェントは、一方が生成し
-         他方が検証する構成であっても、独立な検証とはみなせない
-   根拠: 共有バイアスによる検出力低下は、科学研究の利益相反規程、
-         監査法人のローテーション制度等で経験的に裏付けられている
-   ソース: manifesto.md E1「同じバイアスを持つプロセスが生成と評価を兼ねると
-           検出力が落ちる」
-   反証条件: バイアスの相関が検出力に影響しないことが実証された場合 
+(Axiom Card)
+   Layer: Γ \ T₀ (Hypothesis-derived)
+   Content: Sharing internal state correlates biases.
+         Two agents sharing internal state cannot be considered independent
+         verifiers, even if one generates and the other verifies.
+   Basis: Detection power degradation due to shared bias is empirically
+         supported by conflict-of-interest policies in scientific research,
+         audit firm rotation requirements, etc.
+   Source: manifesto.md E1 "When a process with the same biases handles both
+           generation and evaluation, detection power degrades"
+   Refutation condition: If it is demonstrated that bias correlation has no effect on detection power 
 
 *Declaration:* `axiom shared_bias_reduces_detection`
 
 ```
-axiom `shared_bias_reduces_detection` :
+axiom shared_bias_reduces_detection :
   ∀ (a b : Agent) (action : Action) (w : World),
     sharesInternalState a b →
     generates a action w →
     ¬verifies b action w
 ```
 
-## E2: 能力の増大はリスクの増大と不可分である
+## E2 Capability Growth Is Inseparable from Risk Growth
 
-「あらゆるツールにおいて、能力は正負両方の結果を可能にする
-  ことが繰り返し観測されている。ただし、完璧なサンドボックス
-  など、能力を増大させつつリスクを完全に封じ込める手段が
-  原理的に不可能であるという証明はない。」
+"It has been repeatedly observed across all tools that capability
+  enables both positive and negative outcomes. However, there is no
+  proof that means to increase capability while completely containing
+  risk (such as a perfect sandbox) are impossible in principle."
 
-E2 は1つの axiom として形式化する。
-行動空間（actionSpaceSize）の拡大は、必ずリスク露出度
-（riskExposure）の増大を伴う。
+E2 is formalized as a single axiom.
+Expansion of the action space (actionSpaceSize) necessarily entails
+an increase in risk exposure (riskExposure).
 
-### 経験的地位に関する注記
+## Note on Empirical Status
 
-E2 は経験的公準であり、「完璧なサンドボックス」が将来
-発見される可能性を排除しない。axiom として仮定するが、
-反証された場合は P1（自律権と脆弱性の共成長）が
-見直しの対象となる。
+E2 is an empirical postulate and does not exclude the possibility
+that a "perfect sandbox" may be discovered in the future. It is
+assumed as an axiom, but if refuted, P1 (co-scaling of autonomy
+and vulnerability) becomes subject to revision.
 
-(公理カード)
-   所属: Γ \ T₀（仮説由来）
-   内容: 能力の増大はリスクの増大と不可分。
-         エージェントの行動空間が拡大した場合、リスク露出度も必ず増大する
-   根拠: あらゆるツールにおいて、能力は正負両方の結果を可能にすることが
-         繰り返し観測されている（用語リファレンス §9.1 経験的命題）
-   ソース: manifesto.md E2「能力の増大はリスクの増大と不可分である」
-   反証条件: 完璧なサンドボックスなど、能力を増大させつつリスクを完全に
-             封じ込める手段が発見された場合
+(Axiom Card)
+   Layer: Γ \ T₀ (Hypothesis-derived)
+   Content: Capability growth is inseparable from risk growth.
+         When an agent's action space expands, risk exposure necessarily increases.
+   Basis: It has been repeatedly observed across all tools that capability enables
+         both positive and negative outcomes (Terminology Reference §9.1 empirical propositions).
+   Source: manifesto.md E2 "Capability Growth Is Inseparable from Risk Growth"
+   Refutation condition: If means to increase capability while completely containing risk
+             are discovered (e.g., a perfect sandbox)
 
-   ### 不等号の選択: `<` vs `≤`
+   *Choice of inequality: `<` vs `≤`*
 
-   マニフェストの「不可分」は厳密な共成長を意味するため
-   `<`（厳密増加）を採用。反証条件が充足された場合（リスク封じ込め手段の発見）、
-   この axiom は AGM の縮小（用語リファレンス §9.2）の対象となり、
-   P1（自律権と脆弱性の共成長）が見直される。 
+   The manifesto's "inseparable" implies strict co-scaling, so
+   `<` (strict increase) is adopted. If the refutation condition is met (discovery of
+   a risk containment method), this axiom becomes subject to AGM contraction
+   (Terminology Reference §9.2), and P1 (co-scaling of autonomy and vulnerability)
+   is revised. 
 
 *Declaration:* `axiom capability_risk_coscaling`
 
 ```
-axiom `capability_risk_coscaling` :
+axiom capability_risk_coscaling :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskExposure agent w < riskExposure agent w'
 ```
 
-## Sorry Inventory (Phase 2 追加分)
+## Sorry Inventory Phase 2 Additions
 
 
 :::table +header
 *
-  * 場所
-  * sorry の理由
+  * Location
+  * Reason for sorry
 *
   * `Ontology.lean: generates`
-  * opaque — Phase 3+ で Worker の行為として具体化
+  * opaque — to be concretized as Worker actions in Phase 3+
 *
   * `Ontology.lean: verifies`
-  * opaque — Phase 3+ で Verifier の行為として具体化
+  * opaque — to be concretized as Verifier actions in Phase 3+
 *
   * `Ontology.lean: sharesInternalState`
-  * opaque — Phase 3+ でセッション/パラメータ共有として具体化
+  * opaque — to be concretized as session/parameter sharing in Phase 3+
 *
   * `Ontology.lean: actionSpaceSize`
-  * opaque — Phase 4+ で Observable として計量化
+  * opaque — to be quantified as Observable in Phase 4+
 *
   * `Ontology.lean: riskExposure`
-  * opaque — Phase 4+ で Observable として計量化
+  * opaque — to be quantified as Observable in Phase 4+
 :::
 
