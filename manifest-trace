@@ -28,6 +28,55 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
+# --- scope フィルタ ---
+# --scope=implementation,config のように指定。未指定時は全 scope
+SCOPE_FILTER=""
+
+parse_global_opts() {
+  local args=()
+  for arg in "$@"; do
+    case "$arg" in
+      --scope=*)
+        SCOPE_FILTER="${arg#--scope=}"
+        ;;
+      *)
+        args+=("$arg")
+        ;;
+    esac
+  done
+  REMAINING_ARGS=("${args[@]}")
+}
+
+# scope フィルタ付きで成果物を jq フィルタ
+# 引数: 追加の jq フィルタ（省略可）
+artifacts_jq() {
+  local extra_filter="${1:-.}"
+  if [[ -z "$SCOPE_FILTER" ]]; then
+    jq -r "[.artifacts[] | select(._comment == null)] | map(select(${extra_filter}))" "$MANIFEST"
+  else
+    # カンマ区切りの scope を jq 配列に変換
+    local scope_array
+    scope_array=$(echo "$SCOPE_FILTER" | tr ',' '\n' | jq -R . | jq -s .)
+    jq -r --argjson scopes "$scope_array" \
+      "[.artifacts[] | select(._comment == null) | select(.scope as \$s | \$scopes | index(\$s))] | map(select(${extra_filter}))" \
+      "$MANIFEST"
+  fi
+}
+
+# scope フィルタ付きで成果物を行出力
+artifacts_lines() {
+  local format="${1:-.id}"
+  if [[ -z "$SCOPE_FILTER" ]]; then
+    jq -r ".artifacts[] | select(._comment == null) | ${format}" "$MANIFEST"
+  else
+    local scope_array
+    scope_array=$(echo "$SCOPE_FILTER" | tr ',' '\n' | jq -R . | jq -s .)
+    jq -r --argjson scopes "$scope_array" \
+      ".artifacts[] | select(._comment == null) | select(.scope as \$s | \$scopes | index(\$s)) | ${format}" \
+      "$MANIFEST"
+  fi
+}
+
 # --- ヘルパー ---
 die() { echo -e "${RED}ERROR: $*${NC}" >&2; exit 1; }
 
@@ -85,7 +134,9 @@ artifact_refs() {
 # --- サブコマンド ---
 
 cmd_coverage() {
-  echo -e "${BOLD}=== カバレッジレポート ===${NC}"
+  local scope_label=""
+  [[ -n "$SCOPE_FILTER" ]] && scope_label=" (scope: ${SCOPE_FILTER})"
+  echo -e "${BOLD}=== カバレッジレポート${scope_label} ===${NC}"
   echo ""
 
   local total=0
@@ -93,33 +144,52 @@ cmd_coverage() {
   local gaps=""
   local weak=""
 
+  # scope フィルタ付きの成果物リストを一度取得
+  local filtered_artifacts
+  filtered_artifacts=$(artifacts_jq "true")
+
   while IFS= read -r prop; do
     total=$((total + 1))
 
-    # この命題を参照する全成果物
     local impl_count
-    impl_count=$(jq --arg p "$prop" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+    impl_count=$(echo "$filtered_artifacts" | jq --arg p "$prop" '[.[] | select(.refs[] == $p)] | length')
 
     # 種別ごとのカウント
-    local hook_count skill_count agent_count rule_count test_count
-    hook_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "hook" and (.refs[] == $p))] | length' "$MANIFEST")
-    skill_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "skill" and (.refs[] == $p))] | length' "$MANIFEST")
-    agent_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "agent" and (.refs[] == $p))] | length' "$MANIFEST")
-    rule_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "rule" and (.refs[] == $p))] | length' "$MANIFEST")
-    test_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "test" and (.refs[] == $p))] | length' "$MANIFEST")
+    local type_counts
+    type_counts=$(echo "$filtered_artifacts" | jq -r --arg p "$prop" '
+      [.[] | select(.refs[] == $p)] | group_by(.type) | map({(.[0].type): length}) | add // {}
+    ')
+
+    local hook_count skill_count agent_count rule_count test_count config_count doc_count data_count
+    hook_count=$(echo "$type_counts" | jq '.hook // 0')
+    skill_count=$(echo "$type_counts" | jq '.skill // 0')
+    agent_count=$(echo "$type_counts" | jq '.agent // 0')
+    rule_count=$(echo "$type_counts" | jq '.rule // 0')
+    test_count=$(echo "$type_counts" | jq '.test // 0')
+    config_count=$(echo "$type_counts" | jq '.config // 0')
+    doc_count=$(echo "$type_counts" | jq '.document // 0')
+    data_count=$(echo "$type_counts" | jq '.data // 0')
 
     if [[ "$impl_count" -eq 0 ]]; then
       gaps="${gaps}  ${RED}✗ ${prop}${NC}: 実装なし\n"
     else
       covered=$((covered + 1))
 
-      # 実装はあるがテストがない
       if [[ "$test_count" -eq 0 ]]; then
         weak="${weak}  ${YELLOW}△ ${prop}${NC}: 実装 ${impl_count} 件あるがテスト 0 件\n"
       fi
 
-      local color="$GREEN"
-      echo -e "  ${color}✓ ${prop}${NC}: hook=${hook_count} skill=${skill_count} agent=${agent_count} rule=${rule_count} test=${test_count}"
+      # scope に応じて表示カラムを選択
+      local detail=""
+      [[ "$hook_count" -gt 0 ]] && detail="${detail} hook=${hook_count}"
+      [[ "$skill_count" -gt 0 ]] && detail="${detail} skill=${skill_count}"
+      [[ "$agent_count" -gt 0 ]] && detail="${detail} agent=${agent_count}"
+      [[ "$rule_count" -gt 0 ]] && detail="${detail} rule=${rule_count}"
+      [[ "$test_count" -gt 0 ]] && detail="${detail} test=${test_count}"
+      [[ "$config_count" -gt 0 ]] && detail="${detail} config=${config_count}"
+      [[ "$doc_count" -gt 0 ]] && detail="${detail} doc=${doc_count}"
+      [[ "$data_count" -gt 0 ]] && detail="${detail} data=${data_count}"
+      echo -e "  ${GREEN}✓ ${prop}${NC}:${detail}"
     fi
   done < <(all_propositions)
 
@@ -183,11 +253,20 @@ cmd_trace() {
   echo ""
 
   # 3. 実装成果物
-  echo -e "${CYAN}■ 実装成果物:${NC}"
-  jq -r --arg p "$target" '.artifacts[] | select(.refs[] == $p) | "  [\(.type)] \(.id) — \(.path)"' "$MANIFEST"
+  local scope_label=""
+  [[ -n "$SCOPE_FILTER" ]] && scope_label=" (scope: ${SCOPE_FILTER})"
+  echo -e "${CYAN}■ 実装成果物${scope_label}:${NC}"
+  artifacts_lines "\"  [\\(.type)] \\(.id) — \\(.path)\"" | while IFS= read -r line; do
+    local aid
+    aid=$(echo "$line" | sed 's/.*\] //;s/ —.*//')
+    # この成果物が target を参照しているか
+    local has_ref
+    has_ref=$(artifacts_jq "(.id == \"${aid}\") and (.refs[] == \"${target}\")" | jq 'length')
+    [[ "$has_ref" -gt 0 ]] && echo "$line"
+  done
 
   local count
-  count=$(jq --arg p "$target" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+  count=$(artifacts_jq ".refs[] == \"${target}\"" | jq 'length')
   if [[ "$count" -eq 0 ]]; then
     echo -e "  ${RED}(実装成果物なし — カバレッジギャップ)${NC}"
   fi
@@ -235,7 +314,7 @@ cmd_graph() {
   echo ''
   echo '  // 成果物ノード'
 
-  jq -r '.artifacts[] | "\(.id)|\(.type)|\(.refs | join(","))"' "$MANIFEST" | \
+  artifacts_lines '"\(.id)|\(.type)|\(.refs | join(","))"' | \
   while IFS='|' read -r aid atype arefs; do
     local shape="ellipse"
     local color="gray"
@@ -281,25 +360,22 @@ cmd_violations() {
   while IFS='|' read -r aid arefs; do
     IFS=',' read -ra ref_array <<< "$arefs"
     for ref in "${ref_array[@]}"; do
-      # この ref の上流依存を取得
       local upstream
       upstream=$(parse_lean_dependencies | awk -v t="$ref" '$1 == t {print $2}')
       for up in $upstream; do
-        # 上流がどこかの成果物でカバーされているか
         local up_count
-        up_count=$(jq --arg p "$up" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+        up_count=$(artifacts_jq ".refs[] == \"${up}\"" | jq 'length')
         if [[ "$up_count" -eq 0 ]]; then
           echo -e "  ${YELLOW}⚠ ${aid}${NC}: ${ref} を参照するが、その上流 ${up} を実装する成果物がない"
           violation_count=$((violation_count + 1))
         fi
       done
     done
-  done < <(jq -r '.artifacts[] | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
+  done < <(artifacts_lines '"\(.id)|\(.refs | join(","))"')
 
   echo ""
 
   # 検査 2: enforces レベルの一貫性
-  # L1 (strength 2+) の成果物は structural enforcement を持つべき
   echo -e "${CYAN}検査 2: 強制レベルの一貫性（L1 は structural であるべき）${NC}"
   echo ""
 
@@ -308,7 +384,7 @@ cmd_violations() {
       echo -e "  ${YELLOW}⚠ ${aid}${NC}: L1 を参照するが enforces=${aenforces}（structural 推奨）"
       violation_count=$((violation_count + 1))
     fi
-  done < <(jq -r '.artifacts[] | select(.refs[] == "L1") | "\(.id)|\(.enforces)"' "$MANIFEST")
+  done < <(artifacts_lines 'select(.refs[] == "L1") | "\(.id)|\(.enforces)"')
 
   echo ""
 
@@ -320,29 +396,31 @@ cmd_violations() {
 }
 
 cmd_health() {
-  echo -e "${BOLD}=== manifest-trace 健全性サマリ ===${NC}"
+  local scope_label=""
+  [[ -n "$SCOPE_FILTER" ]] && scope_label=" (scope: ${SCOPE_FILTER})"
+  echo -e "${BOLD}=== manifest-trace 健全性サマリ${scope_label} ===${NC}"
   echo ""
 
   local total_props
   total_props=$(jq '.propositions | length' "$MANIFEST")
+  local filtered_artifacts
+  filtered_artifacts=$(artifacts_jq "true")
   local total_artifacts
-  total_artifacts=$(jq '.artifacts | length' "$MANIFEST")
+  total_artifacts=$(echo "$filtered_artifacts" | jq 'length')
 
   echo -e "命題数: ${BOLD}${total_props}${NC}"
   echo -e "成果物数: ${BOLD}${total_artifacts}${NC}"
   echo ""
 
-  # 種別ごとの集計
   echo -e "${CYAN}成果物の種別分布:${NC}"
-  jq -r '[.artifacts[].type] | group_by(.) | map({type: .[0], count: length}) | .[] | "  \(.type): \(.count)"' "$MANIFEST"
+  echo "$filtered_artifacts" | jq -r '[.[].type] | group_by(.) | map({type: .[0], count: length}) | .[] | "  \(.type): \(.count)"'
   echo ""
 
-  # カバレッジサマリ
   local covered=0
   local uncovered_list=""
   while IFS= read -r prop; do
     local count
-    count=$(jq --arg p "$prop" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+    count=$(echo "$filtered_artifacts" | jq --arg p "$prop" '[.[] | select(.refs[] == $p)] | length')
     if [[ "$count" -gt 0 ]]; then
       covered=$((covered + 1))
     else
@@ -359,7 +437,6 @@ cmd_health() {
 
   echo ""
 
-  # ファイル存在チェック
   echo -e "${CYAN}成果物ファイル存在チェック:${NC}"
   local missing=0
   while IFS='|' read -r aid apath; do
@@ -367,7 +444,7 @@ cmd_health() {
       echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
       missing=$((missing + 1))
     fi
-  done < <(jq -r '.artifacts[] | "\(.id)|\(.path)"' "$MANIFEST")
+  done < <(artifacts_lines '"\(.id)|\(.path)"')
 
   if [[ "$missing" -eq 0 ]]; then
     echo -e "  ${GREEN}全ファイル存在確認済み${NC}"
@@ -427,11 +504,11 @@ cmd_selfcheck() {
         invalid_refs=$((invalid_refs + 1))
       fi
     done
-  done < <(jq -r '.artifacts[] | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
+  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
 
   if [[ "$invalid_refs" -eq 0 ]]; then
     local total_refs
-    total_refs=$(jq '[.artifacts[].refs[]] | length' "$MANIFEST")
+    total_refs=$(jq '[.artifacts[] | select(._comment == null) | .refs[]] | length' "$MANIFEST")
     echo -e "  ${GREEN}✓ 全 refs が Lean に接地済み (${total_refs} 参照)${NC}"
   fi
   errors=$((errors + invalid_refs))
@@ -508,7 +585,7 @@ cmd_selfcheck() {
 
   # 重複 ID チェック
   local dup_ids
-  dup_ids=$(jq -r '.artifacts[].id' "$MANIFEST" | sort | uniq -d)
+  dup_ids=$(jq -r '.artifacts[] | select(._comment == null) | .id' "$MANIFEST" | sort | uniq -d)
   if [[ -n "$dup_ids" ]]; then
     echo -e "  ${RED}✗ 重複 ID:${NC}"
     echo "$dup_ids" | while read -r id; do echo "    - $id"; done
@@ -517,15 +594,21 @@ cmd_selfcheck() {
     echo -e "  ${GREEN}✓ ID 重複なし${NC}"
   fi
 
-  # type と id プレフィックスの一貫性
+  # type と id プレフィックスの一貫性（略称も許容: doc→document, config→config）
   local type_mismatch=0
   while IFS='|' read -r aid atype; do
-    local expected_prefix="${atype}:"
-    if [[ "$aid" != ${expected_prefix}* ]]; then
-      echo -e "  ${YELLOW}⚠ ${aid}${NC}: type=${atype} だが ID が ${expected_prefix} で始まらない"
+    local id_prefix="${aid%%:*}"
+    local valid=false
+    # 完全一致または公認略称
+    case "${atype}" in
+      document) [[ "$id_prefix" == "doc" || "$id_prefix" == "document" ]] && valid=true ;;
+      *)        [[ "$id_prefix" == "$atype" ]] && valid=true ;;
+    esac
+    if [[ "$valid" == false ]]; then
+      echo -e "  ${YELLOW}⚠ ${aid}${NC}: type=${atype} だが ID プレフィックス ${id_prefix}: が不一致"
       type_mismatch=$((type_mismatch + 1))
     fi
-  done < <(jq -r '.artifacts[] | "\(.id)|\(.type)"' "$MANIFEST")
+  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.type)"' "$MANIFEST")
 
   if [[ "$type_mismatch" -eq 0 ]]; then
     echo -e "  ${GREEN}✓ ID プレフィックスと type が一貫${NC}"
@@ -539,7 +622,7 @@ cmd_selfcheck() {
       echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
       missing=$((missing + 1))
     fi
-  done < <(jq -r '.artifacts[] | "\(.id)|\(.path)"' "$MANIFEST")
+  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.path)"' "$MANIFEST")
 
   if [[ "$missing" -eq 0 ]]; then
     echo -e "  ${GREEN}✓ 全ファイル存在${NC}"
@@ -560,6 +643,8 @@ cmd_selfcheck() {
 
 # --- メイン ---
 check_deps
+parse_global_opts "$@"
+set -- "${REMAINING_ARGS[@]}"
 
 case "${1:-help}" in
   coverage)    cmd_coverage ;;
@@ -572,12 +657,27 @@ case "${1:-help}" in
     echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
     echo ""
     echo "使用法:"
-    echo "  manifest-trace coverage         カバレッジギャップレポート"
-    echo "  manifest-trace trace <ID>       順方向・逆方向トレース"
-    echo "  manifest-trace graph            半順序グラフ（DOT 形式）"
-    echo "  manifest-trace violations       半順序違反レポート"
-    echo "  manifest-trace health           全指標サマリ"
-    echo "  manifest-trace selfcheck        自己検証（Lean を真実源として突合）"
+    echo "  manifest-trace [--scope=SCOPES] <subcommand>"
+    echo ""
+    echo "サブコマンド:"
+    echo "  coverage         カバレッジギャップレポート"
+    echo "  trace <ID>       順方向・逆方向トレース"
+    echo "  graph            半順序グラフ（DOT 形式）"
+    echo "  violations       半順序違反レポート"
+    echo "  health           全指標サマリ"
+    echo "  selfcheck        自己検証（Lean を真実源として突合）"
+    echo ""
+    echo "グローバルオプション:"
+    echo "  --scope=SCOPES   対象スコープ（カンマ区切り）"
+    echo "                   implementation  hooks, skills, agents, rules, tests"
+    echo "                   config          settings.json 等"
+    echo "                   document        CLAUDE.md, README.md, docs/ 等"
+    echo "                   data            .claude/metrics/*.jsonl 等"
+    echo ""
+    echo "例:"
+    echo "  manifest-trace --scope=implementation coverage"
+    echo "  manifest-trace --scope=implementation,config health"
+    echo "  manifest-trace coverage   # 全スコープ"
     ;;
   *)
     die "不明なサブコマンド: $1（manifest-trace help を参照）"

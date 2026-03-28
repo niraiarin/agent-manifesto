@@ -1,365 +1,1018 @@
 {
-  "version": "0.1.0",
-  "description": "全成果物→公理マッピング。半順序導出・カバレッジ検出・逸脱検出の単一真実源。",
+  "version": "0.2.0",
+  "description": "全成果物→公理マッピング。半順序導出・カバレッジ検出・逸脱検出の単一真実源。真実源は Lean。",
+  "scopes": [
+    "implementation",
+    "config",
+    "document",
+    "data"
+  ],
   "propositions": [
-    "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8",
-    "E1", "E2",
-    "P1", "P2", "P3", "P4", "P5", "P6",
-    "L1", "L2", "L3", "L4", "L5", "L6",
-    "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11", "D12", "D13", "D14"
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "E1",
+    "E2",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L6",
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6",
+    "D7",
+    "D8",
+    "D9",
+    "D10",
+    "D11",
+    "D12",
+    "D13",
+    "D14"
   ],
   "artifacts": [
     {
       "id": "hook:l1-safety-check",
       "type": "hook",
       "path": ".claude/hooks/l1-safety-check.sh",
-      "refs": ["L1", "T6", "T7"],
+      "refs": [
+        "L1",
+        "T6",
+        "T7"
+      ],
       "enforces": "structural",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "hook:l1-file-guard",
       "type": "hook",
       "path": ".claude/hooks/l1-file-guard.sh",
-      "refs": ["L1", "T1"],
+      "refs": [
+        "L1",
+        "T1"
+      ],
       "enforces": "structural",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "hook:p2-verify-on-commit",
       "type": "hook",
       "path": ".claude/hooks/p2-verify-on-commit.sh",
-      "refs": ["P2", "E1", "D2"],
+      "refs": [
+        "P2",
+        "E1",
+        "D2"
+      ],
       "enforces": "procedural",
-      "phase": 2
+      "phase": 2,
+      "scope": "implementation"
     },
     {
       "id": "hook:p3-compatibility-check",
       "type": "hook",
       "path": ".claude/hooks/p3-compatibility-check.sh",
-      "refs": ["P3", "D13", "D8"],
+      "refs": [
+        "P3",
+        "D13",
+        "D8"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-metrics-collector",
       "type": "hook",
       "path": ".claude/hooks/p4-metrics-collector.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-drift-detector",
       "type": "hook",
       "path": ".claude/hooks/p4-drift-detector.sh",
-      "refs": ["P4", "T5", "D3"],
+      "refs": [
+        "P4",
+        "T5",
+        "D3"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-gate-logger",
       "type": "hook",
       "path": ".claude/hooks/p4-gate-logger.sh",
-      "refs": ["P4", "L6"],
+      "refs": [
+        "P4",
+        "L6"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-temporal-tracker",
       "type": "hook",
       "path": ".claude/hooks/p4-temporal-tracker.sh",
-      "refs": ["P4", "T1"],
+      "refs": [
+        "P4",
+        "T1"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-v5-approval-tracker",
       "type": "hook",
       "path": ".claude/hooks/p4-v5-approval-tracker.sh",
-      "refs": ["P4", "T6", "D3"],
+      "refs": [
+        "P4",
+        "T6",
+        "D3"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:p4-v7-task-tracker",
       "type": "hook",
       "path": ".claude/hooks/p4-v7-task-tracker.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:hallucination-check",
       "type": "hook",
       "path": ".claude/hooks/hallucination-check.sh",
-      "refs": ["L2"],
+      "refs": [
+        "L2"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:evolve-metrics-recorder",
       "type": "hook",
       "path": ".claude/hooks/evolve-metrics-recorder.sh",
-      "refs": ["P4", "D3", "D9"],
+      "refs": [
+        "P4",
+        "D3",
+        "D9"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "hook:evolve-state-loader",
       "type": "hook",
       "path": ".claude/hooks/evolve-state-loader.sh",
-      "refs": ["P3", "T2", "D10"],
+      "refs": [
+        "P3",
+        "T2",
+        "D10"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "skill:verify",
       "type": "skill",
       "path": ".claude/skills/verify/SKILL.md",
-      "refs": ["P2", "E1", "D2", "D1"],
+      "refs": [
+        "P2",
+        "E1",
+        "D2",
+        "D1"
+      ],
       "enforces": "procedural",
-      "phase": 2
+      "phase": 2,
+      "scope": "implementation"
     },
     {
       "id": "skill:metrics",
       "type": "skill",
       "path": ".claude/skills/metrics/SKILL.md",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "skill:adjust-action-space",
       "type": "skill",
       "path": ".claude/skills/adjust-action-space/SKILL.md",
-      "refs": ["P1", "D8", "D7", "L4", "E2"],
+      "refs": [
+        "P1",
+        "D8",
+        "D7",
+        "L4",
+        "E2"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "skill:evolve",
       "type": "skill",
       "path": ".claude/skills/evolve/SKILL.md",
-      "refs": ["T1", "T2", "T6", "P2", "P3", "P4", "D1", "D4", "D9", "D10", "D13"],
+      "refs": [
+        "T1",
+        "T2",
+        "T6",
+        "P2",
+        "P3",
+        "P4",
+        "D1",
+        "D4",
+        "D9",
+        "D10",
+        "D13"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "skill:research",
       "type": "skill",
       "path": ".claude/skills/research/SKILL.md",
-      "refs": ["P3", "D3", "D13"],
+      "refs": [
+        "P3",
+        "D3",
+        "D13"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "skill:formal-derivation",
       "type": "skill",
       "path": ".claude/skills/formal-derivation/SKILL.md",
-      "refs": ["D1", "D5", "P5"],
+      "refs": [
+        "D1",
+        "D5",
+        "P5"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "skill:design-implementation-plan",
       "type": "skill",
       "path": ".claude/skills/design-implementation-plan/SKILL.md",
-      "refs": ["P6", "D5", "D12", "D14"],
+      "refs": [
+        "P6",
+        "D5",
+        "D12",
+        "D14"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "skill:instantiate-model",
       "type": "skill",
       "path": ".claude/skills/instantiate-model/SKILL.md",
-      "refs": ["D5", "D1"],
+      "refs": [
+        "D5",
+        "D1"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "skill:package-plugin",
       "type": "skill",
       "path": ".claude/skills/package-plugin/SKILL.md",
-      "refs": ["D9", "T2"],
+      "refs": [
+        "D9",
+        "T2"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "skill:trace",
       "type": "skill",
       "path": ".claude/skills/trace/SKILL.md",
-      "refs": ["P4", "D3", "D13"],
+      "refs": [
+        "P4",
+        "D3",
+        "D13"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "agent:verifier",
       "type": "agent",
       "path": ".claude/agents/verifier.md",
-      "refs": ["P2", "E1", "D2", "D10"],
+      "refs": [
+        "P2",
+        "E1",
+        "D2",
+        "D10"
+      ],
       "enforces": "procedural",
-      "phase": 2
+      "phase": 2,
+      "scope": "implementation"
     },
     {
       "id": "agent:observer",
       "type": "agent",
       "path": ".claude/agents/observer/AGENT.md",
-      "refs": ["P4", "D3", "D9"],
+      "refs": [
+        "P4",
+        "D3",
+        "D9"
+      ],
       "enforces": "procedural",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "agent:hypothesizer",
       "type": "agent",
       "path": ".claude/agents/hypothesizer/AGENT.md",
-      "refs": ["P3", "D1", "D8", "D9"],
+      "refs": [
+        "P3",
+        "D1",
+        "D8",
+        "D9"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "agent:integrator",
       "type": "agent",
       "path": ".claude/agents/integrator/AGENT.md",
-      "refs": ["P3", "T2", "D9", "D13"],
+      "refs": [
+        "P3",
+        "T2",
+        "D9",
+        "D13"
+      ],
       "enforces": "procedural",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "agent:model-questioner",
       "type": "agent",
       "path": ".claude/agents/model-questioner.md",
-      "refs": ["D5", "D1"],
+      "refs": [
+        "D5",
+        "D1"
+      ],
       "enforces": "procedural",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "rule:l1-safety",
       "type": "rule",
       "path": ".claude/rules/l1-safety.md",
-      "refs": ["L1", "T6", "D1"],
+      "refs": [
+        "L1",
+        "T6",
+        "D1"
+      ],
       "enforces": "normative",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "rule:l1-sandbox-recommendation",
       "type": "rule",
       "path": ".claude/rules/l1-sandbox-recommendation.md",
-      "refs": ["L1", "D1"],
+      "refs": [
+        "L1",
+        "D1"
+      ],
       "enforces": "normative",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "rule:p3-governed-learning",
       "type": "rule",
       "path": ".claude/rules/p3-governed-learning.md",
-      "refs": ["P3", "D13"],
+      "refs": [
+        "P3",
+        "D13"
+      ],
       "enforces": "normative",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "test:l1-structural",
       "type": "test",
       "path": "tests/phase1/test-l1-structural.sh",
-      "refs": ["L1", "D1"],
+      "refs": [
+        "L1",
+        "D1"
+      ],
       "enforces": "verification",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "test:l1-behavioral",
       "type": "test",
       "path": "tests/phase1/test-l1-behavioral.sh",
-      "refs": ["L1", "T6", "T7"],
+      "refs": [
+        "L1",
+        "T6",
+        "T7"
+      ],
       "enforces": "verification",
-      "phase": 1
+      "phase": 1,
+      "scope": "implementation"
     },
     {
       "id": "test:p2-structural",
       "type": "test",
       "path": "tests/phase2/test-p2-structural.sh",
-      "refs": ["P2", "E1", "D2"],
+      "refs": [
+        "P2",
+        "E1",
+        "D2"
+      ],
       "enforces": "verification",
-      "phase": 2
+      "phase": 2,
+      "scope": "implementation"
     },
     {
       "id": "test:p2-behavioral",
       "type": "test",
       "path": "tests/phase2/test-p2-behavioral.sh",
-      "refs": ["P2", "E1", "D2"],
+      "refs": [
+        "P2",
+        "E1",
+        "D2"
+      ],
       "enforces": "verification",
-      "phase": 2
+      "phase": 2,
+      "scope": "implementation"
     },
     {
       "id": "test:phase3-structural",
       "type": "test",
       "path": "tests/phase3/test-phase3-structural.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "verification",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "test:phase3-behavioral",
       "type": "test",
       "path": "tests/phase3/test-phase3-behavioral.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "verification",
-      "phase": 3
+      "phase": 3,
+      "scope": "implementation"
     },
     {
       "id": "test:phase4-structural",
       "type": "test",
       "path": "tests/phase4/test-phase4-structural.sh",
-      "refs": ["P3", "D13"],
+      "refs": [
+        "P3",
+        "D13"
+      ],
       "enforces": "verification",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "test:phase4-behavioral",
       "type": "test",
       "path": "tests/phase4/test-phase4-behavioral.sh",
-      "refs": ["P3", "D13"],
+      "refs": [
+        "P3",
+        "D13"
+      ],
       "enforces": "verification",
-      "phase": 4
+      "phase": 4,
+      "scope": "implementation"
     },
     {
       "id": "test:evolve-structural",
       "type": "test",
       "path": "tests/phase5/test-evolve-structural.sh",
-      "refs": ["T1", "T2", "T6", "P2", "P3", "P4", "D1", "D4", "D9"],
+      "refs": [
+        "T1",
+        "T2",
+        "T6",
+        "P2",
+        "P3",
+        "P4",
+        "D1",
+        "D4",
+        "D9"
+      ],
       "enforces": "verification",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "test:axiom-quality",
       "type": "test",
       "path": "tests/phase5/test-axiom-quality.sh",
-      "refs": ["D5", "D1"],
+      "refs": [
+        "D5",
+        "D1"
+      ],
       "enforces": "verification",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "test:dynamic-structural",
       "type": "test",
       "path": "tests/phase5/test-dynamic-structural.sh",
-      "refs": ["D8", "L4", "P1"],
+      "refs": [
+        "D8",
+        "L4",
+        "P1"
+      ],
       "enforces": "verification",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "test:dynamic-behavioral",
       "type": "test",
       "path": "tests/phase5/test-dynamic-behavioral.sh",
-      "refs": ["D8", "L4", "P1"],
+      "refs": [
+        "D8",
+        "L4",
+        "P1"
+      ],
       "enforces": "verification",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
     },
     {
       "id": "test:research-structural",
       "type": "test",
       "path": "tests/phase5/test-research-structural.sh",
-      "refs": ["P3", "D3", "D13"],
+      "refs": [
+        "P3",
+        "D3",
+        "D13"
+      ],
       "enforces": "verification",
-      "phase": 5
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "_comment": "--- config scope ---"
+    },
+    {
+      "id": "config:settings",
+      "type": "config",
+      "path": ".claude/settings.json",
+      "refs": [
+        "L1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "T6",
+        "D1"
+      ],
+      "enforces": "structural",
+      "scope": "config"
+    },
+    {
+      "id": "config:settings-local",
+      "type": "config",
+      "path": ".claude/settings.local.json",
+      "refs": [
+        "P3",
+        "T6"
+      ],
+      "enforces": "structural",
+      "scope": "config"
+    },
+    {
+      "_comment": "--- document scope ---"
+    },
+    {
+      "id": "doc:claude-md",
+      "type": "document",
+      "path": "CLAUDE.md",
+      "refs": [
+        "T1",
+        "T2",
+        "T6",
+        "E1",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "L1",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D8",
+        "D9"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:readme",
+      "type": "document",
+      "path": "README.md",
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "E1",
+        "E2",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:changelog",
+      "type": "document",
+      "path": "CHANGELOG.md",
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "E1",
+        "E2",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "L1",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:design-foundation",
+      "type": "document",
+      "path": "docs/design-development-foundation.md",
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "E1",
+        "E2",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:formal-derivation-procedure",
+      "type": "document",
+      "path": "docs/formal-derivation-procedure.md",
+      "refs": [
+        "D5",
+        "T8",
+        "P4"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:implementation-boundaries",
+      "type": "document",
+      "path": "docs/implementation-boundaries.md",
+      "refs": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "D1",
+        "D3",
+        "D5",
+        "D6",
+        "D9"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:math-logic-terminology",
+      "type": "document",
+      "path": "docs/mathematical-logic-terminology.md",
+      "refs": [
+        "D5"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:handoff-self-improving",
+      "type": "document",
+      "path": "docs/handoff-self-improving-skill.md",
+      "refs": [
+        "T1",
+        "T2",
+        "D9"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:prior-art-research",
+      "type": "document",
+      "path": "research/step0b-prior-art-research.md",
+      "refs": [
+        "D1",
+        "D2",
+        "L1",
+        "E1",
+        "P2",
+        "P5"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:claude-code-tech-spec",
+      "type": "document",
+      "path": "research/claude-code-technical-spec.md",
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "_comment": "--- data scope ---"
+    },
+    {
+      "id": "data:evolve-history",
+      "type": "data",
+      "path": ".claude/metrics/evolve-history.jsonl",
+      "refs": [
+        "T1",
+        "T2",
+        "P3",
+        "P4",
+        "D3",
+        "D4",
+        "D10"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:benchmark",
+      "type": "data",
+      "path": ".claude/metrics/benchmark.json",
+      "refs": [
+        "P4",
+        "D3"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:sessions",
+      "type": "data",
+      "path": ".claude/metrics/sessions.jsonl",
+      "refs": [
+        "P4",
+        "T1"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:p2-verified",
+      "type": "data",
+      "path": ".claude/metrics/p2-verified.jsonl",
+      "refs": [
+        "P2",
+        "E1"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:v5-approvals",
+      "type": "data",
+      "path": ".claude/metrics/v5-approvals.jsonl",
+      "refs": [
+        "P4",
+        "T6"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:v7-tasks",
+      "type": "data",
+      "path": ".claude/metrics/v7-tasks.jsonl",
+      "refs": [
+        "P4",
+        "D3"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:drift-checks",
+      "type": "data",
+      "path": ".claude/metrics/drift-checks.jsonl",
+      "refs": [
+        "P4",
+        "T5",
+        "D3"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:deferred-status",
+      "type": "data",
+      "path": ".claude/metrics/deferred-status.json",
+      "refs": [
+        "P3",
+        "D3"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
     }
   ]
 }
