@@ -204,6 +204,22 @@ cmd_coverage() {
     echo -e "$weak"
   fi
 
+  # 過剰 refs 警告（selfcheck 検査6 と同等の情報を coverage にも表示）
+  local overspec_list=""
+  local total_props
+  total_props=$(jq '.propositions | length' "$MANIFEST")
+  local threshold=$((total_props * 80 / 100))
+  while IFS='|' read -r aid ref_count; do
+    if [[ "$ref_count" -ge "$threshold" ]]; then
+      overspec_list="${overspec_list}  ${YELLOW}⚠ ${aid}${NC}: ${ref_count}/${total_props} refs（カバレッジ水増しの可能性）\n"
+    fi
+  done < <(echo "$filtered_artifacts" | jq -r '.[] | "\(.id)|\(.refs | length)"')
+
+  if [[ -n "$overspec_list" ]]; then
+    echo -e "${BOLD}${YELLOW}--- 過剰 refs 警告 ---${NC}"
+    echo -e "$overspec_list"
+  fi
+
   local pct=$((covered * 100 / total))
   echo -e "${BOLD}カバレッジ: ${covered}/${total} (${pct}%)${NC}"
 
@@ -610,34 +626,56 @@ cmd_selfcheck() {
   local parsed_count
   parsed_count=$(echo "$parsed_deps" | grep -c . || true)
 
-  # Lean ソースから期待値を直接構築（別のパーサで交差検証）
-  # 各 PropositionId について、dependencies の [...] 内を直接抽出
-  local expected_deps=""
-  # 交差検証パーサ: "| .{id} => [...]" パターンで LHS の全 ID を正確に抽出
-  # メインパーサと同じ Lean ブロックを別のロジックで解析して突合する
-  sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | \
-  grep '^\s*|.*=>' | \
-  while IFS= read -r line; do
-    # LHS: => の左側から全 .id を抽出
-    local lhs
-    lhs=$(echo "$line" | sed 's/ =>.*//')
-    local ids_in_line
-    ids_in_line=$(echo "$lhs" | grep -o '\.[a-z][a-z0-9]*' | sed 's/^\.//' | tr 'a-z' 'A-Z')
+  # 交差検証パーサ: awk のみで実装（メインパーサの sed/grep とは独立）
+  # メインパーサ: sed でブロック抽出 → grep '^\s*|' → sed で LHS/RHS 分割 → grep -o
+  # 交差検証パーサ: awk で全処理（ブロック検出・行分割・ID抽出・依存出力）
+  # macOS awk 互換（gawk 3引数 match 不使用）
+  awk '
+  /def PropositionId\.dependencies/,/^[[:space:]]*$/ {
+    if (/=>/) {
+      split($0, parts, "=>")
+      lhs = parts[1]
+      rhs = parts[2]
 
-    # RHS: => [...] の中身を抽出
-    local bracket_content
-    bracket_content=$(echo "$line" | sed 's/.*=> \[//;s/\].*//')
-    local deps_in_line
-    deps_in_line=$(echo "$bracket_content" | tr ',' '\n' | sed 's/^[[:space:]]*\.//;s/[[:space:]]*$//' | tr 'a-z' 'A-Z')
+      # LHS から .id を抽出（ドット付きトークンを走査）
+      id_count = 0
+      n = split(lhs, tokens, /[^a-z0-9.]/)
+      for (i = 1; i <= n; i++) {
+        t = tokens[i]
+        if (substr(t, 1, 1) == "." && length(t) > 1) {
+          id_count++
+          ids[id_count] = toupper(substr(t, 2))
+        }
+      }
 
-    for id in $ids_in_line; do
-      [[ -z "$id" ]] && continue
-      for dep in $deps_in_line; do
-        [[ -z "$dep" ]] && continue
-        echo "$id $dep"
-      done
-    done
-  done > /tmp/manifest-trace-expected-deps.tmp
+      # RHS から [...] 内の .id を抽出
+      dep_count = 0
+      # bracket 内容を取得
+      bi = index(rhs, "[")
+      be = index(rhs, "]")
+      if (bi > 0 && be > bi) {
+        content = substr(rhs, bi + 1, be - bi - 1)
+        m = split(content, dep_tokens, /[^a-z0-9.]/)
+        for (i = 1; i <= m; i++) {
+          t = dep_tokens[i]
+          if (substr(t, 1, 1) == "." && length(t) > 1) {
+            dep_count++
+            deps[dep_count] = toupper(substr(t, 2))
+          }
+        }
+      }
+
+      for (i = 1; i <= id_count; i++) {
+        for (j = 1; j <= dep_count; j++) {
+          print ids[i] " " deps[j]
+        }
+      }
+
+      id_count = 0; dep_count = 0
+      delete ids; delete deps
+    }
+  }
+  ' "$ONTOLOGY" > /tmp/manifest-trace-expected-deps.tmp
   local expected_sorted
   expected_sorted=$(sort -u /tmp/manifest-trace-expected-deps.tmp)
   local expected_count
@@ -723,52 +761,71 @@ cmd_selfcheck() {
   registered_paths=$(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | sort)
   local unregistered=0
 
-  # hooks
-  while IFS= read -r f; do
-    local rel_path=".claude/hooks/$(basename "$f")"
-    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-      unregistered=$((unregistered + 1))
-    fi
-  done < <(find "$SCRIPT_DIR/.claude/hooks" -name '*.sh' -type f 2>/dev/null | sort)
+  # 動的ディレクトリスキャン: manifest に登録された path のディレクトリ集合から
+  # 対象パターンを導出し、未登録ファイルを検出する
+  # （新しいディレクトリが manifest に追加されれば自動的にスキャン対象になる）
 
-  # skills
+  # パターン定義: ディレクトリパス → find パターン
+  declare -A scan_patterns
+  scan_patterns[".claude/hooks"]='*.sh'
+  scan_patterns[".claude/rules"]='*.md'
+
+  # 固定パターンのディレクトリをスキャン
+  for dir in "${!scan_patterns[@]}"; do
+    local pattern="${scan_patterns[$dir]}"
+    [[ -d "$SCRIPT_DIR/$dir" ]] || continue
+    while IFS= read -r f; do
+      local rel_path="${f#$SCRIPT_DIR/}"
+      if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+        echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+        unregistered=$((unregistered + 1))
+      fi
+    done < <(find "$SCRIPT_DIR/$dir" -name "$pattern" -type f 2>/dev/null | sort)
+  done
+
+  # skills: SKILL.md を持つ全サブディレクトリ
   while IFS= read -r f; do
-    local skill_name
-    skill_name=$(basename "$(dirname "$f")")
-    local rel_path=".claude/skills/${skill_name}/SKILL.md"
+    local rel_path="${f#$SCRIPT_DIR/}"
     if ! echo "$registered_paths" | grep -qx "$rel_path"; then
       echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
       unregistered=$((unregistered + 1))
     fi
   done < <(find "$SCRIPT_DIR/.claude/skills" -name 'SKILL.md' -type f 2>/dev/null | sort)
 
-  # agents
+  # agents: .md と AGENT.md
   while IFS= read -r f; do
     local rel_path="${f#$SCRIPT_DIR/}"
     if ! echo "$registered_paths" | grep -qx "$rel_path"; then
       echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
       unregistered=$((unregistered + 1))
     fi
-  done < <(find "$SCRIPT_DIR/.claude/agents" \( -name '*.md' -o -name 'AGENT.md' \) -type f 2>/dev/null | sort)
+  done < <(find "$SCRIPT_DIR/.claude/agents" \( -name '*.md' \) -type f 2>/dev/null | sort)
 
-  # rules
-  while IFS= read -r f; do
-    local rel_path=".claude/rules/$(basename "$f")"
-    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-      unregistered=$((unregistered + 1))
-    fi
-  done < <(find "$SCRIPT_DIR/.claude/rules" -name '*.md' -type f 2>/dev/null | sort)
-
-  # tests
+  # tests: 全フェーズの test-*.sh + test-all.sh
   while IFS= read -r f; do
     local rel_path="${f#$SCRIPT_DIR/}"
     if ! echo "$registered_paths" | grep -qx "$rel_path"; then
       echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
       unregistered=$((unregistered + 1))
     fi
-  done < <(find "$SCRIPT_DIR/tests" -name 'test-*.sh' -type f 2>/dev/null | sort)
+  done < <(find "$SCRIPT_DIR/tests" -name '*.sh' -type f 2>/dev/null | sort)
+
+  # manifest 登録パスから追加ディレクトリを動的検出してスキャン
+  # ルート (.) と既にスキャン済みディレクトリは除外
+  while IFS= read -r dir; do
+    [[ "$dir" == "." ]] && continue
+    [[ -d "$SCRIPT_DIR/$dir" ]] || continue
+    case "$dir" in
+      .claude/hooks|.claude/rules|.claude/skills*|.claude/agents*|tests*) continue ;;
+    esac
+    while IFS= read -r f; do
+      local rel_path="${f#$SCRIPT_DIR/}"
+      if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+        echo -e "  ${RED}✗ 未登録:${NC} $rel_path (動的検出: $dir)"
+        unregistered=$((unregistered + 1))
+      fi
+    done < <(find "$SCRIPT_DIR/$dir" -maxdepth 1 -type f \( -name '*.sh' -o -name '*.md' -o -name '*.json' -o -name '*.jsonl' \) 2>/dev/null | sort)
+  done < <(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | xargs -I{} dirname {} | sort -u)
 
   if [[ "$unregistered" -eq 0 ]]; then
     echo -e "  ${GREEN}✓ 全 artifact が登録済み${NC}"
@@ -800,10 +857,11 @@ cmd_selfcheck() {
 
   echo ""
 
-  # --- 検査 7: 交差検証の独立性強化（弱み3） ---
-  # メインパーサと交差検証パーサは異なるアルゴリズムを使用:
-  #   メインパーサ: grep '^\s*|' → sed で LHS/RHS 分割 → grep -o で .id 抽出
-  #   交差検証パーサ: awk でブロック解析 → match() で直接抽出
+  # --- 検査 7: 依存グラフの構造検証 ---
+  # パーサ出力の形式的性質を検証（検査3の交差検証を補完）:
+  #   7a: 根ノードが constraint/E2/L5 であること
+  #   7b: 依存が強度単調であること（dependency_respects_strength）
+  #   7c: DAG に閉路がないこと（visited set 付き BFS）
   echo -e "${CYAN}検査 7: 依存グラフの構造検証（Lean 公理との突合）${NC}"
 
   local struct_errors=0
@@ -849,27 +907,29 @@ cmd_selfcheck() {
     fi
   done <<< "$parsed_deps"
 
-  # 検証 7c: 依存グラフに閉路がないこと（DAG 検証）
+  # 検証 7c: 依存グラフに閉路がないこと（visited set 付き BFS）
   local cycle_found=false
   for id in $all_ids; do
-    # 簡易 DFS: 自分自身に到達可能か
-    local visited="$id"
-    local frontier
-    frontier=$(echo "$parsed_deps" | awk -v t="$id" '$1 == t {print $2}')
-    local depth=0
-    while [[ -n "$frontier" && "$depth" -lt 40 ]]; do
-      local next_frontier=""
-      for dep in $frontier; do
+    local visited_set=" "
+    local queue
+    queue=$(echo "$parsed_deps" | awk -v t="$id" '$1 == t {print $2}')
+    while [[ -n "$queue" ]]; do
+      local next_queue=""
+      for dep in $queue; do
         if [[ "$dep" == "$id" ]]; then
           echo -e "  ${RED}✗ 閉路検出: ${id} → ... → ${id}${NC}"
           struct_errors=$((struct_errors + 1))
           cycle_found=true
           break 2
         fi
-        next_frontier="$next_frontier $(echo "$parsed_deps" | awk -v t="$dep" '$1 == t {print $2}')"
+        # visited チェック（同じノードを再訪問しない）
+        if [[ "$visited_set" == *" ${dep} "* ]]; then
+          continue
+        fi
+        visited_set="${visited_set}${dep} "
+        next_queue="$next_queue $(echo "$parsed_deps" | awk -v t="$dep" '$1 == t {print $2}')"
       done
-      frontier="$next_frontier"
-      depth=$((depth + 1))
+      queue="$next_queue"
     done
   done
 
