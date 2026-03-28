@@ -1,0 +1,248 @@
+{
+  "namespace": "TestCoverage.S487",
+  "layers": [
+    {
+      "name": "WaterResourceInvariant",
+      "ordValue": 5,
+      "definition": "地下水枯渇・生態系破壊を防ぐ取水量の絶対上限",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "RegulatoryWaterRightPolicy",
+      "ordValue": 4,
+      "definition": "河川法・農業用水権・環境影響評価への適合要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "IrrigationSchedulePolicy",
+      "ordValue": 3,
+      "definition": "作物の水ストレス回避・省水効率・施肥連携の灌漑方針",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "SoilMoistureModel",
+      "ordValue": 2,
+      "definition": "土壌水分・蒸発散量・根域分布のモデル推論",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "YieldPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "収量・品質・病害リスクに関する予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s487_p01",
+      "layerName": "WaterResourceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s487_p02",
+      "layerName": "WaterResourceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s487_p01"
+      ]
+    },
+    {
+      "id": "s487_p03",
+      "layerName": "RegulatoryWaterRightPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s487_p01"
+      ]
+    },
+    {
+      "id": "s487_p04",
+      "layerName": "RegulatoryWaterRightPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s487_p01"
+      ]
+    },
+    {
+      "id": "s487_p05",
+      "layerName": "RegulatoryWaterRightPolicy",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s487_p03",
+        ".s487_p04"
+      ]
+    },
+    {
+      "id": "s487_p06",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s487_p02"
+      ]
+    },
+    {
+      "id": "s487_p07",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s487_p05"
+      ]
+    },
+    {
+      "id": "s487_p08",
+      "layerName": "IrrigationSchedulePolicy",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s487_p06",
+        ".s487_p07"
+      ]
+    },
+    {
+      "id": "s487_p09",
+      "layerName": "SoilMoistureModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s487_p06"
+      ]
+    },
+    {
+      "id": "s487_p10",
+      "layerName": "SoilMoistureModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s487_p07"
+      ]
+    },
+    {
+      "id": "s487_p11",
+      "layerName": "SoilMoistureModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s487_p08",
+        ".s487_p09"
+      ]
+    },
+    {
+      "id": "s487_p12",
+      "layerName": "SoilMoistureModel",
+      "justification": [
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s487_p09",
+        ".s487_p10",
+        ".s487_p11"
+      ]
+    },
+    {
+      "id": "s487_p13",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s487_p09"
+      ]
+    },
+    {
+      "id": "s487_p14",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s487_p10"
+      ]
+    },
+    {
+      "id": "s487_p15",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s487_p11",
+        ".s487_p13"
+      ]
+    },
+    {
+      "id": "s487_p16",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s487_p13",
+        ".s487_p14"
+      ]
+    },
+    {
+      "id": "s487_p17",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s487_p14",
+        ".s487_p15"
+      ]
+    },
+    {
+      "id": "s487_p18",
+      "layerName": "YieldPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s487_p16",
+        ".s487_p17"
+      ]
+    }
+  ]
+}

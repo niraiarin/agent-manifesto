@@ -1,0 +1,245 @@
+{
+  "namespace": "TestCoverage.S394",
+  "layers": [
+    {
+      "name": "LifeSafetyInvariant",
+      "ordValue": 5,
+      "definition": "作業員の生命・身体安全に関わる絶対不変条件（労働安全衛生法準拠）",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "HazardDetectionPolicy",
+      "ordValue": 4,
+      "definition": "危険区域への立入禁止・ヘルメット着用の強制的検知方針",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "EmergencyResponse",
+      "ordValue": 3,
+      "definition": "事故発生時の即時通報・作業停止・救急要請に関する対応原則",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "RiskAssessmentPolicy",
+      "ordValue": 2,
+      "definition": "日常的リスクアセスメント・ヒヤリハット記録の方針",
+      "derivedFrom": [
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictiveSafetyHypothesis",
+      "ordValue": 1,
+      "definition": "過去事故データ・天候・作業疲労度から事故予測する仮説モデル",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s394_p01",
+      "layerName": "LifeSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s394_p02",
+      "layerName": "HazardDetectionPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s394_p01"
+      ]
+    },
+    {
+      "id": "s394_p03",
+      "layerName": "HazardDetectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s394_p01"
+      ]
+    },
+    {
+      "id": "s394_p04",
+      "layerName": "HazardDetectionPolicy",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s394_p02",
+        ".s394_p03"
+      ]
+    },
+    {
+      "id": "s394_p05",
+      "layerName": "EmergencyResponse",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s394_p02"
+      ]
+    },
+    {
+      "id": "s394_p06",
+      "layerName": "EmergencyResponse",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s394_p03"
+      ]
+    },
+    {
+      "id": "s394_p07",
+      "layerName": "EmergencyResponse",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s394_p05",
+        ".s394_p06"
+      ]
+    },
+    {
+      "id": "s394_p08",
+      "layerName": "RiskAssessmentPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s394_p04"
+      ]
+    },
+    {
+      "id": "s394_p09",
+      "layerName": "RiskAssessmentPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s394_p07"
+      ]
+    },
+    {
+      "id": "s394_p10",
+      "layerName": "RiskAssessmentPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s394_p08"
+      ]
+    },
+    {
+      "id": "s394_p11",
+      "layerName": "RiskAssessmentPolicy",
+      "justification": [
+        "C6",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s394_p09",
+        ".s394_p10"
+      ]
+    },
+    {
+      "id": "s394_p12",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s394_p08"
+      ]
+    },
+    {
+      "id": "s394_p13",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s394_p09"
+      ]
+    },
+    {
+      "id": "s394_p14",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s394_p11"
+      ]
+    },
+    {
+      "id": "s394_p15",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s394_p12"
+      ]
+    },
+    {
+      "id": "s394_p16",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s394_p13"
+      ]
+    },
+    {
+      "id": "s394_p17",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s394_p14",
+        ".s394_p15"
+      ]
+    },
+    {
+      "id": "s394_p18",
+      "layerName": "PredictiveSafetyHypothesis",
+      "justification": [
+        "H4",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s394_p16",
+        ".s394_p17"
+      ]
+    }
+  ]
+}

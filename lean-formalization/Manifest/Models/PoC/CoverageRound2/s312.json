@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S312",
+  "layers": [
+    {
+      "name": "privacy_invariant",
+      "ordValue": 4,
+      "definition": "FERPA準拠・学習データ保護の絶対要件",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "pedagogical_policy",
+      "ordValue": 3,
+      "definition": "学習設計・難易度設計・教師権限の方針",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "measurement_model",
+      "ordValue": 2,
+      "definition": "習熟度計測・離脱予測の方法論",
+      "derivedFrom": [
+        "C1",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "optimization_hypothesis",
+      "ordValue": 1,
+      "definition": "推薦アルゴリズム・フィードバック利用の仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s312_p01",
+      "layerName": "privacy_invariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s312_p02",
+      "layerName": "privacy_invariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s312_p01"
+      ]
+    },
+    {
+      "id": "s312_p03",
+      "layerName": "pedagogical_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s312_p04",
+      "layerName": "pedagogical_policy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s312_p03"
+      ]
+    },
+    {
+      "id": "s312_p05",
+      "layerName": "measurement_model",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s312_p01"
+      ]
+    },
+    {
+      "id": "s312_p06",
+      "layerName": "measurement_model",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".s312_p05"
+      ]
+    },
+    {
+      "id": "s312_p07",
+      "layerName": "measurement_model",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s312_p05",
+        ".s312_p06"
+      ]
+    },
+    {
+      "id": "s312_p08",
+      "layerName": "measurement_model",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s312_p07"
+      ]
+    },
+    {
+      "id": "s312_p09",
+      "layerName": "optimization_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s312_p03",
+        ".s312_p06"
+      ]
+    },
+    {
+      "id": "s312_p10",
+      "layerName": "optimization_hypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s312_p04",
+        ".s312_p09"
+      ]
+    },
+    {
+      "id": "s312_p11",
+      "layerName": "optimization_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s312_p02",
+        ".s312_p07"
+      ]
+    },
+    {
+      "id": "s312_p12",
+      "layerName": "optimization_hypothesis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s312_p06",
+        ".s312_p09"
+      ]
+    },
+    {
+      "id": "s312_p13",
+      "layerName": "measurement_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s312_p07"
+      ]
+    },
+    {
+      "id": "s312_p14",
+      "layerName": "optimization_hypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s312_p10",
+        ".s312_p11"
+      ]
+    }
+  ]
+}

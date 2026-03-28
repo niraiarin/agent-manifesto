@@ -1,0 +1,248 @@
+{
+  "namespace": "TestCoverage.S447",
+  "layers": [
+    {
+      "name": "EnvironmentalSafetyInvariant",
+      "ordValue": 6,
+      "definition": "海洋環境保護・船舶安全・潜水作業規制の絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "InternationalLegalInvariant",
+      "ordValue": 5,
+      "definition": "国連海洋法条約・各国EEZ・排他的経済水域の法的制約",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "CableIntegrityPolicy",
+      "ordValue": 4,
+      "definition": "ケーブル損傷検知・絶縁抵抗管理・光損失測定の監視方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "MaintenanceSchedulePolicy",
+      "ordValue": 3,
+      "definition": "予防保全周期・修理船運航・部品在庫管理の運用方針",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "RepairCostOptimizationPolicy",
+      "ordValue": 2,
+      "definition": "修理コスト最小化・リスク優先度・保険管理の最適化方針",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "LifecyclePredictionHypothesis",
+      "ordValue": 1,
+      "definition": "ケーブル寿命予測・劣化モデル・更新タイミングに関する仮説",
+      "derivedFrom": [
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s447_p01",
+      "layerName": "EnvironmentalSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s447_p02",
+      "layerName": "InternationalLegalInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s447_p01"
+      ]
+    },
+    {
+      "id": "s447_p03",
+      "layerName": "CableIntegrityPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s447_p01"
+      ]
+    },
+    {
+      "id": "s447_p04",
+      "layerName": "CableIntegrityPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s447_p02",
+        ".s447_p03"
+      ]
+    },
+    {
+      "id": "s447_p05",
+      "layerName": "CableIntegrityPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s447_p03",
+        ".s447_p04"
+      ]
+    },
+    {
+      "id": "s447_p06",
+      "layerName": "MaintenanceSchedulePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s447_p03"
+      ]
+    },
+    {
+      "id": "s447_p07",
+      "layerName": "MaintenanceSchedulePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s447_p04",
+        ".s447_p06"
+      ]
+    },
+    {
+      "id": "s447_p08",
+      "layerName": "MaintenanceSchedulePolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s447_p06",
+        ".s447_p07"
+      ]
+    },
+    {
+      "id": "s447_p09",
+      "layerName": "RepairCostOptimizationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s447_p06"
+      ]
+    },
+    {
+      "id": "s447_p10",
+      "layerName": "RepairCostOptimizationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s447_p07",
+        ".s447_p09"
+      ]
+    },
+    {
+      "id": "s447_p11",
+      "layerName": "RepairCostOptimizationPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s447_p09",
+        ".s447_p10"
+      ]
+    },
+    {
+      "id": "s447_p12",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p05"
+      ]
+    },
+    {
+      "id": "s447_p13",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p08",
+        ".s447_p12"
+      ]
+    },
+    {
+      "id": "s447_p14",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p11"
+      ]
+    },
+    {
+      "id": "s447_p15",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p13",
+        ".s447_p14"
+      ]
+    },
+    {
+      "id": "s447_p16",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p15"
+      ]
+    },
+    {
+      "id": "s447_p17",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p16"
+      ]
+    },
+    {
+      "id": "s447_p18",
+      "layerName": "LifecyclePredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s447_p15",
+        ".s447_p17"
+      ]
+    }
+  ]
+}

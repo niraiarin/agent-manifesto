@@ -1,0 +1,189 @@
+{
+  "namespace": "TestCoverage.S354",
+  "layers": [
+    {
+      "name": "ProductSafetyInvariant",
+      "ordValue": 4,
+      "definition": "出荷製品の安全性・欠陥品排除に関する絶対品質制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "StandardsCompliance",
+      "ordValue": 3,
+      "definition": "ISO 9001・JIS規格・業界品質基準への準拠要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "StatisticalProcessControl",
+      "ordValue": 2,
+      "definition": "管理図・工程能力指数・サンプリング計画の統計的管理方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnomalyDetectionHypothesis",
+      "ordValue": 1,
+      "definition": "異常検知閾値・不良率予測・根本原因推定に関する統計仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s354_p01",
+      "layerName": "ProductSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s354_p02",
+      "layerName": "ProductSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s354_p03",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s354_p01"
+      ]
+    },
+    {
+      "id": "s354_p04",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s354_p02"
+      ]
+    },
+    {
+      "id": "s354_p05",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s354_p01",
+        ".s354_p02"
+      ]
+    },
+    {
+      "id": "s354_p06",
+      "layerName": "StatisticalProcessControl",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s354_p03"
+      ]
+    },
+    {
+      "id": "s354_p07",
+      "layerName": "StatisticalProcessControl",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s354_p04"
+      ]
+    },
+    {
+      "id": "s354_p08",
+      "layerName": "StatisticalProcessControl",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s354_p05"
+      ]
+    },
+    {
+      "id": "s354_p09",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s354_p06"
+      ]
+    },
+    {
+      "id": "s354_p10",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s354_p07"
+      ]
+    },
+    {
+      "id": "s354_p11",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s354_p08"
+      ]
+    },
+    {
+      "id": "s354_p12",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s354_p09"
+      ]
+    },
+    {
+      "id": "s354_p13",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s354_p10",
+        ".s354_p11"
+      ]
+    },
+    {
+      "id": "s354_p14",
+      "layerName": "AnomalyDetectionHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s354_p12",
+        ".s354_p13"
+      ]
+    }
+  ]
+}

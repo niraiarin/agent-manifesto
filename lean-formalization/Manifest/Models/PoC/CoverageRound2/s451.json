@@ -1,0 +1,169 @@
+{
+  "namespace": "TestCoverage.S451",
+  "layers": [
+    {
+      "name": "LegalZoningInvariant",
+      "ordValue": 4,
+      "definition": "都市計画法・建築基準法に基づく絶対的用途地域制約。いかなる開発計画も違反不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalProtectionPolicy",
+      "ordValue": 3,
+      "definition": "環境影響評価・緑地保全・水源保護の行政指導方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "InfrastructureCapacityRule",
+      "ordValue": 2,
+      "definition": "上下水道・道路容量・電力供給の許容量に基づく開発規模上限推論",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DevelopmentFeasibilityHypothesis",
+      "ordValue": 1,
+      "definition": "市場需要・投資収益性・地価動向に関する開発実現可能性仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s451_p01",
+      "layerName": "LegalZoningInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s451_p02",
+      "layerName": "LegalZoningInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s451_p03",
+      "layerName": "LegalZoningInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s451_p01",
+        ".s451_p02"
+      ]
+    },
+    {
+      "id": "s451_p04",
+      "layerName": "EnvironmentalProtectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s451_p01"
+      ]
+    },
+    {
+      "id": "s451_p05",
+      "layerName": "EnvironmentalProtectionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s451_p02",
+        ".s451_p03"
+      ]
+    },
+    {
+      "id": "s451_p06",
+      "layerName": "InfrastructureCapacityRule",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s451_p04"
+      ]
+    },
+    {
+      "id": "s451_p07",
+      "layerName": "InfrastructureCapacityRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s451_p04",
+        ".s451_p05"
+      ]
+    },
+    {
+      "id": "s451_p08",
+      "layerName": "InfrastructureCapacityRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s451_p06",
+        ".s451_p07"
+      ]
+    },
+    {
+      "id": "s451_p09",
+      "layerName": "DevelopmentFeasibilityHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s451_p06"
+      ]
+    },
+    {
+      "id": "s451_p10",
+      "layerName": "DevelopmentFeasibilityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s451_p07",
+        ".s451_p08"
+      ]
+    },
+    {
+      "id": "s451_p11",
+      "layerName": "DevelopmentFeasibilityHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s451_p09"
+      ]
+    },
+    {
+      "id": "s451_p12",
+      "layerName": "DevelopmentFeasibilityHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s451_p10",
+        ".s451_p11"
+      ]
+    }
+  ]
+}

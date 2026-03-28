@@ -1,0 +1,124 @@
+{
+  "namespace": "TestCoverage.S393",
+  "layers": [
+    {
+      "name": "DeliveryConstraint",
+      "ordValue": 2,
+      "definition": "納期・積載量・法定労働時間に関する物流ハード制約（絶対不変）",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "燃料コスト・配送効率・動的再経路計算に関するアルゴリズム仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s393_p01",
+      "layerName": "DeliveryConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s393_p02",
+      "layerName": "DeliveryConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s393_p03",
+      "layerName": "DeliveryConstraint",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s393_p01",
+        ".s393_p02"
+      ]
+    },
+    {
+      "id": "s393_p04",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s393_p01"
+      ]
+    },
+    {
+      "id": "s393_p05",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s393_p02"
+      ]
+    },
+    {
+      "id": "s393_p06",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s393_p03"
+      ]
+    },
+    {
+      "id": "s393_p07",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s393_p04"
+      ]
+    },
+    {
+      "id": "s393_p08",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s393_p05",
+        ".s393_p06"
+      ]
+    },
+    {
+      "id": "s393_p09",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H2",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s393_p07",
+        ".s393_p08"
+      ]
+    }
+  ]
+}

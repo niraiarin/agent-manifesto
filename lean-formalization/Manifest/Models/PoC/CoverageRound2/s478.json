@@ -1,0 +1,213 @@
+{
+  "namespace": "TestCoverage.S478",
+  "layers": [
+    {
+      "name": "FoodSafetyAndAllergyInvariant",
+      "ordValue": 4,
+      "definition": "食品衛生法・アレルギー対応義務・異物混入防止の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "NutritionStandardPolicy",
+      "ordValue": 3,
+      "definition": "学校給食摂取基準・栄養バランス・年齢別カロリー設計ポリシー",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "ProcurementAndMenuPolicy",
+      "ordValue": 2,
+      "definition": "地産地消・発注サイクル・献立作成・在庫管理の方針",
+      "derivedFrom": [
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "MenuOptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "喫食率・残食分析・嗜好データを活用した献立最適化仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s478_p01",
+      "layerName": "FoodSafetyAndAllergyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s478_p02",
+      "layerName": "FoodSafetyAndAllergyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s478_p03",
+      "layerName": "FoodSafetyAndAllergyInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s478_p01",
+        ".s478_p02"
+      ]
+    },
+    {
+      "id": "s478_p04",
+      "layerName": "NutritionStandardPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s478_p01"
+      ]
+    },
+    {
+      "id": "s478_p05",
+      "layerName": "NutritionStandardPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s478_p02"
+      ]
+    },
+    {
+      "id": "s478_p06",
+      "layerName": "NutritionStandardPolicy",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s478_p04",
+        ".s478_p05"
+      ]
+    },
+    {
+      "id": "s478_p07",
+      "layerName": "ProcurementAndMenuPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s478_p03"
+      ]
+    },
+    {
+      "id": "s478_p08",
+      "layerName": "ProcurementAndMenuPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s478_p05"
+      ]
+    },
+    {
+      "id": "s478_p09",
+      "layerName": "ProcurementAndMenuPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s478_p06",
+        ".s478_p07"
+      ]
+    },
+    {
+      "id": "s478_p10",
+      "layerName": "MenuOptimizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s478_p07"
+      ]
+    },
+    {
+      "id": "s478_p11",
+      "layerName": "MenuOptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s478_p08"
+      ]
+    },
+    {
+      "id": "s478_p12",
+      "layerName": "MenuOptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s478_p09",
+        ".s478_p10"
+      ]
+    },
+    {
+      "id": "s478_p13",
+      "layerName": "MenuOptimizationHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s478_p10",
+        ".s478_p11"
+      ]
+    },
+    {
+      "id": "s478_p14",
+      "layerName": "ProcurementAndMenuPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s478_p08",
+        ".s478_p09"
+      ]
+    },
+    {
+      "id": "s478_p15",
+      "layerName": "NutritionStandardPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s478_p06"
+      ]
+    },
+    {
+      "id": "s478_p16",
+      "layerName": "FoodSafetyAndAllergyInvariant",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s478_p02",
+        ".s478_p03"
+      ]
+    }
+  ]
+}

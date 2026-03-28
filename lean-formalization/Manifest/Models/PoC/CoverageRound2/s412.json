@@ -1,0 +1,197 @@
+{
+  "namespace": "TestCoverage.S412",
+  "layers": [
+    {
+      "name": "StatutoryObligation",
+      "ordValue": 4,
+      "definition": "法定報告義務・金融規制当局への提出要件。違反は刑事・行政罰の対象",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DataAccuracyStandard",
+      "ordValue": 3,
+      "definition": "報告データの正確性・完全性・一貫性に関する品質基準",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ProcessAutomation",
+      "ordValue": 2,
+      "definition": "データ収集・変換・検証・提出プロセスの自動化方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "EfficiencyOptimization",
+      "ordValue": 1,
+      "definition": "処理速度・コスト削減・人的エラー低減に向けた最適化仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s412_p01",
+      "layerName": "StatutoryObligation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s412_p02",
+      "layerName": "StatutoryObligation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s412_p03",
+      "layerName": "StatutoryObligation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s412_p01",
+        ".s412_p02"
+      ]
+    },
+    {
+      "id": "s412_p04",
+      "layerName": "DataAccuracyStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s412_p01"
+      ]
+    },
+    {
+      "id": "s412_p05",
+      "layerName": "DataAccuracyStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s412_p02"
+      ]
+    },
+    {
+      "id": "s412_p06",
+      "layerName": "DataAccuracyStandard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s412_p03",
+        ".s412_p04"
+      ]
+    },
+    {
+      "id": "s412_p07",
+      "layerName": "ProcessAutomation",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s412_p04"
+      ]
+    },
+    {
+      "id": "s412_p08",
+      "layerName": "ProcessAutomation",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s412_p05",
+        ".s412_p06"
+      ]
+    },
+    {
+      "id": "s412_p09",
+      "layerName": "ProcessAutomation",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s412_p07",
+        ".s412_p08"
+      ]
+    },
+    {
+      "id": "s412_p10",
+      "layerName": "EfficiencyOptimization",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s412_p07"
+      ]
+    },
+    {
+      "id": "s412_p11",
+      "layerName": "EfficiencyOptimization",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s412_p08"
+      ]
+    },
+    {
+      "id": "s412_p12",
+      "layerName": "EfficiencyOptimization",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s412_p09"
+      ]
+    },
+    {
+      "id": "s412_p13",
+      "layerName": "EfficiencyOptimization",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s412_p10",
+        ".s412_p11"
+      ]
+    },
+    {
+      "id": "s412_p14",
+      "layerName": "EfficiencyOptimization",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s412_p12",
+        ".s412_p13"
+      ]
+    }
+  ]
+}

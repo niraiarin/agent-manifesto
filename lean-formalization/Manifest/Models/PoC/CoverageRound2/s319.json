@@ -1,0 +1,195 @@
+{
+  "namespace": "TestCoverage.S319",
+  "layers": [
+    {
+      "name": "structural_safety_invariant",
+      "ordValue": 4,
+      "definition": "構造崩壊防止・人間最終確認の絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "measurement_standard",
+      "ordValue": 3,
+      "definition": "センサー構成・計測手順の標準",
+      "derivedFrom": [
+        "C2",
+        "C4"
+      ]
+    },
+    {
+      "name": "detection_model",
+      "ordValue": 2,
+      "definition": "損傷検知・診断・優先度付けのモデル",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H4"
+      ]
+    },
+    {
+      "name": "architecture_hypothesis",
+      "ordValue": 1,
+      "definition": "エッジ-クラウド構成・高度モデルの仮説",
+      "derivedFrom": [
+        "H3",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s319_p01",
+      "layerName": "structural_safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s319_p02",
+      "layerName": "structural_safety_invariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s319_p01"
+      ]
+    },
+    {
+      "id": "s319_p03",
+      "layerName": "structural_safety_invariant",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s319_p01"
+      ]
+    },
+    {
+      "id": "s319_p04",
+      "layerName": "measurement_standard",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s319_p01"
+      ]
+    },
+    {
+      "id": "s319_p05",
+      "layerName": "measurement_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s319_p04"
+      ]
+    },
+    {
+      "id": "s319_p06",
+      "layerName": "detection_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s319_p04",
+        ".s319_p05"
+      ]
+    },
+    {
+      "id": "s319_p07",
+      "layerName": "detection_model",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s319_p04",
+        ".s319_p06"
+      ]
+    },
+    {
+      "id": "s319_p08",
+      "layerName": "detection_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s319_p01",
+        ".s319_p06"
+      ]
+    },
+    {
+      "id": "s319_p09",
+      "layerName": "detection_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s319_p04",
+        ".s319_p06"
+      ]
+    },
+    {
+      "id": "s319_p10",
+      "layerName": "detection_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s319_p08",
+        ".s319_p09"
+      ]
+    },
+    {
+      "id": "s319_p11",
+      "layerName": "architecture_hypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s319_p07"
+      ]
+    },
+    {
+      "id": "s319_p12",
+      "layerName": "architecture_hypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s319_p09",
+        ".s319_p11"
+      ]
+    },
+    {
+      "id": "s319_p13",
+      "layerName": "detection_model",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s319_p06",
+        ".s319_p09"
+      ]
+    },
+    {
+      "id": "s319_p14",
+      "layerName": "architecture_hypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s319_p11",
+        ".s319_p12"
+      ]
+    }
+  ]
+}

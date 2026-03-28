@@ -1,0 +1,216 @@
+{
+  "namespace": "TestCoverage.S445",
+  "layers": [
+    {
+      "name": "ContractualObligationInvariant",
+      "ordValue": 4,
+      "definition": "SLA契約条件・ペナルティ条項・最低保証水準の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "MonitoringDetectionPolicy",
+      "ordValue": 3,
+      "definition": "リアルタイム監視・閾値アラート・エスカレーション手順の方針",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictiveAnalyticsPolicy",
+      "ordValue": 2,
+      "definition": "機械学習による違反予測・異常検知・根本原因分析の運用方針",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "RemediationHypothesis",
+      "ordValue": 1,
+      "definition": "自動修復アクション・リソース再配分・フェイルオーバー効果の仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s445_p01",
+      "layerName": "ContractualObligationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s445_p02",
+      "layerName": "ContractualObligationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s445_p01"
+      ]
+    },
+    {
+      "id": "s445_p03",
+      "layerName": "MonitoringDetectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s445_p01"
+      ]
+    },
+    {
+      "id": "s445_p04",
+      "layerName": "MonitoringDetectionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s445_p02",
+        ".s445_p03"
+      ]
+    },
+    {
+      "id": "s445_p05",
+      "layerName": "PredictiveAnalyticsPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s445_p03"
+      ]
+    },
+    {
+      "id": "s445_p06",
+      "layerName": "PredictiveAnalyticsPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s445_p04"
+      ]
+    },
+    {
+      "id": "s445_p07",
+      "layerName": "PredictiveAnalyticsPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s445_p05",
+        ".s445_p06"
+      ]
+    },
+    {
+      "id": "s445_p08",
+      "layerName": "PredictiveAnalyticsPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s445_p06",
+        ".s445_p07"
+      ]
+    },
+    {
+      "id": "s445_p09",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s445_p05"
+      ]
+    },
+    {
+      "id": "s445_p10",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s445_p06"
+      ]
+    },
+    {
+      "id": "s445_p11",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s445_p07",
+        ".s445_p09"
+      ]
+    },
+    {
+      "id": "s445_p12",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s445_p10"
+      ]
+    },
+    {
+      "id": "s445_p13",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s445_p08",
+        ".s445_p11"
+      ]
+    },
+    {
+      "id": "s445_p14",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H4",
+        "H7"
+      ],
+      "dependencies": [
+        ".s445_p12",
+        ".s445_p13"
+      ]
+    },
+    {
+      "id": "s445_p15",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s445_p11",
+        ".s445_p12"
+      ]
+    },
+    {
+      "id": "s445_p16",
+      "layerName": "RemediationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s445_p14",
+        ".s445_p15"
+      ]
+    }
+  ]
+}

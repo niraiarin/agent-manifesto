@@ -1,0 +1,140 @@
+{
+  "namespace": "TestCoverage.S303",
+  "layers": [
+    {
+      "name": "GridStabilityInvariant",
+      "ordValue": 3,
+      "definition": "電力網の周波数・電圧安定性に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BalancingPolicy",
+      "ordValue": 2,
+      "definition": "需給バランス・再生可能エネルギー優先・負荷制御の方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ForecastHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測・発電量推定に関する統計的仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s303_p01",
+      "layerName": "GridStabilityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s303_p02",
+      "layerName": "GridStabilityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s303_p03",
+      "layerName": "GridStabilityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s303_p01",
+        ".s303_p02"
+      ]
+    },
+    {
+      "id": "s303_p04",
+      "layerName": "BalancingPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s303_p01"
+      ]
+    },
+    {
+      "id": "s303_p05",
+      "layerName": "BalancingPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s303_p02"
+      ]
+    },
+    {
+      "id": "s303_p06",
+      "layerName": "BalancingPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s303_p03",
+        ".s303_p04"
+      ]
+    },
+    {
+      "id": "s303_p07",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s303_p04"
+      ]
+    },
+    {
+      "id": "s303_p08",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s303_p05"
+      ]
+    },
+    {
+      "id": "s303_p09",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s303_p06",
+        ".s303_p07"
+      ]
+    },
+    {
+      "id": "s303_p10",
+      "layerName": "ForecastHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s303_p08",
+        ".s303_p09"
+      ]
+    }
+  ]
+}

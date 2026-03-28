@@ -1,0 +1,199 @@
+{
+  "namespace": "TestCoverage.S333",
+  "layers": [
+    {
+      "name": "PatientSafety",
+      "ordValue": 4,
+      "definition": "患者傷害防止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "医療機器規制（FDA/PMDA）への適合要件",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "手術中の操作・制御方針",
+      "derivedFrom": [
+        "C2",
+        "C3",
+        "H3"
+      ]
+    },
+    {
+      "name": "EngineeringHypothesis",
+      "ordValue": 1,
+      "definition": "制御アルゴリズム・機械設計に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s333_p01",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s333_p02",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s333_p03",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s333_p01"
+      ]
+    },
+    {
+      "id": "s333_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s333_p01",
+        ".s333_p02"
+      ]
+    },
+    {
+      "id": "s333_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s333_p04"
+      ]
+    },
+    {
+      "id": "s333_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s333_p02"
+      ]
+    },
+    {
+      "id": "s333_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s333_p02",
+        ".s333_p06"
+      ]
+    },
+    {
+      "id": "s333_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s333_p03"
+      ]
+    },
+    {
+      "id": "s333_p09",
+      "layerName": "EngineeringHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s333_p01"
+      ]
+    },
+    {
+      "id": "s333_p10",
+      "layerName": "EngineeringHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s333_p06"
+      ]
+    },
+    {
+      "id": "s333_p11",
+      "layerName": "EngineeringHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s333_p07"
+      ]
+    },
+    {
+      "id": "s333_p12",
+      "layerName": "EngineeringHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s333_p09"
+      ]
+    },
+    {
+      "id": "s333_p13",
+      "layerName": "EngineeringHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s333_p08"
+      ]
+    },
+    {
+      "id": "s333_p14",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".s333_p09",
+        ".s333_p07"
+      ]
+    },
+    {
+      "id": "s333_p15",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s333_p12",
+        ".s333_p14"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "namespace": "TestCoverage.S374",
+  "layers": [
+    {
+      "name": "ProductSafetySpec",
+      "ordValue": 4,
+      "definition": "製品強度・寸法公差・材料認証の絶対仕様",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ProcessCertification",
+      "ordValue": 3,
+      "definition": "ISO/ASTM AM認証・医療機器製造プロセス適合",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "InspectionControlPolicy",
+      "ordValue": 2,
+      "definition": "インライン検査・リワーク判定・廃棄ルールの方針",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PrintDefectModelHypothesis",
+      "ordValue": 1,
+      "definition": "層欠陥・気孔・反り変形の予測モデル仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s374_p01",
+      "layerName": "ProductSafetySpec",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s374_p02",
+      "layerName": "ProductSafetySpec",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s374_p03",
+      "layerName": "ProductSafetySpec",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s374_p01",
+        ".s374_p02"
+      ]
+    },
+    {
+      "id": "s374_p04",
+      "layerName": "ProcessCertification",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s374_p01"
+      ]
+    },
+    {
+      "id": "s374_p05",
+      "layerName": "ProcessCertification",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s374_p03"
+      ]
+    },
+    {
+      "id": "s374_p06",
+      "layerName": "InspectionControlPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s374_p04"
+      ]
+    },
+    {
+      "id": "s374_p07",
+      "layerName": "InspectionControlPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s374_p05"
+      ]
+    },
+    {
+      "id": "s374_p08",
+      "layerName": "InspectionControlPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s374_p06",
+        ".s374_p07"
+      ]
+    },
+    {
+      "id": "s374_p09",
+      "layerName": "InspectionControlPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s374_p07",
+        ".s374_p08"
+      ]
+    },
+    {
+      "id": "s374_p10",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s374_p06"
+      ]
+    },
+    {
+      "id": "s374_p11",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s374_p07"
+      ]
+    },
+    {
+      "id": "s374_p12",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s374_p08"
+      ]
+    },
+    {
+      "id": "s374_p13",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s374_p09",
+        ".s374_p10"
+      ]
+    },
+    {
+      "id": "s374_p14",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s374_p11"
+      ]
+    },
+    {
+      "id": "s374_p15",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s374_p12",
+        ".s374_p13"
+      ]
+    },
+    {
+      "id": "s374_p16",
+      "layerName": "PrintDefectModelHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s374_p14",
+        ".s374_p15"
+      ]
+    }
+  ]
+}

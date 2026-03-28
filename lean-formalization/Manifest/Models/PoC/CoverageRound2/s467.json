@@ -1,0 +1,130 @@
+{
+  "namespace": "TestCoverage.S467",
+  "layers": [
+    {
+      "name": "FairPlayInvariant",
+      "ordValue": 3,
+      "definition": "チート検知・不正行為排除の絶対制約。試合結果の公正性保証",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "GameRuleCompliance",
+      "ordValue": 2,
+      "definition": "ゲームタイトル毎のルール・大会レギュレーション・プラットフォームポリシー準拠",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "PerformanceModelHypothesis",
+      "ordValue": 1,
+      "definition": "プレイヤーの行動パターン・チーム連携・スキル成長を推定する仮説層",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s467_p01",
+      "layerName": "FairPlayInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s467_p02",
+      "layerName": "FairPlayInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s467_p01"
+      ]
+    },
+    {
+      "id": "s467_p03",
+      "layerName": "GameRuleCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s467_p01"
+      ]
+    },
+    {
+      "id": "s467_p04",
+      "layerName": "GameRuleCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s467_p02"
+      ]
+    },
+    {
+      "id": "s467_p05",
+      "layerName": "PerformanceModelHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s467_p03"
+      ]
+    },
+    {
+      "id": "s467_p06",
+      "layerName": "PerformanceModelHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s467_p04"
+      ]
+    },
+    {
+      "id": "s467_p07",
+      "layerName": "PerformanceModelHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s467_p05"
+      ]
+    },
+    {
+      "id": "s467_p08",
+      "layerName": "PerformanceModelHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s467_p06"
+      ]
+    },
+    {
+      "id": "s467_p09",
+      "layerName": "PerformanceModelHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s467_p07",
+        ".s467_p08"
+      ]
+    }
+  ]
+}

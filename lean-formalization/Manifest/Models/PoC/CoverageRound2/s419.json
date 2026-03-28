@@ -1,0 +1,283 @@
+{
+  "namespace": "TestCoverage.S419",
+  "layers": [
+    {
+      "name": "BuildingSafetyCode",
+      "ordValue": 6,
+      "definition": "建築基準法・消防法・電気設備技術基準による建物安全の絶対制約",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "EnergyRegulation",
+      "ordValue": 5,
+      "definition": "省エネ法・建築物省エネ法・ZEB基準への法定準拠制約",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "DiagnosticStandard",
+      "ordValue": 4,
+      "definition": "ASHRAE・ISO 50001・JIS A 2102に基づくエネルギー診断手法の標準",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "MeasurementProtocol",
+      "ordValue": 3,
+      "definition": "センサ設置・データ収集・校正・品質管理に関する計測手順",
+      "derivedFrom": [
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalysisModel",
+      "ordValue": 2,
+      "definition": "熱負荷計算・エネルギーシミュレーション・ベースライン比較分析モデル",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "RetrofitRecommendation",
+      "ordValue": 1,
+      "definition": "改修優先度・ROI試算・CO2削減効果予測に関する提案最適化仮説",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s419_p01",
+      "layerName": "BuildingSafetyCode",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s419_p02",
+      "layerName": "EnergyRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s419_p01"
+      ]
+    },
+    {
+      "id": "s419_p03",
+      "layerName": "EnergyRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s419_p01"
+      ]
+    },
+    {
+      "id": "s419_p04",
+      "layerName": "EnergyRegulation",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s419_p02",
+        ".s419_p03"
+      ]
+    },
+    {
+      "id": "s419_p05",
+      "layerName": "DiagnosticStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s419_p02"
+      ]
+    },
+    {
+      "id": "s419_p06",
+      "layerName": "DiagnosticStandard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s419_p03"
+      ]
+    },
+    {
+      "id": "s419_p07",
+      "layerName": "DiagnosticStandard",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s419_p04",
+        ".s419_p05",
+        ".s419_p06"
+      ]
+    },
+    {
+      "id": "s419_p08",
+      "layerName": "MeasurementProtocol",
+      "justification": [
+        "C6",
+        "H1"
+      ],
+      "dependencies": [
+        ".s419_p05"
+      ]
+    },
+    {
+      "id": "s419_p09",
+      "layerName": "MeasurementProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s419_p06"
+      ]
+    },
+    {
+      "id": "s419_p10",
+      "layerName": "MeasurementProtocol",
+      "justification": [
+        "C6",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s419_p07",
+        ".s419_p08",
+        ".s419_p09"
+      ]
+    },
+    {
+      "id": "s419_p11",
+      "layerName": "AnalysisModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s419_p08"
+      ]
+    },
+    {
+      "id": "s419_p12",
+      "layerName": "AnalysisModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s419_p09"
+      ]
+    },
+    {
+      "id": "s419_p13",
+      "layerName": "AnalysisModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s419_p10"
+      ]
+    },
+    {
+      "id": "s419_p14",
+      "layerName": "AnalysisModel",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s419_p11",
+        ".s419_p12",
+        ".s419_p13"
+      ]
+    },
+    {
+      "id": "s419_p15",
+      "layerName": "RetrofitRecommendation",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s419_p11"
+      ]
+    },
+    {
+      "id": "s419_p16",
+      "layerName": "RetrofitRecommendation",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s419_p12"
+      ]
+    },
+    {
+      "id": "s419_p17",
+      "layerName": "RetrofitRecommendation",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s419_p13",
+        ".s419_p14",
+        ".s419_p15",
+        ".s419_p16"
+      ]
+    },
+    {
+      "id": "s419_p18",
+      "layerName": "AnalysisModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s419_p11",
+        ".s419_p12"
+      ]
+    },
+    {
+      "id": "s419_p19",
+      "layerName": "EnergyRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s419_p15"
+      ]
+    },
+    {
+      "id": "s419_p20",
+      "layerName": "RetrofitRecommendation",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s419_p17",
+        ".s419_p18",
+        ".s419_p19"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "namespace": "TestCoverage.S395",
+  "layers": [
+    {
+      "name": "PrivacyInvariant",
+      "ordValue": 3,
+      "definition": "個人識別情報の完全削除・再識別不可能性の絶対保証（GDPR・個人情報保護法準拠）",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DataUtilityPolicy",
+      "ordValue": 2,
+      "definition": "匿名化後データの統計的有用性・分析適合性を維持する方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "AnonymizationTechHypothesis",
+      "ordValue": 1,
+      "definition": "k-匿名性・差分プライバシー・擬似匿名化手法の有効性に関する仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s395_p01",
+      "layerName": "PrivacyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s395_p02",
+      "layerName": "PrivacyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s395_p03",
+      "layerName": "PrivacyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s395_p01",
+        ".s395_p02"
+      ]
+    },
+    {
+      "id": "s395_p04",
+      "layerName": "DataUtilityPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s395_p01"
+      ]
+    },
+    {
+      "id": "s395_p05",
+      "layerName": "DataUtilityPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s395_p02"
+      ]
+    },
+    {
+      "id": "s395_p06",
+      "layerName": "DataUtilityPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s395_p03"
+      ]
+    },
+    {
+      "id": "s395_p07",
+      "layerName": "DataUtilityPolicy",
+      "justification": [
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s395_p04",
+        ".s395_p05",
+        ".s395_p06"
+      ]
+    },
+    {
+      "id": "s395_p08",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s395_p04"
+      ]
+    },
+    {
+      "id": "s395_p09",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s395_p05"
+      ]
+    },
+    {
+      "id": "s395_p10",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s395_p07"
+      ]
+    },
+    {
+      "id": "s395_p11",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s395_p08"
+      ]
+    },
+    {
+      "id": "s395_p12",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s395_p09"
+      ]
+    },
+    {
+      "id": "s395_p13",
+      "layerName": "AnonymizationTechHypothesis",
+      "justification": [
+        "H1",
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s395_p10",
+        ".s395_p11",
+        ".s395_p12"
+      ]
+    }
+  ]
+}

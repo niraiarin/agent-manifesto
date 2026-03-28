@@ -1,0 +1,194 @@
+{
+  "namespace": "TestCoverage.S421",
+  "layers": [
+    {
+      "name": "MaternalSafety",
+      "ordValue": 4,
+      "definition": "母体・胎児の生命安全に関わる絶対不変条件。バイタル閾値超過時の即時介入義務",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ClinicalProtocol",
+      "ordValue": 3,
+      "definition": "産科医療ガイドライン・個人情報保護法・医療機器規制への準拠要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "MonitoringPolicy",
+      "ordValue": 2,
+      "definition": "計測頻度・アラート基準・遠隔相談トリガーに関する運用方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "RiskPrediction",
+      "ordValue": 1,
+      "definition": "早産リスク・妊娠高血圧症候群発症確率に関する予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s421_p01",
+      "layerName": "MaternalSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s421_p02",
+      "layerName": "MaternalSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s421_p03",
+      "layerName": "MaternalSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s421_p01",
+        ".s421_p02"
+      ]
+    },
+    {
+      "id": "s421_p04",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s421_p01"
+      ]
+    },
+    {
+      "id": "s421_p05",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s421_p02"
+      ]
+    },
+    {
+      "id": "s421_p06",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s421_p04",
+        ".s421_p05"
+      ]
+    },
+    {
+      "id": "s421_p07",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s421_p04"
+      ]
+    },
+    {
+      "id": "s421_p08",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s421_p05"
+      ]
+    },
+    {
+      "id": "s421_p09",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s421_p07",
+        ".s421_p08"
+      ]
+    },
+    {
+      "id": "s421_p10",
+      "layerName": "RiskPrediction",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s421_p07"
+      ]
+    },
+    {
+      "id": "s421_p11",
+      "layerName": "RiskPrediction",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s421_p08"
+      ]
+    },
+    {
+      "id": "s421_p12",
+      "layerName": "RiskPrediction",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s421_p10"
+      ]
+    },
+    {
+      "id": "s421_p13",
+      "layerName": "RiskPrediction",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s421_p11"
+      ]
+    },
+    {
+      "id": "s421_p14",
+      "layerName": "RiskPrediction",
+      "justification": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s421_p12",
+        ".s421_p13"
+      ]
+    }
+  ]
+}

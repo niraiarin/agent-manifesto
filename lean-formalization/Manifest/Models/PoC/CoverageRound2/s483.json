@@ -1,0 +1,168 @@
+{
+  "namespace": "TestCoverage.S483",
+  "layers": [
+    {
+      "name": "AirspaceFlightSafetyInvariant",
+      "ordValue": 3,
+      "definition": "衝突回避・緊急着陸・乗員安全の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AirTrafficRegulationPolicy",
+      "ordValue": 2,
+      "definition": "UTM統合・飛行経路承認・騒音規制・航空法遵守方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6",
+        "C7"
+      ]
+    },
+    {
+      "name": "RouteOptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "気象条件・交通密度・バッテリー残量に基づく経路予測仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s483_p01",
+      "layerName": "AirspaceFlightSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s483_p02",
+      "layerName": "AirspaceFlightSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s483_p03",
+      "layerName": "AirspaceFlightSafetyInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s483_p01"
+      ]
+    },
+    {
+      "id": "s483_p04",
+      "layerName": "AirspaceFlightSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s483_p01",
+        ".s483_p02",
+        ".s483_p03"
+      ]
+    },
+    {
+      "id": "s483_p05",
+      "layerName": "AirTrafficRegulationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s483_p01"
+      ]
+    },
+    {
+      "id": "s483_p06",
+      "layerName": "AirTrafficRegulationPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s483_p02",
+        ".s483_p04"
+      ]
+    },
+    {
+      "id": "s483_p07",
+      "layerName": "AirTrafficRegulationPolicy",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s483_p05",
+        ".s483_p06"
+      ]
+    },
+    {
+      "id": "s483_p08",
+      "layerName": "RouteOptimizationHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s483_p05"
+      ]
+    },
+    {
+      "id": "s483_p09",
+      "layerName": "RouteOptimizationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s483_p06"
+      ]
+    },
+    {
+      "id": "s483_p10",
+      "layerName": "RouteOptimizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s483_p07",
+        ".s483_p08"
+      ]
+    },
+    {
+      "id": "s483_p11",
+      "layerName": "RouteOptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s483_p08",
+        ".s483_p09"
+      ]
+    },
+    {
+      "id": "s483_p12",
+      "layerName": "RouteOptimizationHypothesis",
+      "justification": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s483_p10",
+        ".s483_p11"
+      ]
+    }
+  ]
+}

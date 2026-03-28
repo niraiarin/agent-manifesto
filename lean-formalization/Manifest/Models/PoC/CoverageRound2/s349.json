@@ -1,0 +1,194 @@
+{
+  "namespace": "TestCoverage.S349",
+  "layers": [
+    {
+      "name": "FairnessInvariant",
+      "ordValue": 4,
+      "definition": "地域属性・人種的背景に基づく差別的評価禁止の絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "宅地建物取引業法・個人情報保護法・公正住宅法への適合",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "ValuationPolicy",
+      "ordValue": 2,
+      "definition": "価格帯定義・不確実性開示・更新頻度の評価方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "MarketHypothesis",
+      "ordValue": 1,
+      "definition": "地価変動・需給バランス・周辺施設影響に関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s349_p01",
+      "layerName": "FairnessInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s349_p02",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s349_p01"
+      ]
+    },
+    {
+      "id": "s349_p03",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s349_p01"
+      ]
+    },
+    {
+      "id": "s349_p04",
+      "layerName": "ValuationPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s349_p02"
+      ]
+    },
+    {
+      "id": "s349_p05",
+      "layerName": "ValuationPolicy",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s349_p03"
+      ]
+    },
+    {
+      "id": "s349_p06",
+      "layerName": "ValuationPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s349_p04",
+        ".s349_p05"
+      ]
+    },
+    {
+      "id": "s349_p07",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s349_p04"
+      ]
+    },
+    {
+      "id": "s349_p08",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s349_p05"
+      ]
+    },
+    {
+      "id": "s349_p09",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s349_p06",
+        ".s349_p07"
+      ]
+    },
+    {
+      "id": "s349_p10",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s349_p08"
+      ]
+    },
+    {
+      "id": "s349_p11",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s349_p09"
+      ]
+    },
+    {
+      "id": "s349_p12",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s349_p10"
+      ]
+    },
+    {
+      "id": "s349_p13",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s349_p11",
+        ".s349_p12"
+      ]
+    },
+    {
+      "id": "s349_p14",
+      "layerName": "MarketHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s349_p13"
+      ]
+    }
+  ]
+}

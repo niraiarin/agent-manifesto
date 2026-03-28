@@ -1,0 +1,102 @@
+{
+  "namespace": "TestCoverage.S466",
+  "layers": [
+    {
+      "name": "UserSafetyInvariant",
+      "ordValue": 2,
+      "definition": "ユーザーの安全・プライバシー保護の絶対制約。有害情報提供・個人情報漏洩の禁止",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "DialogueCapabilityHypothesis",
+      "ordValue": 1,
+      "definition": "意図理解・文脈把握・応答生成に関する推論能力仮説。ユーザー行動から更新可能",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s466_p01",
+      "layerName": "UserSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s466_p02",
+      "layerName": "UserSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s466_p01"
+      ]
+    },
+    {
+      "id": "s466_p03",
+      "layerName": "UserSafetyInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s466_p01"
+      ]
+    },
+    {
+      "id": "s466_p04",
+      "layerName": "DialogueCapabilityHypothesis",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s466_p01"
+      ]
+    },
+    {
+      "id": "s466_p05",
+      "layerName": "DialogueCapabilityHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s466_p02",
+        ".s466_p04"
+      ]
+    },
+    {
+      "id": "s466_p06",
+      "layerName": "DialogueCapabilityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s466_p03"
+      ]
+    },
+    {
+      "id": "s466_p07",
+      "layerName": "DialogueCapabilityHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s466_p05",
+        ".s466_p06"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S481",
+  "layers": [
+    {
+      "name": "PatientSafetyInvariant",
+      "ordValue": 4,
+      "definition": "骨・歯根・神経への不可逆的損傷を防ぐ絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ClinicalRegulationPolicy",
+      "ordValue": 3,
+      "definition": "歯科医師法・医療機器規制・インフォームドコンセント要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "TreatmentPlanningModel",
+      "ordValue": 2,
+      "definition": "歯列移動量・保定期間・装置選択に関するモデル推論",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictiveOutcomeHypothesis",
+      "ordValue": 1,
+      "definition": "治療後の審美結果・後戻りリスクに関する予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s481_p01",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s481_p02",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s481_p03",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s481_p01",
+        ".s481_p02"
+      ]
+    },
+    {
+      "id": "s481_p04",
+      "layerName": "ClinicalRegulationPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s481_p01"
+      ]
+    },
+    {
+      "id": "s481_p05",
+      "layerName": "ClinicalRegulationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s481_p03"
+      ]
+    },
+    {
+      "id": "s481_p06",
+      "layerName": "ClinicalRegulationPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s481_p04",
+        ".s481_p05"
+      ]
+    },
+    {
+      "id": "s481_p07",
+      "layerName": "TreatmentPlanningModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s481_p04"
+      ]
+    },
+    {
+      "id": "s481_p08",
+      "layerName": "TreatmentPlanningModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s481_p05"
+      ]
+    },
+    {
+      "id": "s481_p09",
+      "layerName": "TreatmentPlanningModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s481_p06",
+        ".s481_p07"
+      ]
+    },
+    {
+      "id": "s481_p10",
+      "layerName": "PredictiveOutcomeHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s481_p07"
+      ]
+    },
+    {
+      "id": "s481_p11",
+      "layerName": "PredictiveOutcomeHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s481_p08"
+      ]
+    },
+    {
+      "id": "s481_p12",
+      "layerName": "PredictiveOutcomeHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s481_p09",
+        ".s481_p10"
+      ]
+    },
+    {
+      "id": "s481_p13",
+      "layerName": "PredictiveOutcomeHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s481_p10",
+        ".s481_p11"
+      ]
+    },
+    {
+      "id": "s481_p14",
+      "layerName": "PredictiveOutcomeHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s481_p12",
+        ".s481_p13"
+      ]
+    }
+  ]
+}

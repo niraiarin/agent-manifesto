@@ -1,0 +1,1488 @@
+[
+  {
+    "phase0": {
+      "vision": "ドローンによる小口貨物配送ネットワークを都市圏で運営するシステム。飛行ルート最適化・安全回廊管理・配送ステータス追跡を統合する。",
+      "stakeholders": "物流事業者、受取人、航空当局（JCAB）、地域住民",
+      "priority": "空域安全が最優先。配送効率は安全制約を満たした上で最大化する"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "国土交通省の無人航空機規則（航空法）に完全準拠する"},
+        {"id": "C2", "content": "他の航空機・障害物との衝突回避は常に保証する"},
+        {"id": "C3", "content": "緊急着陸地点を常に確保し、機体喪失時の被害を最小化する"},
+        {"id": "C4", "content": "配送完了率と遅延率をKPIとして計測・報告する"},
+        {"id": "C5", "content": "悪天候時は自動的に飛行を停止・回送する"},
+        {"id": "C6", "content": "オペレーターが全機体の状態をリアルタイムで監視できる"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C2", "content": "ADS-B + カメラ融合による360度検知が最適な衝突回避構成", "refutation": "5G UTM通信で十分なリアルタイム位置情報が提供される場合"},
+        {"id": "H2", "basis": "C5", "content": "風速10m/s超・降水量5mm/h超を飛行停止閾値とすべき", "refutation": "機体の耐候性能が向上し基準が緩和される場合"},
+        {"id": "H3", "basis": "C3,C6", "content": "緊急着陸スポットは500m間隔で事前登録すべき", "refutation": "都市密集部では実現不可能なケースが多い場合"},
+        {"id": "H4", "basis": "C4", "content": "ルート最適化はA*アルゴリズムベースで十分", "refutation": "リアルタイム交通・気象変動の影響が大きい場合"},
+        {"id": "H5", "basis": "外部知識", "content": "バッテリー残量20%を帰還開始閾値とすることでフェールセーフ余裕を確保できる", "refutation": "長距離ルートで中継充電が必要な場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 321,
+    "project": "ドローン配送管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S321",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 4,
+          "definition": "航空安全・衝突回避に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "航空法・国交省規則への適合要件",
+          "derivedFrom": ["C1", "C5"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "運用方針・飛行停止基準・監視体制",
+          "derivedFrom": ["C4", "C5", "C6", "H1", "H2", "H3"]
+        },
+        {
+          "name": "optimization_model",
+          "ordValue": 1,
+          "definition": "ルート最適化・バッテリー管理の推論モデル",
+          "derivedFrom": ["H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s321_p01",
+          "layerName": "safety_invariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s321_p02",
+          "layerName": "safety_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s321_p01"]
+        },
+        {
+          "id": "s321_p03",
+          "layerName": "safety_invariant",
+          "justification": ["C2", "H1"],
+          "dependencies": []
+        },
+        {
+          "id": "s321_p04",
+          "layerName": "regulatory_compliance",
+          "justification": ["C1"],
+          "dependencies": [".s321_p01"]
+        },
+        {
+          "id": "s321_p05",
+          "layerName": "regulatory_compliance",
+          "justification": ["C1", "C5"],
+          "dependencies": [".s321_p04"]
+        },
+        {
+          "id": "s321_p06",
+          "layerName": "operational_policy",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s321_p04"]
+        },
+        {
+          "id": "s321_p07",
+          "layerName": "operational_policy",
+          "justification": ["C3", "H3"],
+          "dependencies": [".s321_p02", ".s321_p06"]
+        },
+        {
+          "id": "s321_p08",
+          "layerName": "operational_policy",
+          "justification": ["C6"],
+          "dependencies": [".s321_p03"]
+        },
+        {
+          "id": "s321_p09",
+          "layerName": "operational_policy",
+          "justification": ["C4"],
+          "dependencies": [".s321_p08"]
+        },
+        {
+          "id": "s321_p10",
+          "layerName": "optimization_model",
+          "justification": ["H4"],
+          "dependencies": [".s321_p06", ".s321_p07"]
+        },
+        {
+          "id": "s321_p11",
+          "layerName": "optimization_model",
+          "justification": ["H5"],
+          "dependencies": [".s321_p10"]
+        },
+        {
+          "id": "s321_p12",
+          "layerName": "optimization_model",
+          "justification": ["C4", "H4"],
+          "dependencies": [".s321_p09", ".s321_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "次世代シーケンサーデータから疾患関連変異を自動検出するゲノム解析パイプライン。生データ前処理からバリアントコール・機能注釈まで一貫して処理する。",
+      "stakeholders": "臨床遺伝科医、研究者、患者・家族",
+      "priority": "臨床判断に用いる変異の見逃しがゼロであること。偽陽性は後工程で除去可能だが偽陰性は回復不可"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "病的バリアントの感度は99%以上を保証する"},
+        {"id": "C2", "content": "バリアント分類はACMG/AMP基準に準拠する"},
+        {"id": "C3", "content": "個人ゲノムデータは匿名化・暗号化して保管する"},
+        {"id": "C4", "content": "解析結果の再現性を確保するためパイプラインのバージョン管理を行う"},
+        {"id": "C5", "content": "臨床報告前に人間の専門家によるレビューを必須とする"},
+        {"id": "C6", "content": "処理時間は24時間以内（緊急ケース6時間以内）に完了する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "カバレッジ深度30x以上でのコールが臨床精度の最低ライン", "refutation": "超深度シーケンシングやロングリードが標準化される場合"},
+        {"id": "H2", "basis": "C2", "content": "ClinVarとgnomADの統合参照が分類精度を最大化する", "refutation": "新規変異データベースが既存を置き換える場合"},
+        {"id": "H3", "basis": "C4,C6", "content": "Nextflow/Snakemakeによるワークフロー管理が最も再現性が高い", "refutation": "コンテナオーケストレーションだけで十分な場合"},
+        {"id": "H4", "basis": "C3", "content": "ゲノムデータはk-anonymity k≥100で匿名化すべき", "refutation": "差分プライバシーが実用的精度で利用可能になる場合"},
+        {"id": "H5", "basis": "C1,C5", "content": "機械学習によるパスジェニシティスコアリングで専門家レビューを優先順位付けできる", "refutation": "専門家の判断とスコアに相関がない場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 322,
+    "project": "ゲノム解析パイプライン",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S322",
+      "layers": [
+        {
+          "name": "clinical_safety",
+          "ordValue": 4,
+          "definition": "臨床判断の安全性に関する絶対不変条件",
+          "derivedFrom": ["C1", "C5"]
+        },
+        {
+          "name": "regulatory_standard",
+          "ordValue": 3,
+          "definition": "ACMG/AMP基準・データ保護規制への適合",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "pipeline_policy",
+          "ordValue": 2,
+          "definition": "パイプライン運用方針・再現性・パフォーマンス要件",
+          "derivedFrom": ["C4", "C6", "H1", "H3"]
+        },
+        {
+          "name": "inference_model",
+          "ordValue": 1,
+          "definition": "変異分類・スコアリングのMLモデル仮説",
+          "derivedFrom": ["H2", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s322_p01",
+          "layerName": "clinical_safety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s322_p02",
+          "layerName": "clinical_safety",
+          "justification": ["C5"],
+          "dependencies": [".s322_p01"]
+        },
+        {
+          "id": "s322_p03",
+          "layerName": "clinical_safety",
+          "justification": ["C1", "C5"],
+          "dependencies": [".s322_p02"]
+        },
+        {
+          "id": "s322_p04",
+          "layerName": "regulatory_standard",
+          "justification": ["C2"],
+          "dependencies": [".s322_p01"]
+        },
+        {
+          "id": "s322_p05",
+          "layerName": "regulatory_standard",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s322_p06",
+          "layerName": "regulatory_standard",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s322_p04", ".s322_p05"]
+        },
+        {
+          "id": "s322_p07",
+          "layerName": "pipeline_policy",
+          "justification": ["C4"],
+          "dependencies": [".s322_p04"]
+        },
+        {
+          "id": "s322_p08",
+          "layerName": "pipeline_policy",
+          "justification": ["C6"],
+          "dependencies": [".s322_p07"]
+        },
+        {
+          "id": "s322_p09",
+          "layerName": "pipeline_policy",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s322_p03"]
+        },
+        {
+          "id": "s322_p10",
+          "layerName": "pipeline_policy",
+          "justification": ["C4", "H3"],
+          "dependencies": [".s322_p07", ".s322_p08"]
+        },
+        {
+          "id": "s322_p11",
+          "layerName": "inference_model",
+          "justification": ["H2"],
+          "dependencies": [".s322_p09"]
+        },
+        {
+          "id": "s322_p12",
+          "layerName": "inference_model",
+          "justification": ["H4"],
+          "dependencies": [".s322_p05"]
+        },
+        {
+          "id": "s322_p13",
+          "layerName": "inference_model",
+          "justification": ["H5"],
+          "dependencies": [".s322_p11", ".s322_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "都市部の交差点ネットワークで信号タイミングをリアルタイム最適化するAI。車両・歩行者フローを検知し、渋滞・CO2排出・事故リスクを同時低減する。",
+      "stakeholders": "道路管理者、ドライバー、歩行者・自転車利用者、緊急車両運用者",
+      "priority": "緊急車両の通行優先と歩行者安全が絶対条件。渋滞緩和はその次"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "緊急車両（救急・消防・警察）の接近時は最優先で青信号経路を確保する"},
+        {"id": "C2", "content": "歩行者・自転車の横断時間は物理的最低限以上を常に保証する"},
+        {"id": "C3", "content": "信号制御は道路交通法の信号サイクル規定に準拠する"},
+        {"id": "C4", "content": "システム障害時は固定サイクルにフォールバックする"},
+        {"id": "C5", "content": "交差点ごとの渋滞・停車時間データをリアルタイム収集する"},
+        {"id": "C6", "content": "最適化の変更は段階的に適用し急激な信号変更を避ける"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "緊急車両検知はADS-B + GPS + 路側センサー3重系が最も信頼性が高い", "refutation": "5G V2X通信が普及した場合"},
+        {"id": "H2", "basis": "C5", "content": "強化学習（PPO）による適応的信号制御が静的最適化より15%以上効率的", "refutation": "訓練データの偏りが現実の交通パターンと乖離する場合"},
+        {"id": "H3", "basis": "C2,C3", "content": "歩行者感応式＋タイマー表示の組み合わせが横断安全率を最大化する", "refutation": "高齢者・障害者の行動パターンが標準モデルと大きく異なる場合"},
+        {"id": "H4", "basis": "C6", "content": "グリーンウェーブは車速35-45km/hの帯域で最も効果的", "refutation": "電動キックボード等の低速交通が多数混在する場合"},
+        {"id": "H5", "basis": "C5", "content": "ネットワーク全体の最適化は各交差点の局所最適化の集約で近似できる", "refutation": "遠距離交差点間の相互依存が強い場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: adaptive_cycle(適応サイクル, ord=1)がemergency_preempt(緊急優先, ord=4)に依存している",
+          "from": "adaptive_cycle (optimization_model, ord=1)",
+          "to": "emergency_preempt (safety_invariant, ord=4)",
+          "fix": "adaptive_cycleをoperational_policyに昇格させるか、依存を除去する"
+        }
+      ]
+    },
+    "scenario_id": 323,
+    "project": "交通信号最適化AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S323",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 4,
+          "definition": "歩行者安全・緊急車両優先に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "道路交通法・信号制御規定への適合",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "信号制御運用方針・データ収集・フォールバック",
+          "derivedFrom": ["C4", "C5", "C6", "H1", "H3"]
+        },
+        {
+          "name": "optimization_model",
+          "ordValue": 1,
+          "definition": "強化学習・グリーンウェーブ等の最適化モデル仮説",
+          "derivedFrom": ["H2", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s323_p01",
+          "layerName": "safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s323_p02",
+          "layerName": "safety_invariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s323_p03",
+          "layerName": "safety_invariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s323_p01", ".s323_p02"]
+        },
+        {
+          "id": "s323_p04",
+          "layerName": "regulatory_compliance",
+          "justification": ["C3"],
+          "dependencies": [".s323_p02"]
+        },
+        {
+          "id": "s323_p05",
+          "layerName": "regulatory_compliance",
+          "justification": ["C4"],
+          "dependencies": [".s323_p04"]
+        },
+        {
+          "id": "s323_p06",
+          "layerName": "operational_policy",
+          "justification": ["C4"],
+          "dependencies": [".s323_p05"]
+        },
+        {
+          "id": "s323_p07",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s323_p06"]
+        },
+        {
+          "id": "s323_p08",
+          "layerName": "operational_policy",
+          "justification": ["C2", "H3"],
+          "dependencies": [".s323_p02"]
+        },
+        {
+          "id": "s323_p09",
+          "layerName": "operational_policy",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s323_p01"]
+        },
+        {
+          "id": "s323_p10",
+          "layerName": "operational_policy",
+          "justification": ["C6"],
+          "dependencies": [".s323_p07", ".s323_p08"]
+        },
+        {
+          "id": "s323_p11",
+          "layerName": "optimization_model",
+          "justification": ["H2"],
+          "dependencies": [".s323_p07", ".s323_p10"]
+        },
+        {
+          "id": "s323_p12",
+          "layerName": "optimization_model",
+          "justification": ["H4"],
+          "dependencies": [".s323_p10"]
+        },
+        {
+          "id": "s323_p13",
+          "layerName": "optimization_model",
+          "justification": ["H5"],
+          "dependencies": [".s323_p01"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "損害保険の保険金請求に対してAIが損害額を自動査定するシステム。書類・写真・現場データを統合解析し、査定精度向上と処理時間短縮を実現する。",
+      "stakeholders": "保険契約者、損害査定員、保険会社経営層、金融庁",
+      "priority": "公正・公平な査定が最優先。自動化によるスピード化は公正性を損なわない範囲で追求する"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "保険業法および金融庁ガイドラインに準拠した査定プロセスを維持する"},
+        {"id": "C2", "content": "査定根拠は被保険者に説明可能な形で文書化する"},
+        {"id": "C3", "content": "一定金額以上の案件・異議申し立て案件は必ず人間が最終審査する"},
+        {"id": "C4", "content": "査定モデルに性別・居住地域・民族属性等による差別的バイアスを含まない"},
+        {"id": "C5", "content": "保険金不正請求の検出精度を向上させる"},
+        {"id": "C6", "content": "個人情報・医療情報の取扱いは個人情報保護法に準拠する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C2", "content": "SHAPベースの説明可能AI手法で査定根拠を自然言語に変換できる", "refutation": "複雑モデルでSHAP値の解釈が直感に反する場合"},
+        {"id": "H2", "basis": "C4", "content": "公平性制約付き学習（Fairness-aware ML）でバイアスを95%削減できる", "refutation": "公平性制約がモデル精度と根本的にトレードオフになる場合"},
+        {"id": "H3", "basis": "C5", "content": "異常検知アルゴリズムと過去の不正パターンDBの組み合わせが最も不正検出率が高い", "refutation": "新手の不正手口がパターンから乖離する場合"},
+        {"id": "H4", "basis": "C3", "content": "査定額の95%タイル値を自動化の上限閾値とすることでリスクを限定できる", "refutation": "高額案件でも定型的な損害が多い保険種類の場合"},
+        {"id": "H5", "basis": "C1,C6", "content": "フェデレーテッドラーニングで医療情報を集中管理せずにモデル訓練できる", "refutation": "通信コスト・同期遅延がシステム要件を超える場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 324,
+    "project": "保険査定自動化システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S324",
+      "layers": [
+        {
+          "name": "fairness_invariant",
+          "ordValue": 4,
+          "definition": "公正・無差別な査定に関する絶対不変条件",
+          "derivedFrom": ["C2", "C3", "C4"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "保険業法・金融庁・個人情報保護法への適合",
+          "derivedFrom": ["C1", "C6"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "査定プロセス・不正検出・人間審査ゲート",
+          "derivedFrom": ["C3", "C5", "H1", "H3", "H4"]
+        },
+        {
+          "name": "ml_model",
+          "ordValue": 1,
+          "definition": "公平性制約付き学習・説明可能AI・フェデレーテッドラーニングの仮説",
+          "derivedFrom": ["H2", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s324_p01",
+          "layerName": "fairness_invariant",
+          "justification": ["C4"],
+          "dependencies": []
+        },
+        {
+          "id": "s324_p02",
+          "layerName": "fairness_invariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s324_p03",
+          "layerName": "fairness_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s324_p01", ".s324_p02"]
+        },
+        {
+          "id": "s324_p04",
+          "layerName": "regulatory_compliance",
+          "justification": ["C1"],
+          "dependencies": [".s324_p02"]
+        },
+        {
+          "id": "s324_p05",
+          "layerName": "regulatory_compliance",
+          "justification": ["C6"],
+          "dependencies": [".s324_p04"]
+        },
+        {
+          "id": "s324_p06",
+          "layerName": "regulatory_compliance",
+          "justification": ["C1", "C6"],
+          "dependencies": [".s324_p04", ".s324_p05"]
+        },
+        {
+          "id": "s324_p07",
+          "layerName": "operational_policy",
+          "justification": ["C3", "H4"],
+          "dependencies": [".s324_p03"]
+        },
+        {
+          "id": "s324_p08",
+          "layerName": "operational_policy",
+          "justification": ["C2", "H1"],
+          "dependencies": [".s324_p02"]
+        },
+        {
+          "id": "s324_p09",
+          "layerName": "operational_policy",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s324_p06"]
+        },
+        {
+          "id": "s324_p10",
+          "layerName": "operational_policy",
+          "justification": ["C3"],
+          "dependencies": [".s324_p07", ".s324_p08"]
+        },
+        {
+          "id": "s324_p11",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s324_p09"]
+        },
+        {
+          "id": "s324_p12",
+          "layerName": "ml_model",
+          "justification": ["H2"],
+          "dependencies": [".s324_p01", ".s324_p10"]
+        },
+        {
+          "id": "s324_p13",
+          "layerName": "ml_model",
+          "justification": ["H5"],
+          "dependencies": [".s324_p05"]
+        },
+        {
+          "id": "s324_p14",
+          "layerName": "ml_model",
+          "justification": ["H1"],
+          "dependencies": [".s324_p08", ".s324_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "河川・湖沼・海岸の水質をIoTセンサーネットワークとAIで常時監視し、汚染の早期検出・汚染源の特定・行政への自動アラートを提供するシステム。",
+      "stakeholders": "環境省・地方自治体、漁業者、水道事業者、周辺住民",
+      "priority": "有害物質の検出見逃しゼロ。飲料水・漁業への影響を未然に防ぐ"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "WHO・環境基本法の水質基準を下回る汚染は即時アラートを発報する"},
+        {"id": "C2", "content": "センサーの故障・異常値は自動検知し除外または補間する"},
+        {"id": "C3", "content": "汚染源の特定には複数センサーのデータを統合して空間的推定を行う"},
+        {"id": "C4", "content": "アラート発報から行政への通知は15分以内に完了する"},
+        {"id": "C5", "content": "10年以上の長期トレンド分析に耐えうるデータ保存設計とする"},
+        {"id": "C6", "content": "センサーネットワークはサイバー攻撃・自然災害に対する冗長性を持つ"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C2", "content": "多変量異常検知（pH・濁度・溶存酸素・電気伝導度の複合スコア）が最も早期検出感度が高い", "refutation": "単一指標で特定汚染物質のほうが感度が高いケースがある場合"},
+        {"id": "H2", "basis": "C3", "content": "粒子追跡シミュレーション（水流モデル）と機械学習の融合で汚染源を90%精度で特定できる", "refutation": "地形・流速が複雑な水系では精度が大幅低下する場合"},
+        {"id": "H3", "basis": "C2,C6", "content": "センサー配置は最大8km間隔でメッシュ構造が最良のカバレッジ・冗長性バランス", "refutation": "地形障壁で通信カバレッジが不均一になる場合"},
+        {"id": "H4", "basis": "C5", "content": "時系列データはTimescaleDB + Parquet形式での階層アーカイブが最適", "refutation": "クラウドネイティブの時系列専用DBが同等コストで提供される場合"},
+        {"id": "H5", "basis": "C4", "content": "Edge computingによる現地前処理でアラート遅延を5分以内に削減できる", "refutation": "Edgeデバイスの電力・コストが自治体予算を超える場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 325,
+    "project": "水質モニタリングAI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S325",
+      "layers": [
+        {
+          "name": "environmental_safety",
+          "ordValue": 4,
+          "definition": "水質汚染検出・住民安全に関する絶対不変条件",
+          "derivedFrom": ["C1", "C4"]
+        },
+        {
+          "name": "sensor_integrity",
+          "ordValue": 3,
+          "definition": "センサーネットワークの信頼性・冗長性保証",
+          "derivedFrom": ["C2", "C6"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "汚染源特定・アラート通知・長期保存の運用方針",
+          "derivedFrom": ["C3", "C5", "H3", "H5"]
+        },
+        {
+          "name": "analysis_model",
+          "ordValue": 1,
+          "definition": "多変量異常検知・粒子追跡・時系列分析モデルの仮説",
+          "derivedFrom": ["H1", "H2", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s325_p01",
+          "layerName": "environmental_safety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s325_p02",
+          "layerName": "environmental_safety",
+          "justification": ["C4"],
+          "dependencies": [".s325_p01"]
+        },
+        {
+          "id": "s325_p03",
+          "layerName": "sensor_integrity",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s325_p04",
+          "layerName": "sensor_integrity",
+          "justification": ["C6"],
+          "dependencies": [".s325_p03"]
+        },
+        {
+          "id": "s325_p05",
+          "layerName": "operational_policy",
+          "justification": ["C3"],
+          "dependencies": [".s325_p03", ".s325_p04"]
+        },
+        {
+          "id": "s325_p06",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s325_p05"]
+        },
+        {
+          "id": "s325_p07",
+          "layerName": "operational_policy",
+          "justification": ["H3"],
+          "dependencies": [".s325_p04"]
+        },
+        {
+          "id": "s325_p08",
+          "layerName": "operational_policy",
+          "justification": ["C4", "H5"],
+          "dependencies": [".s325_p01", ".s325_p07"]
+        },
+        {
+          "id": "s325_p09",
+          "layerName": "analysis_model",
+          "justification": ["H1"],
+          "dependencies": [".s325_p03", ".s325_p05"]
+        },
+        {
+          "id": "s325_p10",
+          "layerName": "analysis_model",
+          "justification": ["H2"],
+          "dependencies": [".s325_p05", ".s325_p09"]
+        },
+        {
+          "id": "s325_p11",
+          "layerName": "analysis_model",
+          "justification": ["H4"],
+          "dependencies": [".s325_p06"]
+        },
+        {
+          "id": "s325_p12",
+          "layerName": "analysis_model",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s325_p09", ".s325_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "製造ラインの設備・機械の状態データをリアルタイム収集・分析し、故障を事前予測して計画的メンテナンスを実施するシステム。予期せぬ停止ゼロを目指す。",
+      "stakeholders": "製造現場オペレーター、設備管理部門、経営層、メンテナンス業者",
+      "priority": "安全に関わる設備故障（火災・爆発・作業者負傷リスク）の見逃しゼロが最優先"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "安全に直結する故障モード（過熱・圧力異常・回転部破損）は即時停止指令を出す"},
+        {"id": "C2", "content": "予測結果には信頼区間と根拠となるセンサー指標を明示する"},
+        {"id": "C3", "content": "メンテナンス推奨は生産計画と連動してスケジューリングする"},
+        {"id": "C4", "content": "新機種・新ライン導入後3ヶ月は人間の監視を強化するウォームアップ期間とする"},
+        {"id": "C5", "content": "故障予測モデルは各設備カテゴリごとに専用モデルを持つ"},
+        {"id": "C6", "content": "ISO 55000（資産管理）に準拠したライフサイクル管理を行う"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C5", "content": "振動・温度・電流の3センサー融合が最も汎用的な故障前兆検出に有効", "refutation": "特定の機械種では音響センサーや油分析が支配的な場合"},
+        {"id": "H2", "basis": "C2", "content": "LSTMオートエンコーダによる残差異常スコアが説明可能な指標として最適", "refutation": "短期時系列での偽陽性率が実用閾値を超える場合"},
+        {"id": "H3", "basis": "C3", "content": "メンテナンス最適化は制約充足問題（CSP）として定式化できる", "refutation": "生産計画の変動頻度が高くリアルタイム再計算コストが過大な場合"},
+        {"id": "H4", "basis": "C4,C5", "content": "転移学習で類似機種のモデルを流用し新機種の学習期間を50%短縮できる", "refutation": "機種間の動作特性が根本的に異なる場合"},
+        {"id": "H5", "basis": "C6", "content": "MTBF・MTTRのベイズ更新が動的ライフサイクル予測の最良手法", "refutation": "稀な故障イベントではベイズ事前分布の選択が結果を支配する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 326,
+    "project": "予知保全システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S326",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 5,
+          "definition": "安全直結故障の即時停止に関する絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "asset_management_standard",
+          "ordValue": 4,
+          "definition": "ISO 55000・資産ライフサイクル管理への適合",
+          "derivedFrom": ["C6"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 3,
+          "definition": "予測提示・ウォームアップ期間・生産連動スケジューリング",
+          "derivedFrom": ["C2", "C3", "C4", "H3"]
+        },
+        {
+          "name": "model_governance",
+          "ordValue": 2,
+          "definition": "モデル専門化・転移学習・ウォームアップ管理の方針",
+          "derivedFrom": ["C4", "C5", "H4"]
+        },
+        {
+          "name": "prediction_model",
+          "ordValue": 1,
+          "definition": "センサー融合・LSTMオートエンコーダ・ベイズ更新の推論仮説",
+          "derivedFrom": ["H1", "H2", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s326_p01",
+          "layerName": "safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s326_p02",
+          "layerName": "safety_invariant",
+          "justification": ["C1"],
+          "dependencies": [".s326_p01"]
+        },
+        {
+          "id": "s326_p03",
+          "layerName": "asset_management_standard",
+          "justification": ["C6"],
+          "dependencies": []
+        },
+        {
+          "id": "s326_p04",
+          "layerName": "asset_management_standard",
+          "justification": ["C6"],
+          "dependencies": [".s326_p03"]
+        },
+        {
+          "id": "s326_p05",
+          "layerName": "operational_policy",
+          "justification": ["C2"],
+          "dependencies": [".s326_p01"]
+        },
+        {
+          "id": "s326_p06",
+          "layerName": "operational_policy",
+          "justification": ["C3", "H3"],
+          "dependencies": [".s326_p05"]
+        },
+        {
+          "id": "s326_p07",
+          "layerName": "operational_policy",
+          "justification": ["C4"],
+          "dependencies": [".s326_p05", ".s326_p06"]
+        },
+        {
+          "id": "s326_p08",
+          "layerName": "operational_policy",
+          "justification": ["C3"],
+          "dependencies": [".s326_p04", ".s326_p06"]
+        },
+        {
+          "id": "s326_p09",
+          "layerName": "model_governance",
+          "justification": ["C5"],
+          "dependencies": [".s326_p07"]
+        },
+        {
+          "id": "s326_p10",
+          "layerName": "model_governance",
+          "justification": ["C4", "H4"],
+          "dependencies": [".s326_p07", ".s326_p09"]
+        },
+        {
+          "id": "s326_p11",
+          "layerName": "model_governance",
+          "justification": ["C4"],
+          "dependencies": [".s326_p10"]
+        },
+        {
+          "id": "s326_p12",
+          "layerName": "prediction_model",
+          "justification": ["H1"],
+          "dependencies": [".s326_p09"]
+        },
+        {
+          "id": "s326_p13",
+          "layerName": "prediction_model",
+          "justification": ["H2"],
+          "dependencies": [".s326_p05", ".s326_p12"]
+        },
+        {
+          "id": "s326_p14",
+          "layerName": "prediction_model",
+          "justification": ["H5"],
+          "dependencies": [".s326_p03", ".s326_p04"]
+        },
+        {
+          "id": "s326_p15",
+          "layerName": "prediction_model",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s326_p12", ".s326_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "ニュース記事・SNS投稿をリアルタイム解析し、フェイクニュースおよびミスインフォメーションを検知・スコアリングするシステム。メディアリテラシー支援と情報エコシステムの健全化を目的とする。",
+      "stakeholders": "メディア企業、プラットフォーム事業者、一般市民、政府・選挙管理委員会",
+      "priority": "誤検知（本当の情報をフェイクと判定）は言論の自由を侵害するリスクがある。偽陰性より偽陽性のコストを重視する"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "検知結果は「フェイク」ではなく「信頼性スコア」として提示し、削除ではなくラベリングに留める"},
+        {"id": "C2", "content": "政治的・宗教的・文化的観点に対して中立性を保つ"},
+        {"id": "C3", "content": "根拠情報源（ファクトチェック機関・公式データ）を検知根拠として明示する"},
+        {"id": "C4", "content": "モデルの判断に対して発信者・受信者が異議申し立てできる仕組みを設ける"},
+        {"id": "C5", "content": "リアルタイム処理（投稿後5分以内のスコアリング）を実現する"},
+        {"id": "C6", "content": "各国の表現の自由に関する法的フレームワークに準拠する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C3", "content": "知識グラフ（WikiData/DBpedia）との照合が最も信頼性の高い根拠付けを提供する", "refutation": "知識グラフ自体が誤情報を含む場合"},
+        {"id": "H2", "basis": "C1,C2", "content": "マルチソース・アンサンブルモデル（言語モデル＋ソースモデル＋拡散モデル）が中立性を確保しやすい", "refutation": "訓練データのソース偏りが各モデルに共通する場合"},
+        {"id": "H3", "basis": "C5", "content": "事前計算済みのソース信頼性スコアとリアルタイム内容分析の2段階パイプラインで5分以内を達成できる", "refutation": "ソース信頼性が急激に変動するイベント（アカウント乗っ取り等）の場合"},
+        {"id": "H4", "basis": "C4", "content": "異議申し立てデータのフィードバックループがモデル精度を継続的に改善する", "refutation": "悪意ある大量の異議申し立てでモデルが汚染される場合"},
+        {"id": "H5", "basis": "C2,C6", "content": "地域・言語ごとの専門キュレーターによる監督が法的準拠と中立性を担保する", "refutation": "キュレーター自身が偏向している場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: feedback_loop(フィードバック, ord=1)がneutrality_check(中立性, ord=4)に依存している",
+          "from": "feedback_loop (learning_model, ord=1)",
+          "to": "neutrality_check (editorial_invariant, ord=4)",
+          "fix": "feedback_loopをoperational_policyに昇格させるか依存を除去する"
+        }
+      ]
+    },
+    "scenario_id": 327,
+    "project": "フェイクニュース検知システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S327",
+      "layers": [
+        {
+          "name": "editorial_invariant",
+          "ordValue": 4,
+          "definition": "言論の自由・中立性・表現保護に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C6"]
+        },
+        {
+          "name": "transparency_standard",
+          "ordValue": 3,
+          "definition": "根拠明示・異議申し立て・説明可能性の要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "リアルタイム処理・キュレーター監督・異議対応の運用方針",
+          "derivedFrom": ["C5", "H3", "H5"]
+        },
+        {
+          "name": "learning_model",
+          "ordValue": 1,
+          "definition": "知識グラフ照合・アンサンブル・フィードバック学習の仮説",
+          "derivedFrom": ["H1", "H2", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s327_p01",
+          "layerName": "editorial_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s327_p02",
+          "layerName": "editorial_invariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s327_p03",
+          "layerName": "editorial_invariant",
+          "justification": ["C6"],
+          "dependencies": [".s327_p01", ".s327_p02"]
+        },
+        {
+          "id": "s327_p04",
+          "layerName": "transparency_standard",
+          "justification": ["C3"],
+          "dependencies": [".s327_p01"]
+        },
+        {
+          "id": "s327_p05",
+          "layerName": "transparency_standard",
+          "justification": ["C4"],
+          "dependencies": [".s327_p04"]
+        },
+        {
+          "id": "s327_p06",
+          "layerName": "transparency_standard",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s327_p04", ".s327_p05"]
+        },
+        {
+          "id": "s327_p07",
+          "layerName": "operational_policy",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s327_p04"]
+        },
+        {
+          "id": "s327_p08",
+          "layerName": "operational_policy",
+          "justification": ["C2", "H5"],
+          "dependencies": [".s327_p02", ".s327_p03"]
+        },
+        {
+          "id": "s327_p09",
+          "layerName": "operational_policy",
+          "justification": ["C4"],
+          "dependencies": [".s327_p05", ".s327_p07"]
+        },
+        {
+          "id": "s327_p10",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s327_p07", ".s327_p08"]
+        },
+        {
+          "id": "s327_p11",
+          "layerName": "learning_model",
+          "justification": ["H1"],
+          "dependencies": [".s327_p04", ".s327_p07"]
+        },
+        {
+          "id": "s327_p12",
+          "layerName": "learning_model",
+          "justification": ["H2"],
+          "dependencies": [".s327_p01", ".s327_p02"]
+        },
+        {
+          "id": "s327_p13",
+          "layerName": "learning_model",
+          "justification": ["H4"],
+          "dependencies": [".s327_p02"]
+        },
+        {
+          "id": "s327_p14",
+          "layerName": "learning_model",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s327_p11", ".s327_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "過去の犯罪データ・地理情報・時系列パターンを解析し、犯罪発生リスクの高い地域と時間帯を予測してパトロール計画を最適化するシステム。",
+      "stakeholders": "警察・公安当局、地域住民、市民権団体、地方政府",
+      "priority": "市民の人権・プライバシー保護が最優先。特定個人や属性グループへの差別的な予測は絶対に行わない"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "予測の対象は地域・時間帯であり、特定個人やデモグラフィック属性に基づく予測は行わない"},
+        {"id": "C2", "content": "予測結果は逮捕・拘留の根拠として単独使用してはならず、情報提供に限定する"},
+        {"id": "C3", "content": "システムの使用はデータ保護法・人権条約に準拠する"},
+        {"id": "C4", "content": "モデルのバイアス評価を定期的（半年ごと）に第三者機関が実施する"},
+        {"id": "C5", "content": "訓練データの収集・利用に関する透明性レポートを公開する"},
+        {"id": "C6", "content": "警察官は予測システムへの過依存を避け、現場判断を優先する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "ホットスポット分析（KDE）は個人特定リスクが低く地理的予測の基本手法として適切", "refutation": "地域単位の予測でも人口密度データが間接的に属性情報を含む場合"},
+        {"id": "H2", "basis": "C4", "content": "Equalized Oddsベースの公平性評価が属性バイアスを最も検出しやすい指標", "refutation": "公平性定義が競合する（例: 個別公平性vs群衆公平性）場合"},
+        {"id": "H3", "basis": "C5,C6", "content": "予測の可視化ダッシュボードに「予測不確実性」を明示することで過依存を抑制できる", "refutation": "不確実性表示が判断回避を招き逆に依存を強める場合"},
+        {"id": "H4", "basis": "C3", "content": "データ収集期間を直近3年に限定することで古い偏向データの影響を低減できる", "refutation": "地域特有の長期的犯罪パターンが3年では捉えられない場合"},
+        {"id": "H5", "basis": "C1,C2", "content": "パトロール計画の最終決定は必ず現場責任者の承認を経る設計にすることで法的責任を明確化できる", "refutation": "承認プロセスがボトルネックとなりリアルタイム対応が遅れる場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 328,
+    "project": "犯罪予測パトロール最適化",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S328",
+      "layers": [
+        {
+          "name": "rights_invariant",
+          "ordValue": 4,
+          "definition": "市民権・プライバシー・無差別原則に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "accountability_standard",
+          "ordValue": 3,
+          "definition": "透明性・第三者監査・バイアス評価の説明責任要件",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "予測提示方法・過依存防止・データ制限の運用方針",
+          "derivedFrom": ["C6", "H3", "H4", "H5"]
+        },
+        {
+          "name": "prediction_model",
+          "ordValue": 1,
+          "definition": "ホットスポット分析・公平性評価・データ期間制限の推論仮説",
+          "derivedFrom": ["H1", "H2"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s328_p01",
+          "layerName": "rights_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s328_p02",
+          "layerName": "rights_invariant",
+          "justification": ["C2"],
+          "dependencies": [".s328_p01"]
+        },
+        {
+          "id": "s328_p03",
+          "layerName": "rights_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s328_p01", ".s328_p02"]
+        },
+        {
+          "id": "s328_p04",
+          "layerName": "accountability_standard",
+          "justification": ["C4"],
+          "dependencies": [".s328_p01"]
+        },
+        {
+          "id": "s328_p05",
+          "layerName": "accountability_standard",
+          "justification": ["C5"],
+          "dependencies": [".s328_p04"]
+        },
+        {
+          "id": "s328_p06",
+          "layerName": "operational_policy",
+          "justification": ["C6", "H3"],
+          "dependencies": [".s328_p02", ".s328_p04"]
+        },
+        {
+          "id": "s328_p07",
+          "layerName": "operational_policy",
+          "justification": ["H4"],
+          "dependencies": [".s328_p03", ".s328_p05"]
+        },
+        {
+          "id": "s328_p08",
+          "layerName": "operational_policy",
+          "justification": ["C2", "H5"],
+          "dependencies": [".s328_p02", ".s328_p06"]
+        },
+        {
+          "id": "s328_p09",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s328_p05", ".s328_p07"]
+        },
+        {
+          "id": "s328_p10",
+          "layerName": "prediction_model",
+          "justification": ["H1"],
+          "dependencies": [".s328_p01", ".s328_p07"]
+        },
+        {
+          "id": "s328_p11",
+          "layerName": "prediction_model",
+          "justification": ["H2"],
+          "dependencies": [".s328_p04", ".s328_p10"]
+        },
+        {
+          "id": "s328_p12",
+          "layerName": "prediction_model",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s328_p10", ".s328_p11"]
+        },
+        {
+          "id": "s328_p13",
+          "layerName": "prediction_model",
+          "justification": ["H4"],
+          "dependencies": [".s328_p07", ".s328_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "電気自動車充電インフラのネットワーク全体を最適管理するシステム。需要予測・充電スケジューリング・電力グリッドとの連携・故障管理を統合する。",
+      "stakeholders": "EV利用者、充電インフラ事業者、電力会社、地方自治体",
+      "priority": "電力グリッドの安定性を損なわないこと。次いで利用者の待機時間最小化と充電器稼働率最大化"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "系統側の需要制限・デマンドレスポンス指令には即座に従い出力を調整する"},
+        {"id": "C2", "content": "充電器故障時の代替案内は5分以内にユーザーに通知する"},
+        {"id": "C3", "content": "個人の充電履歴・位置情報は匿名化して管理する"},
+        {"id": "C4", "content": "価格設定は規制当局が定める上限を超えない"},
+        {"id": "C5", "content": "再生可能エネルギーの余剰時には充電を優先的にスケジュールする"},
+        {"id": "C6", "content": "充電器の稼働率・故障率・平均待機時間をKPIとして月次報告する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C5", "content": "V2G（Vehicle-to-Grid）対応EVを分散バッファとして活用することでグリッド安定化と再エネ統合を両立できる", "refutation": "バッテリー劣化コストがV2Gの電力調整収益を上回る場合"},
+        {"id": "H2", "basis": "C2,C6", "content": "予知保全アルゴリズムで故障を48時間前に予測し稼働率を99%以上に維持できる", "refutation": "充電器種別ごとの故障パターンが標準化できない場合"},
+        {"id": "H3", "basis": "C5", "content": "太陽光発電予測（翌日発電量推定）と連動した前日スケジューリングが充電コスト15%削減できる", "refutation": "天候予測精度が低い地域では計画と実績の乖離が大きい場合"},
+        {"id": "H4", "basis": "C4", "content": "動的価格設定（時間帯・需給連動）がピーク需要の30%を平準化できる", "refutation": "価格感応度の低い急速充電ニーズが支配的な場合"},
+        {"id": "H5", "basis": "C3", "content": "充電パターンのクラスタリングで匿名化後もユーザー行動予測の精度を維持できる", "refutation": "クラスタ化が再識別リスクを生む場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 329,
+    "project": "EV充電網管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S329",
+      "layers": [
+        {
+          "name": "grid_safety_invariant",
+          "ordValue": 4,
+          "definition": "電力系統安定性・デマンドレスポンス遵守に関する絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "価格規制・個人情報保護・報告義務への適合",
+          "derivedFrom": ["C3", "C4", "C6"]
+        },
+        {
+          "name": "operational_policy",
+          "ordValue": 2,
+          "definition": "故障通知・再エネ優先・KPI管理の運用方針",
+          "derivedFrom": ["C2", "C5", "H2", "H3"]
+        },
+        {
+          "name": "optimization_model",
+          "ordValue": 1,
+          "definition": "V2G統合・動的価格・予知保全の最適化モデル仮説",
+          "derivedFrom": ["H1", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s329_p01",
+          "layerName": "grid_safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s329_p02",
+          "layerName": "grid_safety_invariant",
+          "justification": ["C1"],
+          "dependencies": [".s329_p01"]
+        },
+        {
+          "id": "s329_p03",
+          "layerName": "regulatory_compliance",
+          "justification": ["C4"],
+          "dependencies": [".s329_p01"]
+        },
+        {
+          "id": "s329_p04",
+          "layerName": "regulatory_compliance",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s329_p05",
+          "layerName": "regulatory_compliance",
+          "justification": ["C6"],
+          "dependencies": [".s329_p03"]
+        },
+        {
+          "id": "s329_p06",
+          "layerName": "operational_policy",
+          "justification": ["C2"],
+          "dependencies": [".s329_p05"]
+        },
+        {
+          "id": "s329_p07",
+          "layerName": "operational_policy",
+          "justification": ["C5"],
+          "dependencies": [".s329_p01"]
+        },
+        {
+          "id": "s329_p08",
+          "layerName": "operational_policy",
+          "justification": ["C2", "H2"],
+          "dependencies": [".s329_p06"]
+        },
+        {
+          "id": "s329_p09",
+          "layerName": "operational_policy",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s329_p07"]
+        },
+        {
+          "id": "s329_p10",
+          "layerName": "optimization_model",
+          "justification": ["H1"],
+          "dependencies": [".s329_p01", ".s329_p07"]
+        },
+        {
+          "id": "s329_p11",
+          "layerName": "optimization_model",
+          "justification": ["H4"],
+          "dependencies": [".s329_p03", ".s329_p09"]
+        },
+        {
+          "id": "s329_p12",
+          "layerName": "optimization_model",
+          "justification": ["H5"],
+          "dependencies": [".s329_p04"]
+        },
+        {
+          "id": "s329_p13",
+          "layerName": "optimization_model",
+          "justification": ["H1", "H4"],
+          "dependencies": [".s329_p10", ".s329_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "大規模化合物ライブラリから創薬候補化合物を自動スクリーニングするAIシステム。分子構造特性・ADMET予測・標的タンパク質結合親和性を統合して候補を絞り込む。",
+      "stakeholders": "創薬研究者、製薬企業経営層、規制当局（PMDA/FDA）、将来の患者",
+      "priority": "毒性の見逃しは臨床段階での被験者被害に直結するため、毒性予測の感度を最優先する"
+    },
+    "phase1": {
+      "C": [
+        {"id": "C1", "content": "ADMET（吸収・分布・代謝・排泄・毒性）予測は保守的（感度優先）に設定する"},
+        {"id": "C2", "content": "スクリーニング結果は実験的検証なしに臨床試験に進めない"},
+        {"id": "C3", "content": "予測モデルの根拠（特徴量重要度・類似既知化合物）を研究者に提示する"},
+        {"id": "C4", "content": "化合物データと予測結果は知的財産として厳格に管理する"},
+        {"id": "C5", "content": "新規モデルの追加は独立した検証データセットでのベンチマーク合格を条件とする"},
+        {"id": "C6", "content": "希少疾患・熱帯病等のアンメット・メディカル・ニーズ領域を優先スコアリングする"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C3", "content": "GNN（グラフニューラルネットワーク）による分子特性予測がRF/SVMより解釈可能性・精度ともに優れる", "refutation": "小規模データセットではGNNが過学習しRFの方が汎化する場合"},
+        {"id": "H2", "basis": "C2", "content": "仮想スクリーニングは実験スループットを100倍以上に拡大するが、ヒット率は1-5%以下が現実的", "refutation": "標的ポケットが特殊で既知活性化合物が少ない場合"},
+        {"id": "H3", "basis": "C3", "content": "類似化合物検索（Tanimoto係数≥0.85）が最も直感的な根拠提示法", "refutation": "scaffold hopが必要な新規骨格探索では類似性指標が無意味な場合"},
+        {"id": "H4", "basis": "C5", "content": "MoleculeNetベンチマークの全12タスクで既存SOTAを超えることがモデル採用基準として適切", "refutation": "ベンチマークと実際の創薬タスクの分布が乖離している場合"},
+        {"id": "H5", "basis": "C1", "content": "毒性予測にはアンサンブル手法（複数モデルの多数決）が単一モデルより偽陰性を30%削減する", "refutation": "アンサンブル内モデルに共通の系統的エラーが存在する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 330,
+    "project": "創薬候補スクリーニングAI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S330",
+      "layers": [
+        {
+          "name": "safety_invariant",
+          "ordValue": 5,
+          "definition": "毒性見逃しゼロ・臨床移行ゲートに関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ip_protection",
+          "ordValue": 4,
+          "definition": "化合物データ・予測結果の知的財産保護",
+          "derivedFrom": ["C4"]
+        },
+        {
+          "name": "quality_standard",
+          "ordValue": 3,
+          "definition": "モデル検証・ベンチマーク合格・ADMET評価基準",
+          "derivedFrom": ["C5", "C3"]
+        },
+        {
+          "name": "prioritization_policy",
+          "ordValue": 2,
+          "definition": "アンメット・ニーズ優先・ヒット率管理・候補選定方針",
+          "derivedFrom": ["C6", "H2", "H3"]
+        },
+        {
+          "name": "ml_model",
+          "ordValue": 1,
+          "definition": "GNN・アンサンブル毒性予測・類似化合物検索の仮説",
+          "derivedFrom": ["H1", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s330_p01",
+          "layerName": "safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s330_p02",
+          "layerName": "safety_invariant",
+          "justification": ["C2"],
+          "dependencies": [".s330_p01"]
+        },
+        {
+          "id": "s330_p03",
+          "layerName": "safety_invariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s330_p01", ".s330_p02"]
+        },
+        {
+          "id": "s330_p04",
+          "layerName": "ip_protection",
+          "justification": ["C4"],
+          "dependencies": []
+        },
+        {
+          "id": "s330_p05",
+          "layerName": "ip_protection",
+          "justification": ["C4"],
+          "dependencies": [".s330_p04"]
+        },
+        {
+          "id": "s330_p06",
+          "layerName": "quality_standard",
+          "justification": ["C5"],
+          "dependencies": [".s330_p01"]
+        },
+        {
+          "id": "s330_p07",
+          "layerName": "quality_standard",
+          "justification": ["C3"],
+          "dependencies": [".s330_p06"]
+        },
+        {
+          "id": "s330_p08",
+          "layerName": "quality_standard",
+          "justification": ["C5"],
+          "dependencies": [".s330_p06", ".s330_p07"]
+        },
+        {
+          "id": "s330_p09",
+          "layerName": "prioritization_policy",
+          "justification": ["C6"],
+          "dependencies": [".s330_p06"]
+        },
+        {
+          "id": "s330_p10",
+          "layerName": "prioritization_policy",
+          "justification": ["H2"],
+          "dependencies": [".s330_p02", ".s330_p09"]
+        },
+        {
+          "id": "s330_p11",
+          "layerName": "prioritization_policy",
+          "justification": ["C3", "H3"],
+          "dependencies": [".s330_p07", ".s330_p10"]
+        },
+        {
+          "id": "s330_p12",
+          "layerName": "prioritization_policy",
+          "justification": ["C6"],
+          "dependencies": [".s330_p09", ".s330_p11"]
+        },
+        {
+          "id": "s330_p13",
+          "layerName": "ml_model",
+          "justification": ["H1"],
+          "dependencies": [".s330_p06", ".s330_p08"]
+        },
+        {
+          "id": "s330_p14",
+          "layerName": "ml_model",
+          "justification": ["H5"],
+          "dependencies": [".s330_p01", ".s330_p13"]
+        },
+        {
+          "id": "s330_p15",
+          "layerName": "ml_model",
+          "justification": ["H4"],
+          "dependencies": [".s330_p08"]
+        },
+        {
+          "id": "s330_p16",
+          "layerName": "ml_model",
+          "justification": ["H1", "H5"],
+          "dependencies": [".s330_p13", ".s330_p14"]
+        }
+      ]
+    }
+  }
+]

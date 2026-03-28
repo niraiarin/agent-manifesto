@@ -1,0 +1,169 @@
+{
+  "namespace": "TestCoverage.S325",
+  "layers": [
+    {
+      "name": "environmental_safety",
+      "ordValue": 4,
+      "definition": "水質汚染検出・住民安全に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C4"
+      ]
+    },
+    {
+      "name": "sensor_integrity",
+      "ordValue": 3,
+      "definition": "センサーネットワークの信頼性・冗長性保証",
+      "derivedFrom": [
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "ordValue": 2,
+      "definition": "汚染源特定・アラート通知・長期保存の運用方針",
+      "derivedFrom": [
+        "C3",
+        "C5",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "analysis_model",
+      "ordValue": 1,
+      "definition": "多変量異常検知・粒子追跡・時系列分析モデルの仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s325_p01",
+      "layerName": "environmental_safety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s325_p02",
+      "layerName": "environmental_safety",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s325_p01"
+      ]
+    },
+    {
+      "id": "s325_p03",
+      "layerName": "sensor_integrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s325_p04",
+      "layerName": "sensor_integrity",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s325_p03"
+      ]
+    },
+    {
+      "id": "s325_p05",
+      "layerName": "operational_policy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s325_p03",
+        ".s325_p04"
+      ]
+    },
+    {
+      "id": "s325_p06",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s325_p05"
+      ]
+    },
+    {
+      "id": "s325_p07",
+      "layerName": "operational_policy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s325_p04"
+      ]
+    },
+    {
+      "id": "s325_p08",
+      "layerName": "operational_policy",
+      "justification": [
+        "C4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s325_p01",
+        ".s325_p07"
+      ]
+    },
+    {
+      "id": "s325_p09",
+      "layerName": "analysis_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s325_p03",
+        ".s325_p05"
+      ]
+    },
+    {
+      "id": "s325_p10",
+      "layerName": "analysis_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s325_p05",
+        ".s325_p09"
+      ]
+    },
+    {
+      "id": "s325_p11",
+      "layerName": "analysis_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s325_p06"
+      ]
+    },
+    {
+      "id": "s325_p12",
+      "layerName": "analysis_model",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s325_p09",
+        ".s325_p10"
+      ]
+    }
+  ]
+}

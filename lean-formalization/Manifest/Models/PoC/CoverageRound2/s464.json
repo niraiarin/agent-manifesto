@@ -1,0 +1,245 @@
+{
+  "namespace": "TestCoverage.S464",
+  "layers": [
+    {
+      "name": "PrivacyRightsInvariant",
+      "ordValue": 5,
+      "definition": "個人情報の収集・利用の絶対制約。GDPR・個人情報保護法への違反禁止",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "AdRegulationCompliance",
+      "ordValue": 4,
+      "definition": "景品表示法・不当広告規制・プラットフォーム広告ポリシーへの準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "TargetingEthicsPolicy",
+      "ordValue": 3,
+      "definition": "脆弱層（未成年・依存症リスク）への有害広告排除。差別的ターゲティングの禁止",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1"
+      ]
+    },
+    {
+      "name": "AudienceSegmentationPolicy",
+      "ordValue": 2,
+      "definition": "行動データ・デモグラフィクスによるオーディエンスセグメント設計方針",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "ConversionPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "クリック率・購買確率の予測仮説。実績データによる継続的更新",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s464_p01",
+      "layerName": "PrivacyRightsInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s464_p02",
+      "layerName": "PrivacyRightsInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s464_p01"
+      ]
+    },
+    {
+      "id": "s464_p03",
+      "layerName": "AdRegulationCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s464_p01"
+      ]
+    },
+    {
+      "id": "s464_p04",
+      "layerName": "AdRegulationCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s464_p02"
+      ]
+    },
+    {
+      "id": "s464_p05",
+      "layerName": "TargetingEthicsPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s464_p03"
+      ]
+    },
+    {
+      "id": "s464_p06",
+      "layerName": "TargetingEthicsPolicy",
+      "justification": [
+        "C6",
+        "H1"
+      ],
+      "dependencies": [
+        ".s464_p04"
+      ]
+    },
+    {
+      "id": "s464_p07",
+      "layerName": "TargetingEthicsPolicy",
+      "justification": [
+        "C5",
+        "C6"
+      ],
+      "dependencies": [
+        ".s464_p05",
+        ".s464_p06"
+      ]
+    },
+    {
+      "id": "s464_p08",
+      "layerName": "AudienceSegmentationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s464_p05"
+      ]
+    },
+    {
+      "id": "s464_p09",
+      "layerName": "AudienceSegmentationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s464_p06"
+      ]
+    },
+    {
+      "id": "s464_p10",
+      "layerName": "AudienceSegmentationPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s464_p07"
+      ]
+    },
+    {
+      "id": "s464_p11",
+      "layerName": "AudienceSegmentationPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s464_p08",
+        ".s464_p09"
+      ]
+    },
+    {
+      "id": "s464_p12",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s464_p08"
+      ]
+    },
+    {
+      "id": "s464_p13",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s464_p09"
+      ]
+    },
+    {
+      "id": "s464_p14",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s464_p10"
+      ]
+    },
+    {
+      "id": "s464_p15",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s464_p11"
+      ]
+    },
+    {
+      "id": "s464_p16",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s464_p12",
+        ".s464_p13"
+      ]
+    },
+    {
+      "id": "s464_p17",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".s464_p14",
+        ".s464_p15"
+      ]
+    },
+    {
+      "id": "s464_p18",
+      "layerName": "ConversionPredictionHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s464_p16",
+        ".s464_p17"
+      ]
+    }
+  ]
+}

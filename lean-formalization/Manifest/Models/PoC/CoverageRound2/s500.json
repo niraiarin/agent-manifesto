@@ -1,0 +1,204 @@
+{
+  "namespace": "TestCoverage.S500",
+  "layers": [
+    {
+      "name": "HeritagePreservationInvariant",
+      "ordValue": 5,
+      "definition": "文化財保護法・ユネスコ条約・遺跡不可逆損傷防止の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ScientificIntegrity",
+      "ordValue": 4,
+      "definition": "発掘記録の正確性・再現性・査読可能性に関する科学的誠実性基準",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "ExcavationPolicy",
+      "ordValue": 3,
+      "definition": "発掘優先区域・保存vs調査のトレードオフ・多機関調整に関するポリシー",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AnalysisStrategy",
+      "ordValue": 2,
+      "definition": "地層解析・遺物分類・年代測定手法選択に関する分析戦略仮説",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "DiscoveryHeuristic",
+      "ordValue": 1,
+      "definition": "パターン認識・異常検知・発見確率予測に関する探索ヒューリスティック",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s500_p01",
+      "layerName": "HeritagePreservationInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s500_p02",
+      "layerName": "HeritagePreservationInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s500_p03",
+      "layerName": "ScientificIntegrity",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s500_p01"
+      ]
+    },
+    {
+      "id": "s500_p04",
+      "layerName": "ScientificIntegrity",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s500_p02",
+        ".s500_p03"
+      ]
+    },
+    {
+      "id": "s500_p05",
+      "layerName": "ExcavationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s500_p03"
+      ]
+    },
+    {
+      "id": "s500_p06",
+      "layerName": "ExcavationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s500_p04"
+      ]
+    },
+    {
+      "id": "s500_p07",
+      "layerName": "ExcavationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s500_p05",
+        ".s500_p06"
+      ]
+    },
+    {
+      "id": "s500_p08",
+      "layerName": "AnalysisStrategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s500_p05"
+      ]
+    },
+    {
+      "id": "s500_p09",
+      "layerName": "AnalysisStrategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s500_p06"
+      ]
+    },
+    {
+      "id": "s500_p10",
+      "layerName": "AnalysisStrategy",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s500_p07",
+        ".s500_p08"
+      ]
+    },
+    {
+      "id": "s500_p11",
+      "layerName": "DiscoveryHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s500_p08"
+      ]
+    },
+    {
+      "id": "s500_p12",
+      "layerName": "DiscoveryHeuristic",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s500_p09"
+      ]
+    },
+    {
+      "id": "s500_p13",
+      "layerName": "DiscoveryHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s500_p10",
+        ".s500_p11"
+      ]
+    },
+    {
+      "id": "s500_p14",
+      "layerName": "DiscoveryHeuristic",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s500_p12",
+        ".s500_p13"
+      ]
+    },
+    {
+      "id": "s500_p15",
+      "layerName": "AnalysisStrategy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s500_p14"
+      ]
+    }
+  ]
+}

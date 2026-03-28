@@ -1,0 +1,180 @@
+{
+  "namespace": "TestCoverage.S410",
+  "layers": [
+    {
+      "name": "ScientificIntegrityInvariant",
+      "ordValue": 4,
+      "definition": "予測結果の科学的整合性・物理法則との整合性を保証する不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ResearchEthicsCompliance",
+      "ordValue": 3,
+      "definition": "研究倫理・データ帰属・再現可能性要件への準拠。学術標準",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "ModelValidationPolicy",
+      "ordValue": 2,
+      "definition": "予測モデルの検証・ベンチマーク・不確実性定量化ポリシー。品質保証規則",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ExplorationHypothesis",
+      "ordValue": 1,
+      "definition": "新材料設計空間探索・マルチフィデリティ学習の仮説。実験と計算の統合",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s410_p01",
+      "layerName": "ScientificIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s410_p02",
+      "layerName": "ScientificIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s410_p03",
+      "layerName": "ScientificIntegrityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s410_p01",
+        ".s410_p02"
+      ]
+    },
+    {
+      "id": "s410_p04",
+      "layerName": "ResearchEthicsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s410_p01"
+      ]
+    },
+    {
+      "id": "s410_p05",
+      "layerName": "ResearchEthicsCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s410_p02"
+      ]
+    },
+    {
+      "id": "s410_p06",
+      "layerName": "ResearchEthicsCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s410_p03"
+      ]
+    },
+    {
+      "id": "s410_p07",
+      "layerName": "ModelValidationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s410_p04"
+      ]
+    },
+    {
+      "id": "s410_p08",
+      "layerName": "ModelValidationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s410_p05"
+      ]
+    },
+    {
+      "id": "s410_p09",
+      "layerName": "ModelValidationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s410_p06"
+      ]
+    },
+    {
+      "id": "s410_p10",
+      "layerName": "ModelValidationPolicy",
+      "justification": [
+        "C4",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s410_p07",
+        ".s410_p08"
+      ]
+    },
+    {
+      "id": "s410_p11",
+      "layerName": "ExplorationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s410_p07"
+      ]
+    },
+    {
+      "id": "s410_p12",
+      "layerName": "ExplorationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s410_p08"
+      ]
+    },
+    {
+      "id": "s410_p13",
+      "layerName": "ExplorationHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s410_p09",
+        ".s410_p10"
+      ]
+    }
+  ]
+}

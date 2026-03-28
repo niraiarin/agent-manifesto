@@ -1,0 +1,1224 @@
+[
+  {
+    "scenario_id": 341,
+    "project": "電子カルテ統合システム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S341",
+      "layers": [
+        {
+          "name": "PatientDataIntegrity",
+          "ordValue": 4,
+          "definition": "患者データの正確性・完全性・一貫性に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "PrivacyCompliance",
+          "ordValue": 3,
+          "definition": "個人情報保護法・医療情報安全管理ガイドラインへの適合",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "ClinicalWorkflow",
+          "ordValue": 2,
+          "definition": "診察・投薬・検査オーダーの業務フロー方針",
+          "derivedFrom": ["C5", "C6", "H1", "H2"]
+        },
+        {
+          "name": "InteroperabilityHypothesis",
+          "ordValue": 1,
+          "definition": "HL7 FHIR・既存レガシーシステムとの相互運用性に関する推論仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s341_p01",
+          "layerName": "PatientDataIntegrity",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s341_p02",
+          "layerName": "PatientDataIntegrity",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s341_p03",
+          "layerName": "PatientDataIntegrity",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s341_p01", ".s341_p02"]
+        },
+        {
+          "id": "s341_p04",
+          "layerName": "PrivacyCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s341_p01"]
+        },
+        {
+          "id": "s341_p05",
+          "layerName": "PrivacyCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s341_p02"]
+        },
+        {
+          "id": "s341_p06",
+          "layerName": "PrivacyCompliance",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s341_p04", ".s341_p05"]
+        },
+        {
+          "id": "s341_p07",
+          "layerName": "ClinicalWorkflow",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s341_p04"]
+        },
+        {
+          "id": "s341_p08",
+          "layerName": "ClinicalWorkflow",
+          "justification": ["C6", "H2"],
+          "dependencies": [".s341_p05"]
+        },
+        {
+          "id": "s341_p09",
+          "layerName": "ClinicalWorkflow",
+          "justification": ["H1"],
+          "dependencies": [".s341_p06", ".s341_p07"]
+        },
+        {
+          "id": "s341_p10",
+          "layerName": "ClinicalWorkflow",
+          "justification": ["H2"],
+          "dependencies": [".s341_p08"]
+        },
+        {
+          "id": "s341_p11",
+          "layerName": "InteroperabilityHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s341_p07"]
+        },
+        {
+          "id": "s341_p12",
+          "layerName": "InteroperabilityHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s341_p08"]
+        },
+        {
+          "id": "s341_p13",
+          "layerName": "InteroperabilityHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s341_p11"]
+        },
+        {
+          "id": "s341_p14",
+          "layerName": "InteroperabilityHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s341_p09", ".s341_p12"]
+        },
+        {
+          "id": "s341_p15",
+          "layerName": "InteroperabilityHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s341_p13", ".s341_p14"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 342,
+    "project": "信用スコアリング AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 13,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S342",
+      "layers": [
+        {
+          "name": "FairnessInvariant",
+          "ordValue": 5,
+          "definition": "人種・性別・宗教等による差別禁止の絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 4,
+          "definition": "金融庁規制・貸金業法・公正信用報告法への適合",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "RiskPolicy",
+          "ordValue": 3,
+          "definition": "デフォルトリスク許容・担保評価・与信限度方針",
+          "derivedFrom": ["C4", "H1"]
+        },
+        {
+          "name": "ModelGovernance",
+          "ordValue": 2,
+          "definition": "モデル説明可能性・ドリフト検知・再学習方針",
+          "derivedFrom": ["C5", "H2", "H3"]
+        },
+        {
+          "name": "PredictionHypothesis",
+          "ordValue": 1,
+          "definition": "返済能力・行動特徴に基づく信用予測の推論仮説",
+          "derivedFrom": ["H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s342_p01",
+          "layerName": "FairnessInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s342_p02",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s342_p01"]
+        },
+        {
+          "id": "s342_p03",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s342_p01"]
+        },
+        {
+          "id": "s342_p04",
+          "layerName": "RiskPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s342_p02"]
+        },
+        {
+          "id": "s342_p05",
+          "layerName": "RiskPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s342_p03"]
+        },
+        {
+          "id": "s342_p06",
+          "layerName": "ModelGovernance",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s342_p04"]
+        },
+        {
+          "id": "s342_p07",
+          "layerName": "ModelGovernance",
+          "justification": ["H3"],
+          "dependencies": [".s342_p05"]
+        },
+        {
+          "id": "s342_p08",
+          "layerName": "ModelGovernance",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s342_p06", ".s342_p07"]
+        },
+        {
+          "id": "s342_p09",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s342_p06"]
+        },
+        {
+          "id": "s342_p10",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s342_p07"]
+        },
+        {
+          "id": "s342_p11",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s342_p09"]
+        },
+        {
+          "id": "s342_p12",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H4", "H6"],
+          "dependencies": [".s342_p08", ".s342_p10"]
+        },
+        {
+          "id": "s342_p13",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s342_p11", ".s342_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 343,
+    "project": "鉄道運行管理システム",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S343",
+      "layers": [
+        {
+          "name": "SafetyInvariant",
+          "ordValue": 4,
+          "definition": "乗客・乗務員・線路近接者の生命安全に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "鉄道事業法・国土交通省安全指針・信号保安規則への適合",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "ダイヤ管理・遅延回復・乗務員配置の運行方針",
+          "derivedFrom": ["C5", "C6", "H1", "H2"]
+        },
+        {
+          "name": "PredictiveHypothesis",
+          "ordValue": 1,
+          "definition": "混雑予測・故障予兆・最適ルート推論に関する仮説",
+          "derivedFrom": ["C7", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s343_p01",
+          "layerName": "SafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s343_p02",
+          "layerName": "SafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s343_p03",
+          "layerName": "SafetyInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s343_p01", ".s343_p02"]
+        },
+        {
+          "id": "s343_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s343_p01"]
+        },
+        {
+          "id": "s343_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s343_p02"]
+        },
+        {
+          "id": "s343_p06",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s343_p04", ".s343_p05"]
+        },
+        {
+          "id": "s343_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s343_p04"]
+        },
+        {
+          "id": "s343_p08",
+          "layerName": "OperationalPolicy",
+          "justification": ["C6", "H2"],
+          "dependencies": [".s343_p05"]
+        },
+        {
+          "id": "s343_p09",
+          "layerName": "OperationalPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s343_p06", ".s343_p07"]
+        },
+        {
+          "id": "s343_p10",
+          "layerName": "OperationalPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s343_p08"]
+        },
+        {
+          "id": "s343_p11",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["C7", "H3"],
+          "dependencies": [".s343_p07"]
+        },
+        {
+          "id": "s343_p12",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s343_p08"]
+        },
+        {
+          "id": "s343_p13",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s343_p09", ".s343_p11"]
+        },
+        {
+          "id": "s343_p14",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s343_p10", ".s343_p12"]
+        },
+        {
+          "id": "s343_p15",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s343_p13"]
+        },
+        {
+          "id": "s343_p16",
+          "layerName": "PredictiveHypothesis",
+          "justification": ["C7", "H5"],
+          "dependencies": [".s343_p14", ".s343_p15"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 344,
+    "project": "化学プラント安全管理システム",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S344",
+      "layers": [
+        {
+          "name": "HazardInvariant",
+          "ordValue": 5,
+          "definition": "爆発・毒性漏洩・火災による人命・環境への損害禁止の絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 4,
+          "definition": "高圧ガス保安法・労働安全衛生法・REACH規制への適合",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "SafetyPolicy",
+          "ordValue": 3,
+          "definition": "緊急停止・立入制限・防護装備着用の安全方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "ProcessControl",
+          "ordValue": 2,
+          "definition": "温度・圧力・流量の制御限界と自動調整方針",
+          "derivedFrom": ["C6", "C7", "H3", "H4"]
+        },
+        {
+          "name": "AnomalyHypothesis",
+          "ordValue": 1,
+          "definition": "異常予兆・設備劣化・反応暴走に関する推論仮説",
+          "derivedFrom": ["H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s344_p01",
+          "layerName": "HazardInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s344_p02",
+          "layerName": "HazardInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s344_p03",
+          "layerName": "HazardInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s344_p01", ".s344_p02"]
+        },
+        {
+          "id": "s344_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s344_p01"]
+        },
+        {
+          "id": "s344_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s344_p02"]
+        },
+        {
+          "id": "s344_p06",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s344_p04", ".s344_p05"]
+        },
+        {
+          "id": "s344_p07",
+          "layerName": "SafetyPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s344_p03"]
+        },
+        {
+          "id": "s344_p08",
+          "layerName": "SafetyPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s344_p04"]
+        },
+        {
+          "id": "s344_p09",
+          "layerName": "SafetyPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s344_p07", ".s344_p08"]
+        },
+        {
+          "id": "s344_p10",
+          "layerName": "ProcessControl",
+          "justification": ["C6", "H3"],
+          "dependencies": [".s344_p06"]
+        },
+        {
+          "id": "s344_p11",
+          "layerName": "ProcessControl",
+          "justification": ["C7", "H4"],
+          "dependencies": [".s344_p05"]
+        },
+        {
+          "id": "s344_p12",
+          "layerName": "ProcessControl",
+          "justification": ["H3"],
+          "dependencies": [".s344_p09", ".s344_p10"]
+        },
+        {
+          "id": "s344_p13",
+          "layerName": "ProcessControl",
+          "justification": ["H4"],
+          "dependencies": [".s344_p11"]
+        },
+        {
+          "id": "s344_p14",
+          "layerName": "AnomalyHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s344_p10"]
+        },
+        {
+          "id": "s344_p15",
+          "layerName": "AnomalyHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s344_p11"]
+        },
+        {
+          "id": "s344_p16",
+          "layerName": "AnomalyHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s344_p12", ".s344_p14"]
+        },
+        {
+          "id": "s344_p17",
+          "layerName": "AnomalyHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s344_p13", ".s344_p15"]
+        },
+        {
+          "id": "s344_p18",
+          "layerName": "AnomalyHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s344_p16", ".s344_p17"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 345,
+    "project": "脆弱性スキャナ",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S345",
+      "layers": [
+        {
+          "name": "SecurityInvariant",
+          "ordValue": 3,
+          "definition": "スキャン対象システムへの損害・データ漏洩禁止の絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "CompliancePolicy",
+          "ordValue": 2,
+          "definition": "CVSSスコアリング・開示ポリシー・スキャン認可要件の方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "DetectionHypothesis",
+          "ordValue": 1,
+          "definition": "既知CVE照合・ゼロデイ推論・設定不備検出に関する仮説",
+          "derivedFrom": ["C5", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s345_p01",
+          "layerName": "SecurityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s345_p02",
+          "layerName": "SecurityInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s345_p03",
+          "layerName": "CompliancePolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s345_p01"]
+        },
+        {
+          "id": "s345_p04",
+          "layerName": "CompliancePolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s345_p02"]
+        },
+        {
+          "id": "s345_p05",
+          "layerName": "CompliancePolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s345_p03", ".s345_p04"]
+        },
+        {
+          "id": "s345_p06",
+          "layerName": "DetectionHypothesis",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s345_p03"]
+        },
+        {
+          "id": "s345_p07",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s345_p04"]
+        },
+        {
+          "id": "s345_p08",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s345_p05", ".s345_p06"]
+        },
+        {
+          "id": "s345_p09",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s345_p07"]
+        },
+        {
+          "id": "s345_p10",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s345_p08", ".s345_p09"]
+        },
+        {
+          "id": "s345_p11",
+          "layerName": "DetectionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s345_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 346,
+    "project": "カリキュラム最適化 AI",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S346",
+      "layers": [
+        {
+          "name": "LearnerWelfare",
+          "ordValue": 4,
+          "definition": "学習者の心理的安全・過負荷防止に関する絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "EducationalPolicy",
+          "ordValue": 3,
+          "definition": "学習指導要領・単位認定・アクセシビリティ確保の教育方針",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "PersonalizationPolicy",
+          "ordValue": 2,
+          "definition": "個別学習経路・難易度調整・フィードバック頻度の方針",
+          "derivedFrom": ["C4", "C5", "H1", "H2"]
+        },
+        {
+          "name": "LearningHypothesis",
+          "ordValue": 1,
+          "definition": "習熟速度・記憶定着・動機維持に関するML推論仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s346_p01",
+          "layerName": "LearnerWelfare",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s346_p02",
+          "layerName": "EducationalPolicy",
+          "justification": ["C2"],
+          "dependencies": [".s346_p01"]
+        },
+        {
+          "id": "s346_p03",
+          "layerName": "EducationalPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s346_p01"]
+        },
+        {
+          "id": "s346_p04",
+          "layerName": "PersonalizationPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s346_p02"]
+        },
+        {
+          "id": "s346_p05",
+          "layerName": "PersonalizationPolicy",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s346_p03"]
+        },
+        {
+          "id": "s346_p06",
+          "layerName": "PersonalizationPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s346_p04", ".s346_p05"]
+        },
+        {
+          "id": "s346_p07",
+          "layerName": "LearningHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s346_p04"]
+        },
+        {
+          "id": "s346_p08",
+          "layerName": "LearningHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s346_p05"]
+        },
+        {
+          "id": "s346_p09",
+          "layerName": "LearningHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s346_p06", ".s346_p07"]
+        },
+        {
+          "id": "s346_p10",
+          "layerName": "LearningHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s346_p08"]
+        },
+        {
+          "id": "s346_p11",
+          "layerName": "LearningHypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s346_p09"]
+        },
+        {
+          "id": "s346_p12",
+          "layerName": "LearningHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s346_p10"]
+        },
+        {
+          "id": "s346_p13",
+          "layerName": "LearningHypothesis",
+          "justification": ["H6", "H7"],
+          "dependencies": [".s346_p11", ".s346_p12"]
+        },
+        {
+          "id": "s346_p14",
+          "layerName": "LearningHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s346_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 347,
+    "project": "風力発電配置最適化システム",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S347",
+      "layers": [
+        {
+          "name": "EnvironmentalInvariant",
+          "ordValue": 3,
+          "definition": "生態系保護・騒音規制・景観条例への適合の絶対不変条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "EnergyPolicy",
+          "ordValue": 2,
+          "definition": "発電効率目標・系統安定化・メンテナンス計画の方針",
+          "derivedFrom": ["C4", "C5", "H1", "H2", "H3"]
+        },
+        {
+          "name": "OptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "風況予測・タービン間干渉・土地利用効率に関する推論仮説",
+          "derivedFrom": ["C6", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s347_p01",
+          "layerName": "EnvironmentalInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s347_p02",
+          "layerName": "EnvironmentalInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s347_p03",
+          "layerName": "EnvironmentalInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s347_p01", ".s347_p02"]
+        },
+        {
+          "id": "s347_p04",
+          "layerName": "EnergyPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s347_p01"]
+        },
+        {
+          "id": "s347_p05",
+          "layerName": "EnergyPolicy",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s347_p02"]
+        },
+        {
+          "id": "s347_p06",
+          "layerName": "EnergyPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s347_p03", ".s347_p04"]
+        },
+        {
+          "id": "s347_p07",
+          "layerName": "EnergyPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s347_p05"]
+        },
+        {
+          "id": "s347_p08",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["C6", "H4"],
+          "dependencies": [".s347_p04"]
+        },
+        {
+          "id": "s347_p09",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s347_p05"]
+        },
+        {
+          "id": "s347_p10",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s347_p06", ".s347_p08"]
+        },
+        {
+          "id": "s347_p11",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s347_p07", ".s347_p09"]
+        },
+        {
+          "id": "s347_p12",
+          "layerName": "OptimizationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s347_p10", ".s347_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 348,
+    "project": "判例検索 AI",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 2,
+    "num_props": 8,
+    "num_deps": 6,
+    "model_spec": {
+      "namespace": "TestCoverage.S348",
+      "layers": [
+        {
+          "name": "LegalIntegrityInvariant",
+          "ordValue": 2,
+          "definition": "判例の改竄防止・著作権尊重・司法独立性保護の絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RetrievalHypothesis",
+          "ordValue": 1,
+          "definition": "判例類似度計算・法令解釈・関連性スコアリングの推論仮説",
+          "derivedFrom": ["C3", "C4", "H1", "H2", "H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s348_p01",
+          "layerName": "LegalIntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s348_p02",
+          "layerName": "LegalIntegrityInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s348_p03",
+          "layerName": "RetrievalHypothesis",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s348_p01"]
+        },
+        {
+          "id": "s348_p04",
+          "layerName": "RetrievalHypothesis",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s348_p02"]
+        },
+        {
+          "id": "s348_p05",
+          "layerName": "RetrievalHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s348_p03"]
+        },
+        {
+          "id": "s348_p06",
+          "layerName": "LegalIntegrityInvariant",
+          "justification": ["H4"],
+          "dependencies": [".s348_p04"]
+        },
+        {
+          "id": "s348_p07",
+          "layerName": "RetrievalHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s348_p03", ".s348_p05"]
+        },
+        {
+          "id": "s348_p08",
+          "layerName": "RetrievalHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s348_p06", ".s348_p07"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 349,
+    "project": "不動産価格予測システム",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S349",
+      "layers": [
+        {
+          "name": "FairnessInvariant",
+          "ordValue": 4,
+          "definition": "地域属性・人種的背景に基づく差別的評価禁止の絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "宅地建物取引業法・個人情報保護法・公正住宅法への適合",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "ValuationPolicy",
+          "ordValue": 2,
+          "definition": "価格帯定義・不確実性開示・更新頻度の評価方針",
+          "derivedFrom": ["C4", "C5", "H1", "H2"]
+        },
+        {
+          "name": "MarketHypothesis",
+          "ordValue": 1,
+          "definition": "地価変動・需給バランス・周辺施設影響に関する推論仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s349_p01",
+          "layerName": "FairnessInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s349_p02",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s349_p01"]
+        },
+        {
+          "id": "s349_p03",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s349_p01"]
+        },
+        {
+          "id": "s349_p04",
+          "layerName": "ValuationPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s349_p02"]
+        },
+        {
+          "id": "s349_p05",
+          "layerName": "ValuationPolicy",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s349_p03"]
+        },
+        {
+          "id": "s349_p06",
+          "layerName": "ValuationPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s349_p04", ".s349_p05"]
+        },
+        {
+          "id": "s349_p07",
+          "layerName": "MarketHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s349_p04"]
+        },
+        {
+          "id": "s349_p08",
+          "layerName": "MarketHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s349_p05"]
+        },
+        {
+          "id": "s349_p09",
+          "layerName": "MarketHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s349_p06", ".s349_p07"]
+        },
+        {
+          "id": "s349_p10",
+          "layerName": "MarketHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s349_p08"]
+        },
+        {
+          "id": "s349_p11",
+          "layerName": "MarketHypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s349_p09"]
+        },
+        {
+          "id": "s349_p12",
+          "layerName": "MarketHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s349_p10"]
+        },
+        {
+          "id": "s349_p13",
+          "layerName": "MarketHypothesis",
+          "justification": ["H6", "H7"],
+          "dependencies": [".s349_p11", ".s349_p12"]
+        },
+        {
+          "id": "s349_p14",
+          "layerName": "MarketHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s349_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 350,
+    "project": "天体観測スケジューリングシステム",
+    "num_c": 4,
+    "num_h": 8,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S350",
+      "layers": [
+        {
+          "name": "InstrumentSafetyInvariant",
+          "ordValue": 5,
+          "definition": "望遠鏡・検出器の物理的損傷防止に関する絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "ObservatoryPolicy",
+          "ordValue": 4,
+          "definition": "観測時間配分・光害規制・気象安全停止の運用方針",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "SciencePolicy",
+          "ordValue": 3,
+          "definition": "優先度付け・競合解決・公開データ要件の科学方針",
+          "derivedFrom": ["C4", "H1", "H2"]
+        },
+        {
+          "name": "SchedulingHypothesis",
+          "ordValue": 2,
+          "definition": "空き時間充填・制約充足・マルチ目標最適化に関する仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        },
+        {
+          "name": "AstronomyHypothesis",
+          "ordValue": 1,
+          "definition": "天体可視性・大気透明度・シーイング条件に関する推論仮説",
+          "derivedFrom": ["H6", "H7", "H8"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s350_p01",
+          "layerName": "InstrumentSafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s350_p02",
+          "layerName": "ObservatoryPolicy",
+          "justification": ["C2"],
+          "dependencies": [".s350_p01"]
+        },
+        {
+          "id": "s350_p03",
+          "layerName": "ObservatoryPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s350_p01"]
+        },
+        {
+          "id": "s350_p04",
+          "layerName": "SciencePolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s350_p02"]
+        },
+        {
+          "id": "s350_p05",
+          "layerName": "SciencePolicy",
+          "justification": ["H2"],
+          "dependencies": [".s350_p03"]
+        },
+        {
+          "id": "s350_p06",
+          "layerName": "SciencePolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s350_p04", ".s350_p05"]
+        },
+        {
+          "id": "s350_p07",
+          "layerName": "SchedulingHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s350_p04"]
+        },
+        {
+          "id": "s350_p08",
+          "layerName": "SchedulingHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s350_p05"]
+        },
+        {
+          "id": "s350_p09",
+          "layerName": "SchedulingHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s350_p06", ".s350_p07"]
+        },
+        {
+          "id": "s350_p10",
+          "layerName": "SchedulingHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s350_p08", ".s350_p09"]
+        },
+        {
+          "id": "s350_p11",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s350_p07"]
+        },
+        {
+          "id": "s350_p12",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s350_p08"]
+        },
+        {
+          "id": "s350_p13",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H8"],
+          "dependencies": [".s350_p09", ".s350_p11"]
+        },
+        {
+          "id": "s350_p14",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H6", "H7"],
+          "dependencies": [".s350_p10", ".s350_p12"]
+        },
+        {
+          "id": "s350_p15",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H8"],
+          "dependencies": [".s350_p13"]
+        },
+        {
+          "id": "s350_p16",
+          "layerName": "SchedulingHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s350_p14"]
+        },
+        {
+          "id": "s350_p17",
+          "layerName": "AstronomyHypothesis",
+          "justification": ["H7", "H8"],
+          "dependencies": [".s350_p15", ".s350_p16"]
+        }
+      ]
+    }
+  }
+]

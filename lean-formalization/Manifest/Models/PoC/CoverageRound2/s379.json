@@ -1,0 +1,244 @@
+{
+  "namespace": "TestCoverage.S379",
+  "layers": [
+    {
+      "name": "HumanLifeSafetyInvariant",
+      "ordValue": 5,
+      "definition": "建物倒壊・地盤崩壊による人命損失を防ぐ絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BuildingCodeCompliance",
+      "ordValue": 4,
+      "definition": "建築基準法・耐震設計規準への適合要件",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "HazardZoningPolicy",
+      "ordValue": 3,
+      "definition": "液状化危険度マップ・土地利用規制・避難計画策定の方針",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "SoilMechanicsModel",
+      "ordValue": 2,
+      "definition": "N値・粒度分布・地下水位による地盤評価モデル",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "LiquefactionPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "地震動強度・飽和度・繰返しせん断応力の予測仮説",
+      "derivedFrom": [
+        "C6",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s379_p01",
+      "layerName": "HumanLifeSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s379_p02",
+      "layerName": "HumanLifeSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s379_p03",
+      "layerName": "HumanLifeSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s379_p01",
+        ".s379_p02"
+      ]
+    },
+    {
+      "id": "s379_p04",
+      "layerName": "BuildingCodeCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s379_p01"
+      ]
+    },
+    {
+      "id": "s379_p05",
+      "layerName": "BuildingCodeCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s379_p03"
+      ]
+    },
+    {
+      "id": "s379_p06",
+      "layerName": "HazardZoningPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s379_p04"
+      ]
+    },
+    {
+      "id": "s379_p07",
+      "layerName": "HazardZoningPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s379_p05"
+      ]
+    },
+    {
+      "id": "s379_p08",
+      "layerName": "HazardZoningPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s379_p06",
+        ".s379_p07"
+      ]
+    },
+    {
+      "id": "s379_p09",
+      "layerName": "SoilMechanicsModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s379_p06"
+      ]
+    },
+    {
+      "id": "s379_p10",
+      "layerName": "SoilMechanicsModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s379_p07"
+      ]
+    },
+    {
+      "id": "s379_p11",
+      "layerName": "SoilMechanicsModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s379_p08",
+        ".s379_p09"
+      ]
+    },
+    {
+      "id": "s379_p12",
+      "layerName": "SoilMechanicsModel",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s379_p10",
+        ".s379_p11"
+      ]
+    },
+    {
+      "id": "s379_p13",
+      "layerName": "LiquefactionPredictionHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s379_p09"
+      ]
+    },
+    {
+      "id": "s379_p14",
+      "layerName": "LiquefactionPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s379_p10"
+      ]
+    },
+    {
+      "id": "s379_p15",
+      "layerName": "LiquefactionPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s379_p11"
+      ]
+    },
+    {
+      "id": "s379_p16",
+      "layerName": "LiquefactionPredictionHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s379_p12",
+        ".s379_p13",
+        ".s379_p14"
+      ]
+    },
+    {
+      "id": "s379_p17",
+      "layerName": "LiquefactionPredictionHypothesis",
+      "justification": [
+        "C6",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s379_p15",
+        ".s379_p16"
+      ]
+    },
+    {
+      "id": "s379_p18",
+      "layerName": "HazardZoningPolicy",
+      "justification": [
+        "H2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s379_p08",
+        ".s379_p14"
+      ]
+    }
+  ]
+}

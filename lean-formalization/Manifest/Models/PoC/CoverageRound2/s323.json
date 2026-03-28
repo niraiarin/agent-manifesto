@@ -1,0 +1,179 @@
+{
+  "namespace": "TestCoverage.S323",
+  "layers": [
+    {
+      "name": "safety_invariant",
+      "ordValue": 4,
+      "definition": "歩行者安全・緊急車両優先に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "regulatory_compliance",
+      "ordValue": 3,
+      "definition": "道路交通法・信号制御規定への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "ordValue": 2,
+      "definition": "信号制御運用方針・データ収集・フォールバック",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "C6",
+        "H1",
+        "H3"
+      ]
+    },
+    {
+      "name": "optimization_model",
+      "ordValue": 1,
+      "definition": "強化学習・グリーンウェーブ等の最適化モデル仮説",
+      "derivedFrom": [
+        "H2",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s323_p01",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s323_p02",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s323_p03",
+      "layerName": "safety_invariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s323_p01",
+        ".s323_p02"
+      ]
+    },
+    {
+      "id": "s323_p04",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s323_p02"
+      ]
+    },
+    {
+      "id": "s323_p05",
+      "layerName": "regulatory_compliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s323_p04"
+      ]
+    },
+    {
+      "id": "s323_p06",
+      "layerName": "operational_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s323_p05"
+      ]
+    },
+    {
+      "id": "s323_p07",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s323_p06"
+      ]
+    },
+    {
+      "id": "s323_p08",
+      "layerName": "operational_policy",
+      "justification": [
+        "C2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s323_p02"
+      ]
+    },
+    {
+      "id": "s323_p09",
+      "layerName": "operational_policy",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".s323_p01"
+      ]
+    },
+    {
+      "id": "s323_p10",
+      "layerName": "operational_policy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s323_p07",
+        ".s323_p08"
+      ]
+    },
+    {
+      "id": "s323_p11",
+      "layerName": "optimization_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s323_p07",
+        ".s323_p10"
+      ]
+    },
+    {
+      "id": "s323_p12",
+      "layerName": "optimization_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s323_p10"
+      ]
+    },
+    {
+      "id": "s323_p13",
+      "layerName": "optimization_model",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s323_p01"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "namespace": "TestCoverage.S361",
+  "layers": [
+    {
+      "name": "PatientSafety",
+      "ordValue": 4,
+      "definition": "リハビリ患者の身体的安全・二次障害防止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ClinicalCompliance",
+      "ordValue": 3,
+      "definition": "医師・理学療法士の指示・医療機器規制への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "TherapyPolicy",
+      "ordValue": 2,
+      "definition": "負荷調整・反復動作・疲労検知に基づくリハビリ方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "AdaptationHypothesis",
+      "ordValue": 1,
+      "definition": "患者回復曲線・動作パターン適応に関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s361_p01",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s361_p02",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s361_p03",
+      "layerName": "PatientSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s361_p01"
+      ]
+    },
+    {
+      "id": "s361_p04",
+      "layerName": "ClinicalCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s361_p01"
+      ]
+    },
+    {
+      "id": "s361_p05",
+      "layerName": "ClinicalCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s361_p02"
+      ]
+    },
+    {
+      "id": "s361_p06",
+      "layerName": "ClinicalCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s361_p04",
+        ".s361_p05"
+      ]
+    },
+    {
+      "id": "s361_p07",
+      "layerName": "TherapyPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s361_p04"
+      ]
+    },
+    {
+      "id": "s361_p08",
+      "layerName": "TherapyPolicy",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s361_p05"
+      ]
+    },
+    {
+      "id": "s361_p09",
+      "layerName": "TherapyPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s361_p03",
+        ".s361_p07"
+      ]
+    },
+    {
+      "id": "s361_p10",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s361_p07"
+      ]
+    },
+    {
+      "id": "s361_p11",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s361_p08"
+      ]
+    },
+    {
+      "id": "s361_p12",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s361_p09",
+        ".s361_p10"
+      ]
+    },
+    {
+      "id": "s361_p13",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s361_p11"
+      ]
+    },
+    {
+      "id": "s361_p14",
+      "layerName": "AdaptationHypothesis",
+      "justification": [
+        "H3",
+        "H7"
+      ],
+      "dependencies": [
+        ".s361_p12",
+        ".s361_p13"
+      ]
+    }
+  ]
+}

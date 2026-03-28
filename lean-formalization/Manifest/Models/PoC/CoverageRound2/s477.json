@@ -1,0 +1,150 @@
+{
+  "namespace": "TestCoverage.S477",
+  "layers": [
+    {
+      "name": "EnvironmentalComplianceInvariant",
+      "ordValue": 3,
+      "definition": "水質汚濁防止法・排水基準値遵守・行政報告の絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "TreatmentProcessPolicy",
+      "ordValue": 2,
+      "definition": "pH調整・凝集沈殿・活性汚泥処理の運転管理ポリシー",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "ProcessOptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "センサーデータからの処理効率予測と薬品投入最適化仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s477_p01",
+      "layerName": "EnvironmentalComplianceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s477_p02",
+      "layerName": "EnvironmentalComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s477_p03",
+      "layerName": "EnvironmentalComplianceInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s477_p01",
+        ".s477_p02"
+      ]
+    },
+    {
+      "id": "s477_p04",
+      "layerName": "TreatmentProcessPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s477_p01"
+      ]
+    },
+    {
+      "id": "s477_p05",
+      "layerName": "TreatmentProcessPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s477_p02"
+      ]
+    },
+    {
+      "id": "s477_p06",
+      "layerName": "TreatmentProcessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s477_p03",
+        ".s477_p04"
+      ]
+    },
+    {
+      "id": "s477_p07",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s477_p04"
+      ]
+    },
+    {
+      "id": "s477_p08",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s477_p05",
+        ".s477_p06"
+      ]
+    },
+    {
+      "id": "s477_p09",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s477_p07",
+        ".s477_p08"
+      ]
+    },
+    {
+      "id": "s477_p10",
+      "layerName": "TreatmentProcessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s477_p05",
+        ".s477_p06"
+      ]
+    },
+    {
+      "id": "s477_p11",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s477_p08",
+        ".s477_p09"
+      ]
+    }
+  ]
+}

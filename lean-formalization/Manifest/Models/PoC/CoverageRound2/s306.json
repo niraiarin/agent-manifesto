@@ -1,0 +1,176 @@
+{
+  "namespace": "TestCoverage.S306",
+  "layers": [
+    {
+      "name": "LifeSafetyInvariant",
+      "ordValue": 4,
+      "definition": "要救助者の生命を最優先する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EvacuationPolicy",
+      "ordValue": 3,
+      "definition": "避難経路決定・優先順位付け・情報発信の方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ResourceModel",
+      "ordValue": 2,
+      "definition": "救助資源・避難所キャパシティ・輸送手段の配分モデル",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DisasterHypothesis",
+      "ordValue": 1,
+      "definition": "被災規模推定・二次災害リスク予測に関する仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s306_p01",
+      "layerName": "LifeSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s306_p02",
+      "layerName": "LifeSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s306_p03",
+      "layerName": "EvacuationPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s306_p01"
+      ]
+    },
+    {
+      "id": "s306_p04",
+      "layerName": "EvacuationPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s306_p02"
+      ]
+    },
+    {
+      "id": "s306_p05",
+      "layerName": "EvacuationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s306_p03"
+      ]
+    },
+    {
+      "id": "s306_p06",
+      "layerName": "ResourceModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s306_p03"
+      ]
+    },
+    {
+      "id": "s306_p07",
+      "layerName": "ResourceModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s306_p04"
+      ]
+    },
+    {
+      "id": "s306_p08",
+      "layerName": "ResourceModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s306_p05",
+        ".s306_p06"
+      ]
+    },
+    {
+      "id": "s306_p09",
+      "layerName": "DisasterHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s306_p06"
+      ]
+    },
+    {
+      "id": "s306_p10",
+      "layerName": "DisasterHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s306_p07"
+      ]
+    },
+    {
+      "id": "s306_p11",
+      "layerName": "DisasterHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s306_p08",
+        ".s306_p09"
+      ]
+    },
+    {
+      "id": "s306_p12",
+      "layerName": "DisasterHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s306_p10"
+      ]
+    },
+    {
+      "id": "s306_p13",
+      "layerName": "DisasterHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s306_p11",
+        ".s306_p12"
+      ]
+    }
+  ]
+}

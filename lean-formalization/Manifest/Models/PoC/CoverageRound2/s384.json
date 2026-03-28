@@ -1,0 +1,159 @@
+{
+  "namespace": "TestCoverage.S384",
+  "layers": [
+    {
+      "name": "ServiceLevelInvariant",
+      "ordValue": 3,
+      "definition": "サービスレベルと在庫安全性に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C3",
+        "C5"
+      ]
+    },
+    {
+      "name": "ProcurementPolicy",
+      "ordValue": 2,
+      "definition": "発注・調達の運用ポリシーとリスク管理方針",
+      "derivedFrom": [
+        "C2",
+        "C4",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "需要予測モデルとコスト計算に関する最適化仮説",
+      "derivedFrom": [
+        "H1",
+        "H2"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s384_p01",
+      "layerName": "ServiceLevelInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s384_p02",
+      "layerName": "ServiceLevelInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s384_p03",
+      "layerName": "ServiceLevelInvariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s384_p01"
+      ]
+    },
+    {
+      "id": "s384_p04",
+      "layerName": "ProcurementPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s384_p01"
+      ]
+    },
+    {
+      "id": "s384_p05",
+      "layerName": "ProcurementPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s384_p02"
+      ]
+    },
+    {
+      "id": "s384_p06",
+      "layerName": "ProcurementPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s384_p02",
+        ".s384_p04"
+      ]
+    },
+    {
+      "id": "s384_p07",
+      "layerName": "ProcurementPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s384_p03"
+      ]
+    },
+    {
+      "id": "s384_p08",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s384_p01"
+      ]
+    },
+    {
+      "id": "s384_p09",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s384_p04"
+      ]
+    },
+    {
+      "id": "s384_p10",
+      "layerName": "ProcurementPolicy",
+      "justification": [
+        "C2",
+        "H2"
+      ],
+      "dependencies": [
+        ".s384_p09"
+      ]
+    },
+    {
+      "id": "s384_p11",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H1",
+        "H3"
+      ],
+      "dependencies": [
+        ".s384_p08",
+        ".s384_p06"
+      ]
+    },
+    {
+      "id": "s384_p12",
+      "layerName": "ServiceLevelInvariant",
+      "justification": [
+        "C1",
+        "C5"
+      ],
+      "dependencies": [
+        ".s384_p07",
+        ".s384_p11"
+      ]
+    }
+  ]
+}

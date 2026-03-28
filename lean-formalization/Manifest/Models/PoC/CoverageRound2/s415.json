@@ -1,0 +1,173 @@
+{
+  "namespace": "TestCoverage.S415",
+  "layers": [
+    {
+      "name": "RegulatoryMandate",
+      "ordValue": 3,
+      "definition": "金融庁・証券取引等監視委員会・国際会計基準に基づく法定監査義務",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AuditMethodology",
+      "ordValue": 2,
+      "definition": "リスクベースアプローチ・サンプリング・証跡収集に関する監査手法方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "IntelligenceEnhancement",
+      "ordValue": 1,
+      "definition": "パターン認識・異常検知・予測分析による監査効率向上仮説",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s415_p01",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s415_p02",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s415_p03",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s415_p04",
+      "layerName": "RegulatoryMandate",
+      "justification": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s415_p01",
+        ".s415_p02",
+        ".s415_p03"
+      ]
+    },
+    {
+      "id": "s415_p05",
+      "layerName": "AuditMethodology",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s415_p01"
+      ]
+    },
+    {
+      "id": "s415_p06",
+      "layerName": "AuditMethodology",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s415_p02",
+        ".s415_p03"
+      ]
+    },
+    {
+      "id": "s415_p07",
+      "layerName": "AuditMethodology",
+      "justification": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s415_p04",
+        ".s415_p05",
+        ".s415_p06"
+      ]
+    },
+    {
+      "id": "s415_p08",
+      "layerName": "IntelligenceEnhancement",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s415_p05"
+      ]
+    },
+    {
+      "id": "s415_p09",
+      "layerName": "IntelligenceEnhancement",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s415_p06"
+      ]
+    },
+    {
+      "id": "s415_p10",
+      "layerName": "IntelligenceEnhancement",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s415_p07"
+      ]
+    },
+    {
+      "id": "s415_p11",
+      "layerName": "IntelligenceEnhancement",
+      "justification": [
+        "C6",
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s415_p08",
+        ".s415_p09"
+      ]
+    },
+    {
+      "id": "s415_p12",
+      "layerName": "IntelligenceEnhancement",
+      "justification": [
+        "C6",
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s415_p10",
+        ".s415_p11"
+      ]
+    }
+  ]
+}

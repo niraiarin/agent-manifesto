@@ -1,0 +1,1555 @@
+[
+  {
+    "phase0": {
+      "vision": "ネットワーク・エンドポイントへの侵入をリアルタイムに検知し、攻撃パターンを自動分類して即時対応を支援するAI駆動セキュリティシステム。",
+      "stakeholders": "SOCアナリスト、CISO、システム管理者",
+      "priority": "見逃し（偽陰性）を最小化しつつ、アナリストの疲労を招く過剰アラートを抑制する"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: 既知攻撃シグネチャと未知の異常行動をどのように重み付けするか？",
+        "Q2: アラートのトリアージ自動化はどこまで許容されるか？",
+        "Q3: 誤検知率の許容上限はどの程度か？",
+        "Q4: インシデントレスポンスとの連携インターフェースは？"
+      ],
+      "answers": [
+        "A1: シグネチャ一致は高優先度、異常スコアは閾値超過で通知",
+        "A2: 低リスクアラートは自動クローズ可能、中・高リスクは人間確認必須",
+        "A3: 誤検知率5%以下を運用目標とする",
+        "A4: SIEM/SOAR との API 連携を必須とする"
+      ],
+      "C": [
+        {"id": "C1", "content": "既知攻撃シグネチャは高信頼度として扱い、即時アラートを発する"},
+        {"id": "C2", "content": "未知の異常行動は機械学習スコアリングで評価する"},
+        {"id": "C3", "content": "中リスク以上のアラートは人間アナリストが最終判断する"},
+        {"id": "C4", "content": "SIEM/SOAR との API 連携インターフェースを提供する"},
+        {"id": "C5", "content": "誤検知率5%以下を運用SLOとして維持する"},
+        {"id": "C6", "content": "全インシデントログは改ざん不可の形式で90日保持する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C2", "content": "異常スコアのベースラインは7日間の学習ウィンドウで更新すべき", "refutation": "攻撃キャンペーンが7日以上継続し学習データを汚染する場合"},
+        {"id": "H2", "basis": "C1,C2", "content": "シグネチャと異常スコアを組み合わせたアンサンブル判定が精度を高める", "refutation": "シグネチャが支配的で異常スコアが冗長になる場合"},
+        {"id": "H3", "basis": "C3", "content": "アナリスト判断履歴をフィードバックループとしてモデル改善に使う", "refutation": "アナリストのバイアスがモデルに転移する場合"},
+        {"id": "H4", "basis": "C5", "content": "低スコアイベントの自動クローズで誤検知削減が可能", "refutation": "攻撃者が低スコアで侵入し自動クローズを悪用する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 311,
+    "project": "侵入検知セキュリティシステム",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S311",
+      "layers": [
+        {
+          "name": "security_invariant",
+          "ordValue": 4,
+          "definition": "侵入検知の絶対要件。見逃しゼロ方針とログ保全",
+          "derivedFrom": ["C1", "C6"]
+        },
+        {
+          "name": "detection_policy",
+          "ordValue": 3,
+          "definition": "検知アルゴリズムの選択・運用方針。SLO定義",
+          "derivedFrom": ["C2", "C3", "C5"]
+        },
+        {
+          "name": "integration_model",
+          "ordValue": 2,
+          "definition": "外部SIEMとの連携・インターフェース仕様",
+          "derivedFrom": ["C4", "H2"]
+        },
+        {
+          "name": "learning_hypothesis",
+          "ordValue": 1,
+          "definition": "ML モデルの学習・更新に関する仮説",
+          "derivedFrom": ["H1", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s311_p01",
+          "layerName": "security_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s311_p02",
+          "layerName": "security_invariant",
+          "justification": ["C6"],
+          "dependencies": []
+        },
+        {
+          "id": "s311_p03",
+          "layerName": "detection_policy",
+          "justification": ["C2", "C5"],
+          "dependencies": [".s311_p01"]
+        },
+        {
+          "id": "s311_p04",
+          "layerName": "detection_policy",
+          "justification": ["C3"],
+          "dependencies": [".s311_p03"]
+        },
+        {
+          "id": "s311_p05",
+          "layerName": "detection_policy",
+          "justification": ["C5"],
+          "dependencies": [".s311_p03"]
+        },
+        {
+          "id": "s311_p06",
+          "layerName": "integration_model",
+          "justification": ["C4"],
+          "dependencies": [".s311_p04"]
+        },
+        {
+          "id": "s311_p07",
+          "layerName": "integration_model",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s311_p06"]
+        },
+        {
+          "id": "s311_p08",
+          "layerName": "learning_hypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s311_p03"]
+        },
+        {
+          "id": "s311_p09",
+          "layerName": "learning_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s311_p04", ".s311_p08"]
+        },
+        {
+          "id": "s311_p10",
+          "layerName": "learning_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s311_p05", ".s311_p08"]
+        },
+        {
+          "id": "s311_p11",
+          "layerName": "learning_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s311_p08", ".s311_p09"]
+        },
+        {
+          "id": "s311_p12",
+          "layerName": "security_invariant",
+          "justification": ["C6"],
+          "dependencies": [".s311_p02", ".s311_p07"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "学習者の習熟度・学習スタイル・進捗をリアルタイムに把握し、最適なコンテンツと難易度を動的に提示する適応型学習プラットフォーム。",
+      "stakeholders": "学習者（K12〜社会人）、教師・インストラクター、教育機関管理者",
+      "priority": "学習者ごとの理解度最大化。遅延・離脱を早期検知し介入する"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: 習熟度はどの指標で計測するか？",
+        "Q2: コンテンツ推薦は教師が介入できるか？",
+        "Q3: 学習データのプライバシー保護はどうするか？",
+        "Q4: 離脱予測モデルの精度要件は？"
+      ],
+      "answers": [
+        "A1: クイズ正答率・解答時間・再視聴回数を複合指標とする",
+        "A2: 教師はコンテンツをオーバーライドできる",
+        "A3: FERPA 準拠、学習データは教育目的のみに使用",
+        "A4: 離脱予測は2週間前に80%精度で検知"
+      ],
+      "C": [
+        {"id": "C1", "content": "習熟度は複合指標（正答率・解答時間・再視聴回数）で評価する"},
+        {"id": "C2", "content": "教師はAIのコンテンツ推薦をオーバーライドできる"},
+        {"id": "C3", "content": "学習データはFERPA準拠で保護し教育目的のみに使用する"},
+        {"id": "C4", "content": "離脱リスクを2週間前に検知して教師に通知する"},
+        {"id": "C5", "content": "コンテンツの難易度はBlooms分類法に基づいて段階化する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1", "content": "解答時間は習熟度の強いシグナルであり正答率より信頼性が高い", "refutation": "学習者が急いで解答する行動パターンが多い場合"},
+        {"id": "H2", "basis": "C4", "content": "ログイン頻度の低下が離脱の最も早期なシグナル", "refutation": "ログイン頻度が高くても非エンゲージメントが進行している場合"},
+        {"id": "H3", "basis": "C5", "content": "隣接する難易度ステップへの段階的移行が学習効果を最大化する", "refutation": "一部の学習者は大きなジャンプを好む場合"},
+        {"id": "H4", "basis": "C2,C5", "content": "教師オーバーライドの記録をモデル改善のフィードバックとして使う", "refutation": "教師の判断にも系統的バイアスがある場合"},
+        {"id": "H5", "basis": "C3", "content": "差分プライバシー技術で個人特定リスクを排除した集計分析が可能", "refutation": "差分プライバシーの精度コストが学習改善効果を上回る場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 312,
+    "project": "適応型学習プラットフォーム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S312",
+      "layers": [
+        {
+          "name": "privacy_invariant",
+          "ordValue": 4,
+          "definition": "FERPA準拠・学習データ保護の絶対要件",
+          "derivedFrom": ["C3"]
+        },
+        {
+          "name": "pedagogical_policy",
+          "ordValue": 3,
+          "definition": "学習設計・難易度設計・教師権限の方針",
+          "derivedFrom": ["C2", "C5"]
+        },
+        {
+          "name": "measurement_model",
+          "ordValue": 2,
+          "definition": "習熟度計測・離脱予測の方法論",
+          "derivedFrom": ["C1", "C4", "H1", "H2"]
+        },
+        {
+          "name": "optimization_hypothesis",
+          "ordValue": 1,
+          "definition": "推薦アルゴリズム・フィードバック利用の仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s312_p01",
+          "layerName": "privacy_invariant",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s312_p02",
+          "layerName": "privacy_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s312_p01"]
+        },
+        {
+          "id": "s312_p03",
+          "layerName": "pedagogical_policy",
+          "justification": ["C5"],
+          "dependencies": []
+        },
+        {
+          "id": "s312_p04",
+          "layerName": "pedagogical_policy",
+          "justification": ["C2"],
+          "dependencies": [".s312_p03"]
+        },
+        {
+          "id": "s312_p05",
+          "layerName": "measurement_model",
+          "justification": ["C1"],
+          "dependencies": [".s312_p01"]
+        },
+        {
+          "id": "s312_p06",
+          "layerName": "measurement_model",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s312_p05"]
+        },
+        {
+          "id": "s312_p07",
+          "layerName": "measurement_model",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s312_p05", ".s312_p06"]
+        },
+        {
+          "id": "s312_p08",
+          "layerName": "measurement_model",
+          "justification": ["C4"],
+          "dependencies": [".s312_p07"]
+        },
+        {
+          "id": "s312_p09",
+          "layerName": "optimization_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s312_p03", ".s312_p06"]
+        },
+        {
+          "id": "s312_p10",
+          "layerName": "optimization_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s312_p04", ".s312_p09"]
+        },
+        {
+          "id": "s312_p11",
+          "layerName": "optimization_hypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s312_p02", ".s312_p07"]
+        },
+        {
+          "id": "s312_p12",
+          "layerName": "optimization_hypothesis",
+          "justification": ["H1", "H3"],
+          "dependencies": [".s312_p06", ".s312_p09"]
+        },
+        {
+          "id": "s312_p13",
+          "layerName": "measurement_model",
+          "justification": ["H2"],
+          "dependencies": [".s312_p07"]
+        },
+        {
+          "id": "s312_p14",
+          "layerName": "optimization_hypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s312_p10", ".s312_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "航空管制官の意思決定を支援するAIシステム。飛行経路の競合検知、気象回避ルーティング、容量計画を自動化し、管制官の認知負荷を軽減する。",
+      "stakeholders": "航空管制官、航空会社オペレーション、国土交通省航空局",
+      "priority": "安全性最優先。システム提案は管制官が常に拒否・修正できる。誤警報よりも見逃しが致命的"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: AIの提案と管制官判断の権限分界はどこか？",
+        "Q2: 気象情報はリアルタイムでどう統合するか？",
+        "Q3: 複数機の経路競合をどのアルゴリズムで解決するか？",
+        "Q4: システム障害時のフォールバック手順は？"
+      ],
+      "answers": [
+        "A1: AIは提案のみ、最終判断・実行は管制官が行う",
+        "A2: 気象レーダー・METAR・SIGMETをリアルタイム融合",
+        "A3: 衝突回避はRASA準拠のルールベース、最適化は混合整数計画法",
+        "A4: AIダウン時は従来の音声誘導に即時切替、バックアップ手順を常時訓練"
+      ],
+      "C": [
+        {"id": "C1", "content": "AIは提案のみ提供し、最終判断・発話は管制官が行う"},
+        {"id": "C2", "content": "衝突回避はICAO RASA準拠のルールベースで保証する"},
+        {"id": "C3", "content": "気象情報はリアルタイム（1分以内）で統合する"},
+        {"id": "C4", "content": "AIシステム障害時は5秒以内に従来管制モードへ切替える"},
+        {"id": "C5", "content": "全AIアドバイスは理由と代替案を管制官に提示する"},
+        {"id": "C6", "content": "管制官の最終判断履歴を記録し事後分析に使用する"},
+        {"id": "C7", "content": "セクター容量はICAO基準に基づき動的に計算する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C3", "content": "気象予測は30分先まで信頼性が高く、それ以上は不確実性が急増する", "refutation": "AI予測精度が向上し60分先まで高精度になる場合"},
+        {"id": "H2", "basis": "C2,C5", "content": "ルールベースと最適化の組み合わせがシングルアプローチより優れる", "refutation": "LLM系のエンドツーエンド学習が規則体系を超える場合"},
+        {"id": "H3", "basis": "C7", "content": "セクター容量は気象・交通密度の関数として動的に変化する", "refutation": "静的上限が安全側として採用される規制が維持される場合"},
+        {"id": "H4", "basis": "C1,C6", "content": "管制官フィードバックによるオンライン学習がシステムを改善する", "refutation": "高ストレス環境下での管制官フィードバックが信頼性を欠く場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: weather_adaptation(気象適応提案)がfallback_procedure(フォールバック)に依存しているが、weather_adaptationはoperational_support(ord=2)、fallback_procedureはsafety_core(ord=4)に属しており、上位層の命題が下位層の命題に依存するのは単調性違反",
+          "from": "s313_p07 weather_adaptation (operational_support, ord=2)",
+          "to": "s313_p04 fallback_procedure (safety_core, ord=4)",
+          "fix": "weather_adaptationをsafety_coreに昇格、またはfallback_procedureへの依存を除去"
+        }
+      ]
+    },
+    "scenario_id": 313,
+    "project": "航空管制支援AI",
+    "num_c": 7,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S313",
+      "layers": [
+        {
+          "name": "safety_core",
+          "ordValue": 4,
+          "definition": "衝突回避・フォールバック手順の絶対安全要件",
+          "derivedFrom": ["C1", "C2", "C4"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "ICAO/RASA規制への適合要件",
+          "derivedFrom": ["C2", "C7"]
+        },
+        {
+          "name": "operational_support",
+          "ordValue": 2,
+          "definition": "管制官支援・気象統合・容量管理の運用機能",
+          "derivedFrom": ["C3", "C5", "C6", "H1"]
+        },
+        {
+          "name": "learning_hypothesis",
+          "ordValue": 1,
+          "definition": "AIモデル更新・フィードバック利用の仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s313_p01",
+          "layerName": "safety_core",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s313_p02",
+          "layerName": "safety_core",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s313_p03",
+          "layerName": "safety_core",
+          "justification": ["C2", "C4"],
+          "dependencies": [".s313_p02"]
+        },
+        {
+          "id": "s313_p04",
+          "layerName": "safety_core",
+          "justification": ["C4"],
+          "dependencies": [".s313_p01"]
+        },
+        {
+          "id": "s313_p05",
+          "layerName": "regulatory_compliance",
+          "justification": ["C2"],
+          "dependencies": [".s313_p02"]
+        },
+        {
+          "id": "s313_p06",
+          "layerName": "regulatory_compliance",
+          "justification": ["C7"],
+          "dependencies": [".s313_p05"]
+        },
+        {
+          "id": "s313_p07",
+          "layerName": "operational_support",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s313_p04"]
+        },
+        {
+          "id": "s313_p08",
+          "layerName": "operational_support",
+          "justification": ["C5"],
+          "dependencies": [".s313_p01", ".s313_p05"]
+        },
+        {
+          "id": "s313_p09",
+          "layerName": "operational_support",
+          "justification": ["C6"],
+          "dependencies": [".s313_p08"]
+        },
+        {
+          "id": "s313_p10",
+          "layerName": "operational_support",
+          "justification": ["C3"],
+          "dependencies": [".s313_p06", ".s313_p07"]
+        },
+        {
+          "id": "s313_p11",
+          "layerName": "learning_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s313_p05", ".s313_p08"]
+        },
+        {
+          "id": "s313_p12",
+          "layerName": "learning_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s313_p09", ".s313_p11"]
+        },
+        {
+          "id": "s313_p13",
+          "layerName": "learning_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s313_p06", ".s313_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "農場から食卓までの食品供給チェーン全体をブロックチェーンベースで追跡し、汚染源を48時間以内に特定・隔離できる食品安全トレーサビリティシステム。",
+      "stakeholders": "食品製造業者、流通業者、小売業者、消費者、食品安全規制当局",
+      "priority": "汚染発生時の迅速な回収・封じ込め。サプライチェーンの透明性確保"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: データ入力の信頼性をどう担保するか？",
+        "Q2: 中小企業の参加障壁をどう下げるか？",
+        "Q3: 汚染検知から回収指示までの自動化はどこまで可能か？",
+        "Q4: 消費者向け情報開示の粒度は？"
+      ],
+      "answers": [
+        "A1: IoTセンサー自動計測+QRコードスキャン+デジタル署名",
+        "A2: スマートフォンアプリとAPIで参加コストを最小化",
+        "A3: 汚染検知→影響ロット特定→回収指示は自動化、実行は人間承認",
+        "A4: 産地・製造日・輸送履歴を消費者に公開、詳細は業者のみ"
+      ],
+      "C": [
+        {"id": "C1", "content": "全食品ロットはブロックチェーンで改ざん不可な履歴を持つ"},
+        {"id": "C2", "content": "汚染検知から影響ロット特定まで48時間以内に完了する"},
+        {"id": "C3", "content": "回収指示の実行は規制当局または企業責任者が承認する"},
+        {"id": "C4", "content": "消費者は産地・製造日・輸送履歴をQRコードで参照できる"},
+        {"id": "C5", "content": "中小企業はスマートフォンアプリでシステムに参加できる"},
+        {"id": "C6", "content": "食品安全基準はコーデックスアリメンタリウス委員会の規格に準拠する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C2", "content": "グラフDBによる影響ロット連鎖分析が48時間目標を達成できる", "refutation": "サプライチェーンが複雑すぎてグラフ探索が指数爆発する場合"},
+        {"id": "H2", "basis": "C5", "content": "モバイルファーストのUXが農家・小規模業者の採用率を高める", "refutation": "農村部のネットワーク環境が参加障壁になる場合"},
+        {"id": "H3", "basis": "C4", "content": "QRコードスキャンによる消費者エンゲージメントが食品安全意識を向上させる", "refutation": "消費者の大半がQRコードを利用しない場合"},
+        {"id": "H4", "basis": "C6", "content": "AIによる規格適合自動チェックが審査コストを削減する", "refutation": "規格の解釈に曖昧性があり自動化が困難な場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 314,
+    "project": "食品安全トレーサビリティ",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S314",
+      "layers": [
+        {
+          "name": "food_safety_invariant",
+          "ordValue": 3,
+          "definition": "食品安全・回収手順の絶対要件",
+          "derivedFrom": ["C1", "C2", "C3", "C6"]
+        },
+        {
+          "name": "traceability_model",
+          "ordValue": 2,
+          "definition": "追跡・記録・照会の技術モデル",
+          "derivedFrom": ["C1", "C4", "C5", "H1"]
+        },
+        {
+          "name": "adoption_hypothesis",
+          "ordValue": 1,
+          "definition": "普及・活用に関する仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s314_p01",
+          "layerName": "food_safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s314_p02",
+          "layerName": "food_safety_invariant",
+          "justification": ["C2"],
+          "dependencies": [".s314_p01"]
+        },
+        {
+          "id": "s314_p03",
+          "layerName": "food_safety_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s314_p02"]
+        },
+        {
+          "id": "s314_p04",
+          "layerName": "food_safety_invariant",
+          "justification": ["C6"],
+          "dependencies": [".s314_p01"]
+        },
+        {
+          "id": "s314_p05",
+          "layerName": "traceability_model",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s314_p01"]
+        },
+        {
+          "id": "s314_p06",
+          "layerName": "traceability_model",
+          "justification": ["C4"],
+          "dependencies": [".s314_p05"]
+        },
+        {
+          "id": "s314_p07",
+          "layerName": "traceability_model",
+          "justification": ["C5"],
+          "dependencies": [".s314_p05"]
+        },
+        {
+          "id": "s314_p08",
+          "layerName": "traceability_model",
+          "justification": ["H1"],
+          "dependencies": [".s314_p02", ".s314_p05"]
+        },
+        {
+          "id": "s314_p09",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s314_p07"]
+        },
+        {
+          "id": "s314_p10",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s314_p06", ".s314_p09"]
+        },
+        {
+          "id": "s314_p11",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s314_p04", ".s314_p08"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "M&A・調達・雇用契約等の複雑な契約書を自動レビューし、リスク条項・法令違反・不利条件を検出して法務担当者の判断を支援するAIシステム。",
+      "stakeholders": "企業法務チーム、弁護士、調達部門担当者",
+      "priority": "リスク条項の見逃し防止。法令違反の検出精度。最終判断は必ず人間弁護士が行う"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: レビュー対象の契約書タイプと法域をどう定義するか？",
+        "Q2: リスク評価の根拠を弁護士にどう説明するか？",
+        "Q3: 機密契約書の情報セキュリティ要件は？",
+        "Q4: モデルの出力をどのような形式で法務ワークフローに統合するか？"
+      ],
+      "answers": [
+        "A1: M&A・NDA・調達契約を優先、日本法・EU法・米国法に対応",
+        "A2: 根拠条文・類似判例・条件変更提案を構造化して提示",
+        "A3: オンプレミスまたはプライベートクラウド、暗号化保存・転送",
+        "A4: Word/PDF注釈、リスクサマリーレポート、ワークフローAPI"
+      ],
+      "C": [
+        {"id": "C1", "content": "最終法的判断は必ず資格保有弁護士が行う"},
+        {"id": "C2", "content": "契約書データは顧客のプライベート環境内でのみ処理する"},
+        {"id": "C3", "content": "リスク検出には根拠条文・類似判例・修正提案を付与する"},
+        {"id": "C4", "content": "レビュー結果はWord/PDF注釈とワークフローAPIで提供する"},
+        {"id": "C5", "content": "モデルの誤りは訴訟リスクに直結するため誤検知より漏れを重視する"},
+        {"id": "C6", "content": "日本法・EU法（GDPR等）・米国法の三法域に対応する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C3,C5", "content": "条項レベルの埋め込み表現が文書レベルより高精度なリスク検出を実現する", "refutation": "契約書全体の文脈が局所条項だけでは判断できない場合"},
+        {"id": "H2", "basis": "C6", "content": "法域ごとのファインチューニングが汎用モデルより高精度", "refutation": "データ不足でファインチューニングが逆効果になる場合"},
+        {"id": "H3", "basis": "C1,C3", "content": "説明可能性（根拠提示）が弁護士の信頼と採用率を高める", "refutation": "説明生成が正確性を犠牲にする場合"},
+        {"id": "H4", "basis": "C4", "content": "既存法務ワークフローへのシームレスな統合が導入障壁を下げる", "refutation": "カスタム統合コストが標準化によるメリットを上回る場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 315,
+    "project": "契約書レビューAI",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S315",
+      "layers": [
+        {
+          "name": "legal_invariant",
+          "ordValue": 4,
+          "definition": "法的責任・人間最終判断の絶対要件",
+          "derivedFrom": ["C1", "C5"]
+        },
+        {
+          "name": "security_compliance",
+          "ordValue": 3,
+          "definition": "データ保護・法域対応の規制遵守要件",
+          "derivedFrom": ["C2", "C6"]
+        },
+        {
+          "name": "review_model",
+          "ordValue": 2,
+          "definition": "契約書解析・リスク検出・説明生成のモデル",
+          "derivedFrom": ["C3", "C4", "H1"]
+        },
+        {
+          "name": "adoption_hypothesis",
+          "ordValue": 1,
+          "definition": "弁護士採用・ワークフロー統合の仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s315_p01",
+          "layerName": "legal_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s315_p02",
+          "layerName": "legal_invariant",
+          "justification": ["C5"],
+          "dependencies": [".s315_p01"]
+        },
+        {
+          "id": "s315_p03",
+          "layerName": "security_compliance",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s315_p04",
+          "layerName": "security_compliance",
+          "justification": ["C6"],
+          "dependencies": [".s315_p03"]
+        },
+        {
+          "id": "s315_p05",
+          "layerName": "review_model",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s315_p02", ".s315_p04"]
+        },
+        {
+          "id": "s315_p06",
+          "layerName": "review_model",
+          "justification": ["C3"],
+          "dependencies": [".s315_p05"]
+        },
+        {
+          "id": "s315_p07",
+          "layerName": "review_model",
+          "justification": ["C4"],
+          "dependencies": [".s315_p05"]
+        },
+        {
+          "id": "s315_p08",
+          "layerName": "review_model",
+          "justification": ["H1"],
+          "dependencies": [".s315_p06"]
+        },
+        {
+          "id": "s315_p09",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s315_p04", ".s315_p08"]
+        },
+        {
+          "id": "s315_p10",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s315_p06", ".s315_p09"]
+        },
+        {
+          "id": "s315_p11",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s315_p07", ".s315_p10"]
+        },
+        {
+          "id": "s315_p12",
+          "layerName": "review_model",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s315_p02", ".s315_p08"]
+        },
+        {
+          "id": "s315_p13",
+          "layerName": "adoption_hypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s315_p10", ".s315_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "気象データ・衛星画像・電力需要パターンを統合した太陽光発電量予測AIシステム。電力グリッドの需給バランス計画と再エネ普及を支援する。",
+      "stakeholders": "電力系統オペレーター、太陽光発電事業者、電力トレーダー",
+      "priority": "24時間先予測精度の最大化。極端気象時の不確実性定量化"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: 予測精度の目標値と評価指標は？",
+        "Q2: 衛星画像データのラグタイムをどう扱うか？",
+        "Q3: モデルの不確実性をどう定量化して伝えるか？",
+        "Q4: 地域ごとの気候パターンの違いにどう対応するか？"
+      ],
+      "answers": [
+        "A1: RMSE 5%以下、特に日射量ゼロ〜ピーク遷移部の精度が重要",
+        "A2: 衛星データは1時間ラグ、気象レーダーは5分ラグで統合",
+        "A3: 予測区間（10/90パーセンタイル）をアウトプットに含める",
+        "A4: 地域クラスタリング+ローカルファインチューニング"
+      ],
+      "C": [
+        {"id": "C1", "content": "24時間先予測をRMSE 5%以下で提供する"},
+        {"id": "C2", "content": "予測には不確実性区間（10/90パーセンタイル）を付与する"},
+        {"id": "C3", "content": "気象レーダー・衛星画像・気温データを多源統合する"},
+        {"id": "C4", "content": "極端気象イベント（台風・豪雨）は専用モデルで処理する"},
+        {"id": "C5", "content": "電力系統オペレーターは予測をAPIで5分ごとに取得できる"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C3", "content": "衛星雲画像の時系列がNWPモデルより短期予測精度が高い", "refutation": "数値気象予報(NWP)がアンサンブルで衛星精度を超える場合"},
+        {"id": "H2", "basis": "C1,C4", "content": "極端気象専用モデルはクラスタリングによる転移学習で訓練できる", "refutation": "極端気象の訓練データが不足で過学習する場合"},
+        {"id": "H3", "basis": "C2", "content": "ConformalPredictionが不確実性定量化の最適手法", "refutation": "ベイズニューラルネット等が同等以上の精度を示す場合"},
+        {"id": "H4", "basis": "C5", "content": "ストリーミング推論アーキテクチャが5分更新の遅延要件を満たせる", "refutation": "モデルサイズが大きくバッチ処理しか現実的でない場合"},
+        {"id": "H5", "basis": "C3", "content": "地域クラスタリングにより単一グローバルモデルより精度が向上する", "refutation": "地域ラベルなしの自己教師あり学習が地域差を自然に学習する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 316,
+    "project": "太陽光発電予測",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 13,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S316",
+      "layers": [
+        {
+          "name": "accuracy_requirement",
+          "ordValue": 3,
+          "definition": "予測精度・不確実性定量化の要件",
+          "derivedFrom": ["C1", "C2", "C4"]
+        },
+        {
+          "name": "data_integration_model",
+          "ordValue": 2,
+          "definition": "多源データ統合・配信インターフェース",
+          "derivedFrom": ["C3", "C5", "H1"]
+        },
+        {
+          "name": "modeling_hypothesis",
+          "ordValue": 1,
+          "definition": "モデルアーキテクチャ・学習戦略の仮説",
+          "derivedFrom": ["H2", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s316_p01",
+          "layerName": "accuracy_requirement",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s316_p02",
+          "layerName": "accuracy_requirement",
+          "justification": ["C2"],
+          "dependencies": [".s316_p01"]
+        },
+        {
+          "id": "s316_p03",
+          "layerName": "accuracy_requirement",
+          "justification": ["C4"],
+          "dependencies": [".s316_p01"]
+        },
+        {
+          "id": "s316_p04",
+          "layerName": "data_integration_model",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s316_p01"]
+        },
+        {
+          "id": "s316_p05",
+          "layerName": "data_integration_model",
+          "justification": ["C5"],
+          "dependencies": [".s316_p04"]
+        },
+        {
+          "id": "s316_p06",
+          "layerName": "data_integration_model",
+          "justification": ["H1"],
+          "dependencies": [".s316_p04"]
+        },
+        {
+          "id": "s316_p07",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s316_p02", ".s316_p06"]
+        },
+        {
+          "id": "s316_p08",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s316_p03", ".s316_p06"]
+        },
+        {
+          "id": "s316_p09",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s316_p04", ".s316_p08"]
+        },
+        {
+          "id": "s316_p10",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s316_p05", ".s316_p09"]
+        },
+        {
+          "id": "s316_p11",
+          "layerName": "data_integration_model",
+          "justification": ["C3"],
+          "dependencies": [".s316_p04", ".s316_p06"]
+        },
+        {
+          "id": "s316_p12",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H2", "H5"],
+          "dependencies": [".s316_p08", ".s316_p09"]
+        },
+        {
+          "id": "s316_p13",
+          "layerName": "accuracy_requirement",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s316_p01", ".s316_p02"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "ICUに入院中の重症患者のバイタル・検査値・投薬履歴をリアルタイム統合し、急変・敗血症・臓器不全リスクを早期予測して医療チームに警告するAIシステム。",
+      "stakeholders": "集中治療医・ICU看護師、病院経営管理者、患者・家族",
+      "priority": "急変の見逃しゼロ。誤警報は看護師の疲弊を招くため最小化。全行動は医師の承認下で実行"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: 急変予測のリードタイムはどのくらいか？",
+        "Q2: 敗血症スコアリングはSOFAとqSOFAどちらを基準にするか？",
+        "Q3: 警報疲れをどう防ぐか？",
+        "Q4: 患者IDEとのデータ連携はどうするか？"
+      ],
+      "answers": [
+        "A1: 急変6時間前、敗血症12時間前の早期予測を目標",
+        "A2: SOFAをゴールドスタンダードとし、qSOFAで初期トリアージ",
+        "A3: 優先度スコアリングにより最重要アラートのみポップアップ",
+        "A4: HL7 FHIR R4準拠でEHRシステムと双方向連携"
+      ],
+      "C": [
+        {"id": "C1", "content": "急変を6時間前に予測し医療チームに警告する"},
+        {"id": "C2", "content": "全アラートの最終対応は担当医・担当看護師が承認する"},
+        {"id": "C3", "content": "敗血症スコアリングはSOFA基準に準拠する"},
+        {"id": "C4", "content": "HL7 FHIR R4準拠でEHRと双方向連携する"},
+        {"id": "C5", "content": "患者データは院内ネットワーク内でのみ処理しクラウド送信しない"},
+        {"id": "C6", "content": "アラート疲れを防ぐため優先度スコアリングで表示数を制御する"},
+        {"id": "C7", "content": "AIの予測根拠を臨床的に解釈可能な形式で医師に提示する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C3", "content": "バイタルの微細なトレンド変化が急変の最も早期なシグナル", "refutation": "検査値（乳酸値・プロカルシトニン）がより強い予測因子になる場合"},
+        {"id": "H2", "basis": "C6", "content": "アラートの文脈スコアリング（シフト内警報数・患者重症度）が疲れを軽減する", "refutation": "スコアリングロジックの複雑さが新たな操作ミスを招く場合"},
+        {"id": "H3", "basis": "C7", "content": "SHAP値による特徴重要度が臨床医に最も受け入れられる説明形式", "refutation": "臨床医が統計的説明より自然言語サマリーを好む場合"},
+        {"id": "H4", "basis": "C4,C5", "content": "オンプレミスFL(連合学習)が施設間モデル共有と患者プライバシーを両立できる", "refutation": "FL の通信オーバーヘッドがICU環境のリアルタイム性を損なう場合"},
+        {"id": "H5", "basis": "C1", "content": "マルチモーダル入力（バイタル+検査+投薬）の統合モデルが単一モダリティより優れる", "refutation": "投薬データのラグが統合モデルを不安定化する場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: federated_learning(連合学習)がsofa_scoring(SOFAスコアリング)に依存しているが、federated_learningはlearning_infrastructure(ord=1)、sofa_scoringはclinical_standard(ord=3)にあり、下位層が上位層の命題を参照する単調性違反",
+          "from": "s317_p12 federated_learning (learning_infrastructure, ord=1)",
+          "to": "s317_p03 sofa_scoring (clinical_standard, ord=3)",
+          "fix": "federated_learningをclinical_standardに昇格、またはsofa_scoringへの依存を除去"
+        }
+      ]
+    },
+    "scenario_id": 317,
+    "project": "ICU患者モニタリング",
+    "num_c": 7,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S317",
+      "layers": [
+        {
+          "name": "patient_safety_invariant",
+          "ordValue": 4,
+          "definition": "患者安全・人間最終判断・データローカリティの絶対要件",
+          "derivedFrom": ["C1", "C2", "C5"]
+        },
+        {
+          "name": "clinical_standard",
+          "ordValue": 3,
+          "definition": "臨床ガイドライン・標準スコアリングへの準拠",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "alert_model",
+          "ordValue": 2,
+          "definition": "アラート生成・優先度付け・説明生成のモデル",
+          "derivedFrom": ["C6", "C7", "H1", "H2", "H3"]
+        },
+        {
+          "name": "learning_infrastructure",
+          "ordValue": 1,
+          "definition": "モデル学習・更新・施設間共有の仮説",
+          "derivedFrom": ["H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s317_p01",
+          "layerName": "patient_safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s317_p02",
+          "layerName": "patient_safety_invariant",
+          "justification": ["C2"],
+          "dependencies": [".s317_p01"]
+        },
+        {
+          "id": "s317_p03",
+          "layerName": "clinical_standard",
+          "justification": ["C3"],
+          "dependencies": []
+        },
+        {
+          "id": "s317_p04",
+          "layerName": "clinical_standard",
+          "justification": ["C4"],
+          "dependencies": [".s317_p03"]
+        },
+        {
+          "id": "s317_p05",
+          "layerName": "patient_safety_invariant",
+          "justification": ["C5"],
+          "dependencies": []
+        },
+        {
+          "id": "s317_p06",
+          "layerName": "alert_model",
+          "justification": ["C6", "H2"],
+          "dependencies": [".s317_p01", ".s317_p03"]
+        },
+        {
+          "id": "s317_p07",
+          "layerName": "alert_model",
+          "justification": ["C7", "H3"],
+          "dependencies": [".s317_p02", ".s317_p06"]
+        },
+        {
+          "id": "s317_p08",
+          "layerName": "alert_model",
+          "justification": ["H1"],
+          "dependencies": [".s317_p03", ".s317_p06"]
+        },
+        {
+          "id": "s317_p09",
+          "layerName": "alert_model",
+          "justification": ["C6"],
+          "dependencies": [".s317_p06", ".s317_p08"]
+        },
+        {
+          "id": "s317_p10",
+          "layerName": "alert_model",
+          "justification": ["H2"],
+          "dependencies": [".s317_p07", ".s317_p09"]
+        },
+        {
+          "id": "s317_p11",
+          "layerName": "learning_infrastructure",
+          "justification": ["H5"],
+          "dependencies": [".s317_p08", ".s317_p09"]
+        },
+        {
+          "id": "s317_p12",
+          "layerName": "learning_infrastructure",
+          "justification": ["H4"],
+          "dependencies": [".s317_p03", ".s317_p05", ".s317_p11"]
+        },
+        {
+          "id": "s317_p13",
+          "layerName": "learning_infrastructure",
+          "justification": ["H5"],
+          "dependencies": [".s317_p11"]
+        },
+        {
+          "id": "s317_p14",
+          "layerName": "alert_model",
+          "justification": ["H3"],
+          "dependencies": [".s317_p07", ".s317_p10"]
+        },
+        {
+          "id": "s317_p15",
+          "layerName": "learning_infrastructure",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s317_p12", ".s317_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "暗号資産ポートフォリオのリスクを多角的に評価するAIシステム。市場リスク・流動性リスク・スマートコントラクトリスク・規制リスクを統合し、投資家と機関に評価レポートを提供する。",
+      "stakeholders": "機関投資家・ファンドマネージャー、個人投資家、暗号資産取引所、規制当局",
+      "priority": "リスクの見落としを防止。不確実性の透明な開示。規制変化への迅速な適応"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: リスク評価の時間軸は短期（1日）から長期（1年）まで対応するか？",
+        "Q2: スマートコントラクトの脆弱性評価はどう自動化するか？",
+        "Q3: 規制変化をリアルタイムで監視・反映する仕組みは？",
+        "Q4: ブラックスワンイベント（FTX破綻等）への対応は？"
+      ],
+      "answers": [
+        "A1: 1日・7日・30日・1年のマルチホライズン評価",
+        "A2: 静的解析ツール（Slither等）＋LLMによる異常パターン検知",
+        "A3: 規制ニュース監視エージェント＋弁護士レビューゲート",
+        "A4: テールリスクモデル（CVaR）と過去ブラックスワンシナリオの組み込み"
+      ],
+      "C": [
+        {"id": "C1", "content": "リスク評価は1日・7日・30日・1年のマルチホライズンで提供する"},
+        {"id": "C2", "content": "スマートコントラクトリスクは静的解析と異常パターン検知で評価する"},
+        {"id": "C3", "content": "規制変化は弁護士レビューを経てモデルに反映する"},
+        {"id": "C4", "content": "テールリスク（CVaR）を標準指標として不確実性を開示する"},
+        {"id": "C5", "content": "評価根拠と仮定を全ての利用者に透明に開示する"},
+        {"id": "C6", "content": "過去ブラックスワンイベントをシナリオとして組み込む"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C4", "content": "暗号資産の分布は裾が重く正規分布仮定は危険。CVaRが適切", "refutation": "ステーブルコインなど低ボラティリティ資産では正規分布が許容される場合"},
+        {"id": "H2", "basis": "C2", "content": "LLMによるスマートコントラクトレビューが既知の脆弱性パターンを高精度で検知できる", "refutation": "新規ゼロデイ脆弱性はLLMの訓練データに存在しない場合"},
+        {"id": "H3", "basis": "C6", "content": "過去危機の相関行列崩壊パターンが将来のシステミックリスクの前兆となる", "refutation": "暗号市場の構造変化で過去パターンが無効になる場合"},
+        {"id": "H4", "basis": "C3,C5", "content": "規制リスクのNLP分類は専門的な法律コーパスでファインチューニングすることで有効", "refutation": "規制の地域差・言語差が単一モデルの適用を困難にする場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 318,
+    "project": "暗号資産リスク評価",
+    "num_c": 6,
+    "num_h": 4,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S318",
+      "layers": [
+        {
+          "name": "disclosure_invariant",
+          "ordValue": 4,
+          "definition": "透明性・不確実性開示の絶対要件",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "regulatory_compliance",
+          "ordValue": 3,
+          "definition": "規制変化対応・法的レビュー要件",
+          "derivedFrom": ["C3"]
+        },
+        {
+          "name": "risk_model",
+          "ordValue": 2,
+          "definition": "市場・スマートコントラクト・テールリスクの評価モデル",
+          "derivedFrom": ["C1", "C2", "C6", "H1"]
+        },
+        {
+          "name": "analytical_hypothesis",
+          "ordValue": 1,
+          "definition": "リスク分析手法・モデル設計の仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s318_p01",
+          "layerName": "disclosure_invariant",
+          "justification": ["C4"],
+          "dependencies": []
+        },
+        {
+          "id": "s318_p02",
+          "layerName": "disclosure_invariant",
+          "justification": ["C5"],
+          "dependencies": [".s318_p01"]
+        },
+        {
+          "id": "s318_p03",
+          "layerName": "regulatory_compliance",
+          "justification": ["C3"],
+          "dependencies": [".s318_p02"]
+        },
+        {
+          "id": "s318_p04",
+          "layerName": "risk_model",
+          "justification": ["C1", "H1"],
+          "dependencies": [".s318_p01"]
+        },
+        {
+          "id": "s318_p05",
+          "layerName": "risk_model",
+          "justification": ["C2"],
+          "dependencies": [".s318_p04"]
+        },
+        {
+          "id": "s318_p06",
+          "layerName": "risk_model",
+          "justification": ["C6", "H3"],
+          "dependencies": [".s318_p04"]
+        },
+        {
+          "id": "s318_p07",
+          "layerName": "risk_model",
+          "justification": ["C4"],
+          "dependencies": [".s318_p04", ".s318_p06"]
+        },
+        {
+          "id": "s318_p08",
+          "layerName": "analytical_hypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s318_p04", ".s318_p07"]
+        },
+        {
+          "id": "s318_p09",
+          "layerName": "analytical_hypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s318_p05", ".s318_p08"]
+        },
+        {
+          "id": "s318_p10",
+          "layerName": "analytical_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s318_p06", ".s318_p08"]
+        },
+        {
+          "id": "s318_p11",
+          "layerName": "analytical_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s318_p03", ".s318_p09"]
+        },
+        {
+          "id": "s318_p12",
+          "layerName": "risk_model",
+          "justification": ["C2", "H2"],
+          "dependencies": [".s318_p05", ".s318_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "橋梁・ビル・ダム等の構造物に設置されたセンサー群からリアルタイムにデータを収集し、疲労・腐食・不同沈下・損傷を早期検知して予防保全を支援するAIシステム。",
+      "stakeholders": "土木構造物の所有者・管理者、保守会社、防災・減災担当機関",
+      "priority": "構造物崩壊の防止（見逃しゼロ）。予防保全による長寿命化。根拠ある警告と優先順位付け"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: どのセンサーデータを使用するか？",
+        "Q2: 損傷の閾値設定は誰が決めるか？",
+        "Q3: 多数の構造物を同時監視する際のスケーラビリティは？",
+        "Q4: 気象イベントの影響をどう分離するか？"
+      ],
+      "answers": [
+        "A1: 加速度計・ひずみゲージ・傾斜計・AEセンサーを基本セット",
+        "A2: 構造設計士が設計値から閾値を設定、AIがベースラインからの乖離を検知",
+        "A3: エッジ処理+クラウドの2層アーキテクチャでスケール",
+        "A4: 気象データとの相関モデルで環境由来変動を正規化"
+      ],
+      "C": [
+        {"id": "C1", "content": "損傷閾値は構造設計士が設計値に基づいて設定する"},
+        {"id": "C2", "content": "加速度計・ひずみゲージ・傾斜計・AEセンサーを基本計測セットとする"},
+        {"id": "C3", "content": "警告発令時は構造設計士による現地確認が必須"},
+        {"id": "C4", "content": "AIの診断には根拠となるセンサー値・パターンを付与する"},
+        {"id": "C5", "content": "エッジノードは通信断でも局所アラートを継続できる"},
+        {"id": "C6", "content": "ISO 13822（構造物評価の国際規格）に準拠した手順を採用する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C2", "content": "固有振動数の変化が損傷の最も信頼性の高い早期指標", "refutation": "荷重変化や温度変化が固有振動数変化を模倣する場合"},
+        {"id": "H2", "basis": "C1,C4", "content": "ベースラインからの乖離検知が絶対閾値より適応的で有効", "refutation": "ベースライン自体が劣化している場合に乖離が検知できない"},
+        {"id": "H3", "basis": "C5", "content": "エッジ軽量モデル（TinyML）がリアルタイム局所判断を実現できる", "refutation": "エッジのコンピューティングリソースが不十分な場合"},
+        {"id": "H4", "basis": "C2", "content": "気象データとの多変量相関モデルが環境ノイズを効果的に除去できる", "refutation": "気象センサーのラグタイムが構造センサーとのミスアライメントを招く場合"},
+        {"id": "H5", "basis": "C6", "content": "GraphNNが多点センサー間の空間的依存関係を最もよくモデル化できる", "refutation": "センサー配置の疎密が不均一でグラフ構造の仮定が成立しない場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 319,
+    "project": "建物構造健全性モニタリング",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S319",
+      "layers": [
+        {
+          "name": "structural_safety_invariant",
+          "ordValue": 4,
+          "definition": "構造崩壊防止・人間最終確認の絶対要件",
+          "derivedFrom": ["C1", "C3", "C6"]
+        },
+        {
+          "name": "measurement_standard",
+          "ordValue": 3,
+          "definition": "センサー構成・計測手順の標準",
+          "derivedFrom": ["C2", "C4"]
+        },
+        {
+          "name": "detection_model",
+          "ordValue": 2,
+          "definition": "損傷検知・診断・優先度付けのモデル",
+          "derivedFrom": ["C5", "H1", "H2", "H4"]
+        },
+        {
+          "name": "architecture_hypothesis",
+          "ordValue": 1,
+          "definition": "エッジ-クラウド構成・高度モデルの仮説",
+          "derivedFrom": ["H3", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s319_p01",
+          "layerName": "structural_safety_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s319_p02",
+          "layerName": "structural_safety_invariant",
+          "justification": ["C3"],
+          "dependencies": [".s319_p01"]
+        },
+        {
+          "id": "s319_p03",
+          "layerName": "structural_safety_invariant",
+          "justification": ["C6"],
+          "dependencies": [".s319_p01"]
+        },
+        {
+          "id": "s319_p04",
+          "layerName": "measurement_standard",
+          "justification": ["C2"],
+          "dependencies": [".s319_p01"]
+        },
+        {
+          "id": "s319_p05",
+          "layerName": "measurement_standard",
+          "justification": ["C4"],
+          "dependencies": [".s319_p04"]
+        },
+        {
+          "id": "s319_p06",
+          "layerName": "detection_model",
+          "justification": ["H1"],
+          "dependencies": [".s319_p04", ".s319_p05"]
+        },
+        {
+          "id": "s319_p07",
+          "layerName": "detection_model",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s319_p04", ".s319_p06"]
+        },
+        {
+          "id": "s319_p08",
+          "layerName": "detection_model",
+          "justification": ["H2"],
+          "dependencies": [".s319_p01", ".s319_p06"]
+        },
+        {
+          "id": "s319_p09",
+          "layerName": "detection_model",
+          "justification": ["H4"],
+          "dependencies": [".s319_p04", ".s319_p06"]
+        },
+        {
+          "id": "s319_p10",
+          "layerName": "detection_model",
+          "justification": ["H2"],
+          "dependencies": [".s319_p08", ".s319_p09"]
+        },
+        {
+          "id": "s319_p11",
+          "layerName": "architecture_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s319_p07"]
+        },
+        {
+          "id": "s319_p12",
+          "layerName": "architecture_hypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s319_p09", ".s319_p11"]
+        },
+        {
+          "id": "s319_p13",
+          "layerName": "detection_model",
+          "justification": ["H1", "H4"],
+          "dependencies": [".s319_p06", ".s319_p09"]
+        },
+        {
+          "id": "s319_p14",
+          "layerName": "architecture_hypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s319_p11", ".s319_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "phase0": {
+      "vision": "海域の気象・海流・水温・過去の漁獲データを統合し、魚種別・海域別の漁獲量を予測するAIシステム。漁業者の意思決定支援と水産資源の持続可能な管理を目的とする。",
+      "stakeholders": "漁業者・漁協、水産庁・水産研究所、流通・加工業者",
+      "priority": "予測精度よりも予測不確実性の適切な開示。乱獲防止のための保守的推定"
+    },
+    "phase1": {
+      "questions": [
+        "Q1: 予測対象魚種と海域の範囲は？",
+        "Q2: 資源評価モデルとAI予測モデルはどう統合するか？",
+        "Q3: 漁師の経験的知識をどうモデルに組み込むか？",
+        "Q4: 気候変動による長期的な資源変化をどう扱うか？"
+      ],
+      "answers": [
+        "A1: 主要水産種（マグロ・サバ・イカ等）、日本EEZ内の主要漁場",
+        "A2: 科学的資源評価(VPA等)をベースライン、AI予測を補助的に位置付け",
+        "A3: 漁師の目視観察・漁獲日誌データをクラウドソーシングで収集",
+        "A4: IPCCシナリオとの結合で30年先の分布変化を推定"
+      ],
+      "C": [
+        {"id": "C1", "content": "資源評価はVPA等の科学的手法をベースラインとし、AI予測を補助とする"},
+        {"id": "C2", "content": "漁獲上限推奨値は保守的に（資源評価の下限推定値ベースで）設定する"},
+        {"id": "C3", "content": "予測には不確実性区間を付与し過信を防ぐ"},
+        {"id": "C4", "content": "漁師の経験的観察データをクラウドソーシングで収集・統合する"},
+        {"id": "C5", "content": "水産庁の資源管理規制への準拠を確認する機能を持つ"},
+        {"id": "C6", "content": "IPCCシナリオと結合した30年先の分布変化予測を提供する"}
+      ],
+      "H": [
+        {"id": "H1", "basis": "C1,C3", "content": "アンサンブルモデル（物理モデル+ML）が単独モデルより予測信頼性が高い", "refutation": "アンサンブルの重み付けが困難でバイアスが増幅される場合"},
+        {"id": "H2", "basis": "C4", "content": "漁師の経験観察が衛星データが捉えられない局所情報を補完できる", "refutation": "観察バイアス（良好海域のみ報告）がデータを歪める場合"},
+        {"id": "H3", "basis": "C6", "content": "海水温の長期トレンドが魚種分布変化の最も強い予測変数", "refutation": "食物連鎖の変化や海流パターン変化がより支配的な場合"},
+        {"id": "H4", "basis": "C2,C3", "content": "ベイズ更新フレームワークが不確実性伝播と保守的推定を両立できる", "refutation": "事前分布の設定誤りがベイズ推定を過剰に偏らせる場合"},
+        {"id": "H5", "basis": "C5", "content": "規制準拠チェックの自動化が漁業者の申告コストを削減する", "refutation": "規制の解釈多様性が自動チェックを困難にする場合"}
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "scenario_id": 320,
+    "project": "漁獲量予測",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S320",
+      "layers": [
+        {
+          "name": "conservation_invariant",
+          "ordValue": 4,
+          "definition": "資源保護・保守的推定・規制準拠の絶対要件",
+          "derivedFrom": ["C1", "C2", "C5"]
+        },
+        {
+          "name": "uncertainty_policy",
+          "ordValue": 3,
+          "definition": "不確実性開示・科学的根拠提示の方針",
+          "derivedFrom": ["C3", "C1"]
+        },
+        {
+          "name": "data_integration_model",
+          "ordValue": 2,
+          "definition": "多源データ統合・長期予測モデルの構成",
+          "derivedFrom": ["C4", "C6", "H1", "H2"]
+        },
+        {
+          "name": "modeling_hypothesis",
+          "ordValue": 1,
+          "definition": "予測アーキテクチャ・統計手法の仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s320_p01",
+          "layerName": "conservation_invariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s320_p02",
+          "layerName": "conservation_invariant",
+          "justification": ["C2"],
+          "dependencies": [".s320_p01"]
+        },
+        {
+          "id": "s320_p03",
+          "layerName": "conservation_invariant",
+          "justification": ["C5"],
+          "dependencies": [".s320_p01"]
+        },
+        {
+          "id": "s320_p04",
+          "layerName": "uncertainty_policy",
+          "justification": ["C3"],
+          "dependencies": [".s320_p02"]
+        },
+        {
+          "id": "s320_p05",
+          "layerName": "uncertainty_policy",
+          "justification": ["C1", "C3"],
+          "dependencies": [".s320_p01", ".s320_p04"]
+        },
+        {
+          "id": "s320_p06",
+          "layerName": "data_integration_model",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s320_p04"]
+        },
+        {
+          "id": "s320_p07",
+          "layerName": "data_integration_model",
+          "justification": ["C6", "H3"],
+          "dependencies": [".s320_p05"]
+        },
+        {
+          "id": "s320_p08",
+          "layerName": "data_integration_model",
+          "justification": ["H1"],
+          "dependencies": [".s320_p05", ".s320_p06"]
+        },
+        {
+          "id": "s320_p09",
+          "layerName": "data_integration_model",
+          "justification": ["C4"],
+          "dependencies": [".s320_p06"]
+        },
+        {
+          "id": "s320_p10",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s320_p04", ".s320_p08"]
+        },
+        {
+          "id": "s320_p11",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s320_p07", ".s320_p10"]
+        },
+        {
+          "id": "s320_p12",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s320_p08", ".s320_p10"]
+        },
+        {
+          "id": "s320_p13",
+          "layerName": "modeling_hypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s320_p03", ".s320_p12"]
+        },
+        {
+          "id": "s320_p14",
+          "layerName": "data_integration_model",
+          "justification": ["H2"],
+          "dependencies": [".s320_p06", ".s320_p09"]
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,252 @@
+{
+  "namespace": "TestCoverage.S455",
+  "layers": [
+    {
+      "name": "TaxLegalInvariant",
+      "ordValue": 6,
+      "definition": "所得税法・法人税法・消費税法の強行規定。誤申告・脱税示唆は絶対禁止",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "PrivacyProtectionCompliance",
+      "ordValue": 5,
+      "definition": "個人情報保護法・マイナンバー法に基づく納税者情報取扱いの法的義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AdvisoryBoundaryPolicy",
+      "ordValue": 4,
+      "definition": "税理士法による非資格者の税務相談範囲制限。AIの助言限界の明示方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "DeductionClassificationRule",
+      "ordValue": 3,
+      "definition": "経費・控除・特例適用の分類ルール。通達・事例データベースに基づく",
+      "derivedFrom": [
+        "C5",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "OptimizationStrategyHypothesis",
+      "ordValue": 2,
+      "definition": "合法的節税手法・申告タイミング・繰越控除活用の最適化仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "UserInputValidationHypothesis",
+      "ordValue": 1,
+      "definition": "領収書OCR精度・入力値整合性・異常値検出に関する検証仮説",
+      "derivedFrom": [
+        "C6",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s455_p01",
+      "layerName": "TaxLegalInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s455_p02",
+      "layerName": "PrivacyProtectionCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s455_p01"
+      ]
+    },
+    {
+      "id": "s455_p03",
+      "layerName": "PrivacyProtectionCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s455_p01"
+      ]
+    },
+    {
+      "id": "s455_p04",
+      "layerName": "AdvisoryBoundaryPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s455_p02"
+      ]
+    },
+    {
+      "id": "s455_p05",
+      "layerName": "AdvisoryBoundaryPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s455_p02",
+        ".s455_p03"
+      ]
+    },
+    {
+      "id": "s455_p06",
+      "layerName": "AdvisoryBoundaryPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s455_p04",
+        ".s455_p05"
+      ]
+    },
+    {
+      "id": "s455_p07",
+      "layerName": "DeductionClassificationRule",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s455_p04"
+      ]
+    },
+    {
+      "id": "s455_p08",
+      "layerName": "DeductionClassificationRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s455_p05"
+      ]
+    },
+    {
+      "id": "s455_p09",
+      "layerName": "DeductionClassificationRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s455_p06",
+        ".s455_p07"
+      ]
+    },
+    {
+      "id": "s455_p10",
+      "layerName": "DeductionClassificationRule",
+      "justification": [
+        "C5",
+        "H2"
+      ],
+      "dependencies": [
+        ".s455_p08",
+        ".s455_p09"
+      ]
+    },
+    {
+      "id": "s455_p11",
+      "layerName": "OptimizationStrategyHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s455_p07",
+        ".s455_p09"
+      ]
+    },
+    {
+      "id": "s455_p12",
+      "layerName": "OptimizationStrategyHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s455_p10"
+      ]
+    },
+    {
+      "id": "s455_p13",
+      "layerName": "OptimizationStrategyHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s455_p11",
+        ".s455_p12"
+      ]
+    },
+    {
+      "id": "s455_p14",
+      "layerName": "UserInputValidationHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s455_p08"
+      ]
+    },
+    {
+      "id": "s455_p15",
+      "layerName": "UserInputValidationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s455_p11"
+      ]
+    },
+    {
+      "id": "s455_p16",
+      "layerName": "UserInputValidationHypothesis",
+      "justification": [
+        "C6",
+        "H6"
+      ],
+      "dependencies": [
+        ".s455_p14",
+        ".s455_p15"
+      ]
+    },
+    {
+      "id": "s455_p17",
+      "layerName": "UserInputValidationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s455_p12",
+        ".s455_p16"
+      ]
+    },
+    {
+      "id": "s455_p18",
+      "layerName": "UserInputValidationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s455_p13",
+        ".s455_p17"
+      ]
+    }
+  ]
+}

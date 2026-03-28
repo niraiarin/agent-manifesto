@@ -1,0 +1,1857 @@
+[
+  {
+    "scenario_id": 431,
+    "project": "スポーツ戦術分析 AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S431",
+      "layers": [
+        {
+          "name": "PhysicalConstraint",
+          "ordValue": 4,
+          "definition": "スポーツルール・フィジカル限界・競技規則の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "PerformanceBaseline",
+          "ordValue": 3,
+          "definition": "選手の能力指標・統計的パフォーマンス基準",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "TacticalPolicy",
+          "ordValue": 2,
+          "definition": "戦術選択・フォーメーション・プレースタイルの方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "MatchPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "対戦相手の行動・試合展開に関する予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s431_p01",
+          "layerName": "PhysicalConstraint",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s431_p02",
+          "layerName": "PhysicalConstraint",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s431_p03",
+          "layerName": "PhysicalConstraint",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s431_p01",
+            ".s431_p02"
+          ]
+        },
+        {
+          "id": "s431_p04",
+          "layerName": "PerformanceBaseline",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s431_p01"
+          ]
+        },
+        {
+          "id": "s431_p05",
+          "layerName": "PerformanceBaseline",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s431_p02"
+          ]
+        },
+        {
+          "id": "s431_p06",
+          "layerName": "PerformanceBaseline",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s431_p04",
+            ".s431_p05"
+          ]
+        },
+        {
+          "id": "s431_p07",
+          "layerName": "TacticalPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s431_p03"
+          ]
+        },
+        {
+          "id": "s431_p08",
+          "layerName": "TacticalPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s431_p04"
+          ]
+        },
+        {
+          "id": "s431_p09",
+          "layerName": "TacticalPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s431_p06",
+            ".s431_p07"
+          ]
+        },
+        {
+          "id": "s431_p10",
+          "layerName": "MatchPredictionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s431_p07"
+          ]
+        },
+        {
+          "id": "s431_p11",
+          "layerName": "MatchPredictionHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s431_p08",
+            ".s431_p09"
+          ]
+        },
+        {
+          "id": "s431_p12",
+          "layerName": "MatchPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s431_p10",
+            ".s431_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 432,
+    "project": "養殖場管理 AI",
+    "num_c": 4,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S432",
+      "layers": [
+        {
+          "name": "AquacultureRegulation",
+          "ordValue": 3,
+          "definition": "水産業法規・水質基準・環境保護法令への適合",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "BiologicalManagementPolicy",
+          "ordValue": 2,
+          "definition": "魚類健康管理・給餌プロトコル・密度制御の方針",
+          "derivedFrom": [
+            "C3",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "WaterQualityPredictionModel",
+          "ordValue": 1,
+          "definition": "溶存酸素・pH・アンモニア濃度の予測モデル仮説",
+          "derivedFrom": [
+            "C4",
+            "H3",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s432_p01",
+          "layerName": "AquacultureRegulation",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s432_p02",
+          "layerName": "AquacultureRegulation",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s432_p03",
+          "layerName": "BiologicalManagementPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s432_p01"
+          ]
+        },
+        {
+          "id": "s432_p04",
+          "layerName": "BiologicalManagementPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s432_p02"
+          ]
+        },
+        {
+          "id": "s432_p05",
+          "layerName": "BiologicalManagementPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s432_p03",
+            ".s432_p04"
+          ]
+        },
+        {
+          "id": "s432_p06",
+          "layerName": "WaterQualityPredictionModel",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s432_p03"
+          ]
+        },
+        {
+          "id": "s432_p07",
+          "layerName": "WaterQualityPredictionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s432_p04",
+            ".s432_p06"
+          ]
+        },
+        {
+          "id": "s432_p08",
+          "layerName": "WaterQualityPredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s432_p05",
+            ".s432_p07"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 433,
+    "project": "土壌分析 AI",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S433",
+      "layers": [
+        {
+          "name": "ChemicalLawInvariant",
+          "ordValue": 5,
+          "definition": "土壌化学・反応速度論・pH平衡の不変制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "EnvironmentalRegulation",
+          "ordValue": 4,
+          "definition": "土壌汚染対策法・農薬残留基準・重金属規制",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "SamplingAnalysisPolicy",
+          "ordValue": 3,
+          "definition": "土壌サンプリング手法・分析プロトコル・精度保証",
+          "derivedFrom": [
+            "C5",
+            "H1"
+          ]
+        },
+        {
+          "name": "NutrientModelHypothesis",
+          "ordValue": 2,
+          "definition": "窒素・リン・カリウムの作物吸収モデルに関する推論",
+          "derivedFrom": [
+            "C6",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "RecommendationAlgorithm",
+          "ordValue": 1,
+          "definition": "施肥量・改良材推奨アルゴリズムの仮説的選択",
+          "derivedFrom": [
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s433_p01",
+          "layerName": "ChemicalLawInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s433_p02",
+          "layerName": "ChemicalLawInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s433_p03",
+          "layerName": "ChemicalLawInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s433_p01",
+            ".s433_p02"
+          ]
+        },
+        {
+          "id": "s433_p04",
+          "layerName": "EnvironmentalRegulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s433_p01"
+          ]
+        },
+        {
+          "id": "s433_p05",
+          "layerName": "EnvironmentalRegulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s433_p02"
+          ]
+        },
+        {
+          "id": "s433_p06",
+          "layerName": "EnvironmentalRegulation",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s433_p04",
+            ".s433_p05"
+          ]
+        },
+        {
+          "id": "s433_p07",
+          "layerName": "SamplingAnalysisPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s433_p03"
+          ]
+        },
+        {
+          "id": "s433_p08",
+          "layerName": "SamplingAnalysisPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s433_p06"
+          ]
+        },
+        {
+          "id": "s433_p09",
+          "layerName": "SamplingAnalysisPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s433_p07",
+            ".s433_p08"
+          ]
+        },
+        {
+          "id": "s433_p10",
+          "layerName": "NutrientModelHypothesis",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s433_p07"
+          ]
+        },
+        {
+          "id": "s433_p11",
+          "layerName": "NutrientModelHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s433_p08"
+          ]
+        },
+        {
+          "id": "s433_p12",
+          "layerName": "NutrientModelHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s433_p09",
+            ".s433_p10"
+          ]
+        },
+        {
+          "id": "s433_p13",
+          "layerName": "NutrientModelHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s433_p11",
+            ".s433_p12"
+          ]
+        },
+        {
+          "id": "s433_p14",
+          "layerName": "RecommendationAlgorithm",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s433_p10"
+          ]
+        },
+        {
+          "id": "s433_p15",
+          "layerName": "RecommendationAlgorithm",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s433_p12",
+            ".s433_p14"
+          ]
+        },
+        {
+          "id": "s433_p16",
+          "layerName": "RecommendationAlgorithm",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s433_p13",
+            ".s433_p15"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 434,
+    "project": "収穫時期予測 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S434",
+      "layers": [
+        {
+          "name": "BiologicalGrowthInvariant",
+          "ordValue": 4,
+          "definition": "作物の生育ステージ・積算温度・生物学的成熟限界",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "MarketQualityStandard",
+          "ordValue": 3,
+          "definition": "出荷品質基準・糖度・硬度・外観規格",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "HarvestSchedulingPolicy",
+          "ordValue": 2,
+          "definition": "収穫作業計画・労働力配分・機械使用スケジュール",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "WeatherForecastHypothesis",
+          "ordValue": 1,
+          "definition": "気象予報・降雨確率・気温変動の予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s434_p01",
+          "layerName": "BiologicalGrowthInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s434_p02",
+          "layerName": "BiologicalGrowthInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s434_p03",
+          "layerName": "MarketQualityStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s434_p01"
+          ]
+        },
+        {
+          "id": "s434_p04",
+          "layerName": "MarketQualityStandard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s434_p02"
+          ]
+        },
+        {
+          "id": "s434_p05",
+          "layerName": "MarketQualityStandard",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s434_p03",
+            ".s434_p04"
+          ]
+        },
+        {
+          "id": "s434_p06",
+          "layerName": "HarvestSchedulingPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s434_p03"
+          ]
+        },
+        {
+          "id": "s434_p07",
+          "layerName": "HarvestSchedulingPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s434_p04"
+          ]
+        },
+        {
+          "id": "s434_p08",
+          "layerName": "HarvestSchedulingPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s434_p05",
+            ".s434_p06"
+          ]
+        },
+        {
+          "id": "s434_p09",
+          "layerName": "WeatherForecastHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s434_p06"
+          ]
+        },
+        {
+          "id": "s434_p10",
+          "layerName": "WeatherForecastHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s434_p07",
+            ".s434_p09"
+          ]
+        },
+        {
+          "id": "s434_p11",
+          "layerName": "WeatherForecastHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s434_p08",
+            ".s434_p10"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 435,
+    "project": "食品鮮度管理 AI",
+    "num_c": 4,
+    "num_h": 3,
+    "num_layers": 3,
+    "num_props": 7,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S435",
+      "layers": [
+        {
+          "name": "FoodSafetyInvariant",
+          "ordValue": 3,
+          "definition": "食品衛生法・HACCP・細菌増殖限界の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "StorageManagementPolicy",
+          "ordValue": 2,
+          "definition": "温度帯管理・湿度制御・先入先出原則の方針",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "FreshnessDecayHypothesis",
+          "ordValue": 1,
+          "definition": "品目別鮮度劣化速度・廃棄タイミングの予測仮説",
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s435_p01",
+          "layerName": "FoodSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s435_p02",
+          "layerName": "FoodSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s435_p03",
+          "layerName": "StorageManagementPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s435_p01"
+          ]
+        },
+        {
+          "id": "s435_p04",
+          "layerName": "StorageManagementPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s435_p02",
+            ".s435_p03"
+          ]
+        },
+        {
+          "id": "s435_p05",
+          "layerName": "FreshnessDecayHypothesis",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s435_p03"
+          ]
+        },
+        {
+          "id": "s435_p06",
+          "layerName": "FreshnessDecayHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s435_p04"
+          ]
+        },
+        {
+          "id": "s435_p07",
+          "layerName": "FreshnessDecayHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s435_p05",
+            ".s435_p06"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 436,
+    "project": "農薬散布最適化 AI",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 19,
+    "_monotonicity_violation": true,
+    "_violation_description": "意図的違反: s436_p03(ChemicalSafetyInvariant, ordValue=4)がs436_p12(PestPredictionHypothesis, ordValue=1)に依存するため、高層から低層への上向き依存が発生し単調性制約に違反する",
+    "model_spec": {
+      "namespace": "TestCoverage.S436",
+      "layers": [
+        {
+          "name": "ChemicalSafetyInvariant",
+          "ordValue": 4,
+          "definition": "農薬登録法・残留基準・作業者安全・環境毒性の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "EnvironmentalCompliancePolicy",
+          "ordValue": 3,
+          "definition": "生態系保護区・益虫保護・水源汚染防止の規制方針",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ApplicationSchedulePolicy",
+          "ordValue": 2,
+          "definition": "散布タイミング・散布量・薬剤選択の作業方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "PestPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "病害虫発生予測・抵抗性獲得確率の仮説モデル",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s436_p01",
+          "layerName": "ChemicalSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s436_p02",
+          "layerName": "ChemicalSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s436_p03",
+          "layerName": "ChemicalSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s436_p01",
+            ".s436_p02",
+            ".s436_p12"
+          ]
+        },
+        {
+          "id": "s436_p04",
+          "layerName": "EnvironmentalCompliancePolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s436_p01"
+          ]
+        },
+        {
+          "id": "s436_p05",
+          "layerName": "EnvironmentalCompliancePolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s436_p02"
+          ]
+        },
+        {
+          "id": "s436_p06",
+          "layerName": "EnvironmentalCompliancePolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s436_p04",
+            ".s436_p05"
+          ]
+        },
+        {
+          "id": "s436_p07",
+          "layerName": "ApplicationSchedulePolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s436_p01"
+          ]
+        },
+        {
+          "id": "s436_p08",
+          "layerName": "ApplicationSchedulePolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s436_p04"
+          ]
+        },
+        {
+          "id": "s436_p09",
+          "layerName": "ApplicationSchedulePolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s436_p06",
+            ".s436_p07"
+          ]
+        },
+        {
+          "id": "s436_p10",
+          "layerName": "ApplicationSchedulePolicy",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s436_p08",
+            ".s436_p09"
+          ]
+        },
+        {
+          "id": "s436_p11",
+          "layerName": "PestPredictionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s436_p07"
+          ]
+        },
+        {
+          "id": "s436_p12",
+          "layerName": "PestPredictionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s436_p08"
+          ]
+        },
+        {
+          "id": "s436_p13",
+          "layerName": "PestPredictionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s436_p11",
+            ".s436_p12"
+          ]
+        },
+        {
+          "id": "s436_p14",
+          "layerName": "PestPredictionHypothesis",
+          "justification": [
+            "H3",
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s436_p09",
+            ".s436_p13"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 437,
+    "project": "品種改良シミュレーション AI",
+    "num_c": 7,
+    "num_h": 8,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "TestCoverage.S437",
+      "layers": [
+        {
+          "name": "GeneticFundamentalLaw",
+          "ordValue": 6,
+          "definition": "メンデル遺伝則・DNA複製メカニズムの不変法則",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "BioethicsRegulation",
+          "ordValue": 5,
+          "definition": "遺伝子組換え規制・生物多様性条約・倫理審査基準",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "BreedingObjectivePolicy",
+          "ordValue": 4,
+          "definition": "目標形質の優先順位・育種目標・選抜基準の方針",
+          "derivedFrom": [
+            "C5",
+            "C6"
+          ]
+        },
+        {
+          "name": "SimulationModelPolicy",
+          "ordValue": 3,
+          "definition": "ゲノム選抜モデル・量的形質座位解析手法の選択",
+          "derivedFrom": [
+            "C7",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "PhenotypeExpressionModel",
+          "ordValue": 2,
+          "definition": "遺伝子型・環境相互作用・表現型発現の推論モデル",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "GenerationPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "世代進行・形質固定確率・育種年限の予測仮説",
+          "derivedFrom": [
+            "H6",
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s437_p01",
+          "layerName": "GeneticFundamentalLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s437_p02",
+          "layerName": "GeneticFundamentalLaw",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s437_p03",
+          "layerName": "BioethicsRegulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s437_p01"
+          ]
+        },
+        {
+          "id": "s437_p04",
+          "layerName": "BioethicsRegulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s437_p02"
+          ]
+        },
+        {
+          "id": "s437_p05",
+          "layerName": "BioethicsRegulation",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s437_p03",
+            ".s437_p04"
+          ]
+        },
+        {
+          "id": "s437_p06",
+          "layerName": "BreedingObjectivePolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s437_p03"
+          ]
+        },
+        {
+          "id": "s437_p07",
+          "layerName": "BreedingObjectivePolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s437_p04"
+          ]
+        },
+        {
+          "id": "s437_p08",
+          "layerName": "BreedingObjectivePolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s437_p06",
+            ".s437_p07"
+          ]
+        },
+        {
+          "id": "s437_p09",
+          "layerName": "SimulationModelPolicy",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".s437_p05"
+          ]
+        },
+        {
+          "id": "s437_p10",
+          "layerName": "SimulationModelPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s437_p06"
+          ]
+        },
+        {
+          "id": "s437_p11",
+          "layerName": "SimulationModelPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s437_p08",
+            ".s437_p09"
+          ]
+        },
+        {
+          "id": "s437_p12",
+          "layerName": "PhenotypeExpressionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s437_p09"
+          ]
+        },
+        {
+          "id": "s437_p13",
+          "layerName": "PhenotypeExpressionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s437_p10"
+          ]
+        },
+        {
+          "id": "s437_p14",
+          "layerName": "PhenotypeExpressionModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s437_p11",
+            ".s437_p12"
+          ]
+        },
+        {
+          "id": "s437_p15",
+          "layerName": "GenerationPredictionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s437_p12"
+          ]
+        },
+        {
+          "id": "s437_p16",
+          "layerName": "GenerationPredictionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s437_p13",
+            ".s437_p15"
+          ]
+        },
+        {
+          "id": "s437_p17",
+          "layerName": "GenerationPredictionHypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".s437_p14",
+            ".s437_p16"
+          ]
+        },
+        {
+          "id": "s437_p18",
+          "layerName": "GenerationPredictionHypothesis",
+          "justification": [
+            "H6",
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".s437_p15",
+            ".s437_p16",
+            ".s437_p17"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 438,
+    "project": "灌漑自動制御 AI",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 10,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S438",
+      "layers": [
+        {
+          "name": "WaterRightLegalInvariant",
+          "ordValue": 4,
+          "definition": "水利権・取水量上限・農業用水法令の絶対制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "CropWaterNeedStandard",
+          "ordValue": 3,
+          "definition": "作物蒸散量・根域水分・生育ステージ別必要水量基準",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "IrrigationSchedulePolicy",
+          "ordValue": 2,
+          "definition": "灌漑スケジュール・区画優先順位・節水目標の方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "SoilMoisturePredictionModel",
+          "ordValue": 1,
+          "definition": "土壌水分変動・浸透速度・蒸発散予測の仮説モデル",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s438_p01",
+          "layerName": "WaterRightLegalInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s438_p02",
+          "layerName": "WaterRightLegalInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s438_p03",
+          "layerName": "CropWaterNeedStandard",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s438_p01"
+          ]
+        },
+        {
+          "id": "s438_p04",
+          "layerName": "CropWaterNeedStandard",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s438_p02"
+          ]
+        },
+        {
+          "id": "s438_p05",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s438_p03"
+          ]
+        },
+        {
+          "id": "s438_p06",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s438_p04"
+          ]
+        },
+        {
+          "id": "s438_p07",
+          "layerName": "IrrigationSchedulePolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s438_p05",
+            ".s438_p06"
+          ]
+        },
+        {
+          "id": "s438_p08",
+          "layerName": "SoilMoisturePredictionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s438_p05"
+          ]
+        },
+        {
+          "id": "s438_p09",
+          "layerName": "SoilMoisturePredictionModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s438_p06",
+            ".s438_p08"
+          ]
+        },
+        {
+          "id": "s438_p10",
+          "layerName": "SoilMoisturePredictionModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s438_p07",
+            ".s438_p09"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 439,
+    "project": "フードロス予測 AI",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 10,
+    "_monotonicity_violation": true,
+    "_violation_description": "意図的違反: s439_p04(WasteReductionPolicy, ordValue=2)がs439_p06(DemandForecastHypothesis, ordValue=1)に依存するため、高層(ordValue=2)から低層(ordValue=1)への上向き依存が発生し単調性制約に違反する",
+    "model_spec": {
+      "namespace": "TestCoverage.S439",
+      "layers": [
+        {
+          "name": "FoodLossLegalInvariant",
+          "ordValue": 3,
+          "definition": "食品廃棄物削減法・食品ロス削減推進法への適合",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "WasteReductionPolicy",
+          "ordValue": 2,
+          "definition": "廃棄目標値・寄付プログラム・値下げタイミングの方針",
+          "derivedFrom": [
+            "C3",
+            "H1"
+          ]
+        },
+        {
+          "name": "DemandForecastHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測・販売速度・廃棄確率の統計的仮説モデル",
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s439_p01",
+          "layerName": "FoodLossLegalInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s439_p02",
+          "layerName": "FoodLossLegalInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s439_p03",
+          "layerName": "WasteReductionPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s439_p01"
+          ]
+        },
+        {
+          "id": "s439_p04",
+          "layerName": "WasteReductionPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s439_p03",
+            ".s439_p06"
+          ]
+        },
+        {
+          "id": "s439_p05",
+          "layerName": "DemandForecastHypothesis",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s439_p01"
+          ]
+        },
+        {
+          "id": "s439_p06",
+          "layerName": "DemandForecastHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s439_p05"
+          ]
+        },
+        {
+          "id": "s439_p07",
+          "layerName": "DemandForecastHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s439_p03"
+          ]
+        },
+        {
+          "id": "s439_p08",
+          "layerName": "DemandForecastHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s439_p06",
+            ".s439_p07"
+          ]
+        },
+        {
+          "id": "s439_p09",
+          "layerName": "DemandForecastHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s439_p04",
+            ".s439_p08"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 440,
+    "project": "帯域幅最適化 AI",
+    "num_c": 7,
+    "num_h": 8,
+    "num_layers": 7,
+    "num_props": 20,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "TestCoverage.S440",
+      "layers": [
+        {
+          "name": "PhysicalNetworkLaw",
+          "ordValue": 7,
+          "definition": "シャノン容量定理・電磁干渉法規・周波数割当の物理法則",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "TelecomRegulation",
+          "ordValue": 6,
+          "definition": "電気通信事業法・総務省周波数管理規制・SLA法的義務",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "QoSGuaranteeStandard",
+          "ordValue": 5,
+          "definition": "遅延・ジッタ・パケットロス率の品質保証基準",
+          "derivedFrom": [
+            "C5",
+            "C6"
+          ]
+        },
+        {
+          "name": "TrafficManagementPolicy",
+          "ordValue": 4,
+          "definition": "トラフィッククラス優先度・輻輳制御・ルーティングポリシー",
+          "derivedFrom": [
+            "C7",
+            "H1"
+          ]
+        },
+        {
+          "name": "ResourceAllocationPolicy",
+          "ordValue": 3,
+          "definition": "帯域幅割当アルゴリズム・動的再配分・利用率目標",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "PredictiveOptimizationModel",
+          "ordValue": 2,
+          "definition": "トラフィック需要予測・ボトルネック特定の推論モデル",
+          "derivedFrom": [
+            "H4",
+            "H5",
+            "H6"
+          ]
+        },
+        {
+          "name": "AdaptiveLearningHypothesis",
+          "ordValue": 1,
+          "definition": "利用パターン学習・自律的最適化に関する適応仮説",
+          "derivedFrom": [
+            "H7",
+            "H8"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s440_p01",
+          "layerName": "PhysicalNetworkLaw",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s440_p02",
+          "layerName": "PhysicalNetworkLaw",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s440_p03",
+          "layerName": "TelecomRegulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s440_p01"
+          ]
+        },
+        {
+          "id": "s440_p04",
+          "layerName": "TelecomRegulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s440_p02"
+          ]
+        },
+        {
+          "id": "s440_p05",
+          "layerName": "TelecomRegulation",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s440_p03",
+            ".s440_p04"
+          ]
+        },
+        {
+          "id": "s440_p06",
+          "layerName": "QoSGuaranteeStandard",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s440_p03"
+          ]
+        },
+        {
+          "id": "s440_p07",
+          "layerName": "QoSGuaranteeStandard",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s440_p04"
+          ]
+        },
+        {
+          "id": "s440_p08",
+          "layerName": "QoSGuaranteeStandard",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s440_p06",
+            ".s440_p07"
+          ]
+        },
+        {
+          "id": "s440_p09",
+          "layerName": "TrafficManagementPolicy",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".s440_p05"
+          ]
+        },
+        {
+          "id": "s440_p10",
+          "layerName": "TrafficManagementPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s440_p06",
+            ".s440_p09"
+          ]
+        },
+        {
+          "id": "s440_p11",
+          "layerName": "TrafficManagementPolicy",
+          "justification": [
+            "C7",
+            "H1"
+          ],
+          "dependencies": [
+            ".s440_p08",
+            ".s440_p10"
+          ]
+        },
+        {
+          "id": "s440_p12",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s440_p09"
+          ]
+        },
+        {
+          "id": "s440_p13",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s440_p10"
+          ]
+        },
+        {
+          "id": "s440_p14",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s440_p11",
+            ".s440_p12"
+          ]
+        },
+        {
+          "id": "s440_p15",
+          "layerName": "PredictiveOptimizationModel",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s440_p12"
+          ]
+        },
+        {
+          "id": "s440_p16",
+          "layerName": "PredictiveOptimizationModel",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s440_p13"
+          ]
+        },
+        {
+          "id": "s440_p17",
+          "layerName": "PredictiveOptimizationModel",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s440_p14",
+            ".s440_p15"
+          ]
+        },
+        {
+          "id": "s440_p18",
+          "layerName": "AdaptiveLearningHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s440_p15"
+          ]
+        },
+        {
+          "id": "s440_p19",
+          "layerName": "AdaptiveLearningHypothesis",
+          "justification": [
+            "H8"
+          ],
+          "dependencies": [
+            ".s440_p16",
+            ".s440_p18"
+          ]
+        },
+        {
+          "id": "s440_p20",
+          "layerName": "AdaptiveLearningHypothesis",
+          "justification": [
+            "H7",
+            "H8"
+          ],
+          "dependencies": [
+            ".s440_p17",
+            ".s440_p19"
+          ]
+        }
+      ]
+    }
+  }
+]

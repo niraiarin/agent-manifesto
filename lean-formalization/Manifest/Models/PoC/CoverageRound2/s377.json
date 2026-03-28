@@ -1,0 +1,192 @@
+{
+  "namespace": "TestCoverage.S377",
+  "layers": [
+    {
+      "name": "DownstreamSafetyInvariant",
+      "ordValue": 4,
+      "definition": "下流住民・インフラの浸水被害防止に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "DamOperationRegulation",
+      "ordValue": 3,
+      "definition": "河川法・操作規則・放流量制限の法的要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "FloodDischargePolicy",
+      "ordValue": 2,
+      "definition": "予備放流・段階的増量・警報発令タイミングの方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "HydrologicalModelHypothesis",
+      "ordValue": 1,
+      "definition": "流入量予測・貯水位変化・下流河道伝播の推論仮説",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s377_p01",
+      "layerName": "DownstreamSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s377_p02",
+      "layerName": "DownstreamSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s377_p03",
+      "layerName": "DownstreamSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s377_p01",
+        ".s377_p02"
+      ]
+    },
+    {
+      "id": "s377_p04",
+      "layerName": "DamOperationRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s377_p01"
+      ]
+    },
+    {
+      "id": "s377_p05",
+      "layerName": "DamOperationRegulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s377_p02"
+      ]
+    },
+    {
+      "id": "s377_p06",
+      "layerName": "DamOperationRegulation",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s377_p03",
+        ".s377_p04"
+      ]
+    },
+    {
+      "id": "s377_p07",
+      "layerName": "FloodDischargePolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s377_p04"
+      ]
+    },
+    {
+      "id": "s377_p08",
+      "layerName": "FloodDischargePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s377_p05"
+      ]
+    },
+    {
+      "id": "s377_p09",
+      "layerName": "FloodDischargePolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s377_p06",
+        ".s377_p07"
+      ]
+    },
+    {
+      "id": "s377_p10",
+      "layerName": "HydrologicalModelHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s377_p07"
+      ]
+    },
+    {
+      "id": "s377_p11",
+      "layerName": "HydrologicalModelHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s377_p08"
+      ]
+    },
+    {
+      "id": "s377_p12",
+      "layerName": "HydrologicalModelHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s377_p09",
+        ".s377_p10"
+      ]
+    },
+    {
+      "id": "s377_p13",
+      "layerName": "HydrologicalModelHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s377_p10",
+        ".s377_p11"
+      ]
+    },
+    {
+      "id": "s377_p14",
+      "layerName": "HydrologicalModelHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s377_p12",
+        ".s377_p13"
+      ]
+    }
+  ]
+}

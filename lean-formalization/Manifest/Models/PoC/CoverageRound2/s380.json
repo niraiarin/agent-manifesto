@@ -1,0 +1,280 @@
+{
+  "namespace": "TestCoverage.S380",
+  "layers": [
+    {
+      "name": "PatientSafetyInvariant",
+      "ordValue": 7,
+      "definition": "臨床試験での患者安全・毒性回避に関する絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "DrugRegulatoryApproval",
+      "ordValue": 6,
+      "definition": "PMDA・FDA・EMA承認要件・GLP準拠の適合条件",
+      "derivedFrom": [
+        "C2"
+      ]
+    },
+    {
+      "name": "IntellectualPropertyPolicy",
+      "ordValue": 5,
+      "definition": "特許回避・企業秘密保護・オープンサイエンス方針",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "TargetValidationPolicy",
+      "ordValue": 4,
+      "definition": "疾患標的選定・バインディング部位・選択性要件の方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "MolecularDockingModel",
+      "ordValue": 3,
+      "definition": "結合親和性スコアリング・conformational sampling のモデル",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "StructurePredictionModel",
+      "ordValue": 2,
+      "definition": "一次配列から三次構造予測・ドメイン境界推定のモデル",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "SequenceEmbeddingHypothesis",
+      "ordValue": 1,
+      "definition": "進化情報・共変動解析・言語モデル埋め込みの仮説",
+      "derivedFrom": [
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s380_p01",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s380_p02",
+      "layerName": "DrugRegulatoryApproval",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s380_p01"
+      ]
+    },
+    {
+      "id": "s380_p03",
+      "layerName": "IntellectualPropertyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s380_p01"
+      ]
+    },
+    {
+      "id": "s380_p04",
+      "layerName": "IntellectualPropertyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s380_p02"
+      ]
+    },
+    {
+      "id": "s380_p05",
+      "layerName": "TargetValidationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s380_p02"
+      ]
+    },
+    {
+      "id": "s380_p06",
+      "layerName": "TargetValidationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s380_p03",
+        ".s380_p05"
+      ]
+    },
+    {
+      "id": "s380_p07",
+      "layerName": "TargetValidationPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s380_p04",
+        ".s380_p05",
+        ".s380_p06"
+      ]
+    },
+    {
+      "id": "s380_p08",
+      "layerName": "MolecularDockingModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s380_p05"
+      ]
+    },
+    {
+      "id": "s380_p09",
+      "layerName": "MolecularDockingModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s380_p06"
+      ]
+    },
+    {
+      "id": "s380_p10",
+      "layerName": "MolecularDockingModel",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s380_p07",
+        ".s380_p08",
+        ".s380_p09"
+      ]
+    },
+    {
+      "id": "s380_p11",
+      "layerName": "StructurePredictionModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s380_p08"
+      ]
+    },
+    {
+      "id": "s380_p12",
+      "layerName": "StructurePredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s380_p09"
+      ]
+    },
+    {
+      "id": "s380_p13",
+      "layerName": "StructurePredictionModel",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s380_p10",
+        ".s380_p11"
+      ]
+    },
+    {
+      "id": "s380_p14",
+      "layerName": "StructurePredictionModel",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s380_p12",
+        ".s380_p13"
+      ]
+    },
+    {
+      "id": "s380_p15",
+      "layerName": "SequenceEmbeddingHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s380_p11"
+      ]
+    },
+    {
+      "id": "s380_p16",
+      "layerName": "SequenceEmbeddingHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s380_p12"
+      ]
+    },
+    {
+      "id": "s380_p17",
+      "layerName": "SequenceEmbeddingHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s380_p13",
+        ".s380_p15"
+      ]
+    },
+    {
+      "id": "s380_p18",
+      "layerName": "SequenceEmbeddingHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s380_p14",
+        ".s380_p16"
+      ]
+    },
+    {
+      "id": "s380_p19",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s380_p15"
+      ]
+    },
+    {
+      "id": "s380_p20",
+      "layerName": "DrugRegulatoryApproval",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s380_p17",
+        ".s380_p18"
+      ]
+    }
+  ]
+}

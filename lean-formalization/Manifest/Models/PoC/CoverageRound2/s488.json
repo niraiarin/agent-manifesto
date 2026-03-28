@@ -1,0 +1,204 @@
+{
+  "namespace": "TestCoverage.S488",
+  "layers": [
+    {
+      "name": "LegalAccuracyInvariant",
+      "ordValue": 4,
+      "definition": "法令情報の誤りが業務違反を招くことを防ぐ絶対正確性要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryUpdatePolicy",
+      "ordValue": 3,
+      "definition": "法改正・ガイドライン更新の即時反映・バージョン管理方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "LearnerAdaptationModel",
+      "ordValue": 2,
+      "definition": "受講者の理解度・職種・リスク領域に応じた研修カスタマイズ",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "KnowledgeRetentionHypothesis",
+      "ordValue": 1,
+      "definition": "繰り返し学習・事例演習・定期テストによる定着率向上仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s488_p01",
+      "layerName": "LegalAccuracyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s488_p02",
+      "layerName": "LegalAccuracyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s488_p03",
+      "layerName": "LegalAccuracyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s488_p01",
+        ".s488_p02"
+      ]
+    },
+    {
+      "id": "s488_p04",
+      "layerName": "RegulatoryUpdatePolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s488_p01"
+      ]
+    },
+    {
+      "id": "s488_p05",
+      "layerName": "RegulatoryUpdatePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s488_p03"
+      ]
+    },
+    {
+      "id": "s488_p06",
+      "layerName": "RegulatoryUpdatePolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s488_p04",
+        ".s488_p05"
+      ]
+    },
+    {
+      "id": "s488_p07",
+      "layerName": "LearnerAdaptationModel",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s488_p04"
+      ]
+    },
+    {
+      "id": "s488_p08",
+      "layerName": "LearnerAdaptationModel",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s488_p05"
+      ]
+    },
+    {
+      "id": "s488_p09",
+      "layerName": "LearnerAdaptationModel",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s488_p06",
+        ".s488_p07"
+      ]
+    },
+    {
+      "id": "s488_p10",
+      "layerName": "LearnerAdaptationModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s488_p07",
+        ".s488_p08"
+      ]
+    },
+    {
+      "id": "s488_p11",
+      "layerName": "KnowledgeRetentionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s488_p09"
+      ]
+    },
+    {
+      "id": "s488_p12",
+      "layerName": "KnowledgeRetentionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s488_p10"
+      ]
+    },
+    {
+      "id": "s488_p13",
+      "layerName": "KnowledgeRetentionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s488_p09",
+        ".s488_p11"
+      ]
+    },
+    {
+      "id": "s488_p14",
+      "layerName": "KnowledgeRetentionHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s488_p11",
+        ".s488_p12"
+      ]
+    },
+    {
+      "id": "s488_p15",
+      "layerName": "KnowledgeRetentionHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s488_p13",
+        ".s488_p14"
+      ]
+    }
+  ]
+}

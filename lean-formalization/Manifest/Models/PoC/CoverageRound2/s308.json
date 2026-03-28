@@ -1,0 +1,139 @@
+{
+  "namespace": "TestCoverage.S308",
+  "layers": [
+    {
+      "name": "IntegrityInvariant",
+      "ordValue": 3,
+      "definition": "試験公平性・不正行為ゼロに関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PrivacyPolicy",
+      "ordValue": 2,
+      "definition": "受験者プライバシー保護・データ保持制限方針（GDPR準拠）",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ProctorHypothesis",
+      "ordValue": 1,
+      "definition": "不正行為パターン推定・環境リスク評価の仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s308_p01",
+      "layerName": "IntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s308_p02",
+      "layerName": "IntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s308_p01"
+      ]
+    },
+    {
+      "id": "s308_p03",
+      "layerName": "PrivacyPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s308_p01"
+      ]
+    },
+    {
+      "id": "s308_p04",
+      "layerName": "PrivacyPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s308_p02"
+      ]
+    },
+    {
+      "id": "s308_p05",
+      "layerName": "PrivacyPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s308_p03",
+        ".s308_p04"
+      ]
+    },
+    {
+      "id": "s308_p06",
+      "layerName": "ProctorHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s308_p03"
+      ]
+    },
+    {
+      "id": "s308_p07",
+      "layerName": "ProctorHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s308_p04"
+      ]
+    },
+    {
+      "id": "s308_p08",
+      "layerName": "ProctorHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s308_p05",
+        ".s308_p06"
+      ]
+    },
+    {
+      "id": "s308_p09",
+      "layerName": "ProctorHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s308_p07"
+      ]
+    },
+    {
+      "id": "s308_p10",
+      "layerName": "IntegrityInvariant",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s308_p09"
+      ]
+    }
+  ]
+}

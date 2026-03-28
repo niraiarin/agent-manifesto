@@ -1,0 +1,149 @@
+{
+  "namespace": "TestCoverage.S449",
+  "layers": [
+    {
+      "name": "PublicFairnessInvariant",
+      "ordValue": 3,
+      "definition": "公平なアクセス・差別禁止・情報公開義務の公共サービス絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BookingManagementPolicy",
+      "ordValue": 2,
+      "definition": "予約競合解決・キャンセル規則・優先度ルール・空き最大化の運用方針",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "DemandPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "施設利用率予測・季節パターン・イベント需要に関する推定仮説",
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s449_p01",
+      "layerName": "PublicFairnessInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s449_p02",
+      "layerName": "PublicFairnessInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s449_p01"
+      ]
+    },
+    {
+      "id": "s449_p03",
+      "layerName": "BookingManagementPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s449_p01"
+      ]
+    },
+    {
+      "id": "s449_p04",
+      "layerName": "BookingManagementPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s449_p02",
+        ".s449_p03"
+      ]
+    },
+    {
+      "id": "s449_p05",
+      "layerName": "BookingManagementPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s449_p03"
+      ]
+    },
+    {
+      "id": "s449_p06",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s449_p03"
+      ]
+    },
+    {
+      "id": "s449_p07",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s449_p04",
+        ".s449_p06"
+      ]
+    },
+    {
+      "id": "s449_p08",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s449_p05"
+      ]
+    },
+    {
+      "id": "s449_p09",
+      "layerName": "DemandPredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s449_p07",
+        ".s449_p08"
+      ]
+    },
+    {
+      "id": "s449_p10",
+      "layerName": "BookingManagementPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s449_p09"
+      ]
+    },
+    {
+      "id": "s449_p11",
+      "layerName": "PublicFairnessInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s449_p10"
+      ]
+    }
+  ]
+}

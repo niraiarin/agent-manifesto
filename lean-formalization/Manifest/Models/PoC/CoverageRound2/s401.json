@@ -1,0 +1,190 @@
+{
+  "namespace": "TestCoverage.S401",
+  "layers": [
+    {
+      "name": "PatientSafetyInvariant",
+      "ordValue": 4,
+      "definition": "患者の生命・精神的安全に関わる不変制約。いかなる状況でも優先される",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ClinicalEthicsCompliance",
+      "ordValue": 3,
+      "definition": "医療倫理・守秘義務・インフォームドコンセントへの準拠。法的義務",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "AssessmentPolicy",
+      "ordValue": 2,
+      "definition": "スクリーニング実施方針。臨床判断に基づく運用ルール",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "AdaptiveHypothesis",
+      "ordValue": 1,
+      "definition": "個別化スクリーニング改善の仮説。検証データに基づき調整可能",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s401_p01",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s401_p02",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s401_p03",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s401_p01",
+        ".s401_p02"
+      ]
+    },
+    {
+      "id": "s401_p04",
+      "layerName": "ClinicalEthicsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s401_p01"
+      ]
+    },
+    {
+      "id": "s401_p05",
+      "layerName": "ClinicalEthicsCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s401_p02"
+      ]
+    },
+    {
+      "id": "s401_p06",
+      "layerName": "ClinicalEthicsCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s401_p03"
+      ]
+    },
+    {
+      "id": "s401_p07",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s401_p04"
+      ]
+    },
+    {
+      "id": "s401_p08",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s401_p05"
+      ]
+    },
+    {
+      "id": "s401_p09",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s401_p06"
+      ]
+    },
+    {
+      "id": "s401_p10",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s401_p07",
+        ".s401_p08"
+      ]
+    },
+    {
+      "id": "s401_p11",
+      "layerName": "AdaptiveHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s401_p07"
+      ]
+    },
+    {
+      "id": "s401_p12",
+      "layerName": "AdaptiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s401_p08"
+      ]
+    },
+    {
+      "id": "s401_p13",
+      "layerName": "AdaptiveHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s401_p09"
+      ]
+    },
+    {
+      "id": "s401_p14",
+      "layerName": "AdaptiveHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s401_p10",
+        ".s401_p11",
+        ".s401_p12"
+      ]
+    }
+  ]
+}

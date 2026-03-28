@@ -1,0 +1,190 @@
+{
+  "namespace": "TestCoverage.S407",
+  "layers": [
+    {
+      "name": "EnvironmentalSafetyInvariant",
+      "ordValue": 4,
+      "definition": "CO2回収プロセスの環境安全・二次汚染防止の不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryEmissionsCompliance",
+      "ordValue": 3,
+      "definition": "排出規制・カーボンクレジット制度への準拠。環境法令に基づく義務",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "OperationalEfficiencyPolicy",
+      "ordValue": 2,
+      "definition": "回収プロセス効率・エネルギー消費ポリシー。運用コスト最適化規則",
+      "derivedFrom": [
+        "C4",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "ProcessOptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "触媒性能・温度・圧力最適化の仮説。実験データで継続的に検証",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s407_p01",
+      "layerName": "EnvironmentalSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s407_p02",
+      "layerName": "EnvironmentalSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s407_p03",
+      "layerName": "EnvironmentalSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s407_p01",
+        ".s407_p02"
+      ]
+    },
+    {
+      "id": "s407_p04",
+      "layerName": "RegulatoryEmissionsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s407_p01"
+      ]
+    },
+    {
+      "id": "s407_p05",
+      "layerName": "RegulatoryEmissionsCompliance",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s407_p02"
+      ]
+    },
+    {
+      "id": "s407_p06",
+      "layerName": "RegulatoryEmissionsCompliance",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s407_p03"
+      ]
+    },
+    {
+      "id": "s407_p07",
+      "layerName": "OperationalEfficiencyPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s407_p04"
+      ]
+    },
+    {
+      "id": "s407_p08",
+      "layerName": "OperationalEfficiencyPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s407_p05"
+      ]
+    },
+    {
+      "id": "s407_p09",
+      "layerName": "OperationalEfficiencyPolicy",
+      "justification": [
+        "H3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s407_p06"
+      ]
+    },
+    {
+      "id": "s407_p10",
+      "layerName": "OperationalEfficiencyPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s407_p07",
+        ".s407_p08"
+      ]
+    },
+    {
+      "id": "s407_p11",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s407_p07"
+      ]
+    },
+    {
+      "id": "s407_p12",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s407_p08"
+      ]
+    },
+    {
+      "id": "s407_p13",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s407_p09"
+      ]
+    },
+    {
+      "id": "s407_p14",
+      "layerName": "ProcessOptimizationHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s407_p10",
+        ".s407_p11",
+        ".s407_p12"
+      ]
+    }
+  ]
+}

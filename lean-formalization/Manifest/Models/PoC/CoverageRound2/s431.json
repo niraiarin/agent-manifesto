@@ -1,0 +1,170 @@
+{
+  "namespace": "TestCoverage.S431",
+  "layers": [
+    {
+      "name": "PhysicalConstraint",
+      "ordValue": 4,
+      "definition": "スポーツルール・フィジカル限界・競技規則の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PerformanceBaseline",
+      "ordValue": 3,
+      "definition": "選手の能力指標・統計的パフォーマンス基準",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "TacticalPolicy",
+      "ordValue": 2,
+      "definition": "戦術選択・フォーメーション・プレースタイルの方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "MatchPredictionHypothesis",
+      "ordValue": 1,
+      "definition": "対戦相手の行動・試合展開に関する予測仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s431_p01",
+      "layerName": "PhysicalConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s431_p02",
+      "layerName": "PhysicalConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s431_p03",
+      "layerName": "PhysicalConstraint",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s431_p01",
+        ".s431_p02"
+      ]
+    },
+    {
+      "id": "s431_p04",
+      "layerName": "PerformanceBaseline",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s431_p01"
+      ]
+    },
+    {
+      "id": "s431_p05",
+      "layerName": "PerformanceBaseline",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s431_p02"
+      ]
+    },
+    {
+      "id": "s431_p06",
+      "layerName": "PerformanceBaseline",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s431_p04",
+        ".s431_p05"
+      ]
+    },
+    {
+      "id": "s431_p07",
+      "layerName": "TacticalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s431_p03"
+      ]
+    },
+    {
+      "id": "s431_p08",
+      "layerName": "TacticalPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s431_p04"
+      ]
+    },
+    {
+      "id": "s431_p09",
+      "layerName": "TacticalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s431_p06",
+        ".s431_p07"
+      ]
+    },
+    {
+      "id": "s431_p10",
+      "layerName": "MatchPredictionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s431_p07"
+      ]
+    },
+    {
+      "id": "s431_p11",
+      "layerName": "MatchPredictionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s431_p08",
+        ".s431_p09"
+      ]
+    },
+    {
+      "id": "s431_p12",
+      "layerName": "MatchPredictionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s431_p10",
+        ".s431_p11"
+      ]
+    }
+  ]
+}

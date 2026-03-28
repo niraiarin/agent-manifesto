@@ -1,0 +1,252 @@
+{
+  "namespace": "TestCoverage.S414",
+  "layers": [
+    {
+      "name": "SafetyRegulation",
+      "ordValue": 5,
+      "definition": "消防法・高圧ガス保安法・労働安全衛生法に基づく危険物取扱の絶対安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalCompliance",
+      "ordValue": 4,
+      "definition": "化学物質管理法・環境基本法による排出・保管・廃棄規制への準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OperationalProtocol",
+      "ordValue": 3,
+      "definition": "危険物の入出庫・保管・移動・使用に関する標準作業手順",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "MonitoringControl",
+      "ordValue": 2,
+      "definition": "センサ監視・警報システム・インシデント対応の制御方針",
+      "derivedFrom": [
+        "C7",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PredictiveRiskHypothesis",
+      "ordValue": 1,
+      "definition": "過去事故データ・環境条件に基づくリスク予測精度向上仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s414_p01",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s414_p02",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s414_p03",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s414_p01",
+        ".s414_p02"
+      ]
+    },
+    {
+      "id": "s414_p04",
+      "layerName": "EnvironmentalCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s414_p01"
+      ]
+    },
+    {
+      "id": "s414_p05",
+      "layerName": "EnvironmentalCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s414_p02"
+      ]
+    },
+    {
+      "id": "s414_p06",
+      "layerName": "EnvironmentalCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s414_p04",
+        ".s414_p05"
+      ]
+    },
+    {
+      "id": "s414_p07",
+      "layerName": "OperationalProtocol",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s414_p04"
+      ]
+    },
+    {
+      "id": "s414_p08",
+      "layerName": "OperationalProtocol",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s414_p05"
+      ]
+    },
+    {
+      "id": "s414_p09",
+      "layerName": "OperationalProtocol",
+      "justification": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s414_p06",
+        ".s414_p07",
+        ".s414_p08"
+      ]
+    },
+    {
+      "id": "s414_p10",
+      "layerName": "MonitoringControl",
+      "justification": [
+        "C7",
+        "H3"
+      ],
+      "dependencies": [
+        ".s414_p07"
+      ]
+    },
+    {
+      "id": "s414_p11",
+      "layerName": "MonitoringControl",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s414_p08"
+      ]
+    },
+    {
+      "id": "s414_p12",
+      "layerName": "MonitoringControl",
+      "justification": [
+        "C7",
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s414_p09",
+        ".s414_p10",
+        ".s414_p11"
+      ]
+    },
+    {
+      "id": "s414_p13",
+      "layerName": "PredictiveRiskHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s414_p10"
+      ]
+    },
+    {
+      "id": "s414_p14",
+      "layerName": "PredictiveRiskHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s414_p11"
+      ]
+    },
+    {
+      "id": "s414_p15",
+      "layerName": "PredictiveRiskHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s414_p13",
+        ".s414_p14"
+      ]
+    },
+    {
+      "id": "s414_p16",
+      "layerName": "MonitoringControl",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s414_p03"
+      ]
+    },
+    {
+      "id": "s414_p17",
+      "layerName": "SafetyRegulation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s414_p13"
+      ]
+    },
+    {
+      "id": "s414_p18",
+      "layerName": "PredictiveRiskHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s414_p12",
+        ".s414_p15"
+      ]
+    }
+  ]
+}

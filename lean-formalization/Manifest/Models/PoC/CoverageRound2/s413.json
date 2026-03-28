@@ -1,0 +1,189 @@
+{
+  "namespace": "TestCoverage.S413",
+  "layers": [
+    {
+      "name": "UserPrivacyProtection",
+      "ordValue": 4,
+      "definition": "ユーザープライバシー・個人データ保護・GDPR準拠の絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ContentModerationPolicy",
+      "ordValue": 3,
+      "definition": "有害コンテンツ排除・著作権遵守・プラットフォーム利用規約の適用",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "RecommendationAlgorithm",
+      "ordValue": 2,
+      "definition": "協調フィルタリング・コンテンツベースフィルタリングによる推薦ロジック",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PersonalizationHypothesis",
+      "ordValue": 1,
+      "definition": "行動履歴・嗜好推定・多様性バランスに関する推薦精度向上仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s413_p01",
+      "layerName": "UserPrivacyProtection",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s413_p02",
+      "layerName": "UserPrivacyProtection",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s413_p03",
+      "layerName": "ContentModerationPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s413_p01"
+      ]
+    },
+    {
+      "id": "s413_p04",
+      "layerName": "ContentModerationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s413_p02"
+      ]
+    },
+    {
+      "id": "s413_p05",
+      "layerName": "ContentModerationPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s413_p03",
+        ".s413_p04"
+      ]
+    },
+    {
+      "id": "s413_p06",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s413_p03"
+      ]
+    },
+    {
+      "id": "s413_p07",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s413_p04",
+        ".s413_p05"
+      ]
+    },
+    {
+      "id": "s413_p08",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s413_p06",
+        ".s413_p07"
+      ]
+    },
+    {
+      "id": "s413_p09",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s413_p06"
+      ]
+    },
+    {
+      "id": "s413_p10",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s413_p07"
+      ]
+    },
+    {
+      "id": "s413_p11",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s413_p08"
+      ]
+    },
+    {
+      "id": "s413_p12",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H8"
+      ],
+      "dependencies": [
+        ".s413_p09",
+        ".s413_p10"
+      ]
+    },
+    {
+      "id": "s413_p13",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8"
+      ],
+      "dependencies": [
+        ".s413_p11",
+        ".s413_p12"
+      ]
+    }
+  ]
+}

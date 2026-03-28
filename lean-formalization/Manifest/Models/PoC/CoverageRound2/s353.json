@@ -1,0 +1,133 @@
+{
+  "namespace": "TestCoverage.S353",
+  "layers": [
+    {
+      "name": "TrafficSafetyRule",
+      "ordValue": 3,
+      "definition": "道路交通法・緊急車両優先・事故防止の絶対的交通安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InfrastructurePolicy",
+      "ordValue": 2,
+      "definition": "信号制御・迂回路案内・データ提供に関する道路管理方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictionModel",
+      "ordValue": 1,
+      "definition": "交通流量・旅行時間・渋滞発生確率に関する予測仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s353_p01",
+      "layerName": "TrafficSafetyRule",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s353_p09"
+      ]
+    },
+    {
+      "id": "s353_p02",
+      "layerName": "TrafficSafetyRule",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s353_p01"
+      ]
+    },
+    {
+      "id": "s353_p03",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s353_p01"
+      ]
+    },
+    {
+      "id": "s353_p04",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s353_p02"
+      ]
+    },
+    {
+      "id": "s353_p05",
+      "layerName": "InfrastructurePolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s353_p03"
+      ]
+    },
+    {
+      "id": "s353_p06",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s353_p03"
+      ]
+    },
+    {
+      "id": "s353_p07",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s353_p04"
+      ]
+    },
+    {
+      "id": "s353_p08",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s353_p05",
+        ".s353_p06"
+      ]
+    },
+    {
+      "id": "s353_p09",
+      "layerName": "PredictionModel",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s353_p07",
+        ".s353_p08"
+      ]
+    }
+  ]
+}

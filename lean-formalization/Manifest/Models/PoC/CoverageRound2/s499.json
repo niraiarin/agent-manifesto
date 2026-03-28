@@ -1,0 +1,169 @@
+{
+  "namespace": "TestCoverage.S499",
+  "layers": [
+    {
+      "name": "LifeSafetyInvariant",
+      "ordValue": 4,
+      "definition": "建物倒壊・人命損失を防ぐ耐震安全性の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BuildingCodeCompliance",
+      "ordValue": 3,
+      "definition": "建築基準法・耐震改修促進法・国土交通省告示への準拠要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DiagnosticPolicy",
+      "ordValue": 2,
+      "definition": "診断手法選択・調査項目・評点算定に関する診断ポリシー",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "RecommendationHeuristic",
+      "ordValue": 1,
+      "definition": "補強優先度・費用対効果・工法選択に関する推奨ヒューリスティック",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s499_p01",
+      "layerName": "LifeSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s499_p02",
+      "layerName": "LifeSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s499_p01"
+      ]
+    },
+    {
+      "id": "s499_p03",
+      "layerName": "BuildingCodeCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s499_p01"
+      ]
+    },
+    {
+      "id": "s499_p04",
+      "layerName": "BuildingCodeCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s499_p02"
+      ]
+    },
+    {
+      "id": "s499_p05",
+      "layerName": "BuildingCodeCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s499_p03",
+        ".s499_p04"
+      ]
+    },
+    {
+      "id": "s499_p06",
+      "layerName": "DiagnosticPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s499_p03"
+      ]
+    },
+    {
+      "id": "s499_p07",
+      "layerName": "DiagnosticPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s499_p04"
+      ]
+    },
+    {
+      "id": "s499_p08",
+      "layerName": "DiagnosticPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s499_p05",
+        ".s499_p06"
+      ]
+    },
+    {
+      "id": "s499_p09",
+      "layerName": "RecommendationHeuristic",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s499_p06"
+      ]
+    },
+    {
+      "id": "s499_p10",
+      "layerName": "RecommendationHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s499_p08"
+      ]
+    },
+    {
+      "id": "s499_p11",
+      "layerName": "RecommendationHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s499_p09",
+        ".s499_p10"
+      ]
+    },
+    {
+      "id": "s499_p12",
+      "layerName": "RecommendationHeuristic",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s499_p07",
+        ".s499_p11"
+      ]
+    }
+  ]
+}

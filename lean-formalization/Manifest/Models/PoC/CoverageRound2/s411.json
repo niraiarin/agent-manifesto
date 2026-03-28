@@ -1,0 +1,228 @@
+{
+  "namespace": "TestCoverage.S411",
+  "layers": [
+    {
+      "name": "LifeSafetyAbsolute",
+      "ordValue": 5,
+      "definition": "患者の生命維持に直結する絶対制約。いかなる判断も生命安全を下回ることはできない",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "MedicalEthicsCompliance",
+      "ordValue": 4,
+      "definition": "医療倫理・インフォームドコンセント・守秘義務に関する規範的制約",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ClinicalProtocol",
+      "ordValue": 3,
+      "definition": "トリアージ分類（START/JTAS）プロトコルに基づく臨床手順",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ResourceAllocation",
+      "ordValue": 2,
+      "definition": "救急リソース（人員・設備・ベッド数）の効率的配分に関する方針",
+      "derivedFrom": [
+        "C6",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "AdaptiveRefinement",
+      "ordValue": 1,
+      "definition": "過去症例・フィードバックに基づく判断精度の改善仮説",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s411_p01",
+      "layerName": "LifeSafetyAbsolute",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s411_p02",
+      "layerName": "LifeSafetyAbsolute",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s411_p03",
+      "layerName": "LifeSafetyAbsolute",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s411_p01",
+        ".s411_p02"
+      ]
+    },
+    {
+      "id": "s411_p04",
+      "layerName": "MedicalEthicsCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s411_p01"
+      ]
+    },
+    {
+      "id": "s411_p05",
+      "layerName": "MedicalEthicsCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s411_p02"
+      ]
+    },
+    {
+      "id": "s411_p06",
+      "layerName": "MedicalEthicsCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s411_p04",
+        ".s411_p05"
+      ]
+    },
+    {
+      "id": "s411_p07",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s411_p04"
+      ]
+    },
+    {
+      "id": "s411_p08",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s411_p05",
+        ".s411_p06"
+      ]
+    },
+    {
+      "id": "s411_p09",
+      "layerName": "ClinicalProtocol",
+      "justification": [
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s411_p07",
+        ".s411_p08"
+      ]
+    },
+    {
+      "id": "s411_p10",
+      "layerName": "ResourceAllocation",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s411_p07"
+      ]
+    },
+    {
+      "id": "s411_p11",
+      "layerName": "ResourceAllocation",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s411_p08"
+      ]
+    },
+    {
+      "id": "s411_p12",
+      "layerName": "ResourceAllocation",
+      "justification": [
+        "C6",
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s411_p10",
+        ".s411_p11"
+      ]
+    },
+    {
+      "id": "s411_p13",
+      "layerName": "AdaptiveRefinement",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s411_p10"
+      ]
+    },
+    {
+      "id": "s411_p14",
+      "layerName": "AdaptiveRefinement",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s411_p11"
+      ]
+    },
+    {
+      "id": "s411_p15",
+      "layerName": "AdaptiveRefinement",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s411_p12"
+      ]
+    },
+    {
+      "id": "s411_p16",
+      "layerName": "AdaptiveRefinement",
+      "justification": [
+        "H5",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s411_p13",
+        ".s411_p14",
+        ".s411_p15"
+      ]
+    }
+  ]
+}

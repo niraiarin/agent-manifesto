@@ -1,0 +1,1230 @@
+[
+  {
+    "scenario_id": 451,
+    "project": "土地利用計画支援システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S451",
+      "layers": [
+        {
+          "name": "LegalZoningInvariant",
+          "ordValue": 4,
+          "definition": "都市計画法・建築基準法に基づく絶対的用途地域制約。いかなる開発計画も違反不可",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "EnvironmentalProtectionPolicy",
+          "ordValue": 3,
+          "definition": "環境影響評価・緑地保全・水源保護の行政指導方針",
+          "derivedFrom": ["C3", "H1"]
+        },
+        {
+          "name": "InfrastructureCapacityRule",
+          "ordValue": 2,
+          "definition": "上下水道・道路容量・電力供給の許容量に基づく開発規模上限推論",
+          "derivedFrom": ["C4", "H2", "H3"]
+        },
+        {
+          "name": "DevelopmentFeasibilityHypothesis",
+          "ordValue": 1,
+          "definition": "市場需要・投資収益性・地価動向に関する開発実現可能性仮説",
+          "derivedFrom": ["C5", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s451_p01",
+          "layerName": "LegalZoningInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s451_p02",
+          "layerName": "LegalZoningInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s451_p03",
+          "layerName": "LegalZoningInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s451_p01", ".s451_p02"]
+        },
+        {
+          "id": "s451_p04",
+          "layerName": "EnvironmentalProtectionPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s451_p01"]
+        },
+        {
+          "id": "s451_p05",
+          "layerName": "EnvironmentalProtectionPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s451_p02", ".s451_p03"]
+        },
+        {
+          "id": "s451_p06",
+          "layerName": "InfrastructureCapacityRule",
+          "justification": ["C4"],
+          "dependencies": [".s451_p04"]
+        },
+        {
+          "id": "s451_p07",
+          "layerName": "InfrastructureCapacityRule",
+          "justification": ["H2"],
+          "dependencies": [".s451_p04", ".s451_p05"]
+        },
+        {
+          "id": "s451_p08",
+          "layerName": "InfrastructureCapacityRule",
+          "justification": ["H3"],
+          "dependencies": [".s451_p06", ".s451_p07"]
+        },
+        {
+          "id": "s451_p09",
+          "layerName": "DevelopmentFeasibilityHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s451_p06"]
+        },
+        {
+          "id": "s451_p10",
+          "layerName": "DevelopmentFeasibilityHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s451_p07", ".s451_p08"]
+        },
+        {
+          "id": "s451_p11",
+          "layerName": "DevelopmentFeasibilityHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s451_p09"]
+        },
+        {
+          "id": "s451_p12",
+          "layerName": "DevelopmentFeasibilityHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s451_p10", ".s451_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 452,
+    "project": "人口動態予測モデル",
+    "num_c": 4,
+    "num_h": 7,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S452",
+      "layers": [
+        {
+          "name": "StatisticalIntegrityInvariant",
+          "ordValue": 3,
+          "definition": "国勢調査データの真正性・統計的不偏性の不変条件。データ改ざん・選択バイアス許容不可",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "DemographicModelPolicy",
+          "ordValue": 2,
+          "definition": "出生率・死亡率・移動率モデルの選択方針。コーホート生命表・Leslie行列適用基準",
+          "derivedFrom": ["C3", "H1", "H2", "H3"]
+        },
+        {
+          "name": "ProjectionUncertaintyHypothesis",
+          "ordValue": 1,
+          "definition": "長期予測誤差区間・感度分析・シナリオ分岐に関する不確実性仮説",
+          "derivedFrom": ["C4", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s452_p01",
+          "layerName": "StatisticalIntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s452_p02",
+          "layerName": "StatisticalIntegrityInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s452_p03",
+          "layerName": "DemographicModelPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s452_p01"]
+        },
+        {
+          "id": "s452_p04",
+          "layerName": "DemographicModelPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s452_p01", ".s452_p02"]
+        },
+        {
+          "id": "s452_p05",
+          "layerName": "DemographicModelPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s452_p03", ".s452_p04"]
+        },
+        {
+          "id": "s452_p06",
+          "layerName": "ProjectionUncertaintyHypothesis",
+          "justification": ["C4"],
+          "dependencies": [".s452_p03"]
+        },
+        {
+          "id": "s452_p07",
+          "layerName": "ProjectionUncertaintyHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s452_p04", ".s452_p05"]
+        },
+        {
+          "id": "s452_p08",
+          "layerName": "ProjectionUncertaintyHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s452_p06"]
+        },
+        {
+          "id": "s452_p09",
+          "layerName": "ProjectionUncertaintyHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s452_p07", ".s452_p08"]
+        },
+        {
+          "id": "s452_p10",
+          "layerName": "ProjectionUncertaintyHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s452_p08", ".s452_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 453,
+    "project": "公共交通バリアフリー適合評価システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "TestCoverage.S453",
+      "layers": [
+        {
+          "name": "AccessibilityRightInvariant",
+          "ordValue": 5,
+          "definition": "障害者差別解消法・バリアフリー法による移動権保障の絶対制約",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "SafetyStandardCompliance",
+          "ordValue": 4,
+          "definition": "国土交通省バリアフリー整備ガイドライン・JIS規格への適合要件",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "UniversalDesignPolicy",
+          "ordValue": 3,
+          "definition": "視覚・聴覚・肢体障害・高齢者対応の設計方針。利用者代表との合意形成を含む",
+          "derivedFrom": ["C4", "H1", "H2"]
+        },
+        {
+          "name": "OperationalAdaptationRule",
+          "ordValue": 2,
+          "definition": "ラッシュ時・イベント時・緊急時の運用調整ルール。リソース制約下での優先順位",
+          "derivedFrom": ["H3", "H4"]
+        },
+        {
+          "name": "UserExperienceHypothesis",
+          "ordValue": 1,
+          "definition": "利用者満足度・利用頻度・介助負担に関する改善仮説",
+          "derivedFrom": ["C5", "C6", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s453_p01",
+          "layerName": "AccessibilityRightInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s453_p02",
+          "layerName": "SafetyStandardCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s453_p01"]
+        },
+        {
+          "id": "s453_p03",
+          "layerName": "SafetyStandardCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s453_p01"]
+        },
+        {
+          "id": "s453_p04",
+          "layerName": "SafetyStandardCompliance",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s453_p02", ".s453_p03", ".s453_p11"]
+        },
+        {
+          "id": "s453_p05",
+          "layerName": "UniversalDesignPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s453_p02"]
+        },
+        {
+          "id": "s453_p06",
+          "layerName": "UniversalDesignPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s453_p03", ".s453_p04"]
+        },
+        {
+          "id": "s453_p07",
+          "layerName": "UniversalDesignPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s453_p05", ".s453_p06"]
+        },
+        {
+          "id": "s453_p08",
+          "layerName": "OperationalAdaptationRule",
+          "justification": ["H3"],
+          "dependencies": [".s453_p05", ".s453_p06"]
+        },
+        {
+          "id": "s453_p09",
+          "layerName": "OperationalAdaptationRule",
+          "justification": ["H4"],
+          "dependencies": [".s453_p07"]
+        },
+        {
+          "id": "s453_p10",
+          "layerName": "OperationalAdaptationRule",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s453_p08", ".s453_p09"]
+        },
+        {
+          "id": "s453_p11",
+          "layerName": "UserExperienceHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s453_p08"]
+        },
+        {
+          "id": "s453_p12",
+          "layerName": "UserExperienceHypothesis",
+          "justification": ["C6"],
+          "dependencies": [".s453_p09"]
+        },
+        {
+          "id": "s453_p13",
+          "layerName": "UserExperienceHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s453_p10", ".s453_p11"]
+        },
+        {
+          "id": "s453_p14",
+          "layerName": "UserExperienceHypothesis",
+          "justification": ["C5", "H5"],
+          "dependencies": [".s453_p12", ".s453_p13"]
+        },
+        {
+          "id": "s453_p15",
+          "layerName": "UserExperienceHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s453_p14"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 454,
+    "project": "緊急通報自動分類システム",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S454",
+      "layers": [
+        {
+          "name": "LifeSafetyDispatchInvariant",
+          "ordValue": 3,
+          "definition": "生命危機事案への即時対応保障。分類誤りによる応急遅延は絶対許容不可",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "TriageClassificationPolicy",
+          "ordValue": 2,
+          "definition": "緊急度A/B/C分類基準・管轄機関振り分け・二次確認プロセスの方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "CallAnalysisHypothesis",
+          "ordValue": 1,
+          "definition": "音声特徴・キーワード抽出・発信者属性による緊急度推定仮説",
+          "derivedFrom": ["C5", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s454_p01",
+          "layerName": "LifeSafetyDispatchInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s454_p02",
+          "layerName": "LifeSafetyDispatchInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s454_p03",
+          "layerName": "TriageClassificationPolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s454_p01"]
+        },
+        {
+          "id": "s454_p04",
+          "layerName": "TriageClassificationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s454_p02"]
+        },
+        {
+          "id": "s454_p05",
+          "layerName": "TriageClassificationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s454_p03", ".s454_p04"]
+        },
+        {
+          "id": "s454_p06",
+          "layerName": "CallAnalysisHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s454_p03"]
+        },
+        {
+          "id": "s454_p07",
+          "layerName": "CallAnalysisHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s454_p04"]
+        },
+        {
+          "id": "s454_p08",
+          "layerName": "CallAnalysisHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s454_p05", ".s454_p06"]
+        },
+        {
+          "id": "s454_p09",
+          "layerName": "CallAnalysisHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s454_p07", ".s454_p08"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 455,
+    "project": "税務申告支援 AI",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "TestCoverage.S455",
+      "layers": [
+        {
+          "name": "TaxLegalInvariant",
+          "ordValue": 6,
+          "definition": "所得税法・法人税法・消費税法の強行規定。誤申告・脱税示唆は絶対禁止",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "PrivacyProtectionCompliance",
+          "ordValue": 5,
+          "definition": "個人情報保護法・マイナンバー法に基づく納税者情報取扱いの法的義務",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "AdvisoryBoundaryPolicy",
+          "ordValue": 4,
+          "definition": "税理士法による非資格者の税務相談範囲制限。AIの助言限界の明示方針",
+          "derivedFrom": ["C4", "H1"]
+        },
+        {
+          "name": "DeductionClassificationRule",
+          "ordValue": 3,
+          "definition": "経費・控除・特例適用の分類ルール。通達・事例データベースに基づく",
+          "derivedFrom": ["C5", "H2", "H3"]
+        },
+        {
+          "name": "OptimizationStrategyHypothesis",
+          "ordValue": 2,
+          "definition": "合法的節税手法・申告タイミング・繰越控除活用の最適化仮説",
+          "derivedFrom": ["H4", "H5"]
+        },
+        {
+          "name": "UserInputValidationHypothesis",
+          "ordValue": 1,
+          "definition": "領収書OCR精度・入力値整合性・異常値検出に関する検証仮説",
+          "derivedFrom": ["C6", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s455_p01",
+          "layerName": "TaxLegalInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s455_p02",
+          "layerName": "PrivacyProtectionCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s455_p01"]
+        },
+        {
+          "id": "s455_p03",
+          "layerName": "PrivacyProtectionCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s455_p01"]
+        },
+        {
+          "id": "s455_p04",
+          "layerName": "AdvisoryBoundaryPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s455_p02"]
+        },
+        {
+          "id": "s455_p05",
+          "layerName": "AdvisoryBoundaryPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s455_p02", ".s455_p03"]
+        },
+        {
+          "id": "s455_p06",
+          "layerName": "AdvisoryBoundaryPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s455_p04", ".s455_p05"]
+        },
+        {
+          "id": "s455_p07",
+          "layerName": "DeductionClassificationRule",
+          "justification": ["C5"],
+          "dependencies": [".s455_p04"]
+        },
+        {
+          "id": "s455_p08",
+          "layerName": "DeductionClassificationRule",
+          "justification": ["H2"],
+          "dependencies": [".s455_p05"]
+        },
+        {
+          "id": "s455_p09",
+          "layerName": "DeductionClassificationRule",
+          "justification": ["H3"],
+          "dependencies": [".s455_p06", ".s455_p07"]
+        },
+        {
+          "id": "s455_p10",
+          "layerName": "DeductionClassificationRule",
+          "justification": ["C5", "H2"],
+          "dependencies": [".s455_p08", ".s455_p09"]
+        },
+        {
+          "id": "s455_p11",
+          "layerName": "OptimizationStrategyHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s455_p07", ".s455_p09"]
+        },
+        {
+          "id": "s455_p12",
+          "layerName": "OptimizationStrategyHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s455_p10"]
+        },
+        {
+          "id": "s455_p13",
+          "layerName": "OptimizationStrategyHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s455_p11", ".s455_p12"]
+        },
+        {
+          "id": "s455_p14",
+          "layerName": "UserInputValidationHypothesis",
+          "justification": ["C6"],
+          "dependencies": [".s455_p08"]
+        },
+        {
+          "id": "s455_p15",
+          "layerName": "UserInputValidationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s455_p11"]
+        },
+        {
+          "id": "s455_p16",
+          "layerName": "UserInputValidationHypothesis",
+          "justification": ["C6", "H6"],
+          "dependencies": [".s455_p14", ".s455_p15"]
+        },
+        {
+          "id": "s455_p17",
+          "layerName": "UserInputValidationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s455_p12", ".s455_p16"]
+        },
+        {
+          "id": "s455_p18",
+          "layerName": "UserInputValidationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s455_p13", ".s455_p17"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 456,
+    "project": "都市騒音マッピングシステム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 2,
+    "num_props": 7,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S456",
+      "layers": [
+        {
+          "name": "NoiseLegalStandardInvariant",
+          "ordValue": 2,
+          "definition": "騒音規制法・環境基本法に基づく地域別環境基準値の絶対遵守制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "AcousticMeasurementHypothesis",
+          "ordValue": 1,
+          "definition": "センサー配置・補間アルゴリズム・時系列変動モデルに関する測定仮説",
+          "derivedFrom": ["C3", "C4", "H1", "H2", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s456_p01",
+          "layerName": "NoiseLegalStandardInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s456_p02",
+          "layerName": "NoiseLegalStandardInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s456_p03",
+          "layerName": "AcousticMeasurementHypothesis",
+          "justification": ["C3"],
+          "dependencies": [".s456_p01"]
+        },
+        {
+          "id": "s456_p04",
+          "layerName": "AcousticMeasurementHypothesis",
+          "justification": ["C4"],
+          "dependencies": [".s456_p02"]
+        },
+        {
+          "id": "s456_p05",
+          "layerName": "AcousticMeasurementHypothesis",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s456_p03", ".s456_p04"]
+        },
+        {
+          "id": "s456_p06",
+          "layerName": "AcousticMeasurementHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s456_p03"]
+        },
+        {
+          "id": "s456_p07",
+          "layerName": "AcousticMeasurementHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s456_p05", ".s456_p06"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 457,
+    "project": "ごみ収集ルート最適化システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S457",
+      "layers": [
+        {
+          "name": "WasteRegulationInvariant",
+          "ordValue": 4,
+          "definition": "廃棄物処理法・地方自治体条例に基づく収集義務・不法投棄防止の絶対制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "PublicHealthSafetyPolicy",
+          "ordValue": 3,
+          "definition": "衛生管理・有害物質分別・医療廃棄物取扱いの保健行政方針",
+          "derivedFrom": ["C3", "H1"]
+        },
+        {
+          "name": "RouteOptimizationRule",
+          "ordValue": 2,
+          "definition": "車両積載効率・燃費・収集頻度の最適化ルール。交通規制・収集時間帯制約を考慮",
+          "derivedFrom": ["C4", "H2", "H3"]
+        },
+        {
+          "name": "DemandForecastHypothesis",
+          "ordValue": 1,
+          "definition": "排出量季節変動・イベント影響・人口増減による需要予測仮説",
+          "derivedFrom": ["C5", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s457_p01",
+          "layerName": "WasteRegulationInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s457_p02",
+          "layerName": "WasteRegulationInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s457_p03",
+          "layerName": "PublicHealthSafetyPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s457_p01"]
+        },
+        {
+          "id": "s457_p04",
+          "layerName": "PublicHealthSafetyPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s457_p02"]
+        },
+        {
+          "id": "s457_p05",
+          "layerName": "PublicHealthSafetyPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s457_p03", ".s457_p04"]
+        },
+        {
+          "id": "s457_p06",
+          "layerName": "RouteOptimizationRule",
+          "justification": ["C4"],
+          "dependencies": [".s457_p03"]
+        },
+        {
+          "id": "s457_p07",
+          "layerName": "RouteOptimizationRule",
+          "justification": ["H2"],
+          "dependencies": [".s457_p04", ".s457_p05"]
+        },
+        {
+          "id": "s457_p08",
+          "layerName": "RouteOptimizationRule",
+          "justification": ["H3"],
+          "dependencies": [".s457_p06", ".s457_p07"]
+        },
+        {
+          "id": "s457_p09",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s457_p06"]
+        },
+        {
+          "id": "s457_p10",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s457_p07", ".s457_p08"]
+        },
+        {
+          "id": "s457_p11",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s457_p09"]
+        },
+        {
+          "id": "s457_p12",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s457_p10", ".s457_p11"]
+        },
+        {
+          "id": "s457_p13",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s457_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 458,
+    "project": "公営住宅配分支援システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 25,
+    "model_spec": {
+      "namespace": "TestCoverage.S458",
+      "layers": [
+        {
+          "name": "HousingRightInvariant",
+          "ordValue": 5,
+          "definition": "住宅確保要配慮者への支援義務・居住の安定確保の絶対的法的制約",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "AntiDiscriminationCompliance",
+          "ordValue": 4,
+          "definition": "住宅入居差別禁止・外国人・障害者・高齢者への平等取扱い義務",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "AllocationFairnessPolicy",
+          "ordValue": 3,
+          "definition": "抽選・ポイント制・優先順位の透明性と公平性確保の行政方針",
+          "derivedFrom": ["C4", "H1", "H2"]
+        },
+        {
+          "name": "NeedAssessmentRule",
+          "ordValue": 2,
+          "definition": "所得・世帯構成・住宅困窮度・緊急性スコアリングの評価ルール",
+          "derivedFrom": ["C5", "H3", "H4"]
+        },
+        {
+          "name": "InventoryMatchingHypothesis",
+          "ordValue": 1,
+          "definition": "空き物件予測・世帯ニーズマッチング・長期待機最小化の仮説",
+          "derivedFrom": ["C6", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s458_p01",
+          "layerName": "HousingRightInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s458_p02",
+          "layerName": "AntiDiscriminationCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s458_p01"]
+        },
+        {
+          "id": "s458_p03",
+          "layerName": "AntiDiscriminationCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s458_p01"]
+        },
+        {
+          "id": "s458_p04",
+          "layerName": "AntiDiscriminationCompliance",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s458_p02", ".s458_p03"]
+        },
+        {
+          "id": "s458_p05",
+          "layerName": "AllocationFairnessPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s458_p02"]
+        },
+        {
+          "id": "s458_p06",
+          "layerName": "AllocationFairnessPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s458_p03", ".s458_p04"]
+        },
+        {
+          "id": "s458_p07",
+          "layerName": "AllocationFairnessPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s458_p05", ".s458_p06"]
+        },
+        {
+          "id": "s458_p08",
+          "layerName": "AllocationFairnessPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s458_p05", ".s458_p06"]
+        },
+        {
+          "id": "s458_p09",
+          "layerName": "NeedAssessmentRule",
+          "justification": ["C5"],
+          "dependencies": [".s458_p05"]
+        },
+        {
+          "id": "s458_p10",
+          "layerName": "NeedAssessmentRule",
+          "justification": ["H3"],
+          "dependencies": [".s458_p07"]
+        },
+        {
+          "id": "s458_p11",
+          "layerName": "NeedAssessmentRule",
+          "justification": ["H4"],
+          "dependencies": [".s458_p08", ".s458_p09"]
+        },
+        {
+          "id": "s458_p12",
+          "layerName": "NeedAssessmentRule",
+          "justification": ["C5", "H3"],
+          "dependencies": [".s458_p10", ".s458_p11"]
+        },
+        {
+          "id": "s458_p13",
+          "layerName": "InventoryMatchingHypothesis",
+          "justification": ["C6"],
+          "dependencies": [".s458_p09"]
+        },
+        {
+          "id": "s458_p14",
+          "layerName": "InventoryMatchingHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s458_p10", ".s458_p12"]
+        },
+        {
+          "id": "s458_p15",
+          "layerName": "InventoryMatchingHypothesis",
+          "justification": ["C6", "H5"],
+          "dependencies": [".s458_p13", ".s458_p14"]
+        },
+        {
+          "id": "s458_p16",
+          "layerName": "InventoryMatchingHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s458_p11"]
+        },
+        {
+          "id": "s458_p17",
+          "layerName": "InventoryMatchingHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s458_p15", ".s458_p16"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 459,
+    "project": "義肢制御インターフェースシステム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 7,
+    "num_props": 20,
+    "num_deps": 28,
+    "model_spec": {
+      "namespace": "TestCoverage.S459",
+      "layers": [
+        {
+          "name": "BodyIntegrityInvariant",
+          "ordValue": 7,
+          "definition": "装着者の身体的安全・組織損傷防止の絶対制約。誤動作による傷害は許容不可",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "MedicalDeviceRegulationCompliance",
+          "ordValue": 6,
+          "definition": "薬機法・ISO 13485・IEC 62133に基づく医療機器認証要件",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "ClinicalEvidencePolicy",
+          "ordValue": 5,
+          "definition": "臨床試験・有効性エビデンスに基づく機能実装方針。根拠なき機能追加禁止",
+          "derivedFrom": ["C4", "H1"]
+        },
+        {
+          "name": "MotorControlRule",
+          "ordValue": 4,
+          "definition": "筋電位・脳波信号のデコード・アクチュエータ制御の精度ルール",
+          "derivedFrom": ["H2", "H3"]
+        },
+        {
+          "name": "AdaptiveLearningPolicy",
+          "ordValue": 3,
+          "definition": "個人差適応・長期使用による制御モデル更新の方針。安全範囲内での自律調整",
+          "derivedFrom": ["C5", "H4"]
+        },
+        {
+          "name": "UserIntentHypothesis",
+          "ordValue": 2,
+          "definition": "意図推定モデル・コンテキスト認識・誤操作検出に関する仮説",
+          "derivedFrom": ["H5"]
+        },
+        {
+          "name": "FeedbackCalibrationHypothesis",
+          "ordValue": 1,
+          "definition": "触覚フィードバック・視覚補助・ユーザー調整パラメータの最適化仮説",
+          "derivedFrom": ["H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s459_p01",
+          "layerName": "BodyIntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s459_p02",
+          "layerName": "MedicalDeviceRegulationCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s459_p01"]
+        },
+        {
+          "id": "s459_p03",
+          "layerName": "MedicalDeviceRegulationCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s459_p01"]
+        },
+        {
+          "id": "s459_p04",
+          "layerName": "ClinicalEvidencePolicy",
+          "justification": ["C4"],
+          "dependencies": [".s459_p02"]
+        },
+        {
+          "id": "s459_p05",
+          "layerName": "ClinicalEvidencePolicy",
+          "justification": ["H1"],
+          "dependencies": [".s459_p02", ".s459_p03", ".s459_p15"]
+        },
+        {
+          "id": "s459_p06",
+          "layerName": "MotorControlRule",
+          "justification": ["H2"],
+          "dependencies": [".s459_p04"]
+        },
+        {
+          "id": "s459_p07",
+          "layerName": "MotorControlRule",
+          "justification": ["H3"],
+          "dependencies": [".s459_p05"]
+        },
+        {
+          "id": "s459_p08",
+          "layerName": "MotorControlRule",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s459_p06", ".s459_p07"]
+        },
+        {
+          "id": "s459_p09",
+          "layerName": "AdaptiveLearningPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s459_p06"]
+        },
+        {
+          "id": "s459_p10",
+          "layerName": "AdaptiveLearningPolicy",
+          "justification": ["H4"],
+          "dependencies": [".s459_p07", ".s459_p08"]
+        },
+        {
+          "id": "s459_p11",
+          "layerName": "AdaptiveLearningPolicy",
+          "justification": ["C5", "H4"],
+          "dependencies": [".s459_p09", ".s459_p10"]
+        },
+        {
+          "id": "s459_p12",
+          "layerName": "UserIntentHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s459_p09"]
+        },
+        {
+          "id": "s459_p13",
+          "layerName": "UserIntentHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s459_p10"]
+        },
+        {
+          "id": "s459_p14",
+          "layerName": "UserIntentHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s459_p11", ".s459_p12"]
+        },
+        {
+          "id": "s459_p15",
+          "layerName": "FeedbackCalibrationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s459_p12"]
+        },
+        {
+          "id": "s459_p16",
+          "layerName": "FeedbackCalibrationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s459_p13"]
+        },
+        {
+          "id": "s459_p17",
+          "layerName": "FeedbackCalibrationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s459_p14", ".s459_p15"]
+        },
+        {
+          "id": "s459_p18",
+          "layerName": "UserIntentHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s459_p17"]
+        },
+        {
+          "id": "s459_p19",
+          "layerName": "FeedbackCalibrationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s459_p16", ".s459_p18"]
+        },
+        {
+          "id": "s459_p20",
+          "layerName": "FeedbackCalibrationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s459_p17", ".s459_p19"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 460,
+    "project": "病院物流最適化システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestCoverage.S460",
+      "layers": [
+        {
+          "name": "PatientSafetySupplyInvariant",
+          "ordValue": 4,
+          "definition": "医薬品・医療機器の欠品・誤配送による患者危害防止の絶対制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RegulatoryStorageCompliance",
+          "ordValue": 3,
+          "definition": "薬機法・GMP・冷鎖管理に基づく医薬品保管・搬送の法的遵守要件",
+          "derivedFrom": ["C3", "H1"]
+        },
+        {
+          "name": "InventoryAllocationPolicy",
+          "ordValue": 2,
+          "definition": "病棟別在庫配分・緊急補充・期限管理・無駄削減の運用方針",
+          "derivedFrom": ["C4", "H2", "H3", "H4"]
+        },
+        {
+          "name": "DemandPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "手術スケジュール・季節疾患・入院患者数変動による需要予測仮説",
+          "derivedFrom": ["C5", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s460_p01",
+          "layerName": "PatientSafetySupplyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s460_p02",
+          "layerName": "PatientSafetySupplyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s460_p03",
+          "layerName": "RegulatoryStorageCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s460_p01"]
+        },
+        {
+          "id": "s460_p04",
+          "layerName": "RegulatoryStorageCompliance",
+          "justification": ["H1"],
+          "dependencies": [".s460_p01", ".s460_p02"]
+        },
+        {
+          "id": "s460_p05",
+          "layerName": "RegulatoryStorageCompliance",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s460_p03", ".s460_p04"]
+        },
+        {
+          "id": "s460_p06",
+          "layerName": "InventoryAllocationPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s460_p03"]
+        },
+        {
+          "id": "s460_p07",
+          "layerName": "InventoryAllocationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s460_p04"]
+        },
+        {
+          "id": "s460_p08",
+          "layerName": "InventoryAllocationPolicy",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s460_p05", ".s460_p06"]
+        },
+        {
+          "id": "s460_p09",
+          "layerName": "InventoryAllocationPolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s460_p07", ".s460_p08"]
+        },
+        {
+          "id": "s460_p10",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s460_p06"]
+        },
+        {
+          "id": "s460_p11",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s460_p07", ".s460_p09"]
+        },
+        {
+          "id": "s460_p12",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s460_p10", ".s460_p11"]
+        },
+        {
+          "id": "s460_p13",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["C5", "H5"],
+          "dependencies": [".s460_p11", ".s460_p12"]
+        },
+        {
+          "id": "s460_p14",
+          "layerName": "DemandPredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s460_p13"]
+        }
+      ]
+    }
+  }
+]

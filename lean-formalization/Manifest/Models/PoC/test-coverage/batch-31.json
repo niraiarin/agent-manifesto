@@ -1,0 +1,1122 @@
+[
+  {
+    "scenario_id": 301,
+    "project": "自動運転バス安全管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S301",
+      "layers": [
+        {
+          "name": "SafetyInvariant",
+          "ordValue": 4,
+          "definition": "乗客・歩行者の生命安全に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "道路交通法・自動運転安全基準への適合要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "OperationalPolicy",
+          "ordValue": 2,
+          "definition": "運行管理・緊急停止・監視員介入の方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "PredictionHypothesis",
+          "ordValue": 1,
+          "definition": "障害物検知・経路予測に関する推論仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s301_p01",
+          "layerName": "SafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s301_p02",
+          "layerName": "SafetyInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s301_p03",
+          "layerName": "SafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s301_p01"]
+        },
+        {
+          "id": "s301_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s301_p01"]
+        },
+        {
+          "id": "s301_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s301_p02"]
+        },
+        {
+          "id": "s301_p06",
+          "layerName": "OperationalPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s301_p04"]
+        },
+        {
+          "id": "s301_p07",
+          "layerName": "OperationalPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s301_p05"]
+        },
+        {
+          "id": "s301_p08",
+          "layerName": "OperationalPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s301_p03", ".s301_p06"]
+        },
+        {
+          "id": "s301_p09",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s301_p06"]
+        },
+        {
+          "id": "s301_p10",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s301_p07"]
+        },
+        {
+          "id": "s301_p11",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s301_p09"]
+        },
+        {
+          "id": "s301_p12",
+          "layerName": "PredictionHypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s301_p08", ".s301_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 302,
+    "project": "遠隔医療プラットフォーム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 14,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S302",
+      "layers": [
+        {
+          "name": "PatientSafety",
+          "ordValue": 5,
+          "definition": "患者の生命・健康を守る最上位不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "LegalCompliance",
+          "ordValue": 4,
+          "definition": "医師法・個人情報保護法・遠隔診療ガイドラインへの適合",
+          "derivedFrom": ["C3"]
+        },
+        {
+          "name": "ClinicalPolicy",
+          "ordValue": 3,
+          "definition": "診断支援・処方制限・緊急搬送の臨床方針",
+          "derivedFrom": ["C4", "C5", "H1"]
+        },
+        {
+          "name": "SystemReliability",
+          "ordValue": 2,
+          "definition": "通信品質・バックアップ・可用性に関する方針",
+          "derivedFrom": ["H2", "H3"]
+        },
+        {
+          "name": "DiagnosticHypothesis",
+          "ordValue": 1,
+          "definition": "症状推定・疾患分類に関するML推論仮説",
+          "derivedFrom": ["H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s302_p01",
+          "layerName": "PatientSafety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s302_p02",
+          "layerName": "PatientSafety",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s302_p03",
+          "layerName": "LegalCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s302_p01"]
+        },
+        {
+          "id": "s302_p04",
+          "layerName": "ClinicalPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s302_p01", ".s302_p03"]
+        },
+        {
+          "id": "s302_p05",
+          "layerName": "ClinicalPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s302_p02"]
+        },
+        {
+          "id": "s302_p06",
+          "layerName": "ClinicalPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s302_p03"]
+        },
+        {
+          "id": "s302_p07",
+          "layerName": "SystemReliability",
+          "justification": ["H2"],
+          "dependencies": [".s302_p04"]
+        },
+        {
+          "id": "s302_p08",
+          "layerName": "SystemReliability",
+          "justification": ["H3"],
+          "dependencies": [".s302_p05"]
+        },
+        {
+          "id": "s302_p09",
+          "layerName": "SystemReliability",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s302_p06", ".s302_p07"]
+        },
+        {
+          "id": "s302_p10",
+          "layerName": "DiagnosticHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s302_p07"]
+        },
+        {
+          "id": "s302_p11",
+          "layerName": "DiagnosticHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s302_p08"]
+        },
+        {
+          "id": "s302_p12",
+          "layerName": "DiagnosticHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s302_p09"]
+        },
+        {
+          "id": "s302_p13",
+          "layerName": "DiagnosticHypothesis",
+          "justification": ["H4", "H6"],
+          "dependencies": [".s302_p10", ".s302_p11"]
+        },
+        {
+          "id": "s302_p14",
+          "layerName": "DiagnosticHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s302_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 303,
+    "project": "スマートグリッド電力管理システム",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "TestCoverage.S303",
+      "layers": [
+        {
+          "name": "GridStabilityInvariant",
+          "ordValue": 3,
+          "definition": "電力網の周波数・電圧安定性に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "BalancingPolicy",
+          "ordValue": 2,
+          "definition": "需給バランス・再生可能エネルギー優先・負荷制御の方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "ForecastHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測・発電量推定に関する統計的仮説",
+          "derivedFrom": ["C5", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s303_p01",
+          "layerName": "GridStabilityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s303_p02",
+          "layerName": "GridStabilityInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s303_p03",
+          "layerName": "GridStabilityInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s303_p01", ".s303_p02"]
+        },
+        {
+          "id": "s303_p04",
+          "layerName": "BalancingPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s303_p01"]
+        },
+        {
+          "id": "s303_p05",
+          "layerName": "BalancingPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s303_p02"]
+        },
+        {
+          "id": "s303_p06",
+          "layerName": "BalancingPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s303_p03", ".s303_p04"]
+        },
+        {
+          "id": "s303_p07",
+          "layerName": "ForecastHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s303_p04"]
+        },
+        {
+          "id": "s303_p08",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s303_p05"]
+        },
+        {
+          "id": "s303_p09",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s303_p06", ".s303_p07"]
+        },
+        {
+          "id": "s303_p10",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s303_p08", ".s303_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 304,
+    "project": "不正取引検知システム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S304",
+      "layers": [
+        {
+          "name": "ComplianceInvariant",
+          "ordValue": 4,
+          "definition": "マネーロンダリング防止法・金融規制への絶対適合要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "DetectionPolicy",
+          "ordValue": 3,
+          "definition": "不正検知の閾値・エスカレーション・調査起動方針",
+          "derivedFrom": ["C3", "C4", "H1"]
+        },
+        {
+          "name": "RiskScoringModel",
+          "ordValue": 2,
+          "definition": "リスクスコア算出・取引パターン分類モデル",
+          "derivedFrom": ["C5", "H2", "H3", "H4"]
+        },
+        {
+          "name": "BehaviorHypothesis",
+          "ordValue": 1,
+          "definition": "顧客行動変化・新手口推定に関する仮説",
+          "derivedFrom": ["C6", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s304_p01",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s304_p02",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s304_p03",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s304_p01"]
+        },
+        {
+          "id": "s304_p04",
+          "layerName": "DetectionPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s304_p01"]
+        },
+        {
+          "id": "s304_p05",
+          "layerName": "DetectionPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s304_p02"]
+        },
+        {
+          "id": "s304_p06",
+          "layerName": "DetectionPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s304_p03", ".s304_p04"]
+        },
+        {
+          "id": "s304_p07",
+          "layerName": "RiskScoringModel",
+          "justification": ["C5"],
+          "dependencies": [".s304_p04"]
+        },
+        {
+          "id": "s304_p08",
+          "layerName": "RiskScoringModel",
+          "justification": ["H2"],
+          "dependencies": [".s304_p05"]
+        },
+        {
+          "id": "s304_p09",
+          "layerName": "RiskScoringModel",
+          "justification": ["H3"],
+          "dependencies": [".s304_p06"]
+        },
+        {
+          "id": "s304_p10",
+          "layerName": "RiskScoringModel",
+          "justification": ["H4"],
+          "dependencies": [".s304_p07", ".s304_p08"]
+        },
+        {
+          "id": "s304_p11",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["C6"],
+          "dependencies": [".s304_p07"]
+        },
+        {
+          "id": "s304_p12",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s304_p08", ".s304_p09"]
+        },
+        {
+          "id": "s304_p13",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s304_p10"]
+        },
+        {
+          "id": "s304_p14",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s304_p11"]
+        },
+        {
+          "id": "s304_p15",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s304_p12", ".s304_p13"]
+        },
+        {
+          "id": "s304_p16",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s304_p14", ".s304_p15"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 305,
+    "project": "精密農業ドローン制御システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 6,
+    "model_spec": {
+      "namespace": "TestCoverage.S305",
+      "layers": [
+        {
+          "name": "SafetyConstraint",
+          "ordValue": 3,
+          "definition": "人・家畜・禁止空域への衝突回避に関する安全制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "AgriPolicy",
+          "ordValue": 2,
+          "definition": "農薬散布量・飛行経路・作業スケジュール管理方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "CropHypothesis",
+          "ordValue": 1,
+          "definition": "作物成長状態・病害リスク推定に関する仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s305_p01",
+          "layerName": "SafetyConstraint",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s305_p02",
+          "layerName": "SafetyConstraint",
+          "justification": ["C2"],
+          "dependencies": [".s305_p01"]
+        },
+        {
+          "id": "s305_p03",
+          "layerName": "AgriPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s305_p01"]
+        },
+        {
+          "id": "s305_p04",
+          "layerName": "AgriPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s305_p02"]
+        },
+        {
+          "id": "s305_p05",
+          "layerName": "AgriPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s305_p03"]
+        },
+        {
+          "id": "s305_p06",
+          "layerName": "CropHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s305_p03"]
+        },
+        {
+          "id": "s305_p07",
+          "layerName": "CropHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s305_p04", ".s305_p05"]
+        },
+        {
+          "id": "s305_p08",
+          "layerName": "CropHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s305_p06"]
+        },
+        {
+          "id": "s305_p09",
+          "layerName": "CropHypothesis",
+          "justification": ["H3", "H5"],
+          "dependencies": [".s305_p07", ".s305_p08"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 306,
+    "project": "災害避難支援 AI システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S306",
+      "layers": [
+        {
+          "name": "LifeSafetyInvariant",
+          "ordValue": 4,
+          "definition": "要救助者の生命を最優先する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "EvacuationPolicy",
+          "ordValue": 3,
+          "definition": "避難経路決定・優先順位付け・情報発信の方針",
+          "derivedFrom": ["C3", "C4", "H1"]
+        },
+        {
+          "name": "ResourceModel",
+          "ordValue": 2,
+          "definition": "救助資源・避難所キャパシティ・輸送手段の配分モデル",
+          "derivedFrom": ["C5", "H2", "H3"]
+        },
+        {
+          "name": "DisasterHypothesis",
+          "ordValue": 1,
+          "definition": "被災規模推定・二次災害リスク予測に関する仮説",
+          "derivedFrom": ["H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s306_p01",
+          "layerName": "LifeSafetyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s306_p02",
+          "layerName": "LifeSafetyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s306_p03",
+          "layerName": "EvacuationPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s306_p01"]
+        },
+        {
+          "id": "s306_p04",
+          "layerName": "EvacuationPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s306_p02"]
+        },
+        {
+          "id": "s306_p05",
+          "layerName": "EvacuationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s306_p03"]
+        },
+        {
+          "id": "s306_p06",
+          "layerName": "ResourceModel",
+          "justification": ["C5"],
+          "dependencies": [".s306_p03"]
+        },
+        {
+          "id": "s306_p07",
+          "layerName": "ResourceModel",
+          "justification": ["H2"],
+          "dependencies": [".s306_p04"]
+        },
+        {
+          "id": "s306_p08",
+          "layerName": "ResourceModel",
+          "justification": ["H3"],
+          "dependencies": [".s306_p05", ".s306_p06"]
+        },
+        {
+          "id": "s306_p09",
+          "layerName": "DisasterHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s306_p06"]
+        },
+        {
+          "id": "s306_p10",
+          "layerName": "DisasterHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s306_p07"]
+        },
+        {
+          "id": "s306_p11",
+          "layerName": "DisasterHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s306_p08", ".s306_p09"]
+        },
+        {
+          "id": "s306_p12",
+          "layerName": "DisasterHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s306_p10"]
+        },
+        {
+          "id": "s306_p13",
+          "layerName": "DisasterHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s306_p11", ".s306_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 307,
+    "project": "半導体欠陥検査システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S307",
+      "layers": [
+        {
+          "name": "QualityInvariant",
+          "ordValue": 4,
+          "definition": "製品出荷品質保証に関する絶対不変条件（偽陰性ゼロ）",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "InspectionStandard",
+          "ordValue": 3,
+          "definition": "IPC基準・顧客仕様への適合検査方針",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "DetectionModel",
+          "ordValue": 2,
+          "definition": "欠陥分類・サイズ測定・位置特定のモデル",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "DefectHypothesis",
+          "ordValue": 1,
+          "definition": "欠陥発生パターン・製造工程起因推定の仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s307_p01",
+          "layerName": "QualityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s307_p02",
+          "layerName": "QualityInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s307_p01"]
+        },
+        {
+          "id": "s307_p03",
+          "layerName": "InspectionStandard",
+          "justification": ["C3"],
+          "dependencies": [".s307_p01"]
+        },
+        {
+          "id": "s307_p04",
+          "layerName": "InspectionStandard",
+          "justification": ["C4"],
+          "dependencies": [".s307_p02", ".s307_p03"]
+        },
+        {
+          "id": "s307_p05",
+          "layerName": "DetectionModel",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s307_p03"]
+        },
+        {
+          "id": "s307_p06",
+          "layerName": "DetectionModel",
+          "justification": ["H2"],
+          "dependencies": [".s307_p04"]
+        },
+        {
+          "id": "s307_p07",
+          "layerName": "DetectionModel",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s307_p05", ".s307_p06"]
+        },
+        {
+          "id": "s307_p08",
+          "layerName": "DefectHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s307_p05"]
+        },
+        {
+          "id": "s307_p09",
+          "layerName": "DefectHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s307_p06"]
+        },
+        {
+          "id": "s307_p10",
+          "layerName": "DefectHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s307_p07", ".s307_p08"]
+        },
+        {
+          "id": "s307_p11",
+          "layerName": "DefectHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s307_p09", ".s307_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 308,
+    "project": "オンライン試験監督 AI システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S308",
+      "layers": [
+        {
+          "name": "IntegrityInvariant",
+          "ordValue": 3,
+          "definition": "試験公平性・不正行為ゼロに関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "PrivacyPolicy",
+          "ordValue": 2,
+          "definition": "受験者プライバシー保護・データ保持制限方針（GDPR準拠）",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "ProctorHypothesis",
+          "ordValue": 1,
+          "definition": "不正行為パターン推定・環境リスク評価の仮説",
+          "derivedFrom": ["C5", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s308_p01",
+          "layerName": "IntegrityInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s308_p02",
+          "layerName": "IntegrityInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s308_p01"]
+        },
+        {
+          "id": "s308_p03",
+          "layerName": "PrivacyPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s308_p01"]
+        },
+        {
+          "id": "s308_p04",
+          "layerName": "PrivacyPolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s308_p02"]
+        },
+        {
+          "id": "s308_p05",
+          "layerName": "PrivacyPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s308_p03", ".s308_p04"]
+        },
+        {
+          "id": "s308_p06",
+          "layerName": "ProctorHypothesis",
+          "justification": ["C5"],
+          "dependencies": [".s308_p03"]
+        },
+        {
+          "id": "s308_p07",
+          "layerName": "ProctorHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s308_p04"]
+        },
+        {
+          "id": "s308_p08",
+          "layerName": "ProctorHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s308_p05", ".s308_p06"]
+        },
+        {
+          "id": "s308_p09",
+          "layerName": "ProctorHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s308_p07"]
+        },
+        {
+          "id": "s308_p10",
+          "layerName": "IntegrityInvariant",
+          "justification": ["H3"],
+          "dependencies": [".s308_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 309,
+    "project": "港湾コンテナ最適化システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S309",
+      "layers": [
+        {
+          "name": "SafetyConstraint",
+          "ordValue": 4,
+          "definition": "作業員安全・積荷崩壊防止に関する絶対安全制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "OperationalCompliance",
+          "ordValue": 3,
+          "definition": "税関・検疫・危険物規制への適合要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "OptimizationPolicy",
+          "ordValue": 2,
+          "definition": "荷役順序・クレーン割当・保管場所割当の最適化方針",
+          "derivedFrom": ["C5", "H1", "H2", "H3"]
+        },
+        {
+          "name": "DemandHypothesis",
+          "ordValue": 1,
+          "definition": "船便スケジュール変動・需要量予測に関する仮説",
+          "derivedFrom": ["H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s309_p01",
+          "layerName": "SafetyConstraint",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s309_p02",
+          "layerName": "SafetyConstraint",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s309_p03",
+          "layerName": "OperationalCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s309_p01"]
+        },
+        {
+          "id": "s309_p04",
+          "layerName": "OperationalCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s309_p02"]
+        },
+        {
+          "id": "s309_p05",
+          "layerName": "OperationalCompliance",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s309_p03", ".s309_p04"]
+        },
+        {
+          "id": "s309_p06",
+          "layerName": "OptimizationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s309_p03"]
+        },
+        {
+          "id": "s309_p07",
+          "layerName": "OptimizationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s309_p04"]
+        },
+        {
+          "id": "s309_p08",
+          "layerName": "OptimizationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s309_p05", ".s309_p06"]
+        },
+        {
+          "id": "s309_p09",
+          "layerName": "OptimizationPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s309_p07", ".s309_p08"]
+        },
+        {
+          "id": "s309_p10",
+          "layerName": "DemandHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s309_p06"]
+        },
+        {
+          "id": "s309_p11",
+          "layerName": "DemandHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s309_p07"]
+        },
+        {
+          "id": "s309_p12",
+          "layerName": "DemandHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s309_p08"]
+        },
+        {
+          "id": "s309_p13",
+          "layerName": "DemandHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s309_p09", ".s309_p10"]
+        },
+        {
+          "id": "s309_p14",
+          "layerName": "DemandHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s309_p11", ".s309_p12"]
+        },
+        {
+          "id": "s309_p15",
+          "layerName": "DemandHypothesis",
+          "justification": ["H4", "H6"],
+          "dependencies": [".s309_p13", ".s309_p14"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 310,
+    "project": "森林火災早期検知システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S310",
+      "layers": [
+        {
+          "name": "AlertInvariant",
+          "ordValue": 4,
+          "definition": "火災見逃しゼロ・早期警報に関する絶対不変条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ResponsePolicy",
+          "ordValue": 3,
+          "definition": "消防機関通報・避難指示・資源投入の対応方針",
+          "derivedFrom": ["C3", "C4", "H1"]
+        },
+        {
+          "name": "SensorFusionModel",
+          "ordValue": 2,
+          "definition": "衛星・IoT・気象データ統合による検知モデル",
+          "derivedFrom": ["C5", "H2", "H3"]
+        },
+        {
+          "name": "SpreadHypothesis",
+          "ordValue": 1,
+          "definition": "火災延焼予測・リスク地域推定に関する仮説",
+          "derivedFrom": ["H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s310_p01",
+          "layerName": "AlertInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s310_p02",
+          "layerName": "AlertInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s310_p01"]
+        },
+        {
+          "id": "s310_p03",
+          "layerName": "ResponsePolicy",
+          "justification": ["C3"],
+          "dependencies": [".s310_p01"]
+        },
+        {
+          "id": "s310_p04",
+          "layerName": "ResponsePolicy",
+          "justification": ["C4", "H1"],
+          "dependencies": [".s310_p02"]
+        },
+        {
+          "id": "s310_p05",
+          "layerName": "ResponsePolicy",
+          "justification": ["H1"],
+          "dependencies": [".s310_p03"]
+        },
+        {
+          "id": "s310_p06",
+          "layerName": "SensorFusionModel",
+          "justification": ["C5"],
+          "dependencies": [".s310_p03"]
+        },
+        {
+          "id": "s310_p07",
+          "layerName": "SensorFusionModel",
+          "justification": ["H2"],
+          "dependencies": [".s310_p04"]
+        },
+        {
+          "id": "s310_p08",
+          "layerName": "SensorFusionModel",
+          "justification": ["H3"],
+          "dependencies": [".s310_p05", ".s310_p06"]
+        },
+        {
+          "id": "s310_p09",
+          "layerName": "SpreadHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s310_p06"]
+        },
+        {
+          "id": "s310_p10",
+          "layerName": "SpreadHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s310_p07"]
+        },
+        {
+          "id": "s310_p11",
+          "layerName": "SpreadHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s310_p08", ".s310_p09"]
+        },
+        {
+          "id": "s310_p12",
+          "layerName": "AlertInvariant",
+          "justification": ["H4"],
+          "dependencies": [".s310_p10", ".s310_p11"]
+        }
+      ]
+    }
+  }
+]

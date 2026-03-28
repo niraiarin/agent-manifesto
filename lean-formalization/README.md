@@ -124,6 +124,22 @@ Manifest             ← 全 16 モジュール
 | Section 6（投資サイクル） | `trust_accumulates_gradually` 等 | designTheorem (1) |
 | Section 7（自己適用） | `manifest_persists_as_structure` 等 | designTheorem (1) |
 
+## Models/PoC — 認識論的層モデルのインスタンシエーション
+
+`EpistemicLayerClass` を任意のドメインでインスタンス化する PoC パイプライン。
+Phase 0-3 の一気通貫テストで 500 シナリオ（200+ ドメイン）の形式検証を完了。
+
+| コンポーネント | 役割 |
+|--------------|------|
+| `generate-conditional-axiom-system.sh` | ModelSpec JSON → Lean 4 コード生成 |
+| `check-monotonicity.sh` | 層割り当ての単調性検証 |
+| `test-coverage/` | カバレッジテストパイプライン（[詳細](Manifest/Models/PoC/test-coverage/README.md)） |
+
+```
+500 シナリオ = Round 1 (S1-S300, LLM) + Round 2 (S301-S500, LLM Phase 0-3) + Synthetic (100)
+BUILD PASS: 532 / BUILD FAIL: 0 / 単調性違反(意図的): 47
+```
+
 ## ビルド
 
 ```sh

@@ -1,0 +1,158 @@
+{
+  "namespace": "TestCoverage.S338",
+  "layers": [
+    {
+      "name": "EthicalInvariant",
+      "ordValue": 3,
+      "definition": "児童プライバシー・誤診防止・倫理的配慮に関する絶対不変条件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "AssessmentPolicy",
+      "ordValue": 2,
+      "definition": "スクリーニング実施・報告・支援連携の運用方針",
+      "derivedFrom": [
+        "C1",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "DetectionHypothesis",
+      "ordValue": 1,
+      "definition": "検知アルゴリズム・特徴量・説明可能性に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s338_p01",
+      "layerName": "EthicalInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s338_p02",
+      "layerName": "EthicalInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s338_p03",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s338_p02"
+      ]
+    },
+    {
+      "id": "s338_p04",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s338_p03"
+      ]
+    },
+    {
+      "id": "s338_p05",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s338_p02"
+      ]
+    },
+    {
+      "id": "s338_p06",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s338_p03"
+      ]
+    },
+    {
+      "id": "s338_p07",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s338_p04"
+      ]
+    },
+    {
+      "id": "s338_p08",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s338_p05"
+      ]
+    },
+    {
+      "id": "s338_p09",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s338_p06"
+      ]
+    },
+    {
+      "id": "s338_p10",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C1",
+        "H1"
+      ],
+      "dependencies": [
+        ".s338_p06",
+        ".s338_p07"
+      ]
+    },
+    {
+      "id": "s338_p11",
+      "layerName": "DetectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s338_p09",
+        ".s338_p08"
+      ]
+    },
+    {
+      "id": "s338_p12",
+      "layerName": "AssessmentPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s338_p10",
+        ".s338_p11"
+      ]
+    }
+  ]
+}

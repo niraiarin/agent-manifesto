@@ -1,0 +1,129 @@
+{
+  "namespace": "TestCoverage.S305",
+  "layers": [
+    {
+      "name": "SafetyConstraint",
+      "ordValue": 3,
+      "definition": "人・家畜・禁止空域への衝突回避に関する安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "AgriPolicy",
+      "ordValue": 2,
+      "definition": "農薬散布量・飛行経路・作業スケジュール管理方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "CropHypothesis",
+      "ordValue": 1,
+      "definition": "作物成長状態・病害リスク推定に関する仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s305_p01",
+      "layerName": "SafetyConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s305_p02",
+      "layerName": "SafetyConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s305_p01"
+      ]
+    },
+    {
+      "id": "s305_p03",
+      "layerName": "AgriPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s305_p01"
+      ]
+    },
+    {
+      "id": "s305_p04",
+      "layerName": "AgriPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s305_p02"
+      ]
+    },
+    {
+      "id": "s305_p05",
+      "layerName": "AgriPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s305_p03"
+      ]
+    },
+    {
+      "id": "s305_p06",
+      "layerName": "CropHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s305_p03"
+      ]
+    },
+    {
+      "id": "s305_p07",
+      "layerName": "CropHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s305_p04",
+        ".s305_p05"
+      ]
+    },
+    {
+      "id": "s305_p08",
+      "layerName": "CropHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s305_p06"
+      ]
+    },
+    {
+      "id": "s305_p09",
+      "layerName": "CropHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s305_p07",
+        ".s305_p08"
+      ]
+    }
+  ]
+}

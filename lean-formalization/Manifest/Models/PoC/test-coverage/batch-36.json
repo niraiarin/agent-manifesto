@@ -1,0 +1,1945 @@
+[
+  {
+    "scenario_id": 351,
+    "project": "感染症拡散モデリングシステム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S351",
+      "layers": [
+        {
+          "name": "PublicHealthSafety",
+          "ordValue": 4,
+          "definition": "市民の生命・健康を守る最上位安全制約。感染拡大防止のための絶対条件",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "EpidemiologicalLaw",
+          "ordValue": 3,
+          "definition": "感染症法・隔離指針・報告義務など法的・規制的要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ModelingPolicy",
+          "ordValue": 2,
+          "definition": "SIRモデルパラメータ選定・データ収集方針・シミュレーション精度基準",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "TransmissionHypothesis",
+          "ordValue": 1,
+          "definition": "接触率・潜伏期間・免疫持続期間に関する推論仮説。観察データで更新可能",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s351_p01",
+          "layerName": "PublicHealthSafety",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s351_p02",
+          "layerName": "PublicHealthSafety",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s351_p01"
+          ]
+        },
+        {
+          "id": "s351_p03",
+          "layerName": "EpidemiologicalLaw",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s351_p01"
+          ]
+        },
+        {
+          "id": "s351_p04",
+          "layerName": "EpidemiologicalLaw",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s351_p02"
+          ]
+        },
+        {
+          "id": "s351_p05",
+          "layerName": "ModelingPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s351_p03"
+          ]
+        },
+        {
+          "id": "s351_p06",
+          "layerName": "ModelingPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s351_p04"
+          ]
+        },
+        {
+          "id": "s351_p07",
+          "layerName": "ModelingPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s351_p03",
+            ".s351_p04"
+          ]
+        },
+        {
+          "id": "s351_p08",
+          "layerName": "TransmissionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s351_p05"
+          ]
+        },
+        {
+          "id": "s351_p09",
+          "layerName": "TransmissionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s351_p06"
+          ]
+        },
+        {
+          "id": "s351_p10",
+          "layerName": "TransmissionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s351_p07"
+          ]
+        },
+        {
+          "id": "s351_p11",
+          "layerName": "TransmissionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s351_p08"
+          ]
+        },
+        {
+          "id": "s351_p12",
+          "layerName": "TransmissionHypothesis",
+          "justification": [
+            "H3",
+            "H5"
+          ],
+          "dependencies": [
+            ".s351_p09",
+            ".s351_p10"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 352,
+    "project": "住宅ローン審査 AI システム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 16,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S352",
+      "layers": [
+        {
+          "name": "FairLendingInvariant",
+          "ordValue": 5,
+          "definition": "差別禁止・公正貸付法への絶対準拠。属性による不当差別の禁止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 4,
+          "definition": "金融庁ガイドライン・個人情報保護法・AI公正利用規制への適合",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "CreditPolicy",
+          "ordValue": 3,
+          "definition": "融資基準・担保評価・信用スコア閾値の業務方針",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "RiskAssessment",
+          "ordValue": 2,
+          "definition": "デフォルト確率推定・金利算定・LTV評価に関するリスクモデル",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "MarketHypothesis",
+          "ordValue": 1,
+          "definition": "不動産市況・金利動向・経済指標に関する予測仮説",
+          "derivedFrom": [
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s352_p01",
+          "layerName": "FairLendingInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s352_p02",
+          "layerName": "FairLendingInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s352_p03",
+          "layerName": "FairLendingInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s352_p01"
+          ]
+        },
+        {
+          "id": "s352_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s352_p01"
+          ]
+        },
+        {
+          "id": "s352_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s352_p02"
+          ]
+        },
+        {
+          "id": "s352_p06",
+          "layerName": "CreditPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s352_p04"
+          ]
+        },
+        {
+          "id": "s352_p07",
+          "layerName": "CreditPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s352_p05"
+          ]
+        },
+        {
+          "id": "s352_p08",
+          "layerName": "CreditPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s352_p03",
+            ".s352_p04"
+          ]
+        },
+        {
+          "id": "s352_p09",
+          "layerName": "RiskAssessment",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s352_p06"
+          ]
+        },
+        {
+          "id": "s352_p10",
+          "layerName": "RiskAssessment",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s352_p07"
+          ]
+        },
+        {
+          "id": "s352_p11",
+          "layerName": "RiskAssessment",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s352_p08"
+          ]
+        },
+        {
+          "id": "s352_p12",
+          "layerName": "RiskAssessment",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s352_p09"
+          ]
+        },
+        {
+          "id": "s352_p13",
+          "layerName": "MarketHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s352_p09"
+          ]
+        },
+        {
+          "id": "s352_p14",
+          "layerName": "MarketHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s352_p10"
+          ]
+        },
+        {
+          "id": "s352_p15",
+          "layerName": "MarketHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s352_p11",
+            ".s352_p12"
+          ]
+        },
+        {
+          "id": "s352_p16",
+          "layerName": "MarketHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s352_p13",
+            ".s352_p14"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 353,
+    "project": "都市部渋滞予測システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S353",
+      "layers": [
+        {
+          "name": "TrafficSafetyRule",
+          "ordValue": 3,
+          "definition": "道路交通法・緊急車両優先・事故防止の絶対的交通安全制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "InfrastructurePolicy",
+          "ordValue": 2,
+          "definition": "信号制御・迂回路案内・データ提供に関する道路管理方針",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1"
+          ]
+        },
+        {
+          "name": "PredictionModel",
+          "ordValue": 1,
+          "definition": "交通流量・旅行時間・渋滞発生確率に関する予測仮説",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s353_p01",
+          "layerName": "TrafficSafetyRule",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": [
+            ".s353_p09"
+          ]
+        },
+        {
+          "id": "s353_p02",
+          "layerName": "TrafficSafetyRule",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s353_p01"
+          ]
+        },
+        {
+          "id": "s353_p03",
+          "layerName": "InfrastructurePolicy",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s353_p01"
+          ]
+        },
+        {
+          "id": "s353_p04",
+          "layerName": "InfrastructurePolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s353_p02"
+          ]
+        },
+        {
+          "id": "s353_p05",
+          "layerName": "InfrastructurePolicy",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s353_p03"
+          ]
+        },
+        {
+          "id": "s353_p06",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s353_p03"
+          ]
+        },
+        {
+          "id": "s353_p07",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s353_p04"
+          ]
+        },
+        {
+          "id": "s353_p08",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s353_p05",
+            ".s353_p06"
+          ]
+        },
+        {
+          "id": "s353_p09",
+          "layerName": "PredictionModel",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s353_p07",
+            ".s353_p08"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 354,
+    "project": "製造ライン品質管理統計システム",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S354",
+      "layers": [
+        {
+          "name": "ProductSafetyInvariant",
+          "ordValue": 4,
+          "definition": "出荷製品の安全性・欠陥品排除に関する絶対品質制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "StandardsCompliance",
+          "ordValue": 3,
+          "definition": "ISO 9001・JIS規格・業界品質基準への準拠要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "StatisticalProcessControl",
+          "ordValue": 2,
+          "definition": "管理図・工程能力指数・サンプリング計画の統計的管理方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "AnomalyDetectionHypothesis",
+          "ordValue": 1,
+          "definition": "異常検知閾値・不良率予測・根本原因推定に関する統計仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s354_p01",
+          "layerName": "ProductSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s354_p02",
+          "layerName": "ProductSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s354_p03",
+          "layerName": "StandardsCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s354_p01"
+          ]
+        },
+        {
+          "id": "s354_p04",
+          "layerName": "StandardsCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s354_p02"
+          ]
+        },
+        {
+          "id": "s354_p05",
+          "layerName": "StandardsCompliance",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s354_p01",
+            ".s354_p02"
+          ]
+        },
+        {
+          "id": "s354_p06",
+          "layerName": "StatisticalProcessControl",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s354_p03"
+          ]
+        },
+        {
+          "id": "s354_p07",
+          "layerName": "StatisticalProcessControl",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s354_p04"
+          ]
+        },
+        {
+          "id": "s354_p08",
+          "layerName": "StatisticalProcessControl",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s354_p05"
+          ]
+        },
+        {
+          "id": "s354_p09",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s354_p06"
+          ]
+        },
+        {
+          "id": "s354_p10",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s354_p07"
+          ]
+        },
+        {
+          "id": "s354_p11",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s354_p08"
+          ]
+        },
+        {
+          "id": "s354_p12",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s354_p09"
+          ]
+        },
+        {
+          "id": "s354_p13",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H3",
+            "H5"
+          ],
+          "dependencies": [
+            ".s354_p10",
+            ".s354_p11"
+          ]
+        },
+        {
+          "id": "s354_p14",
+          "layerName": "AnomalyDetectionHypothesis",
+          "justification": [
+            "H4",
+            "H6"
+          ],
+          "dependencies": [
+            ".s354_p12",
+            ".s354_p13"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 355,
+    "project": "エンタープライズ アクセス制御ポリシー管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 15,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S355",
+      "layers": [
+        {
+          "name": "SecurityInvariant",
+          "ordValue": 5,
+          "definition": "機密情報保護・不正アクセス禁止の絶対セキュリティ制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "ComplianceRequirement",
+          "ordValue": 4,
+          "definition": "SOC2・ISO 27001・個人情報保護法・GDPR への準拠要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "OrganizationalPolicy",
+          "ordValue": 3,
+          "definition": "最小権限原則・職務分離・定期レビュー要件の組織方針",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "AccessControlRule",
+          "ordValue": 2,
+          "definition": "ロールベースアクセス制御・コンテキスト認証・時間制限の実装ルール",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        },
+        {
+          "name": "BehaviorHypothesis",
+          "ordValue": 1,
+          "definition": "ユーザー行動パターン・異常アクセス検知・リスクスコア推定の仮説",
+          "derivedFrom": [
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s355_p01",
+          "layerName": "SecurityInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s355_p02",
+          "layerName": "SecurityInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s355_p03",
+          "layerName": "ComplianceRequirement",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s355_p01"
+          ]
+        },
+        {
+          "id": "s355_p04",
+          "layerName": "ComplianceRequirement",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s355_p02"
+          ]
+        },
+        {
+          "id": "s355_p05",
+          "layerName": "OrganizationalPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s355_p03"
+          ]
+        },
+        {
+          "id": "s355_p06",
+          "layerName": "OrganizationalPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s355_p04"
+          ]
+        },
+        {
+          "id": "s355_p07",
+          "layerName": "OrganizationalPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s355_p03",
+            ".s355_p04"
+          ]
+        },
+        {
+          "id": "s355_p08",
+          "layerName": "AccessControlRule",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s355_p05"
+          ]
+        },
+        {
+          "id": "s355_p09",
+          "layerName": "AccessControlRule",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s355_p06"
+          ]
+        },
+        {
+          "id": "s355_p10",
+          "layerName": "AccessControlRule",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s355_p07",
+            ".s355_p08"
+          ]
+        },
+        {
+          "id": "s355_p11",
+          "layerName": "BehaviorHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s355_p08"
+          ]
+        },
+        {
+          "id": "s355_p12",
+          "layerName": "BehaviorHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s355_p09"
+          ]
+        },
+        {
+          "id": "s355_p13",
+          "layerName": "BehaviorHypothesis",
+          "justification": [
+            "H4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s355_p10"
+          ]
+        },
+        {
+          "id": "s355_p14",
+          "layerName": "BehaviorHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s355_p11",
+            ".s355_p12"
+          ]
+        },
+        {
+          "id": "s355_p15",
+          "layerName": "BehaviorHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s355_p13",
+            ".s355_p14"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 356,
+    "project": "語学学習チャットボット",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 3,
+    "num_props": 8,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S356",
+      "layers": [
+        {
+          "name": "LearnerWelfareInvariant",
+          "ordValue": 3,
+          "definition": "学習者の誤学習防止・安全コンテンツ提供の不変制約。有害情報の排除",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "PedagogicalPolicy",
+          "ordValue": 2,
+          "definition": "段階的習熟・エラー修正方針・モチベーション維持の教育学的方針",
+          "derivedFrom": [
+            "C3",
+            "C4",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "PersonalizationHypothesis",
+          "ordValue": 1,
+          "definition": "習熟度推定・学習スタイル・最適復習間隔に関する適応学習仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s356_p01",
+          "layerName": "LearnerWelfareInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": [
+            ".s356_p08"
+          ]
+        },
+        {
+          "id": "s356_p02",
+          "layerName": "LearnerWelfareInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s356_p01"
+          ]
+        },
+        {
+          "id": "s356_p03",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "C3",
+            "H1"
+          ],
+          "dependencies": [
+            ".s356_p01"
+          ]
+        },
+        {
+          "id": "s356_p04",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "C4",
+            "H2"
+          ],
+          "dependencies": [
+            ".s356_p02"
+          ]
+        },
+        {
+          "id": "s356_p05",
+          "layerName": "PersonalizationHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s356_p03"
+          ]
+        },
+        {
+          "id": "s356_p06",
+          "layerName": "PersonalizationHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s356_p04"
+          ]
+        },
+        {
+          "id": "s356_p07",
+          "layerName": "PersonalizationHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s356_p05"
+          ]
+        },
+        {
+          "id": "s356_p08",
+          "layerName": "PersonalizationHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s356_p06",
+            ".s356_p07"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 357,
+    "project": "都市大気汚染予測システム",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S357",
+      "layers": [
+        {
+          "name": "PublicHealthProtection",
+          "ordValue": 4,
+          "definition": "住民の健康被害防止・緊急警報発令の絶対的公衆衛生制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "EnvironmentalLaw",
+          "ordValue": 3,
+          "definition": "大気汚染防止法・環境基準値・自治体条例への法的準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "MonitoringPolicy",
+          "ordValue": 2,
+          "definition": "観測点配置・データ収集頻度・欠損補完の監視方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "DispersionHypothesis",
+          "ordValue": 1,
+          "definition": "大気拡散モデル・気象影響・汚染源推定に関する予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5",
+            "H6",
+            "H7"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s357_p01",
+          "layerName": "PublicHealthProtection",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s357_p02",
+          "layerName": "PublicHealthProtection",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s357_p01"
+          ]
+        },
+        {
+          "id": "s357_p03",
+          "layerName": "EnvironmentalLaw",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s357_p01"
+          ]
+        },
+        {
+          "id": "s357_p04",
+          "layerName": "EnvironmentalLaw",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s357_p02"
+          ]
+        },
+        {
+          "id": "s357_p05",
+          "layerName": "MonitoringPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s357_p03"
+          ]
+        },
+        {
+          "id": "s357_p06",
+          "layerName": "MonitoringPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s357_p04"
+          ]
+        },
+        {
+          "id": "s357_p07",
+          "layerName": "MonitoringPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s357_p03",
+            ".s357_p04"
+          ]
+        },
+        {
+          "id": "s357_p08",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s357_p05"
+          ]
+        },
+        {
+          "id": "s357_p09",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s357_p06"
+          ]
+        },
+        {
+          "id": "s357_p10",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s357_p07"
+          ]
+        },
+        {
+          "id": "s357_p11",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s357_p08"
+          ]
+        },
+        {
+          "id": "s357_p12",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H7"
+          ],
+          "dependencies": [
+            ".s357_p09",
+            ".s357_p10"
+          ]
+        },
+        {
+          "id": "s357_p13",
+          "layerName": "DispersionHypothesis",
+          "justification": [
+            "H3",
+            "H6"
+          ],
+          "dependencies": [
+            ".s357_p11",
+            ".s357_p12"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 358,
+    "project": "採用スクリーニング AI システム",
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestCoverage.S358",
+      "layers": [
+        {
+          "name": "AntiDiscriminationInvariant",
+          "ordValue": 5,
+          "definition": "雇用差別禁止・公平採用の絶対制約。性別・人種・年齢等属性による不当選別の禁止",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "LaborLawCompliance",
+          "ordValue": 4,
+          "definition": "労働基準法・雇用機会均等法・個人情報保護法への準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "HiringPolicy",
+          "ordValue": 3,
+          "definition": "採用基準・選考フロー・合否通知に関する人事方針",
+          "derivedFrom": [
+            "C5",
+            "C6",
+            "H1"
+          ]
+        },
+        {
+          "name": "CandidateEvaluation",
+          "ordValue": 2,
+          "definition": "スキルマッチング・文化適合・ポテンシャル評価の方法論",
+          "derivedFrom": [
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "PredictiveHypothesis",
+          "ordValue": 1,
+          "definition": "入社後パフォーマンス・定着率・成長予測に関する統計仮説",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s358_p01",
+          "layerName": "AntiDiscriminationInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s358_p02",
+          "layerName": "AntiDiscriminationInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s358_p03",
+          "layerName": "AntiDiscriminationInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s358_p01"
+          ]
+        },
+        {
+          "id": "s358_p04",
+          "layerName": "LaborLawCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s358_p01"
+          ]
+        },
+        {
+          "id": "s358_p05",
+          "layerName": "LaborLawCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s358_p02"
+          ]
+        },
+        {
+          "id": "s358_p06",
+          "layerName": "LaborLawCompliance",
+          "justification": [
+            "C3",
+            "C4"
+          ],
+          "dependencies": [
+            ".s358_p03"
+          ]
+        },
+        {
+          "id": "s358_p07",
+          "layerName": "HiringPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s358_p04"
+          ]
+        },
+        {
+          "id": "s358_p08",
+          "layerName": "HiringPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s358_p05"
+          ]
+        },
+        {
+          "id": "s358_p09",
+          "layerName": "HiringPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s358_p06",
+            ".s358_p07"
+          ]
+        },
+        {
+          "id": "s358_p10",
+          "layerName": "CandidateEvaluation",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s358_p07"
+          ]
+        },
+        {
+          "id": "s358_p11",
+          "layerName": "CandidateEvaluation",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s358_p08"
+          ]
+        },
+        {
+          "id": "s358_p12",
+          "layerName": "CandidateEvaluation",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s358_p09"
+          ]
+        },
+        {
+          "id": "s358_p13",
+          "layerName": "CandidateEvaluation",
+          "justification": [
+            "H2",
+            "H4"
+          ],
+          "dependencies": [
+            ".s358_p10",
+            ".s358_p12"
+          ]
+        },
+        {
+          "id": "s358_p14",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s358_p10"
+          ]
+        },
+        {
+          "id": "s358_p15",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s358_p11"
+          ]
+        },
+        {
+          "id": "s358_p16",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s358_p12",
+            ".s358_p13"
+          ]
+        },
+        {
+          "id": "s358_p17",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s358_p14",
+            ".s358_p15"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 359,
+    "project": "建設施工進捗管理システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 11,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S359",
+      "layers": [
+        {
+          "name": "ConstructionSafetyInvariant",
+          "ordValue": 4,
+          "definition": "作業員の生命安全・重大事故防止の絶対的工事安全制約",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "建設業法・労働安全衛生法・建築基準法への適合要件",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "ProjectManagementPolicy",
+          "ordValue": 2,
+          "definition": "工程計画・資材調達・サブコン管理・品質検査の施工管理方針",
+          "derivedFrom": [
+            "C5",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "ProgressForecastHypothesis",
+          "ordValue": 1,
+          "definition": "完工予測・遅延リスク・コスト超過に関する進捗予測仮説",
+          "derivedFrom": [
+            "H3",
+            "H4",
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s359_p01",
+          "layerName": "ConstructionSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s359_p02",
+          "layerName": "ConstructionSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s359_p01"
+          ]
+        },
+        {
+          "id": "s359_p03",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s359_p01"
+          ]
+        },
+        {
+          "id": "s359_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s359_p02"
+          ]
+        },
+        {
+          "id": "s359_p05",
+          "layerName": "ProjectManagementPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s359_p03"
+          ]
+        },
+        {
+          "id": "s359_p06",
+          "layerName": "ProjectManagementPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s359_p04"
+          ]
+        },
+        {
+          "id": "s359_p07",
+          "layerName": "ProjectManagementPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s359_p03",
+            ".s359_p04"
+          ]
+        },
+        {
+          "id": "s359_p08",
+          "layerName": "ProgressForecastHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s359_p05"
+          ]
+        },
+        {
+          "id": "s359_p09",
+          "layerName": "ProgressForecastHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s359_p06"
+          ]
+        },
+        {
+          "id": "s359_p10",
+          "layerName": "ProgressForecastHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s359_p07",
+            ".s359_p08"
+          ]
+        },
+        {
+          "id": "s359_p11",
+          "layerName": "ProgressForecastHypothesis",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s359_p09",
+            ".s359_p10"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 360,
+    "project": "粒子加速器制御システム",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 6,
+    "num_props": 18,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S360",
+      "layers": [
+        {
+          "name": "RadiationSafetyInvariant",
+          "ordValue": 6,
+          "definition": "放射線被曝防止・施設外漏洩禁止の絶対安全制約。いかなる状況でも違反不可",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "NuclearRegulation",
+          "ordValue": 5,
+          "definition": "原子力規制法・IAEA安全基準・施設使用許可条件への厳格な準拠",
+          "derivedFrom": [
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "FacilityProtectionPolicy",
+          "ordValue": 4,
+          "definition": "超電導磁石保護・ビームダンプ動作・緊急停止手順の施設保護方針",
+          "derivedFrom": [
+            "C5",
+            "C6"
+          ]
+        },
+        {
+          "name": "ExperimentalProtocol",
+          "ordValue": 3,
+          "definition": "衝突エネルギー設定・ルミノシティ管理・検出器運用の実験手順",
+          "derivedFrom": [
+            "C7",
+            "H1",
+            "H2"
+          ]
+        },
+        {
+          "name": "AcceleratorControl",
+          "ordValue": 2,
+          "definition": "ビーム調整・磁場制御・位相同期に関する運転制御ルール",
+          "derivedFrom": [
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "PhysicsHypothesis",
+          "ordValue": 1,
+          "definition": "粒子軌道・衝突断面積・二次粒子生成に関する物理予測仮説",
+          "derivedFrom": [
+            "H5",
+            "H6"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s360_p01",
+          "layerName": "RadiationSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s360_p02",
+          "layerName": "RadiationSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s360_p03",
+          "layerName": "RadiationSafetyInvariant",
+          "justification": [
+            "C1",
+            "C2"
+          ],
+          "dependencies": [
+            ".s360_p01"
+          ]
+        },
+        {
+          "id": "s360_p04",
+          "layerName": "NuclearRegulation",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s360_p01"
+          ]
+        },
+        {
+          "id": "s360_p05",
+          "layerName": "NuclearRegulation",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s360_p02"
+          ]
+        },
+        {
+          "id": "s360_p06",
+          "layerName": "FacilityProtectionPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s360_p04"
+          ]
+        },
+        {
+          "id": "s360_p07",
+          "layerName": "FacilityProtectionPolicy",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s360_p05"
+          ]
+        },
+        {
+          "id": "s360_p08",
+          "layerName": "FacilityProtectionPolicy",
+          "justification": [
+            "C5",
+            "C6"
+          ],
+          "dependencies": [
+            ".s360_p03",
+            ".s360_p04"
+          ]
+        },
+        {
+          "id": "s360_p09",
+          "layerName": "ExperimentalProtocol",
+          "justification": [
+            "C7",
+            "H1"
+          ],
+          "dependencies": [
+            ".s360_p06"
+          ]
+        },
+        {
+          "id": "s360_p10",
+          "layerName": "ExperimentalProtocol",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s360_p07"
+          ]
+        },
+        {
+          "id": "s360_p11",
+          "layerName": "ExperimentalProtocol",
+          "justification": [
+            "C7"
+          ],
+          "dependencies": [
+            ".s360_p08",
+            ".s360_p09"
+          ]
+        },
+        {
+          "id": "s360_p12",
+          "layerName": "AcceleratorControl",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s360_p09"
+          ]
+        },
+        {
+          "id": "s360_p13",
+          "layerName": "AcceleratorControl",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s360_p10"
+          ]
+        },
+        {
+          "id": "s360_p14",
+          "layerName": "AcceleratorControl",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s360_p11",
+            ".s360_p12"
+          ]
+        },
+        {
+          "id": "s360_p15",
+          "layerName": "PhysicsHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s360_p12"
+          ]
+        },
+        {
+          "id": "s360_p16",
+          "layerName": "PhysicsHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s360_p13"
+          ]
+        },
+        {
+          "id": "s360_p17",
+          "layerName": "PhysicsHypothesis",
+          "justification": [
+            "H5",
+            "H6"
+          ],
+          "dependencies": [
+            ".s360_p14",
+            ".s360_p15"
+          ]
+        },
+        {
+          "id": "s360_p18",
+          "layerName": "PhysicsHypothesis",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s360_p16",
+            ".s360_p17"
+          ]
+        }
+      ]
+    }
+  }
+]

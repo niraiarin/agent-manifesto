@@ -1,0 +1,98 @@
+{
+  "namespace": "TestCoverage.S444",
+  "layers": [
+    {
+      "name": "ServiceAvailabilityInvariant",
+      "ordValue": 2,
+      "definition": "通信サービスの可用性・データ完全性・障害通知に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "QualityMetricsHypothesis",
+      "ordValue": 1,
+      "definition": "パケットロス率・遅延分散・スループット変動の品質推定仮説",
+      "derivedFrom": [
+        "C4",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s444_p01",
+      "layerName": "ServiceAvailabilityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s444_p02",
+      "layerName": "ServiceAvailabilityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s444_p01"
+      ]
+    },
+    {
+      "id": "s444_p03",
+      "layerName": "ServiceAvailabilityInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s444_p01"
+      ]
+    },
+    {
+      "id": "s444_p04",
+      "layerName": "QualityMetricsHypothesis",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s444_p02"
+      ]
+    },
+    {
+      "id": "s444_p05",
+      "layerName": "QualityMetricsHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s444_p03",
+        ".s444_p04"
+      ]
+    },
+    {
+      "id": "s444_p06",
+      "layerName": "QualityMetricsHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s444_p04"
+      ]
+    },
+    {
+      "id": "s444_p07",
+      "layerName": "QualityMetricsHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s444_p05",
+        ".s444_p06"
+      ]
+    }
+  ]
+}

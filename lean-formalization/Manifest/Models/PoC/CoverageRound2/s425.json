@@ -1,0 +1,173 @@
+{
+  "namespace": "TestCoverage.S425",
+  "layers": [
+    {
+      "name": "SupplyChainSecurity",
+      "ordValue": 4,
+      "definition": "既知脆弱性コンポーネントの使用禁止・Critical CVE即時対応に関する絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LicenseCompliance",
+      "ordValue": 3,
+      "definition": "OSS ライセンス遵守・GPL汚染防止・特許侵害回避に関する法的要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DependencyPolicy",
+      "ordValue": 2,
+      "definition": "推移的依存解決・バージョンピン戦略・更新ポリシーに関する管理方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "RiskAssessHypothesis",
+      "ordValue": 1,
+      "definition": "サプライチェーン攻撃経路・依存グラフ脆弱性伝播に関するリスク仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s425_p01",
+      "layerName": "SupplyChainSecurity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s425_p02",
+      "layerName": "SupplyChainSecurity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s425_p03",
+      "layerName": "LicenseCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s425_p01"
+      ]
+    },
+    {
+      "id": "s425_p04",
+      "layerName": "LicenseCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s425_p02"
+      ]
+    },
+    {
+      "id": "s425_p05",
+      "layerName": "LicenseCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s425_p03",
+        ".s425_p04"
+      ]
+    },
+    {
+      "id": "s425_p06",
+      "layerName": "DependencyPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s425_p03"
+      ]
+    },
+    {
+      "id": "s425_p07",
+      "layerName": "DependencyPolicy",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s425_p04"
+      ]
+    },
+    {
+      "id": "s425_p08",
+      "layerName": "DependencyPolicy",
+      "justification": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s425_p06",
+        ".s425_p07"
+      ]
+    },
+    {
+      "id": "s425_p09",
+      "layerName": "RiskAssessHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s425_p06"
+      ]
+    },
+    {
+      "id": "s425_p10",
+      "layerName": "RiskAssessHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s425_p07"
+      ]
+    },
+    {
+      "id": "s425_p11",
+      "layerName": "RiskAssessHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s425_p09"
+      ]
+    },
+    {
+      "id": "s425_p12",
+      "layerName": "RiskAssessHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s425_p10",
+        ".s425_p11"
+      ]
+    }
+  ]
+}

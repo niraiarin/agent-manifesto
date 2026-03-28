@@ -1,0 +1,168 @@
+{
+  "namespace": "TestCoverage.S351",
+  "layers": [
+    {
+      "name": "PublicHealthSafety",
+      "ordValue": 4,
+      "definition": "市民の生命・健康を守る最上位安全制約。感染拡大防止のための絶対条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EpidemiologicalLaw",
+      "ordValue": 3,
+      "definition": "感染症法・隔離指針・報告義務など法的・規制的要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ModelingPolicy",
+      "ordValue": 2,
+      "definition": "SIRモデルパラメータ選定・データ収集方針・シミュレーション精度基準",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "TransmissionHypothesis",
+      "ordValue": 1,
+      "definition": "接触率・潜伏期間・免疫持続期間に関する推論仮説。観察データで更新可能",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s351_p01",
+      "layerName": "PublicHealthSafety",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s351_p02",
+      "layerName": "PublicHealthSafety",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s351_p01"
+      ]
+    },
+    {
+      "id": "s351_p03",
+      "layerName": "EpidemiologicalLaw",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s351_p01"
+      ]
+    },
+    {
+      "id": "s351_p04",
+      "layerName": "EpidemiologicalLaw",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s351_p02"
+      ]
+    },
+    {
+      "id": "s351_p05",
+      "layerName": "ModelingPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s351_p03"
+      ]
+    },
+    {
+      "id": "s351_p06",
+      "layerName": "ModelingPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s351_p04"
+      ]
+    },
+    {
+      "id": "s351_p07",
+      "layerName": "ModelingPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s351_p03",
+        ".s351_p04"
+      ]
+    },
+    {
+      "id": "s351_p08",
+      "layerName": "TransmissionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s351_p05"
+      ]
+    },
+    {
+      "id": "s351_p09",
+      "layerName": "TransmissionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s351_p06"
+      ]
+    },
+    {
+      "id": "s351_p10",
+      "layerName": "TransmissionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s351_p07"
+      ]
+    },
+    {
+      "id": "s351_p11",
+      "layerName": "TransmissionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s351_p08"
+      ]
+    },
+    {
+      "id": "s351_p12",
+      "layerName": "TransmissionHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s351_p09",
+        ".s351_p10"
+      ]
+    }
+  ]
+}

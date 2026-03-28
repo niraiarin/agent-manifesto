@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S331",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 4,
+      "definition": "炉心安全に関する絶対不変条件。いかなる運転状況でも侵犯不可",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "RegulatoryRequirement",
+      "ordValue": 3,
+      "definition": "規制基準・法令への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "通常運転・過渡対応の運用方針",
+      "derivedFrom": [
+        "C4",
+        "C6",
+        "H1",
+        "H5"
+      ]
+    },
+    {
+      "name": "AnalysisHypothesis",
+      "ordValue": 1,
+      "definition": "安全解析・シミュレーションに基づく推定仮説",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s331_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s331_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s331_p03",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s331_p02"
+      ]
+    },
+    {
+      "id": "s331_p04",
+      "layerName": "RegulatoryRequirement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s331_p01"
+      ]
+    },
+    {
+      "id": "s331_p05",
+      "layerName": "RegulatoryRequirement",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s331_p01"
+      ]
+    },
+    {
+      "id": "s331_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C6",
+        "H1"
+      ],
+      "dependencies": [
+        ".s331_p01",
+        ".s331_p04"
+      ]
+    },
+    {
+      "id": "s331_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s331_p05",
+        ".s331_p06"
+      ]
+    },
+    {
+      "id": "s331_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C2",
+        "H1"
+      ],
+      "dependencies": [
+        ".s331_p02"
+      ]
+    },
+    {
+      "id": "s331_p09",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s331_p08"
+      ]
+    },
+    {
+      "id": "s331_p10",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s331_p03"
+      ]
+    },
+    {
+      "id": "s331_p11",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s331_p06"
+      ]
+    },
+    {
+      "id": "s331_p12",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s331_p09",
+        ".s331_p11"
+      ]
+    },
+    {
+      "id": "s331_p13",
+      "layerName": "RegulatoryRequirement",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s331_p04",
+        ".s331_p12"
+      ]
+    },
+    {
+      "id": "s331_p14",
+      "layerName": "AnalysisHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s331_p07"
+      ]
+    }
+  ]
+}

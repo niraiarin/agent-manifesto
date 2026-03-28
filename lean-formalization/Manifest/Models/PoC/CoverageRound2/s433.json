@@ -1,0 +1,222 @@
+{
+  "namespace": "TestCoverage.S433",
+  "layers": [
+    {
+      "name": "ChemicalLawInvariant",
+      "ordValue": 5,
+      "definition": "土壌化学・反応速度論・pH平衡の不変制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "EnvironmentalRegulation",
+      "ordValue": 4,
+      "definition": "土壌汚染対策法・農薬残留基準・重金属規制",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "SamplingAnalysisPolicy",
+      "ordValue": 3,
+      "definition": "土壌サンプリング手法・分析プロトコル・精度保証",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "NutrientModelHypothesis",
+      "ordValue": 2,
+      "definition": "窒素・リン・カリウムの作物吸収モデルに関する推論",
+      "derivedFrom": [
+        "C6",
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "RecommendationAlgorithm",
+      "ordValue": 1,
+      "definition": "施肥量・改良材推奨アルゴリズムの仮説的選択",
+      "derivedFrom": [
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s433_p01",
+      "layerName": "ChemicalLawInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s433_p02",
+      "layerName": "ChemicalLawInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s433_p03",
+      "layerName": "ChemicalLawInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s433_p01",
+        ".s433_p02"
+      ]
+    },
+    {
+      "id": "s433_p04",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s433_p01"
+      ]
+    },
+    {
+      "id": "s433_p05",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s433_p02"
+      ]
+    },
+    {
+      "id": "s433_p06",
+      "layerName": "EnvironmentalRegulation",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s433_p04",
+        ".s433_p05"
+      ]
+    },
+    {
+      "id": "s433_p07",
+      "layerName": "SamplingAnalysisPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s433_p03"
+      ]
+    },
+    {
+      "id": "s433_p08",
+      "layerName": "SamplingAnalysisPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s433_p06"
+      ]
+    },
+    {
+      "id": "s433_p09",
+      "layerName": "SamplingAnalysisPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s433_p07",
+        ".s433_p08"
+      ]
+    },
+    {
+      "id": "s433_p10",
+      "layerName": "NutrientModelHypothesis",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s433_p07"
+      ]
+    },
+    {
+      "id": "s433_p11",
+      "layerName": "NutrientModelHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s433_p08"
+      ]
+    },
+    {
+      "id": "s433_p12",
+      "layerName": "NutrientModelHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s433_p09",
+        ".s433_p10"
+      ]
+    },
+    {
+      "id": "s433_p13",
+      "layerName": "NutrientModelHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s433_p11",
+        ".s433_p12"
+      ]
+    },
+    {
+      "id": "s433_p14",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s433_p10"
+      ]
+    },
+    {
+      "id": "s433_p15",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s433_p12",
+        ".s433_p14"
+      ]
+    },
+    {
+      "id": "s433_p16",
+      "layerName": "RecommendationAlgorithm",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s433_p13",
+        ".s433_p15"
+      ]
+    }
+  ]
+}

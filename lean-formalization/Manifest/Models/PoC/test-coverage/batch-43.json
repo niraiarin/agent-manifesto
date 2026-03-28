@@ -1,0 +1,1152 @@
+[
+  {
+    "scenario_id": 421,
+    "project": "妊婦遠隔モニタリング",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S421",
+      "layers": [
+        {
+          "name": "MaternalSafety",
+          "ordValue": 4,
+          "definition": "母体・胎児の生命安全に関わる絶対不変条件。バイタル閾値超過時の即時介入義務",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ClinicalProtocol",
+          "ordValue": 3,
+          "definition": "産科医療ガイドライン・個人情報保護法・医療機器規制への準拠要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "MonitoringPolicy",
+          "ordValue": 2,
+          "definition": "計測頻度・アラート基準・遠隔相談トリガーに関する運用方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "RiskPrediction",
+          "ordValue": 1,
+          "definition": "早産リスク・妊娠高血圧症候群発症確率に関する予測仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s421_p01",
+          "layerName": "MaternalSafety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s421_p02",
+          "layerName": "MaternalSafety",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s421_p03",
+          "layerName": "MaternalSafety",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s421_p01", ".s421_p02"]
+        },
+        {
+          "id": "s421_p04",
+          "layerName": "ClinicalProtocol",
+          "justification": ["C3"],
+          "dependencies": [".s421_p01"]
+        },
+        {
+          "id": "s421_p05",
+          "layerName": "ClinicalProtocol",
+          "justification": ["C4"],
+          "dependencies": [".s421_p02"]
+        },
+        {
+          "id": "s421_p06",
+          "layerName": "ClinicalProtocol",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s421_p04", ".s421_p05"]
+        },
+        {
+          "id": "s421_p07",
+          "layerName": "MonitoringPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s421_p04"]
+        },
+        {
+          "id": "s421_p08",
+          "layerName": "MonitoringPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s421_p05"]
+        },
+        {
+          "id": "s421_p09",
+          "layerName": "MonitoringPolicy",
+          "justification": ["C5", "H1", "H2"],
+          "dependencies": [".s421_p07", ".s421_p08"]
+        },
+        {
+          "id": "s421_p10",
+          "layerName": "RiskPrediction",
+          "justification": ["H3"],
+          "dependencies": [".s421_p07"]
+        },
+        {
+          "id": "s421_p11",
+          "layerName": "RiskPrediction",
+          "justification": ["H4"],
+          "dependencies": [".s421_p08"]
+        },
+        {
+          "id": "s421_p12",
+          "layerName": "RiskPrediction",
+          "justification": ["H5"],
+          "dependencies": [".s421_p10"]
+        },
+        {
+          "id": "s421_p13",
+          "layerName": "RiskPrediction",
+          "justification": ["H6"],
+          "dependencies": [".s421_p11"]
+        },
+        {
+          "id": "s421_p14",
+          "layerName": "RiskPrediction",
+          "justification": ["H3", "H4", "H5", "H6"],
+          "dependencies": [".s421_p12", ".s421_p13"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 422,
+    "project": "年金運用最適化",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S422",
+      "layers": [
+        {
+          "name": "BeneficiaryProtection",
+          "ordValue": 5,
+          "definition": "年金受給者の元本保全・最低給付保証に関する絶対不変条件",
+          "derivedFrom": ["C1"]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 4,
+          "definition": "年金法・金融商品取引法・受託者責任への法的準拠要件",
+          "derivedFrom": ["C2", "C3"]
+        },
+        {
+          "name": "RiskGovernance",
+          "ordValue": 3,
+          "definition": "VaR上限・分散投資制約・流動性バッファー維持に関するリスク統治",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "AllocationPolicy",
+          "ordValue": 2,
+          "definition": "国内外株式・債券・オルタナティブへの資産配分方針",
+          "derivedFrom": ["C6", "H1", "H2", "H3"]
+        },
+        {
+          "name": "MarketHypothesis",
+          "ordValue": 1,
+          "definition": "金利サイクル・株式リスクプレミアム・為替トレンドに関する市場仮説",
+          "derivedFrom": ["H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s422_p01",
+          "layerName": "BeneficiaryProtection",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s422_p02",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C2"],
+          "dependencies": [".s422_p01"]
+        },
+        {
+          "id": "s422_p03",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s422_p01"]
+        },
+        {
+          "id": "s422_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s422_p02", ".s422_p03"]
+        },
+        {
+          "id": "s422_p05",
+          "layerName": "RiskGovernance",
+          "justification": ["C4"],
+          "dependencies": [".s422_p02"]
+        },
+        {
+          "id": "s422_p06",
+          "layerName": "RiskGovernance",
+          "justification": ["C5"],
+          "dependencies": [".s422_p03"]
+        },
+        {
+          "id": "s422_p07",
+          "layerName": "RiskGovernance",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s422_p05", ".s422_p06"]
+        },
+        {
+          "id": "s422_p08",
+          "layerName": "AllocationPolicy",
+          "justification": ["C6", "H1"],
+          "dependencies": [".s422_p05"]
+        },
+        {
+          "id": "s422_p09",
+          "layerName": "AllocationPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s422_p06"]
+        },
+        {
+          "id": "s422_p10",
+          "layerName": "AllocationPolicy",
+          "justification": ["C6", "H1", "H2"],
+          "dependencies": [".s422_p08", ".s422_p09"]
+        },
+        {
+          "id": "s422_p11",
+          "layerName": "MarketHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s422_p08"]
+        },
+        {
+          "id": "s422_p12",
+          "layerName": "MarketHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s422_p09"]
+        },
+        {
+          "id": "s422_p13",
+          "layerName": "MarketHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s422_p11"]
+        },
+        {
+          "id": "s422_p14",
+          "layerName": "MarketHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s422_p12"]
+        },
+        {
+          "id": "s422_p15",
+          "layerName": "MarketHypothesis",
+          "justification": ["H4", "H6"],
+          "dependencies": [".s422_p13"]
+        },
+        {
+          "id": "s422_p16",
+          "layerName": "MarketHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s422_p14"]
+        },
+        {
+          "id": "s422_p17",
+          "layerName": "MarketHypothesis",
+          "justification": ["H4", "H5", "H6", "H7"],
+          "dependencies": [".s422_p15", ".s422_p16"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 423,
+    "project": "ゲームAIバランス調整",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 8,
+    "model_spec": {
+      "namespace": "TestCoverage.S423",
+      "layers": [
+        {
+          "name": "PlayerExperience",
+          "ordValue": 3,
+          "definition": "プレイヤーの公正性知覚・フラストレーション回避に関する絶対要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "GameDesignPolicy",
+          "ordValue": 2,
+          "definition": "難易度曲線・スキルギャップ・報酬設計に関するゲームデザイン方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2"]
+        },
+        {
+          "name": "BalanceHypothesis",
+          "ordValue": 1,
+          "definition": "キャラクター強度・マップ優位性・メタゲーム変化に関するバランス仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s423_p01",
+          "layerName": "PlayerExperience",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s423_p02",
+          "layerName": "PlayerExperience",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s423_p03",
+          "layerName": "GameDesignPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s423_p01"]
+        },
+        {
+          "id": "s423_p04",
+          "layerName": "GameDesignPolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s423_p02"]
+        },
+        {
+          "id": "s423_p05",
+          "layerName": "GameDesignPolicy",
+          "justification": ["C3", "C4", "H1", "H2"],
+          "dependencies": [".s423_p03", ".s423_p04"]
+        },
+        {
+          "id": "s423_p06",
+          "layerName": "BalanceHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s423_p03"]
+        },
+        {
+          "id": "s423_p07",
+          "layerName": "BalanceHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s423_p04"]
+        },
+        {
+          "id": "s423_p08",
+          "layerName": "BalanceHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s423_p06"]
+        },
+        {
+          "id": "s423_p09",
+          "layerName": "BalanceHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s423_p07"]
+        },
+        {
+          "id": "s423_p10",
+          "layerName": "BalanceHypothesis",
+          "justification": ["H3", "H4", "H5"],
+          "dependencies": [".s423_p08", ".s423_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 424,
+    "project": "設備投資判断支援",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 13,
+    "num_deps": 11,
+    "model_spec": {
+      "namespace": "TestCoverage.S424",
+      "layers": [
+        {
+          "name": "FinancialConstraint",
+          "ordValue": 4,
+          "definition": "投資上限・負債比率上限・最低ROI閾値に関する財務的絶対制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "StrategicAlignment",
+          "ordValue": 3,
+          "definition": "事業戦略・中期計画・ESG目標への整合要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "EvaluationPolicy",
+          "ordValue": 2,
+          "definition": "NPV・IRR・回収期間・リスク調整リターンに基づく評価方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "ForecastHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測・コスト削減効果・技術陳腐化リスクに関する予測仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s424_p01",
+          "layerName": "FinancialConstraint",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s424_p02",
+          "layerName": "FinancialConstraint",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s424_p03",
+          "layerName": "StrategicAlignment",
+          "justification": ["C3"],
+          "dependencies": [".s424_p01"]
+        },
+        {
+          "id": "s424_p04",
+          "layerName": "StrategicAlignment",
+          "justification": ["C4"],
+          "dependencies": [".s424_p02"]
+        },
+        {
+          "id": "s424_p05",
+          "layerName": "StrategicAlignment",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s424_p03", ".s424_p04"]
+        },
+        {
+          "id": "s424_p06",
+          "layerName": "EvaluationPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s424_p03"]
+        },
+        {
+          "id": "s424_p07",
+          "layerName": "EvaluationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s424_p04"]
+        },
+        {
+          "id": "s424_p08",
+          "layerName": "EvaluationPolicy",
+          "justification": ["C5", "H1", "H2"],
+          "dependencies": [".s424_p06", ".s424_p07"]
+        },
+        {
+          "id": "s424_p09",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s424_p06"]
+        },
+        {
+          "id": "s424_p10",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s424_p07"]
+        },
+        {
+          "id": "s424_p11",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s424_p09"]
+        },
+        {
+          "id": "s424_p12",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s424_p10"]
+        },
+        {
+          "id": "s424_p13",
+          "layerName": "ForecastHypothesis",
+          "justification": ["H3", "H4", "H5", "H6"],
+          "dependencies": [".s424_p11", ".s424_p12"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 425,
+    "project": "SBOM管理",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 12,
+    "num_deps": 10,
+    "model_spec": {
+      "namespace": "TestCoverage.S425",
+      "layers": [
+        {
+          "name": "SupplyChainSecurity",
+          "ordValue": 4,
+          "definition": "既知脆弱性コンポーネントの使用禁止・Critical CVE即時対応に関する絶対要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "LicenseCompliance",
+          "ordValue": 3,
+          "definition": "OSS ライセンス遵守・GPL汚染防止・特許侵害回避に関する法的要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "DependencyPolicy",
+          "ordValue": 2,
+          "definition": "推移的依存解決・バージョンピン戦略・更新ポリシーに関する管理方針",
+          "derivedFrom": ["C5", "C6", "H1", "H2"]
+        },
+        {
+          "name": "RiskAssessHypothesis",
+          "ordValue": 1,
+          "definition": "サプライチェーン攻撃経路・依存グラフ脆弱性伝播に関するリスク仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s425_p01",
+          "layerName": "SupplyChainSecurity",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s425_p02",
+          "layerName": "SupplyChainSecurity",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s425_p03",
+          "layerName": "LicenseCompliance",
+          "justification": ["C3"],
+          "dependencies": [".s425_p01"]
+        },
+        {
+          "id": "s425_p04",
+          "layerName": "LicenseCompliance",
+          "justification": ["C4"],
+          "dependencies": [".s425_p02"]
+        },
+        {
+          "id": "s425_p05",
+          "layerName": "LicenseCompliance",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s425_p03", ".s425_p04"]
+        },
+        {
+          "id": "s425_p06",
+          "layerName": "DependencyPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s425_p03"]
+        },
+        {
+          "id": "s425_p07",
+          "layerName": "DependencyPolicy",
+          "justification": ["C6", "H2"],
+          "dependencies": [".s425_p04"]
+        },
+        {
+          "id": "s425_p08",
+          "layerName": "DependencyPolicy",
+          "justification": ["C5", "C6", "H1", "H2"],
+          "dependencies": [".s425_p06", ".s425_p07"]
+        },
+        {
+          "id": "s425_p09",
+          "layerName": "RiskAssessHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s425_p06"]
+        },
+        {
+          "id": "s425_p10",
+          "layerName": "RiskAssessHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s425_p07"]
+        },
+        {
+          "id": "s425_p11",
+          "layerName": "RiskAssessHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s425_p09"]
+        },
+        {
+          "id": "s425_p12",
+          "layerName": "RiskAssessHypothesis",
+          "justification": ["H3", "H4", "H5"],
+          "dependencies": [".s425_p10", ".s425_p11"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 426,
+    "project": "河川氾濫予測",
+    "num_c": 4,
+    "num_h": 8,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 9,
+    "model_spec": {
+      "namespace": "TestCoverage.S426",
+      "layers": [
+        {
+          "name": "PublicSafety",
+          "ordValue": 3,
+          "definition": "住民避難勧告発令基準・誤報抑制・見落とし防止に関する絶対要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "AlertPolicy",
+          "ordValue": 2,
+          "definition": "水位閾値・降雨量累積・ダム放流通知に基づくアラート発令方針",
+          "derivedFrom": ["C3", "C4", "H1", "H2", "H3"]
+        },
+        {
+          "name": "HydroHypothesis",
+          "ordValue": 1,
+          "definition": "流域モデル・土壌飽和度・地下水位・降雨継続時間に関する水文学仮説",
+          "derivedFrom": ["H4", "H5", "H6", "H7", "H8"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s426_p01",
+          "layerName": "PublicSafety",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s426_p02",
+          "layerName": "PublicSafety",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s426_p03",
+          "layerName": "AlertPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s426_p01"]
+        },
+        {
+          "id": "s426_p04",
+          "layerName": "AlertPolicy",
+          "justification": ["C4", "H2"],
+          "dependencies": [".s426_p02"]
+        },
+        {
+          "id": "s426_p05",
+          "layerName": "AlertPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s426_p03", ".s426_p04"]
+        },
+        {
+          "id": "s426_p06",
+          "layerName": "HydroHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s426_p03"]
+        },
+        {
+          "id": "s426_p07",
+          "layerName": "HydroHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s426_p04"]
+        },
+        {
+          "id": "s426_p08",
+          "layerName": "HydroHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s426_p06"]
+        },
+        {
+          "id": "s426_p09",
+          "layerName": "HydroHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s426_p07"]
+        },
+        {
+          "id": "s426_p10",
+          "layerName": "HydroHypothesis",
+          "justification": ["H8"],
+          "dependencies": [".s426_p08"]
+        },
+        {
+          "id": "s426_p11",
+          "layerName": "HydroHypothesis",
+          "justification": ["H4", "H5", "H6", "H7", "H8"],
+          "dependencies": [".s426_p09", ".s426_p10"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 427,
+    "project": "映像監視分析",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S427",
+      "layers": [
+        {
+          "name": "PrivacyProtection",
+          "ordValue": 4,
+          "definition": "個人識別情報の最小化・目的外利用禁止・保存期間制限に関する絶対要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "LegalFramework",
+          "ordValue": 3,
+          "definition": "個人情報保護法・防犯目的限定・令状なし顔認識禁止に関する法的準拠",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "DetectionPolicy",
+          "ordValue": 2,
+          "definition": "異常行動検出閾値・アラート基準・オペレータ確認フローに関する検出方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "BehaviorHypothesis",
+          "ordValue": 1,
+          "definition": "群衆密度・動線異常・放置物検知・侵入パターンに関する行動仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s427_p01",
+          "layerName": "PrivacyProtection",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s427_p02",
+          "layerName": "PrivacyProtection",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s427_p03",
+          "layerName": "LegalFramework",
+          "justification": ["C3"],
+          "dependencies": [".s427_p01"]
+        },
+        {
+          "id": "s427_p04",
+          "layerName": "LegalFramework",
+          "justification": ["C4"],
+          "dependencies": [".s427_p02"]
+        },
+        {
+          "id": "s427_p05",
+          "layerName": "LegalFramework",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s427_p03", ".s427_p04"]
+        },
+        {
+          "id": "s427_p06",
+          "layerName": "DetectionPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s427_p03"]
+        },
+        {
+          "id": "s427_p07",
+          "layerName": "DetectionPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s427_p04"]
+        },
+        {
+          "id": "s427_p08",
+          "layerName": "DetectionPolicy",
+          "justification": ["C5", "H1", "H2"],
+          "dependencies": [".s427_p06", ".s427_p07"]
+        },
+        {
+          "id": "s427_p09",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s427_p06"]
+        },
+        {
+          "id": "s427_p10",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s427_p07"]
+        },
+        {
+          "id": "s427_p11",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s427_p09"]
+        },
+        {
+          "id": "s427_p12",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s427_p10"]
+        },
+        {
+          "id": "s427_p13",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s427_p11"]
+        },
+        {
+          "id": "s427_p14",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s427_p12"]
+        },
+        {
+          "id": "s427_p15",
+          "layerName": "BehaviorHypothesis",
+          "justification": ["H3", "H4", "H5", "H6"],
+          "dependencies": [".s427_p13", ".s427_p14"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 428,
+    "project": "ネットワーク障害予測",
+    "num_c": 5,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 20,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S428",
+      "layers": [
+        {
+          "name": "ServiceAvailability",
+          "ordValue": 4,
+          "definition": "SLA99.99%維持・重要インフラ通信断絶防止に関する絶対可用性要件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "IncidentResponse",
+          "ordValue": 3,
+          "definition": "障害検知後のエスカレーション・自動回復・影響範囲通知に関する対応要件",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "MonitoringPolicy",
+          "ordValue": 2,
+          "definition": "メトリクス収集間隔・異常検知感度・相関分析ウィンドウに関する監視方針",
+          "derivedFrom": ["C5", "H1", "H2", "H3"]
+        },
+        {
+          "name": "FailurePredHypothesis",
+          "ordValue": 1,
+          "definition": "障害伝播モデル・機器寿命分布・トラフィックパターン異常に関する予測仮説",
+          "derivedFrom": ["H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s428_p01",
+          "layerName": "ServiceAvailability",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s428_p02",
+          "layerName": "ServiceAvailability",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s428_p03",
+          "layerName": "ServiceAvailability",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s428_p01", ".s428_p02"]
+        },
+        {
+          "id": "s428_p04",
+          "layerName": "IncidentResponse",
+          "justification": ["C3"],
+          "dependencies": [".s428_p01"]
+        },
+        {
+          "id": "s428_p05",
+          "layerName": "IncidentResponse",
+          "justification": ["C4"],
+          "dependencies": [".s428_p02"]
+        },
+        {
+          "id": "s428_p06",
+          "layerName": "IncidentResponse",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s428_p04", ".s428_p05"]
+        },
+        {
+          "id": "s428_p07",
+          "layerName": "MonitoringPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s428_p04"]
+        },
+        {
+          "id": "s428_p08",
+          "layerName": "MonitoringPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s428_p05"]
+        },
+        {
+          "id": "s428_p09",
+          "layerName": "MonitoringPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s428_p07"]
+        },
+        {
+          "id": "s428_p10",
+          "layerName": "MonitoringPolicy",
+          "justification": ["C5", "H1", "H2", "H3"],
+          "dependencies": [".s428_p08", ".s428_p09"]
+        },
+        {
+          "id": "s428_p11",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s428_p07"]
+        },
+        {
+          "id": "s428_p12",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s428_p08"]
+        },
+        {
+          "id": "s428_p13",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s428_p11"]
+        },
+        {
+          "id": "s428_p14",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s428_p12"]
+        },
+        {
+          "id": "s428_p15",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s428_p13"]
+        },
+        {
+          "id": "s428_p16",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H6", "H7"],
+          "dependencies": [".s428_p14"]
+        },
+        {
+          "id": "s428_p17",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H4", "H6"],
+          "dependencies": [".s428_p15"]
+        },
+        {
+          "id": "s428_p18",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H5", "H7"],
+          "dependencies": [".s428_p16"]
+        },
+        {
+          "id": "s428_p19",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H4", "H5", "H6"],
+          "dependencies": [".s428_p17"]
+        },
+        {
+          "id": "s428_p20",
+          "layerName": "FailurePredHypothesis",
+          "justification": ["H4", "H5", "H6", "H7"],
+          "dependencies": [".s428_p18", ".s428_p19"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 429,
+    "project": "アレルギー予測AI",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 2,
+    "num_props": 8,
+    "num_deps": 5,
+    "model_spec": {
+      "namespace": "TestCoverage.S429",
+      "layers": [
+        {
+          "name": "PatientSafetyConstraint",
+          "ordValue": 2,
+          "definition": "アナフィラキシーリスク過小評価禁止・医師最終確認義務・患者同意必須に関する安全制約",
+          "derivedFrom": ["C1", "C2", "C3", "C4", "C5"]
+        },
+        {
+          "name": "AllergyHypothesis",
+          "ordValue": 1,
+          "definition": "遺伝的素因・食物抗原交差反応・環境曝露累積・腸内菌叢変化に関するアレルギー発症仮説",
+          "derivedFrom": ["H1", "H2", "H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s429_p01",
+          "layerName": "PatientSafetyConstraint",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s429_p02",
+          "layerName": "PatientSafetyConstraint",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s429_p01"]
+        },
+        {
+          "id": "s429_p03",
+          "layerName": "PatientSafetyConstraint",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s429_p01"]
+        },
+        {
+          "id": "s429_p04",
+          "layerName": "AllergyHypothesis",
+          "justification": ["H1"],
+          "dependencies": [".s429_p02"]
+        },
+        {
+          "id": "s429_p05",
+          "layerName": "AllergyHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s429_p03"]
+        },
+        {
+          "id": "s429_p06",
+          "layerName": "AllergyHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s429_p04"]
+        },
+        {
+          "id": "s429_p07",
+          "layerName": "AllergyHypothesis",
+          "justification": ["H5", "H6"],
+          "dependencies": [".s429_p05"]
+        },
+        {
+          "id": "s429_p08",
+          "layerName": "AllergyHypothesis",
+          "justification": ["H1", "H2", "H3", "H4", "H5", "H6"],
+          "dependencies": [".s429_p06", ".s429_p07"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 430,
+    "project": "音楽生成AI",
+    "num_c": 3,
+    "num_h": 7,
+    "num_layers": 3,
+    "num_props": 9,
+    "num_deps": 7,
+    "model_spec": {
+      "namespace": "TestCoverage.S430",
+      "layers": [
+        {
+          "name": "CopyrightConstraint",
+          "ordValue": 3,
+          "definition": "著作権侵害コンテンツ生成禁止・学習データライセンス遵守に関する絶対制約",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ContentPolicy",
+          "ordValue": 1,
+          "definition": "ジャンル整合性・テンポ制約・ハーモニー規則に関するコンテンツ方針。注: 層順序違反（ordValue=1がordValue=2より下位でない）— 意図的単調性違反テスト",
+          "derivedFrom": ["C3", "H1", "H2"]
+        },
+        {
+          "name": "GenerationHypothesis",
+          "ordValue": 2,
+          "definition": "感情誘起メカニズム・スタイル転移・旋律記憶定着に関する音楽生成仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s430_p01",
+          "layerName": "CopyrightConstraint",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s430_p02",
+          "layerName": "CopyrightConstraint",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s430_p03",
+          "layerName": "ContentPolicy",
+          "justification": ["C3", "H1"],
+          "dependencies": [".s430_p01"]
+        },
+        {
+          "id": "s430_p04",
+          "layerName": "ContentPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s430_p02"]
+        },
+        {
+          "id": "s430_p05",
+          "layerName": "GenerationHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s430_p03"]
+        },
+        {
+          "id": "s430_p06",
+          "layerName": "GenerationHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s430_p04"]
+        },
+        {
+          "id": "s430_p07",
+          "layerName": "GenerationHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s430_p05"]
+        },
+        {
+          "id": "s430_p08",
+          "layerName": "GenerationHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s430_p06"]
+        },
+        {
+          "id": "s430_p09",
+          "layerName": "GenerationHypothesis",
+          "justification": ["H3", "H4", "H5", "H6", "H7"],
+          "dependencies": [".s430_p07", ".s430_p08"]
+        }
+      ]
+    }
+  }
+]

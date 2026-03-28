@@ -1,0 +1,249 @@
+{
+  "namespace": "TestCoverage.S376",
+  "layers": [
+    {
+      "name": "TeacherWellbeingInvariant",
+      "ordValue": 5,
+      "definition": "教師の過重労働防止・健康保護に関する絶対不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "LaborRegulationCompliance",
+      "ordValue": 4,
+      "definition": "労働基準法・教育職員の勤務時間規制への適合",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "CurriculumCoveragePolicy",
+      "ordValue": 3,
+      "definition": "学習指導要領・教科担当適格性・専科配置の方針",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "ScheduleBalancingModel",
+      "ordValue": 2,
+      "definition": "時限配置・移動コスト・連続授業制約の最適化モデル",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "TeacherPreferenceHypothesis",
+      "ordValue": 1,
+      "definition": "個人の疲労蓄積・授業準備コストに関する推論仮説",
+      "derivedFrom": [
+        "C5",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s376_p01",
+      "layerName": "TeacherWellbeingInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s376_p02",
+      "layerName": "LaborRegulationCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s376_p01"
+      ]
+    },
+    {
+      "id": "s376_p03",
+      "layerName": "LaborRegulationCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s376_p01"
+      ]
+    },
+    {
+      "id": "s376_p04",
+      "layerName": "LaborRegulationCompliance",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s376_p02",
+        ".s376_p03"
+      ]
+    },
+    {
+      "id": "s376_p05",
+      "layerName": "CurriculumCoveragePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s376_p02"
+      ]
+    },
+    {
+      "id": "s376_p06",
+      "layerName": "CurriculumCoveragePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s376_p03"
+      ]
+    },
+    {
+      "id": "s376_p07",
+      "layerName": "CurriculumCoveragePolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s376_p04",
+        ".s376_p05",
+        ".s376_p06"
+      ]
+    },
+    {
+      "id": "s376_p08",
+      "layerName": "ScheduleBalancingModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s376_p05"
+      ]
+    },
+    {
+      "id": "s376_p09",
+      "layerName": "ScheduleBalancingModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s376_p06"
+      ]
+    },
+    {
+      "id": "s376_p10",
+      "layerName": "ScheduleBalancingModel",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s376_p07",
+        ".s376_p08",
+        ".s376_p09"
+      ]
+    },
+    {
+      "id": "s376_p11",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s376_p08"
+      ]
+    },
+    {
+      "id": "s376_p12",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s376_p09"
+      ]
+    },
+    {
+      "id": "s376_p13",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s376_p10"
+      ]
+    },
+    {
+      "id": "s376_p14",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s376_p11"
+      ]
+    },
+    {
+      "id": "s376_p15",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s376_p12",
+        ".s376_p13"
+      ]
+    },
+    {
+      "id": "s376_p16",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s376_p13",
+        ".s376_p14"
+      ]
+    },
+    {
+      "id": "s376_p17",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s376_p11",
+        ".s376_p12"
+      ]
+    },
+    {
+      "id": "s376_p18",
+      "layerName": "TeacherPreferenceHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s376_p15",
+        ".s376_p16",
+        ".s376_p17"
+      ]
+    }
+  ]
+}

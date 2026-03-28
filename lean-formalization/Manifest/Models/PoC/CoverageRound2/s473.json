@@ -1,0 +1,242 @@
+{
+  "namespace": "TestCoverage.S473",
+  "layers": [
+    {
+      "name": "LegalComplianceInvariant",
+      "ordValue": 5,
+      "definition": "区分所有法・建物管理規約への絶対的準拠条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "FinancialSoundnessPolicy",
+      "ordValue": 4,
+      "definition": "修繕積立金・会計監査・予算管理の財務健全性ポリシー",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ResidentConsentPolicy",
+      "ordValue": 3,
+      "definition": "総会決議・住民合意形成・議事録管理のポリシー",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "MaintenancePlanningPolicy",
+      "ordValue": 2,
+      "definition": "長期修繕計画・劣化診断・業者選定の計画方針",
+      "derivedFrom": [
+        "C6",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "PredictiveMaintenanceHypothesis",
+      "ordValue": 1,
+      "definition": "建物劣化予測と修繕タイミング最適化に関する推論仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s473_p01",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s473_p02",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s473_p03",
+      "layerName": "LegalComplianceInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s473_p01",
+        ".s473_p02"
+      ]
+    },
+    {
+      "id": "s473_p04",
+      "layerName": "FinancialSoundnessPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s473_p01"
+      ]
+    },
+    {
+      "id": "s473_p05",
+      "layerName": "FinancialSoundnessPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s473_p02"
+      ]
+    },
+    {
+      "id": "s473_p06",
+      "layerName": "FinancialSoundnessPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s473_p04",
+        ".s473_p05"
+      ]
+    },
+    {
+      "id": "s473_p07",
+      "layerName": "ResidentConsentPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s473_p03"
+      ]
+    },
+    {
+      "id": "s473_p08",
+      "layerName": "ResidentConsentPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s473_p06"
+      ]
+    },
+    {
+      "id": "s473_p09",
+      "layerName": "ResidentConsentPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s473_p07",
+        ".s473_p08"
+      ]
+    },
+    {
+      "id": "s473_p10",
+      "layerName": "MaintenancePlanningPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s473_p04"
+      ]
+    },
+    {
+      "id": "s473_p11",
+      "layerName": "MaintenancePlanningPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s473_p07"
+      ]
+    },
+    {
+      "id": "s473_p12",
+      "layerName": "MaintenancePlanningPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s473_p09",
+        ".s473_p10"
+      ]
+    },
+    {
+      "id": "s473_p13",
+      "layerName": "PredictiveMaintenanceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s473_p10"
+      ]
+    },
+    {
+      "id": "s473_p14",
+      "layerName": "PredictiveMaintenanceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s473_p11"
+      ]
+    },
+    {
+      "id": "s473_p15",
+      "layerName": "PredictiveMaintenanceHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s473_p12",
+        ".s473_p13"
+      ]
+    },
+    {
+      "id": "s473_p16",
+      "layerName": "PredictiveMaintenanceHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s473_p14",
+        ".s473_p15"
+      ]
+    },
+    {
+      "id": "s473_p17",
+      "layerName": "MaintenancePlanningPolicy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s473_p11",
+        ".s473_p12"
+      ]
+    },
+    {
+      "id": "s473_p18",
+      "layerName": "FinancialSoundnessPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s473_p06"
+      ]
+    }
+  ]
+}

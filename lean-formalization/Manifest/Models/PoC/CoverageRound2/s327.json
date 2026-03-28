@@ -1,0 +1,194 @@
+{
+  "namespace": "TestCoverage.S327",
+  "layers": [
+    {
+      "name": "editorial_invariant",
+      "ordValue": 4,
+      "definition": "言論の自由・中立性・表現保護に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C6"
+      ]
+    },
+    {
+      "name": "transparency_standard",
+      "ordValue": 3,
+      "definition": "根拠明示・異議申し立て・説明可能性の要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "operational_policy",
+      "ordValue": 2,
+      "definition": "リアルタイム処理・キュレーター監督・異議対応の運用方針",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H5"
+      ]
+    },
+    {
+      "name": "learning_model",
+      "ordValue": 1,
+      "definition": "知識グラフ照合・アンサンブル・フィードバック学習の仮説",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s327_p01",
+      "layerName": "editorial_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s327_p02",
+      "layerName": "editorial_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s327_p03",
+      "layerName": "editorial_invariant",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s327_p01",
+        ".s327_p02"
+      ]
+    },
+    {
+      "id": "s327_p04",
+      "layerName": "transparency_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s327_p01"
+      ]
+    },
+    {
+      "id": "s327_p05",
+      "layerName": "transparency_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s327_p04"
+      ]
+    },
+    {
+      "id": "s327_p06",
+      "layerName": "transparency_standard",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s327_p04",
+        ".s327_p05"
+      ]
+    },
+    {
+      "id": "s327_p07",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s327_p04"
+      ]
+    },
+    {
+      "id": "s327_p08",
+      "layerName": "operational_policy",
+      "justification": [
+        "C2",
+        "H5"
+      ],
+      "dependencies": [
+        ".s327_p02",
+        ".s327_p03"
+      ]
+    },
+    {
+      "id": "s327_p09",
+      "layerName": "operational_policy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s327_p05",
+        ".s327_p07"
+      ]
+    },
+    {
+      "id": "s327_p10",
+      "layerName": "operational_policy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s327_p07",
+        ".s327_p08"
+      ]
+    },
+    {
+      "id": "s327_p11",
+      "layerName": "learning_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s327_p04",
+        ".s327_p07"
+      ]
+    },
+    {
+      "id": "s327_p12",
+      "layerName": "learning_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s327_p01",
+        ".s327_p02"
+      ]
+    },
+    {
+      "id": "s327_p13",
+      "layerName": "learning_model",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s327_p02"
+      ]
+    },
+    {
+      "id": "s327_p14",
+      "layerName": "learning_model",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s327_p11",
+        ".s327_p12"
+      ]
+    }
+  ]
+}

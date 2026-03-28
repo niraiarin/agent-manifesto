@@ -1,0 +1,262 @@
+{
+  "namespace": "TestCoverage.S428",
+  "layers": [
+    {
+      "name": "ServiceAvailability",
+      "ordValue": 4,
+      "definition": "SLA99.99%維持・重要インフラ通信断絶防止に関する絶対可用性要件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "IncidentResponse",
+      "ordValue": 3,
+      "definition": "障害検知後のエスカレーション・自動回復・影響範囲通知に関する対応要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "MonitoringPolicy",
+      "ordValue": 2,
+      "definition": "メトリクス収集間隔・異常検知感度・相関分析ウィンドウに関する監視方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "FailurePredHypothesis",
+      "ordValue": 1,
+      "definition": "障害伝播モデル・機器寿命分布・トラフィックパターン異常に関する予測仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s428_p01",
+      "layerName": "ServiceAvailability",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s428_p02",
+      "layerName": "ServiceAvailability",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s428_p03",
+      "layerName": "ServiceAvailability",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s428_p01",
+        ".s428_p02"
+      ]
+    },
+    {
+      "id": "s428_p04",
+      "layerName": "IncidentResponse",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s428_p01"
+      ]
+    },
+    {
+      "id": "s428_p05",
+      "layerName": "IncidentResponse",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s428_p02"
+      ]
+    },
+    {
+      "id": "s428_p06",
+      "layerName": "IncidentResponse",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s428_p04",
+        ".s428_p05"
+      ]
+    },
+    {
+      "id": "s428_p07",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s428_p04"
+      ]
+    },
+    {
+      "id": "s428_p08",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s428_p05"
+      ]
+    },
+    {
+      "id": "s428_p09",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s428_p07"
+      ]
+    },
+    {
+      "id": "s428_p10",
+      "layerName": "MonitoringPolicy",
+      "justification": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s428_p08",
+        ".s428_p09"
+      ]
+    },
+    {
+      "id": "s428_p11",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s428_p07"
+      ]
+    },
+    {
+      "id": "s428_p12",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s428_p08"
+      ]
+    },
+    {
+      "id": "s428_p13",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s428_p11"
+      ]
+    },
+    {
+      "id": "s428_p14",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s428_p12"
+      ]
+    },
+    {
+      "id": "s428_p15",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s428_p13"
+      ]
+    },
+    {
+      "id": "s428_p16",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s428_p14"
+      ]
+    },
+    {
+      "id": "s428_p17",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s428_p15"
+      ]
+    },
+    {
+      "id": "s428_p18",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s428_p16"
+      ]
+    },
+    {
+      "id": "s428_p19",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s428_p17"
+      ]
+    },
+    {
+      "id": "s428_p20",
+      "layerName": "FailurePredHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s428_p18",
+        ".s428_p19"
+      ]
+    }
+  ]
+}

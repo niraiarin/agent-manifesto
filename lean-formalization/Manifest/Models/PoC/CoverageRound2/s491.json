@@ -1,0 +1,191 @@
+{
+  "namespace": "TestCoverage.S491",
+  "layers": [
+    {
+      "name": "PatientSafetyInvariant",
+      "ordValue": 4,
+      "definition": "患者への誤診・見逃しを防ぐ絶対不変条件。臨床的安全性を最優先とする",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "体外診断薬法・ISO 15189・厚生労働省ガイドラインへの準拠要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "AnalysisPolicy",
+      "ordValue": 2,
+      "definition": "検査項目の自動解釈・アラート閾値・レポート生成に関する運用ポリシー",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ModelHypothesis",
+      "ordValue": 1,
+      "definition": "機械学習モデルの精度・汎化性能・ドリフト検出に関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s491_p01",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s491_p02",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s491_p03",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s491_p01",
+        ".s491_p02"
+      ]
+    },
+    {
+      "id": "s491_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s491_p01"
+      ]
+    },
+    {
+      "id": "s491_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s491_p02"
+      ]
+    },
+    {
+      "id": "s491_p06",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s491_p04",
+        ".s491_p05"
+      ]
+    },
+    {
+      "id": "s491_p07",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s491_p04"
+      ]
+    },
+    {
+      "id": "s491_p08",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s491_p05"
+      ]
+    },
+    {
+      "id": "s491_p09",
+      "layerName": "AnalysisPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s491_p06",
+        ".s491_p07"
+      ]
+    },
+    {
+      "id": "s491_p10",
+      "layerName": "ModelHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s491_p07"
+      ]
+    },
+    {
+      "id": "s491_p11",
+      "layerName": "ModelHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s491_p08"
+      ]
+    },
+    {
+      "id": "s491_p12",
+      "layerName": "ModelHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s491_p09",
+        ".s491_p10"
+      ]
+    },
+    {
+      "id": "s491_p13",
+      "layerName": "ModelHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s491_p10",
+        ".s491_p11"
+      ]
+    },
+    {
+      "id": "s491_p14",
+      "layerName": "ModelHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s491_p12",
+        ".s491_p13"
+      ]
+    }
+  ]
+}

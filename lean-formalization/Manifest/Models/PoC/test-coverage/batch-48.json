@@ -1,0 +1,1284 @@
+[
+  {
+    "scenario_id": 471,
+    "project": "クラウドセキュリティ姿勢管理",
+    "num_c": 5,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 14,
+    "num_deps": 18,
+    "model_spec": {
+      "namespace": "TestCoverage.S471",
+      "layers": [
+        {
+          "name": "ComplianceInvariant",
+          "ordValue": 4,
+          "definition": "SOC2・ISO27001・PCI-DSS 等の規制要件への絶対的準拠条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ThreatDetectionPolicy",
+          "ordValue": 3,
+          "definition": "脅威インテリジェンス連携・異常検知ルールの強制ポリシー",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "RemediationWorkflow",
+          "ordValue": 2,
+          "definition": "脆弱性発見から修復完了までのエスカレーション・自動化方針",
+          "derivedFrom": ["C5", "H1", "H2"]
+        },
+        {
+          "name": "PostureScoreHypothesis",
+          "ordValue": 1,
+          "definition": "セキュリティスコア計算モデルとリスク優先度付けに関する推論仮説",
+          "derivedFrom": ["H3", "H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s471_p01",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s471_p02",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s471_p03",
+          "layerName": "ComplianceInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s471_p01", ".s471_p02"]
+        },
+        {
+          "id": "s471_p04",
+          "layerName": "ThreatDetectionPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s471_p01"]
+        },
+        {
+          "id": "s471_p05",
+          "layerName": "ThreatDetectionPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s471_p02"]
+        },
+        {
+          "id": "s471_p06",
+          "layerName": "ThreatDetectionPolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s471_p04", ".s471_p05"]
+        },
+        {
+          "id": "s471_p07",
+          "layerName": "RemediationWorkflow",
+          "justification": ["C5"],
+          "dependencies": [".s471_p04"]
+        },
+        {
+          "id": "s471_p08",
+          "layerName": "RemediationWorkflow",
+          "justification": ["H1"],
+          "dependencies": [".s471_p05"]
+        },
+        {
+          "id": "s471_p09",
+          "layerName": "RemediationWorkflow",
+          "justification": ["H2"],
+          "dependencies": [".s471_p06", ".s471_p07"]
+        },
+        {
+          "id": "s471_p10",
+          "layerName": "PostureScoreHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s471_p07"]
+        },
+        {
+          "id": "s471_p11",
+          "layerName": "PostureScoreHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s471_p08"]
+        },
+        {
+          "id": "s471_p12",
+          "layerName": "PostureScoreHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s471_p09", ".s471_p10"]
+        },
+        {
+          "id": "s471_p13",
+          "layerName": "PostureScoreHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s471_p11", ".s471_p12"]
+        },
+        {
+          "id": "s471_p14",
+          "layerName": "RemediationWorkflow",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s471_p08", ".s471_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 472,
+    "project": "防災備蓄管理システム",
+    "num_c": 4,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 10,
+    "num_deps": 12,
+    "model_spec": {
+      "namespace": "TestCoverage.S472",
+      "layers": [
+        {
+          "name": "StorageRequirementInvariant",
+          "ordValue": 3,
+          "definition": "法定備蓄基準・賞味期限管理・保管環境の絶対条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "RotationAndReplenishPolicy",
+          "ordValue": 2,
+          "definition": "先入れ先出し・定期ローテーション・自動発注のポリシー",
+          "derivedFrom": ["C3", "C4", "H1"]
+        },
+        {
+          "name": "DemandForecastHypothesis",
+          "ordValue": 1,
+          "definition": "災害発生時の消費予測と備蓄量最適化に関する推論仮説",
+          "derivedFrom": ["H2", "H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s472_p01",
+          "layerName": "StorageRequirementInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s472_p02",
+          "layerName": "StorageRequirementInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s472_p03",
+          "layerName": "StorageRequirementInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s472_p01", ".s472_p02"]
+        },
+        {
+          "id": "s472_p04",
+          "layerName": "RotationAndReplenishPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s472_p01"]
+        },
+        {
+          "id": "s472_p05",
+          "layerName": "RotationAndReplenishPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s472_p02"]
+        },
+        {
+          "id": "s472_p06",
+          "layerName": "RotationAndReplenishPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s472_p03", ".s472_p04"]
+        },
+        {
+          "id": "s472_p07",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s472_p04"]
+        },
+        {
+          "id": "s472_p08",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s472_p05"]
+        },
+        {
+          "id": "s472_p09",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s472_p06", ".s472_p07"]
+        },
+        {
+          "id": "s472_p10",
+          "layerName": "DemandForecastHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s472_p08", ".s472_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 473,
+    "project": "マンション管理組合支援システム",
+    "num_c": 6,
+    "num_h": 7,
+    "num_layers": 5,
+    "num_props": 18,
+    "num_deps": 23,
+    "model_spec": {
+      "namespace": "TestCoverage.S473",
+      "layers": [
+        {
+          "name": "LegalComplianceInvariant",
+          "ordValue": 5,
+          "definition": "区分所有法・建物管理規約への絶対的準拠条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "FinancialSoundnessPolicy",
+          "ordValue": 4,
+          "definition": "修繕積立金・会計監査・予算管理の財務健全性ポリシー",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "ResidentConsentPolicy",
+          "ordValue": 3,
+          "definition": "総会決議・住民合意形成・議事録管理のポリシー",
+          "derivedFrom": ["C5", "H1"]
+        },
+        {
+          "name": "MaintenancePlanningPolicy",
+          "ordValue": 2,
+          "definition": "長期修繕計画・劣化診断・業者選定の計画方針",
+          "derivedFrom": ["C6", "H2", "H3"]
+        },
+        {
+          "name": "PredictiveMaintenanceHypothesis",
+          "ordValue": 1,
+          "definition": "建物劣化予測と修繕タイミング最適化に関する推論仮説",
+          "derivedFrom": ["H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s473_p01",
+          "layerName": "LegalComplianceInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s473_p02",
+          "layerName": "LegalComplianceInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s473_p03",
+          "layerName": "LegalComplianceInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s473_p01", ".s473_p02"]
+        },
+        {
+          "id": "s473_p04",
+          "layerName": "FinancialSoundnessPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s473_p01"]
+        },
+        {
+          "id": "s473_p05",
+          "layerName": "FinancialSoundnessPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s473_p02"]
+        },
+        {
+          "id": "s473_p06",
+          "layerName": "FinancialSoundnessPolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s473_p04", ".s473_p05"]
+        },
+        {
+          "id": "s473_p07",
+          "layerName": "ResidentConsentPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s473_p03"]
+        },
+        {
+          "id": "s473_p08",
+          "layerName": "ResidentConsentPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s473_p06"]
+        },
+        {
+          "id": "s473_p09",
+          "layerName": "ResidentConsentPolicy",
+          "justification": ["C5", "H1"],
+          "dependencies": [".s473_p07", ".s473_p08"]
+        },
+        {
+          "id": "s473_p10",
+          "layerName": "MaintenancePlanningPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s473_p04"]
+        },
+        {
+          "id": "s473_p11",
+          "layerName": "MaintenancePlanningPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s473_p07"]
+        },
+        {
+          "id": "s473_p12",
+          "layerName": "MaintenancePlanningPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s473_p09", ".s473_p10"]
+        },
+        {
+          "id": "s473_p13",
+          "layerName": "PredictiveMaintenanceHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s473_p10"]
+        },
+        {
+          "id": "s473_p14",
+          "layerName": "PredictiveMaintenanceHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s473_p11"]
+        },
+        {
+          "id": "s473_p15",
+          "layerName": "PredictiveMaintenanceHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s473_p12", ".s473_p13"]
+        },
+        {
+          "id": "s473_p16",
+          "layerName": "PredictiveMaintenanceHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s473_p14", ".s473_p15"]
+        },
+        {
+          "id": "s473_p17",
+          "layerName": "MaintenancePlanningPolicy",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s473_p11", ".s473_p12"]
+        },
+        {
+          "id": "s473_p18",
+          "layerName": "FinancialSoundnessPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s473_p06"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 474,
+    "project": "配管劣化診断システム",
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S474",
+      "layers": [
+        {
+          "name": "SafetyAndRegulatoryInvariant",
+          "ordValue": 3,
+          "definition": "水道法・建築基準法・漏水事故防止の安全絶対条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "InspectionAndPriorityPolicy",
+          "ordValue": 2,
+          "definition": "劣化指標測定・点検頻度・修繕優先度付けポリシー",
+          "derivedFrom": ["C4", "C5", "H1", "H2"]
+        },
+        {
+          "name": "DegradationModelHypothesis",
+          "ordValue": 1,
+          "definition": "配管材質・年数・使用条件による劣化進行予測仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s474_p01",
+          "layerName": "SafetyAndRegulatoryInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s474_p02",
+          "layerName": "SafetyAndRegulatoryInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s474_p03",
+          "layerName": "SafetyAndRegulatoryInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s474_p01", ".s474_p02"]
+        },
+        {
+          "id": "s474_p04",
+          "layerName": "InspectionAndPriorityPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s474_p01"]
+        },
+        {
+          "id": "s474_p05",
+          "layerName": "InspectionAndPriorityPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s474_p02"]
+        },
+        {
+          "id": "s474_p06",
+          "layerName": "InspectionAndPriorityPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s474_p03", ".s474_p04"]
+        },
+        {
+          "id": "s474_p07",
+          "layerName": "InspectionAndPriorityPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s474_p05", ".s474_p06"]
+        },
+        {
+          "id": "s474_p08",
+          "layerName": "DegradationModelHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s474_p04"]
+        },
+        {
+          "id": "s474_p09",
+          "layerName": "DegradationModelHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s474_p06"]
+        },
+        {
+          "id": "s474_p10",
+          "layerName": "DegradationModelHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s474_p07", ".s474_p08"]
+        },
+        {
+          "id": "s474_p11",
+          "layerName": "DegradationModelHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s474_p09", ".s474_p10"]
+        },
+        {
+          "id": "s474_p12",
+          "layerName": "InspectionAndPriorityPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s474_p06", ".s474_p07"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 475,
+    "project": "クラウドコスト最適化システム",
+    "num_c": 4,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestCoverage.S475",
+      "layers": [
+        {
+          "name": "BudgetAndSLAInvariant",
+          "ordValue": 4,
+          "definition": "予算上限・SLA保証・ガバナンス要件の絶対条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ResourceAllocationPolicy",
+          "ordValue": 3,
+          "definition": "リソース使用率・リザーブドインスタンス・スポット活用ポリシー",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "OptimizationStrategyPolicy",
+          "ordValue": 2,
+          "definition": "ライトサイジング・アイドルリソース廃棄・タグ管理の方針",
+          "derivedFrom": ["H1", "H2", "H3"]
+        },
+        {
+          "name": "CostForecastHypothesis",
+          "ordValue": 1,
+          "definition": "使用量トレンドと季節変動を考慮したコスト予測仮説",
+          "derivedFrom": ["H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s475_p01",
+          "layerName": "BudgetAndSLAInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s475_p02",
+          "layerName": "BudgetAndSLAInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s475_p03",
+          "layerName": "BudgetAndSLAInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s475_p01", ".s475_p02"]
+        },
+        {
+          "id": "s475_p04",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s475_p01"]
+        },
+        {
+          "id": "s475_p05",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s475_p02"]
+        },
+        {
+          "id": "s475_p06",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s475_p04", ".s475_p05"]
+        },
+        {
+          "id": "s475_p07",
+          "layerName": "OptimizationStrategyPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s475_p04"]
+        },
+        {
+          "id": "s475_p08",
+          "layerName": "OptimizationStrategyPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s475_p05"]
+        },
+        {
+          "id": "s475_p09",
+          "layerName": "OptimizationStrategyPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s475_p06", ".s475_p07"]
+        },
+        {
+          "id": "s475_p10",
+          "layerName": "CostForecastHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s475_p07"]
+        },
+        {
+          "id": "s475_p11",
+          "layerName": "CostForecastHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s475_p08"]
+        },
+        {
+          "id": "s475_p12",
+          "layerName": "CostForecastHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s475_p09", ".s475_p10"]
+        },
+        {
+          "id": "s475_p13",
+          "layerName": "CostForecastHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s475_p10", ".s475_p11"]
+        },
+        {
+          "id": "s475_p14",
+          "layerName": "OptimizationStrategyPolicy",
+          "justification": ["H1", "H3"],
+          "dependencies": [".s475_p07", ".s475_p09"]
+        },
+        {
+          "id": "s475_p15",
+          "layerName": "ResourceAllocationPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s475_p06"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 476,
+    "project": "遺伝カウンセリング支援システム",
+    "num_c": 7,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 19,
+    "num_deps": 26,
+    "model_spec": {
+      "namespace": "TestCoverage.S476",
+      "layers": [
+        {
+          "name": "EthicalAndLegalInvariant",
+          "ordValue": 5,
+          "definition": "遺伝情報保護法・インフォームドコンセント・差別禁止の絶対条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "ClinicalAccuracyPolicy",
+          "ordValue": 4,
+          "definition": "変異解釈基準（ACMG）・病原性分類・レポート品質のポリシー",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "FamilyRiskCommunicationPolicy",
+          "ordValue": 3,
+          "definition": "家系図作成・親族への開示方針・遺伝リスク説明ポリシー",
+          "derivedFrom": ["C6", "H1", "H2"]
+        },
+        {
+          "name": "PsychosocialSupportPolicy",
+          "ordValue": 2,
+          "definition": "心理的サポート・フォローアップ計画・社会資源連携の方針",
+          "derivedFrom": ["C7", "H3"]
+        },
+        {
+          "name": "RiskPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "多因子遺伝リスクスコアと表現型予測に関する推論仮説",
+          "derivedFrom": ["H4", "H5", "H6"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s476_p01",
+          "layerName": "EthicalAndLegalInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s476_p02",
+          "layerName": "EthicalAndLegalInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s476_p03",
+          "layerName": "EthicalAndLegalInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s476_p01", ".s476_p02"]
+        },
+        {
+          "id": "s476_p04",
+          "layerName": "ClinicalAccuracyPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s476_p01"]
+        },
+        {
+          "id": "s476_p05",
+          "layerName": "ClinicalAccuracyPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s476_p02"]
+        },
+        {
+          "id": "s476_p06",
+          "layerName": "ClinicalAccuracyPolicy",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s476_p04", ".s476_p05"]
+        },
+        {
+          "id": "s476_p07",
+          "layerName": "FamilyRiskCommunicationPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s476_p03"]
+        },
+        {
+          "id": "s476_p08",
+          "layerName": "FamilyRiskCommunicationPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s476_p05"]
+        },
+        {
+          "id": "s476_p09",
+          "layerName": "FamilyRiskCommunicationPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s476_p06", ".s476_p07"]
+        },
+        {
+          "id": "s476_p10",
+          "layerName": "PsychosocialSupportPolicy",
+          "justification": ["C7"],
+          "dependencies": [".s476_p07"]
+        },
+        {
+          "id": "s476_p11",
+          "layerName": "PsychosocialSupportPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s476_p08", ".s476_p09"]
+        },
+        {
+          "id": "s476_p12",
+          "layerName": "PsychosocialSupportPolicy",
+          "justification": ["C7", "H3"],
+          "dependencies": [".s476_p10", ".s476_p11"]
+        },
+        {
+          "id": "s476_p13",
+          "layerName": "RiskPredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s476_p06"]
+        },
+        {
+          "id": "s476_p14",
+          "layerName": "RiskPredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s476_p09"]
+        },
+        {
+          "id": "s476_p15",
+          "layerName": "RiskPredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s476_p11", ".s476_p13"]
+        },
+        {
+          "id": "s476_p16",
+          "layerName": "RiskPredictionHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s476_p13", ".s476_p14"]
+        },
+        {
+          "id": "s476_p17",
+          "layerName": "FamilyRiskCommunicationPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s476_p08", ".s476_p09"]
+        },
+        {
+          "id": "s476_p18",
+          "layerName": "ClinicalAccuracyPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s476_p06"]
+        },
+        {
+          "id": "s476_p19",
+          "layerName": "PsychosocialSupportPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s476_p12", ".s476_p15"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 477,
+    "project": "工場排水管理システム",
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 11,
+    "num_deps": 15,
+    "model_spec": {
+      "namespace": "TestCoverage.S477",
+      "layers": [
+        {
+          "name": "EnvironmentalComplianceInvariant",
+          "ordValue": 3,
+          "definition": "水質汚濁防止法・排水基準値遵守・行政報告の絶対条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "TreatmentProcessPolicy",
+          "ordValue": 2,
+          "definition": "pH調整・凝集沈殿・活性汚泥処理の運転管理ポリシー",
+          "derivedFrom": ["C4", "C5", "H1"]
+        },
+        {
+          "name": "ProcessOptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "センサーデータからの処理効率予測と薬品投入最適化仮説",
+          "derivedFrom": ["H2", "H3", "H4"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s477_p01",
+          "layerName": "EnvironmentalComplianceInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s477_p02",
+          "layerName": "EnvironmentalComplianceInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s477_p03",
+          "layerName": "EnvironmentalComplianceInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s477_p01", ".s477_p02"]
+        },
+        {
+          "id": "s477_p04",
+          "layerName": "TreatmentProcessPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s477_p01"]
+        },
+        {
+          "id": "s477_p05",
+          "layerName": "TreatmentProcessPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s477_p02"]
+        },
+        {
+          "id": "s477_p06",
+          "layerName": "TreatmentProcessPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s477_p03", ".s477_p04"]
+        },
+        {
+          "id": "s477_p07",
+          "layerName": "ProcessOptimizationHypothesis",
+          "justification": ["H2"],
+          "dependencies": [".s477_p04"]
+        },
+        {
+          "id": "s477_p08",
+          "layerName": "ProcessOptimizationHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s477_p05", ".s477_p06"]
+        },
+        {
+          "id": "s477_p09",
+          "layerName": "ProcessOptimizationHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s477_p07", ".s477_p08"]
+        },
+        {
+          "id": "s477_p10",
+          "layerName": "TreatmentProcessPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s477_p05", ".s477_p06"]
+        },
+        {
+          "id": "s477_p11",
+          "layerName": "ProcessOptimizationHypothesis",
+          "justification": ["H2", "H3"],
+          "dependencies": [".s477_p08", ".s477_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 478,
+    "project": "学校給食管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S478",
+      "layers": [
+        {
+          "name": "FoodSafetyAndAllergyInvariant",
+          "ordValue": 4,
+          "definition": "食品衛生法・アレルギー対応義務・異物混入防止の絶対条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "NutritionStandardPolicy",
+          "ordValue": 3,
+          "definition": "学校給食摂取基準・栄養バランス・年齢別カロリー設計ポリシー",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "ProcurementAndMenuPolicy",
+          "ordValue": 2,
+          "definition": "地産地消・発注サイクル・献立作成・在庫管理の方針",
+          "derivedFrom": ["C6", "H1", "H2"]
+        },
+        {
+          "name": "MenuOptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "喫食率・残食分析・嗜好データを活用した献立最適化仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s478_p01",
+          "layerName": "FoodSafetyAndAllergyInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s478_p02",
+          "layerName": "FoodSafetyAndAllergyInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s478_p03",
+          "layerName": "FoodSafetyAndAllergyInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s478_p01", ".s478_p02"]
+        },
+        {
+          "id": "s478_p04",
+          "layerName": "NutritionStandardPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s478_p01"]
+        },
+        {
+          "id": "s478_p05",
+          "layerName": "NutritionStandardPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s478_p02"]
+        },
+        {
+          "id": "s478_p06",
+          "layerName": "NutritionStandardPolicy",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s478_p04", ".s478_p05"]
+        },
+        {
+          "id": "s478_p07",
+          "layerName": "ProcurementAndMenuPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s478_p03"]
+        },
+        {
+          "id": "s478_p08",
+          "layerName": "ProcurementAndMenuPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s478_p05"]
+        },
+        {
+          "id": "s478_p09",
+          "layerName": "ProcurementAndMenuPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s478_p06", ".s478_p07"]
+        },
+        {
+          "id": "s478_p10",
+          "layerName": "MenuOptimizationHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s478_p07"]
+        },
+        {
+          "id": "s478_p11",
+          "layerName": "MenuOptimizationHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s478_p08"]
+        },
+        {
+          "id": "s478_p12",
+          "layerName": "MenuOptimizationHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s478_p09", ".s478_p10"]
+        },
+        {
+          "id": "s478_p13",
+          "layerName": "MenuOptimizationHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s478_p10", ".s478_p11"]
+        },
+        {
+          "id": "s478_p14",
+          "layerName": "ProcurementAndMenuPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s478_p08", ".s478_p09"]
+        },
+        {
+          "id": "s478_p15",
+          "layerName": "NutritionStandardPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s478_p06"]
+        },
+        {
+          "id": "s478_p16",
+          "layerName": "FoodSafetyAndAllergyInvariant",
+          "justification": ["C2", "C3"],
+          "dependencies": [".s478_p02", ".s478_p03"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 479,
+    "project": "スマート農場管理システム",
+    "num_c": 4,
+    "num_h": 7,
+    "num_layers": 4,
+    "num_props": 17,
+    "num_deps": 23,
+    "model_spec": {
+      "namespace": "TestCoverage.S479",
+      "layers": [
+        {
+          "name": "FoodSafetyAndCertificationInvariant",
+          "ordValue": 4,
+          "definition": "農薬残留基準・有機認証・食品安全管理の絶対条件",
+          "derivedFrom": ["C1", "C2"]
+        },
+        {
+          "name": "ResourceManagementPolicy",
+          "ordValue": 3,
+          "definition": "水・肥料・エネルギー使用量の適正管理ポリシー",
+          "derivedFrom": ["C3", "C4"]
+        },
+        {
+          "name": "CultivationControlPolicy",
+          "ordValue": 2,
+          "definition": "センサーデータ連携・環境制御・生育記録管理の方針",
+          "derivedFrom": ["H1", "H2", "H3"]
+        },
+        {
+          "name": "YieldPredictionHypothesis",
+          "ordValue": 1,
+          "definition": "気象・土壌・生育データから収量・品質を予測する仮説",
+          "derivedFrom": ["H4", "H5", "H6", "H7"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s479_p01",
+          "layerName": "FoodSafetyAndCertificationInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s479_p02",
+          "layerName": "FoodSafetyAndCertificationInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s479_p03",
+          "layerName": "FoodSafetyAndCertificationInvariant",
+          "justification": ["C1", "C2"],
+          "dependencies": [".s479_p01", ".s479_p02"]
+        },
+        {
+          "id": "s479_p04",
+          "layerName": "ResourceManagementPolicy",
+          "justification": ["C3"],
+          "dependencies": [".s479_p01"]
+        },
+        {
+          "id": "s479_p05",
+          "layerName": "ResourceManagementPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s479_p02"]
+        },
+        {
+          "id": "s479_p06",
+          "layerName": "ResourceManagementPolicy",
+          "justification": ["C3", "C4"],
+          "dependencies": [".s479_p04", ".s479_p05"]
+        },
+        {
+          "id": "s479_p07",
+          "layerName": "CultivationControlPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s479_p03"]
+        },
+        {
+          "id": "s479_p08",
+          "layerName": "CultivationControlPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s479_p05"]
+        },
+        {
+          "id": "s479_p09",
+          "layerName": "CultivationControlPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s479_p06", ".s479_p07"]
+        },
+        {
+          "id": "s479_p10",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s479_p07"]
+        },
+        {
+          "id": "s479_p11",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s479_p08"]
+        },
+        {
+          "id": "s479_p12",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": ["H6"],
+          "dependencies": [".s479_p09", ".s479_p10"]
+        },
+        {
+          "id": "s479_p13",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": ["H7"],
+          "dependencies": [".s479_p11", ".s479_p12"]
+        },
+        {
+          "id": "s479_p14",
+          "layerName": "CultivationControlPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s479_p07", ".s479_p08"]
+        },
+        {
+          "id": "s479_p15",
+          "layerName": "YieldPredictionHypothesis",
+          "justification": ["H4", "H5"],
+          "dependencies": [".s479_p10", ".s479_p11"]
+        },
+        {
+          "id": "s479_p16",
+          "layerName": "ResourceManagementPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s479_p06"]
+        },
+        {
+          "id": "s479_p17",
+          "layerName": "CultivationControlPolicy",
+          "justification": ["H3"],
+          "dependencies": [".s479_p14", ".s479_p09"]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 480,
+    "project": "仮想通貨ウォレット管理システム",
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S480",
+      "layers": [
+        {
+          "name": "KeySecurityAndRegulatoryInvariant",
+          "ordValue": 4,
+          "definition": "秘密鍵保護・KYC/AML規制・資金決済法準拠の絶対条件",
+          "derivedFrom": ["C1", "C2", "C3"]
+        },
+        {
+          "name": "TransactionValidationPolicy",
+          "ordValue": 3,
+          "definition": "署名検証・二重送金防止・トランザクション承認ポリシー",
+          "derivedFrom": ["C4", "C5"]
+        },
+        {
+          "name": "RiskMonitoringPolicy",
+          "ordValue": 2,
+          "definition": "異常取引検知・ブラックリスト照合・アラート管理の方針",
+          "derivedFrom": ["C6", "H1", "H2"]
+        },
+        {
+          "name": "MarketRiskHypothesis",
+          "ordValue": 1,
+          "definition": "価格変動・流動性リスク・ポートフォリオ最適化の推論仮説",
+          "derivedFrom": ["H3", "H4", "H5"]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s480_p01",
+          "layerName": "KeySecurityAndRegulatoryInvariant",
+          "justification": ["C1"],
+          "dependencies": []
+        },
+        {
+          "id": "s480_p02",
+          "layerName": "KeySecurityAndRegulatoryInvariant",
+          "justification": ["C2"],
+          "dependencies": []
+        },
+        {
+          "id": "s480_p03",
+          "layerName": "KeySecurityAndRegulatoryInvariant",
+          "justification": ["C3"],
+          "dependencies": [".s480_p01", ".s480_p02"]
+        },
+        {
+          "id": "s480_p04",
+          "layerName": "TransactionValidationPolicy",
+          "justification": ["C4"],
+          "dependencies": [".s480_p01"]
+        },
+        {
+          "id": "s480_p05",
+          "layerName": "TransactionValidationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s480_p02"]
+        },
+        {
+          "id": "s480_p06",
+          "layerName": "TransactionValidationPolicy",
+          "justification": ["C4", "C5"],
+          "dependencies": [".s480_p04", ".s480_p05"]
+        },
+        {
+          "id": "s480_p07",
+          "layerName": "RiskMonitoringPolicy",
+          "justification": ["C6"],
+          "dependencies": [".s480_p03"]
+        },
+        {
+          "id": "s480_p08",
+          "layerName": "RiskMonitoringPolicy",
+          "justification": ["H1"],
+          "dependencies": [".s480_p05"]
+        },
+        {
+          "id": "s480_p09",
+          "layerName": "RiskMonitoringPolicy",
+          "justification": ["H2"],
+          "dependencies": [".s480_p06", ".s480_p07"]
+        },
+        {
+          "id": "s480_p10",
+          "layerName": "MarketRiskHypothesis",
+          "justification": ["H3"],
+          "dependencies": [".s480_p07"]
+        },
+        {
+          "id": "s480_p11",
+          "layerName": "MarketRiskHypothesis",
+          "justification": ["H4"],
+          "dependencies": [".s480_p08"]
+        },
+        {
+          "id": "s480_p12",
+          "layerName": "MarketRiskHypothesis",
+          "justification": ["H5"],
+          "dependencies": [".s480_p09", ".s480_p10"]
+        },
+        {
+          "id": "s480_p13",
+          "layerName": "MarketRiskHypothesis",
+          "justification": ["H3", "H4"],
+          "dependencies": [".s480_p10", ".s480_p11"]
+        },
+        {
+          "id": "s480_p14",
+          "layerName": "RiskMonitoringPolicy",
+          "justification": ["H1", "H2"],
+          "dependencies": [".s480_p08", ".s480_p09"]
+        },
+        {
+          "id": "s480_p15",
+          "layerName": "TransactionValidationPolicy",
+          "justification": ["C5"],
+          "dependencies": [".s480_p04", ".s480_p06"]
+        },
+        {
+          "id": "s480_p16",
+          "layerName": "KeySecurityAndRegulatoryInvariant",
+          "justification": ["C2"],
+          "dependencies": [".s480_p03"]
+        }
+      ]
+    }
+  }
+]

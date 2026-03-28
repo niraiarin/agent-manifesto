@@ -1,0 +1,2795 @@
+[
+  {
+    "scenario_id": 381,
+    "project": "臨床試験マッチングプラットフォーム",
+    "phase0": {
+      "vision": "患者の医療記録・遺伝子情報・生活歴を解析し、適合する臨床試験を自動推薦するAIプラットフォーム。試験登録率向上と新薬開発加速を目指す。",
+      "stakeholders": "患者・家族、担当医師、製薬会社、IRB（治験審査委員会）、規制当局（FDA/PMDA）",
+      "priority": "患者安全と適格基準の厳守が最優先。マッチング精度はその範囲内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "患者の適格基準（inclusion/exclusion criteria）を全て満たさない推薦は行わない"
+        },
+        {
+          "id": "C2",
+          "content": "患者情報の利用には有効なインフォームドコンセントが必要"
+        },
+        {
+          "id": "C3",
+          "content": "試験参加の最終判断は担当医師が行い、AIは推薦のみ提供する"
+        },
+        {
+          "id": "C4",
+          "content": "推薦の根拠となったデータソースと適合スコアを開示する"
+        },
+        {
+          "id": "C5",
+          "content": "希少疾患患者への適用時は通常より慎重な閾値設定を行う"
+        },
+        {
+          "id": "C6",
+          "content": "試験スポンサーの利益相反情報を推薦画面に表示する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C5",
+          "content": "適合スコア閾値は通常疾患0.75以上、希少疾患0.65以上に設定すべき",
+          "refutation": "閾値が高すぎて希少疾患患者の試験機会が著しく損なわれる場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "コンセント取得から72時間以内のデータのみ推薦に使用すべき",
+          "refutation": "慢性疾患では72時間より古いデータの方が病態を反映する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C4",
+          "content": "特徴量重要度はSHAP値で上位5因子を提示すべき",
+          "refutation": "モデルがブラックボックス化しSHAP計算コストが許容できない場合"
+        },
+        {
+          "id": "H4",
+          "basis": "外部知識",
+          "content": "地理的アクセシビリティ（50km圏内）をマッチング条件に含めるべき",
+          "refutation": "遠距離テレヘルス対応試験では地理制約が不要な場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C6",
+          "content": "利益相反スコアが0.8を超える試験は推薦ランキングを3段階下げるべき",
+          "refutation": "利益相反があっても科学的品質が高い試験を不当に下げる場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestCoverage.S381",
+      "layers": [
+        {
+          "name": "PatientSafetyInvariant",
+          "ordValue": 4,
+          "definition": "患者安全と適格基準遵守に関する絶対不変条件。いかなる推薦最適化も侵犯不可",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "IRB・規制当局の要件および医師の最終判断権に関する遵守義務",
+          "derivedFrom": [
+            "C3",
+            "C6"
+          ]
+        },
+        {
+          "name": "RecommendationPolicy",
+          "ordValue": 2,
+          "definition": "推薦アルゴリズムの運用方針と閾値設定ポリシー",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H1",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "AnalyticalHypothesis",
+          "ordValue": 1,
+          "definition": "スコアリングモデルと特徴量設計に関する仮説的推論",
+          "derivedFrom": [
+            "H2",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s381_p01",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s381_p02",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s381_p03",
+          "layerName": "PatientSafetyInvariant",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s381_p01"
+          ]
+        },
+        {
+          "id": "s381_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s381_p01",
+            ".s381_p02"
+          ]
+        },
+        {
+          "id": "s381_p05",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s381_p04"
+          ]
+        },
+        {
+          "id": "s381_p06",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s381_p04"
+          ]
+        },
+        {
+          "id": "s381_p07",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "C5",
+            "H1"
+          ],
+          "dependencies": [
+            ".s381_p03",
+            ".s381_p06"
+          ]
+        },
+        {
+          "id": "s381_p08",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s381_p06"
+          ]
+        },
+        {
+          "id": "s381_p09",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s381_p05",
+            ".s381_p06"
+          ]
+        },
+        {
+          "id": "s381_p10",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s381_p02"
+          ]
+        },
+        {
+          "id": "s381_p11",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s381_p06"
+          ]
+        },
+        {
+          "id": "s381_p12",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            ".s381_p11"
+          ]
+        },
+        {
+          "id": "s381_p13",
+          "layerName": "RecommendationPolicy",
+          "justification": [
+            "H1",
+            "H4"
+          ],
+          "dependencies": [
+            ".s381_p07",
+            ".s381_p08"
+          ]
+        },
+        {
+          "id": "s381_p14",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3",
+            "C6"
+          ],
+          "dependencies": [
+            ".s381_p05",
+            ".s381_p09"
+          ]
+        },
+        {
+          "id": "s381_p15",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H2",
+            "H3"
+          ],
+          "dependencies": [
+            ".s381_p10",
+            ".s381_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 382,
+    "project": "ESG投資評価エンジン",
+    "phase0": {
+      "vision": "企業の環境・社会・ガバナンス情報を多角的に解析し、機関投資家向けのESGスコアリングと投資推薦を提供するエンジン。サステナビリティ投資の透明性を高める。",
+      "stakeholders": "機関投資家、年金基金、ESGアナリスト、上場企業IR部門、NGO・市民社会",
+      "priority": "データソースの信頼性と評価手法の透明性。スコアの操作可能性を排除する"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "ESGスコアは検証可能な公開データと企業開示に基づく"
+        },
+        {
+          "id": "C2",
+          "content": "スコアリング手法は年次で公開し独立機関の検証を受ける"
+        },
+        {
+          "id": "C3",
+          "content": "グリーンウォッシングと判断された企業は警告フラグを付与する"
+        },
+        {
+          "id": "C4",
+          "content": "各スコアには信頼区間と使用データソースを明示する"
+        },
+        {
+          "id": "C5",
+          "content": "業界別の重み付けはセクター特性を反映して設定する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C4",
+          "content": "データソースが3種以下の場合は信頼区間を±15%以上として表示すべき",
+          "refutation": "少数でも高品質ソースが多数低品質ソースを上回る場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C3",
+          "content": "CO2排出量の自己申告値が業界平均の40%以下乖離でグリーンウォッシング検知すべき",
+          "refutation": "技術革新によって正当に低排出を達成した場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C5",
+          "content": "エネルギーセクターではE(環境)の重みをS/Gより2倍高く設定すべき",
+          "refutation": "社会的影響度の高い公益事業では社会指標が同等以上に重要な場合"
+        },
+        {
+          "id": "H4",
+          "basis": "外部知識",
+          "content": "ESGデータの更新頻度は四半期ごとに設定すべき",
+          "refutation": "急激な企業環境変化（不祥事等）に四半期更新では対応できない場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C2",
+          "content": "スコアリングモデルの変更は30日前に事前通知すべき",
+          "refutation": "緊急の規制変更に即応する必要がある場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: s382_p11(sector_weight_update)がs382_p03(data_integrity)に依存するが、sector_weight_updateはAnalyticalHypothesis(ord=1)、data_integrityはDataInvariant(ord=3)にあり逆方向",
+          "from": "s382_p11 (AnalyticalHypothesis, ord=1)",
+          "to": "s382_p03 (DataInvariant, ord=3)",
+          "fix": "H由来 — sector_weight_updateをScoringPolicy(ord=2)に昇格させるか依存を削除"
+        }
+      ]
+    },
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 13,
+    "num_deps": 16,
+    "model_spec": {
+      "namespace": "TestCoverage.S382",
+      "layers": [
+        {
+          "name": "DataInvariant",
+          "ordValue": 3,
+          "definition": "ESGデータの信頼性・検証可能性に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "ScoringPolicy",
+          "ordValue": 2,
+          "definition": "スコアリング手法と評価指標の運用ポリシー",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "H3",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "AnalyticalHypothesis",
+          "ordValue": 1,
+          "definition": "統計的手法と業界ベンチマークに基づく分析仮説",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s382_p01",
+          "layerName": "DataInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s382_p02",
+          "layerName": "DataInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s382_p03",
+          "layerName": "DataInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s382_p01"
+          ]
+        },
+        {
+          "id": "s382_p04",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s382_p01",
+            ".s382_p02"
+          ]
+        },
+        {
+          "id": "s382_p05",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s382_p04"
+          ]
+        },
+        {
+          "id": "s382_p06",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s382_p04"
+          ]
+        },
+        {
+          "id": "s382_p07",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s382_p02",
+            ".s382_p04"
+          ]
+        },
+        {
+          "id": "s382_p08",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s382_p04"
+          ]
+        },
+        {
+          "id": "s382_p09",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s382_p03"
+          ]
+        },
+        {
+          "id": "s382_p10",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "C4",
+            "H1"
+          ],
+          "dependencies": [
+            ".s382_p08"
+          ]
+        },
+        {
+          "id": "s382_p11",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s382_p03",
+            ".s382_p05"
+          ]
+        },
+        {
+          "id": "s382_p12",
+          "layerName": "ScoringPolicy",
+          "justification": [
+            "C5",
+            "H2"
+          ],
+          "dependencies": [
+            ".s382_p09",
+            ".s382_p05"
+          ]
+        },
+        {
+          "id": "s382_p13",
+          "layerName": "DataInvariant",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s382_p02",
+            ".s382_p07"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 383,
+    "project": "船舶衝突回避システム（COLREGS準拠）",
+    "phase0": {
+      "vision": "国際海上衝突予防規則（COLREGS）に基づいて自律航行船舶の衝突リスクを検知し、最適な回避行動を自動実行するシステム。海難事故ゼロを目指す。",
+      "stakeholders": "船舶運航会社、船員・航海士、海上保安庁、IMO（国際海事機関）、港湾管理者",
+      "priority": "人命と船体の安全が絶対優先。COLREGS違反の回避行動は取らない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "衝突リスクCPA（最接近点）が500m以内かつ3分以内の場合に回避行動を開始する"
+        },
+        {
+          "id": "C2",
+          "content": "COLREGS規則16条に従い、他船の進路を妨げない回避を行う"
+        },
+        {
+          "id": "C3",
+          "content": "視界制限時はSOG（対地速度）を安全速力以下に自動減速する"
+        },
+        {
+          "id": "C4",
+          "content": "複数船舶が同時接近する場合は最高リスク船を優先対処する"
+        },
+        {
+          "id": "C5",
+          "content": "回避行動後は元の針路への復帰タイミングを明示的に計算する"
+        },
+        {
+          "id": "C6",
+          "content": "AIS信号が途絶した場合はレーダー単独モードに自動切替える"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "TCPA計算更新は2秒ごとに実行し、0.5秒以内に回避判断を出すべき",
+          "refutation": "高速艇が多数存在する海域では計算負荷が許容レベルを超える場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C3",
+          "content": "視界制限時の安全速力は視界距離の2倍未満の停止距離となる速力とすべき",
+          "refutation": "港湾内では船型に関わらず固定速力制限が優先される場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C4",
+          "content": "3隻以上同時接近時はモンテカルロシミュレーション1000回で最適針路を算出すべき",
+          "refutation": "計算時間が実時間要件を満たさず単純ルールベースの方が高速な場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C6",
+          "content": "AIS途絶から30秒以内に代替センサーフュージョンに移行すべき",
+          "refutation": "港湾混雑時のAIS輻輳は一時的であり即座の切替が誤回避を誘発する場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C5",
+          "content": "回避後の復帰はCPAが2000m以上になった時点で開始すべき",
+          "refutation": "高交通密度海域では2000m確保が実用的でない場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 5,
+    "num_props": 17,
+    "num_deps": 22,
+    "model_spec": {
+      "namespace": "TestCoverage.S383",
+      "layers": [
+        {
+          "name": "SafetyAbsolute",
+          "ordValue": 5,
+          "definition": "人命と船体安全に関する絶対不変条件。COLREGS強制規定",
+          "derivedFrom": [
+            "C1",
+            "C2"
+          ]
+        },
+        {
+          "name": "RegulatoryMandatory",
+          "ordValue": 4,
+          "definition": "IMO・COLREGS規則の遵守義務",
+          "derivedFrom": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "name": "OperationalControl",
+          "ordValue": 3,
+          "definition": "通常運航・緊急時の操船制御ポリシー",
+          "derivedFrom": [
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        {
+          "name": "AlgorithmPolicy",
+          "ordValue": 2,
+          "definition": "回避アルゴリズムとセンサー統合の運用方針",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "SimulationHypothesis",
+          "ordValue": 1,
+          "definition": "シミュレーションと最適化手法に関する計算仮説",
+          "derivedFrom": [
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s383_p01",
+          "layerName": "SafetyAbsolute",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s383_p02",
+          "layerName": "SafetyAbsolute",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s383_p03",
+          "layerName": "RegulatoryMandatory",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s383_p02"
+          ]
+        },
+        {
+          "id": "s383_p04",
+          "layerName": "RegulatoryMandatory",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s383_p01"
+          ]
+        },
+        {
+          "id": "s383_p05",
+          "layerName": "OperationalControl",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s383_p01",
+            ".s383_p03"
+          ]
+        },
+        {
+          "id": "s383_p06",
+          "layerName": "OperationalControl",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s383_p03",
+            ".s383_p05"
+          ]
+        },
+        {
+          "id": "s383_p07",
+          "layerName": "OperationalControl",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s383_p04"
+          ]
+        },
+        {
+          "id": "s383_p08",
+          "layerName": "AlgorithmPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s383_p01",
+            ".s383_p05"
+          ]
+        },
+        {
+          "id": "s383_p09",
+          "layerName": "AlgorithmPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s383_p04"
+          ]
+        },
+        {
+          "id": "s383_p10",
+          "layerName": "AlgorithmPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s383_p07"
+          ]
+        },
+        {
+          "id": "s383_p11",
+          "layerName": "AlgorithmPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s383_p06"
+          ]
+        },
+        {
+          "id": "s383_p12",
+          "layerName": "SimulationHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s383_p05",
+            ".s383_p08"
+          ]
+        },
+        {
+          "id": "s383_p13",
+          "layerName": "OperationalControl",
+          "justification": [
+            "C4",
+            "C6"
+          ],
+          "dependencies": [
+            ".s383_p07",
+            ".s383_p10"
+          ]
+        },
+        {
+          "id": "s383_p14",
+          "layerName": "AlgorithmPolicy",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".s383_p12"
+          ]
+        },
+        {
+          "id": "s383_p15",
+          "layerName": "RegulatoryMandatory",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s383_p09"
+          ]
+        },
+        {
+          "id": "s383_p16",
+          "layerName": "OperationalControl",
+          "justification": [
+            "C5",
+            "H5"
+          ],
+          "dependencies": [
+            ".s383_p11",
+            ".s383_p06"
+          ]
+        },
+        {
+          "id": "s383_p17",
+          "layerName": "SimulationHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s383_p08",
+            ".s383_p12"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 384,
+    "project": "サプライチェーン在庫最適化AI",
+    "phase0": {
+      "vision": "需要予測・リードタイム・コスト制約を統合して多段階サプライチェーンの在庫水準を動的最適化するAI。欠品と過剰在庫の両方を最小化する。",
+      "stakeholders": "調達部門、倉庫管理者、販売部門、サプライヤー、財務部門",
+      "priority": "欠品による機会損失防止が最優先。在庫コスト削減はその範囲内で追求"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "安全在庫水準はサービスレベル99%を下回らないよう設定する"
+        },
+        {
+          "id": "C2",
+          "content": "発注量は最小発注単位（MOQ）と発注コストを考慮した経済発注量を基準とする"
+        },
+        {
+          "id": "C3",
+          "content": "在庫データの更新はリアルタイムで行い、夜間バッチ処理に依存しない"
+        },
+        {
+          "id": "C4",
+          "content": "期限切れリスクのある在庫は自動的に値引き推薦または廃棄スケジュールを生成する"
+        },
+        {
+          "id": "C5",
+          "content": "単一サプライヤー依存度が80%を超える品目はリスクフラグを付与する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "需要予測は過去24ヶ月データに季節性調整を加えたARIMAモデルを使用すべき",
+          "refutation": "製品ライフサイクルが24ヶ月より短い新製品では過去データが無意味な場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "EOQ計算には保管コストを在庫金額の年率25%として計上すべき",
+          "refutation": "倉庫が自社保有か賃貸かでコスト構造が大幅に異なる場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "在庫最適化モデルの再計算は需要変動が±15%を超えた時点でトリガーすべき",
+          "refutation": "高頻度トリガーがシステム負荷を超える場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C5",
+          "content": "代替サプライヤー切替コストを考慮したリスクスコアを算出すべき",
+          "refutation": "代替品の品質差が大きくコスト比較のみでは意思決定できない場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 4,
+    "num_layers": 3,
+    "num_props": 12,
+    "num_deps": 13,
+    "model_spec": {
+      "namespace": "TestCoverage.S384",
+      "layers": [
+        {
+          "name": "ServiceLevelInvariant",
+          "ordValue": 3,
+          "definition": "サービスレベルと在庫安全性に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C3",
+            "C5"
+          ]
+        },
+        {
+          "name": "ProcurementPolicy",
+          "ordValue": 2,
+          "definition": "発注・調達の運用ポリシーとリスク管理方針",
+          "derivedFrom": [
+            "C2",
+            "C4",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "OptimizationHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測モデルとコスト計算に関する最適化仮説",
+          "derivedFrom": [
+            "H1",
+            "H2"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s384_p01",
+          "layerName": "ServiceLevelInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s384_p02",
+          "layerName": "ServiceLevelInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s384_p03",
+          "layerName": "ServiceLevelInvariant",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s384_p01"
+          ]
+        },
+        {
+          "id": "s384_p04",
+          "layerName": "ProcurementPolicy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s384_p01"
+          ]
+        },
+        {
+          "id": "s384_p05",
+          "layerName": "ProcurementPolicy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s384_p02"
+          ]
+        },
+        {
+          "id": "s384_p06",
+          "layerName": "ProcurementPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s384_p02",
+            ".s384_p04"
+          ]
+        },
+        {
+          "id": "s384_p07",
+          "layerName": "ProcurementPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s384_p03"
+          ]
+        },
+        {
+          "id": "s384_p08",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s384_p01"
+          ]
+        },
+        {
+          "id": "s384_p09",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s384_p04"
+          ]
+        },
+        {
+          "id": "s384_p10",
+          "layerName": "ProcurementPolicy",
+          "justification": [
+            "C2",
+            "H2"
+          ],
+          "dependencies": [
+            ".s384_p09"
+          ]
+        },
+        {
+          "id": "s384_p11",
+          "layerName": "OptimizationHypothesis",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".s384_p08",
+            ".s384_p06"
+          ]
+        },
+        {
+          "id": "s384_p12",
+          "layerName": "ServiceLevelInvariant",
+          "justification": [
+            "C1",
+            "C5"
+          ],
+          "dependencies": [
+            ".s384_p07",
+            ".s384_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 385,
+    "project": "ゼロトラスト認証・認可プラットフォーム",
+    "phase0": {
+      "vision": "「決して信頼せず、常に検証する」原則に基づき、すべてのリソースアクセスを継続的に認証・認可するゼロトラストセキュリティプラットフォームを構築する。",
+      "stakeholders": "CISO、IT管理者、従業員・エンドユーザー、監査部門、クラウドサービスプロバイダー",
+      "priority": "セキュリティ侵害ゼロが最優先。ユーザー利便性はゼロトラスト原則の範囲内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "すべてのアクセスリクエストはアイデンティティ・デバイス・コンテキストの三要素で認証する"
+        },
+        {
+          "id": "C2",
+          "content": "最小権限原則に基づき、業務上必要な最低限のアクセス権のみを付与する"
+        },
+        {
+          "id": "C3",
+          "content": "異常なアクセスパターン検知時は即座にセッションを終了し再認証を要求する"
+        },
+        {
+          "id": "C4",
+          "content": "全アクセスログは改竄不可能な形式で90日間保存する"
+        },
+        {
+          "id": "C5",
+          "content": "特権アクセス（管理者権限）はジャストインタイム（JIT）方式で付与する"
+        },
+        {
+          "id": "C6",
+          "content": "マイクロセグメンテーションにより横断的な侵害伝播を防止する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "リスクスコアが閾値0.7を超えた場合にMFAを追加要求すべき",
+          "refutation": "高頻度アクセス業務では追加認証が業務効率を著しく低下させる場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C3",
+          "content": "ベースライン行動からの2σ超過アクセスパターンを異常として検知すべき",
+          "refutation": "正当な業務変更（部署異動等）を異常として検知するFPが多発する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C5",
+          "content": "特権アクセスのJITウィンドウは最大4時間とし自動失効すべき",
+          "refutation": "長時間のメンテナンス作業では4時間が実用的でない場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C6",
+          "content": "マイクロセグメントは最大50台/セグメントで分割すべき",
+          "refutation": "コンテナ環境では50台制限が動的スケールを阻害する場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C4",
+          "content": "ログ整合性はSHA-256ハッシュチェーンで毎時間検証すべき",
+          "refutation": "大規模環境でのハッシュ計算コストが監視システムのリソースを圧迫する場合"
+        },
+        {
+          "id": "H6",
+          "basis": "外部知識",
+          "content": "デバイス信頼スコアはCVSSスコアと組み合わせて動的評価すべき",
+          "refutation": "CVSSが公開前のゼロデイ脆弱性には対応できない場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 4,
+    "num_props": 18,
+    "num_deps": 24,
+    "model_spec": {
+      "namespace": "TestCoverage.S385",
+      "layers": [
+        {
+          "name": "ZeroTrustInvariant",
+          "ordValue": 4,
+          "definition": "ゼロトラスト原則の絶対不変条件。すべての検証義務と侵害防止",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3",
+            "C6"
+          ]
+        },
+        {
+          "name": "AuditCompliance",
+          "ordValue": 3,
+          "definition": "監査・ログ要件と規制遵守に関する義務",
+          "derivedFrom": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "name": "AccessPolicy",
+          "ordValue": 2,
+          "definition": "認証・認可の運用ポリシーとリスク評価方針",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H6"
+          ]
+        },
+        {
+          "name": "TechnicalHypothesis",
+          "ordValue": 1,
+          "definition": "実装技術と閾値設定に関する技術的仮説",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s385_p01",
+          "layerName": "ZeroTrustInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s385_p02",
+          "layerName": "ZeroTrustInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s385_p03",
+          "layerName": "ZeroTrustInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s385_p01"
+          ]
+        },
+        {
+          "id": "s385_p04",
+          "layerName": "ZeroTrustInvariant",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s385_p02"
+          ]
+        },
+        {
+          "id": "s385_p05",
+          "layerName": "AuditCompliance",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s385_p01",
+            ".s385_p03"
+          ]
+        },
+        {
+          "id": "s385_p06",
+          "layerName": "AuditCompliance",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s385_p02",
+            ".s385_p05"
+          ]
+        },
+        {
+          "id": "s385_p07",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s385_p01",
+            ".s385_p03"
+          ]
+        },
+        {
+          "id": "s385_p08",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s385_p03"
+          ]
+        },
+        {
+          "id": "s385_p09",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s385_p06"
+          ]
+        },
+        {
+          "id": "s385_p10",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s385_p04"
+          ]
+        },
+        {
+          "id": "s385_p11",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s385_p07"
+          ]
+        },
+        {
+          "id": "s385_p12",
+          "layerName": "TechnicalHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s385_p05"
+          ]
+        },
+        {
+          "id": "s385_p13",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s385_p07",
+            ".s385_p08"
+          ]
+        },
+        {
+          "id": "s385_p14",
+          "layerName": "AuditCompliance",
+          "justification": [
+            "C4",
+            "H5"
+          ],
+          "dependencies": [
+            ".s385_p12"
+          ]
+        },
+        {
+          "id": "s385_p15",
+          "layerName": "ZeroTrustInvariant",
+          "justification": [
+            "C3",
+            "C6"
+          ],
+          "dependencies": [
+            ".s385_p03",
+            ".s385_p04"
+          ]
+        },
+        {
+          "id": "s385_p16",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H3",
+            "H6"
+          ],
+          "dependencies": [
+            ".s385_p09",
+            ".s385_p11"
+          ]
+        },
+        {
+          "id": "s385_p17",
+          "layerName": "TechnicalHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s385_p12",
+            ".s385_p14"
+          ]
+        },
+        {
+          "id": "s385_p18",
+          "layerName": "AccessPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s385_p10",
+            ".s385_p15"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 386,
+    "project": "STEM実験仮想シミュレーター",
+    "phase0": {
+      "vision": "物理・化学・生物の実験を安全かつインタラクティブにシミュレートし、K-12から大学生まで実験概念の理解を深めるSTEM教育プラットフォームを提供する。",
+      "stakeholders": "学生（K-12・大学）、教員・教授、学校管理者、カリキュラム設計者、保護者",
+      "priority": "教育的正確性が最優先。危険物質・高電圧などの危険シミュレーションの安全表示を怠らない"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "実験シミュレーションは実際の物理・化学法則に基づく正確なモデルを使用する"
+        },
+        {
+          "id": "C2",
+          "content": "危険物質・反応を含む実験には安全警告と実世界での注意事項を必ず表示する"
+        },
+        {
+          "id": "C3",
+          "content": "学年別の難易度フィルタリングで適切な複雑さの実験のみを表示する"
+        },
+        {
+          "id": "C4",
+          "content": "実験結果の誤差範囲と測定不確かさを教育コンテンツとして可視化する"
+        },
+        {
+          "id": "C5",
+          "content": "教員はカスタム実験パラメータを設定し学習課題として学生に割り当てられる"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1",
+          "content": "物理シミュレーションは数値積分をRunge-Kutta4次法で行い時間刻みは10ms以下とすべき",
+          "refutation": "シンプルな力学問題では計算コスト過多となりUX劣化する場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "危険度スコア7以上の実験は親/教員の事前許可が必要とすべき",
+          "refutation": "許可フローが授業進行を妨げ教員が形骸化させる場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "Blooms Taxonomyレベルに対応した6段階の難易度分類を採用すべき",
+          "refutation": "生徒の個人差が大きく学年単一の難易度分類が有効でない場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C4",
+          "content": "不確かさ伝播計算はモンテカルロ法で1000サンプル生成して可視化すべき",
+          "refutation": "リアルタイム表示要件にモンテカルロ計算コストが合わない場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C5",
+          "content": "教員のカスタムパラメータはLearning Management System(LMS)とのLTI 1.3で同期すべき",
+          "refutation": "学校がLMSを未導入の場合にLTI要件がシステム導入障壁になる場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 14,
+    "num_deps": 14,
+    "model_spec": {
+      "namespace": "TestCoverage.S386",
+      "layers": [
+        {
+          "name": "EducationalAccuracy",
+          "ordValue": 3,
+          "definition": "科学的正確性と安全教育に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C4"
+          ]
+        },
+        {
+          "name": "PedagogicalPolicy",
+          "ordValue": 2,
+          "definition": "教育設計と学習体験の運用ポリシー",
+          "derivedFrom": [
+            "C3",
+            "C5",
+            "H2",
+            "H3",
+            "H5"
+          ]
+        },
+        {
+          "name": "TechnicalHypothesis",
+          "ordValue": 1,
+          "definition": "シミュレーション手法と実装技術に関する仮説",
+          "derivedFrom": [
+            "H1",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s386_p01",
+          "layerName": "EducationalAccuracy",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s386_p02",
+          "layerName": "EducationalAccuracy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s386_p03",
+          "layerName": "EducationalAccuracy",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s386_p01"
+          ]
+        },
+        {
+          "id": "s386_p04",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s386_p01"
+          ]
+        },
+        {
+          "id": "s386_p05",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s386_p04"
+          ]
+        },
+        {
+          "id": "s386_p06",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s386_p02"
+          ]
+        },
+        {
+          "id": "s386_p07",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s386_p04"
+          ]
+        },
+        {
+          "id": "s386_p08",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s386_p05"
+          ]
+        },
+        {
+          "id": "s386_p09",
+          "layerName": "TechnicalHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s386_p01"
+          ]
+        },
+        {
+          "id": "s386_p10",
+          "layerName": "TechnicalHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s386_p03"
+          ]
+        },
+        {
+          "id": "s386_p11",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "C3",
+            "H3"
+          ],
+          "dependencies": [
+            ".s386_p07"
+          ]
+        },
+        {
+          "id": "s386_p12",
+          "layerName": "EducationalAccuracy",
+          "justification": [
+            "C4",
+            "H4"
+          ],
+          "dependencies": [
+            ".s386_p10"
+          ]
+        },
+        {
+          "id": "s386_p13",
+          "layerName": "TechnicalHypothesis",
+          "justification": [
+            "H1",
+            "H4"
+          ],
+          "dependencies": [
+            ".s386_p09",
+            ".s386_p10"
+          ]
+        },
+        {
+          "id": "s386_p14",
+          "layerName": "PedagogicalPolicy",
+          "justification": [
+            "H2",
+            "H5"
+          ],
+          "dependencies": [
+            ".s386_p06",
+            ".s386_p08"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 387,
+    "project": "地熱発電所運用管理システム",
+    "phase0": {
+      "vision": "地熱貯留層の状態監視・生産井制御・タービン最適化を統合管理し、地熱発電所の安全かつ効率的な運用を支援するシステム。貯留層の長期持続性を確保する。",
+      "stakeholders": "発電所オペレーター、地熱地質学者、電力系統管理者、環境規制当局、地域住民",
+      "priority": "貯留層の不可逆的枯渇防止が最優先。発電効率はその制約内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "生産率は貯留層の持続可能採掘量（SDR）の90%を超えてはならない"
+        },
+        {
+          "id": "C2",
+          "content": "地震活動（M2.0以上）検知時は即座に注水量を50%削減する"
+        },
+        {
+          "id": "C3",
+          "content": "地表沈下速度が年間20mmを超えた場合は生産を一時停止する"
+        },
+        {
+          "id": "C4",
+          "content": "タービン効率は蒸気品質とエンタルピーに基づいて毎時最適化する"
+        },
+        {
+          "id": "C5",
+          "content": "注水・生産のバランスを維持し貯留層圧力を設計範囲内に保つ"
+        },
+        {
+          "id": "C6",
+          "content": "排水・排気の環境基準値超過時は自動的に処理ラインに切り替える"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C5",
+          "content": "貯留層数値シミュレーションは月次更新でSDR再評価すべき",
+          "refutation": "急激な注水による貯留層変化が月次では捕捉できない場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "誘発地震閾値はM1.5から段階的警告を開始し、M2.5で生産停止すべき",
+          "refutation": "地域の自然地震活動が高い場合に誤検知で生産が頻繁停止する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C4",
+          "content": "蒸気セパレーター効率最適化は機械学習で季節特性を反映した制御モデルを使用すべき",
+          "refutation": "機械学習モデルの予期しない挙動がタービントリップを誘発する場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C3,C5",
+          "content": "InSAR衛星測量を月次で実施し地表変動モニタリングを補完すべき",
+          "refutation": "雲天候が多い地域では月次InSARデータが欠損しがちな場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C6",
+          "content": "H2S排出モニタリングは5分間隔でOPC-UAプロトコルで集中監視すべき",
+          "refutation": "風向変化が急激な場合5分間隔では基準超過の即応に不十分な場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 16,
+    "num_deps": 21,
+    "model_spec": {
+      "namespace": "TestCoverage.S387",
+      "layers": [
+        {
+          "name": "ReservoirInvariant",
+          "ordValue": 4,
+          "definition": "貯留層の持続可能性と地盤安全に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3",
+            "C5"
+          ]
+        },
+        {
+          "name": "EnvironmentalCompliance",
+          "ordValue": 3,
+          "definition": "環境規制への遵守と排出基準管理",
+          "derivedFrom": [
+            "C6"
+          ]
+        },
+        {
+          "name": "OperationalOptimization",
+          "ordValue": 2,
+          "definition": "発電効率最大化と運用制御ポリシー",
+          "derivedFrom": [
+            "C4",
+            "H2",
+            "H3",
+            "H5"
+          ]
+        },
+        {
+          "name": "MonitoringHypothesis",
+          "ordValue": 1,
+          "definition": "貯留層モニタリングと予測モデルに関する科学的仮説",
+          "derivedFrom": [
+            "H1",
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s387_p01",
+          "layerName": "ReservoirInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s387_p02",
+          "layerName": "ReservoirInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s387_p03",
+          "layerName": "ReservoirInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s387_p01"
+          ]
+        },
+        {
+          "id": "s387_p04",
+          "layerName": "ReservoirInvariant",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s387_p01",
+            ".s387_p02"
+          ]
+        },
+        {
+          "id": "s387_p05",
+          "layerName": "EnvironmentalCompliance",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s387_p04"
+          ]
+        },
+        {
+          "id": "s387_p06",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s387_p01",
+            ".s387_p04"
+          ]
+        },
+        {
+          "id": "s387_p07",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s387_p02"
+          ]
+        },
+        {
+          "id": "s387_p08",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s387_p06"
+          ]
+        },
+        {
+          "id": "s387_p09",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s387_p05"
+          ]
+        },
+        {
+          "id": "s387_p10",
+          "layerName": "MonitoringHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s387_p01",
+            ".s387_p04"
+          ]
+        },
+        {
+          "id": "s387_p11",
+          "layerName": "MonitoringHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s387_p03"
+          ]
+        },
+        {
+          "id": "s387_p12",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "C4",
+            "H3"
+          ],
+          "dependencies": [
+            ".s387_p08"
+          ]
+        },
+        {
+          "id": "s387_p13",
+          "layerName": "ReservoirInvariant",
+          "justification": [
+            "C2",
+            "C3"
+          ],
+          "dependencies": [
+            ".s387_p03",
+            ".s387_p07"
+          ]
+        },
+        {
+          "id": "s387_p14",
+          "layerName": "MonitoringHypothesis",
+          "justification": [
+            "H1",
+            "H4"
+          ],
+          "dependencies": [
+            ".s387_p10",
+            ".s387_p11"
+          ]
+        },
+        {
+          "id": "s387_p15",
+          "layerName": "EnvironmentalCompliance",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s387_p09",
+            ".s387_p05"
+          ]
+        },
+        {
+          "id": "s387_p16",
+          "layerName": "OperationalOptimization",
+          "justification": [
+            "H2",
+            "H5"
+          ],
+          "dependencies": [
+            ".s387_p07",
+            ".s387_p09"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 388,
+    "project": "知的財産調査・先行技術AI",
+    "phase0": {
+      "vision": "特許・論文・技術文献を横断的に解析し、特許出願の新規性・進歩性判断を支援するAIシステム。弁理士・発明者の先行技術調査を大幅に効率化する。",
+      "stakeholders": "弁理士・特許担当者、発明者・R&Dチーム、特許庁審査官、企業法務部門",
+      "priority": "検索の網羅性が最優先（見落とし防止）。調査速度はその範囲内で改善"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "先行技術調査はUSPTO・EPO・JPO・WIPO全データベースを対象とする"
+        },
+        {
+          "id": "C2",
+          "content": "類似度スコアと引用文献を共に提示し、判断根拠を透明化する"
+        },
+        {
+          "id": "C3",
+          "content": "新規性・進歩性の最終判断は弁理士・審査官が行いAIは候補を提示する"
+        },
+        {
+          "id": "C4",
+          "content": "調査結果には検索式・検索日時・使用データベースバージョンを記録する"
+        },
+        {
+          "id": "C5",
+          "content": "競合他社特許の無効化先行技術サーチも同一品質で実施できる"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C1,C2",
+          "content": "技術クレームの意味検索にはBERT-Patentsファインチューニングモデルを使用すべき",
+          "refutation": "特定技術分野の専門用語でBERT-Patentsの精度が既存キーワード検索を下回る場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2",
+          "content": "類似度閾値0.75以上を「強い先行技術」として警告表示すべき",
+          "refutation": "新技術組み合わせで個々の類似度が低くても全体として新規性が低い場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C4",
+          "content": "検索結果はIPC/CPC国際特許分類コードで自動分類し可視化すべき",
+          "refutation": "新技術領域でIPC分類が未整備のため分類精度が低い場合"
+        },
+        {
+          "id": "H4",
+          "basis": "外部知識",
+          "content": "特許ファミリー（同族特許）は1件として扱い重複表示を排除すべき",
+          "refutation": "各国ごとのクレーム範囲差異が分析上重要な場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C5",
+          "content": "無効化調査では出願優先日前10年の文献を標準検索範囲とすべき",
+          "refutation": "基礎的発明では10年より古い文献が決定的先行技術となる場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": [
+        {
+          "description": "意図的違反: s388_p10(ipc_classification)がs388_p01(database_coverage)に依存するが、ipc_classificationはAnalyticalHypothesis(ord=1)、database_coverageはSearchInvariant(ord=3)にあり逆方向",
+          "from": "s388_p10 (AnalyticalHypothesis, ord=1)",
+          "to": "s388_p01 (SearchInvariant, ord=3)",
+          "fix": "依存をSearchPolicy(ord=2)の命題に変更するか、ipc_classificationをSearchPolicy層に昇格"
+        }
+      ]
+    },
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 3,
+    "num_props": 13,
+    "num_deps": 17,
+    "model_spec": {
+      "namespace": "TestCoverage.S388",
+      "layers": [
+        {
+          "name": "SearchInvariant",
+          "ordValue": 3,
+          "definition": "調査網羅性と判断透明性に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C3",
+            "C4"
+          ]
+        },
+        {
+          "name": "SearchPolicy",
+          "ordValue": 2,
+          "definition": "検索戦略と結果提示の運用ポリシー",
+          "derivedFrom": [
+            "C5",
+            "H2",
+            "H4",
+            "H5"
+          ]
+        },
+        {
+          "name": "AnalyticalHypothesis",
+          "ordValue": 1,
+          "definition": "意味検索モデルと分類手法に関する技術仮説",
+          "derivedFrom": [
+            "H1",
+            "H3"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s388_p01",
+          "layerName": "SearchInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s388_p02",
+          "layerName": "SearchInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s388_p03",
+          "layerName": "SearchInvariant",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s388_p01",
+            ".s388_p02"
+          ]
+        },
+        {
+          "id": "s388_p04",
+          "layerName": "SearchInvariant",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s388_p01"
+          ]
+        },
+        {
+          "id": "s388_p05",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s388_p01",
+            ".s388_p03"
+          ]
+        },
+        {
+          "id": "s388_p06",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s388_p02"
+          ]
+        },
+        {
+          "id": "s388_p07",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s388_p01"
+          ]
+        },
+        {
+          "id": "s388_p08",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s388_p05"
+          ]
+        },
+        {
+          "id": "s388_p09",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s388_p06"
+          ]
+        },
+        {
+          "id": "s388_p10",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s388_p01",
+            ".s388_p04"
+          ]
+        },
+        {
+          "id": "s388_p11",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "H2",
+            "H4"
+          ],
+          "dependencies": [
+            ".s388_p06",
+            ".s388_p07"
+          ]
+        },
+        {
+          "id": "s388_p12",
+          "layerName": "AnalyticalHypothesis",
+          "justification": [
+            "H1",
+            "H3"
+          ],
+          "dependencies": [
+            ".s388_p09",
+            ".s388_p10"
+          ]
+        },
+        {
+          "id": "s388_p13",
+          "layerName": "SearchPolicy",
+          "justification": [
+            "C5",
+            "H5"
+          ],
+          "dependencies": [
+            ".s388_p08",
+            ".s388_p11"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 389,
+    "project": "スマートビル管理自動化プラットフォーム",
+    "phase0": {
+      "vision": "HVAC・照明・セキュリティ・エネルギー管理を統合し、IoTセンサーデータとAIで建物運用を自動化。在室者の快適性とエネルギー効率を同時に最大化する。",
+      "stakeholders": "ビルオーナー、テナント企業、施設管理者、エネルギー事業者、消防・安全当局",
+      "priority": "在室者の安全（消防・避難）が最優先。エネルギー効率はその範囲内で最適化"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "火災・避難警報は人間の確認なしに即座に発令し全システムをセーフモードに移行する"
+        },
+        {
+          "id": "C2",
+          "content": "HVAC制御は空気品質（CO2 1000ppm以下）とPMV快適性指標を維持する"
+        },
+        {
+          "id": "C3",
+          "content": "エネルギー使用データは15分間隔でスマートメーターに記録しテナントに開示する"
+        },
+        {
+          "id": "C4",
+          "content": "セキュリティシステムとHVACの制御優先権は常に安全系が上位を占める"
+        },
+        {
+          "id": "C5",
+          "content": "計画外のシステム停止は24時間以内に原因特定と再発防止策を提示する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C2",
+          "content": "在室予測モデルはカレンダー連携と過去パターンから30分先の在室率を予測すべき",
+          "refutation": "急なイベントや行動変容でカレンダー予測が実態と30%以上乖離する場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C2,C3",
+          "content": "気候データAPIとの連携でHVACの予測制御（MPC）を実装すべき",
+          "refutation": "気候API障害時に予測制御が停止し快適性が著しく低下する場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C3",
+          "content": "ピーク需要シフトのためバッテリー充放電スケジュールを前日22時に自動生成すべき",
+          "refutation": "電力市場の急変でピーク時間帯が前日予測と異なる場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C4",
+          "content": "セキュリティゾーン間の人流データは5分間隔の集計値のみ保存しプライバシーを保護すべき",
+          "refutation": "インシデント調査で詳細な個人動線データが必要になる場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C5",
+          "content": "システム停止の根本原因分析にはDigital Twinを用いた障害シミュレーションを使用すべき",
+          "refutation": "Digital Twinモデルと実ビルの乖離が大きく分析精度が保証できない場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 5,
+    "num_h": 5,
+    "num_layers": 4,
+    "num_props": 15,
+    "num_deps": 19,
+    "model_spec": {
+      "namespace": "TestCoverage.S389",
+      "layers": [
+        {
+          "name": "SafetyInvariant",
+          "ordValue": 4,
+          "definition": "在室者安全と消防・避難に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C4"
+          ]
+        },
+        {
+          "name": "RegulatoryCompliance",
+          "ordValue": 3,
+          "definition": "安全・エネルギー規制への遵守義務",
+          "derivedFrom": [
+            "C3",
+            "C5"
+          ]
+        },
+        {
+          "name": "BuildingOperationPolicy",
+          "ordValue": 2,
+          "definition": "HVAC・エネルギー・セキュリティの運用ポリシー",
+          "derivedFrom": [
+            "C2",
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ]
+        },
+        {
+          "name": "PredictiveHypothesis",
+          "ordValue": 1,
+          "definition": "需要予測・故障分析に関する機械学習仮説",
+          "derivedFrom": [
+            "H5"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s389_p01",
+          "layerName": "SafetyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s389_p02",
+          "layerName": "SafetyInvariant",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s389_p01"
+          ]
+        },
+        {
+          "id": "s389_p03",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s389_p01"
+          ]
+        },
+        {
+          "id": "s389_p04",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s389_p03"
+          ]
+        },
+        {
+          "id": "s389_p05",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s389_p02"
+          ]
+        },
+        {
+          "id": "s389_p06",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s389_p05"
+          ]
+        },
+        {
+          "id": "s389_p07",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s389_p05",
+            ".s389_p03"
+          ]
+        },
+        {
+          "id": "s389_p08",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s389_p03"
+          ]
+        },
+        {
+          "id": "s389_p09",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s389_p02"
+          ]
+        },
+        {
+          "id": "s389_p10",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s389_p04"
+          ]
+        },
+        {
+          "id": "s389_p11",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s389_p06",
+            ".s389_p07"
+          ]
+        },
+        {
+          "id": "s389_p12",
+          "layerName": "RegulatoryCompliance",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s389_p10"
+          ]
+        },
+        {
+          "id": "s389_p13",
+          "layerName": "SafetyInvariant",
+          "justification": [
+            "C1",
+            "C4"
+          ],
+          "dependencies": [
+            ".s389_p01",
+            ".s389_p02"
+          ]
+        },
+        {
+          "id": "s389_p14",
+          "layerName": "BuildingOperationPolicy",
+          "justification": [
+            "H3",
+            "H4"
+          ],
+          "dependencies": [
+            ".s389_p08",
+            ".s389_p09"
+          ]
+        },
+        {
+          "id": "s389_p15",
+          "layerName": "PredictiveHypothesis",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s389_p10",
+            ".s389_p12"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario_id": 390,
+    "project": "量子化学シミュレーションプラットフォーム",
+    "phase0": {
+      "vision": "DFT・CCSD(T)等の量子化学計算手法を統合し、新材料・触媒・医薬品設計を支援するHPC量子化学シミュレーションプラットフォームを提供する。",
+      "stakeholders": "計算化学者、材料科学研究者、製薬企業のドラッグデザイン部門、スパコンセンター管理者",
+      "priority": "計算精度の保証が最優先。計算リソース効率はその制約内で最大化"
+    },
+    "phase1": {
+      "C": [
+        {
+          "id": "C1",
+          "content": "全ての量子化学計算は選択された手法の理論的精度限界を明示する"
+        },
+        {
+          "id": "C2",
+          "content": "DFT計算はバシスセットと汎関数の組み合わせ誤差を定量的に評価する"
+        },
+        {
+          "id": "C3",
+          "content": "計算結果は再現性のため入力ファイル・実行環境・バージョン情報と共に保存する"
+        },
+        {
+          "id": "C4",
+          "content": "分子シミュレーションの収束判定はエネルギー変化1e-6 Hartree以下を基準とする"
+        },
+        {
+          "id": "C5",
+          "content": "高精度計算（CCSD(T)以上）の実行前にリソース見積もりをユーザーに提示する"
+        },
+        {
+          "id": "C6",
+          "content": "計算結果の可視化は実験値との比較ベンチマーク付きで提示する"
+        }
+      ],
+      "H": [
+        {
+          "id": "H1",
+          "basis": "C2",
+          "content": "基底状態エネルギーはB3LYP/6-311+G(d,p)を標準レベルとして推薦すべき",
+          "refutation": "遷移金属系ではB3LYPの精度が系統的に不十分な場合"
+        },
+        {
+          "id": "H2",
+          "basis": "C4",
+          "content": "収束しない場合のフォールバックとして収束判定を1e-5に緩和するオプションを提供すべき",
+          "refutation": "緩和した収束判定が誤った最小値への収束を許容し結果の信頼性を損なう場合"
+        },
+        {
+          "id": "H3",
+          "basis": "C5",
+          "content": "CCSD(T)計算のリソース見積もりはO(N^7)スケーリングで原子数から自動計算すべき",
+          "refutation": "対称性や局在化近似で実効スケーリングが大幅に改善される場合"
+        },
+        {
+          "id": "H4",
+          "basis": "C3",
+          "content": "計算ジョブの来歴管理はGit LFSでインプット・アウトプットをバージョン管理すべき",
+          "refutation": "大規模計算の出力ファイルサイズがGit LFSの実用的な容量制限を超える場合"
+        },
+        {
+          "id": "H5",
+          "basis": "C6",
+          "content": "NIST WebBookの実験値データベースとのAPIによる自動比較機能を実装すべき",
+          "refutation": "NISTデータベースに対象分子の実験値が未収録の場合"
+        },
+        {
+          "id": "H6",
+          "basis": "C1",
+          "content": "手法選択ガイドとして計算精度と計算コストのトレードオフ表を常時表示すべき",
+          "refutation": "ユーザーの専門性が高い場合に簡略ガイドが冗長で作業フローを妨げる場合"
+        }
+      ]
+    },
+    "phase2": {
+      "monotonicity_violations": []
+    },
+    "num_c": 6,
+    "num_h": 6,
+    "num_layers": 5,
+    "num_props": 19,
+    "num_deps": 25,
+    "model_spec": {
+      "namespace": "TestCoverage.S390",
+      "layers": [
+        {
+          "name": "AccuracyInvariant",
+          "ordValue": 5,
+          "definition": "量子化学計算の精度保証と理論的正確性に関する絶対不変条件",
+          "derivedFrom": [
+            "C1",
+            "C2",
+            "C4"
+          ]
+        },
+        {
+          "name": "ReproducibilityRequirement",
+          "ordValue": 4,
+          "definition": "計算再現性と科学的誠実性に関する要件",
+          "derivedFrom": [
+            "C3",
+            "C6"
+          ]
+        },
+        {
+          "name": "ComputationalPolicy",
+          "ordValue": 3,
+          "definition": "リソース管理と計算手法選択のポリシー",
+          "derivedFrom": [
+            "C5",
+            "H3",
+            "H6"
+          ]
+        },
+        {
+          "name": "MethodologyPolicy",
+          "ordValue": 2,
+          "definition": "具体的な計算手法設定と収束基準の運用方針",
+          "derivedFrom": [
+            "H1",
+            "H2",
+            "H5"
+          ]
+        },
+        {
+          "name": "ImplementationHypothesis",
+          "ordValue": 1,
+          "definition": "ツール実装と来歴管理に関する技術的仮説",
+          "derivedFrom": [
+            "H4"
+          ]
+        }
+      ],
+      "propositions": [
+        {
+          "id": "s390_p01",
+          "layerName": "AccuracyInvariant",
+          "justification": [
+            "C1"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "s390_p02",
+          "layerName": "AccuracyInvariant",
+          "justification": [
+            "C2"
+          ],
+          "dependencies": [
+            ".s390_p01"
+          ]
+        },
+        {
+          "id": "s390_p03",
+          "layerName": "AccuracyInvariant",
+          "justification": [
+            "C4"
+          ],
+          "dependencies": [
+            ".s390_p01"
+          ]
+        },
+        {
+          "id": "s390_p04",
+          "layerName": "ReproducibilityRequirement",
+          "justification": [
+            "C3"
+          ],
+          "dependencies": [
+            ".s390_p01"
+          ]
+        },
+        {
+          "id": "s390_p05",
+          "layerName": "ReproducibilityRequirement",
+          "justification": [
+            "C6"
+          ],
+          "dependencies": [
+            ".s390_p02",
+            ".s390_p04"
+          ]
+        },
+        {
+          "id": "s390_p06",
+          "layerName": "ComputationalPolicy",
+          "justification": [
+            "C5"
+          ],
+          "dependencies": [
+            ".s390_p01",
+            ".s390_p03"
+          ]
+        },
+        {
+          "id": "s390_p07",
+          "layerName": "ComputationalPolicy",
+          "justification": [
+            "H3"
+          ],
+          "dependencies": [
+            ".s390_p06"
+          ]
+        },
+        {
+          "id": "s390_p08",
+          "layerName": "ComputationalPolicy",
+          "justification": [
+            "H6"
+          ],
+          "dependencies": [
+            ".s390_p01"
+          ]
+        },
+        {
+          "id": "s390_p09",
+          "layerName": "MethodologyPolicy",
+          "justification": [
+            "H1"
+          ],
+          "dependencies": [
+            ".s390_p02"
+          ]
+        },
+        {
+          "id": "s390_p10",
+          "layerName": "MethodologyPolicy",
+          "justification": [
+            "H2"
+          ],
+          "dependencies": [
+            ".s390_p03"
+          ]
+        },
+        {
+          "id": "s390_p11",
+          "layerName": "MethodologyPolicy",
+          "justification": [
+            "H5"
+          ],
+          "dependencies": [
+            ".s390_p05"
+          ]
+        },
+        {
+          "id": "s390_p12",
+          "layerName": "ImplementationHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s390_p04"
+          ]
+        },
+        {
+          "id": "s390_p13",
+          "layerName": "MethodologyPolicy",
+          "justification": [
+            "H1",
+            "H2"
+          ],
+          "dependencies": [
+            ".s390_p09",
+            ".s390_p10"
+          ]
+        },
+        {
+          "id": "s390_p14",
+          "layerName": "ComputationalPolicy",
+          "justification": [
+            "C5",
+            "H3"
+          ],
+          "dependencies": [
+            ".s390_p07"
+          ]
+        },
+        {
+          "id": "s390_p15",
+          "layerName": "ReproducibilityRequirement",
+          "justification": [
+            "C6",
+            "H5"
+          ],
+          "dependencies": [
+            ".s390_p11"
+          ]
+        },
+        {
+          "id": "s390_p16",
+          "layerName": "ImplementationHypothesis",
+          "justification": [
+            "H4"
+          ],
+          "dependencies": [
+            ".s390_p12",
+            ".s390_p04"
+          ]
+        },
+        {
+          "id": "s390_p17",
+          "layerName": "MethodologyPolicy",
+          "justification": [
+            "H1",
+            "H6"
+          ],
+          "dependencies": [
+            ".s390_p08",
+            ".s390_p09"
+          ]
+        },
+        {
+          "id": "s390_p18",
+          "layerName": "AccuracyInvariant",
+          "justification": [
+            "C2",
+            "C4"
+          ],
+          "dependencies": [
+            ".s390_p02",
+            ".s390_p03"
+          ]
+        },
+        {
+          "id": "s390_p19",
+          "layerName": "ComputationalPolicy",
+          "justification": [
+            "H3",
+            "H6"
+          ],
+          "dependencies": [
+            ".s390_p07",
+            ".s390_p08"
+          ]
+        }
+      ]
+    }
+  }
+]

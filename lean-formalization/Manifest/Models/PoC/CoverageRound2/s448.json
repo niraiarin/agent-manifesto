@@ -1,0 +1,256 @@
+{
+  "namespace": "TestCoverage.S448",
+  "layers": [
+    {
+      "name": "DemocraticIntegrityInvariant",
+      "ordValue": 5,
+      "definition": "一人一票・無記名秘密投票・改竄不可能性の民主主義的絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "LegalFrameworkInvariant",
+      "ordValue": 4,
+      "definition": "公職選挙法・個人情報保護法・選挙管理委員会規則への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "SecurityAuditPolicy",
+      "ordValue": 3,
+      "definition": "ペネトレーションテスト・監査ログ・改竄検知の不正防止方針",
+      "derivedFrom": [
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "AccessibilityOperationPolicy",
+      "ordValue": 2,
+      "definition": "障害者対応・多言語サポート・操作性確保の運用方針",
+      "derivedFrom": [
+        "C6",
+        "H2"
+      ]
+    },
+    {
+      "name": "SystemReliabilityHypothesis",
+      "ordValue": 1,
+      "definition": "投票集計精度・システム可用性・障害復旧時間に関する仮説",
+      "derivedFrom": [
+        "C7",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s448_p01",
+      "layerName": "DemocraticIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s448_p02",
+      "layerName": "DemocraticIntegrityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s448_p01"
+      ]
+    },
+    {
+      "id": "s448_p03",
+      "layerName": "DemocraticIntegrityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s448_p01",
+        ".s448_p02"
+      ]
+    },
+    {
+      "id": "s448_p04",
+      "layerName": "LegalFrameworkInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s448_p01"
+      ]
+    },
+    {
+      "id": "s448_p05",
+      "layerName": "LegalFrameworkInvariant",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s448_p02"
+      ]
+    },
+    {
+      "id": "s448_p06",
+      "layerName": "LegalFrameworkInvariant",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s448_p04",
+        ".s448_p05"
+      ]
+    },
+    {
+      "id": "s448_p07",
+      "layerName": "SecurityAuditPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s448_p03"
+      ]
+    },
+    {
+      "id": "s448_p08",
+      "layerName": "SecurityAuditPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s448_p06",
+        ".s448_p07"
+      ]
+    },
+    {
+      "id": "s448_p09",
+      "layerName": "SecurityAuditPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s448_p07",
+        ".s448_p08"
+      ]
+    },
+    {
+      "id": "s448_p10",
+      "layerName": "AccessibilityOperationPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s448_p04"
+      ]
+    },
+    {
+      "id": "s448_p11",
+      "layerName": "AccessibilityOperationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s448_p08",
+        ".s448_p10"
+      ]
+    },
+    {
+      "id": "s448_p12",
+      "layerName": "AccessibilityOperationPolicy",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s448_p10",
+        ".s448_p11"
+      ]
+    },
+    {
+      "id": "s448_p13",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s448_p07"
+      ]
+    },
+    {
+      "id": "s448_p14",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s448_p09",
+        ".s448_p13"
+      ]
+    },
+    {
+      "id": "s448_p15",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s448_p11"
+      ]
+    },
+    {
+      "id": "s448_p16",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s448_p14",
+        ".s448_p15"
+      ]
+    },
+    {
+      "id": "s448_p17",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "C7"
+      ],
+      "dependencies": [
+        ".s448_p12"
+      ]
+    },
+    {
+      "id": "s448_p18",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s448_p16",
+        ".s448_p17"
+      ]
+    },
+    {
+      "id": "s448_p19",
+      "layerName": "SystemReliabilityHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s448_p18"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "namespace": "TestCoverage.S307",
+  "layers": [
+    {
+      "name": "QualityInvariant",
+      "ordValue": 4,
+      "definition": "製品出荷品質保証に関する絶対不変条件（偽陰性ゼロ）",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "InspectionStandard",
+      "ordValue": 3,
+      "definition": "IPC基準・顧客仕様への適合検査方針",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "DetectionModel",
+      "ordValue": 2,
+      "definition": "欠陥分類・サイズ測定・位置特定のモデル",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "DefectHypothesis",
+      "ordValue": 1,
+      "definition": "欠陥発生パターン・製造工程起因推定の仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s307_p01",
+      "layerName": "QualityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s307_p02",
+      "layerName": "QualityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s307_p01"
+      ]
+    },
+    {
+      "id": "s307_p03",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s307_p01"
+      ]
+    },
+    {
+      "id": "s307_p04",
+      "layerName": "InspectionStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s307_p02",
+        ".s307_p03"
+      ]
+    },
+    {
+      "id": "s307_p05",
+      "layerName": "DetectionModel",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s307_p03"
+      ]
+    },
+    {
+      "id": "s307_p06",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s307_p04"
+      ]
+    },
+    {
+      "id": "s307_p07",
+      "layerName": "DetectionModel",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s307_p05",
+        ".s307_p06"
+      ]
+    },
+    {
+      "id": "s307_p08",
+      "layerName": "DefectHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s307_p05"
+      ]
+    },
+    {
+      "id": "s307_p09",
+      "layerName": "DefectHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s307_p06"
+      ]
+    },
+    {
+      "id": "s307_p10",
+      "layerName": "DefectHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s307_p07",
+        ".s307_p08"
+      ]
+    },
+    {
+      "id": "s307_p11",
+      "layerName": "DefectHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s307_p09",
+        ".s307_p10"
+      ]
+    }
+  ]
+}

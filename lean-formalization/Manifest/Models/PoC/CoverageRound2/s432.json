@@ -1,0 +1,115 @@
+{
+  "namespace": "TestCoverage.S432",
+  "layers": [
+    {
+      "name": "AquacultureRegulation",
+      "ordValue": 3,
+      "definition": "水産業法規・水質基準・環境保護法令への適合",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "BiologicalManagementPolicy",
+      "ordValue": 2,
+      "definition": "魚類健康管理・給餌プロトコル・密度制御の方針",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "WaterQualityPredictionModel",
+      "ordValue": 1,
+      "definition": "溶存酸素・pH・アンモニア濃度の予測モデル仮説",
+      "derivedFrom": [
+        "C4",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s432_p01",
+      "layerName": "AquacultureRegulation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s432_p02",
+      "layerName": "AquacultureRegulation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s432_p03",
+      "layerName": "BiologicalManagementPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s432_p01"
+      ]
+    },
+    {
+      "id": "s432_p04",
+      "layerName": "BiologicalManagementPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s432_p02"
+      ]
+    },
+    {
+      "id": "s432_p05",
+      "layerName": "BiologicalManagementPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s432_p03",
+        ".s432_p04"
+      ]
+    },
+    {
+      "id": "s432_p06",
+      "layerName": "WaterQualityPredictionModel",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s432_p03"
+      ]
+    },
+    {
+      "id": "s432_p07",
+      "layerName": "WaterQualityPredictionModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s432_p04",
+        ".s432_p06"
+      ]
+    },
+    {
+      "id": "s432_p08",
+      "layerName": "WaterQualityPredictionModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s432_p05",
+        ".s432_p07"
+      ]
+    }
+  ]
+}

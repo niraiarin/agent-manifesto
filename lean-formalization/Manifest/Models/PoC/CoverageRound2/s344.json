@@ -1,0 +1,246 @@
+{
+  "namespace": "TestCoverage.S344",
+  "layers": [
+    {
+      "name": "HazardInvariant",
+      "ordValue": 5,
+      "definition": "爆発・毒性漏洩・火災による人命・環境への損害禁止の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 4,
+      "definition": "高圧ガス保安法・労働安全衛生法・REACH規制への適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "SafetyPolicy",
+      "ordValue": 3,
+      "definition": "緊急停止・立入制限・防護装備着用の安全方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "ProcessControl",
+      "ordValue": 2,
+      "definition": "温度・圧力・流量の制御限界と自動調整方針",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "AnomalyHypothesis",
+      "ordValue": 1,
+      "definition": "異常予兆・設備劣化・反応暴走に関する推論仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s344_p01",
+      "layerName": "HazardInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s344_p02",
+      "layerName": "HazardInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s344_p03",
+      "layerName": "HazardInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s344_p01",
+        ".s344_p02"
+      ]
+    },
+    {
+      "id": "s344_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s344_p01"
+      ]
+    },
+    {
+      "id": "s344_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s344_p02"
+      ]
+    },
+    {
+      "id": "s344_p06",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s344_p04",
+        ".s344_p05"
+      ]
+    },
+    {
+      "id": "s344_p07",
+      "layerName": "SafetyPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s344_p03"
+      ]
+    },
+    {
+      "id": "s344_p08",
+      "layerName": "SafetyPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s344_p04"
+      ]
+    },
+    {
+      "id": "s344_p09",
+      "layerName": "SafetyPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s344_p07",
+        ".s344_p08"
+      ]
+    },
+    {
+      "id": "s344_p10",
+      "layerName": "ProcessControl",
+      "justification": [
+        "C6",
+        "H3"
+      ],
+      "dependencies": [
+        ".s344_p06"
+      ]
+    },
+    {
+      "id": "s344_p11",
+      "layerName": "ProcessControl",
+      "justification": [
+        "C7",
+        "H4"
+      ],
+      "dependencies": [
+        ".s344_p05"
+      ]
+    },
+    {
+      "id": "s344_p12",
+      "layerName": "ProcessControl",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s344_p09",
+        ".s344_p10"
+      ]
+    },
+    {
+      "id": "s344_p13",
+      "layerName": "ProcessControl",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s344_p11"
+      ]
+    },
+    {
+      "id": "s344_p14",
+      "layerName": "AnomalyHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s344_p10"
+      ]
+    },
+    {
+      "id": "s344_p15",
+      "layerName": "AnomalyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s344_p11"
+      ]
+    },
+    {
+      "id": "s344_p16",
+      "layerName": "AnomalyHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s344_p12",
+        ".s344_p14"
+      ]
+    },
+    {
+      "id": "s344_p17",
+      "layerName": "AnomalyHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s344_p13",
+        ".s344_p15"
+      ]
+    },
+    {
+      "id": "s344_p18",
+      "layerName": "AnomalyHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s344_p16",
+        ".s344_p17"
+      ]
+    }
+  ]
+}

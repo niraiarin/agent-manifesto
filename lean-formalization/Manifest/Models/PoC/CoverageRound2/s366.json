@@ -1,0 +1,240 @@
+{
+  "namespace": "TestCoverage.S366",
+  "layers": [
+    {
+      "name": "ConstitutionalEquality",
+      "ordValue": 6,
+      "definition": "憲法・教育基本法に基づく平等権・差別禁止の絶対的不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "AdmissionLegality",
+      "ordValue": 5,
+      "definition": "入試選抜の法的根拠・個人情報保護・透明性要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "FairnessStandard",
+      "ordValue": 4,
+      "definition": "評価基準の統一性・採点者間信頼性・測定不変性の基準",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "BiasDetectionPolicy",
+      "ordValue": 3,
+      "definition": "統計的バイアス検出・属性別格差分析の監査方針",
+      "derivedFrom": [
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "RemediationModel",
+      "ordValue": 2,
+      "definition": "バイアス是正・選抜プロセス改善の修正モデル",
+      "derivedFrom": [
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PredictiveHypothesis",
+      "ordValue": 1,
+      "definition": "将来的公平性確保・属性相関消去に関する推論仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s366_p01",
+      "layerName": "ConstitutionalEquality",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s366_p02",
+      "layerName": "AdmissionLegality",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s366_p01"
+      ]
+    },
+    {
+      "id": "s366_p03",
+      "layerName": "AdmissionLegality",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s366_p01"
+      ]
+    },
+    {
+      "id": "s366_p04",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s366_p02"
+      ]
+    },
+    {
+      "id": "s366_p05",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s366_p03"
+      ]
+    },
+    {
+      "id": "s366_p06",
+      "layerName": "FairnessStandard",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s366_p04",
+        ".s366_p05"
+      ]
+    },
+    {
+      "id": "s366_p07",
+      "layerName": "BiasDetectionPolicy",
+      "justification": [
+        "C6",
+        "H1"
+      ],
+      "dependencies": [
+        ".s366_p04"
+      ]
+    },
+    {
+      "id": "s366_p08",
+      "layerName": "BiasDetectionPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s366_p05"
+      ]
+    },
+    {
+      "id": "s366_p09",
+      "layerName": "BiasDetectionPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s366_p06",
+        ".s366_p07"
+      ]
+    },
+    {
+      "id": "s366_p10",
+      "layerName": "RemediationModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s366_p07"
+      ]
+    },
+    {
+      "id": "s366_p11",
+      "layerName": "RemediationModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s366_p08"
+      ]
+    },
+    {
+      "id": "s366_p12",
+      "layerName": "RemediationModel",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s366_p09",
+        ".s366_p10"
+      ]
+    },
+    {
+      "id": "s366_p13",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s366_p10"
+      ]
+    },
+    {
+      "id": "s366_p14",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s366_p11"
+      ]
+    },
+    {
+      "id": "s366_p15",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s366_p12",
+        ".s366_p13"
+      ]
+    },
+    {
+      "id": "s366_p16",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s366_p14",
+        ".s366_p15"
+      ]
+    },
+    {
+      "id": "s366_p17",
+      "layerName": "PredictiveHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s366_p01",
+        ".s366_p16"
+      ]
+    }
+  ]
+}

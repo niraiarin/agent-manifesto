@@ -1,0 +1,208 @@
+{
+  "namespace": "TestCoverage.S492",
+  "layers": [
+    {
+      "name": "PrivacyInvariant",
+      "ordValue": 5,
+      "definition": "顧客個人情報保護の絶対制約。GDPR・個人情報保護法に基づく不変条件",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "EthicalConstraint",
+      "ordValue": 4,
+      "definition": "差別的予測・公平性侵害を防ぐ倫理的制約。透明性確保義務",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "BusinessPolicy",
+      "ordValue": 3,
+      "definition": "顧客維持施策・介入タイミング・予算配分に関するビジネスポリシー",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "PredictionStrategy",
+      "ordValue": 2,
+      "definition": "特徴量選択・モデル選択・閾値設定に関する予測戦略",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "OperationalHeuristic",
+      "ordValue": 1,
+      "definition": "A/Bテスト設計・コホート分析・リアルタイム更新に関するヒューリスティック",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s492_p01",
+      "layerName": "PrivacyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s492_p02",
+      "layerName": "PrivacyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s492_p01"
+      ]
+    },
+    {
+      "id": "s492_p03",
+      "layerName": "EthicalConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s492_p01"
+      ]
+    },
+    {
+      "id": "s492_p04",
+      "layerName": "EthicalConstraint",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s492_p01"
+      ]
+    },
+    {
+      "id": "s492_p05",
+      "layerName": "EthicalConstraint",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s492_p03",
+        ".s492_p04"
+      ]
+    },
+    {
+      "id": "s492_p06",
+      "layerName": "BusinessPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s492_p03"
+      ]
+    },
+    {
+      "id": "s492_p07",
+      "layerName": "BusinessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s492_p04"
+      ]
+    },
+    {
+      "id": "s492_p08",
+      "layerName": "BusinessPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s492_p05",
+        ".s492_p06"
+      ]
+    },
+    {
+      "id": "s492_p09",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s492_p06"
+      ]
+    },
+    {
+      "id": "s492_p10",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s492_p07"
+      ]
+    },
+    {
+      "id": "s492_p11",
+      "layerName": "PredictionStrategy",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s492_p08",
+        ".s492_p09"
+      ]
+    },
+    {
+      "id": "s492_p12",
+      "layerName": "OperationalHeuristic",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s492_p09"
+      ]
+    },
+    {
+      "id": "s492_p13",
+      "layerName": "OperationalHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s492_p10"
+      ]
+    },
+    {
+      "id": "s492_p14",
+      "layerName": "OperationalHeuristic",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s492_p11",
+        ".s492_p12"
+      ]
+    },
+    {
+      "id": "s492_p15",
+      "layerName": "OperationalHeuristic",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s492_p13",
+        ".s492_p14"
+      ]
+    }
+  ]
+}

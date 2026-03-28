@@ -1,0 +1,266 @@
+{
+  "namespace": "TestCoverage.S405",
+  "layers": [
+    {
+      "name": "CryptographicSecurityInvariant",
+      "ordValue": 6,
+      "definition": "暗号強度・鍵の機密性を保証する絶対不変制約。数学的安全保証",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryKeyManagement",
+      "ordValue": 5,
+      "definition": "FIPS 140-2・Common Criteria等規格準拠。政府・規制当局の要求",
+      "derivedFrom": [
+        "C3",
+        "H1"
+      ]
+    },
+    {
+      "name": "AccessControlPolicy",
+      "ordValue": 4,
+      "definition": "鍵へのアクセス制御・最小権限原則。セキュリティポリシーに基づく",
+      "derivedFrom": [
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "LifecycleManagementPolicy",
+      "ordValue": 3,
+      "definition": "鍵の生成・更新・廃棄ライフサイクル管理。運用規則",
+      "derivedFrom": [
+        "C5",
+        "H3"
+      ]
+    },
+    {
+      "name": "AuditAndMonitoringPolicy",
+      "ordValue": 2,
+      "definition": "鍵使用の監査ログ・異常検知ポリシー。コンプライアンス記録",
+      "derivedFrom": [
+        "C6",
+        "H4"
+      ]
+    },
+    {
+      "name": "OptimizationHypothesis",
+      "ordValue": 1,
+      "definition": "鍵管理パフォーマンス・可用性改善の仮説。運用データで検証",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s405_p01",
+      "layerName": "CryptographicSecurityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s405_p02",
+      "layerName": "CryptographicSecurityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s405_p03",
+      "layerName": "CryptographicSecurityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s405_p01",
+        ".s405_p02"
+      ]
+    },
+    {
+      "id": "s405_p04",
+      "layerName": "RegulatoryKeyManagement",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s405_p01"
+      ]
+    },
+    {
+      "id": "s405_p05",
+      "layerName": "RegulatoryKeyManagement",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s405_p02"
+      ]
+    },
+    {
+      "id": "s405_p06",
+      "layerName": "RegulatoryKeyManagement",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s405_p03"
+      ]
+    },
+    {
+      "id": "s405_p07",
+      "layerName": "AccessControlPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s405_p04"
+      ]
+    },
+    {
+      "id": "s405_p08",
+      "layerName": "AccessControlPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s405_p05"
+      ]
+    },
+    {
+      "id": "s405_p09",
+      "layerName": "AccessControlPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s405_p06"
+      ]
+    },
+    {
+      "id": "s405_p10",
+      "layerName": "LifecycleManagementPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s405_p07"
+      ]
+    },
+    {
+      "id": "s405_p11",
+      "layerName": "LifecycleManagementPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s405_p08"
+      ]
+    },
+    {
+      "id": "s405_p12",
+      "layerName": "LifecycleManagementPolicy",
+      "justification": [
+        "C5",
+        "H3"
+      ],
+      "dependencies": [
+        ".s405_p09"
+      ]
+    },
+    {
+      "id": "s405_p13",
+      "layerName": "LifecycleManagementPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s405_p10",
+        ".s405_p11"
+      ]
+    },
+    {
+      "id": "s405_p14",
+      "layerName": "AuditAndMonitoringPolicy",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s405_p10"
+      ]
+    },
+    {
+      "id": "s405_p15",
+      "layerName": "AuditAndMonitoringPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s405_p11"
+      ]
+    },
+    {
+      "id": "s405_p16",
+      "layerName": "AuditAndMonitoringPolicy",
+      "justification": [
+        "C6",
+        "H4"
+      ],
+      "dependencies": [
+        ".s405_p12",
+        ".s405_p13"
+      ]
+    },
+    {
+      "id": "s405_p17",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s405_p14"
+      ]
+    },
+    {
+      "id": "s405_p18",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s405_p15"
+      ]
+    },
+    {
+      "id": "s405_p19",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s405_p16"
+      ]
+    },
+    {
+      "id": "s405_p20",
+      "layerName": "OptimizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s405_p17",
+        ".s405_p18",
+        ".s405_p19"
+      ]
+    }
+  ]
+}

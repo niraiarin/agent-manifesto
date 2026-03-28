@@ -1,0 +1,204 @@
+{
+  "namespace": "TestCoverage.S381",
+  "layers": [
+    {
+      "name": "PatientSafetyInvariant",
+      "ordValue": 4,
+      "definition": "患者安全と適格基準遵守に関する絶対不変条件。いかなる推薦最適化も侵犯不可",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "IRB・規制当局の要件および医師の最終判断権に関する遵守義務",
+      "derivedFrom": [
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "RecommendationPolicy",
+      "ordValue": 2,
+      "definition": "推薦アルゴリズムの運用方針と閾値設定ポリシー",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H4",
+        "H5"
+      ]
+    },
+    {
+      "name": "AnalyticalHypothesis",
+      "ordValue": 1,
+      "definition": "スコアリングモデルと特徴量設計に関する仮説的推論",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s381_p01",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s381_p02",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s381_p03",
+      "layerName": "PatientSafetyInvariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s381_p01"
+      ]
+    },
+    {
+      "id": "s381_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s381_p01",
+        ".s381_p02"
+      ]
+    },
+    {
+      "id": "s381_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s381_p04"
+      ]
+    },
+    {
+      "id": "s381_p06",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s381_p04"
+      ]
+    },
+    {
+      "id": "s381_p07",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s381_p03",
+        ".s381_p06"
+      ]
+    },
+    {
+      "id": "s381_p08",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s381_p06"
+      ]
+    },
+    {
+      "id": "s381_p09",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s381_p05",
+        ".s381_p06"
+      ]
+    },
+    {
+      "id": "s381_p10",
+      "layerName": "AnalyticalHypothesis",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s381_p02"
+      ]
+    },
+    {
+      "id": "s381_p11",
+      "layerName": "AnalyticalHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s381_p06"
+      ]
+    },
+    {
+      "id": "s381_p12",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "C4",
+        "H3"
+      ],
+      "dependencies": [
+        ".s381_p11"
+      ]
+    },
+    {
+      "id": "s381_p13",
+      "layerName": "RecommendationPolicy",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s381_p07",
+        ".s381_p08"
+      ]
+    },
+    {
+      "id": "s381_p14",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".s381_p05",
+        ".s381_p09"
+      ]
+    },
+    {
+      "id": "s381_p15",
+      "layerName": "AnalyticalHypothesis",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s381_p10",
+        ".s381_p11"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "namespace": "TestCoverage.S454",
+  "layers": [
+    {
+      "name": "LifeSafetyDispatchInvariant",
+      "ordValue": 3,
+      "definition": "生命危機事案への即時対応保障。分類誤りによる応急遅延は絶対許容不可",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "TriageClassificationPolicy",
+      "ordValue": 2,
+      "definition": "緊急度A/B/C分類基準・管轄機関振り分け・二次確認プロセスの方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "CallAnalysisHypothesis",
+      "ordValue": 1,
+      "definition": "音声特徴・キーワード抽出・発信者属性による緊急度推定仮説",
+      "derivedFrom": [
+        "C5",
+        "H3",
+        "H4"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s454_p01",
+      "layerName": "LifeSafetyDispatchInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s454_p02",
+      "layerName": "LifeSafetyDispatchInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s454_p03",
+      "layerName": "TriageClassificationPolicy",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s454_p01"
+      ]
+    },
+    {
+      "id": "s454_p04",
+      "layerName": "TriageClassificationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s454_p02"
+      ]
+    },
+    {
+      "id": "s454_p05",
+      "layerName": "TriageClassificationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s454_p03",
+        ".s454_p04"
+      ]
+    },
+    {
+      "id": "s454_p06",
+      "layerName": "CallAnalysisHypothesis",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s454_p03"
+      ]
+    },
+    {
+      "id": "s454_p07",
+      "layerName": "CallAnalysisHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s454_p04"
+      ]
+    },
+    {
+      "id": "s454_p08",
+      "layerName": "CallAnalysisHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s454_p05",
+        ".s454_p06"
+      ]
+    },
+    {
+      "id": "s454_p09",
+      "layerName": "CallAnalysisHypothesis",
+      "justification": [
+        "H3",
+        "H4"
+      ],
+      "dependencies": [
+        ".s454_p07",
+        ".s454_p08"
+      ]
+    }
+  ]
+}

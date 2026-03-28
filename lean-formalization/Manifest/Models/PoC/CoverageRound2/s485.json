@@ -1,0 +1,159 @@
+{
+  "namespace": "TestCoverage.S485",
+  "layers": [
+    {
+      "name": "UserPrivacySecurityInvariant",
+      "ordValue": 3,
+      "definition": "個人情報漏洩・金融詐欺被害の発生を防ぐ絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ComplianceDetectionPolicy",
+      "ordValue": 2,
+      "definition": "GDPR・サイバーセキュリティ法・誤検知率上限の遵守方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "ThreatIntelligenceHypothesis",
+      "ordValue": 1,
+      "definition": "URLパターン・送信元評判・コンテンツ類似度による脅威推論",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s485_p01",
+      "layerName": "UserPrivacySecurityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s485_p02",
+      "layerName": "UserPrivacySecurityInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s485_p03",
+      "layerName": "UserPrivacySecurityInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s485_p01",
+        ".s485_p02"
+      ]
+    },
+    {
+      "id": "s485_p04",
+      "layerName": "ComplianceDetectionPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s485_p01"
+      ]
+    },
+    {
+      "id": "s485_p05",
+      "layerName": "ComplianceDetectionPolicy",
+      "justification": [
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s485_p02",
+        ".s485_p03"
+      ]
+    },
+    {
+      "id": "s485_p06",
+      "layerName": "ComplianceDetectionPolicy",
+      "justification": [
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "dependencies": [
+        ".s485_p04",
+        ".s485_p05"
+      ]
+    },
+    {
+      "id": "s485_p07",
+      "layerName": "ThreatIntelligenceHypothesis",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s485_p04"
+      ]
+    },
+    {
+      "id": "s485_p08",
+      "layerName": "ThreatIntelligenceHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s485_p05"
+      ]
+    },
+    {
+      "id": "s485_p09",
+      "layerName": "ThreatIntelligenceHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s485_p06",
+        ".s485_p07"
+      ]
+    },
+    {
+      "id": "s485_p10",
+      "layerName": "ThreatIntelligenceHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s485_p07",
+        ".s485_p08"
+      ]
+    },
+    {
+      "id": "s485_p11",
+      "layerName": "ThreatIntelligenceHypothesis",
+      "justification": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s485_p09",
+        ".s485_p10"
+      ]
+    }
+  ]
+}

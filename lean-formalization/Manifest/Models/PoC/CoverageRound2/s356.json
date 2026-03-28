@@ -1,0 +1,121 @@
+{
+  "namespace": "TestCoverage.S356",
+  "layers": [
+    {
+      "name": "LearnerWelfareInvariant",
+      "ordValue": 3,
+      "definition": "学習者の誤学習防止・安全コンテンツ提供の不変制約。有害情報の排除",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PedagogicalPolicy",
+      "ordValue": 2,
+      "definition": "段階的習熟・エラー修正方針・モチベーション維持の教育学的方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PersonalizationHypothesis",
+      "ordValue": 1,
+      "definition": "習熟度推定・学習スタイル・最適復習間隔に関する適応学習仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s356_p01",
+      "layerName": "LearnerWelfareInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": [
+        ".s356_p08"
+      ]
+    },
+    {
+      "id": "s356_p02",
+      "layerName": "LearnerWelfareInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s356_p01"
+      ]
+    },
+    {
+      "id": "s356_p03",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s356_p01"
+      ]
+    },
+    {
+      "id": "s356_p04",
+      "layerName": "PedagogicalPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s356_p02"
+      ]
+    },
+    {
+      "id": "s356_p05",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s356_p03"
+      ]
+    },
+    {
+      "id": "s356_p06",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s356_p04"
+      ]
+    },
+    {
+      "id": "s356_p07",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s356_p05"
+      ]
+    },
+    {
+      "id": "s356_p08",
+      "layerName": "PersonalizationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s356_p06",
+        ".s356_p07"
+      ]
+    }
+  ]
+}

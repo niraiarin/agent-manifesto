@@ -1,0 +1,193 @@
+{
+  "namespace": "TestCoverage.S340",
+  "layers": [
+    {
+      "name": "QualityInvariant",
+      "ordValue": 4,
+      "definition": "構造安全性に関する溶接品質の絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C3"
+      ]
+    },
+    {
+      "name": "StandardsCompliance",
+      "ordValue": 3,
+      "definition": "JIS/ISO品質基準・トレーサビリティ要件",
+      "derivedFrom": [
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "検査タイミング・生産効率・停止判断の運用方針",
+      "derivedFrom": [
+        "C3",
+        "C4",
+        "H2"
+      ]
+    },
+    {
+      "name": "InspectionHypothesis",
+      "ordValue": 1,
+      "definition": "検査技術・AIモデル・プロセス監視に関する推定仮説",
+      "derivedFrom": [
+        "H1",
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s340_p01",
+      "layerName": "QualityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s340_p02",
+      "layerName": "QualityInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s340_p01"
+      ]
+    },
+    {
+      "id": "s340_p03",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s340_p01"
+      ]
+    },
+    {
+      "id": "s340_p04",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s340_p03"
+      ]
+    },
+    {
+      "id": "s340_p05",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s340_p01"
+      ]
+    },
+    {
+      "id": "s340_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C3",
+        "H2"
+      ],
+      "dependencies": [
+        ".s340_p02",
+        ".s340_p05"
+      ]
+    },
+    {
+      "id": "s340_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C4",
+        "H2"
+      ],
+      "dependencies": [
+        ".s340_p05"
+      ]
+    },
+    {
+      "id": "s340_p08",
+      "layerName": "InspectionHypothesis",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s340_p01"
+      ]
+    },
+    {
+      "id": "s340_p09",
+      "layerName": "InspectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s340_p03"
+      ]
+    },
+    {
+      "id": "s340_p10",
+      "layerName": "InspectionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s340_p06"
+      ]
+    },
+    {
+      "id": "s340_p11",
+      "layerName": "InspectionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s340_p09",
+        ".s340_p10"
+      ]
+    },
+    {
+      "id": "s340_p12",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H1",
+        "H4"
+      ],
+      "dependencies": [
+        ".s340_p08",
+        ".s340_p10"
+      ]
+    },
+    {
+      "id": "s340_p13",
+      "layerName": "StandardsCompliance",
+      "justification": [
+        "C2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s340_p09",
+        ".s340_p12"
+      ]
+    },
+    {
+      "id": "s340_p14",
+      "layerName": "InspectionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s340_p11",
+        ".s340_p13"
+      ]
+    }
+  ]
+}

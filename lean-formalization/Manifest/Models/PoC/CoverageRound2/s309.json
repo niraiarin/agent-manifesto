@@ -1,0 +1,201 @@
+{
+  "namespace": "TestCoverage.S309",
+  "layers": [
+    {
+      "name": "SafetyConstraint",
+      "ordValue": 4,
+      "definition": "作業員安全・積荷崩壊防止に関する絶対安全制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "OperationalCompliance",
+      "ordValue": 3,
+      "definition": "税関・検疫・危険物規制への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OptimizationPolicy",
+      "ordValue": 2,
+      "definition": "荷役順序・クレーン割当・保管場所割当の最適化方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "DemandHypothesis",
+      "ordValue": 1,
+      "definition": "船便スケジュール変動・需要量予測に関する仮説",
+      "derivedFrom": [
+        "H4",
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s309_p01",
+      "layerName": "SafetyConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s309_p02",
+      "layerName": "SafetyConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s309_p03",
+      "layerName": "OperationalCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s309_p01"
+      ]
+    },
+    {
+      "id": "s309_p04",
+      "layerName": "OperationalCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s309_p02"
+      ]
+    },
+    {
+      "id": "s309_p05",
+      "layerName": "OperationalCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s309_p03",
+        ".s309_p04"
+      ]
+    },
+    {
+      "id": "s309_p06",
+      "layerName": "OptimizationPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s309_p03"
+      ]
+    },
+    {
+      "id": "s309_p07",
+      "layerName": "OptimizationPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s309_p04"
+      ]
+    },
+    {
+      "id": "s309_p08",
+      "layerName": "OptimizationPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s309_p05",
+        ".s309_p06"
+      ]
+    },
+    {
+      "id": "s309_p09",
+      "layerName": "OptimizationPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s309_p07",
+        ".s309_p08"
+      ]
+    },
+    {
+      "id": "s309_p10",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s309_p06"
+      ]
+    },
+    {
+      "id": "s309_p11",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s309_p07"
+      ]
+    },
+    {
+      "id": "s309_p12",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s309_p08"
+      ]
+    },
+    {
+      "id": "s309_p13",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s309_p09",
+        ".s309_p10"
+      ]
+    },
+    {
+      "id": "s309_p14",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s309_p11",
+        ".s309_p12"
+      ]
+    },
+    {
+      "id": "s309_p15",
+      "layerName": "DemandHypothesis",
+      "justification": [
+        "H4",
+        "H6"
+      ],
+      "dependencies": [
+        ".s309_p13",
+        ".s309_p14"
+      ]
+    }
+  ]
+}

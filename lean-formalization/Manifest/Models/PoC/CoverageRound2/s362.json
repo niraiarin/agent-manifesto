@@ -1,0 +1,218 @@
+{
+  "namespace": "TestCoverage.S362",
+  "layers": [
+    {
+      "name": "LegalObligation",
+      "ordValue": 5,
+      "definition": "犯罪収益移転防止法・FATF勧告への法的義務遵守",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryReporting",
+      "ordValue": 4,
+      "definition": "疑わしい取引報告・当局連携の規制要件",
+      "derivedFrom": [
+        "C3"
+      ]
+    },
+    {
+      "name": "DetectionPolicy",
+      "ordValue": 3,
+      "definition": "異常取引パターン検出・閾値設定・アラート発報方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1"
+      ]
+    },
+    {
+      "name": "RiskScoringModel",
+      "ordValue": 2,
+      "definition": "顧客リスク評価・取引リスクスコアリング方法論",
+      "derivedFrom": [
+        "H2",
+        "H3",
+        "H4"
+      ]
+    },
+    {
+      "name": "PatternHypothesis",
+      "ordValue": 1,
+      "definition": "資金洗浄手法・迂回経路パターンの推論仮説",
+      "derivedFrom": [
+        "H5",
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s362_p01",
+      "layerName": "LegalObligation",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s362_p02",
+      "layerName": "LegalObligation",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s362_p03",
+      "layerName": "LegalObligation",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s362_p01",
+        ".s362_p02"
+      ]
+    },
+    {
+      "id": "s362_p04",
+      "layerName": "RegulatoryReporting",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s362_p01"
+      ]
+    },
+    {
+      "id": "s362_p05",
+      "layerName": "RegulatoryReporting",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s362_p03"
+      ]
+    },
+    {
+      "id": "s362_p06",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C4",
+        "H1"
+      ],
+      "dependencies": [
+        ".s362_p04"
+      ]
+    },
+    {
+      "id": "s362_p07",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s362_p05"
+      ]
+    },
+    {
+      "id": "s362_p08",
+      "layerName": "DetectionPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s362_p06",
+        ".s362_p07"
+      ]
+    },
+    {
+      "id": "s362_p09",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s362_p06"
+      ]
+    },
+    {
+      "id": "s362_p10",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s362_p07"
+      ]
+    },
+    {
+      "id": "s362_p11",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s362_p08"
+      ]
+    },
+    {
+      "id": "s362_p12",
+      "layerName": "RiskScoringModel",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s362_p09",
+        ".s362_p10"
+      ]
+    },
+    {
+      "id": "s362_p13",
+      "layerName": "PatternHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s362_p09"
+      ]
+    },
+    {
+      "id": "s362_p14",
+      "layerName": "PatternHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s362_p11"
+      ]
+    },
+    {
+      "id": "s362_p15",
+      "layerName": "PatternHypothesis",
+      "justification": [
+        "H5",
+        "H6"
+      ],
+      "dependencies": [
+        ".s362_p12",
+        ".s362_p13"
+      ]
+    },
+    {
+      "id": "s362_p16",
+      "layerName": "PatternHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s362_p14",
+        ".s362_p15"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "namespace": "TestCoverage.S317",
+  "layers": [
+    {
+      "name": "patient_safety_invariant",
+      "ordValue": 4,
+      "definition": "患者安全・人間最終判断・データローカリティの絶対要件",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C5"
+      ]
+    },
+    {
+      "name": "clinical_standard",
+      "ordValue": 3,
+      "definition": "臨床ガイドライン・標準スコアリングへの準拠",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "alert_model",
+      "ordValue": 2,
+      "definition": "アラート生成・優先度付け・説明生成のモデル",
+      "derivedFrom": [
+        "C6",
+        "C7",
+        "H1",
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "learning_infrastructure",
+      "ordValue": 1,
+      "definition": "モデル学習・更新・施設間共有の仮説",
+      "derivedFrom": [
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s317_p01",
+      "layerName": "patient_safety_invariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s317_p02",
+      "layerName": "patient_safety_invariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s317_p01"
+      ]
+    },
+    {
+      "id": "s317_p03",
+      "layerName": "clinical_standard",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s317_p04",
+      "layerName": "clinical_standard",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s317_p03"
+      ]
+    },
+    {
+      "id": "s317_p05",
+      "layerName": "patient_safety_invariant",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s317_p06",
+      "layerName": "alert_model",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s317_p01",
+        ".s317_p03"
+      ]
+    },
+    {
+      "id": "s317_p07",
+      "layerName": "alert_model",
+      "justification": [
+        "C7",
+        "H3"
+      ],
+      "dependencies": [
+        ".s317_p02",
+        ".s317_p06"
+      ]
+    },
+    {
+      "id": "s317_p08",
+      "layerName": "alert_model",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s317_p03",
+        ".s317_p06"
+      ]
+    },
+    {
+      "id": "s317_p09",
+      "layerName": "alert_model",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s317_p06",
+        ".s317_p08"
+      ]
+    },
+    {
+      "id": "s317_p10",
+      "layerName": "alert_model",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s317_p07",
+        ".s317_p09"
+      ]
+    },
+    {
+      "id": "s317_p11",
+      "layerName": "learning_infrastructure",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s317_p08",
+        ".s317_p09"
+      ]
+    },
+    {
+      "id": "s317_p12",
+      "layerName": "learning_infrastructure",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s317_p03",
+        ".s317_p05",
+        ".s317_p11"
+      ]
+    },
+    {
+      "id": "s317_p13",
+      "layerName": "learning_infrastructure",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s317_p11"
+      ]
+    },
+    {
+      "id": "s317_p14",
+      "layerName": "alert_model",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s317_p07",
+        ".s317_p10"
+      ]
+    },
+    {
+      "id": "s317_p15",
+      "layerName": "learning_infrastructure",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s317_p12",
+        ".s317_p13"
+      ]
+    }
+  ]
+}

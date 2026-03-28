@@ -1,0 +1,166 @@
+{
+  "namespace": "TestCoverage.S301",
+  "layers": [
+    {
+      "name": "SafetyInvariant",
+      "ordValue": 4,
+      "definition": "乗客・歩行者の生命安全に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "RegulatoryCompliance",
+      "ordValue": 3,
+      "definition": "道路交通法・自動運転安全基準への適合要件",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "OperationalPolicy",
+      "ordValue": 2,
+      "definition": "運行管理・緊急停止・監視員介入の方針",
+      "derivedFrom": [
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "PredictionHypothesis",
+      "ordValue": 1,
+      "definition": "障害物検知・経路予測に関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s301_p01",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s301_p02",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s301_p03",
+      "layerName": "SafetyInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s301_p01"
+      ]
+    },
+    {
+      "id": "s301_p04",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s301_p01"
+      ]
+    },
+    {
+      "id": "s301_p05",
+      "layerName": "RegulatoryCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s301_p02"
+      ]
+    },
+    {
+      "id": "s301_p06",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s301_p04"
+      ]
+    },
+    {
+      "id": "s301_p07",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s301_p05"
+      ]
+    },
+    {
+      "id": "s301_p08",
+      "layerName": "OperationalPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s301_p03",
+        ".s301_p06"
+      ]
+    },
+    {
+      "id": "s301_p09",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s301_p06"
+      ]
+    },
+    {
+      "id": "s301_p10",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s301_p07"
+      ]
+    },
+    {
+      "id": "s301_p11",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s301_p09"
+      ]
+    },
+    {
+      "id": "s301_p12",
+      "layerName": "PredictionHypothesis",
+      "justification": [
+        "H3",
+        "H5"
+      ],
+      "dependencies": [
+        ".s301_p08",
+        ".s301_p10"
+      ]
+    }
+  ]
+}

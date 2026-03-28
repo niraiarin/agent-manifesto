@@ -1,0 +1,276 @@
+{
+  "namespace": "TestCoverage.S459",
+  "layers": [
+    {
+      "name": "BodyIntegrityInvariant",
+      "ordValue": 7,
+      "definition": "装着者の身体的安全・組織損傷防止の絶対制約。誤動作による傷害は許容不可",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "MedicalDeviceRegulationCompliance",
+      "ordValue": 6,
+      "definition": "薬機法・ISO 13485・IEC 62133に基づく医療機器認証要件",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "ClinicalEvidencePolicy",
+      "ordValue": 5,
+      "definition": "臨床試験・有効性エビデンスに基づく機能実装方針。根拠なき機能追加禁止",
+      "derivedFrom": [
+        "C4",
+        "H1"
+      ]
+    },
+    {
+      "name": "MotorControlRule",
+      "ordValue": 4,
+      "definition": "筋電位・脳波信号のデコード・アクチュエータ制御の精度ルール",
+      "derivedFrom": [
+        "H2",
+        "H3"
+      ]
+    },
+    {
+      "name": "AdaptiveLearningPolicy",
+      "ordValue": 3,
+      "definition": "個人差適応・長期使用による制御モデル更新の方針。安全範囲内での自律調整",
+      "derivedFrom": [
+        "C5",
+        "H4"
+      ]
+    },
+    {
+      "name": "UserIntentHypothesis",
+      "ordValue": 2,
+      "definition": "意図推定モデル・コンテキスト認識・誤操作検出に関する仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    },
+    {
+      "name": "FeedbackCalibrationHypothesis",
+      "ordValue": 1,
+      "definition": "触覚フィードバック・視覚補助・ユーザー調整パラメータの最適化仮説",
+      "derivedFrom": [
+        "H6"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s459_p01",
+      "layerName": "BodyIntegrityInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s459_p02",
+      "layerName": "MedicalDeviceRegulationCompliance",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s459_p01"
+      ]
+    },
+    {
+      "id": "s459_p03",
+      "layerName": "MedicalDeviceRegulationCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s459_p01"
+      ]
+    },
+    {
+      "id": "s459_p04",
+      "layerName": "ClinicalEvidencePolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s459_p02"
+      ]
+    },
+    {
+      "id": "s459_p05",
+      "layerName": "ClinicalEvidencePolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s459_p02",
+        ".s459_p03",
+        ".s459_p15"
+      ]
+    },
+    {
+      "id": "s459_p06",
+      "layerName": "MotorControlRule",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s459_p04"
+      ]
+    },
+    {
+      "id": "s459_p07",
+      "layerName": "MotorControlRule",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s459_p05"
+      ]
+    },
+    {
+      "id": "s459_p08",
+      "layerName": "MotorControlRule",
+      "justification": [
+        "H2",
+        "H3"
+      ],
+      "dependencies": [
+        ".s459_p06",
+        ".s459_p07"
+      ]
+    },
+    {
+      "id": "s459_p09",
+      "layerName": "AdaptiveLearningPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s459_p06"
+      ]
+    },
+    {
+      "id": "s459_p10",
+      "layerName": "AdaptiveLearningPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s459_p07",
+        ".s459_p08"
+      ]
+    },
+    {
+      "id": "s459_p11",
+      "layerName": "AdaptiveLearningPolicy",
+      "justification": [
+        "C5",
+        "H4"
+      ],
+      "dependencies": [
+        ".s459_p09",
+        ".s459_p10"
+      ]
+    },
+    {
+      "id": "s459_p12",
+      "layerName": "UserIntentHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s459_p09"
+      ]
+    },
+    {
+      "id": "s459_p13",
+      "layerName": "UserIntentHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s459_p10"
+      ]
+    },
+    {
+      "id": "s459_p14",
+      "layerName": "UserIntentHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s459_p11",
+        ".s459_p12"
+      ]
+    },
+    {
+      "id": "s459_p15",
+      "layerName": "FeedbackCalibrationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s459_p12"
+      ]
+    },
+    {
+      "id": "s459_p16",
+      "layerName": "FeedbackCalibrationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s459_p13"
+      ]
+    },
+    {
+      "id": "s459_p17",
+      "layerName": "FeedbackCalibrationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s459_p14",
+        ".s459_p15"
+      ]
+    },
+    {
+      "id": "s459_p18",
+      "layerName": "UserIntentHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s459_p17"
+      ]
+    },
+    {
+      "id": "s459_p19",
+      "layerName": "FeedbackCalibrationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s459_p16",
+        ".s459_p18"
+      ]
+    },
+    {
+      "id": "s459_p20",
+      "layerName": "FeedbackCalibrationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s459_p17",
+        ".s459_p19"
+      ]
+    }
+  ]
+}

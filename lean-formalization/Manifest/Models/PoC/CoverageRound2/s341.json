@@ -1,0 +1,203 @@
+{
+  "namespace": "TestCoverage.S341",
+  "layers": [
+    {
+      "name": "PatientDataIntegrity",
+      "ordValue": 4,
+      "definition": "患者データの正確性・完全性・一貫性に関する絶対不変条件",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "PrivacyCompliance",
+      "ordValue": 3,
+      "definition": "個人情報保護法・医療情報安全管理ガイドラインへの適合",
+      "derivedFrom": [
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "name": "ClinicalWorkflow",
+      "ordValue": 2,
+      "definition": "診察・投薬・検査オーダーの業務フロー方針",
+      "derivedFrom": [
+        "C5",
+        "C6",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "InteroperabilityHypothesis",
+      "ordValue": 1,
+      "definition": "HL7 FHIR・既存レガシーシステムとの相互運用性に関する推論仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s341_p01",
+      "layerName": "PatientDataIntegrity",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s341_p02",
+      "layerName": "PatientDataIntegrity",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s341_p03",
+      "layerName": "PatientDataIntegrity",
+      "justification": [
+        "C1",
+        "C2"
+      ],
+      "dependencies": [
+        ".s341_p01",
+        ".s341_p02"
+      ]
+    },
+    {
+      "id": "s341_p04",
+      "layerName": "PrivacyCompliance",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s341_p01"
+      ]
+    },
+    {
+      "id": "s341_p05",
+      "layerName": "PrivacyCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s341_p02"
+      ]
+    },
+    {
+      "id": "s341_p06",
+      "layerName": "PrivacyCompliance",
+      "justification": [
+        "C3",
+        "C4"
+      ],
+      "dependencies": [
+        ".s341_p04",
+        ".s341_p05"
+      ]
+    },
+    {
+      "id": "s341_p07",
+      "layerName": "ClinicalWorkflow",
+      "justification": [
+        "C5",
+        "H1"
+      ],
+      "dependencies": [
+        ".s341_p04"
+      ]
+    },
+    {
+      "id": "s341_p08",
+      "layerName": "ClinicalWorkflow",
+      "justification": [
+        "C6",
+        "H2"
+      ],
+      "dependencies": [
+        ".s341_p05"
+      ]
+    },
+    {
+      "id": "s341_p09",
+      "layerName": "ClinicalWorkflow",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s341_p06",
+        ".s341_p07"
+      ]
+    },
+    {
+      "id": "s341_p10",
+      "layerName": "ClinicalWorkflow",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s341_p08"
+      ]
+    },
+    {
+      "id": "s341_p11",
+      "layerName": "InteroperabilityHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s341_p07"
+      ]
+    },
+    {
+      "id": "s341_p12",
+      "layerName": "InteroperabilityHypothesis",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s341_p08"
+      ]
+    },
+    {
+      "id": "s341_p13",
+      "layerName": "InteroperabilityHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s341_p11"
+      ]
+    },
+    {
+      "id": "s341_p14",
+      "layerName": "InteroperabilityHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s341_p09",
+        ".s341_p12"
+      ]
+    },
+    {
+      "id": "s341_p15",
+      "layerName": "InteroperabilityHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s341_p13",
+        ".s341_p14"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "namespace": "TestCoverage.S430",
+  "layers": [
+    {
+      "name": "CopyrightConstraint",
+      "ordValue": 3,
+      "definition": "著作権侵害コンテンツ生成禁止・学習データライセンス遵守に関する絶対制約",
+      "derivedFrom": [
+        "C1",
+        "C2"
+      ]
+    },
+    {
+      "name": "ContentPolicy",
+      "ordValue": 1,
+      "definition": "ジャンル整合性・テンポ制約・ハーモニー規則に関するコンテンツ方針。注: 層順序違反（ordValue=1がordValue=2より下位でない）— 意図的単調性違反テスト",
+      "derivedFrom": [
+        "C3",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "GenerationHypothesis",
+      "ordValue": 2,
+      "definition": "感情誘起メカニズム・スタイル転移・旋律記憶定着に関する音楽生成仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s430_p01",
+      "layerName": "CopyrightConstraint",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s430_p02",
+      "layerName": "CopyrightConstraint",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s430_p03",
+      "layerName": "ContentPolicy",
+      "justification": [
+        "C3",
+        "H1"
+      ],
+      "dependencies": [
+        ".s430_p01"
+      ]
+    },
+    {
+      "id": "s430_p04",
+      "layerName": "ContentPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s430_p02"
+      ]
+    },
+    {
+      "id": "s430_p05",
+      "layerName": "GenerationHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s430_p03"
+      ]
+    },
+    {
+      "id": "s430_p06",
+      "layerName": "GenerationHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s430_p04"
+      ]
+    },
+    {
+      "id": "s430_p07",
+      "layerName": "GenerationHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s430_p05"
+      ]
+    },
+    {
+      "id": "s430_p08",
+      "layerName": "GenerationHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s430_p06"
+      ]
+    },
+    {
+      "id": "s430_p09",
+      "layerName": "GenerationHypothesis",
+      "justification": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ],
+      "dependencies": [
+        ".s430_p07",
+        ".s430_p08"
+      ]
+    }
+  ]
+}

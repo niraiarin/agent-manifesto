@@ -1,0 +1,208 @@
+{
+  "namespace": "TestCoverage.S396",
+  "layers": [
+    {
+      "name": "CrisisInterventionInvariant",
+      "ordValue": 4,
+      "definition": "自傷・自殺リスク検知時の即時専門家介入の絶対的義務（危機対応プロトコル）",
+      "derivedFrom": [
+        "C1"
+      ]
+    },
+    {
+      "name": "ConfidentialityPolicy",
+      "ordValue": 3,
+      "definition": "相談内容の秘密保持・第三者への無断開示禁止方針（法的例外を除く）",
+      "derivedFrom": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "name": "SupportQualityPolicy",
+      "ordValue": 2,
+      "definition": "エビデンスに基づくメンタルヘルス支援手法の適用方針",
+      "derivedFrom": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ]
+    },
+    {
+      "name": "EarlyDetectionHypothesis",
+      "ordValue": 1,
+      "definition": "行動パターン・SNS利用・出席率からのメンタルヘルス早期検知仮説",
+      "derivedFrom": [
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "H7"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s396_p01",
+      "layerName": "CrisisInterventionInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s396_p02",
+      "layerName": "ConfidentialityPolicy",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": [
+        ".s396_p01"
+      ]
+    },
+    {
+      "id": "s396_p03",
+      "layerName": "ConfidentialityPolicy",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s396_p01"
+      ]
+    },
+    {
+      "id": "s396_p04",
+      "layerName": "ConfidentialityPolicy",
+      "justification": [
+        "C2",
+        "C3"
+      ],
+      "dependencies": [
+        ".s396_p02",
+        ".s396_p03"
+      ]
+    },
+    {
+      "id": "s396_p05",
+      "layerName": "SupportQualityPolicy",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s396_p02"
+      ]
+    },
+    {
+      "id": "s396_p06",
+      "layerName": "SupportQualityPolicy",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s396_p03"
+      ]
+    },
+    {
+      "id": "s396_p07",
+      "layerName": "SupportQualityPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s396_p04"
+      ]
+    },
+    {
+      "id": "s396_p08",
+      "layerName": "SupportQualityPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s396_p05"
+      ]
+    },
+    {
+      "id": "s396_p09",
+      "layerName": "SupportQualityPolicy",
+      "justification": [
+        "C4",
+        "C5",
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s396_p06",
+        ".s396_p07",
+        ".s396_p08"
+      ]
+    },
+    {
+      "id": "s396_p10",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s396_p05"
+      ]
+    },
+    {
+      "id": "s396_p11",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s396_p07"
+      ]
+    },
+    {
+      "id": "s396_p12",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s396_p09"
+      ]
+    },
+    {
+      "id": "s396_p13",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H7"
+      ],
+      "dependencies": [
+        ".s396_p10"
+      ]
+    },
+    {
+      "id": "s396_p14",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H3",
+        "H6"
+      ],
+      "dependencies": [
+        ".s396_p11",
+        ".s396_p12"
+      ]
+    },
+    {
+      "id": "s396_p15",
+      "layerName": "EarlyDetectionHypothesis",
+      "justification": [
+        "H4",
+        "H5",
+        "H7"
+      ],
+      "dependencies": [
+        ".s396_p13",
+        ".s396_p14"
+      ]
+    }
+  ]
+}

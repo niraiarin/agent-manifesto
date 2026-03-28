@@ -1,0 +1,235 @@
+{
+  "namespace": "TestCoverage.S385",
+  "layers": [
+    {
+      "name": "ZeroTrustInvariant",
+      "ordValue": 4,
+      "definition": "ゼロトラスト原則の絶対不変条件。すべての検証義務と侵害防止",
+      "derivedFrom": [
+        "C1",
+        "C2",
+        "C3",
+        "C6"
+      ]
+    },
+    {
+      "name": "AuditCompliance",
+      "ordValue": 3,
+      "definition": "監査・ログ要件と規制遵守に関する義務",
+      "derivedFrom": [
+        "C4",
+        "C5"
+      ]
+    },
+    {
+      "name": "AccessPolicy",
+      "ordValue": 2,
+      "definition": "認証・認可の運用ポリシーとリスク評価方針",
+      "derivedFrom": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H6"
+      ]
+    },
+    {
+      "name": "TechnicalHypothesis",
+      "ordValue": 1,
+      "definition": "実装技術と閾値設定に関する技術的仮説",
+      "derivedFrom": [
+        "H5"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "s385_p01",
+      "layerName": "ZeroTrustInvariant",
+      "justification": [
+        "C1"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s385_p02",
+      "layerName": "ZeroTrustInvariant",
+      "justification": [
+        "C2"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "s385_p03",
+      "layerName": "ZeroTrustInvariant",
+      "justification": [
+        "C3"
+      ],
+      "dependencies": [
+        ".s385_p01"
+      ]
+    },
+    {
+      "id": "s385_p04",
+      "layerName": "ZeroTrustInvariant",
+      "justification": [
+        "C6"
+      ],
+      "dependencies": [
+        ".s385_p02"
+      ]
+    },
+    {
+      "id": "s385_p05",
+      "layerName": "AuditCompliance",
+      "justification": [
+        "C4"
+      ],
+      "dependencies": [
+        ".s385_p01",
+        ".s385_p03"
+      ]
+    },
+    {
+      "id": "s385_p06",
+      "layerName": "AuditCompliance",
+      "justification": [
+        "C5"
+      ],
+      "dependencies": [
+        ".s385_p02",
+        ".s385_p05"
+      ]
+    },
+    {
+      "id": "s385_p07",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H1"
+      ],
+      "dependencies": [
+        ".s385_p01",
+        ".s385_p03"
+      ]
+    },
+    {
+      "id": "s385_p08",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H2"
+      ],
+      "dependencies": [
+        ".s385_p03"
+      ]
+    },
+    {
+      "id": "s385_p09",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H3"
+      ],
+      "dependencies": [
+        ".s385_p06"
+      ]
+    },
+    {
+      "id": "s385_p10",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s385_p04"
+      ]
+    },
+    {
+      "id": "s385_p11",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H6"
+      ],
+      "dependencies": [
+        ".s385_p07"
+      ]
+    },
+    {
+      "id": "s385_p12",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s385_p05"
+      ]
+    },
+    {
+      "id": "s385_p13",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H1",
+        "H2"
+      ],
+      "dependencies": [
+        ".s385_p07",
+        ".s385_p08"
+      ]
+    },
+    {
+      "id": "s385_p14",
+      "layerName": "AuditCompliance",
+      "justification": [
+        "C4",
+        "H5"
+      ],
+      "dependencies": [
+        ".s385_p12"
+      ]
+    },
+    {
+      "id": "s385_p15",
+      "layerName": "ZeroTrustInvariant",
+      "justification": [
+        "C3",
+        "C6"
+      ],
+      "dependencies": [
+        ".s385_p03",
+        ".s385_p04"
+      ]
+    },
+    {
+      "id": "s385_p16",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H3",
+        "H6"
+      ],
+      "dependencies": [
+        ".s385_p09",
+        ".s385_p11"
+      ]
+    },
+    {
+      "id": "s385_p17",
+      "layerName": "TechnicalHypothesis",
+      "justification": [
+        "H5"
+      ],
+      "dependencies": [
+        ".s385_p12",
+        ".s385_p14"
+      ]
+    },
+    {
+      "id": "s385_p18",
+      "layerName": "AccessPolicy",
+      "justification": [
+        "H4"
+      ],
+      "dependencies": [
+        ".s385_p10",
+        ".s385_p15"
+      ]
+    }
+  ]
+}
