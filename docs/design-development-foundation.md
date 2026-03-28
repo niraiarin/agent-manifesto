@@ -1,6 +1,6 @@
 # 設計開発基礎論: マニフェスト準拠システムの構築定理
 
-> **位置づけ:** [マニフェスト](../manifesto.md)の公理系（T/E/P）と制約分類（L/V、`lean-formalization/Manifest/Ontology.lean` および `Observable.lean` で定義）から導かれる、**プラットフォーム非依存の設計開発定理**。
+> **位置づけ:** 公理系（T/E/P、`lean-formalization/Manifest/Axioms.lean` 等で形式化）と制約分類（L/V、`lean-formalization/Manifest/Ontology.lean` および `Observable.lean` で定義）から導かれる、**プラットフォーム非依存の設計開発定理**。
 > 特定のツール（Claude Code, GitHub Actions 等）に依存せず、マニフェスト準拠システムを構築するための普遍的な基礎を定める。
 
 ---

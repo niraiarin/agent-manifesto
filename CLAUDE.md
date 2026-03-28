@@ -12,7 +12,7 @@
 
 ## このプロジェクトの構成
 
-- `manifesto.md` — 公理系の原典（T1–T8, E1–E2, P1–P6）
+- `lean-formalization/Manifest/` — 公理系の正典（T1–T8, E1–E2, P1–P6, L1–L6, V1–V7, D1–D14）。Verso で HTML 生成
 - `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）

@@ -73,7 +73,7 @@ echo ""
 echo "--- De Bruijn Factor ---"
 
 FORMAL_LINES=$(wc -l "$LEAN/Manifest/"*.lean 2>/dev/null | tail -1 | awk '{print $1}')
-INFORMAL_LINES=$(wc -l "$BASE/docs/formal-derivation-procedure.md" "$BASE/docs/mathematical-logic-terminology.md" "$BASE/docs/design-development-foundation.md" "$BASE/manifesto.md" 2>/dev/null | tail -1 | awk '{print $1}')
+INFORMAL_LINES=$(wc -l "$BASE/docs/formal-derivation-procedure.md" "$BASE/docs/mathematical-logic-terminology.md" "$BASE/docs/design-development-foundation.md" "$BASE/archive/manifesto.md" 2>/dev/null | tail -1 | awk '{print $1}')
 
 if [ "$INFORMAL_LINES" -gt 0 ]; then
   DEBRUIJN=$((FORMAL_LINES * 100 / INFORMAL_LINES))

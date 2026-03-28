@@ -22,7 +22,7 @@ description: >
 1. `docs/design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
 2. `lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
 3. `lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
-4. `manifesto.md` — 公理系の原典（T/E/P）
+4. `lean-formalization/Manifest/Axioms.lean` — T1–T8 公理（T₀ base theory）
 5. `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 6. `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 
@@ -105,7 +105,7 @@ Step 0 の成果を以下の形式でまとめる:
 - `docs/design-development-foundation.md` の D1–D9 全文
 - `lean-formalization/Manifest/Ontology.lean` の L1–L6（境界条件セクションの doc comment）
 - `lean-formalization/Manifest/Observable.lean` の V1–V7（変数セクションの doc comment）
-- `manifesto.md` の T1–T8, E1–E2, P1–P6
+- `lean-formalization/Manifest/Axioms.lean` の T1–T8, `EmpiricalPostulates.lean` の E1–E2, `Principles.lean` の P1–P6
 
 ### Step 2: Provider プリミティブの列挙
 

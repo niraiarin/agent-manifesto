@@ -270,7 +270,7 @@ evolve の各実行で以下を計測し、改善を定量的に裏付ける:
 
 | ファイル | 内容 |
 |---------|------|
-| `manifesto.md` | 公理系の原典 |
+| `lean-formalization/Manifest/` | 公理系の権威的ソース（Lean 形式化） |
 | `docs/design-development-foundation.md` | D1–D12 の詳細 |
 | `docs/formal-derivation-procedure.md` | 形式的導出の手順（§6 に Lean 対応表） |
 | `docs/mathematical-logic-terminology.md` | 用語リファレンス |

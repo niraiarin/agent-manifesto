@@ -10,7 +10,7 @@
 
 本プロジェクトは三つの層で構成される。
 
-### 公理系 (manifesto.md)
+### 公理系 (lean-formalization/Manifest/)
 
 最小の前提から設計原理を導出する。
 
@@ -208,7 +208,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ## ディレクトリ構造
 
 ```
-├── manifesto.md                          # 公理系の原典 (T1-T8, E1-E2, P1-P6)
+├── archive/manifesto.md                  # 公理系の初期文書 (archived — Lean が正典)
 ├── docs/
 │   ├── design-development-foundation.md  # 設計開発基礎論 (D1-D9)
 │   ├── implementation-boundaries.md      # 実装判断基準
@@ -237,7 +237,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 ## ドキュメント読み順
 
-1. **[manifesto.md](manifesto.md)** — 公理系の原典
+1. **[lean-formalization/Manifest/](lean-formalization/Manifest/)** — 公理系の正典（Lean 4 形式検証済み）
 2. **[Ontology.lean](lean-formalization/Manifest/Ontology.lean)** — 境界条件 L1–L6
 3. **[Observable.lean](lean-formalization/Manifest/Observable.lean)** — 可観測変数 V1–V7
 4. **[design-development-foundation.md](docs/design-development-foundation.md)** — 設計定理 D1–D9

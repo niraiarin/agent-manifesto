@@ -1,0 +1,74 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lean-formalization/Manifest/**/*.lean'
+      - 'scripts/generate-verso-source.py'
+      - 'scripts/lint-doc-comments.py'
+      - 'lean-formalization/docgen-verso/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run doc comment linter
+        run: python3 scripts/lint-doc-comments.py
+
+  build-verso:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache Lake packages
+        uses: actions/cache@v4
+        with:
+          path: lean-formalization/docgen-verso/.lake
+          key: verso-lake-${{ hashFiles('lean-formalization/docgen-verso/lake-manifest.json') }}
+          restore-keys: verso-lake-
+
+      - name: Generate Verso source
+        run: python3 scripts/generate-verso-source.py
+
+      - name: Build Verso docs
+        working-directory: lean-formalization/docgen-verso
+        run: |
+          lake build Docs
+          lake exe docs --output _out/html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: lean-formalization/docgen-verso/_out/html/html-single
+
+  deploy:
+    needs: build-verso
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

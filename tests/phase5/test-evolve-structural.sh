@@ -443,7 +443,7 @@ echo "--- Section 11: Structural Coherence (Half-Order) ---"
 
 ONTOLOGY="$BASE/lean-formalization/Manifest/Ontology.lean"
 DESIGN_FOUNDATION="$BASE/lean-formalization/Manifest/DesignFoundation.lean"
-MANIFESTO="$BASE/manifesto.md"
+MANIFESTO="$BASE/archive/manifesto.md"
 
 # StructureKind inductive 存在
 echo -n "  StructureKind inductive exists... "
@@ -512,8 +512,8 @@ grep -q "^theorem d13_retirement_requires_feedback" "$DESIGN_FOUNDATION" && \
   pass "d13_retirement_requires_feedback" || \
   fail "d13_retirement_requires_feedback missing"
 
-# manifesto.md Section 8 存在
-echo -n "  manifesto.md Section 8 (Structural Coherence) exists... "
+# archive/manifesto.md Section 8 存在
+echo -n "  archive/manifesto.md Section 8 (Structural Coherence) exists... "
 grep -q "構造的整合性\|Structural Coherence" "$MANIFESTO" && \
   pass "Section 8 exists" || \
   fail "Section 8 missing"

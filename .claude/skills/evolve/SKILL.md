@@ -11,7 +11,7 @@ description: >
 # /evolve — 構造の漸進的改善スキル
 
 > 一時的なエージェントインスタンスの連鎖を通じて、永続する構造が自身を改善し続ける。
-> — manifesto.md §1
+> — Axioms.lean T1+T2, Principles.lean P3
 
 ## 至上命題
 
@@ -562,7 +562,7 @@ Observer が以下のファイルも観察対象に含める:
 
 ### 更新トリガー
 
-- manifesto.md が更新された場合（公理系の変更）
+- Lean 形式化の公理系（Axioms.lean, EmpiricalPostulates.lean）が変更された場合
 - Lean 形式化（Workflow.lean, Evolution.lean 等）が変更された場合
 - 実際の evolve 実行で手順の不備が判明した場合
 - Claude Code の新機能がリリースされた場合

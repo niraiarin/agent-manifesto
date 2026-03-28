@@ -223,7 +223,7 @@ Phase 2 の内部処理で以下を参照する:
 1. **公理系 (A)**: `lean-formalization/Manifest/EpistemicLayer.lean`
 2. **依存グラフ**: `bash lean-formalization/Manifest/Models/extract-dependency-graph.sh`
 3. **既存の仮定**: `lean-formalization/Manifest/Models/Assumptions/` 以下
-4. **プロジェクトコンテキスト**: `manifesto.md`, `docs/`, Lean ファイル群
+4. **プロジェクトコンテキスト**: `lean-formalization/Manifest/`, `docs/`, Lean ファイル群
 
 これらは Phase 0-1 の質問生成には使わない。Phase 2 以降で初めて参照する。
 

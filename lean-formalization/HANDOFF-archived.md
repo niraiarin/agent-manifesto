@@ -55,7 +55,7 @@ Manifest   ← 全モジュール
      - conservativeExtension の連鎖は conservativeExtension
      - breakingChange の後は移行パスが必要
      - compatibleChange の推移性
-   - manifesto.md Section 7「進化する構造としてのマニフェスト」の形式化
+   - archive/manifesto.md Section 7「進化する構造としてのマニフェスト」の形式化
 
 2. **既存の CompatibilityClass との接続**
    - Principles.lean の `CompatibilityClass`, `KnowledgeIntegration`, `isGoverned` を
@@ -122,7 +122,7 @@ opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
 
 ## マニフェスト原文の関連箇所
 
-- `manifesto.md` Section 3, P3 — 学習の統治、互換性分類
-- `manifesto.md` Section 5 — 制約という進化圧
-- `manifesto.md` Section 7 — マニフェスト自身のメンテナンス、進化する構造
+- `archive/manifesto.md` Section 3, P3 — 学習の統治、互換性分類
+- `archive/manifesto.md` Section 5 — 制約という進化圧
+- `archive/manifesto.md` Section 7 — マニフェスト自身のメンテナンス、進化する構造
 - `Observable.lean` Part IV — 分類自体のメンテナンス
