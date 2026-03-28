@@ -3,21 +3,24 @@
 #
 # 使用法:
 #   manifest-trace coverage       カバレッジギャップレポート
-#   manifest-trace trace <ID>     順方向・逆方向トレース（例: manifest-trace trace T6）
+#   manifest-trace trace <ID>     順方向・逆方向トレース + 根拠表示
 #   manifest-trace graph          半順序グラフ（DOT 形式）
 #   manifest-trace violations     半順序違反レポート
 #   manifest-trace health         全指標サマリ
+#   manifest-trace evidence       Lean Axiom Card から根拠抽出（JSON Lines）
 #
 # 依存:
 #   - jq
 #   - artifact-manifest.json（プロジェクトルート）
 #   - lean-formalization/Manifest/Ontology.lean（命題依存定義）
+#   - lean-formalization/Manifest/{Axioms,EmpiricalPostulates,Observable}.lean（Axiom Card）
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MANIFEST="$SCRIPT_DIR/artifact-manifest.json"
 ONTOLOGY="$SCRIPT_DIR/lean-formalization/Manifest/Ontology.lean"
+LEAN_DIR="$SCRIPT_DIR/lean-formalization/Manifest"
 
 # --- 色定義 ---
 RED='\033[0;31m'
@@ -87,6 +90,7 @@ check_deps() {
 
 # --- パーサキャッシュ（推奨3: セッション内で1回だけ Lean をパース） ---
 _DEP_CACHE=""
+_EVIDENCE_CACHE=""
 
 # Lean の PropositionId.dependencies を解析して依存マップを構築
 # 出力: "CHILD PARENT" の行（1行1依存）。結果はキャッシュされる。
@@ -116,6 +120,98 @@ parse_lean_dependencies() {
   done)
 
   _DEP_CACHE="$result"
+  echo "$result"
+}
+
+# Lean の [Axiom Card] doc comment から Basis/Source/Layer を抽出
+# 出力: JSON Lines — 1行1公理カード
+# {"proposition":"T1","axiom":"session_bounded","layer":"...","content":"...","basis":"...","source":"...","refutation":"...","file":"Axioms.lean"}
+parse_lean_evidence() {
+  if [[ -n "$_EVIDENCE_CACHE" ]]; then
+    echo "$_EVIDENCE_CACHE"
+    return
+  fi
+
+  local result=""
+
+  for lean_file in "$LEAN_DIR"/Axioms.lean "$LEAN_DIR"/EmpiricalPostulates.lean "$LEAN_DIR"/Observable.lean; do
+    [[ -f "$lean_file" ]] || continue
+    local file_basename
+    file_basename=$(basename "$lean_file")
+
+    # awk 内で完結: カード解析 → フィールド抽出 → JSON Lines 出力
+    # macOS awk 互換（gawk 拡張不使用）
+    local file_result
+    file_result=$(awk -v file="$file_basename" '
+      function json_escape(s) {
+        gsub(/\\/, "\\\\", s)
+        gsub(/"/, "\\\"", s)
+        gsub(/\t/, " ", s)
+        return s
+      }
+
+      function extract_field(text, field_name,    result, i, lines, n, found) {
+        n = split(text, lines, "\n")
+        result = ""
+        found = 0
+        for (i = 1; i <= n; i++) {
+          if (lines[i] ~ "^[[:space:]]*" field_name ":") {
+            found = 1
+            sub("^[[:space:]]*" field_name ":[[:space:]]*", "", lines[i])
+            result = lines[i]
+            continue
+          }
+          if (found && lines[i] ~ /^[[:space:]]*(Layer|Content|Basis|Source|Refutation condition):/) {
+            found = 0
+            continue
+          }
+          if (found) {
+            sub(/^[[:space:]]+/, "", lines[i])
+            if (lines[i] != "") result = result " " lines[i]
+          }
+        }
+        sub(/[[:space:]]+$/, "", result)
+        return result
+      }
+
+      function extract_prop_id(source,    id) {
+        if (match(source, /[TEPLVD][0-9]+/)) {
+          id = substr(source, RSTART, RLENGTH)
+          return id
+        }
+        return ""
+      }
+
+      /\/-- \[Axiom Card\]/ { in_card=1; card=""; next }
+      in_card && /-\// { in_card=0; waiting_axiom=1; next }
+      in_card { card = card "\n" $0; next }
+      waiting_axiom && /^axiom [a-z_]/ {
+        axiom_line = $0
+        sub(/^axiom /, "", axiom_line)
+        sub(/ .*/, "", axiom_line)
+        sub(/:.*/, "", axiom_line)
+        axiom_name = axiom_line
+        waiting_axiom = 0
+
+        layer = extract_field(card, "Layer")
+        content = extract_field(card, "Content")
+        basis = extract_field(card, "Basis")
+        source = extract_field(card, "Source")
+        refutation = extract_field(card, "Refutation condition")
+        prop_id = extract_prop_id(source)
+
+        if (prop_id != "") {
+          printf "{\"proposition\":\"%s\",\"axiom\":\"%s\",\"layer\":\"%s\",\"content\":\"%s\",\"basis\":\"%s\",\"source\":\"%s\",\"refutation\":\"%s\",\"file\":\"%s\"}\n", \
+            json_escape(prop_id), json_escape(axiom_name), json_escape(layer), \
+            json_escape(content), json_escape(basis), json_escape(source), \
+            json_escape(refutation), json_escape(file)
+        }
+      }
+    ' "$lean_file")
+    result+="$file_result"$'\n'
+  done
+
+  _EVIDENCE_CACHE="$result"
   echo "$result"
 }
 
@@ -277,13 +373,26 @@ cmd_trace() {
     # この成果物が target を参照しているか
     local has_ref
     has_ref=$(artifacts_jq "(.id == \"${aid}\") and (.refs[] == \"${target}\")" | jq 'length')
-    [[ "$has_ref" -gt 0 ]] && echo "$line"
+    [[ "$has_ref" -gt 0 ]] && echo "$line" || true
   done
 
   local count
   count=$(artifacts_jq ".refs[] == \"${target}\"" | jq 'length')
   if [[ "$count" -eq 0 ]]; then
     echo -e "  ${RED}(実装成果物なし — カバレッジギャップ)${NC}"
+  fi
+
+  echo ""
+
+  # 4. 根拠（上方向トレーサビリティ）
+  echo -e "${CYAN}◆ 根拠（Axiom Card → Basis/Source）:${NC}"
+  local evidence_lines
+  evidence_lines=$(parse_lean_evidence | grep -v '^$' | jq -r --arg pid "$target" \
+    'select(.proposition == $pid) | "  [\(.file)] \(.axiom)\n    Basis: \(.basis)\n    Source: \(.source)"')
+  if [[ -z "$evidence_lines" ]]; then
+    echo -e "  ${YELLOW}(Axiom Card なし — 根拠未記載)${NC}"
+  else
+    echo "$evidence_lines"
   fi
 }
 
@@ -477,8 +586,12 @@ cmd_json() {
   local dep_json
   dep_json=$(parse_lean_dependencies | jq -R 'split(" ") | {child: .[0], parent: .[1]}' | jq -s '.')
 
+  # 根拠マップを JSON 配列として構築
+  local evidence_json
+  evidence_json=$(parse_lean_evidence | grep -v '^$' | jq -s '.')
+
   # 全命題について構造を構築
-  jq -n --argjson arts "$filtered_artifacts" --argjson deps "$dep_json" --arg scope "${SCOPE_FILTER:-all}" '
+  jq -n --argjson arts "$filtered_artifacts" --argjson deps "$dep_json" --argjson evid "$evidence_json" --arg scope "${SCOPE_FILTER:-all}" '
     def strength:
       if startswith("T") then 5
       elif startswith("E") then 4
@@ -505,7 +618,7 @@ cmd_json() {
 
     {
       meta: {
-        version: "0.2.0",
+        version: "0.3.0",
         scope: $scope,
         total_propositions: ($all | length),
         total_artifacts: ($arts | length)
@@ -521,11 +634,13 @@ cmd_json() {
           depends_on:  [$deps[] | select(.child == $pid) | .parent],
           depended_by: [$deps[] | select(.parent == $pid) | .child],
           artifacts: [$matching[] | {id, type, path, scope, enforces}],
+          evidence: [$evid[] | select(.proposition == $pid) | {axiom, layer, basis, source, refutation, file}],
           coverage: {
             total: ($matching | length),
             by_type: $by_type,
             has_test: ([$matching[] | select(.type == "test")] | length > 0),
-            has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config")] | length > 0)
+            has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config")] | length > 0),
+            has_evidence: ([$evid[] | select(.proposition == $pid)] | length > 0)
           }
         }
       ],
@@ -546,7 +661,9 @@ cmd_json() {
           )
         ],
         roots:  [$all[] | . as $pid | select([$deps[] | select(.child == $pid)] | length == 0)],
-        leaves: [$all[] | . as $pid | select([$deps[] | select(.parent == $pid)] | length == 0)]
+        leaves: [$all[] | . as $pid | select([$deps[] | select(.parent == $pid)] | length == 0)],
+        with_evidence: [$all[] | . as $pid | select([$evid[] | select(.proposition == $pid)] | length > 0)],
+        without_evidence: [$all[] | . as $pid | select([$evid[] | select(.proposition == $pid)] | length == 0)]
       }
     }
   '
@@ -962,6 +1079,7 @@ case "${1:-help}" in
   violations)  cmd_violations ;;
   health)      cmd_health ;;
   json)        cmd_json ;;
+  evidence)    parse_lean_evidence ;;
   selfcheck)   cmd_selfcheck ;;
   help|--help|-h)
     echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
@@ -975,7 +1093,8 @@ case "${1:-help}" in
     echo "  graph            半順序グラフ（DOT 形式）"
     echo "  violations       半順序違反レポート"
     echo "  health           全指標サマリ"
-    echo "  json             構造的 JSON 出力（半順序 DAG + カバレッジ）"
+    echo "  json             構造的 JSON 出力（半順序 DAG + カバレッジ + 根拠）"
+    echo "  evidence         Lean Axiom Card から根拠を抽出（JSON Lines）"
     echo "  selfcheck        自己検証（Lean を真実源として突合）"
     echo ""
     echo "グローバルオプション:"
