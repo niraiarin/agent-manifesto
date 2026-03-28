@@ -451,6 +451,92 @@ cmd_health() {
   fi
 }
 
+cmd_json() {
+  # 半順序 DAG を構造的 JSON として出力
+  # 各命題ノードに: 強度、依存、被依存、カバレッジを付与
+
+  local filtered_artifacts
+  filtered_artifacts=$(artifacts_jq "true")
+
+  # 依存マップを JSON 配列として構築
+  local dep_json
+  dep_json=$(parse_lean_dependencies | jq -R 'split(" ") | {child: .[0], parent: .[1]}' | jq -s '.')
+
+  # 全命題について構造を構築
+  jq -n --argjson arts "$filtered_artifacts" --argjson deps "$dep_json" --arg scope "${SCOPE_FILTER:-all}" '
+    def strength:
+      if startswith("T") then 5
+      elif startswith("E") then 4
+      elif startswith("P") then 3
+      elif startswith("L") then 2
+      elif startswith("D") then 1
+      else 0
+      end;
+
+    def category:
+      if startswith("T") then "constraint"
+      elif startswith("E") then "empiricalPostulate"
+      elif startswith("P") then "principle"
+      elif startswith("L") then "boundary"
+      elif startswith("D") then "designTheorem"
+      else "unknown"
+      end;
+
+    ["T1","T2","T3","T4","T5","T6","T7","T8",
+     "E1","E2",
+     "P1","P2","P3","P4","P5","P6",
+     "L1","L2","L3","L4","L5","L6",
+     "D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14"] as $all |
+
+    {
+      meta: {
+        version: "0.2.0",
+        scope: $scope,
+        total_propositions: ($all | length),
+        total_artifacts: ($arts | length)
+      },
+      propositions: [
+        $all[] | . as $pid |
+        ([$arts[] | select(.refs | index($pid))]) as $matching |
+        ([$matching[] | .type] | group_by(.) | map({(.[0]): length}) | add // {}) as $by_type |
+        {
+          id: $pid,
+          category: ($pid | category),
+          strength: ($pid | strength),
+          depends_on:  [$deps[] | select(.child == $pid) | .parent],
+          depended_by: [$deps[] | select(.parent == $pid) | .child],
+          artifacts: [$matching[] | {id, type, path, scope, enforces}],
+          coverage: {
+            total: ($matching | length),
+            by_type: $by_type,
+            has_test: ([$matching[] | select(.type == "test")] | length > 0),
+            has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config")] | length > 0)
+          }
+        }
+      ],
+      summary: {
+        covered: [
+          $all[] | . as $pid |
+          select([$arts[] | select(.refs | index($pid))] | length > 0)
+        ] | length,
+        uncovered: [
+          $all[] | . as $pid |
+          select([$arts[] | select(.refs | index($pid))] | length == 0)
+        ],
+        weak: [
+          $all[] | . as $pid |
+          select(
+            ([$arts[] | select(.refs | index($pid))] | length > 0) and
+            ([$arts[] | select(.refs | index($pid)) | select(.type == "test")] | length == 0)
+          )
+        ],
+        roots:  [$all[] | . as $pid | select([$deps[] | select(.child == $pid)] | length == 0)],
+        leaves: [$all[] | . as $pid | select([$deps[] | select(.parent == $pid)] | length == 0)]
+      }
+    }
+  '
+}
+
 cmd_selfcheck() {
   echo -e "${BOLD}=== selfcheck: manifest-trace 自己検証 ===${NC}"
   echo -e "真実源: ${CYAN}${ONTOLOGY}${NC}"
@@ -652,6 +738,7 @@ case "${1:-help}" in
   graph)       cmd_graph ;;
   violations)  cmd_violations ;;
   health)      cmd_health ;;
+  json)        cmd_json ;;
   selfcheck)   cmd_selfcheck ;;
   help|--help|-h)
     echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
@@ -665,6 +752,7 @@ case "${1:-help}" in
     echo "  graph            半順序グラフ（DOT 形式）"
     echo "  violations       半順序違反レポート"
     echo "  health           全指標サマリ"
+    echo "  json             構造的 JSON 出力（半順序 DAG + カバレッジ）"
     echo "  selfcheck        自己検証（Lean を真実源として突合）"
     echo ""
     echo "グローバルオプション:"
