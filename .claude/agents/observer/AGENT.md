@@ -220,7 +220,7 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 - `status = "resolved"` の項目: 既に解決済み。改善候補に含めない
 - `status = "abandoned"` の項目: 放棄済み。改善候補に含めない
 
-**過去の誤検知履歴（注意）**: resolved 済み deferred を open と誤報告した事例が 3 回ある（section8-lean-theorems: run 36, run 48）。deferred-status.json の status フィールドを必ず確認すること。上記の正しいクエリを使用し、status フィールドで確実にフィルタリングすること。
+**過去の誤検知履歴（注意）**: resolved 済み deferred を open と誤報告した事例が 4 回ある（section8-lean-theorems: run 36, run 48; h5-ccusage-cost-analysis 等 4 項目を open と誤報告: run 67）。deferred-status.json の status フィールドを必ず確認すること。上記の正しいクエリを使用し、status フィールドで確実にフィルタリングすること。
 
 **deferred_jsonl_quality は除去済み**: observe.sh の deferred_jsonl_quality フィールドは Run 63 で除去された（レガシーメトリクス）。deferred-status.json が正規ソース。open 件数は deferred_open フィールドを参照すること。
 
@@ -230,3 +230,4 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 - **データ駆動**: 主観的判断ではなく、計測データに基づく
 - **非破壊**: ファイルの変更・作成は行わない（Read/Grep/Glob のみ）
 - **コンテキスト経済（D11）**: 必要最小限のデータを収集し、圧縮して報告
+- **deferred の唯一のデータソースは deferred-status.json である。** evolve-history.jsonl の `.deferred[]` フィールドは累積スナップショット方式（run 1-17）であり、同一 ID が最大 15 回重複出現する。分析・集計に使用してはならない。
