@@ -34,6 +34,8 @@ NC='\033[0m'
 # --- scope フィルタ ---
 # --scope=implementation,config のように指定。未指定時は全 scope
 SCOPE_FILTER=""
+# --manifest=<path> で外部 manifest を指定。未指定時は本リポジトリの manifest
+EXTERNAL_MANIFEST=""
 
 parse_global_opts() {
   local args=()
@@ -41,6 +43,12 @@ parse_global_opts() {
     case "$arg" in
       --scope=*)
         SCOPE_FILTER="${arg#--scope=}"
+        ;;
+      --manifest=*)
+        EXTERNAL_MANIFEST="${arg#--manifest=}"
+        if [[ ! -f "$EXTERNAL_MANIFEST" ]]; then
+          die "外部 manifest が見つかりません: $EXTERNAL_MANIFEST"
+        fi
         ;;
       *)
         args+=("$arg")
@@ -50,33 +58,52 @@ parse_global_opts() {
   REMAINING_ARGS=("${args[@]}")
 }
 
+# 使用する manifest ファイルのリストを返す（本体 + 外部）
+manifest_files() {
+  echo "$MANIFEST"
+  [[ -n "$EXTERNAL_MANIFEST" ]] && echo "$EXTERNAL_MANIFEST"
+}
+
+# 全 manifest から成果物を統合して取得
+merged_artifacts() {
+  local result="[]"
+  while IFS= read -r mfile; do
+    local arts
+    arts=$(jq '[.artifacts[] | select(._comment == null)]' "$mfile" 2>/dev/null || echo "[]")
+    result=$(echo "$result" "$arts" | jq -s '.[0] + .[1]')
+  done < <(manifest_files)
+  echo "$result"
+}
+
 # scope フィルタ付きで成果物を jq フィルタ
 # 引数: 追加の jq フィルタ（省略可）
 artifacts_jq() {
   local extra_filter="${1:-.}"
+  local all_arts
+  all_arts=$(merged_artifacts)
   if [[ -z "$SCOPE_FILTER" ]]; then
-    jq -r "[.artifacts[] | select(._comment == null)] | map(select(${extra_filter}))" "$MANIFEST"
+    echo "$all_arts" | jq -r "map(select(${extra_filter}))"
   else
     # カンマ区切りの scope を jq 配列に変換
     local scope_array
     scope_array=$(echo "$SCOPE_FILTER" | tr ',' '\n' | jq -R . | jq -s .)
-    jq -r --argjson scopes "$scope_array" \
-      "[.artifacts[] | select(._comment == null) | select(.scope as \$s | \$scopes | index(\$s))] | map(select(${extra_filter}))" \
-      "$MANIFEST"
+    echo "$all_arts" | jq -r --argjson scopes "$scope_array" \
+      "[.[] | select(.scope as \$s | \$scopes | index(\$s))] | map(select(${extra_filter}))"
   fi
 }
 
 # scope フィルタ付きで成果物を行出力
 artifacts_lines() {
   local format="${1:-.id}"
+  local all_arts
+  all_arts=$(merged_artifacts)
   if [[ -z "$SCOPE_FILTER" ]]; then
-    jq -r ".artifacts[] | select(._comment == null) | ${format}" "$MANIFEST"
+    echo "$all_arts" | jq -r ".[] | ${format}"
   else
     local scope_array
     scope_array=$(echo "$SCOPE_FILTER" | tr ',' '\n' | jq -R . | jq -s .)
-    jq -r --argjson scopes "$scope_array" \
-      ".artifacts[] | select(._comment == null) | select(.scope as \$s | \$scopes | index(\$s)) | ${format}" \
-      "$MANIFEST"
+    echo "$all_arts" | jq -r --argjson scopes "$scope_array" \
+      ".[] | select(.scope as \$s | \$scopes | index(\$s)) | ${format}"
   fi
 }
 
@@ -220,10 +247,10 @@ all_propositions() {
   jq -r '.propositions[]' "$MANIFEST"
 }
 
-# 成果物から refs を取得
+# 成果物から refs を取得（本体 + 外部 manifest）
 artifact_refs() {
   local artifact_id="$1"
-  jq -r --arg id "$artifact_id" '.artifacts[] | select(.id == $id) | .refs[]' "$MANIFEST"
+  merged_artifacts | jq -r --arg id "$artifact_id" '.[] | select(.id == $id) | .refs[]'
 }
 
 # --- サブコマンド ---
@@ -1057,6 +1084,39 @@ cmd_selfcheck() {
 
   echo ""
 
+  # --- 検査 9: 外部 manifest 検証（--manifest 指定時のみ） ---
+  if [[ -n "$EXTERNAL_MANIFEST" ]]; then
+    echo -e "${CYAN}検査 9: 外部 manifest 検証（${EXTERNAL_MANIFEST}）${NC}"
+
+    # 9a: propositions が本体の Lean と同期しているか
+    local ext_props
+    ext_props=$(jq -r '.propositions[]' "$EXTERNAL_MANIFEST" 2>/dev/null | sort)
+    local bad_props
+    bad_props=$(comm -23 <(echo "$ext_props") <(echo "$lean_ids"))
+    if [[ -n "$bad_props" ]]; then
+      echo -e "  ${RED}✗ 外部 manifest に Lean にない命題:${NC}"
+      echo "$bad_props" | while read -r id; do echo "    - $id"; done
+      errors=$((errors + $(echo "$bad_props" | wc -l | tr -d ' ')))
+    else
+      echo -e "  ${GREEN}✓ propositions が Lean PropositionId に接地${NC}"
+    fi
+
+    # 9b: refs が propositions に含まれるか
+    local ext_refs
+    ext_refs=$(jq -r '[.artifacts[].refs[]] | unique | .[]' "$EXTERNAL_MANIFEST" 2>/dev/null | sort)
+    local bad_refs
+    bad_refs=$(comm -23 <(echo "$ext_refs") <(echo "$lean_ids"))
+    if [[ -n "$bad_refs" ]]; then
+      echo -e "  ${RED}✗ 外部 manifest の refs に Lean にない命題:${NC}"
+      echo "$bad_refs" | while read -r id; do echo "    - $id"; done
+      errors=$((errors + $(echo "$bad_refs" | wc -l | tr -d ' ')))
+    else
+      echo -e "  ${GREEN}✓ refs が Lean PropositionId に接地${NC}"
+    fi
+
+    echo ""
+  fi
+
   # --- 総合判定 ---
   if [[ "$errors" -eq 0 ]]; then
     echo -e "${BOLD}${GREEN}selfcheck PASS: 全検査合格${NC}"
@@ -1103,11 +1163,14 @@ case "${1:-help}" in
     echo "                   config          settings.json 等"
     echo "                   document        CLAUDE.md, README.md, docs/ 等"
     echo "                   data            .claude/metrics/*.jsonl 等"
+    echo "  --manifest=PATH  外部 artifact-manifest.json を追加で読み込む"
+    echo "                   本体と外部の成果物を統合してレポート"
     echo ""
     echo "例:"
     echo "  manifest-trace --scope=implementation coverage"
     echo "  manifest-trace --scope=implementation,config health"
     echo "  manifest-trace coverage   # 全スコープ"
+    echo "  manifest-trace --manifest=/path/to/plugin/artifact-manifest.json coverage"
     ;;
   *)
     die "不明なサブコマンド: $1（manifest-trace help を参照）"

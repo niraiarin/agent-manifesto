@@ -159,6 +159,52 @@ Add to your project's \`.gitignore\`:
 README
 echo "README.md generated"
 
+# --- artifact-manifest.json テンプレート生成 ---
+echo ""
+echo "=== Generating artifact-manifest.json ==="
+
+# 本体の propositions を継承
+PROPOSITIONS=$(jq -r '.propositions' "$BASE/artifact-manifest.json" 2>/dev/null || echo '[]')
+
+# パッケージ内のコンポーネントから artifacts を自動生成
+PLUGIN_ARTIFACTS="[]"
+
+# hooks → plugin-hook:<name>
+for hook_file in "$DEST"/hooks/*.sh; do
+  [ -f "$hook_file" ] || continue
+  name=$(basename "$hook_file" .sh)
+  # ファイル内の命題 ID (T1, E1, P2 等) を refs として抽出
+  refs=$(grep -oE '[TEPLVD][0-9]+' "$hook_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-hook:$name" --arg path ".claude/hooks/$name.sh" --argjson refs "$refs" \
+    '. + [{"id": $id, "type": "hook", "path": $path, "refs": $refs, "scope": "plugin"}]')
+done
+
+# rules → plugin-rule:<name>
+for rule_file in "$DEST"/rules/*.md; do
+  [ -f "$rule_file" ] || continue
+  name=$(basename "$rule_file" .md)
+  refs=$(grep -oE '[TEPLVD][0-9]+' "$rule_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-rule:$name" --arg path ".claude/rules/$name.md" --argjson refs "$refs" \
+    '. + [{"id": $id, "type": "rule", "path": $path, "refs": $refs, "scope": "plugin"}]')
+done
+
+# agents → plugin-agent:<name>
+for agent_file in "$DEST"/agents/*.md "$DEST"/agents/*/AGENT.md; do
+  [ -f "$agent_file" ] || continue
+  name=$(basename "$(dirname "$agent_file")" 2>/dev/null)
+  [ "$name" = "agents" ] && name=$(basename "$agent_file" .md)
+  refs=$(grep -oE '[TEPLVD][0-9]+' "$agent_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-agent:$name" --arg path ".claude/agents/$name" --argjson refs "$refs" \
+    '. + [{"id": $id, "type": "agent", "path": $path, "refs": $refs, "scope": "plugin"}]')
+done
+
+jq -n --argjson props "$PROPOSITIONS" --argjson arts "$PLUGIN_ARTIFACTS" \
+  '{version: "0.2.0", parent: "agent-manifesto", scopes: ["plugin"], propositions: $props, artifacts: $arts}' \
+  > "$DEST/artifact-manifest.json"
+
+ARTIFACT_COUNT=$(echo "$PLUGIN_ARTIFACTS" | jq 'length')
+echo "artifact-manifest.json generated ($ARTIFACT_COUNT artifacts)"
+
 # --- Verification ---
 echo ""
 echo "=== Verification ==="
@@ -175,6 +221,17 @@ REFERENCED=$(jq -r '.. | .command? // empty' "$DEST/hooks/hooks.json" | grep -o 
 for script in $REFERENCED; do
   [ -x "$DEST/hooks/$script" ] && echo "✓ $script exists" || { echo "✗ $script missing"; ERRORS=$((ERRORS+1)); }
 done
+
+# artifact-manifest.json valid
+jq . "$DEST/artifact-manifest.json" > /dev/null 2>&1 && echo "✓ artifact-manifest.json valid" || { echo "✗ artifact-manifest.json invalid"; ERRORS=$((ERRORS+1)); }
+
+# artifact-manifest.json refs grounded in propositions
+BAD_REFS=$(jq -r '[.artifacts[].refs[]] | unique | .[] | select(. as $r | ['"$PROPOSITIONS"'[] | select(. == $r)] | length == 0)' "$DEST/artifact-manifest.json" 2>/dev/null)
+if [ -z "$BAD_REFS" ]; then
+  echo "✓ All refs grounded in propositions"
+else
+  echo "✗ Ungrounded refs: $BAD_REFS"; ERRORS=$((ERRORS+1))
+fi
 
 # No absolute paths
 if grep -r '/Users/' "$DEST/hooks/" --include="*.json" --include="*.sh" > /dev/null 2>&1; then
