@@ -686,6 +686,34 @@ echo "    \"header\": {\"max_run\": $MAX_RUN, \"total_entries\": $TOTAL_ENTRIES}
 echo "    \"h1_verifier\": {\"pass\": $H1_PASS, \"fail\": $H1_FAIL, \"total\": $H1_TOTAL, \"pass_rate_percent\": $H1_PASS_RATE},"
 echo "    \"h4_compatibility\": {\"conservative_extension\": $H4_CONSERVATIVE, \"compatible_change\": $H4_COMPATIBLE, \"breaking_change\": $H4_BREAKING, \"other\": $H4_OTHER, \"total\": $H4_TOTAL},"
 echo "    \"h5_valid_uuids\": $H5_VALID_UUIDS"
-echo "  }"
+echo "  },"
+
+# --- manifest-trace 指標 ---
+if [ -x "$BASE/manifest-trace" ]; then
+  TRACE_JSON=$("$BASE/manifest-trace" json 2>/dev/null || echo "{}")
+  TRACE_COVERED=$(echo "$TRACE_JSON" | jq '.summary.covered // 0' 2>/dev/null || echo "0")
+  TRACE_UNCOVERED=$(echo "$TRACE_JSON" | jq '.summary.uncovered | length // 0' 2>/dev/null || echo "0")
+  TRACE_WEAK=$(echo "$TRACE_JSON" | jq '.summary.weak | length // 0' 2>/dev/null || echo "0")
+  TRACE_TOTAL=$(echo "$TRACE_JSON" | jq '.meta.total_propositions // 0' 2>/dev/null || echo "0")
+  TRACE_ARTIFACTS=$(echo "$TRACE_JSON" | jq '.meta.total_artifacts // 0' 2>/dev/null || echo "0")
+  TRACE_WITH_EVIDENCE=$(echo "$TRACE_JSON" | jq '.summary.with_evidence | length // 0' 2>/dev/null || echo "0")
+  TRACE_WITHOUT_EVIDENCE=$(echo "$TRACE_JSON" | jq '.summary.without_evidence | length // 0' 2>/dev/null || echo "0")
+  # 深さ別カバレッジ
+  TRACE_S5=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S5_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5)] | length' 2>/dev/null || echo "0")
+  TRACE_S4=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 4 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S4_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 4)] | length' 2>/dev/null || echo "0")
+  TRACE_S3=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S3_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3)] | length' 2>/dev/null || echo "0")
+  echo "  \"manifest_trace\": {"
+  echo "    \"version\": $(echo "$TRACE_JSON" | jq '.meta.version // "unknown"' 2>/dev/null || echo '\"unknown\"'),"
+  echo "    \"coverage\": {\"covered\": $TRACE_COVERED, \"uncovered\": $TRACE_UNCOVERED, \"weak\": $TRACE_WEAK, \"total\": $TRACE_TOTAL},"
+  echo "    \"artifacts\": $TRACE_ARTIFACTS,"
+  echo "    \"evidence\": {\"with\": $TRACE_WITH_EVIDENCE, \"without\": $TRACE_WITHOUT_EVIDENCE},"
+  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\"}"
+  echo "  }"
+else
+  echo "  \"manifest_trace\": null"
+fi
 
 echo "}"

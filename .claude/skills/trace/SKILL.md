@@ -66,11 +66,95 @@ description: >
 2. 必要な場合は `/evolve` の Observer フェーズで改善候補として報告
 3. 実装する場合は `artifact-manifest.json` にメタデータを追加
 
+### Step 4: JSON 構造的分析
+
+`manifest-trace json` の出力を jq で解析し、定量的な洞察を得る。
+
+#### 4a. 深さ別カバレッジ（strength 5→1）
+
+```bash
+./manifest-trace json | jq '
+  [.propositions[] | {s: .strength, covered: (.coverage.total > 0)}]
+  | group_by(.s) | map({
+      strength: .[0].s,
+      total: length,
+      covered: [.[] | select(.covered)] | length
+    })
+  | sort_by(-.strength)
+  | .[] | "\(.strength): \(.covered)/\(.total)"
+'
+```
+
+#### 4b. 根拠カバレッジ（evidence）
+
+```bash
+./manifest-trace json | jq '{
+  with_evidence: .summary.with_evidence | length,
+  without_evidence: .summary.without_evidence | length,
+  without_list: .summary.without_evidence
+}'
+```
+
+#### 4c. テストなし命題の優先順位（D13 伝播を考慮）
+
+依存者が多い命題ほど優先度高（変更の影響が広い）:
+
+```bash
+./manifest-trace json | jq '
+  [.propositions[]
+   | select(.coverage.has_test == false and .coverage.total > 0)
+   | {id, dependents: (.depended_by | length), strength}]
+  | sort_by(-.dependents, -.strength)
+'
+```
+
+#### 4d. 孤立ノード検出
+
+depends_on も depended_by も空の命題（半順序に接続されていない）:
+
+```bash
+./manifest-trace json | jq '
+  [.propositions[]
+   | select((.depends_on | length == 0) and (.depended_by | length == 0))
+   | .id]
+'
+```
+
+#### 4e. 依存チェーンの完全性
+
+trunk（根ノード）から leaf まで、カバレッジギャップのない経路が存在するか:
+
+```bash
+./manifest-trace json | jq '
+  .summary as $s |
+  {
+    roots: ($s.roots | length),
+    leaves: ($s.leaves | length),
+    uncovered_on_path: [.propositions[]
+      | select((.depends_on | length > 0) and (.depended_by | length > 0) and .coverage.total == 0)
+      | .id]
+  }
+'
+```
+
+### Step 5: 改善提案テンプレート
+
+json 分析結果から改善提案を生成する:
+
+| 検出パターン | 改善提案 |
+|------------|---------|
+| uncovered + strength ≥ 3 | 「{id} に hook/skill を追加すべき（高強度命題の未実装）」 |
+| has_test == false + dependents ≥ 3 | 「{id} のテスト追加を優先（D13 伝播で {n} 命題に影響）」 |
+| has_evidence == false + T/E 層 | 「{id} に Axiom Card が必要（根拠の欠落）」 |
+| 孤立ノード | 「{id} の依存関係を Ontology.lean で定義すべき」 |
+| 鮮度期限切れ | 「{id} の根拠を再評価すべき（Last validated 期限超過）」 |
+
 ## データソース
 
 - `artifact-manifest.json` — 全成果物→公理マッピング（単一真実源）
 - `lean-formalization/Manifest/Ontology.lean` — 命題間依存定義
 - `lean-formalization/Manifest/DesignFoundation.lean` — D13 影響波及
+- `lean-formalization/Manifest/{Axioms,EmpiricalPostulates,Observable}.lean` — Axiom Card（根拠 + 鮮度）
 
 ## 注意事項
 
