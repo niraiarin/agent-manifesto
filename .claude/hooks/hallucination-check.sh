@@ -84,7 +84,7 @@ if [ -n "$LEAN_NAMES" ]; then
       # Lean 定義として検証
       if ! echo "$LEAN_DEFS" | grep -qxF "$name"; then
         # SKILL.md/CLAUDE.md の既知セクション名やフィールド名は除外
-        echo "$name" | grep -qE '^(failure_type|failure_subtype|tool_name|tool_input|file_path|new_string|session_id|tool_use_id|pass_count|fail_count|pass_rate|cost_per_improvement|session_cost|improvements_count|conservative_extension|compatible_change|breaking_change|action_space|proxy_classification|test_pass_rate|fix_ratio|deferred_open|deferred_status|hypothesis_table_stats|evolve_cost_efficiency|total_improvements|definition_note|last_updated_run|opened_in_run|resolved_in_run)$' && continue
+        echo "$name" | grep -qE '^(failure_type|failure_subtype|tool_name|tool_input|file_path|new_string|session_id|tool_use_id|pass_count|fail_count|pass_rate|cost_per_improvement|session_cost|improvements_count|conservative_extension|compatible_change|breaking_change|action_space|proxy_classification|test_pass_rate|deferred_open|deferred_status|hypothesis_table_stats|evolve_cost_efficiency|total_improvements|definition_note|last_updated_run|opened_in_run|resolved_in_run)$' && continue
         WARNINGS="${WARNINGS}Lean definition '${name}' not found in formalization.\n"
       fi
     fi

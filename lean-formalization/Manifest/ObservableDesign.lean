@@ -370,8 +370,9 @@ theorem uniform_thresholds_equiv :
     各フィールドの値はパーセント（observe.sh と同一スケール）。
 
     運用対応表:
-    - v3_outputQuality = 20: observe.sh の fix_ratio <= 20% に対応
-      （根拠: run 12 commit 05653dc で設定。observe.sh V3_BASELINE_THRESHOLD=20）
+    - v3_outputQuality = 20: 旧 fix_ratio proxy 由来（run 12 commit 05653dc で設定）。
+      fix_ratio 削除後（Run 69）は test_pass_rate が正式指標。
+      閾値 20 は暫定的に保持（test_pass_rate スケール調整は別 run で対応）。
     - 他の変数は暫定値 50（50%）。運用データ蓄積後に個別調整
 
     注: この定数は T6（人間がリソースの最終決定者）に基づく運用判断であり、
@@ -379,14 +380,14 @@ theorem uniform_thresholds_equiv :
 def operationalThresholds : HealthThresholds :=
   { v1_skillQuality              := 50
     v2_contextEfficiency         := 50
-    v3_outputQuality             := 20   -- observe.sh: fix_ratio <= 20%
+    v3_outputQuality             := 20   -- 旧 fix_ratio proxy 由来。Run 69 で fix_ratio 削除。test_pass_rate が正式指標
     v4_gatePassRate              := 50
     v5_proposalAccuracy          := 50
     v6_knowledgeStructureQuality := 50
     v7_taskDesignEfficiency      := 50 }
 
-/-- 運用閾値の V3 は 20（fix_ratio 20%）。
-    observe.sh の V3_BASELINE_THRESHOLD=20 に対応。 -/
+/-- 運用閾値の V3 は 20（旧 fix_ratio proxy 由来、Run 69 で fix_ratio 削除）。
+    test_pass_rate が正式指標となったため、閾値の再調整は今後の run で対応。 -/
 theorem operational_v3_threshold :
   operationalThresholds.v3_outputQuality = 20 := by rfl
 

@@ -157,8 +157,9 @@ opaque contextEfficiency : World → Nat
 /-- V3: 出力品質。コード・設計・文書の品質。
     測定方法: ゲート合格率、レビュー指摘数。
     関連境界条件: L1（安全基準）, L4（行動空間調整の根拠）。
-    observe.sh proxy: fix_ratio_percent（プレフィクスパターン fix/bugfix/hotfix のコミット比率）+
-    test_pass_rate（テスト全通過率）。
+    observe.sh proxy: test_pass_rate（テスト全通過率）+
+    hallucination_proxy（rejected[].failure_type 集計）。
+    旧 fix_ratio_percent proxy（コミット prefix 比率）は Run 69 で削除済み。
     proxy 成熟度分類:
     - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
     - established_proxy: 安定代理指標。運用上十分と判断。

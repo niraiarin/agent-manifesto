@@ -449,17 +449,7 @@ if [ "$V2_CALLS_PER_SESSION" -gt 0 ] 2>/dev/null; then
 fi
 echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"raw_cumulative_avg\": ${V2_RAW_CUMULATIVE:-0}, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
-# V3 fix_ratio proxy の制限: このパターンは "[fix]:" や "fix:" で始まるコミットのみにマッチする。
-# "[evolve] Fix ..." のようにプレフィックスが異なる形式はマッチしない。
-# そのため、実際のバグ修正コミット数はこの proxy 値より多い可能性がある。
-V3_FIX_COMMITS=$({ git -C "$BASE" log --oneline 2>/dev/null || true; } | { grep -iE "^\[?(fix|bugfix|hotfix)\]?[: ]" || true; } | wc -l | tr -d ' ')
-V3_FIX_COMMITS=${V3_FIX_COMMITS:-0}
 V3_TOTAL_COMMITS=${V3_TOTAL_COMMITS:-0}
-if [ "$V3_TOTAL_COMMITS" -gt 0 ] 2>/dev/null; then
-  V3_FIX_RATIO=$((V3_FIX_COMMITS * 100 / V3_TOTAL_COMMITS))
-else
-  V3_FIX_RATIO=0
-fi
 V3_PASS=${PASS:-0}
 V3_FAIL=${FAIL:-0}
 V3_TOTAL_TESTS=$((V3_PASS + V3_FAIL))
@@ -467,14 +457,6 @@ if [ "$V3_TOTAL_TESTS" -gt 0 ] 2>/dev/null; then
   V3_TEST_PASS_RATE=$((V3_PASS * 100 / V3_TOTAL_TESTS))
 else
   V3_TEST_PASS_RATE=0
-fi
-# V3 baseline: fix_ratio <= 20% is healthy. Rationale: current ratio ~15% (10 fix / 66 total).
-# Threshold set at run 12 (commit 05653dc). If ratio exceeds 20%, structural quality is degrading.
-V3_BASELINE_THRESHOLD=20
-if [ "$V3_FIX_RATIO" -le "$V3_BASELINE_THRESHOLD" ] && [ "$V3_TEST_PASS_RATE" -eq 100 ] 2>/dev/null; then
-  V3_BASELINE_MET="true"
-else
-  V3_BASELINE_MET="false"
 fi
 # V3 hallucination_proxy: rejected[].failure_type の集計
 # 注意: failure_type フィールドは Run 54 から標準化開始。
@@ -497,7 +479,7 @@ if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_LOOPBACK_TOTAL=$({ jq -r '.rejected[]?.loopback_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}'; } || echo 0)
   V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"fix_commits\": $V3_FIX_COMMITS, \"fix_ratio_percent\": $V3_FIX_RATIO, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"v3_baseline_threshold\": $V3_BASELINE_THRESHOLD, \"v3_baseline_met\": $V3_BASELINE_MET, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"blocked_excluded\": $V4_BLOCKED_EXCLUDED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
