@@ -1,0 +1,399 @@
+#!/usr/bin/env bash
+# manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出 CLI
+#
+# 使用法:
+#   manifest-trace coverage       カバレッジギャップレポート
+#   manifest-trace trace <ID>     順方向・逆方向トレース（例: manifest-trace trace T6）
+#   manifest-trace graph          半順序グラフ（DOT 形式）
+#   manifest-trace violations     半順序違反レポート
+#   manifest-trace health         全指標サマリ
+#
+# 依存:
+#   - jq
+#   - artifact-manifest.json（プロジェクトルート）
+#   - lean-formalization/Manifest/Ontology.lean（命題依存定義）
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+MANIFEST="$SCRIPT_DIR/artifact-manifest.json"
+ONTOLOGY="$SCRIPT_DIR/lean-formalization/Manifest/Ontology.lean"
+
+# --- 色定義 ---
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+# --- ヘルパー ---
+die() { echo -e "${RED}ERROR: $*${NC}" >&2; exit 1; }
+
+check_deps() {
+  command -v jq >/dev/null 2>&1 || die "jq が必要です: brew install jq"
+  [[ -f "$MANIFEST" ]] || die "artifact-manifest.json が見つかりません: $MANIFEST"
+}
+
+# Lean の PropositionId.dependencies を解析して依存マップを構築
+# 出力: "CHILD PARENT" の行（1行1依存）
+parse_lean_dependencies() {
+  awk '
+  /def PropositionId.dependencies/,/^$/ {
+    if (/\| \.([a-z0-9]+).*=> \[/) {
+      # 依存あり
+      match($0, /\| (\.([a-z0-9]+( \| \.([a-z0-9]+))*))/, _)
+      # ID を抽出
+      gsub(/\|/, "\n", $0)
+      # 各行を処理
+    }
+  }
+  ' "$ONTOLOGY" 2>/dev/null || true
+
+  # より確実なパーサ: sed + awk
+  # multi-pattern 行（| .t1 | .t2 ... => [...]）の全IDを正しく抽出
+  sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | \
+  grep '^\s*|' | \
+  while IFS= read -r line; do
+    # "=>" の左側から全ての .id を抽出（multi-pattern 対応）
+    lhs=$(echo "$line" | sed 's/ =>.*//')
+    ids=$(echo "$lhs" | grep -o '\.[a-z][a-z0-9]*' | sed 's/^\.//' | tr 'a-z' 'A-Z')
+    deps=$(echo "$line" | sed 's/.*=> \[//;s/\].*//' | tr ',' '\n' | sed 's/^[[:space:]]*\.//;s/[[:space:]]*$//' | tr 'a-z' 'A-Z')
+
+    for id in $ids; do
+      [[ -z "$id" ]] && continue
+      for dep in $deps; do
+        [[ -z "$dep" ]] && continue
+        echo "$id $dep"
+      done
+    done
+  done
+}
+
+# 全 PropositionId のリスト
+all_propositions() {
+  jq -r '.propositions[]' "$MANIFEST"
+}
+
+# 成果物から refs を取得
+artifact_refs() {
+  local artifact_id="$1"
+  jq -r --arg id "$artifact_id" '.artifacts[] | select(.id == $id) | .refs[]' "$MANIFEST"
+}
+
+# --- サブコマンド ---
+
+cmd_coverage() {
+  echo -e "${BOLD}=== カバレッジレポート ===${NC}"
+  echo ""
+
+  local total=0
+  local covered=0
+  local gaps=""
+  local weak=""
+
+  while IFS= read -r prop; do
+    total=$((total + 1))
+
+    # この命題を参照する全成果物
+    local impl_count
+    impl_count=$(jq --arg p "$prop" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+
+    # 種別ごとのカウント
+    local hook_count skill_count agent_count rule_count test_count
+    hook_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "hook" and (.refs[] == $p))] | length' "$MANIFEST")
+    skill_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "skill" and (.refs[] == $p))] | length' "$MANIFEST")
+    agent_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "agent" and (.refs[] == $p))] | length' "$MANIFEST")
+    rule_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "rule" and (.refs[] == $p))] | length' "$MANIFEST")
+    test_count=$(jq --arg p "$prop" '[.artifacts[] | select(.type == "test" and (.refs[] == $p))] | length' "$MANIFEST")
+
+    if [[ "$impl_count" -eq 0 ]]; then
+      gaps="${gaps}  ${RED}✗ ${prop}${NC}: 実装なし\n"
+    else
+      covered=$((covered + 1))
+
+      # 実装はあるがテストがない
+      if [[ "$test_count" -eq 0 ]]; then
+        weak="${weak}  ${YELLOW}△ ${prop}${NC}: 実装 ${impl_count} 件あるがテスト 0 件\n"
+      fi
+
+      local color="$GREEN"
+      echo -e "  ${color}✓ ${prop}${NC}: hook=${hook_count} skill=${skill_count} agent=${agent_count} rule=${rule_count} test=${test_count}"
+    fi
+  done < <(all_propositions)
+
+  echo ""
+
+  if [[ -n "$gaps" ]]; then
+    echo -e "${BOLD}${RED}--- カバレッジギャップ（実装なし） ---${NC}"
+    echo -e "$gaps"
+  fi
+
+  if [[ -n "$weak" ]]; then
+    echo -e "${BOLD}${YELLOW}--- 弱カバレッジ（テストなし） ---${NC}"
+    echo -e "$weak"
+  fi
+
+  local pct=$((covered * 100 / total))
+  echo -e "${BOLD}カバレッジ: ${covered}/${total} (${pct}%)${NC}"
+
+  if [[ "$pct" -lt 100 ]]; then
+    return 1
+  fi
+  return 0
+}
+
+cmd_trace() {
+  local target="${1:-}"
+  [[ -z "$target" ]] && die "使用法: manifest-trace trace <PropositionID>"
+
+  # 大文字に正規化
+  target=$(echo "$target" | tr 'a-z' 'A-Z')
+
+  echo -e "${BOLD}=== トレース: ${target} ===${NC}"
+  echo ""
+
+  # 1. 順方向: target が依存するもの（上流）
+  echo -e "${CYAN}▲ 上流（${target} が依存する命題）:${NC}"
+  local deps
+  deps=$(parse_lean_dependencies | awk -v t="$target" '$1 == t {print $2}' | sort -u)
+  if [[ -z "$deps" ]]; then
+    echo "  (根ノード — 依存なし)"
+  else
+    for dep in $deps; do
+      echo "  ← $dep"
+    done
+  fi
+
+  echo ""
+
+  # 2. 逆方向: target に依存するもの（下流）
+  echo -e "${CYAN}▼ 下流（${target} に依存する命題）:${NC}"
+  local dependents
+  dependents=$(parse_lean_dependencies | awk -v t="$target" '$2 == t {print $1}' | sort -u)
+  if [[ -z "$dependents" ]]; then
+    echo "  (葉ノード — 依存者なし)"
+  else
+    for dep in $dependents; do
+      echo "  → $dep"
+    done
+  fi
+
+  echo ""
+
+  # 3. 実装成果物
+  echo -e "${CYAN}■ 実装成果物:${NC}"
+  jq -r --arg p "$target" '.artifacts[] | select(.refs[] == $p) | "  [\(.type)] \(.id) — \(.path)"' "$MANIFEST"
+
+  local count
+  count=$(jq --arg p "$target" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+  if [[ "$count" -eq 0 ]]; then
+    echo -e "  ${RED}(実装成果物なし — カバレッジギャップ)${NC}"
+  fi
+}
+
+cmd_graph() {
+  echo "digraph manifest_trace {"
+  echo '  rankdir=TB;'
+  echo '  node [shape=box, fontname="Helvetica"];'
+  echo ''
+
+  # カテゴリごとのスタイル
+  echo '  // T: 拘束条件 (strength 5)'
+  echo '  subgraph cluster_T { label="T: 拘束条件"; style=dashed; color=red;'
+  for i in 1 2 3 4 5 6 7 8; do echo "    T${i};"; done
+  echo '  }'
+
+  echo '  // E: 経験的公準 (strength 4)'
+  echo '  subgraph cluster_E { label="E: 経験的公準"; style=dashed; color=orange;'
+  for i in 1 2; do echo "    E${i};"; done
+  echo '  }'
+
+  echo '  // P: 基盤原理 (strength 3)'
+  echo '  subgraph cluster_P { label="P: 基盤原理"; style=dashed; color=blue;'
+  for i in 1 2 3 4 5 6; do echo "    P${i};"; done
+  echo '  }'
+
+  echo '  // L: 境界条件 (strength 2)'
+  echo '  subgraph cluster_L { label="L: 境界条件"; style=dashed; color=green;'
+  for i in 1 2 3 4 5 6; do echo "    L${i};"; done
+  echo '  }'
+
+  echo '  // D: 設計定理 (strength 1)'
+  echo '  subgraph cluster_D { label="D: 設計定理"; style=dashed; color=purple;'
+  for i in $(seq 1 14); do echo "    D${i};"; done
+  echo '  }'
+
+  echo ''
+  echo '  // 命題間依存 (Lean PropositionId.dependencies)'
+
+  parse_lean_dependencies | while read -r child parent; do
+    echo "  ${child} -> ${parent};"
+  done
+
+  echo ''
+  echo '  // 成果物ノード'
+
+  jq -r '.artifacts[] | "\(.id)|\(.type)|\(.refs | join(","))"' "$MANIFEST" | \
+  while IFS='|' read -r aid atype arefs; do
+    local shape="ellipse"
+    local color="gray"
+    case "$atype" in
+      hook)  shape="diamond"; color="red" ;;
+      skill) shape="hexagon"; color="blue" ;;
+      agent) shape="oval"; color="green" ;;
+      rule)  shape="note"; color="orange" ;;
+      test)  shape="triangle"; color="purple" ;;
+    esac
+    local safe_id
+    safe_id=$(echo "$aid" | tr ':' '_' | tr '-' '_')
+    echo "  ${safe_id} [label=\"${aid}\", shape=${shape}, color=${color}];"
+
+    IFS=',' read -ra ref_array <<< "$arefs"
+    for ref in "${ref_array[@]}"; do
+      echo "  ${safe_id} -> ${ref} [style=dotted, color=${color}];"
+    done
+  done
+
+  echo '}'
+}
+
+cmd_violations() {
+  echo -e "${BOLD}=== 半順序違反レポート ===${NC}"
+  echo ""
+
+  local violation_count=0
+
+  # 強度マップ
+  declare -A strength_map
+  for t in T1 T2 T3 T4 T5 T6 T7 T8; do strength_map[$t]=5; done
+  for e in E1 E2; do strength_map[$e]=4; done
+  for p in P1 P2 P3 P4 P5 P6; do strength_map[$p]=3; done
+  for l in L1 L2 L3 L4 L5 L6; do strength_map[$l]=2; done
+  for d in D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14; do strength_map[$d]=1; done
+
+  # 検査 1: 成果物が参照する命題の強度順序チェック
+  # 成果物が D1 を参照する場合、D1 の依存先（P5, L1-L6）も何らかの成果物でカバーされるべき
+  echo -e "${CYAN}検査 1: 依存先カバレッジ（成果物が参照する命題の上流がカバーされているか）${NC}"
+  echo ""
+
+  while IFS='|' read -r aid arefs; do
+    IFS=',' read -ra ref_array <<< "$arefs"
+    for ref in "${ref_array[@]}"; do
+      # この ref の上流依存を取得
+      local upstream
+      upstream=$(parse_lean_dependencies | awk -v t="$ref" '$1 == t {print $2}')
+      for up in $upstream; do
+        # 上流がどこかの成果物でカバーされているか
+        local up_count
+        up_count=$(jq --arg p "$up" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+        if [[ "$up_count" -eq 0 ]]; then
+          echo -e "  ${YELLOW}⚠ ${aid}${NC}: ${ref} を参照するが、その上流 ${up} を実装する成果物がない"
+          violation_count=$((violation_count + 1))
+        fi
+      done
+    done
+  done < <(jq -r '.artifacts[] | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
+
+  echo ""
+
+  # 検査 2: enforces レベルの一貫性
+  # L1 (strength 2+) の成果物は structural enforcement を持つべき
+  echo -e "${CYAN}検査 2: 強制レベルの一貫性（L1 は structural であるべき）${NC}"
+  echo ""
+
+  while IFS='|' read -r aid aenforces; do
+    if [[ "$aenforces" != "structural" && "$aenforces" != "verification" ]]; then
+      echo -e "  ${YELLOW}⚠ ${aid}${NC}: L1 を参照するが enforces=${aenforces}（structural 推奨）"
+      violation_count=$((violation_count + 1))
+    fi
+  done < <(jq -r '.artifacts[] | select(.refs[] == "L1") | "\(.id)|\(.enforces)"' "$MANIFEST")
+
+  echo ""
+
+  if [[ "$violation_count" -eq 0 ]]; then
+    echo -e "${GREEN}違反なし${NC}"
+  else
+    echo -e "${RED}${violation_count} 件の潜在的違反${NC}"
+  fi
+}
+
+cmd_health() {
+  echo -e "${BOLD}=== manifest-trace 健全性サマリ ===${NC}"
+  echo ""
+
+  local total_props
+  total_props=$(jq '.propositions | length' "$MANIFEST")
+  local total_artifacts
+  total_artifacts=$(jq '.artifacts | length' "$MANIFEST")
+
+  echo -e "命題数: ${BOLD}${total_props}${NC}"
+  echo -e "成果物数: ${BOLD}${total_artifacts}${NC}"
+  echo ""
+
+  # 種別ごとの集計
+  echo -e "${CYAN}成果物の種別分布:${NC}"
+  jq -r '[.artifacts[].type] | group_by(.) | map({type: .[0], count: length}) | .[] | "  \(.type): \(.count)"' "$MANIFEST"
+  echo ""
+
+  # カバレッジサマリ
+  local covered=0
+  local uncovered_list=""
+  while IFS= read -r prop; do
+    local count
+    count=$(jq --arg p "$prop" '[.artifacts[] | select(.refs[] == $p)] | length' "$MANIFEST")
+    if [[ "$count" -gt 0 ]]; then
+      covered=$((covered + 1))
+    else
+      uncovered_list="${uncovered_list} ${prop}"
+    fi
+  done < <(all_propositions)
+
+  local pct=$((covered * 100 / total_props))
+  echo -e "カバレッジ: ${BOLD}${covered}/${total_props} (${pct}%)${NC}"
+
+  if [[ -n "$uncovered_list" ]]; then
+    echo -e "${RED}未カバー:${uncovered_list}${NC}"
+  fi
+
+  echo ""
+
+  # ファイル存在チェック
+  echo -e "${CYAN}成果物ファイル存在チェック:${NC}"
+  local missing=0
+  while IFS='|' read -r aid apath; do
+    if [[ ! -f "$SCRIPT_DIR/$apath" ]]; then
+      echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
+      missing=$((missing + 1))
+    fi
+  done < <(jq -r '.artifacts[] | "\(.id)|\(.path)"' "$MANIFEST")
+
+  if [[ "$missing" -eq 0 ]]; then
+    echo -e "  ${GREEN}全ファイル存在確認済み${NC}"
+  fi
+}
+
+# --- メイン ---
+check_deps
+
+case "${1:-help}" in
+  coverage)    cmd_coverage ;;
+  trace)       cmd_trace "${2:-}" ;;
+  graph)       cmd_graph ;;
+  violations)  cmd_violations ;;
+  health)      cmd_health ;;
+  help|--help|-h)
+    echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
+    echo ""
+    echo "使用法:"
+    echo "  manifest-trace coverage         カバレッジギャップレポート"
+    echo "  manifest-trace trace <ID>       順方向・逆方向トレース"
+    echo "  manifest-trace graph            半順序グラフ（DOT 形式）"
+    echo "  manifest-trace violations       半順序違反レポート"
+    echo "  manifest-trace health           全指標サマリ"
+    ;;
+  *)
+    die "不明なサブコマンド: $1（manifest-trace help を参照）"
+    ;;
+esac
