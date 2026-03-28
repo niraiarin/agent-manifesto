@@ -85,24 +85,20 @@ check_deps() {
   [[ -f "$MANIFEST" ]] || die "artifact-manifest.json が見つかりません: $MANIFEST"
 }
 
-# Lean の PropositionId.dependencies を解析して依存マップを構築
-# 出力: "CHILD PARENT" の行（1行1依存）
-parse_lean_dependencies() {
-  awk '
-  /def PropositionId.dependencies/,/^$/ {
-    if (/\| \.([a-z0-9]+).*=> \[/) {
-      # 依存あり
-      match($0, /\| (\.([a-z0-9]+( \| \.([a-z0-9]+))*))/, _)
-      # ID を抽出
-      gsub(/\|/, "\n", $0)
-      # 各行を処理
-    }
-  }
-  ' "$ONTOLOGY" 2>/dev/null || true
+# --- パーサキャッシュ（推奨3: セッション内で1回だけ Lean をパース） ---
+_DEP_CACHE=""
 
-  # より確実なパーサ: sed + awk
+# Lean の PropositionId.dependencies を解析して依存マップを構築
+# 出力: "CHILD PARENT" の行（1行1依存）。結果はキャッシュされる。
+parse_lean_dependencies() {
+  if [[ -n "$_DEP_CACHE" ]]; then
+    echo "$_DEP_CACHE"
+    return
+  fi
+
+  local result
   # multi-pattern 行（| .t1 | .t2 ... => [...]）の全IDを正しく抽出
-  sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | \
+  result=$(sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | \
   grep '^\s*|' | \
   while IFS= read -r line; do
     # "=>" の左側から全ての .id を抽出（multi-pattern 対応）
@@ -117,7 +113,10 @@ parse_lean_dependencies() {
         echo "$id $dep"
       done
     done
-  done
+  done)
+
+  _DEP_CACHE="$result"
+  echo "$result"
 }
 
 # 全 PropositionId のリスト
@@ -714,6 +713,170 @@ cmd_selfcheck() {
     echo -e "  ${GREEN}✓ 全ファイル存在${NC}"
   fi
   errors=$((errors + missing))
+
+  echo ""
+
+  # --- 検査 5: 未登録 artifact 検出（弱み1 + 推奨1） ---
+  echo -e "${CYAN}検査 5: 未登録 artifact 検出（既知ディレクトリをスキャン）${NC}"
+
+  local registered_paths
+  registered_paths=$(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | sort)
+  local unregistered=0
+
+  # hooks
+  while IFS= read -r f; do
+    local rel_path=".claude/hooks/$(basename "$f")"
+    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+      unregistered=$((unregistered + 1))
+    fi
+  done < <(find "$SCRIPT_DIR/.claude/hooks" -name '*.sh' -type f 2>/dev/null | sort)
+
+  # skills
+  while IFS= read -r f; do
+    local skill_name
+    skill_name=$(basename "$(dirname "$f")")
+    local rel_path=".claude/skills/${skill_name}/SKILL.md"
+    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+      unregistered=$((unregistered + 1))
+    fi
+  done < <(find "$SCRIPT_DIR/.claude/skills" -name 'SKILL.md' -type f 2>/dev/null | sort)
+
+  # agents
+  while IFS= read -r f; do
+    local rel_path="${f#$SCRIPT_DIR/}"
+    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+      unregistered=$((unregistered + 1))
+    fi
+  done < <(find "$SCRIPT_DIR/.claude/agents" \( -name '*.md' -o -name 'AGENT.md' \) -type f 2>/dev/null | sort)
+
+  # rules
+  while IFS= read -r f; do
+    local rel_path=".claude/rules/$(basename "$f")"
+    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+      unregistered=$((unregistered + 1))
+    fi
+  done < <(find "$SCRIPT_DIR/.claude/rules" -name '*.md' -type f 2>/dev/null | sort)
+
+  # tests
+  while IFS= read -r f; do
+    local rel_path="${f#$SCRIPT_DIR/}"
+    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
+      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
+      unregistered=$((unregistered + 1))
+    fi
+  done < <(find "$SCRIPT_DIR/tests" -name 'test-*.sh' -type f 2>/dev/null | sort)
+
+  if [[ "$unregistered" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ 全 artifact が登録済み${NC}"
+  fi
+  errors=$((errors + unregistered))
+
+  echo ""
+
+  # --- 検査 6: 過剰 refs 警告（弱み2 + 推奨2） ---
+  echo -e "${CYAN}検査 6: 過剰 refs 検出（全命題を参照する artifact は疑わしい）${NC}"
+
+  local total_props
+  total_props=$(jq '.propositions | length' "$MANIFEST")
+  local overspec=0
+
+  while IFS='|' read -r aid ref_count; do
+    local threshold=$((total_props * 80 / 100))  # 80% 以上を参照 → 疑わしい
+    if [[ "$ref_count" -ge "$threshold" ]]; then
+      echo -e "  ${YELLOW}⚠ ${aid}${NC}: ${ref_count}/${total_props} 命題を参照（過剰 — カバレッジを水増しする可能性）"
+      overspec=$((overspec + 1))
+    fi
+  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.refs | length)"' "$MANIFEST")
+
+  if [[ "$overspec" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ 過剰 refs なし${NC}"
+  else
+    echo -e "  ${YELLOW}(${overspec} 件は警告のみ — エラーとしてカウントしない)${NC}"
+  fi
+
+  echo ""
+
+  # --- 検査 7: 交差検証の独立性強化（弱み3） ---
+  # メインパーサと交差検証パーサは異なるアルゴリズムを使用:
+  #   メインパーサ: grep '^\s*|' → sed で LHS/RHS 分割 → grep -o で .id 抽出
+  #   交差検証パーサ: awk でブロック解析 → match() で直接抽出
+  echo -e "${CYAN}検査 7: 依存グラフの構造検証（Lean 公理との突合）${NC}"
+
+  local struct_errors=0
+
+  # 検証 7a: 全ての根ノード（依存なし）が constraint カテゴリであること
+  local parsed_deps
+  parsed_deps=$(parse_lean_dependencies)
+  local all_ids
+  all_ids=$(echo "$lean_ids" | tr '\n' ' ')
+  for id in $all_ids; do
+    local has_deps
+    has_deps=$(echo "$parsed_deps" | awk -v t="$id" '$1 == t' | head -1)
+    if [[ -z "$has_deps" ]]; then
+      # 根ノード — T or E2 or L5 であるべき
+      if [[ ! "$id" =~ ^T[0-9]+$ && "$id" != "E2" && "$id" != "L5" ]]; then
+        echo -e "  ${RED}✗ ${id}${NC}: 依存がないが constraint/E2/L5 ではない"
+        struct_errors=$((struct_errors + 1))
+      fi
+    fi
+  done
+
+  # 検証 7b: 依存は常に強度が上がる方向（dependency_respects_strength）
+  declare -A str_map
+  for t in T1 T2 T3 T4 T5 T6 T7 T8; do str_map[$t]=5; done
+  for e in E1 E2; do str_map[$e]=4; done
+  for p in P1 P2 P3 P4 P5 P6; do str_map[$p]=3; done
+  for l in L1 L2 L3 L4 L5 L6; do str_map[$l]=2; done
+  for d in D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14; do str_map[$d]=1; done
+
+  # 既知例外: L4→D8 は意図的な循環防止設計（Ontology.lean コメント参照）
+  local known_exceptions="L4 D8"
+  while read -r child parent; do
+    [[ -z "$child" || -z "$parent" ]] && continue
+    # 既知例外をスキップ
+    if echo "$known_exceptions" | grep -qw "${child} ${parent}"; then
+      continue
+    fi
+    local child_str=${str_map[$child]:-0}
+    local parent_str=${str_map[$parent]:-0}
+    if [[ "$parent_str" -lt "$child_str" ]]; then
+      echo -e "  ${RED}✗ ${child}→${parent}${NC}: 依存先の強度(${parent_str})が依存元(${child_str})より低い"
+      struct_errors=$((struct_errors + 1))
+    fi
+  done <<< "$parsed_deps"
+
+  # 検証 7c: 依存グラフに閉路がないこと（DAG 検証）
+  local cycle_found=false
+  for id in $all_ids; do
+    # 簡易 DFS: 自分自身に到達可能か
+    local visited="$id"
+    local frontier
+    frontier=$(echo "$parsed_deps" | awk -v t="$id" '$1 == t {print $2}')
+    local depth=0
+    while [[ -n "$frontier" && "$depth" -lt 40 ]]; do
+      local next_frontier=""
+      for dep in $frontier; do
+        if [[ "$dep" == "$id" ]]; then
+          echo -e "  ${RED}✗ 閉路検出: ${id} → ... → ${id}${NC}"
+          struct_errors=$((struct_errors + 1))
+          cycle_found=true
+          break 2
+        fi
+        next_frontier="$next_frontier $(echo "$parsed_deps" | awk -v t="$dep" '$1 == t {print $2}')"
+      done
+      frontier="$next_frontier"
+      depth=$((depth + 1))
+    done
+  done
+
+  if [[ "$struct_errors" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ 根ノード検証 OK / 強度単調性 OK / DAG 閉路なし${NC}"
+  fi
+  errors=$((errors + struct_errors))
 
   echo ""
 
