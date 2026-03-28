@@ -1,0 +1,79 @@
+---
+name: trace
+description: >
+  全成果物の半順序導出・カバレッジ検出・逸脱検出。P4（可観測性）+ D13（影響波及）の
+  運用ツール。公理系から実装が漏れている状況、実装が公理系から逸脱している状況を
+  自動的・機械的に検出する。
+  「トレース」「trace」「カバレッジ」「coverage」「逸脱」「deviation」
+  「半順序」「partial order」で起動。
+---
+
+# Artifact Trace (P4 + D13: 半順序トレーサビリティ)
+
+全成果物（hooks, skills, agents, rules, tests）と公理系（T/E/P/L/D）の
+半順序関係を導出し、カバレッジギャップと逸脱を検出する。
+
+## Lean 形式化との対応
+
+| スキルの概念 | Lean ファイル | 定理/定義 |
+|------------|-------------|----------|
+| 命題間半順序 | Ontology.lean | `PropositionId.dependencies`, `dependency_respects_strength` |
+| 認識論的強度 | Ontology.lean | `PropositionCategory.strength` |
+| 構造種別優先度 | Ontology.lean | `StructureKind.priority`, `structureDependsOn` |
+| 逆方向依存 | Ontology.lean | `PropositionId.dependents` |
+| D13 影響波及 | DesignFoundation.lean | `d13_propagation`, `affected` |
+| 推移的依存 | EpistemicLayer.lean | `TransitivelyDependsOn` |
+| 層割当単調性 | EpistemicLayer.lean | `LayerAssignment.monotone`, `canonicalAssignment` |
+| D3 可観測性 | DesignFoundation.lean | `ObservabilityConditions` |
+
+## 実行手順
+
+### Step 1: `manifest-trace` CLI の実行
+
+ユーザーの要求に応じて適切なサブコマンドを実行する:
+
+```bash
+# 全指標サマリ（デフォルト）
+./manifest-trace health
+
+# カバレッジギャップレポート
+./manifest-trace coverage
+
+# 特定命題のトレース（順方向・逆方向・実装成果物）
+./manifest-trace trace <PropositionID>
+
+# 半順序違反レポート
+./manifest-trace violations
+
+# DOT 形式の依存グラフ（可視化用）
+./manifest-trace graph > trace-graph.dot
+```
+
+### Step 2: 結果の解釈
+
+#### カバレッジギャップ
+- **✗ 実装なし**: その命題を直接実装する成果物がない。新しい hook/skill/test の追加を検討
+- **△ テストなし**: 実装はあるが検証がない。テストの追加を優先
+
+#### 半順序違反
+- **依存先未カバー**: 成果物が参照する命題の上流に実装がない。D13 の伝播パターン
+- **強制レベル不一致**: L1 (安全境界) を参照する成果物が structural enforcement でない
+
+### Step 3: 改善提案
+
+カバレッジギャップや違反が見つかった場合:
+1. ギャップの原因を分析（本当に実装が必要か、命題が環境依存で実装不要か）
+2. 必要な場合は `/evolve` の Observer フェーズで改善候補として報告
+3. 実装する場合は `artifact-manifest.json` にメタデータを追加
+
+## データソース
+
+- `artifact-manifest.json` — 全成果物→公理マッピング（単一真実源）
+- `lean-formalization/Manifest/Ontology.lean` — 命題間依存定義
+- `lean-formalization/Manifest/DesignFoundation.lean` — D13 影響波及
+
+## 注意事項
+
+- `artifact-manifest.json` のメタデータは手動付与。成果物の追加・変更時に更新が必要
+- L5 (プラットフォーム境界) や T3 (有限コンテキスト) など、環境制約として暗黙的に実装されている命題もある
+- violations の結果は「潜在的」違反。全てが修正必須ではない
