@@ -14,7 +14,7 @@
 | hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 | なし |
 | verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 | なし |
 | integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 | なし |
-| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" | Step 3 FAIL 分析（ループバック） | なし |
+| verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" + "Lean trace: verification -> hypothesizing exists in Workflow.lean" | Step 3 FAIL 分析（ループバック） | なし |
 | verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） | なし |
 | retirement → observation (cycle) | "Lean trace: retirement -> observation (cycle in SKILL.md)" | Step 6 → Step 1（次サイクル） | なし |
 

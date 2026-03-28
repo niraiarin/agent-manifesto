@@ -189,6 +189,7 @@ echo ""
 echo "--- 7. Lean Formal Spec Traceability ---"
 
 # Workflow.lean の validPhaseTransition 6 ケースが SKILL.md/AGENT.md に対応しているか確認
+WORKFLOW_LEAN_PATH="lean-formalization/Manifest/Workflow.lean"
 
 # observation -> hypothesizing (Phase 1 -> Phase 2)
 grep -q "観察\|observation" "$SKILL" && grep -q "仮説化\|hypothesiz" "$SKILL" && pass "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" || fail "Lean trace: observation -> hypothesizing not covered in SKILL.md"
@@ -205,11 +206,13 @@ grep -q "統合\|integrat" "$SKILL" && grep -q "退役\|retir" "$SKILL" && pass 
 # verification -> hypothesizing (FAIL ループバック) — D5 断裂修復の核心
 grep -q "FAIL.*分析\|ループバック\|loopback" "$SKILL" && pass "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" || fail "Lean trace: FAIL loopback (verification->hypothesizing) not documented in SKILL.md"
 
+# verification -> hypothesizing — Workflow.lean 直接検証（D5 三層断裂修復: Run 71）
+grep -qE '\.verification,.*\.hypothesizing.*True|verification.*hypothesizing.*True' "$WORKFLOW_LEAN_PATH" && pass "Lean trace: verification -> hypothesizing exists in Workflow.lean" || fail "Missing verification -> hypothesizing transition in Workflow.lean"
+
 # retirement -> observation (サイクル循環)
 grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "Lean trace: retirement -> observation (cycle in SKILL.md)" || fail "Lean trace: retirement -> observation cycle not covered in SKILL.md"
 
 # Workflow.lean 追加定理（Run 55 Gap 解消: no_self_knowledge_transition, knowledge_full_cycle_exists, feedback_precedes_improvement）
-WORKFLOW_LEAN_PATH="lean-formalization/Manifest/Workflow.lean"
 grep -q "no_self_knowledge_transition" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: no_self_knowledge_transition exists in Workflow.lean" || fail "Lean trace: no_self_knowledge_transition not found in Workflow.lean"
 grep -q "knowledge_full_cycle_exists" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: knowledge_full_cycle_exists exists in Workflow.lean" || fail "Lean trace: knowledge_full_cycle_exists not found in Workflow.lean"
 grep -q "feedback_precedes_improvement" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: feedback_precedes_improvement exists in Workflow.lean" || fail "Lean trace: feedback_precedes_improvement not found in Workflow.lean"
@@ -243,6 +246,11 @@ grep -q "^theorem platform_not_in_constraint_boundary" "$OBSERVABLE" && pass "pl
 
 # constraint_boundary_covers_except_platform 定理が存在（L5 以外の網羅性）
 grep -q "^theorem constraint_boundary_covers_except_platform" "$OBSERVABLE" && pass "constraint_boundary_covers_except_platform theorem exists" || fail "constraint_boundary_covers_except_platform theorem not found"
+
+# Observable Boolean closure properties (Run 71)
+grep -q "^theorem observable_not" "$OBSERVABLE" && pass "observable_not exists in Observable.lean" || fail "observable_not not found in Observable.lean"
+grep -q "^theorem observable_or" "$OBSERVABLE" && pass "observable_or exists in Observable.lean" || fail "observable_or not found in Observable.lean"
+grep -q "^theorem degradation_detectable_observable" "$OBSERVABLE" && pass "degradation_detectable_observable exists in Observable.lean" || fail "degradation_detectable_observable not found in Observable.lean"
 
 echo ""
 
@@ -637,6 +645,42 @@ for skill_file in .claude/skills/*/SKILL.md; do
     pass "$skill_name safe"
   fi
 done
+
+echo ""
+
+# ============================================================
+# Section 15: D4/D5/D6 半順序テスト（Run 71 追加）
+# ============================================================
+echo "--- Section 15: D4/D5/D6 Partial Order Tests ---"
+
+DESIGN_FOUNDATION="lean-formalization/Manifest/DesignFoundation.lean"
+
+# D4: DevelopmentPhase 半順序
+grep -q "^instance : LE DevelopmentPhase" "$DESIGN_FOUNDATION" && pass "D4: LE DevelopmentPhase instance" || fail "D4: LE DevelopmentPhase instance not found"
+grep -q "^instance : LT DevelopmentPhase" "$DESIGN_FOUNDATION" && pass "D4: LT DevelopmentPhase instance" || fail "D4: LT DevelopmentPhase instance not found"
+grep -q "^theorem developmentPhaseOrder_injective" "$DESIGN_FOUNDATION" && pass "D4: developmentPhaseOrder_injective" || fail "D4: developmentPhaseOrder_injective not found"
+grep -q "^theorem developmentPhase_le_refl" "$DESIGN_FOUNDATION" && pass "D4: developmentPhase_le_refl" || fail "D4: developmentPhase_le_refl not found"
+grep -q "^theorem developmentPhase_le_trans" "$DESIGN_FOUNDATION" && pass "D4: developmentPhase_le_trans" || fail "D4: developmentPhase_le_trans not found"
+grep -q "^theorem developmentPhase_le_antisymm" "$DESIGN_FOUNDATION" && pass "D4: developmentPhase_le_antisymm" || fail "D4: developmentPhase_le_antisymm not found"
+grep -q "^theorem developmentPhase_lt_iff_le_not_le" "$DESIGN_FOUNDATION" && pass "D4: developmentPhase_lt_iff_le_not_le" || fail "D4: developmentPhase_lt_iff_le_not_le not found"
+
+# D5: SpecLayer 半順序
+grep -q "^instance : LE SpecLayer" "$DESIGN_FOUNDATION" && pass "D5: LE SpecLayer instance" || fail "D5: LE SpecLayer instance not found"
+grep -q "^instance : LT SpecLayer" "$DESIGN_FOUNDATION" && pass "D5: LT SpecLayer instance" || fail "D5: LT SpecLayer instance not found"
+grep -q "^theorem specLayerOrder_injective" "$DESIGN_FOUNDATION" && pass "D5: specLayerOrder_injective" || fail "D5: specLayerOrder_injective not found"
+grep -q "^theorem specLayer_le_refl" "$DESIGN_FOUNDATION" && pass "D5: specLayer_le_refl" || fail "D5: specLayer_le_refl not found"
+grep -q "^theorem specLayer_le_trans" "$DESIGN_FOUNDATION" && pass "D5: specLayer_le_trans" || fail "D5: specLayer_le_trans not found"
+grep -q "^theorem specLayer_le_antisymm" "$DESIGN_FOUNDATION" && pass "D5: specLayer_le_antisymm" || fail "D5: specLayer_le_antisymm not found"
+grep -q "^theorem specLayer_lt_iff_le_not_le" "$DESIGN_FOUNDATION" && pass "D5: specLayer_lt_iff_le_not_le" || fail "D5: specLayer_lt_iff_le_not_le not found"
+
+# D6: DesignStage 半順序
+grep -q "^instance : LE DesignStage" "$DESIGN_FOUNDATION" && pass "D6: LE DesignStage instance" || fail "D6: LE DesignStage instance not found"
+grep -q "^instance : LT DesignStage" "$DESIGN_FOUNDATION" && pass "D6: LT DesignStage instance" || fail "D6: LT DesignStage instance not found"
+grep -q "^theorem designStageOrder_injective" "$DESIGN_FOUNDATION" && pass "D6: designStageOrder_injective" || fail "D6: designStageOrder_injective not found"
+grep -q "^theorem designStage_le_refl" "$DESIGN_FOUNDATION" && pass "D6: designStage_le_refl" || fail "D6: designStage_le_refl not found"
+grep -q "^theorem designStage_le_trans" "$DESIGN_FOUNDATION" && pass "D6: designStage_le_trans" || fail "D6: designStage_le_trans not found"
+grep -q "^theorem designStage_le_antisymm" "$DESIGN_FOUNDATION" && pass "D6: designStage_le_antisymm" || fail "D6: designStage_le_antisymm not found"
+grep -q "^theorem designStage_lt_iff_le_not_le" "$DESIGN_FOUNDATION" && pass "D6: designStage_lt_iff_le_not_le" || fail "D6: designStage_lt_iff_le_not_le not found"
 
 echo ""
 
