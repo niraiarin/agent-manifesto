@@ -374,6 +374,190 @@ cmd_health() {
   fi
 }
 
+cmd_selfcheck() {
+  echo -e "${BOLD}=== selfcheck: manifest-trace 自己検証 ===${NC}"
+  echo -e "真実源: ${CYAN}${ONTOLOGY}${NC}"
+  echo ""
+
+  local errors=0
+
+  # --- 検査 1: 命題リスト同期 ---
+  # Lean の inductive PropositionId から全バリアントを抽出し、manifest と突合
+  echo -e "${CYAN}検査 1: 命題リスト同期（Lean PropositionId ↔ manifest propositions）${NC}"
+
+  local lean_ids
+  lean_ids=$(sed -n '/^inductive PropositionId/,/deriving/p' "$ONTOLOGY" | \
+    grep -o '\| [a-z][a-z0-9]*' | sed 's/| //' | tr 'a-z' 'A-Z' | sort)
+  local manifest_ids
+  manifest_ids=$(jq -r '.propositions[]' "$MANIFEST" | sort)
+
+  local only_lean only_manifest
+  only_lean=$(comm -23 <(echo "$lean_ids") <(echo "$manifest_ids"))
+  only_manifest=$(comm -13 <(echo "$lean_ids") <(echo "$manifest_ids"))
+
+  if [[ -n "$only_lean" ]]; then
+    echo -e "  ${RED}✗ Lean にあるが manifest にない:${NC}"
+    echo "$only_lean" | while read -r id; do echo "    - $id"; done
+    errors=$((errors + $(echo "$only_lean" | wc -l)))
+  fi
+  if [[ -n "$only_manifest" ]]; then
+    echo -e "  ${RED}✗ manifest にあるが Lean にない:${NC}"
+    echo "$only_manifest" | while read -r id; do echo "    - $id"; done
+    errors=$((errors + $(echo "$only_manifest" | wc -l)))
+  fi
+  if [[ -z "$only_lean" && -z "$only_manifest" ]]; then
+    local lean_count manifest_count
+    lean_count=$(echo "$lean_ids" | wc -l | tr -d ' ')
+    manifest_count=$(echo "$manifest_ids" | wc -l | tr -d ' ')
+    echo -e "  ${GREEN}✓ 完全一致 (${lean_count} 命題)${NC}"
+  fi
+
+  echo ""
+
+  # --- 検査 2: refs の接地 ---
+  # 各成果物の refs が Lean PropositionId に存在するか
+  echo -e "${CYAN}検査 2: refs の接地（全 refs が Lean PropositionId に存在するか）${NC}"
+
+  local invalid_refs=0
+  while IFS='|' read -r aid arefs; do
+    IFS=',' read -ra ref_array <<< "$arefs"
+    for ref in "${ref_array[@]}"; do
+      if ! echo "$lean_ids" | grep -qx "$ref"; then
+        echo -e "  ${RED}✗ ${aid}${NC}: refs に ${ref} があるが Lean PropositionId に存在しない"
+        invalid_refs=$((invalid_refs + 1))
+      fi
+    done
+  done < <(jq -r '.artifacts[] | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
+
+  if [[ "$invalid_refs" -eq 0 ]]; then
+    local total_refs
+    total_refs=$(jq '[.artifacts[].refs[]] | length' "$MANIFEST")
+    echo -e "  ${GREEN}✓ 全 refs が Lean に接地済み (${total_refs} 参照)${NC}"
+  fi
+  errors=$((errors + invalid_refs))
+
+  echo ""
+
+  # --- 検査 3: パーサ忠実性 ---
+  # parse_lean_dependencies の出力を Lean ソースと直接突合
+  echo -e "${CYAN}検査 3: パーサ忠実性（parse_lean_dependencies ↔ Lean ソース）${NC}"
+
+  # パーサ出力を取得
+  local parsed_deps
+  parsed_deps=$(parse_lean_dependencies | sort -u)
+  local parsed_count
+  parsed_count=$(echo "$parsed_deps" | grep -c . || true)
+
+  # Lean ソースから期待値を直接構築（別のパーサで交差検証）
+  # 各 PropositionId について、dependencies の [...] 内を直接抽出
+  local expected_deps=""
+  # 交差検証パーサ: "| .{id} => [...]" パターンで LHS の全 ID を正確に抽出
+  # メインパーサと同じ Lean ブロックを別のロジックで解析して突合する
+  sed -n '/def PropositionId.dependencies/,/^$/p' "$ONTOLOGY" | \
+  grep '^\s*|.*=>' | \
+  while IFS= read -r line; do
+    # LHS: => の左側から全 .id を抽出
+    local lhs
+    lhs=$(echo "$line" | sed 's/ =>.*//')
+    local ids_in_line
+    ids_in_line=$(echo "$lhs" | grep -o '\.[a-z][a-z0-9]*' | sed 's/^\.//' | tr 'a-z' 'A-Z')
+
+    # RHS: => [...] の中身を抽出
+    local bracket_content
+    bracket_content=$(echo "$line" | sed 's/.*=> \[//;s/\].*//')
+    local deps_in_line
+    deps_in_line=$(echo "$bracket_content" | tr ',' '\n' | sed 's/^[[:space:]]*\.//;s/[[:space:]]*$//' | tr 'a-z' 'A-Z')
+
+    for id in $ids_in_line; do
+      [[ -z "$id" ]] && continue
+      for dep in $deps_in_line; do
+        [[ -z "$dep" ]] && continue
+        echo "$id $dep"
+      done
+    done
+  done > /tmp/manifest-trace-expected-deps.tmp
+  local expected_sorted
+  expected_sorted=$(sort -u /tmp/manifest-trace-expected-deps.tmp)
+  local expected_count
+  expected_count=$(echo "$expected_sorted" | grep -c . || true)
+
+  # 差分
+  local parser_only expected_only
+  parser_only=$(comm -23 <(echo "$parsed_deps") <(echo "$expected_sorted"))
+  expected_only=$(comm -13 <(echo "$parsed_deps") <(echo "$expected_sorted"))
+
+  if [[ -n "$parser_only" ]]; then
+    echo -e "  ${RED}✗ パーサが余分に出力:${NC}"
+    echo "$parser_only" | while read -r line; do echo "    + $line"; done
+    errors=$((errors + $(echo "$parser_only" | grep -c .)))
+  fi
+  if [[ -n "$expected_only" ]]; then
+    echo -e "  ${RED}✗ パーサが欠落:${NC}"
+    echo "$expected_only" | while read -r line; do echo "    - $line"; done
+    errors=$((errors + $(echo "$expected_only" | grep -c .)))
+  fi
+  if [[ -z "$parser_only" && -z "$expected_only" ]]; then
+    echo -e "  ${GREEN}✓ パーサ出力が Lean と完全一致 (${parsed_count} 依存)${NC}"
+  fi
+
+  rm -f /tmp/manifest-trace-expected-deps.tmp
+  echo ""
+
+  # --- 検査 4: 内部整合性 ---
+  echo -e "${CYAN}検査 4: 内部整合性（重複 ID・孤立 refs・type/path 一貫性）${NC}"
+
+  # 重複 ID チェック
+  local dup_ids
+  dup_ids=$(jq -r '.artifacts[].id' "$MANIFEST" | sort | uniq -d)
+  if [[ -n "$dup_ids" ]]; then
+    echo -e "  ${RED}✗ 重複 ID:${NC}"
+    echo "$dup_ids" | while read -r id; do echo "    - $id"; done
+    errors=$((errors + $(echo "$dup_ids" | grep -c .)))
+  else
+    echo -e "  ${GREEN}✓ ID 重複なし${NC}"
+  fi
+
+  # type と id プレフィックスの一貫性
+  local type_mismatch=0
+  while IFS='|' read -r aid atype; do
+    local expected_prefix="${atype}:"
+    if [[ "$aid" != ${expected_prefix}* ]]; then
+      echo -e "  ${YELLOW}⚠ ${aid}${NC}: type=${atype} だが ID が ${expected_prefix} で始まらない"
+      type_mismatch=$((type_mismatch + 1))
+    fi
+  done < <(jq -r '.artifacts[] | "\(.id)|\(.type)"' "$MANIFEST")
+
+  if [[ "$type_mismatch" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ ID プレフィックスと type が一貫${NC}"
+  fi
+  errors=$((errors + type_mismatch))
+
+  # ファイル存在（health と同じだが selfcheck に統合）
+  local missing=0
+  while IFS='|' read -r aid apath; do
+    if [[ ! -f "$SCRIPT_DIR/$apath" ]]; then
+      echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
+      missing=$((missing + 1))
+    fi
+  done < <(jq -r '.artifacts[] | "\(.id)|\(.path)"' "$MANIFEST")
+
+  if [[ "$missing" -eq 0 ]]; then
+    echo -e "  ${GREEN}✓ 全ファイル存在${NC}"
+  fi
+  errors=$((errors + missing))
+
+  echo ""
+
+  # --- 総合判定 ---
+  if [[ "$errors" -eq 0 ]]; then
+    echo -e "${BOLD}${GREEN}selfcheck PASS: 全検査合格${NC}"
+    return 0
+  else
+    echo -e "${BOLD}${RED}selfcheck FAIL: ${errors} 件のエラー${NC}"
+    return 1
+  fi
+}
+
 # --- メイン ---
 check_deps
 
@@ -383,6 +567,7 @@ case "${1:-help}" in
   graph)       cmd_graph ;;
   violations)  cmd_violations ;;
   health)      cmd_health ;;
+  selfcheck)   cmd_selfcheck ;;
   help|--help|-h)
     echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
     echo ""
@@ -392,6 +577,7 @@ case "${1:-help}" in
     echo "  manifest-trace graph            半順序グラフ（DOT 形式）"
     echo "  manifest-trace violations       半順序違反レポート"
     echo "  manifest-trace health           全指標サマリ"
+    echo "  manifest-trace selfcheck        自己検証（Lean を真実源として突合）"
     ;;
   *)
     die "不明なサブコマンド: $1（manifest-trace help を参照）"
