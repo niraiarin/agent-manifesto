@@ -85,6 +85,9 @@ T1 is decomposed into three axioms:
     Basis: Execution of computational agents consumes finite resources and therefore terminates in finite time (related to T7).
           Reference examples: LLM session timeouts, resource consumption limits.
     Source: manifesto.md T1 "There is no memory across sessions"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom session_bounded :
   ∀ (w : World) (s : Session),
@@ -102,6 +105,9 @@ axiom session_bounded :
           State isolation across sessions is guaranteed at the execution environment level.
           Reference example: session isolation in LLM architectures.
     Source: manifesto.md T1 "There is no continuous 'self'"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom no_cross_session_memory :
   ∀ (w : World) (e1 e2 : AuditEntry),
@@ -118,6 +124,9 @@ axiom no_cross_session_memory :
           do not directly share state. Influence propagates only indirectly through structure (T2).
     Basis: Causal independence across sessions. Each instance is an independent entity.
     Source: manifesto.md T1 "Each instance is an independent entity"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom session_no_shared_state :
   ∀ (agent1 agent2 : Agent) (action1 action2 : Action)
@@ -153,6 +162,9 @@ T2 is decomposed into two axioms:
     Basis: Persistence on the file system. Structures (documents, tests, etc.)
           reside in storage outside the session.
     Source: manifesto.md T2 "The place where improvements accumulate is within structure"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom structure_persists :
   ∀ (w w' : World) (s : Session) (st : Structure),
@@ -169,6 +181,9 @@ axiom structure_persists :
           Contrast with T1: agents are ephemeral, but structure grows.
     Basis: Monotonic epoch increase guaranteed by version control systems (git).
     Source: manifesto.md T2 "Structure outlives the agent"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom structure_accumulates :
   ∀ (w w' : World),
@@ -197,6 +212,9 @@ T3 is decomposed into two axioms:
     Basis: The working memory of computational agents is physically finite.
           Reference examples: LLM token count limits, FSM state buffer sizes.
     Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom context_finite :
   ∀ (agent : Agent),
@@ -209,6 +227,9 @@ axiom context_finite :
           When context usage exceeds capacity, the action cannot be executed.
     Basis: Inability to process when working memory is exceeded is a physical constraint.
     Source: manifesto.md T3 "A constraint on the agent's cognitive space"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom context_bounds_action :
   ∀ (agent : Agent) (action : Action) (w : World),
@@ -243,6 +264,9 @@ T4 declares as an axiom that "this multiplicity can actually occur."
 
     Since `canTransition` is defined as a relation (Prop),
     it is not constrained by Lean's function determinism and can naturally express nondeterminism.
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom output_nondeterministic :
   ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
@@ -275,6 +299,9 @@ opaque structureImproved : World → World → Prop
     Basis: Fundamental principle of control theory. Without a loop of
           measurement, comparison, and adjustment, convergence toward the goal does not occur.
     Source: manifesto.md T5 "A fundamental of control theory"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom no_improvement_without_feedback :
   ∀ (w w' : World),
@@ -307,6 +334,9 @@ def isHuman (agent : Agent) : Prop :=
           The grantedBy of all resource allocations holds a human role.
     Basis: Agreement on authority structure in human-agent collaboration.
     Source: manifesto.md T6 "Computational resources, data access, execution privileges — all are granted by humans"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom human_resource_authority :
   ∀ (w : World) (alloc : ResourceAllocation),
@@ -319,6 +349,9 @@ axiom human_resource_authority :
           For any resource allocation, there exists a transition in which a human invalidates it.
     Basis: Agreement on human final decision-making authority. Privileges can be delegated but remain revocable.
     Source: manifesto.md T6 "can be revoked by humans"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom resource_revocable :
   ∀ (w : World) (alloc : ResourceAllocation),
@@ -348,6 +381,9 @@ Time and energy.
           exists for **all** Worlds (non-vacuity, Terminology Reference §6.4).
     Basis: Physical finiteness of computational resources (CPU, memory, API quotas).
     Source: manifesto.md T7 "Resources available for task execution are finite"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom resource_finite :
   ∀ (w : World),
@@ -371,6 +407,9 @@ axiom resource_finite :
           Tasks with a precision level of 0 cannot be optimization targets (= do not constitute valid tasks).
     Basis: Structural requirement of task definitions. Tasks without a precision level cannot be optimized.
     Source: manifesto.md T8 "Whether self-imposed or externally imposed"
+    Adopted: 2026-03-22
+    Last validated: 2026-03-28
+    Review cycle: 12m
     Refutation condition: Not applicable (T₀) -/
 axiom task_has_precision :
   ∀ (task : Task),
