@@ -28,8 +28,8 @@
 ├── archive/                     # 検証済み歴史的成果物 (PoC等)
 ├── .claude/                     # Claude Code 構成
 │   ├── hooks/                   #   構造的強制 (L1安全, P2検証, P3統治, P4可観測)
-│   ├── skills/                  #   /verify, /metrics, /adjust-action-space 等
-│   ├── agents/                  #   verifier (P2独立検証)
+│   ├── skills/                  #   /evolve, /verify, /metrics, /research 等 9 種
+│   ├── agents/                  #   observer, hypothesizer, integrator, verifier
 │   └── rules/                   #   L1安全, P3学習統治
 └── scripts/                     # 自動化スクリプト
 ```
@@ -69,11 +69,28 @@
 
 ## 形式検証
 
-`lean-formalization/` に Lean 4 による形式検証を含む。
+`lean-formalization/Manifest/` に Lean 4 による形式検証を含む（17 モジュール）。
 
-- **41 公理** (T: 13, E: 4, V: 24)
-- **65+ 定理** (全て sorry-free)
+- **63 公理**, **338 定理**, **0 sorry**
 - 内部整合性を機械的に証明
+- 圧縮率 5.37x（axiomCount 基準）
+
+### 主要モジュール
+
+| モジュール | 内容 |
+|-----------|------|
+| `Ontology.lean` | 境界条件 L1–L6、型定義、半順序公理 |
+| `Observable.lean` | 変数 V1–V7 の定義、proxy 成熟度（V1/V3 formal 昇格済み） |
+| `ObservableDesign.lean` | V1–V7 の設計特性、運用閾値、Goodhart 耐性 |
+| `DesignFoundation.lean` | 設計開発基礎論 D1–D9 の形式化 |
+| `EpistemicLayer.lean` | 認識論的層（GQM, Goodhart 5層防御, proxy 卒業条件） |
+| `EvolveSkill.lean` | /evolve スキルの準拠性証明（φ₁–φ₁₇） |
+| `FormalDerivationSkill.lean` | 形式的導出スキルの準拠性証明 |
+| `Evolution.lean` | 互換性分類の合成、静止の不健全性 |
+| `Workflow.lean` | 学習ライフサイクル、統合ゲート条件 |
+| `Procedure.lean` | T₀ 縮小禁止、修正の安全性順序 |
+| `AxiomQuality.lean` | De Bruijn factor、公理品質指標 |
+| `Meta.lean` | モジュール別定理分布（SSOT） |
 
 ```bash
 export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
@@ -83,12 +100,16 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 このリポジトリは Claude Code Plugin として利用可能。
 
-**スキル:**
+**スキル（9 種）:**
+- `/evolve` — 構造の漸進的改善（Agent Teams による観察→仮説化→検証→統合→退役）
 - `/verify` — P2 独立検証（Worker/Verifier 分離）
 - `/metrics` — V1–V7 ダッシュボード
+- `/research` — Gate-Driven Research Workflow（実装前リサーチ）
+- `/formal-derivation` — Lean 4 形式的導出（Γ ⊢ φ）
 - `/adjust-action-space` — L4 行動空間の拡張/縮小提案
 - `/design-implementation-plan` — D1–D9 のプロバイダマッピング
 - `/package-plugin` — `.claude/` 構成を Plugin としてパッケージ化
+- `/instantiate-model` — マニフェストモデルのインスタンス化
 
 **プラグイン化:**
 ```bash
@@ -99,13 +120,13 @@ bash scripts/package.sh
 ## テスト
 
 ```bash
-bash tests/test-all.sh    # 全 66+ 受入テスト (Phase 1–5)
+bash tests/test-all.sh    # 全 249 受入テスト (Phase 1–5)
 ```
 
-| Phase | 対象 | 内容 |
-|-------|------|------|
-| 1 | L1 安全 | Hook 登録、破壊的操作ブロック |
-| 2 | P2 検証 | Verifier エージェント、検証スキル |
-| 3 | P4 可観測 | メトリクス収集、V1–V7 定義 |
-| 4 | P3 統治 | 互換性分類、知識ライフサイクル |
-| 5 | 動的調整 | 投資サイクル、L4 拡張/縮小 |
+| Phase | 対象 | テスト数 | 内容 |
+|-------|------|---------|------|
+| 1 | L1 安全 | 2 | Hook 登録、破壊的操作ブロック |
+| 2 | P2 検証 | 2 | Verifier エージェント、検証スキル |
+| 3 | P4 可観測 | 2 | メトリクス収集、V1–V7 定義 |
+| 4 | P3 統治 | 2 | 互換性分類、知識ライフサイクル |
+| 5 | 構造品質 | 241 | 公理品質、evolve 構造、Lean 整合性、回帰テスト |
