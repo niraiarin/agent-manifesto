@@ -138,7 +138,7 @@ def v3ProxyMaturity : ProxyMaturityLevel := .formal
     - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
     - established_proxy: 安定代理指標。運用上十分と判断。
     - formal_measurement: 正式測定方法が実装済み。
-    現在の V1 proxy は provisional_proxy。卒業条件: benchmark.json 実装 OR 運用的相関証拠（T6 判断）。 -/
+    V1 proxy は formal_measurement に昇格済み (2026-03-27, #77)。benchmark.json GQM スキーマで測定。 -/
 opaque skillQuality : World → Nat
 
 /-- V2: コンテキスト効率。有限コンテキストの活用度。
@@ -163,7 +163,7 @@ opaque contextEfficiency : World → Nat
     - provisional_proxy: 暫定代理指標。正式測定方法が未実装。
     - established_proxy: 安定代理指標。運用上十分と判断。
     - formal_measurement: 正式測定方法が実装済み。
-    現在の V3 proxy は provisional_proxy。卒業条件: ゲート合格率の実装 OR 運用的相関証拠（T6 判断）。 -/
+    V3 proxy は formal_measurement に昇格済み (2026-03-27, #77)。benchmark.json GQM スキーマで測定。 -/
 opaque outputQuality : World → Nat
 
 /-- V4: ゲート通過率。各フェーズのゲートを一発で通過する率。
