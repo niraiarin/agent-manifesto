@@ -28,19 +28,30 @@ echo "=== Packaging agent-manifesto plugin v$VERSION ==="
 rm -rf "$DEST"
 mkdir -p "$DEST/hooks" "$DEST/agents" "$DEST/skills" "$DEST/rules"
 
+# Hooks excluded from plugin (evolve-specific, not portable)
+HOOKS_EXCLUDE="evolve-metrics-recorder.sh evolve-state-loader.sh"
+
 # --- Hooks: copy scripts ---
 echo "Hooks:"
 for f in "$SRC/hooks/"*.sh; do
   [ -f "$f" ] || continue
+  HOOK_NAME=$(basename "$f")
+  # Skip evolve-specific hooks
+  if echo "$HOOKS_EXCLUDE" | grep -qw "$HOOK_NAME"; then
+    echo "  - $HOOK_NAME (excluded: evolve-specific)"
+    continue
+  fi
   cp "$f" "$DEST/hooks/"
-  chmod +x "$DEST/hooks/$(basename "$f")"
-  echo "  + $(basename "$f")"
+  chmod +x "$DEST/hooks/$HOOK_NAME"
+  echo "  + $HOOK_NAME"
 done
 
 # --- Hooks: generate hooks.json from settings.json ---
 echo "Generating hooks.json from settings.json..."
 python3 -c "
 import json, re, sys
+
+HOOKS_EXCLUDE = {'evolve-metrics-recorder.sh', 'evolve-state-loader.sh'}
 
 with open('$SRC/settings.json') as f:
     settings = json.load(f)
@@ -57,9 +68,16 @@ for event, matchers in hooks.items():
             for h in plugin_matcher['hooks']:
                 new_h = dict(h)
                 if 'command' in new_h:
-                    # .claude/hooks/xxx.sh → \${CLAUDE_PLUGIN_ROOT}/hooks/xxx.sh
                     cmd = new_h['command']
-                    cmd = re.sub(r'bash\s+\.claude/hooks/', 'bash \${CLAUDE_PLUGIN_ROOT}/hooks/', cmd)
+                    # Skip excluded hook scripts
+                    import re as _re
+                    script_match = _re.search(r'(\S+\.sh)', cmd)
+                    if script_match:
+                        script_name = script_match.group(1).split('/')[-1]
+                        if script_name in HOOKS_EXCLUDE:
+                            continue
+                    # .claude/hooks/xxx.sh → \${CLAUDE_PLUGIN_ROOT}/hooks/xxx.sh
+                    cmd = _re.sub(r'bash\s+\.claude/hooks/', 'bash \${CLAUDE_PLUGIN_ROOT}/hooks/', cmd)
                     new_h['command'] = cmd
                 new_hooks.append(new_h)
             plugin_matcher['hooks'] = new_hooks
@@ -71,13 +89,37 @@ with open('$DEST/hooks/hooks.json', 'w') as f:
 print('  hooks.json generated')
 "
 
+# Agents excluded from plugin (evolve-specific, not portable)
+AGENTS_EXCLUDE="hypothesizer integrator observer"
+
 # --- Agents ---
 echo "Agents:"
+# Copy flat .md agent files (exclude evolve-specific directories)
 for f in "$SRC/agents/"*.md; do
   [ -f "$f" ] || continue
+  AGENT_NAME=$(basename "$f" .md)
+  if echo "$AGENTS_EXCLUDE" | grep -qw "$AGENT_NAME"; then
+    echo "  - $(basename "$f") (excluded: evolve-specific)"
+    continue
+  fi
   cp "$f" "$DEST/agents/"
   echo "  + $(basename "$f")"
 done
+# Copy agent subdirectories (exclude evolve-specific)
+for d in "$SRC/agents/"*/; do
+  [ -d "$d" ] || continue
+  AGENT_DIR=$(basename "$d")
+  if echo "$AGENTS_EXCLUDE" | grep -qw "$AGENT_DIR"; then
+    echo "  - $AGENT_DIR/ (excluded: evolve-specific)"
+    continue
+  fi
+  mkdir -p "$DEST/agents/$AGENT_DIR"
+  cp -r "$d"* "$DEST/agents/$AGENT_DIR/" 2>/dev/null || true
+  echo "  + $AGENT_DIR/"
+done
+
+# Skills excluded from plugin (evolve-specific or internal)
+SKILLS_EXCLUDE="evolve formal-derivation instantiate-model"
 
 # --- Skills (exclude package-plugin itself) ---
 echo "Skills:"
@@ -87,6 +129,11 @@ for d in "$SRC/skills/"*/; do
   [ "$SKILL_NAME" = "package-plugin" ] && continue
   # workspace dirs を除外
   echo "$SKILL_NAME" | grep -q "workspace" && continue
+  # evolve-specific スキルを除外
+  if echo "$SKILLS_EXCLUDE" | grep -qw "$SKILL_NAME"; then
+    echo "  - $SKILL_NAME (excluded: evolve-specific)"
+    continue
+  fi
   if [ -f "$d/SKILL.md" ]; then
     mkdir -p "$DEST/skills/$SKILL_NAME"
     cp "$d/SKILL.md" "$DEST/skills/$SKILL_NAME/"
@@ -163,8 +210,8 @@ echo "README.md generated"
 echo ""
 echo "=== Generating artifact-manifest.json ==="
 
-# 本体の propositions を継承
-PROPOSITIONS=$(jq -r '.propositions' "$BASE/artifact-manifest.json" 2>/dev/null || echo '[]')
+# 本体の propositions を継承（-c で compact JSON として取得）
+PROPOSITIONS=$(jq -c '.propositions' "$BASE/artifact-manifest.json" 2>/dev/null || echo '[]')
 
 # パッケージ内のコンポーネントから artifacts を自動生成
 PLUGIN_ARTIFACTS="[]"
@@ -174,7 +221,7 @@ for hook_file in "$DEST"/hooks/*.sh; do
   [ -f "$hook_file" ] || continue
   name=$(basename "$hook_file" .sh)
   # ファイル内の命題 ID (T1, E1, P2 等) を refs として抽出
-  refs=$(grep -oE '[TEPLVD][0-9]+' "$hook_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  refs=$((grep -oE '[TEPLVD][0-9]+' "$hook_file" 2>/dev/null || true) | sort -u | jq -R . | jq -s .)
   PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-hook:$name" --arg path ".claude/hooks/$name.sh" --argjson refs "$refs" \
     '. + [{"id": $id, "type": "hook", "path": $path, "refs": $refs, "scope": "plugin"}]')
 done
@@ -183,20 +230,28 @@ done
 for rule_file in "$DEST"/rules/*.md; do
   [ -f "$rule_file" ] || continue
   name=$(basename "$rule_file" .md)
-  refs=$(grep -oE '[TEPLVD][0-9]+' "$rule_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  refs=$((grep -oE '[TEPLVD][0-9]+' "$rule_file" 2>/dev/null || true) | sort -u | jq -R . | jq -s .)
   PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-rule:$name" --arg path ".claude/rules/$name.md" --argjson refs "$refs" \
     '. + [{"id": $id, "type": "rule", "path": $path, "refs": $refs, "scope": "plugin"}]')
 done
 
 # agents → plugin-agent:<name>
-for agent_file in "$DEST"/agents/*.md "$DEST"/agents/*/AGENT.md; do
+# flat .md files
+for agent_file in "$DEST"/agents/*.md; do
   [ -f "$agent_file" ] || continue
-  name=$(basename "$(dirname "$agent_file")" 2>/dev/null)
-  [ "$name" = "agents" ] && name=$(basename "$agent_file" .md)
-  refs=$(grep -oE '[TEPLVD][0-9]+' "$agent_file" 2>/dev/null | sort -u | jq -R . | jq -s . || echo '[]')
+  name=$(basename "$agent_file" .md)
+  refs=$((grep -oE '[TEPLVD][0-9]+' "$agent_file" 2>/dev/null || true) | sort -u | jq -R . | jq -s .)
   PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-agent:$name" --arg path ".claude/agents/$name" --argjson refs "$refs" \
     '. + [{"id": $id, "type": "agent", "path": $path, "refs": $refs, "scope": "plugin"}]')
 done
+# subdirectory AGENT.md files (use find to avoid glob failure)
+while IFS= read -r agent_file; do
+  [ -f "$agent_file" ] || continue
+  name=$(basename "$(dirname "$agent_file")")
+  refs=$((grep -oE '[TEPLVD][0-9]+' "$agent_file" 2>/dev/null || true) | sort -u | jq -R . | jq -s .)
+  PLUGIN_ARTIFACTS=$(echo "$PLUGIN_ARTIFACTS" | jq --arg id "plugin-agent:$name" --arg path ".claude/agents/$name" --argjson refs "$refs" \
+    '. + [{"id": $id, "type": "agent", "path": $path, "refs": $refs, "scope": "plugin"}]')
+done < <(find "$DEST/agents" -mindepth 2 -name "AGENT.md" 2>/dev/null)
 
 jq -n --argjson props "$PROPOSITIONS" --argjson arts "$PLUGIN_ARTIFACTS" \
   '{version: "0.2.0", parent: "agent-manifesto", scopes: ["plugin"], propositions: $props, artifacts: $arts}' \

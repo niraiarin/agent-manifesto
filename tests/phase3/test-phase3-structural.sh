@@ -39,5 +39,63 @@ check "S3.9 Metrics skill covers V1-V7" \
   "grep -c 'V[1-7]' '$BASE/.claude/skills/metrics/SKILL.md' | xargs test 7 -le"
 
 echo ""
+echo "=== Phase 3: Plugin Drift Tests ==="
+
+DIST="$BASE/dist/agent-manifesto-plugin"
+
+# S3.10: dist/ exists (plugin has been packaged)
+check "S3.10 Plugin dist directory exists" \
+  "[ -d '$DIST' ]"
+
+# S3.11: Generic hooks are present in dist (by name, not count)
+check "S3.11 l1-safety-check.sh in dist" \
+  "[ -f '$DIST/hooks/l1-safety-check.sh' ]"
+
+check "S3.12 p3-compatibility-check.sh in dist" \
+  "[ -f '$DIST/hooks/p3-compatibility-check.sh' ]"
+
+check "S3.13 p4-metrics-collector.sh in dist" \
+  "[ -f '$DIST/hooks/p4-metrics-collector.sh' ]"
+
+# S3.14: evolve-specific hooks NOT in dist
+check "S3.14 evolve-metrics-recorder.sh excluded from dist" \
+  "[ ! -f '$DIST/hooks/evolve-metrics-recorder.sh' ]"
+
+check "S3.15 evolve-state-loader.sh excluded from dist" \
+  "[ ! -f '$DIST/hooks/evolve-state-loader.sh' ]"
+
+# S3.16: evolve-specific agents NOT in dist
+check "S3.16 hypothesizer agent excluded from dist" \
+  "[ ! -d '$DIST/agents/hypothesizer' ]"
+
+check "S3.17 integrator agent excluded from dist" \
+  "[ ! -d '$DIST/agents/integrator' ]"
+
+check "S3.18 observer agent excluded from dist" \
+  "[ ! -d '$DIST/agents/observer' ]"
+
+# S3.19: evolve-specific skills NOT in dist
+check "S3.19 evolve skill excluded from dist" \
+  "[ ! -d '$DIST/skills/evolve' ]"
+
+# S3.20: Content drift — l1-safety-check.sh in dist matches source
+check "S3.20 l1-safety-check.sh dist/src content matches" \
+  "diff -q '$BASE/.claude/hooks/l1-safety-check.sh' '$DIST/hooks/l1-safety-check.sh' >/dev/null 2>&1"
+
+check "S3.21 p3-compatibility-check.sh dist/src content matches" \
+  "diff -q '$BASE/.claude/hooks/p3-compatibility-check.sh' '$DIST/hooks/p3-compatibility-check.sh' >/dev/null 2>&1"
+
+check "S3.22 p4-metrics-collector.sh dist/src content matches" \
+  "diff -q '$BASE/.claude/hooks/p4-metrics-collector.sh' '$DIST/hooks/p4-metrics-collector.sh' >/dev/null 2>&1"
+
+# S3.23: plugin.json is valid JSON
+check "S3.23 plugin.json is valid JSON" \
+  "jq . '$DIST/plugin.json' >/dev/null 2>&1"
+
+# S3.24: hooks.json is valid JSON
+check "S3.24 hooks.json is valid JSON" \
+  "jq . '$DIST/hooks/hooks.json' >/dev/null 2>&1"
+
+echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 [ "$FAIL" -eq 0 ]
