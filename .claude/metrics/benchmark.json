@@ -300,8 +300,8 @@
         "r3_correlation_trend": "weakening for theorem-related pairs"
       },
       "priority_order": [
-        {"rank": 1, "variable": "V3", "reason": "proxy graduation is the project goal (#77). defect absence achieved but proxy still provisional"},
-        {"rank": 2, "variable": "V1", "reason": "GQM redefined (R1) but quality definition pending confirmation"},
+        {"rank": 1, "variable": "V3", "reason": "proxy graduated to formal (2026-03-27, #77). GQM-based quality metrics now active"},
+        {"rank": 2, "variable": "V1", "reason": "proxy graduated to formal (2026-03-27, #77). GQM-based quality metrics now active"},
         {"rank": 3, "variable": "V4", "reason": "100% = Goodhart example. gate_blocked logging not implemented. signal non-functional"},
         {"rank": 4, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
         {"rank": 5, "variable": "V5", "reason": "secondary to V1/V3 proxy graduation"},
@@ -317,7 +317,19 @@
         {"condition": "20 runs elapsed since last review (next: Run 83)", "action": "Full bias(t) re-evaluation"},
         {"condition": "Human explicitly requests re-evaluation", "action": "Full bias(t) re-evaluation"}
       ],
-      "next_mandatory_review": "Run 83 or V1/V3 formal graduation, whichever comes first"
+      "next_mandatory_review": "Run 83 (V1/V3 formal graduation trigger already fired at Run 63, pending human review)",
+      "trigger_log": [
+        {
+          "trigger_index": 0,
+          "condition": "V1 or V3 proxy graduates to formal",
+          "fired_at": "2026-03-27",
+          "fired_at_run": 63,
+          "detected_at_run": 73,
+          "detection_delay_runs": 10,
+          "action_taken": "pending — human review requested via /evolve Run 73",
+          "notes": "V1/V3 both graduated in #77. Detection was delayed because observe.sh had no trigger checking logic."
+        }
+      ]
     }
   },
   "deprecated_proxies": {

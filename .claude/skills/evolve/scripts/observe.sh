@@ -87,9 +87,11 @@ if [ -f "$HISTORY_FILE" ]; then
   PHASES_HYPO_SUM=$(jq -r '.phases.hypothesizer.proposals_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
   PHASES_VERIFIER_PASS_SUM=$(jq -r '.phases.verifier.pass_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
   PHASES_VERIFIER_FAIL_SUM=$(jq -r '.phases.verifier.fail_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  PHASES_NULL_COUNT=$(jq -s '[.[] | select((.phases == null) or (.phases.observer.findings_count == null))] | length' "$HISTORY_FILE" 2>/dev/null || echo 0)
 else
   EVOLVE_RUNS=0
   LAST_RUN="never"
+  PHASES_NULL_COUNT=0
 fi
 echo "  \"evolve_history\": {"
 echo "    \"total_runs\": $EVOLVE_RUNS,"
@@ -98,7 +100,8 @@ echo "    \"phases_totals\": {"
 echo "      \"observer_findings\": ${PHASES_OBSERVER_SUM:-0},"
 echo "      \"hypothesizer_proposals\": ${PHASES_HYPO_SUM:-0},"
 echo "      \"verifier_pass\": ${PHASES_VERIFIER_PASS_SUM:-0},"
-echo "      \"verifier_fail\": ${PHASES_VERIFIER_FAIL_SUM:-0}"
+echo "      \"verifier_fail\": ${PHASES_VERIFIER_FAIL_SUM:-0},"
+echo "      \"null_entries_count\": ${PHASES_NULL_COUNT:-0}"
 echo "    }"
 echo "  },"
 
@@ -327,19 +330,19 @@ if [ -f "$HISTORY_FILE" ]; then
         .[-1].tests.passed - .[-2].tests.passed
       else 0 end
   ' "$HISTORY_FILE" 2>/dev/null || echo 0)
-  # Rolling average over last 10 runs (x100 scale for integer arithmetic)
+  # Rolling average over last 10 runs (decimal, 2-digit precision via *100/100.0)
   V1_THEOREM_DELTA_AVG=$(jq -s '
     [.[] | select(.result != "observation" and .lean.theorems != null)]
     | if length > 1 then
         [range(1; length) as $i | (.[($i)].lean.theorems - .[($i) - 1].lean.theorems)]
-        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+        | [.[-10:][]] | if length > 0 then (add * 100 / length / 100.0) else 0 end
       else 0 end
   ' "$HISTORY_FILE" 2>/dev/null || echo 0)
   V1_TEST_DELTA_AVG=$(jq -s '
     [.[] | select(.result != "observation" and .tests.passed != null)]
     | if length > 1 then
         [range(1; length) as $i | (.[($i)].tests.passed - .[($i) - 1].tests.passed)]
-        | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+        | [.[-10:][]] | if length > 0 then (add * 100 / length / 100.0) else 0 end
       else 0 end
   ' "$HISTORY_FILE" 2>/dev/null || echo 0)
 fi
@@ -365,7 +368,7 @@ if [ -f "$HISTORY_FILE" ]; then
   # Rolling average rejected count over last 10 runs
   V1_REJECTED_AVG=$(jq -s '
     [.[] | select(.result != "observation") | (.rejected | length // 0)]
-    | [.[-10:][]] | if length > 0 then (add * 100 / length) else 0 end
+    | [.[-10:][]] | if length > 0 then (add * 100 / length / 100.0) else 0 end
   ' "$HISTORY_FILE" 2>/dev/null || echo 0)
 fi
 V1_VERIFIER_PASS=${V1_VERIFIER_PASS:-0}
@@ -686,6 +689,53 @@ echo "    \"header\": {\"max_run\": $MAX_RUN, \"total_entries\": $TOTAL_ENTRIES}
 echo "    \"h1_verifier\": {\"pass\": $H1_PASS, \"fail\": $H1_FAIL, \"total\": $H1_TOTAL, \"pass_rate_percent\": $H1_PASS_RATE},"
 echo "    \"h4_compatibility\": {\"conservative_extension\": $H4_CONSERVATIVE, \"compatible_change\": $H4_COMPATIBLE, \"breaking_change\": $H4_BREAKING, \"other\": $H4_OTHER, \"total\": $H4_TOTAL},"
 echo "    \"h5_valid_uuids\": $H5_VALID_UUIDS"
+echo "  },"
+
+# --- priority_bias_review: review_policy トリガー検出 ---
+BENCHMARK_FILE="$METRICS_DIR/benchmark.json"
+PBR_CURRENT_RUN=$MAX_RUN
+PBR_RUN_AT_DECISION=63
+PBR_RUNS_SINCE=$((PBR_CURRENT_RUN - PBR_RUN_AT_DECISION))
+PBR_RUN_THRESHOLD=20
+PBR_NEXT_RUN_TRIGGER=$((PBR_RUN_AT_DECISION + PBR_RUN_THRESHOLD))
+
+# Trigger 0: V1/V3 formal graduation (proxy_classification チェック)
+PBR_T0_FIRED=false
+if [ -f "$BENCHMARK_FILE" ]; then
+  V1_CLASS=$(grep -o '"proxy_classification": *"[^"]*"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null | head -1 | grep -o '"[^"]*"$' | tr -d '"' || echo "unknown")
+fi
+# observe.sh 自身の出力から proxy_classification を検出
+if grep -q '"proxy_classification": "formal"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null; then
+  PBR_T0_FIRED=true
+fi
+PBR_T0_DETAIL=""
+if [ "$PBR_T0_FIRED" = "true" ]; then
+  PBR_T0_DETAIL="V1/V3 formal 2026-03-27, snapshot predates graduation"
+fi
+
+# Trigger 2: 20 runs elapsed since last review
+PBR_T2_FIRED=false
+PBR_T2_NEXT=$PBR_NEXT_RUN_TRIGGER
+if [ "$PBR_CURRENT_RUN" -ge "$PBR_NEXT_RUN_TRIGGER" ] 2>/dev/null; then
+  PBR_T2_FIRED=true
+fi
+
+# review_needed: either trigger 0 or trigger 2 fires
+PBR_REVIEW_NEEDED=false
+if [ "$PBR_T0_FIRED" = "true" ] || [ "$PBR_T2_FIRED" = "true" ]; then
+  PBR_REVIEW_NEEDED=true
+fi
+
+echo "  \"priority_bias_review\": {"
+echo "    \"current_run\": $PBR_CURRENT_RUN,"
+echo "    \"run_at_decision\": $PBR_RUN_AT_DECISION,"
+echo "    \"runs_since_decision\": $PBR_RUNS_SINCE,"
+echo "    \"triggers_fired\": ["
+echo "      {\"trigger\": \"V1/V3 formal graduation\", \"fired\": $PBR_T0_FIRED, \"detail\": \"$PBR_T0_DETAIL\"},"
+echo "      {\"trigger\": \"20 runs elapsed\", \"fired\": $PBR_T2_FIRED, \"next\": $PBR_T2_NEXT}"
+echo "    ],"
+echo "    \"review_needed\": $PBR_REVIEW_NEEDED,"
+echo "    \"authority\": \"T6 (human decision required)\""
 echo "  },"
 
 # --- manifest-trace 指標 ---
