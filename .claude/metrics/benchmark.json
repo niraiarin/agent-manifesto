@@ -287,26 +287,26 @@
     "_model": "priority(V_i, V_j) = g(f(t), bias(t)) where f(t) = system state function, bias(t) = priority bias function",
     "_authority": "T6 delegated to AI (2026-03-27)",
     "current_snapshot": {
-      "timestamp": "2026-03-27",
-      "run_at_decision": 63,
-      "bias_setter": "AI (delegated by human via T6)",
+      "timestamp": "2026-03-30",
+      "run_at_decision": 76,
+      "bias_setter": "human (via #145 comment)",
       "f_t_observations": {
-        "system_phase": "stable operation — defect absence achieved, non-triviality is next bottleneck",
-        "theorem_growth_rate": "2.0/run (last 10) — decelerating",
-        "test_growth_rate": "4.1/run (last 10) — still active",
-        "verifier_pass_rate": "75% — stable",
+        "system_phase": "post-formal-graduation — V1/V3 formal achieved (#77), human redirected to V6 (traceability/observability)",
+        "theorem_growth_rate": "1.5/run (last 10) — decelerating",
+        "test_growth_rate": "4.1/run (last 10) — Run 76 added +20",
+        "verifier_pass_rate": "77% — stable",
         "success_rate": "98% — saturated",
-        "test_pass_rate": "99-100% — near saturation",
+        "test_pass_rate": "100% — saturated",
         "r3_correlation_trend": "weakening for theorem-related pairs"
       },
       "priority_order": [
-        {"rank": 1, "variable": "V3", "reason": "proxy graduated to formal (2026-03-27, #77). GQM-based quality metrics now active"},
-        {"rank": 2, "variable": "V1", "reason": "proxy graduated to formal (2026-03-27, #77). GQM-based quality metrics now active"},
-        {"rank": 3, "variable": "V4", "reason": "100% = Goodhart example. gate_blocked logging not implemented. signal non-functional"},
-        {"rank": 4, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
-        {"rank": 5, "variable": "V5", "reason": "secondary to V1/V3 proxy graduation"},
-        {"rank": 6, "variable": "V6", "reason": "secondary to V1/V3 proxy graduation"},
-        {"rank": 7, "variable": "V7", "reason": "secondary to V1/V3 proxy graduation"}
+        {"rank": 1, "variable": "V6", "reason": "human directive (#145): V6 priority with traceability and observability focus"},
+        {"rank": 2, "variable": "V3", "reason": "formal graduation achieved (#77). Maintain quality but no longer top priority"},
+        {"rank": 3, "variable": "V1", "reason": "formal graduation achieved (#77). Maintain quality but no longer top priority"},
+        {"rank": 4, "variable": "V4", "reason": "gate_blocked logging implemented (PR #76). Signal now functional"},
+        {"rank": 5, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
+        {"rank": 6, "variable": "V5", "reason": "secondary — observability improvements may lift this indirectly"},
+        {"rank": 7, "variable": "V7", "reason": "secondary"}
       ]
     },
     "review_policy": {
@@ -317,7 +317,7 @@
         {"condition": "20 runs elapsed since last review (next: Run 83)", "action": "Full bias(t) re-evaluation"},
         {"condition": "Human explicitly requests re-evaluation", "action": "Full bias(t) re-evaluation"}
       ],
-      "next_mandatory_review": "Run 83 (V1/V3 formal graduation trigger already fired at Run 63, pending human review)",
+      "next_mandatory_review": "Run 96 (20 runs from Run 76)",
       "trigger_log": [
         {
           "trigger_index": 0,
@@ -325,9 +325,8 @@
           "fired_at": "2026-03-27",
           "fired_at_run": 63,
           "detected_at_run": 73,
-          "detection_delay_runs": 10,
-          "action_taken": "pending — human review requested via /evolve Run 73",
-          "notes": "V1/V3 both graduated in #77. Detection was delayed because observe.sh had no trigger checking logic."
+          "action_taken": "resolved — human reviewed via #145 at Run 76. V6 prioritized.",
+          "notes": "V1/V3 both graduated in #77. Human response: 'V6を優先したい。様々な観点・視点におけるトレーサビリティと可観測性も関連する。'"
         }
       ]
     }
