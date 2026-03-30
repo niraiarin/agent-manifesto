@@ -63,7 +63,8 @@ theorem current_compression :
 /-- 圧縮比 ≥ 200 (= 2.0x) は暫定的な健全条件 (H7)。 -/
 theorem current_compression_healthy :
   compressionRatio currentProfile ≥ 200 := by
-  simp [compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms]
+  simp [compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms,
+        currentTheoremDistribution, TheoremDistribution.total]
 
 -- ============================================================
 -- 指標 2: Coverage（網羅率）
@@ -356,7 +357,8 @@ theorem current_quality_healthy_static :
   currentQuality.compressionRatio ≥ 200 ∧
   currentQuality.coveragePercent ≥ 70 ∧
   currentQuality.sorryCount = 0 := by
-  simp [currentQuality, compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms]
+  simp [currentQuality, compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms,
+        currentTheoremDistribution, TheoremDistribution.total]
 
 -- ============================================================
 -- SelfGoverning 自己適用

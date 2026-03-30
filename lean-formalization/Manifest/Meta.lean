@@ -89,38 +89,17 @@ structure AxiomSystemProfile where
   sorryCount            : Nat
   deriving BEq, Repr
 
-/-- 現在の公理系のプロファイル。 -/
-def currentProfile : AxiomSystemProfile :=
-  { constraintCount  := 13   -- T1–T8 (Axioms.lean: 13 axioms)
-    empiricalCount   := 4    -- E1–E2 (EmpiricalPostulates.lean: 4 axioms)
-    observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
-    applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
-    structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
-    theoremCount     := 343  -- 全モジュール合計 (remote 316 + Observable 分割で +15 ObservableDesign + G1b-1 +3 + remote各モジュール調整 + Run 71 Observable +4 + Run 61 Ontology +1)
-    sorryCount       := 0 }
-
 /-- 公理系の総 axiom 数。 -/
 def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
   p.constraintCount + p.empiricalCount + p.observableCount + p.applicationCount + p.structuralCount
 
-/-- 現在の公理系の総 axiom 数は 63。 -/
-theorem current_total_axioms :
-  currentProfile.totalAxioms = 63 := by rfl
-
-/-- 現在の公理系の定理数は 343。 -/
-theorem current_theorem_count :
-  currentProfile.theoremCount = 343 := by rfl
-
-/-- sorry が 0 であることの証明。 -/
-theorem current_sorry_free :
-  currentProfile.sorryCount = 0 := by rfl
-
 -- ============================================================
--- モジュール別定理分布
+-- モジュール別定理分布（currentProfile.theoremCount の計算に先行して定義）
 -- ============================================================
 
-/-- 各 Lean モジュールの定理数。totalAxioms の補完として、
-    定理がどのモジュールに分布しているかを型レベルで記録する。 -/
+/-- 各 Lean モジュールの定理数。
+    定理がどのモジュールに分布しているかを型レベルで記録する。
+    scripts/sync-counts.sh が grep で算出した値を自動同期する。 -/
 structure TheoremDistribution where
   ontologyM              : Nat  -- Ontology.lean
   axiomsM                : Nat  -- Axioms.lean
@@ -148,26 +127,55 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
   d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM +
   d.epistemicLayerM
 
-/-- 現在のモジュール別定理分布。 -/
+/-- 現在のモジュール別定理分布。
+    scripts/sync-counts.sh が各モジュールの定理数を自動更新する。 -/
 def currentTheoremDistribution : TheoremDistribution :=
-  { ontologyM              := 21  -- +4: D4/D5/D6 半順序型クラスインスタンス (Run 61 追加), +1: Run 71
+  { ontologyM              := 21
     axiomsM                := 0
     empiricalPostulatesM   := 0
-    observableM            := 30  -- Observable.lean (15) + ObservableDesign.lean (15)
+    observableM            := 30  -- Observable.lean + ObservableDesign.lean
     principlesM            := 14
-    metaM                  := 12  -- theorem_distribution_consistent を含む
+    metaM                  := 12
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 56  -- +15: D4/D5/D6 半順序インスタンス定理 (Run 61 追加)
-    procedureM             := 25  -- +6: AGM Structure拡張 (manifest_contraction_forbidden' etc.)
+    designFoundationM      := 56
+    procedureM             := 25
     evolutionM             := 16
-    evolveSkillM           := 29  -- +6: φ₁₂-φ₁₇ ループバック再設計 (Issue #7, #8, #9)
-    workflowM              := 7   -- +2: no_self_knowledge_transition, knowledge_full_cycle_exists
+    evolveSkillM           := 29
+    workflowM              := 7
     axiomQualityM          := 11
-    epistemicLayerM        := 47 }  -- G1-G4: 6性質 + typeclass + LayerAssignment + 互換性 (Issues #35-#38)
+    epistemicLayerM        := 47 }
 
-/-- モジュール別定理数の合計が currentProfile.theoremCount と一致する。 -/
+-- ============================================================
+-- 現在の公理系プロファイル
+-- ============================================================
+
+/-- 現在の公理系のプロファイル。
+    theoremCount は currentTheoremDistribution.total から自動計算される。
+    axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
+def currentProfile : AxiomSystemProfile :=
+  { constraintCount  := 13
+    empiricalCount   := 4
+    observableCount  := 25
+    applicationCount := 20
+    structuralCount  := 1
+    theoremCount     := currentTheoremDistribution.total  -- 自動計算
+    sorryCount       := 0 }
+
+/-- 現在の公理系の総 axiom 数は 63。 -/
+theorem current_total_axioms :
+  currentProfile.totalAxioms = 63 := by rfl
+
+/-- 現在の公理系の定理数は分布の合計と一致する。 -/
+theorem current_theorem_count :
+  currentProfile.theoremCount = 343 := by rfl
+
+/-- sorry が 0 であることの証明。 -/
+theorem current_sorry_free :
+  currentProfile.sorryCount = 0 := by rfl
+
+/-- モジュール別定理数の合計が currentProfile.theoremCount と一致する（定義から自明）。 -/
 theorem theorem_distribution_consistent :
   currentTheoremDistribution.total = currentProfile.theoremCount := by rfl
 

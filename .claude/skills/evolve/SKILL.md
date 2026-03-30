@@ -393,11 +393,12 @@ PASS_LIST が 0 件 →
 
 Integrator は以下を実行:
 1. 改善を構造に適用
-2. `lake build Manifest` で Lean ビルド成功を確認
-3. `bash tests/test-all.sh` でテスト全通過を確認
-4. git commit（互換性分類付き）
-5. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
-6. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
+2. `bash scripts/sync-counts.sh --update` でカウント同期（定理数・公理数・テスト数を自動算出・反映）
+3. `lake build Manifest` で Lean ビルド成功を確認
+4. `bash tests/test-all.sh` でテスト全通過を確認
+5. git commit（互換性分類付き）
+6. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
+7. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
 
 **evolve-history.jsonl 記録の不変条件:**
 - evolve-history.jsonl には 1 Run につき 1 エントリのみ追加する。暫定記録は行わない。
