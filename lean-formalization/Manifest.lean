@@ -18,6 +18,7 @@ import Manifest.FormalDerivationSkill
 import Manifest.ConformanceVerification
 import Manifest.AxiomQuality
 import Manifest.EvolveSkill
+import Manifest.TaskClassification
 
 /-!
 # Agent Manifest — Formal Specification

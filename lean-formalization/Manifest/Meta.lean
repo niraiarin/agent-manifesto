@@ -117,6 +117,7 @@ structure TheoremDistribution where
   workflowM              : Nat  -- Workflow.lean
   axiomQualityM          : Nat  -- AxiomQuality.lean
   epistemicLayerM        : Nat  -- EpistemicLayer.lean
+  taskClassificationM    : Nat  -- TaskClassification.lean
   deriving BEq, Repr
 
 /-- モジュール別定理数の合計。 -/
@@ -125,7 +126,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
   d.principlesM + d.metaM + d.terminologyM + d.formalDerivationSkillM +
   d.conformanceVerificationM + d.designFoundationM + d.procedureM +
   d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM +
-  d.epistemicLayerM
+  d.epistemicLayerM + d.taskClassificationM
 
 /-- 現在のモジュール別定理分布。
     scripts/sync-counts.sh が各モジュールの定理数を自動更新する。 -/
@@ -145,7 +146,8 @@ def currentTheoremDistribution : TheoremDistribution :=
     evolveSkillM           := 29
     workflowM              := 7
     axiomQualityM          := 11
-    epistemicLayerM        := 47 }
+    epistemicLayerM        := 47
+    taskClassificationM    := 9 }
 
 -- ============================================================
 -- 現在の公理系プロファイル
@@ -158,18 +160,18 @@ def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 13
     empiricalCount   := 4
     observableCount  := 25
-    applicationCount := 20
+    applicationCount := 22
     structuralCount  := 1
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
 /-- 現在の公理系の総 axiom 数は 63。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 63 := by rfl
+  currentProfile.totalAxioms = 65 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 343 := by rfl
+  currentProfile.theoremCount = 352 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :

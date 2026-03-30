@@ -169,6 +169,7 @@ update_module_count "evolveSkillM" "EvolveSkill.lean"
 update_module_count "workflowM" "Workflow.lean"
 update_module_count "axiomQualityM" "AxiomQuality.lean"
 update_module_count "epistemicLayerM" "EpistemicLayer.lean"
+update_module_count "taskClassificationM" "TaskClassification.lean"
 
 # --- Pattern 7: Meta.lean axiom sub-counts (preserve whitespace + comments) ---
 update_axiom_count() {
@@ -183,7 +184,7 @@ update_axiom_count() {
 update_axiom_count "constraintCount" "Axioms.lean"
 update_axiom_count "empiricalCount" "EmpiricalPostulates.lean"
 update_axiom_count "observableCount" "Observable.lean ObservableDesign.lean"
-update_axiom_count "applicationCount" "FormalDerivationSkill.lean ConformanceVerification.lean"
+update_axiom_count "applicationCount" "FormalDerivationSkill.lean ConformanceVerification.lean TaskClassification.lean"
 update_axiom_count "structuralCount" "Ontology.lean"
 
 # --- Pattern 8: AxiomQuality.lean compression ratio ---
