@@ -1,14 +1,11 @@
 ---
 name: design-implementation-plan
 description: >
-  Generate a manifest-compliant design implementation plan for any platform.
-  Maps D1–D9 design principles to provider primitives (Claude Code, GitHub Actions,
-  CI/CD, etc.) with phased roadmap, test cases, and V1–V7 measurement design.
-  Use this skill whenever the user wants to: create an implementation plan or roadmap
-  for the manifesto, apply L1–L6 or V1–V7 to a real environment, map D1–D9 to a
-  specific provider, design Worker/Verifier separation, plan phased implementation,
-  set up manifest compliance for a project, or asks "what should we implement first".
-  Always use this for any request about building or designing a manifest-compliant system.
+  マニフェスト準拠の設計実装計画書を任意のプラットフォーム向けに生成する。
+  D1-D9 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に
+  マッピングし、フェーズ別ロードマップ、テストケース、V1-V7 計測設計を含む計画書を出力する。
+  「実装計画」「設計計画」「ロードマップ」「design plan」「implementation plan」
+  「何から実装すべき」で起動。
 ---
 
 # Design Implementation Plan Generator
