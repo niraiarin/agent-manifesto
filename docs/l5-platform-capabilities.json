@@ -1,0 +1,190 @@
+{
+  "$schema": "./l5-platform-capabilities.schema.json",
+  "description": "L5 Platform Boundary — structurallyQueryable SSOT. Source: Ontology.lean L5 section.",
+  "version": "0.2.0",
+  "fallback": {
+    "description": "Fallback strategy for L5 incompleteness. Applied when platform is unknown or primitives are missing.",
+    "rules": [
+      {
+        "id": "unknown_platform",
+        "condition": "Platform not in platforms table",
+        "action": "Use _default platform (minimal universal primitives)",
+        "safety": "Conservative: assumes only universally available tools"
+      },
+      {
+        "id": "missing_primitive",
+        "condition": "Required enforcement layer has no primitives for this platform",
+        "action": "Fall back to next lower enforcement layer",
+        "safety": "Degrades gracefully: structural→procedural→normative. Never upgrades.",
+        "note": "D1 minimumEnforcement is a MINIMUM. Fallback means the minimum is not met — flag to human (T6)"
+      },
+      {
+        "id": "uncertain_capability",
+        "condition": "Capability existence is unknown",
+        "action": "Treat as absent. Use normative (most conservative) + flag to human",
+        "safety": "Conservative: avoids relying on unverified capabilities"
+      }
+    ],
+    "invariant": "Fallback ONLY degrades enforcement (structural→procedural→normative), NEVER upgrades. If minimumEnforcement cannot be met, escalate to human (T6)."
+  },
+  "platforms": {
+    "_default": {
+      "description": "Fallback platform for unknown environments. Assumes only universally available tooling.",
+      "capabilities": {
+        "skill_system": false,
+        "persistent_memory": false,
+        "instruction_file": false,
+        "sub_agents": false,
+        "hooks": false,
+        "mcp": false,
+        "model_selection": "unknown"
+      },
+      "enforcement_primitives": {
+        "structural": {
+          "description": "Only git hooks and CI — universally available.",
+          "primitives": [
+            { "id": "git_hooks", "description": "Standard git hooks (pre-commit, etc.)", "deterministic": true },
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "procedural": {
+          "description": "CI only. No built-in agent features.",
+          "primitives": [
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "normative": {
+          "description": "No guaranteed normative channel. Human instruction only.",
+          "primitives": [
+            { "id": "human_instruction", "description": "Direct human instruction per session", "deterministic": false }
+          ]
+        }
+      },
+      "task_routing": {
+        "deterministic": ["git_hooks", "ci_gates", "cli_scripts"],
+        "bounded": ["ci_gates"],
+        "judgmental": ["human_instruction"]
+      }
+    },
+    "claude-code": {
+      "description": "Anthropic Claude Code CLI / Desktop / Web",
+      "capabilities": {
+        "skill_system": true,
+        "persistent_memory": true,
+        "instruction_file": true,
+        "sub_agents": true,
+        "hooks": true,
+        "mcp": true,
+        "model_selection": "anthropic-fixed"
+      },
+      "enforcement_primitives": {
+        "structural": {
+          "description": "Violation physically impossible. contextCost = 0.",
+          "primitives": [
+            { "id": "hooks", "description": "PreToolUse/PostToolUse event handlers", "deterministic": true },
+            { "id": "permissions", "description": "allow/deny rules in settings.json", "deterministic": true },
+            { "id": "sandbox", "description": "OS-level filesystem restriction", "deterministic": true }
+          ]
+        },
+        "procedural": {
+          "description": "Violation possible but detected/blocked. contextCost = 1.",
+          "primitives": [
+            { "id": "skills", "description": "Reusable knowledge modules with workflow judgment", "deterministic": false },
+            { "id": "sub_agents", "description": "Agent tool for independent verification (P2)", "deterministic": false },
+            { "id": "gates", "description": "Automated quality gates (test, lint, build)", "deterministic": true }
+          ]
+        },
+        "normative": {
+          "description": "Compliance is probabilistic (P5). contextCost = 2.",
+          "primitives": [
+            { "id": "rules", "description": ".claude/rules/ — loaded every session", "deterministic": false },
+            { "id": "instruction_file", "description": "CLAUDE.md — project-level instructions", "deterministic": false },
+            { "id": "memory", "description": "MEMORY.md — persistent cross-session notes", "deterministic": false }
+          ]
+        }
+      },
+      "task_routing": {
+        "deterministic": ["hooks", "permissions", "sandbox", "gates", "cli_scripts"],
+        "bounded": ["skills", "sub_agents", "gates"],
+        "judgmental": ["skills", "sub_agents", "rules", "instruction_file"]
+      }
+    },
+    "codex-cli": {
+      "description": "OpenAI Codex CLI",
+      "capabilities": {
+        "skill_system": false,
+        "persistent_memory": false,
+        "instruction_file": true,
+        "sub_agents": false,
+        "hooks": false,
+        "mcp": false,
+        "model_selection": "openai-fixed"
+      },
+      "enforcement_primitives": {
+        "structural": {
+          "description": "Limited to external tooling (git hooks, CI).",
+          "primitives": [
+            { "id": "git_hooks", "description": "Standard git hooks (pre-commit, etc.)", "deterministic": true },
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "procedural": {
+          "description": "No built-in sub-agents or skill system.",
+          "primitives": [
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "normative": {
+          "description": "Instruction file only.",
+          "primitives": [
+            { "id": "instruction_file", "description": "AGENTS.md", "deterministic": false }
+          ]
+        }
+      },
+      "task_routing": {
+        "deterministic": ["git_hooks", "ci_gates", "cli_scripts"],
+        "bounded": ["ci_gates"],
+        "judgmental": ["instruction_file"]
+      }
+    },
+    "gemini-cli": {
+      "description": "Google Gemini CLI",
+      "capabilities": {
+        "skill_system": false,
+        "persistent_memory": false,
+        "instruction_file": true,
+        "sub_agents": false,
+        "hooks": false,
+        "mcp": true,
+        "model_selection": "google-fixed"
+      },
+      "enforcement_primitives": {
+        "structural": {
+          "description": "Limited to external tooling (git hooks, CI).",
+          "primitives": [
+            { "id": "git_hooks", "description": "Standard git hooks", "deterministic": true },
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "procedural": {
+          "description": "MCP servers can provide procedural enforcement.",
+          "primitives": [
+            { "id": "mcp_servers", "description": "MCP protocol-mediated integrations", "deterministic": false },
+            { "id": "ci_gates", "description": "CI/CD pipeline checks", "deterministic": true }
+          ]
+        },
+        "normative": {
+          "description": "Instruction file + MCP.",
+          "primitives": [
+            { "id": "instruction_file", "description": "GEMINI.md", "deterministic": false }
+          ]
+        }
+      },
+      "task_routing": {
+        "deterministic": ["git_hooks", "ci_gates", "cli_scripts"],
+        "bounded": ["mcp_servers", "ci_gates"],
+        "judgmental": ["instruction_file", "mcp_servers"]
+      }
+    }
+  }
+}
