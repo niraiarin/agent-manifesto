@@ -31,7 +31,7 @@ This document provides a navigable, hyperlinked view of the Agent Manifesto's
 Lean 4 formalization. The project encodes a set of axioms, boundary conditions,
 observable variables, and design principles as formal Lean definitions and theorems.
 
-*Project statistics:* 65 axioms, 352 theorems, 0 sorry.
+*Project statistics:* 63 axioms, 353 theorems, 0 sorry.
 
 # Structure
 

@@ -147,7 +147,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     workflowM              := 7
     axiomQualityM          := 11
     epistemicLayerM        := 47
-    taskClassificationM    := 9 }
+    taskClassificationM    := 10 }
 
 -- ============================================================
 -- 現在の公理系プロファイル
@@ -160,18 +160,18 @@ def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 13
     empiricalCount   := 4
     observableCount  := 25
-    applicationCount := 22
+    applicationCount := 20
     structuralCount  := 1
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
 /-- 現在の公理系の総 axiom 数は 63。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 65 := by rfl
+  currentProfile.totalAxioms = 63 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 352 := by rfl
+  currentProfile.theoremCount = 353 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :

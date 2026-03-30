@@ -87,27 +87,24 @@ theorem observable_implies_automatable :
     ∃ (tc : TaskAutomationClass), tc = .deterministic := by
   intro _ _; exact ⟨.deterministic, rfl⟩
 
-/-- 逆: deterministic に分類されるなら成功条件は Observable でなければならない。
-    決定論的でないものを誤分類することを防ぐ。 -/
-axiom deterministic_requires_observable :
-  ∀ (P : TaskSuccessCondition),
-    (∀ tc : TaskAutomationClass, tc = .deterministic) →
-    Observable P
-
 -- ============================================================
 -- 構造的強制の義務（核心の命題）
 -- ============================================================
 
-/-- **核心公理**: 決定論的タスクは構造的強制レイヤーで実行されなければならない。
+/-- 決定論的タスクは構造的強制レイヤーで実行されなければならない。
 
     「LLM がやるべきでないことを LLM にやらせてはならない」の形式化。
 
     D11 (contextCost) + T3 (context_finite) + T7 (resource_finite) から:
-    決定論的タスクを normative 層で実行することは非効率的リソース使用。 -/
-axiom deterministic_must_be_structural :
+    決定論的タスクを normative 層で実行することは非効率的リソース使用。
+
+    Note: taskMinEnforcement の定義から直接導出可能（定義的真理）。
+    axiom ではなく theorem として証明する（公理衛生: nonTautological）。 -/
+theorem deterministic_must_be_structural :
   ∀ (tc : TaskAutomationClass),
     tc = .deterministic →
-    (taskMinEnforcement tc).strength ≥ EnforcementLayer.structural.strength
+    (taskMinEnforcement tc).strength ≥ EnforcementLayer.structural.strength := by
+  intro tc h; subst h; decide
 
 /-- 対偶: 強制力が structural 未満のタスクは deterministic ではない。 -/
 theorem weak_enforcement_not_deterministic :

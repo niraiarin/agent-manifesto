@@ -143,6 +143,14 @@ sync_pattern "$META" \
   "s/\(currentProfile\.totalAxioms = \)[0-9][0-9]*/\1${AXIOM_COUNT}/" \
   "Meta.lean: current_total_axioms"
 
+# --- Pattern 5b: Meta.lean doc comments ---
+sync_pattern "$META" \
+  "s/総 axiom 数は [0-9][0-9]*/総 axiom 数は ${AXIOM_COUNT}/" \
+  "Meta.lean: axiom doc comment"
+sync_pattern "$META" \
+  "s/定理数は [0-9][0-9]*/定理数は ${THEOREM_COUNT}/" \
+  "Meta.lean: theorem doc comment"
+
 # --- Pattern 6: Meta.lean per-module theorem distribution (preserve whitespace + comments) ---
 update_module_count() {
   local key="$1" files="$2"
@@ -186,6 +194,34 @@ update_axiom_count "empiricalCount" "EmpiricalPostulates.lean"
 update_axiom_count "observableCount" "Observable.lean ObservableDesign.lean"
 update_axiom_count "applicationCount" "FormalDerivationSkill.lean ConformanceVerification.lean TaskClassification.lean"
 update_axiom_count "structuralCount" "Ontology.lean"
+
+# --- Pattern 7b: README.md counts ---
+sync_pattern "$BASE/README.md" \
+  "$ATS" \
+  "README.md: axioms/theorems/sorry"
+sync_pattern "$BASE/README.md" \
+  "s/Lean 4 形式検証 ([0-9][0-9]* axioms, [0-9][0-9]* theorems)/Lean 4 形式検証 (${AXIOM_COUNT} axioms, ${THEOREM_COUNT} theorems)/" \
+  "README.md: tree stats"
+
+# --- Pattern 7c: lean-formalization/README.md counts ---
+LEAN_README="$LEAN_DIR/README.md"
+sync_pattern "$LEAN_README" \
+  "s/| axiom | [0-9][0-9]* /| axiom | ${AXIOM_COUNT} /" \
+  "lean-formalization/README.md: axiom count"
+sync_pattern "$LEAN_README" \
+  "s/| theorem | [0-9][0-9]* /| theorem | ${THEOREM_COUNT} /" \
+  "lean-formalization/README.md: theorem count"
+sync_pattern "$LEAN_README" \
+  "s/[0-9][0-9]* theorems \/ [0-9][0-9]* axioms/${THEOREM_COUNT} theorems \/ ${AXIOM_COUNT} axioms/" \
+  "lean-formalization/README.md: compression text"
+sync_pattern "$LEAN_README" \
+  "s/[0-9.]*x ([0-9][0-9]* theorems/${COMPRESSION_DECIMAL}x (${THEOREM_COUNT} theorems/" \
+  "lean-formalization/README.md: compression ratio"
+if [[ -n "${TEST_COUNT:-}" ]]; then
+  sync_pattern "$LEAN_README" \
+    "s/[0-9][0-9]* acceptance tests/${TEST_COUNT} acceptance tests/" \
+    "lean-formalization/README.md: test count"
+fi
 
 # --- Pattern 8: AxiomQuality.lean compression ratio ---
 AQ="$LEAN_DIR/Manifest/AxiomQuality.lean"
