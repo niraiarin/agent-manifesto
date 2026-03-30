@@ -172,8 +172,25 @@ YYYY-MM-DD HH:MM
 - [ ] Observer の観察報告に含まれる failure_patterns を確認した
 - [ ] 同一 failure_type または同一 condition に該当しないことを確認した
 - [ ] Lean 定理を含む場合: trivially-true 回避チェックリスト（下記「制約」参照）を通過した
+- [ ] D.1 の必須事前クエリを実行し、過去の hypothesis_error パターンとの衝突がないことを確認した
 
 > 注記: D と制約セクションの「既知の失敗パターンの回避」は同一の情報源（evolve-history.jsonl の rejected エントリ）を参照する。
+
+#### D.1 必須事前クエリ（改善案設計の前に実行すること）
+
+以下のコマンドを実行し、過去の hypothesis_error パターンを確認する:
+
+```bash
+# 過去の hypothesis_error rejected エントリを一覧表示
+jq -r 'select(.rejected) | .rejected[] | select(.failure_type == "hypothesis_error") | "Run \(.title): \(.reason // "no reason" | .[0:120])"' .claude/metrics/evolve-history.jsonl 2>/dev/null
+
+# failure_type 別の未解決件数
+jq -r 'select(.rejected) | .rejected[] | select((.resolved // false) != true) | .failure_type // "none"' .claude/metrics/evolve-history.jsonl 2>/dev/null | sort | uniq -c | sort -rn
+```
+
+出力を確認し、提案する改善案が以下に該当しないことを確認する:
+- 同一タイトルまたは同一内容の過去 reject エントリ
+- 同一 failure_type に 2 回以上該当するパターン（段階的抑止ルール適用対象）
 
 ### E. 概念の妥当性検証
 

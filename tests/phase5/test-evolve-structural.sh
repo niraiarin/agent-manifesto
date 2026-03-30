@@ -252,6 +252,15 @@ grep -q "^theorem observable_not" "$OBSERVABLE" && pass "observable_not exists i
 grep -q "^theorem observable_or" "$OBSERVABLE" && pass "observable_or exists in Observable.lean" || fail "observable_or not found in Observable.lean"
 grep -q "^theorem degradation_detectable_observable" "$OBSERVABLE" && pass "degradation_detectable_observable exists in Observable.lean" || fail "degradation_detectable_observable not found in Observable.lean"
 
+# T3/T4/T5/T8/E2 axiom アサーション（Run 76）
+AXIOMS_FILE="lean-formalization/Manifest/Axioms.lean"
+EMPIRICAL_FILE="lean-formalization/Manifest/EmpiricalPostulates.lean"
+grep -q "^axiom context_finite" "$AXIOMS_FILE" && pass "T3: context_finite axiom exists in Axioms.lean" || fail "T3: context_finite axiom not found in Axioms.lean"
+grep -q "^axiom output_nondeterministic" "$AXIOMS_FILE" && pass "T4: output_nondeterministic axiom exists in Axioms.lean" || fail "T4: output_nondeterministic axiom not found in Axioms.lean"
+grep -q "^axiom no_improvement_without_feedback" "$AXIOMS_FILE" && pass "T5: no_improvement_without_feedback axiom exists in Axioms.lean" || fail "T5: no_improvement_without_feedback axiom not found in Axioms.lean"
+grep -q "^axiom task_has_precision" "$AXIOMS_FILE" && pass "T8: task_has_precision axiom exists in Axioms.lean" || fail "T8: task_has_precision axiom not found in Axioms.lean"
+grep -q "^axiom capability_risk_coscaling" "$EMPIRICAL_FILE" && pass "E2: capability_risk_coscaling axiom exists in EmpiricalPostulates.lean" || fail "E2: capability_risk_coscaling axiom not found in EmpiricalPostulates.lean"
+
 echo ""
 
 # ============================================================
@@ -681,6 +690,20 @@ grep -q "^theorem designStage_le_refl" "$DESIGN_FOUNDATION" && pass "D6: designS
 grep -q "^theorem designStage_le_trans" "$DESIGN_FOUNDATION" && pass "D6: designStage_le_trans" || fail "D6: designStage_le_trans not found"
 grep -q "^theorem designStage_le_antisymm" "$DESIGN_FOUNDATION" && pass "D6: designStage_le_antisymm" || fail "D6: designStage_le_antisymm not found"
 grep -q "^theorem designStage_lt_iff_le_not_le" "$DESIGN_FOUNDATION" && pass "D6: designStage_lt_iff_le_not_le" || fail "D6: designStage_lt_iff_le_not_le not found"
+
+echo ""
+
+# ============================================================
+# Section 16: TaskClassification.lean 構造テスト（Run 76）
+# ============================================================
+echo "--- Section 16: TaskClassification.lean ---"
+
+TASK_CLASS="lean-formalization/Manifest/TaskClassification.lean"
+
+grep -q "^inductive TaskAutomationClass" "$TASK_CLASS" && pass "TC.2: TaskAutomationClass inductive exists in TaskClassification.lean" || fail "TC.2: TaskAutomationClass not found in TaskClassification.lean"
+grep -q "^def taskMinEnforcement" "$TASK_CLASS" && pass "TC.3: taskMinEnforcement defined in TaskClassification.lean" || fail "TC.3: taskMinEnforcement not found in TaskClassification.lean"
+grep -q "^theorem deterministic_must_be_structural" "$TASK_CLASS" && pass "TC.4: deterministic_must_be_structural theorem exists" || fail "TC.4: deterministic_must_be_structural not found in TaskClassification.lean"
+grep -q "^theorem deterministic_minimizes_cost" "$TASK_CLASS" && pass "TC.5: deterministic_minimizes_cost theorem exists" || fail "TC.5: deterministic_minimizes_cost not found in TaskClassification.lean"
 
 echo ""
 

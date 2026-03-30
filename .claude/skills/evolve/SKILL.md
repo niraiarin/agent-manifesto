@@ -378,6 +378,8 @@ Step 1: 根本原因を分類する:
 - 同一 failure_subtype に該当する改善案を提案する場合、evolve-history.jsonl の該当 FAIL エントリを事前確認し、繰り返し失敗の回避策を明示すること
 - 特に `H_repeated_failure` は段階的抑止ルール（SKILL.md Step 2）に違反するため提案前に必ず過去の FAIL 履歴を確認すること
 
+**Integrator 記録義務**: FAIL 判定時に evolve-history.jsonl の rejected エントリに failure_subtype を必ず付与すること。SKILL.md の failure_subtype テーブル（H_no_pre_verification, H_trivially_true, H_redundancy_check, H_impl_specification, H_repeated_failure, H_wrong_premise, H_technical_validation, O_data_quality）から最も近いものを選択する。該当なしの場合は新サブタイプを提案し、テーブルに追加する（conservative extension として）
+
 Step 2: ループバック判定（EvolveSkill.lean `loopbackTarget`）:
 - observation_error → Observer を再起動し、当該項目を再観察（Phase 1）
 - hypothesis_error → Hypothesizer を再起動し、正確なデータで再設計（Phase 2）
