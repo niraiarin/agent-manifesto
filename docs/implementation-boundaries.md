@@ -245,7 +245,9 @@ A Category 3 skill using protocol-mediated integration is the **intended pattern
 
 ## Environment Applicability
 
-CLI-centric guidance applies differently across environments. The applicability depends on L5（プラットフォーム境界）:
+CLI-centric guidance applies differently across environments. The applicability depends on L5（プラットフォーム境界）.
+
+**L5 SSOT**: Platform capabilities, enforcement primitives, and task routing are defined in `docs/l5-platform-capabilities.json` (structurallyQueryable). Query with `scripts/l5-query.sh`.
 
 | Guidance | CLI-capable env | API-only env | GUI-only env |
 |---|---|---|---|
@@ -260,6 +262,22 @@ GUI-only environments are a primary environment for Skill usage — especially C
 ---
 
 ## Decision Framework
+
+### Step 0: Validity Check (deterministic, automatable)
+
+Before making implementation decisions, run the validity check to confirm that the platform can support the required enforcement layer:
+
+```bash
+./scripts/implementation-check.sh <platform> <task-class>
+# e.g., ./scripts/implementation-check.sh claude-code deterministic
+```
+
+This check is **deterministic** — it mirrors `taskMinEnforcement` from `TaskClassification.lean` and queries the L5 SSOT. It answers: "Can this platform meet the minimum enforcement requirement for this task class?"
+
+- **VALID**: The platform has primitives for the required enforcement layer. Proceed to Step 1.
+- **INSUFFICIENT + fallback**: The minimum enforcement cannot be met. The tool shows the best available fallback and flags for human decision (T6).
+
+> **Validity vs Optimality**: Step 0 checks **validity** (is the minimum met?). Steps 1–3 and the Litmus Tests address **optimality** (what is the best choice among valid options?). L5 incompleteness can affect optimality but not validity — the fallback strategy guarantees a valid (if conservative) answer even when the L5 SSOT is incomplete.
 
 ### Step 1: Do You Need to Build Anything?
 
@@ -284,7 +302,9 @@ GUI-only environments are a primary environment for Skill usage — especially C
 | Does the skill orchestrate deterministic subtasks? (Category 2) | **Skill + CLI.** Extract deterministic steps to `scripts/` or existing CLIs. |
 | Does the skill need to connect to an external service? | **Does a CLI exist for the service?** → Skill + CLI. **No CLI exists?** → Skill + Protocol-mediated. |
 
-### Litmus Tests
+### Litmus Tests (optimality judgment)
+
+After Step 0 confirms validity, use these tests to select the **optimal** implementation approach. These require judgment (they are normative guidelines, not deterministic checks):
 
 Before implementing, ask:
 
