@@ -1,0 +1,31 @@
+{
+  "_description": "Hook 閾値の集約設定。各 hook のハードコード閾値をここに集約する。",
+  "_rationale": "TaskClassification: deterministic 閾値の管理は structural enforcement。散在は保守性を低下させる。",
+
+  "p4_drift_reject_rate_percent": {
+    "value": 40,
+    "rationale": "V4 gate pass rate が 60% 未満で drift 警告",
+    "used_by": "p4-drift-detector.sh"
+  },
+  "p2_verify_ttl_seconds": {
+    "value": 600,
+    "rationale": "P2 検証トークンの有効期間（10 分）",
+    "used_by": "p2-verify-on-commit.sh"
+  },
+  "p3_axiom_evidence_escalation_count": {
+    "value": 2,
+    "rationale": "D8 段階的厳格化: 1 回目警告、2 回目以降ブロック",
+    "used_by": "p3-axiom-evidence-check.sh"
+  },
+  "hallucination_mode": {
+    "value": "WARN",
+    "rationale": "PoC フェーズ: WARN モード。BLOCK に切り替え可能",
+    "used_by": "hallucination-check.sh"
+  },
+  "v1_v7_thresholds": {
+    "_description": "V1-V7 の healthy/warning/degraded 基準",
+    "v4_gate_pass_rate": {"healthy": 80, "warning": 60, "degraded": 40},
+    "v5_approval_rate": {"healthy": 75, "warning": 50, "degraded": 30},
+    "v2_tools_per_session": {"healthy_max": 50, "warning_max": 80}
+  }
+}

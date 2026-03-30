@@ -760,7 +760,19 @@ if [ -x "$BASE/manifest-trace" ]; then
   echo "    \"coverage\": {\"covered\": $TRACE_COVERED, \"uncovered\": $TRACE_UNCOVERED, \"weak\": $TRACE_WEAK, \"total\": $TRACE_TOTAL},"
   echo "    \"artifacts\": $TRACE_ARTIFACTS,"
   echo "    \"evidence\": {\"with\": $TRACE_WITH_EVIDENCE, \"without\": $TRACE_WITHOUT_EVIDENCE},"
-  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\"}"
+  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\"},"
+  # G1: 優先修復候補 — uncovered かつ dependents が多い命題 (D13 影響波及順)
+  TRACE_PRIORITY=$(cd "$BASE" && ./manifest-trace json 2>/dev/null | python3 -c "
+import sys, json
+try:
+    data = json.loads(sys.stdin.read())
+    props = data.get('propositions', [])
+    uncovered = [p for p in props if p.get('coverage', {}).get('total', 0) == 0]
+    priority = sorted(uncovered, key=lambda x: (-len(x.get('depended_by', [])), -x.get('strength', 0)))[:5]
+    print(json.dumps([{'id': p['id'], 'dependents': len(p.get('depended_by', [])), 'strength': p.get('strength', 0)} for p in priority]))
+except: print('[]')
+" 2>/dev/null || echo "[]")
+  echo "    \"priority_repairs\": $TRACE_PRIORITY"
   echo "  }"
 else
   echo "  \"manifest_trace\": null"
