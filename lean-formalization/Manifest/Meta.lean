@@ -96,7 +96,7 @@ def currentProfile : AxiomSystemProfile :=
     observableCount  := 25   -- V1–V7 + tradeoff + Goodhart + sorry解消 + 投資 (Observable.lean: 25 axioms: +2 tradeoff_v3_v2, tradeoff_v5_v2)
     applicationCount := 20   -- FormalDerivationSkill: 17 + ConformanceVerification: 3
     structuralCount  := 1    -- Ontology.lean: dependency_respects_strength
-    theoremCount     := 338  -- 全モジュール合計 (remote 316 + Observable 分割で +15 ObservableDesign + G1b-1 +3 + remote各モジュール調整)
+    theoremCount     := 343  -- 全モジュール合計 (remote 316 + Observable 分割で +15 ObservableDesign + G1b-1 +3 + remote各モジュール調整 + Run 71 Observable +4 + Run 61 Ontology +1)
     sorryCount       := 0 }
 
 /-- 公理系の総 axiom 数。 -/
@@ -107,9 +107,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 theorem current_total_axioms :
   currentProfile.totalAxioms = 63 := by rfl
 
-/-- 現在の公理系の定理数は 338。 -/
+/-- 現在の公理系の定理数は 343。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 338 := by rfl
+  currentProfile.theoremCount = 343 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -125,7 +125,7 @@ structure TheoremDistribution where
   ontologyM              : Nat  -- Ontology.lean
   axiomsM                : Nat  -- Axioms.lean
   empiricalPostulatesM   : Nat  -- EmpiricalPostulates.lean
-  observableM            : Nat  -- Observable.lean
+  observableM            : Nat  -- Observable.lean + ObservableDesign.lean
   principlesM            : Nat  -- Principles.lean
   metaM                  : Nat  -- Meta.lean（本ファイル）
   terminologyM           : Nat  -- Terminology.lean
@@ -150,10 +150,10 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
 
 /-- 現在のモジュール別定理分布。 -/
 def currentTheoremDistribution : TheoremDistribution :=
-  { ontologyM              := 20  -- +4: D4/D5/D6 半順序型クラスインスタンス (Run 61 追加)
+  { ontologyM              := 21  -- +4: D4/D5/D6 半順序型クラスインスタンス (Run 61 追加), +1: Run 71
     axiomsM                := 0
     empiricalPostulatesM   := 0
-    observableM            := 26  -- +3: 品質優先順位定理 (G1b-1 #91)
+    observableM            := 30  -- Observable.lean (15) + ObservableDesign.lean (15)
     principlesM            := 14
     metaM                  := 12  -- theorem_distribution_consistent を含む
     terminologyM           := 23

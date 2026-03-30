@@ -37,7 +37,7 @@ description: >
 | **T5 フィードバック** | hooks (PostToolUse), metrics | Observer が V1-V7 を計測。改善の前後比較が基盤 |
 | **T6 人間の最終決定権** | Permission system | 統合は人間の承認後のみ実行。Integrator は提案のみ |
 | **T7 リソース有限性** | `globalResourceBound` (Ontology.lean), ccusage | evolve-history.jsonl のコスト記録。1 回の evolve で実装可能な改善数の制約 |
-| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 249 tests pass が最低品質水準） |
+| **T8 精度水準** | `PrecisionLevel` (Ontology.lean), テスト/Lean ビルド | 改善案の品質基準（0 sorry, 0 warning, 290 tests pass が最低品質水準） |
 | **P2 検証分離** | Agent tool (verifier subagent) | Worker（Hypothesizer）と Verifier は別コンテキスト |
 | **P3 学習の統治** | Memory, git, hooks | 観察→仮説化→検証→統合→退役の全フェーズを実行 |
 | **P4 可観測性** | PostToolUse hooks → metrics JSONL | Observer が V1-V7 を計測し改善を定量化 |
@@ -454,9 +454,9 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 
 | 指標 | 計測方法 | 期待値 | ガバナンス理由 |
 |------|---------|--------|---------------|
-| test pass count (絶対数) | `bash tests/test-all.sh` | 249+ | 直接最適化すると自明なテスト追加を誘発 |
+| test pass count (絶対数) | `bash tests/test-all.sh` | 290+ | 直接最適化すると自明なテスト追加を誘発 |
 | axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 63 (安定) | 不要な公理追加は形式系を弱める |
-| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 338+ (増加) | delta は最適化、絶対数はガバナンス |
+| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 343+ (増加) | delta は最適化、絶対数はガバナンス |
 | sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
 | warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
 | De Bruijn factor | AxiomQuality.lean より | ≈4.0 | 直接最適化すると冗長な証明を誘発 |
@@ -587,14 +587,14 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（65回実行データ、Run 66 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（73回実行データ、Run 74 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。65回 success / 1回 partial / 3回 observation。Verifier pass rate: 全期間 202/265 PASS（76%） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。73回 success / 1回 partial / 3回 observation。Verifier pass rate: 全期間 224/290 PASS（77%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=338。compression 5.37x（537%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間247改善統合（156 conservative extension, 88 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。13 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63）。session cost: mean 4.34 USD, median 4.68 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 10/13 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。13 データポイント: CPI mean 1.15 USD/improvement, median 1.03 USD (range 0.03-3.94 USD)。前半5 runs (39-46) CPI mean 1.42 USD → 後半8 runs (47-63) CPI mean 0.99 USD（30.7% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=63、theorems=343。compression 5.44x（544%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間273改善統合（172 conservative extension, 98 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。15 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63, 72, 73）。session cost: mean 4.57 USD, median 4.68 USD, range 0.15-8.17 USD。Run 49 (0.15 USD) は outlier（>2 sigma）。コスト分布は 3-6 USD 帯に 11/15 が集中しており、1 セッション 1 実行の粒度で安定したコスト構造を示す。高頻度化のコスト優位性を示すデータはない |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 弱い支持傾向。15 データポイント: CPI mean 1.17 USD/improvement, median 1.05 USD (range 0.03-3.94 USD)。前半7 runs (39-49) CPI mean 1.22 USD → 後半8 runs (50-73) CPI mean 1.14 USD（6.5% 改善）。Run 49 CPI 0.03 USD は outlier。「単調増加」の反証条件は厳密には満たされていない（局所的な悪化あり）が、移動平均は改善傾向 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 
