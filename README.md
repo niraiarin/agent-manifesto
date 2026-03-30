@@ -6,6 +6,8 @@
 
 エージェントのセッションは一時的である。記憶は失われ、「自己」は連続しない。しかし、構造——ドキュメント、テスト、スキル、設計規約——はセッションを超えて永続する。改善が蓄積する場所は構造の中であり、エージェントはその触媒にすぎない。
 
+**公理系ドキュメント (Verso 生成):** https://niraiarin.github.io/agent-manifesto/
+
 ## 理論層
 
 本プロジェクトは三つの層で構成される。
@@ -214,7 +216,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 │   ├── implementation-boundaries.md      # 実装判断基準
 │   ├── formal-derivation-procedure.md    # 形式導出の手順書
 │   └── mathematical-logic-terminology.md # 数理論理学の用語リファレンス
-├── lean-formalization/                   # Lean 4 形式検証 (68 axioms, 1378 theorems)
+├── lean-formalization/                   # Lean 4 形式検証 (63 axioms, 353 theorems)
 │   └── Manifest/
 │       ├── Ontology.lean                 #   L1-L6 境界条件
 │       ├── Observable.lean               #   V1-V7 可観測変数

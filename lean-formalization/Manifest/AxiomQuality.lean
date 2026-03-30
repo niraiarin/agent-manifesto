@@ -52,18 +52,19 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 338 theorems / 63 axioms = 536 (= 5.36x) -/
+    例: 353 theorems / 63 axioms = 560 (= 5.60x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
-/-- 現在の公理系の圧縮比は 536 (= 5.36x)。 -/
+/-- 現在の公理系の圧縮比は 560 (= 5.60x)。 -/
 theorem current_compression :
-  compressionRatio currentProfile = 536 := by rfl
+  compressionRatio currentProfile = 560 := by rfl
 
 /-- 圧縮比 ≥ 200 (= 2.0x) は暫定的な健全条件 (H7)。 -/
 theorem current_compression_healthy :
   compressionRatio currentProfile ≥ 200 := by
-  simp [compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms]
+  simp [compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms,
+        currentTheoremDistribution, TheoremDistribution.total]
 
 -- ============================================================
 -- 指標 2: Coverage（網羅率）
@@ -356,7 +357,8 @@ theorem current_quality_healthy_static :
   currentQuality.compressionRatio ≥ 200 ∧
   currentQuality.coveragePercent ≥ 70 ∧
   currentQuality.sorryCount = 0 := by
-  simp [currentQuality, compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms]
+  simp [currentQuality, compressionRatio, currentProfile, AxiomSystemProfile.totalAxioms,
+        currentTheoremDistribution, TheoremDistribution.total]
 
 -- ============================================================
 -- SelfGoverning 自己適用

@@ -482,6 +482,33 @@ theorem observable_and {P Q : World → Prop} (hp : Observable P) (hq : Observab
   exact ⟨fun ⟨a, b⟩ => ⟨(hfp w).mp a, (hfq w).mp b⟩,
          fun ⟨a, b⟩ => ⟨(hfp w).mpr a, (hfq w).mpr b⟩⟩
 
+/-- Negation closure of Observable. The negation of an Observable property is also Observable. -/
+theorem observable_not {P : World → Prop} (hp : Observable P) :
+    Observable (fun w => ¬ P w) := by
+  obtain ⟨fp, hfp⟩ := hp
+  refine ⟨fun w => !fp w, fun w => ?_⟩
+  constructor
+  · intro h hnp
+    have := (hfp w).mpr hnp
+    simp [this] at h
+  · intro hnp
+    dsimp only []
+    cases hb : fp w with
+    | false => rfl
+    | true => exact absurd ((hfp w).mp hb) hnp
+
+/-- Disjunction closure of Observable. The disjunction of two Observable properties is also Observable. -/
+theorem observable_or {P Q : World → Prop} (hp : Observable P) (hq : Observable Q) :
+    Observable (fun w => P w ∨ Q w) := by
+  obtain ⟨fp, hfp⟩ := hp
+  obtain ⟨fq, hfq⟩ := hq
+  refine ⟨fun w => fp w || fq w, fun w => ?_⟩
+  simp [Bool.or_eq_true]
+  exact ⟨fun h => h.elim (fun hp_w => Or.inl ((hfp w).mp hp_w))
+                          (fun hq_w => Or.inr ((hfq w).mp hq_w)),
+         fun h => h.elim (fun hfp_w => Or.inl ((hfp w).mpr hfp_w))
+                          (fun hfq_w => Or.inr ((hfq w).mpr hfq_w))⟩
+
 /-- System health is Observable (binary-decidable).
     Since each Vi is Measurable, threshold comparison is decidable.
     Proved via measurable_threshold_observable + observable_and.
@@ -497,6 +524,22 @@ theorem system_health_observable :
   apply observable_and (measurable_threshold_observable v5_measurable t)
   apply observable_and (measurable_threshold_observable v6_measurable t)
   exact measurable_threshold_observable v7_measurable t
+
+/-- Degradation detection is Observable: "at least one variable is below threshold"
+    is a decidable property. This is the Observable formalization of D3 condition 2
+    (degradation detectable). Since systemHealthy is Observable (system_health_observable),
+    its negation is also Observable (observable_not). -/
+theorem degradation_detectable_observable :
+    ∀ (threshold : Nat), Observable (fun w => ¬systemHealthy threshold w) := by
+  intro t
+  exact observable_not (system_health_observable t)
+
+/-- Below-threshold comparison is Observable. Dual of measurable_threshold_observable.
+    "Variable m is below threshold t" is decidable if m is Measurable. -/
+theorem measurable_below_threshold_observable {m : World → Nat} (hm : Measurable m) (t : Nat) :
+    Observable (fun w => m w < t) := by
+  obtain ⟨f, hf⟩ := hm
+  exact ⟨fun w => decide (f w < t), fun w => by simp [hf w]⟩
 
 -- ============================================================
 -- Part IV: この分類自体のメンテナンス
