@@ -45,7 +45,7 @@ JSON で出力する。詳細な分析が必要な場合は以下の個別手順
 
 ## 観察対象
 
-### 0. 前回フィードバック・未解決 deferred の確認（最優先）
+### 0. 前回フィードバック・未解決 deferred・T6 Issue の確認（最優先）
 
 ```bash
 # 直近のエントリで type=human_feedback があるか確認
@@ -54,7 +54,16 @@ tail -5 .claude/metrics/evolve-history.jsonl 2>/dev/null | jq -r 'select(.type==
 # 未解決の deferred 項目を正規ソースから取得（SKILL.md Step 0 と同一クエリ）
 jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' \
   .claude/metrics/deferred-status.json 2>/dev/null
+
+# T6 Issue（人間レビュー待ち）の回収
+gh issue list --label "T6:human-review" --state all --json number,title,state,comments --limit 20 2>/dev/null
 ```
+
+T6 Issue の処理:
+- **closed（コメントあり）**: 人間の判断が下された。コメント内容を観察報告の
+  「前回人間フィードバック」セクションに含め、判断結果を改善候補に反映する
+- **open**: 人間の判断が未完了。観察報告に「T6 pending」として記載し、
+  改善候補には含めない（人間の判断を待つ）
 
 human_feedback エントリが存在する場合:
 - その notes を観察報告の冒頭に「前回人間フィードバック」として記載
