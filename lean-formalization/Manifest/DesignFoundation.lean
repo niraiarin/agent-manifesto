@@ -111,10 +111,11 @@ def minimumEnforcement : BoundaryLayer → EnforcementLayer
   | .investmentVariable => .procedural
   | .environmental      => .normative
 
-/-- Rationale for D1: L1 (fixed boundary) requires structural enforcement.
-    By P5 (probabilistic interpretation), normative guidelines cannot guarantee L1.
-
-    Formalization: The minimum enforcement layer for fixed boundaries is structural. -/
+/-- [Derivation Card]
+    Derives from: probabilistic_interpretation_insufficient (P5 / T4)
+    Proposition: D1
+    Content: Fixed boundaries (L1) require structural enforcement. Normative guidelines cannot guarantee L1 compliance under nondeterministic interpretation.
+    Proof strategy: rfl (definitional equality — minimumEnforcement maps .fixed to .structural) -/
 theorem d1_fixed_requires_structural :
   minimumEnforcement .fixed = .structural := by rfl
 
@@ -255,8 +256,11 @@ Note: design-development-foundation.md defines 3 conditions for observability
 this formalization covers only the implication of T5. Structuring of the 3 conditions is not yet implemented.
 -/
 
-/-- Rationale for D3: Feedback (= observation results) must precede improvement.
-    Direct application of T5. -/
+/-- [Derivation Card]
+    Derives from: no_improvement_without_feedback (T5)
+    Proposition: D3
+    Content: Feedback must precede improvement — observability is a necessary precondition for structural improvement.
+    Proof strategy: Direct application of T5 (no_improvement_without_feedback) -/
 theorem d3_observability_precedes_improvement :
   ∀ (w w' : World),
     structureImproved w w' →
@@ -350,7 +354,11 @@ theorem d4_no_self_dependency :
   ∀ (p : DevelopmentPhase), ¬phaseDependency p p := by
   intro p; cases p <;> simp [phaseDependency]
 
-/-- A complete phase chain exists. -/
+/-- [Derivation Card]
+    Derives from: phaseDependency (definitional), structure_accumulates (T2)
+    Proposition: D4
+    Content: A complete phase chain exists: safety → verification → observability → governance → equilibrium. Each phase is strictly ordered with no self-dependencies.
+    Proof strategy: refine + trivial (all four phaseDependency facts hold by definition) -/
 theorem d4_full_chain :
   phaseDependency .verification .safety ∧
   phaseDependency .observability .verification ∧
@@ -600,7 +608,11 @@ Accumulation is bounded (trust_accumulates_gradually),
 damage is unbounded (trust_decreases_on_materialized_risk).
 -/
 
-/-- Rationale for D7: Accumulation is bounded. -/
+/-- [Derivation Card]
+    Derives from: trust_accumulates_gradually (P1)
+    Proposition: D7
+    Content: Trust accumulation is bounded — incremental increases are capped by trustIncrementBound, formalizing the asymmetry of gradual growth.
+    Proof strategy: Direct application of trust_accumulates_gradually (P1) -/
 theorem d7_accumulation_bounded :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w ≤ actionSpaceSize agent w' →
@@ -609,7 +621,11 @@ theorem d7_accumulation_bounded :
     trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound :=
   trust_accumulates_gradually
 
-/-- Rationale for D7: Damage is unbounded. -/
+/-- [Derivation Card]
+    Derives from: trust_decreases_on_materialized_risk (P1)
+    Proposition: D7
+    Content: Trust damage from materialized risk is unbounded — a single incident can destroy arbitrarily accumulated trust, formalizing the asymmetry of abrupt destruction.
+    Proof strategy: Direct application of trust_decreases_on_materialized_risk (P1) -/
 theorem d7_damage_unbounded :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
@@ -630,7 +646,11 @@ By overexpansion_reduces_value,
 there exist cases where expansion of the action space reduces collaborative value.
 -/
 
-/-- Rationale for D8: Overexpansion can damage value. -/
+/-- [Derivation Card]
+    Derives from: overexpansion_reduces_value (E2)
+    Proposition: D8
+    Content: Overexpansion of the action space can reduce collaborative value — equilibrium search is necessary to avoid value-destroying expansion.
+    Proof strategy: Direct application of overexpansion_reduces_value (E2) -/
 theorem d8_overexpansion_risk :
   ∃ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' ∧
@@ -849,9 +869,11 @@ Connects with P3 theorem group in Principles.lean (modifier_agent_terminates,
 modification_persists_after_termination).
 -/
 
-/-- Rationale for D10: Agent sessions terminate (T1), but
-    structure persists (T2). Composition of P3a + P3b.
-    From structure_persists (T2) and session_bounded (T1). -/
+/-- [Derivation Card]
+    Derives from: session_bounded (T1), structure_persists (T2)
+    Proposition: D10
+    Content: Agents are ephemeral (T1) but structure persists (T2) — accumulation of improvements is possible only through structure, not through persistent agent identity.
+    Proof strategy: Constructor pair ⟨session_bounded, structure_persists⟩ — direct composition of T1 and T2 -/
 theorem d10_agent_temporary_structure_permanent :
   -- T1: セッションは終了する
   (∀ (w : World) (s : Session),

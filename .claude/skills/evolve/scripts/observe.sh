@@ -516,7 +516,37 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=$({ grep '"retired"' "$HISTORY_FILE" 2>/dev/null || true; } | wc -l | tr -d ' ')
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
-echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
+# type_distribution: MEMORY エントリの type 別件数（frontmatter type: フィールドを集計）
+V6_TYPE_FEEDBACK=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: feedback" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_PROJECT=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: project" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_REFERENCE=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: reference" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_OTHER=0
+if [ "$V6_MEMORY_FILES" -gt 0 ] 2>/dev/null; then
+  V6_TYPE_OTHER=$(( V6_MEMORY_FILES - V6_TYPE_FEEDBACK - V6_TYPE_PROJECT - V6_TYPE_REFERENCE ))
+  [ "$V6_TYPE_OTHER" -lt 0 ] && V6_TYPE_OTHER=0
+fi
+# index_consistency: MEMORY.md インデックスと実ファイルの整合性チェック
+V6_ORPHAN_FILES=0
+V6_MISSING_FILES=0
+if [ -f "$MEMORY_MD" ] && [ -d "$MEMORY_DIR" ]; then
+  # インデックスに記載されたファイル名を抽出（[label](filename.md) 形式）
+  INDEX_FILES=$(grep -oE '\([a-zA-Z0-9_-]+\.md\)' "$MEMORY_MD" 2>/dev/null | tr -d '()' || true)
+  # orphan_files: ファイルあり・インデックスなし
+  while IFS= read -r f; do
+    fname=$(basename "$f")
+    if ! echo "$INDEX_FILES" | grep -qF "$fname" 2>/dev/null; then
+      V6_ORPHAN_FILES=$(( V6_ORPHAN_FILES + 1 ))
+    fi
+  done < <(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null)
+  # missing_files: インデックスあり・ファイルなし
+  while IFS= read -r fname; do
+    [ -z "$fname" ] && continue
+    if [ ! -f "$MEMORY_DIR/$fname" ]; then
+      V6_MISSING_FILES=$(( V6_MISSING_FILES + 1 ))
+    fi
+  done <<< "$INDEX_FILES"
+fi
+echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"type_distribution\": {\"feedback\": $V6_TYPE_FEEDBACK, \"project\": $V6_TYPE_PROJECT, \"reference\": $V6_TYPE_REFERENCE, \"other\": $V6_TYPE_OTHER}, \"index_consistency\": {\"orphan_files\": $V6_ORPHAN_FILES, \"missing_files\": $V6_MISSING_FILES}, \"note\": \"proxy: entry_count + staleness\" },"
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_status\": \"suppressed_single_agent\" }"
 echo "  },"
 
@@ -778,12 +808,18 @@ if [ -x "$BASE/manifest-trace" ]; then
   TRACE_S4_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 4)] | length' 2>/dev/null || echo "0")
   TRACE_S3=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
   TRACE_S3_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3)] | length' 2>/dev/null || echo "0")
+  TRACE_S2=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 2 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S2_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 2)] | length' 2>/dev/null || echo "0")
+  TRACE_S1=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 1 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S1_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 1)] | length' 2>/dev/null || echo "0")
+  TRACE_S0=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 0 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S0_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 0)] | length' 2>/dev/null || echo "0")
   echo "  \"manifest_trace\": {"
   echo "    \"version\": $(echo "$TRACE_JSON" | jq '.meta.version // "unknown"' 2>/dev/null || echo '\"unknown\"'),"
   echo "    \"coverage\": {\"covered\": $TRACE_COVERED, \"uncovered\": $TRACE_UNCOVERED, \"weak\": $TRACE_WEAK, \"total\": $TRACE_TOTAL},"
   echo "    \"artifacts\": $TRACE_ARTIFACTS,"
   echo "    \"evidence\": {\"with\": $TRACE_WITH_EVIDENCE, \"without\": $TRACE_WITHOUT_EVIDENCE},"
-  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\"},"
+  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\", \"s2\": \"${TRACE_S2}/${TRACE_S2_T}\", \"s1\": \"${TRACE_S1}/${TRACE_S1_T}\", \"s0\": \"${TRACE_S0}/${TRACE_S0_T}\"},"
   # G1: 優先修復候補 — uncovered かつ dependents が多い命題 (D13 影響波及順)
   TRACE_PRIORITY=$(cd "$BASE" && ./manifest-trace json 2>/dev/null | python3 -c "
 import sys, json

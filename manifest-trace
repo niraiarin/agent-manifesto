@@ -592,6 +592,7 @@ cmd_violations() {
   for p in P1 P2 P3 P4 P5 P6; do strength_map[$p]=3; done
   for l in L1 L2 L3 L4 L5 L6; do strength_map[$l]=2; done
   for d in D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14; do strength_map[$d]=1; done
+  for v in V1 V2 V3 V4 V5 V6 V7; do strength_map[$v]=0; done
 
   # 検査 1: 成果物が参照する命題の強度順序チェック
   # 成果物が D1 を参照する場合、D1 の依存先（P5, L1-L6）も何らかの成果物でカバーされるべき
@@ -719,6 +720,7 @@ cmd_json() {
       elif startswith("P") then 3
       elif startswith("L") then 2
       elif startswith("D") then 1
+      elif startswith("V") then 0
       else 0
       end;
 
@@ -728,6 +730,7 @@ cmd_json() {
       elif startswith("P") then "principle"
       elif startswith("L") then "boundary"
       elif startswith("D") then "designTheorem"
+      elif startswith("V") then "observable"
       else "unknown"
       end;
 
@@ -735,7 +738,8 @@ cmd_json() {
      "E1","E2",
      "P1","P2","P3","P4","P5","P6",
      "L1","L2","L3","L4","L5","L6",
-     "D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14"] as $all |
+     "D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14",
+     "V1","V2","V3","V4","V5","V6","V7"] as $all |
 
     {
       meta: {
@@ -762,7 +766,8 @@ cmd_json() {
             by_type: $by_type,
             has_test: ([$matching[] | select(.type == "test")] | length > 0),
             has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config")] | length > 0),
-            has_evidence: ([$evid[] | select(.proposition == $pid)] | length > 0)
+            has_evidence: ([$evid[] | select(.proposition == $pid)] | length > 0),
+            has_derivation: ([$deriv[] | select(.proposition == $pid)] | length > 0)
           }
         }
       ],
@@ -785,7 +790,9 @@ cmd_json() {
         roots:  [$all[] | . as $pid | select([$deps[] | select(.child == $pid)] | length == 0)],
         leaves: [$all[] | . as $pid | select([$deps[] | select(.parent == $pid)] | length == 0)],
         with_evidence: [$all[] | . as $pid | select([$evid[] | select(.proposition == $pid)] | length > 0)],
-        without_evidence: [$all[] | . as $pid | select([$evid[] | select(.proposition == $pid)] | length == 0)]
+        without_evidence: [$all[] | . as $pid | select([$evid[] | select(.proposition == $pid)] | length == 0)],
+        with_derivation: [$all[] | . as $pid | select([$deriv[] | select(.proposition == $pid)] | length > 0)],
+        without_derivation: [$all[] | . as $pid | select([$deriv[] | select(.proposition == $pid)] | length == 0)]
       }
     }
   '
@@ -1129,6 +1136,7 @@ cmd_selfcheck() {
   for p in P1 P2 P3 P4 P5 P6; do str_map[$p]=3; done
   for l in L1 L2 L3 L4 L5 L6; do str_map[$l]=2; done
   for d in D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14; do str_map[$d]=1; done
+  for v in V1 V2 V3 V4 V5 V6 V7; do str_map[$v]=0; done
 
   # 既知例外: L4→D8 は意図的な循環防止設計（Ontology.lean コメント参照）
   local known_exceptions="L4 D8"

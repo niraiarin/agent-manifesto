@@ -469,6 +469,11 @@ evolve-history.jsonl の各エントリに以下のフィールドを追加:
 projectPath 末尾 UUID と照合して後から補完する（H5 データ蓄積プロセスと共有）。
 Integrator 実行時点では null を記録し、データ照合は observe.sh が担当する。
 
+**benchmark フィールドの NTS 転記ルール:**
+`benchmark` フィールドの `non_triviality_score` と `non_triviality_label` は、
+observe.sh の出力（`nts` セクション）から直接転記すること。
+Integrator が独自に算出してはならない。score と label を一致させること。
+
 ### Step 6: 退役処理
 
 退役には 2 種類の基準がある（混同しないこと）:
