@@ -226,11 +226,11 @@ def validSeparation (vs : VerificationIndependence) : Prop :=
   vs.framingIndependent = true ∧
   vs.executionAutomatic = true
 
-/-- Rationale for D2: From E1, valid verification requires separation.
-    The type of verification_requires_independence demands
-    gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver.
-    gen.id ≠ ver.id → contextSeparated ∧ evaluatorIndependent
-    ¬sharesInternalState → framingIndependent -/
+/-- [Derivation Card]
+    Derives from: verification_requires_independence (E1)
+    Proposition: D2
+    Content: Valid verification requires separation — generator and verifier must have distinct IDs and not share internal state, ensuring contextual and evaluative independence.
+    Proof strategy: Direct application of verification_requires_independence (E1) -/
 theorem d2_from_e1 :
   ∀ (gen ver : Agent) (action : Action) (w : World),
     generates gen action w →
@@ -447,8 +447,11 @@ inductive TestKind where
   | behavioral   -- 実行して結果を確認（確率的、T4）
   deriving BEq, Repr
 
-/-- Rationale for D5: By T8, tests have precision levels.
-    A test with precision 0 is meaningless. -/
+/-- [Derivation Card]
+    Derives from: task_has_precision (T8)
+    Proposition: D5
+    Content: Tests must have non-zero precision — a task with precision level 0 is meaningless and cannot support meaningful optimization or acceptance criteria.
+    Proof strategy: Direct application of task_has_precision (T8) -/
 theorem d5_test_has_precision :
   ∀ (task : Task),
     task.precisionRequired.required > 0 :=
@@ -733,7 +736,11 @@ structure DesignPrincipleUpdate where
   hasRationale  : Bool
   deriving Repr
 
-/-- D9: Any compatibility classification belongs to one of the 3 classes. -/
+/-- [Derivation Card]
+    Derives from: CompatibilityClass (definitional — exhaustive inductive type)
+    Proposition: D9
+    Content: Any compatibility classification belongs to exactly one of the three classes: conservativeExtension, compatibleChange, or breakingChange.
+    Proof strategy: intro c; cases c <;> simp — exhaustive case analysis on the CompatibilityClass inductive type -/
 theorem d9_update_classified :
   ∀ (c : CompatibilityClass),
     c = .conservativeExtension ∨
@@ -994,9 +1001,11 @@ Based on PropositionId.dependencies from Ontology.lean,
 defines impact set computation functions and basic properties.
 -/
 
-/-- D13: Priority changes in structure require review of lower-priority items (restatement of Section 8).
-    D13's reinterpretation of coherenceRequirement:
-    High-priority structural change -> all lower-priority structures are included in the impact set. -/
+/-- [Derivation Card]
+    Derives from: Structure.lastModifiedAt (definitional — timestamp ordering)
+    Proposition: D13
+    Content: High-priority structural changes propagate to lower-priority structures — when s₁ has higher priority and s₂ was last modified no later than s₁, the temporal ordering constraint is preserved, requiring review of s₂.
+    Proof strategy: fun _ _ _ h => h — identity proof on the timestamp ordering hypothesis -/
 theorem d13_coherence_implies_propagation :
   ∀ (s₁ s₂ : Structure),
     s₁.kind.priority > s₂.kind.priority →

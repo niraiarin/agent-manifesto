@@ -494,8 +494,17 @@ if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_HYP_ACTIVE=${V3_HALL_HYP_ACTIVE:-0}
   V3_HALL_ASS_ACTIVE=${V3_HALL_ASS_ACTIVE:-0}
   V3_HALL_PRE_ACTIVE=${V3_HALL_PRE_ACTIVE:-0}
+  # post-quality-gate filter: Run 57+ (quality gate introduced in commit 99cc654)
+  V3_HALL_OBS_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
+  V3_HALL_HYP_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
+  V3_HALL_ASS_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^assumption_error$"; } || true)
+  V3_HALL_PRE_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^precondition_error$"; } || true)
+  V3_HALL_OBS_POST_GATE=${V3_HALL_OBS_POST_GATE:-0}
+  V3_HALL_HYP_POST_GATE=${V3_HALL_HYP_POST_GATE:-0}
+  V3_HALL_ASS_POST_GATE=${V3_HALL_ASS_POST_GATE:-0}
+  V3_HALL_PRE_POST_GATE=${V3_HALL_PRE_POST_GATE:-0}
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"observation_error_active\": ${V3_HALL_OBS_ACTIVE:-0}, \"hypothesis_error_active\": ${V3_HALL_HYP_ACTIVE:-0}, \"assumption_error_active\": ${V3_HALL_ASS_ACTIVE:-0}, \"precondition_error_active\": ${V3_HALL_PRE_ACTIVE:-0}, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"observation_error_active\": ${V3_HALL_OBS_ACTIVE:-0}, \"hypothesis_error_active\": ${V3_HALL_HYP_ACTIVE:-0}, \"assumption_error_active\": ${V3_HALL_ASS_ACTIVE:-0}, \"precondition_error_active\": ${V3_HALL_PRE_ACTIVE:-0}, \"observation_error_post_gate\": $V3_HALL_OBS_POST_GATE, \"hypothesis_error_post_gate\": $V3_HALL_HYP_POST_GATE, \"assumption_error_post_gate\": $V3_HALL_ASS_POST_GATE, \"precondition_error_post_gate\": $V3_HALL_PRE_POST_GATE, \"quality_gate_run\": 57, \"note\": \"failure_type 標準化は Run 54 から。_post_gate は Run 57 品質ゲート導入後のみ\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"blocked_excluded\": $V4_BLOCKED_EXCLUDED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
