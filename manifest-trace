@@ -118,6 +118,7 @@ check_deps() {
 # --- パーサキャッシュ（推奨3: セッション内で1回だけ Lean をパース） ---
 _DEP_CACHE=""
 _EVIDENCE_CACHE=""
+_DERIVATION_CACHE=""
 
 # Lean の PropositionId.dependencies を解析して依存マップを構築
 # 出力: "CHILD PARENT" の行（1行1依存）。結果はキャッシュされる。
@@ -239,6 +240,95 @@ parse_lean_evidence() {
   done
 
   _EVIDENCE_CACHE="$result"
+  echo "$result"
+}
+
+# Lean の [Derivation Card] doc comment からフィールドを抽出
+# 出力: JSON Lines — 1行1導出カード
+# {"proposition":"P3","theorem":"t0_contraction_forbidden","derives_from":"...","content":"...","proof_strategy":"...","file":"Procedure.lean"}
+parse_lean_derivations() {
+  if [[ -n "$_DERIVATION_CACHE" ]]; then
+    echo "$_DERIVATION_CACHE"
+    return
+  fi
+
+  local result=""
+
+  for lean_file in "$LEAN_DIR"/*.lean; do
+    [[ -f "$lean_file" ]] || continue
+    local file_basename
+    file_basename=$(basename "$lean_file")
+
+    local file_result
+    file_result=$(awk -v file="$file_basename" '
+      function json_escape(s) {
+        gsub(/\\/, "\\\\", s)
+        gsub(/"/, "\\\"", s)
+        gsub(/\t/, " ", s)
+        return s
+      }
+
+      function extract_field(text, field_name,    result, i, lines, n, found) {
+        n = split(text, lines, "\n")
+        result = ""
+        found = 0
+        for (i = 1; i <= n; i++) {
+          if (lines[i] ~ "^[[:space:]]*" field_name ":") {
+            found = 1
+            sub("^[[:space:]]*" field_name ":[[:space:]]*", "", lines[i])
+            result = lines[i]
+            continue
+          }
+          if (found && lines[i] ~ /^[[:space:]]*(Derives from|Proposition|Content|Proof strategy):/) {
+            found = 0
+            continue
+          }
+          if (found) {
+            sub(/^[[:space:]]+/, "", lines[i])
+            if (lines[i] != "") result = result " " lines[i]
+          }
+        }
+        sub(/[[:space:]]+$/, "", result)
+        return result
+      }
+
+      function extract_prop_id(source,    id) {
+        if (match(source, /[TEPLVD][0-9]+/)) {
+          id = substr(source, RSTART, RLENGTH)
+          return id
+        }
+        return ""
+      }
+
+      /\/-- \[Derivation Card\]/ { in_card=1; card=""; next }
+      in_card && /-\// { in_card=0; waiting_theorem=1; next }
+      in_card { card = card "\n" $0; next }
+      waiting_theorem && /^theorem [a-z_]/ {
+        theorem_line = $0
+        sub(/^theorem /, "", theorem_line)
+        sub(/ .*/, "", theorem_line)
+        sub(/:.*/, "", theorem_line)
+        theorem_name = theorem_line
+        waiting_theorem = 0
+
+        derives_from = extract_field(card, "Derives from")
+        proposition  = extract_field(card, "Proposition")
+        content      = extract_field(card, "Content")
+        proof_strat  = extract_field(card, "Proof strategy")
+        prop_id = extract_prop_id(proposition)
+
+        if (prop_id != "") {
+          printf "{\"proposition\":\"%s\",\"theorem\":\"%s\",\"derives_from\":\"%s\",\"content\":\"%s\",\"proof_strategy\":\"%s\",\"file\":\"%s\"}\n", \
+            json_escape(prop_id), json_escape(theorem_name), \
+            json_escape(derives_from), json_escape(content), \
+            json_escape(proof_strat), json_escape(file)
+        }
+      }
+    ' "$lean_file")
+    result+="$file_result"$'\n'
+  done
+
+  _DERIVATION_CACHE="$result"
   echo "$result"
 }
 
@@ -617,8 +707,12 @@ cmd_json() {
   local evidence_json
   evidence_json=$(parse_lean_evidence | grep -v '^$' | jq -s '.')
 
+  # 導出カードマップを JSON 配列として構築
+  local derivation_json
+  derivation_json=$(parse_lean_derivations | grep -v '^$' | jq -s '.')
+
   # 全命題について構造を構築
-  jq -n --argjson arts "$filtered_artifacts" --argjson deps "$dep_json" --argjson evid "$evidence_json" --arg scope "${SCOPE_FILTER:-all}" '
+  jq -n --argjson arts "$filtered_artifacts" --argjson deps "$dep_json" --argjson evid "$evidence_json" --argjson deriv "$derivation_json" --arg scope "${SCOPE_FILTER:-all}" '
     def strength:
       if startswith("T") then 5
       elif startswith("E") then 4
@@ -662,6 +756,7 @@ cmd_json() {
           depended_by: [$deps[] | select(.parent == $pid) | .child],
           artifacts: [$matching[] | {id, type, path, scope, enforces}],
           evidence: [$evid[] | select(.proposition == $pid) | {axiom, layer, basis, source, refutation, file}],
+          derivations: [$deriv[] | select(.proposition == $pid) | {theorem, derives_from, content, proof_strategy, file}],
           coverage: {
             total: ($matching | length),
             by_type: $by_type,
@@ -1140,6 +1235,7 @@ case "${1:-help}" in
   health)      cmd_health ;;
   json)        cmd_json ;;
   evidence)    parse_lean_evidence ;;
+  derivations) parse_lean_derivations ;;
   selfcheck)   cmd_selfcheck ;;
   help|--help|-h)
     echo "manifest-trace — 全成果物の半順序導出・カバレッジ検出・逸脱検出"
@@ -1155,6 +1251,7 @@ case "${1:-help}" in
     echo "  health           全指標サマリ"
     echo "  json             構造的 JSON 出力（半順序 DAG + カバレッジ + 根拠）"
     echo "  evidence         Lean Axiom Card から根拠を抽出（JSON Lines）"
+    echo "  derivations      Lean Derivation Card から導出を抽出（JSON Lines）"
     echo "  selfcheck        自己検証（Lean を真実源として突合）"
     echo ""
     echo "グローバルオプション:"

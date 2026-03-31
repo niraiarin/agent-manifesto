@@ -78,6 +78,22 @@ check "VP.4: verify-preflight.sh calls sync-counts.sh --check" \
 echo ""
 
 # ============================================================
+# manifest-trace derivations テスト
+# ============================================================
+echo "--- manifest-trace derivations ---"
+
+check "MT.1: manifest-trace derivations subcommand exists in help" \
+  "grep -q 'derivations' '$BASE/manifest-trace'"
+
+check "MT.2: manifest-trace derivations returns valid JSON Lines (pilot card)" \
+  "'$BASE/manifest-trace' derivations 2>/dev/null | grep -q 'theorem'"
+
+check "MT.3: parse_lean_derivations handles Derivation Card in Procedure.lean" \
+  "'$BASE/manifest-trace' derivations 2>/dev/null | grep -q 't0_contraction_forbidden'"
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="

@@ -708,6 +708,53 @@ grep -q "^theorem deterministic_minimizes_cost" "$TASK_CLASS" && pass "TC.5: det
 echo ""
 
 # ============================================================
+# Section 17: evolve-history.jsonl 整合性テスト（Run 78+）
+# ============================================================
+echo "--- Section 17: evolve-history.jsonl Accounting Consistency ---"
+
+EVOLVE_HISTORY="$BASE/.claude/metrics/evolve-history.jsonl"
+if [ -f "$EVOLVE_HISTORY" ]; then
+  # Run >= 78 のエントリのみ対象
+  ENTRIES_78PLUS=$(jq -c 'select(.run >= 78)' "$EVOLVE_HISTORY" 2>/dev/null)
+  if [ -n "$ENTRIES_78PLUS" ]; then
+    INCONSISTENT=0
+    while IFS= read -r entry; do
+      RUN=$(echo "$entry" | jq -r '.run')
+      REJECTED_LEN=$(echo "$entry" | jq '.rejected | length' 2>/dev/null || echo 0)
+      FAIL_COUNT=$(echo "$entry" | jq '.phases.verifier.fail_count' 2>/dev/null || echo 0)
+      IMP_LEN=$(echo "$entry" | jq '.improvements | length' 2>/dev/null || echo 0)
+      PASS_COUNT=$(echo "$entry" | jq '.phases.verifier.pass_count' 2>/dev/null || echo 0)
+      PROPOSALS=$(echo "$entry" | jq '.phases.hypothesizer.proposals_count' 2>/dev/null || echo 0)
+      # rejected length must be >= fail_count
+      if [ "$REJECTED_LEN" -lt "$FAIL_COUNT" ] 2>/dev/null; then
+        fail "Section 17: Run $RUN len(rejected)=$REJECTED_LEN < fail_count=$FAIL_COUNT"
+        INCONSISTENT=$((INCONSISTENT+1))
+      fi
+      # improvements length must equal pass_count
+      if [ "$IMP_LEN" -ne "$PASS_COUNT" ] 2>/dev/null; then
+        fail "Section 17: Run $RUN len(improvements)=$IMP_LEN != pass_count=$PASS_COUNT"
+        INCONSISTENT=$((INCONSISTENT+1))
+      fi
+      # proposals_count must equal pass_count + fail_count
+      EXPECTED_PROPOSALS=$((PASS_COUNT + FAIL_COUNT))
+      if [ "$PROPOSALS" -ne "$EXPECTED_PROPOSALS" ] 2>/dev/null; then
+        fail "Section 17: Run $RUN proposals_count=$PROPOSALS != pass+fail=$EXPECTED_PROPOSALS"
+        INCONSISTENT=$((INCONSISTENT+1))
+      fi
+    done < <(echo "$ENTRIES_78PLUS")
+    if [ "$INCONSISTENT" -eq 0 ]; then
+      pass "Section 17: All Run>=78 entries pass accounting consistency"
+    fi
+  else
+    pass "Section 17: No Run>=78 entries yet (not applicable)"
+  fi
+else
+  pass "Section 17: evolve-history.jsonl not found (not applicable)"
+fi
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="

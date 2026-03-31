@@ -140,6 +140,11 @@ cat >> .claude/metrics/evolve-history.jsonl << EOF
 EOF
 ```
 
+**記録前チェック:**
+- [ ] `len(rejected)` == `phases.verifier.fail_count` であることを確認
+- [ ] `len(improvements)` == `phases.verifier.pass_count` であることを確認
+- [ ] `proposals_count` == `pass_count + fail_count` であることを確認
+
 **notes/deferred 整合性制約**: notes に前方参照（「次回」「蓄積待ち」「可能になる」等）を書く場合、対応する deferred エントリを必ず登録すること。notes だけに未完了タスクを書いて deferred を空にすると、テスト（Section 10）が FAIL する。
 
 ### Step 5c: deferred-status.json の更新

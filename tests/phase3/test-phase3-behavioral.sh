@@ -41,5 +41,35 @@ COUNT=$(wc -l < "$TMPLOG" | tr -d ' ')
 if [ "$COUNT" -ge 3 ]; then echo "PASS ($COUNT entries)"; PASS=$((PASS+1)); else echo "FAIL ($COUNT entries)"; FAIL=$((FAIL+1)); fi
 
 echo ""
+echo "--- H5 Doc Lint Hook ---"
+echo -n "B3.7 h5-doc-lint: non-commit command passes... "
+CODE=$(echo '{"tool_input":{"command":"ls -la"}}' | bash "$HOOKS/h5-doc-lint.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo -n "B3.8 h5-doc-lint: commit without Lean files passes... "
+CODE=$(echo '{"tool_input":{"command":"git commit -m \"test\""}}' | bash "$HOOKS/h5-doc-lint.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo ""
+echo "--- P3 Axiom Evidence Check Hook ---"
+echo -n "B3.9 p3-axiom-evidence: non-commit command passes... "
+CODE=$(echo '{"tool_input":{"command":"git status"}}' | bash "$HOOKS/p3-axiom-evidence-check.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo -n "B3.10 p3-axiom-evidence: commit without axiom files passes... "
+CODE=$(echo '{"tool_input":{"command":"git commit -m \"test\""}}' | bash "$HOOKS/p3-axiom-evidence-check.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo ""
+echo "--- P4 Sync Counts Check Hook ---"
+echo -n "B3.11 p4-sync-counts: non-commit command passes... "
+CODE=$(echo '{"tool_input":{"command":"echo hello"}}' | bash "$HOOKS/p4-sync-counts-check.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo -n "B3.12 p4-sync-counts: commit with synced counts passes... "
+CODE=$(echo '{"tool_input":{"command":"git commit -m \"test\""}}' | bash "$HOOKS/p4-sync-counts-check.sh" >/dev/null 2>/dev/null; echo $?)
+if [ "$CODE" -eq 0 ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit $CODE)"; FAIL=$((FAIL+1)); fi
+
+echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 [ "$FAIL" -eq 0 ]

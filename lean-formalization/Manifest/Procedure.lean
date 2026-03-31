@@ -41,7 +41,11 @@ def permittedOp : PremisePartition → BeliefRevisionOp → Bool
   | .extension,  .contraction => true
   | .extension,  .revision    => true
 
-/-- §2.4/§3 Phase 3b: T₀ の縮小は禁止。 -/
+/-- [Derivation Card]
+    Derives from: (none — derived from definition permittedOp)
+    Proposition: P3
+    Content: Base theory (T₀) contraction is forbidden. permittedOp classifies contraction on baseTheory as false.
+    Proof strategy: rfl (definitional equality) -/
 theorem t0_contraction_forbidden :
   permittedOp .baseTheory .contraction = false := by rfl
 

@@ -707,19 +707,29 @@ echo "  },"
 # --- priority_bias_review: review_policy トリガー検出 ---
 BENCHMARK_FILE="$METRICS_DIR/benchmark.json"
 PBR_CURRENT_RUN=$MAX_RUN
-PBR_RUN_AT_DECISION=63
+PBR_RUN_AT_DECISION=$(jq -r '.priority_bias.current_snapshot.run_at_decision // empty' "$BENCHMARK_FILE" 2>/dev/null)
+if [ -z "$PBR_RUN_AT_DECISION" ] || ! [ "$PBR_RUN_AT_DECISION" -eq "$PBR_RUN_AT_DECISION" ] 2>/dev/null; then
+  PBR_RUN_AT_DECISION=76  # fallback: last known value from Run 76 decision
+fi
 PBR_RUNS_SINCE=$((PBR_CURRENT_RUN - PBR_RUN_AT_DECISION))
 PBR_RUN_THRESHOLD=20
 PBR_NEXT_RUN_TRIGGER=$((PBR_RUN_AT_DECISION + PBR_RUN_THRESHOLD))
 
-# Trigger 0: V1/V3 formal graduation (proxy_classification チェック)
+# Trigger 0: V1/V3 formal graduation (benchmark.json から確認)
 PBR_T0_FIRED=false
+PBR_T0_RESOLVED=false
 if [ -f "$BENCHMARK_FILE" ]; then
-  V1_CLASS=$(grep -o '"proxy_classification": *"[^"]*"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null | head -1 | grep -o '"[^"]*"$' | tr -d '"' || echo "unknown")
+  PBR_T0_ACTION=$(jq -r '.priority_bias.review_policy.trigger_log[0].action_taken // ""' "$BENCHMARK_FILE" 2>/dev/null)
+  if echo "$PBR_T0_ACTION" | grep -q "^resolved" 2>/dev/null; then
+    PBR_T0_RESOLVED=true
+  fi
 fi
-# observe.sh 自身の出力から proxy_classification を検出
-if grep -q '"proxy_classification": "formal"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null; then
-  PBR_T0_FIRED=true
+# Trigger 0 fires only if V1/V3 graduated AND not yet resolved
+if [ "$PBR_T0_RESOLVED" = "false" ]; then
+  V1_CLASS=$(jq -r '.priority_bias.current_snapshot.f_t_observations.system_phase // ""' "$BENCHMARK_FILE" 2>/dev/null)
+  if echo "$V1_CLASS" | grep -q "formal" 2>/dev/null; then
+    PBR_T0_FIRED=true
+  fi
 fi
 PBR_T0_DETAIL=""
 if [ "$PBR_T0_FIRED" = "true" ]; then
