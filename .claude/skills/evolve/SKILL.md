@@ -61,7 +61,7 @@ description: >
 | 修正の安全性順序 | Procedure.lean | `modification_safety_chain` |
 | D2 検証の 4 条件 | DesignFoundation.lean | `VerificationIndependence` |
 | D8 過剰拡大リスク | DesignFoundation.lean | `d8_overexpansion_risk` |
-| /evolve 全体の準拠性 | EvolveSkill.lean | `evolve_skill_compliant` (φ₁-φ₁₁) |
+| /evolve 全体の準拠性 | EvolveSkill.lean | `evolve_skill_compliant` (φ₁–φ₁₇) |
 | Deferral 正当性 | EvolveSkill.lean | `deferral_requires_justification` (φ₁₁) |
 
 #### Lean 形式化 逆引きチェックリスト（外部ファイル参照）

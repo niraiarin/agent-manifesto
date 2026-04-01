@@ -27,10 +27,10 @@ DATA=$(jq -s '
   }]
 ' "$HISTORY_FILE" 2>/dev/null)
 
-python3 -c "
+echo "$DATA" | python3 -c "
 import json, statistics, sys
 
-data = json.loads('''$DATA''')
+data = json.loads(sys.stdin.read())
 n = len(data)
 
 def pearson(xs, ys):

@@ -6,7 +6,7 @@
 ## validPhaseTransition 逆引きチェックリスト
 
 各 Lean ケースが、対応するテストと SKILL.md の実行手順に展開されていることを確認するための逆引き表。
-（Section 7 テストは `tests/test-evolve-structural.sh` 内の記述名称）
+（Section 7 テストは `tests/phase5/test-evolve-structural.sh` 内の記述名称）
 
 | Lean ケース（Workflow.lean `validPhaseTransition`） | テスト（Section 7） | SKILL.md ステップ | Gap |
 |--------------------------------------------------|-------------------|-----------------|-----|
@@ -22,7 +22,7 @@
 
 | スキルの概念 | テスト（Section 3 / Step） | 備考 | Gap |
 |------------|--------------------------|------|-----|
-| `integrationGateCondition` | test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 | なし |
+| `integrationGateCondition` | phase5/test-evolve-structural.sh Section 3 | 統合ゲートの 3 条件を確認 | なし |
 | `retirementCandidate` | SKILL.md Step 6 | 退役基準 A（breakingChange）と基準 B（6ヶ月）の区別 | なし |
 
 ## Workflow.lean 追加定理 逆引きチェックリスト（Run 40 追加）
