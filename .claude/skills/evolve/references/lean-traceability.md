@@ -12,7 +12,9 @@
 |--------------------------------------------------|-------------------|-----------------|-----|
 | observation → hypothesizing | "Lean trace: observation -> hypothesizing (Phase 1->2 in SKILL.md)" | Step 1: Observer 起動 | なし |
 | hypothesizing → verification | "Lean trace: hypothesizing -> verification (Phase 2->3 in SKILL.md)" | Step 2: Hypothesizer 起動 | なし |
-| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動 | なし |
+| verification → judge | — (Phase 3→3.5 未形式化) | Step 3: Verifier PASS → Judge 評価 | **Gap**: Workflow.lean に judge フェーズ未定義。Phase 3.5 は SKILL.md で運用的に導入されたが Lean 形式化が追随していない |
+| judge → integration | — (Phase 3.5→4 未形式化) | Step 3.5: Judge PASS → Integrator 起動 | **Gap**: 同上。judge→integration の遷移が validPhaseTransition に未追加 |
+| verification → integration | "Lean trace: verification -> integration (Phase 3->4 in SKILL.md)" | Step 3: Verifier 起動（Judge 省略時のフォールバック） | なし |
 | integration → retirement | "Lean trace: integration -> retirement (Phase 4->5 in SKILL.md)" | Step 5/6: Integrator + 退役処理 | なし |
 | verification → hypothesizing (FAIL loopback) | "Lean trace: verification -> hypothesizing (FAIL loopback in SKILL.md)" + "Lean trace: verification -> hypothesizing exists in Workflow.lean" | Step 3 FAIL 分析（ループバック） | なし |
 | verification → observation (observation_error loopback) | "Lean trace: verification -> observation (observation_error loopback)" | Step 3 FAIL 分析（observation_error → Phase 1） | なし |
@@ -90,7 +92,7 @@
 | Lean 定理（EvolveSkill.lean） | φ | SKILL.md ステップ | テスト（Section 9） |
 |-------------------------------|---|-------------------|---------------------|
 | `phase_order_aligns_with_workflow` | φ₁ | Step 1→5 のフェーズ順序 | "φ₁: phase order" |
-| `evolve_full_cycle_matches_workflow` | φ₁ | Step 6 → Step 1（サイクル） | "φ₁: full cycle" |
+| `evolve_full_cycle_matches_workflow` | φ₁ | Step 6 → Step 1（サイクル） | "φ₁: phase order" (full cycle subset) |
 | `all_phases_have_agents` | φ₂ | アーキテクチャ図 | "φ₂: all phases have agents" |
 | `all_agents_used` | φ₂ | アーキテクチャ図（4 エージェント） | "φ₂: all agents used" |
 | `evolve_verifier_sufficient_for_low` | φ₃ | Step 3: P2 の限界（low レベル） | "φ₃: verifier sufficient for low" |

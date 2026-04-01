@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-  BASE="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+set -uo pipefail
+BASE="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 METRICS_DIR="$BASE/.claude/metrics"
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 TOOL_INPUT=$(cat 2>/dev/null || true)

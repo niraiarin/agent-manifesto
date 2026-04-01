@@ -7,6 +7,7 @@ description: >
   independence (contextSeparated) but NOT evaluator independence.
   For critical/high risk changes, human review or a different model is required.
 model: sonnet
+effort: high
 tools:
   - Read
   - Glob

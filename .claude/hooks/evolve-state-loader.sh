@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-BASE="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+set -uo pipefail
+BASE="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 HISTORY_FILE="$BASE/.claude/metrics/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
   LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null)

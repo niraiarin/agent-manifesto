@@ -21,7 +21,7 @@ DATA=$(jq -s '
     run: .[($i)].run,
     theorem_delta: (.[($i)].lean.theorems - .[($i)-1].lean.theorems),
     test_delta: (.[($i)].tests.passed - .[($i)-1].tests.passed),
-    verifier_rate: (if (.[($i)].phases.verifier.pass_count + .[($i)].phases.verifier.fail_count) > 0 then (.[($i)].phases.verifier.pass_count * 100 / (.[($i)].phases.verifier.pass_count + .[($i)].phases.verifier.fail_count)) else 0 end),
+    verifier_rate: (if ((.[($i)].phases.verifier.pass_count // 0) + (.[($i)].phases.verifier.fail_count // 0)) > 0 then ((.[($i)].phases.verifier.pass_count // 0) * 100 / ((.[($i)].phases.verifier.pass_count // 0) + (.[($i)].phases.verifier.fail_count // 0))) else 0 end),
     improvements: (.[($i)].improvements | length),
     rejected: (.[($i)].rejected | length)
   }]

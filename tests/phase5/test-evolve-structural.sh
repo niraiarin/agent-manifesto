@@ -43,6 +43,7 @@ echo "--- 1. File Existence ---"
 [ -f ".claude/agents/hypothesizer/AGENT.md" ] && pass "Hypothesizer AGENT.md exists" || fail "Hypothesizer AGENT.md missing"
 [ -f ".claude/agents/integrator/AGENT.md" ] && pass "Integrator AGENT.md exists" || fail "Integrator AGENT.md missing"
 [ -f ".claude/agents/verifier.md" ] && pass "Verifier agent exists" || fail "Verifier agent missing"
+[ -f ".claude/agents/judge.md" ] && pass "Judge agent exists" || fail "Judge agent missing"
 
 echo ""
 

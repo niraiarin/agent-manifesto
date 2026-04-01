@@ -51,11 +51,11 @@ fi
 
 # --- テスト結果 ---
 TEST_OUTPUT=$(bash "$BASE/tests/test-all.sh" 2>&1 || true)
-PASS=$(echo "$TEST_OUTPUT" | grep -o 'TOTAL: [0-9]* passed' | grep -o '[0-9]*' || echo "0")
-FAIL=$(echo "$TEST_OUTPUT" | grep -o '[0-9]* failed' | tail -1 | grep -o '[0-9]*' || echo "0")
+TEST_PASSED=$(echo "$TEST_OUTPUT" | grep -o 'TOTAL: [0-9]* passed' | grep -o '[0-9]*' || echo "0")
+TEST_FAILED=$(echo "$TEST_OUTPUT" | grep -o '[0-9]* failed' | tail -1 | grep -o '[0-9]*' || echo "0")
 echo "  \"tests\": {"
-echo "    \"passed\": ${PASS:-0},"
-echo "    \"failed\": ${FAIL:-0}"
+echo "    \"passed\": ${TEST_PASSED:-0},"
+echo "    \"failed\": ${TEST_FAILED:-0}"
 echo "  },"
 
 # --- git 停滞検出 ---
@@ -446,8 +446,8 @@ fi
 echo "    \"v2_context_efficiency\": { \"tool_calls\": $TOOL_CALLS, \"sessions\": $SESSION_COUNT, \"recent_avg\": $V2_RECENT_AVG, \"cumulative_avg\": $V2_CALLS_PER_SESSION, \"raw_cumulative_avg\": ${V2_RAW_CUMULATIVE:-0}, \"trend_direction\": \"$V2_TREND\", \"divergence_percent\": $V2_DIVERGENCE, \"primary_metric\": \"recent_median\", \"raw_delta_count\": $RAW_DELTA_COUNT, \"filtered_delta_count\": $FILTERED_DELTA_COUNT, \"min_session_delta\": $MIN_SESSION_DELTA },"
 V3_TOTAL_COMMITS=$(git -C "$BASE" rev-list --count HEAD 2>/dev/null || echo "0")
 V3_TOTAL_COMMITS=${V3_TOTAL_COMMITS:-0}
-V3_PASS=${PASS:-0}
-V3_FAIL=${FAIL:-0}
+V3_PASS=${TEST_PASSED:-0}
+V3_FAIL=${TEST_FAILED:-0}
 V3_TOTAL_TESTS=$((V3_PASS + V3_FAIL))
 if [ "$V3_TOTAL_TESTS" -gt 0 ] 2>/dev/null; then
   V3_TEST_PASS_RATE=$((V3_PASS * 100 / V3_TOTAL_TESTS))
