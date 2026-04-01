@@ -12,7 +12,19 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
 exit 0
 fi
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+# Resolve git working directory from command.
+# Claude Code runs `cd /path/to/worktree && git commit ...` but the hook
+# executes in the session CWD (main worktree). Extract the cd target so
+# `git diff --cached` queries the correct worktree.
+GIT_DIR=""
+if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
+GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
+fi
+GIT_CMD=(git)
+if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
+GIT_CMD=(git -C "$GIT_DIR")
+fi
+STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 if [ -z "$STAGED" ]; then
 exit 0
 fi
@@ -22,6 +34,9 @@ if [ -z "$HIGH_RISK_FILES" ]; then
 exit 0
 fi
 VERIFIED_LOG=".claude/metrics/p2-verified.jsonl"
+if [ -n "$GIT_DIR" ] && [ -f "$GIT_DIR/$VERIFIED_LOG" ]; then
+VERIFIED_LOG="$GIT_DIR/$VERIFIED_LOG"
+fi
 if [ -f "$VERIFIED_LOG" ]; then
 NOW=$(date +%s)
 TTL=600
@@ -72,4 +87,3 @@ echo "Staged high-risk files (unverified):" >&2
 echo "$HIGH_RISK_FILES" | while IFS= read -r f; do [ -n "$f" ] && echo "  - $f" >&2; done
 exit 0
 fi
-
