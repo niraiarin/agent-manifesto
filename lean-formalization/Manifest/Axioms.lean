@@ -301,6 +301,17 @@ theorem context_bounds_action :
     Basis: Information-theoretic fact. In any finite information set, the relevance
           of individual items to a specific objective varies. This is independent of
           the agent architecture (applies to LLMs, FSMs, human cognition alike).
+
+    Theoretical grounding (Foundation/InformationTheory.lean):
+      [R51] Shannon (1948) "A Mathematical Theory of Communication"
+            — Information content varies across symbols in any non-trivial source
+      [R52] Tishby et al. (1999) "The Information Bottleneck Method"
+            — Relevance is task-dependent; optimal compression discards irrelevant items
+      Note: T₀ natural-science constraint. The existence of zero-contribution items
+            cannot be derived from type definitions (precisionContribution is opaque).
+
+    降格判定: 導出不可能 — precisionContribution が opaque。axiom として維持。
+
     Source: ForgeCode analysis #147 — identified as common root of B1/B3/B5/B6.
     Refutation condition: If it were shown that all information contributes equally
           to all tasks (contradicts information theory). -/
@@ -377,9 +388,24 @@ opaque structureImproved : World → World → Prop
           If structure has improved between two world states,
           then feedback exists in between.
     Basis: Fundamental principle of control theory. Without a loop of
-          measurement, comparison, and adjustment, convergence toward the goal does not occur.
+          measurement, comparison, and adjustment, convergence toward
+          the goal does not occur.
+
+    Theoretical grounding (Foundation/ControlTheory.lean):
+      [R41] Francis & Wonham (1976) "The Internal Model Principle"
+            — Tracking requires a model of the signal generator (= feedback)
+      [R42] Cover & Thomas (1991) "Data Processing Inequality"
+            — Without new information (feedback), no improvement is possible
+      Compositional property proven: feedback_interval_widen (0 sorry)
+      Note: T₀ natural-science constraint. Feedback necessity cannot be derived
+            from type definitions (structureImproved is opaque).
+
+    降格判定: 導出不可能 — structureImproved が opaque。axiom として維持。
+
     Source: manifesto.md T5 "A fundamental of control theory"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If structural improvement without any feedback
+              mechanism were demonstrated (e.g., improvement through
+              purely internal computation without external input) -/
 axiom no_improvement_without_feedback :
   ∀ (w w' : World),
     structureImproved w w' →
