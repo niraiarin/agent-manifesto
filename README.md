@@ -37,7 +37,7 @@
 
 公理系を Lean 4 で形式化し、内部整合性を機械的に保証する。
 
-- **68 公理**, **1378 定理**, **0 sorry**
+- **51 axioms**, **386 theorems**, **0 sorry**
 - 境界条件 **L1–L6**: エージェントの行動空間の壁（Ontology.lean）
 - 可観測変数 **V1–V7**: 壁の中で構造が動かせるレバー（Observable.lean）
 
@@ -48,10 +48,11 @@
 | `Ontology.lean` | 境界条件 L1–L6、型定義、半順序公理 |
 | `Observable.lean` | 変数 V1–V7 の定義、proxy 成熟度（V1/V3 formal 昇格済み） |
 | `ObservableDesign.lean` | V1–V7 の設計特性、運用閾値、Goodhart 耐性 |
-| `DesignFoundation.lean` | 設計開発基礎論 D1–D9 の形式化 |
+| `DesignFoundation.lean` | 設計開発基礎論 D1–D14 の形式化 |
 | `EpistemicLayer.lean` | 認識論的層（GQM, Goodhart 5層防御, proxy 卒業条件） |
 | `EvolveSkill.lean` | /evolve スキルの準拠性証明（φ₁–φ₁₇） |
 | `FormalDerivationSkill.lean` | 形式的導出スキルの準拠性証明 |
+| `Traceability.lean` | 閉環トレーサビリティ（命題↔テスト↔実装） |
 | `Evolution.lean` | 互換性分類の合成、静止の不健全性 |
 | `Workflow.lean` | 学習ライフサイクル、統合ゲート条件 |
 | `Procedure.lean` | T₀ 縮小禁止、修正の安全性順序 |
@@ -62,7 +63,7 @@
 export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ```
 
-### 設計開発基礎論 (D1–D9)
+### 設計開発基礎論 (D1–D14)
 
 公理系から導出される、プラットフォーム非依存の設計定理。
 
@@ -77,10 +78,15 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | D7 | 非対称信頼 | E2 + P1 |
 | D8 | 均衡探索 | P1 + L4 |
 | D9 | 自己適用 | D1–D8 を自身に適用 |
+| D10 | 構造永続性 | T1 + T2 |
+| D11 | コンテキスト経済 | T3 + D1 |
+| D12 | タスク設計の CSP | P6 + T3 + T7 + T8 |
+| D13 | 前提否定の影響波及 | P3 + T5 |
+| D14 | 検証制約 | P6 + T7 + T8 |
 
 ## 参照実装 — Claude Code 上の運用ワークフロー
 
-理論を Claude Code 上で実際に運用するための構成。9 スキル、12 フック、5 エージェント、249 テスト。
+理論を Claude Code 上で実際に運用するための構成。12 スキル、16 フック、6 エージェント、492 テスト。
 
 ### ワークフロー全体図
 
@@ -118,23 +124,36 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
   │  要件 → Γ (前提集合) + φ (目標命題) → Lean 4 導出構成           │
   │       → 公理衛生検査 → 形式化ギャップ検証 → 監査完了            │
   └───────────────────────────────────────────────────────────────┘
+
+  ┌───────────────────────────────────────────────────────────────┐
+  │              仕様駆動開発 (/spec-driven-workflow)                │
+  │                                                               │
+  │  Phase 0: /instantiate-model → 条件付き公理系（Lean 設計書）    │
+  │  Phase 1: テスト計画導出（# @traces + trace-map.json）          │
+  │  Phase 2: TDD 実装（artifact-manifest.json 登録）              │
+  │  Phase 3: 閉環検証（/trace + /verify + trace-coverage.sh）     │
+  │  Phase 4: 保守（manifest-trace impact + /metrics + /evolve）   │
+  └───────────────────────────────────────────────────────────────┘
 ```
 
-### スキル一覧 (9個)
+### スキル一覧 (12個)
 
 | スキル | 目的 | 実装する原理 | いつ使う |
 |--------|------|-------------|---------|
+| `/spec-driven-workflow` | 仕様駆動開発ワークフロー | 全体統合 | 公理系ベースの開発を Phase 0-4 で実行する時 |
 | `/verify` | 独立検証 | P2, E1 | コミット前（高リスク変更時） |
 | `/metrics` | V1–V7 ダッシュボード | P4, D3 | 改善の前後、健全性確認時 |
+| `/trace` | 半順序トレーサビリティ | P4, D13 | カバレッジ・逸脱・影響分析 |
 | `/evolve` | 漸進的改善 | T1↔T2, P3, D4 | 構造品質を向上させたい時 |
 | `/research` | Gate 付きリサーチ | P3 | 実装前に「やるべきか？」を調査する時 |
 | `/formal-derivation` | Lean 4 形式導出 | T8, D5 | 定理の追加・公理系の拡張時 |
+| `/ground-axiom` | 公理の数学的根拠検証 | T₀ | 公理の根拠を形式証明で裏付ける時 |
 | `/design-implementation-plan` | プロバイダマッピング | D1–D9 | 新プラットフォームへの適用設計時 |
 | `/adjust-action-space` | 行動空間の調整 | D8, L4 | 権限の拡張/縮小を提案する時 |
 | `/package-plugin` | Plugin パッケージ化 | D9 | .claude/ 構成を他プロジェクトに配布する時 |
 | `/instantiate-model` | 条件付き公理系生成 | 形式モデル | ドメイン固有の公理系を生成する時 |
 
-### フック一覧 (12個) — 自動的な構造強制
+### フック一覧 (16個) — 自動的な構造強制
 
 エージェントの裁量に依存せず、ツール実行時に自動強制される。
 
@@ -153,16 +172,24 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | フック | タイミング | 内容 |
 |--------|-----------|------|
 | `p3-compatibility-check.sh` | PreToolUse: Bash (git commit) | 構造ファイル変更時に互換性分類を要求 |
+| `p3-axiom-evidence-check.sh` | PreToolUse: Bash (git commit) | Axiom Card の根拠記載を検証 |
 
 **P4 可観測性:**
 | フック | タイミング | 内容 |
 |--------|-----------|------|
 | `p4-metrics-collector.sh` | PostToolUse (async) | 全ツール使用を tool-usage.jsonl に記録 |
 | `p4-temporal-tracker.sh` | PreToolUse: Bash | タイムスタンプのドリフトを検出 |
+| `p4-sync-counts-check.sh` | PreToolUse: Bash (git commit) | Lean/ドキュメントのカウント同期を検証 |
 | `p4-gate-logger.sh` | SessionStart | セッション開始時の V1–V7 ベースラインを記録 |
 | `p4-drift-detector.sh` | SessionStart | 前セッションからの劣化兆候を検出 |
 | `p4-v5-approval-tracker.sh` | PostToolUse | ユーザー承認/却下イベントを記録 |
 | `p4-v7-task-tracker.sh` | PostToolUse | タスクライフサイクルイベントを記録 |
+
+**H5 品質:**
+| フック | タイミング | 内容 |
+|--------|-----------|------|
+| `h5-doc-lint.sh` | PreToolUse: Bash (git commit) | Lean doc comment の lint（見出し階層、CJK、スラグ） |
+| `hallucination-check.sh` | PreToolUse: Bash (git commit) | ハルシネーション検出 |
 
 **/evolve 専用:**
 | フック | タイミング | 内容 |
@@ -170,11 +197,12 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | `evolve-state-loader.sh` | SessionStart | 前回の evolve 履歴と deferred 状態を読み込み |
 | `evolve-metrics-recorder.sh` | PostToolUse (async) | evolve 実行結果を記録 |
 
-### エージェント (5体)
+### エージェント (6体)
 
 | エージェント | モデル | 役割 | 使われる場面 |
 |-------------|--------|------|-------------|
 | **Verifier** | Sonnet | P2 独立検証（コンテキスト分離 + 自動実行） | /verify, /evolve Phase 3 |
+| **Judge** | — | GQM ベースの定量評価（Gate 判定支援） | /evolve, /research |
 | **Observer** | Sonnet | P4 観測（V1–V7 計測、改善候補の列挙） | /evolve Phase 1 |
 | **Hypothesizer** | Opus | P3 仮説化（改善案設計、互換性分類） | /evolve Phase 2 |
 | **Integrator** | Sonnet | P3 統合（コミット、履歴記録、退役処理） | /evolve Phase 4–5 |
@@ -224,17 +252,23 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 │       ├── EpistemicLayer.lean           #   認識論的層
 │       ├── Workflow.lean                 #   P3 学習ライフサイクル
 │       └── Evolution.lean               #   互換性代数
-├── tests/                                # 受入テスト (249 scenarios, Phase 1-5)
+├── tests/                                # 受入テスト (492 scenarios, Phase 1-5)
+│   └── trace-map.json                    #   テスト→命題トレーサビリティマッピング
 ├── .claude/
-│   ├── skills/                           #   9 スキル (上記参照)
-│   ├── hooks/                            #   12 フック (上記参照)
-│   ├── agents/                           #   5 エージェント (上記参照)
+│   ├── skills/                           #   12 スキル (上記参照)
+│   ├── hooks/                            #   16 フック (上記参照)
+│   ├── agents/                           #   6 エージェント (上記参照)
 │   ├── rules/                            #   規範的指針 (L1, P3)
 │   └── metrics/                          #   運用データ (JSONL)
 ├── research/                             # 調査・参照資料
 ├── reports/                              # 生成レポート
 ├── archive/                              # 検証済み歴史的成果物
-└── scripts/                              # 自動化スクリプト
+├── scripts/                              # 自動化スクリプト
+│   ├── trace-coverage.sh                 #   テスト→命題カバレッジレポート
+│   ├── check-lean-imports.sh             #   Lean import 整合性チェック
+│   └── sync-counts.sh                    #   定理/公理カウント同期
+├── manifest-trace                        # CLI: 半順序トレーサビリティ + D13 影響分析
+└── artifact-manifest.json                # 成果物→命題マッピング (SSOT)
 ```
 
 ## ドキュメント読み順
@@ -249,16 +283,16 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ## テスト
 
 ```bash
-bash tests/test-all.sh    # 全 249 受入テスト (Phase 1-5)
+bash tests/test-all.sh    # 全 492 受入テスト (Phase 1-5)
 ```
 
-| Phase | 対象 | テスト数 | 内容 |
-|-------|------|---------|------|
-| 1 | L1 安全 | 2 | Hook 登録、破壊的操作ブロック |
-| 2 | P2 検証 | 2 | Verifier エージェント、検証スキル |
-| 3 | P4 可観測 | 2 | メトリクス収集、V1–V7 定義 |
-| 4 | P3 統治 | 2 | 互換性分類、知識ライフサイクル |
-| 5 | 構造品質 | 241 | 公理品質、evolve 構造、Lean 整合性、回帰テスト |
+| Phase | 対象 | 内容 |
+|-------|------|------|
+| 1 | L1 安全 | Hook 登録、破壊的操作ブロック、ファイルガード |
+| 2 | P2 検証 | Verifier エージェント、検証スキル、コミットゲート |
+| 3 | P4 可観測 | メトリクス収集、V1–V7 計測インフラ、ドリフト検出 |
+| 4 | P3 統治 | 互換性分類、知識ライフサイクル、構造永続性 |
+| 5 | 構造品質 | 公理品質、依存グラフ、evolve 構造、スクリプト整合性 |
 
 ## ライセンス
 
