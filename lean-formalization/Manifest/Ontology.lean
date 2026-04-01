@@ -877,7 +877,7 @@ theorem structureKind_le_antisymm :
 /-- Consistency of LT and LE: k₁ < k₂ iff k₁ <= k₂ and not (k₂ <= k₁). -/
 theorem structureKind_lt_iff_le_not_le :
     ∀ (k₁ k₂ : StructureKind), k₁ < k₂ ↔ k₁ ≤ k₂ ∧ ¬(k₂ ≤ k₁) := by
-  intro _k₁ _k₂; exact Nat.lt_iff_le_not_le
+  intro _k₁ _k₂; exact Nat.lt_iff_le_and_not_ge
 
 /-- manifest has higher priority than designConvention (Section 8 partial order). -/
 theorem priority_manifest_gt_design :

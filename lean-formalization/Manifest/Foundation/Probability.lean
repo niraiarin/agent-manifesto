@@ -51,12 +51,12 @@ def Logits (V : Type) [Fintype V] := V → ℝ
     Properties: (1) output is in the probability simplex Δ_|V|,
     (2) for τ > 0, all components are strictly positive. -/
 noncomputable def softmax {V : Type} [Fintype V] [Nonempty V]
-    (z : Logits V) (τ : ℝ) (hτ : τ > 0) : V → ℝ :=
+    (z : Logits V) (τ : ℝ) (_hτ : τ > 0) : V → ℝ :=
   fun v => Real.exp (z v / τ) / (∑ w : V, Real.exp (z w / τ))
 
 /-- The denominator of softmax is strictly positive (sum of exponentials). -/
 theorem softmax_denom_pos {V : Type} [Fintype V] [Nonempty V]
-    (z : Logits V) (τ : ℝ) (hτ : τ > 0) :
+    (z : Logits V) (τ : ℝ) (_hτ : τ > 0) :
     (∑ w : V, Real.exp (z w / τ)) > 0 := by
   apply Finset.sum_pos
   · intro v _

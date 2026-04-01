@@ -673,7 +673,7 @@ Consistency of LT and LE: p₁ < p₂ iff p₁ <= p₂ and not (p₂ <= p₁).
 ```
 theorem developmentPhase_lt_iff_le_not_le :
     ∀ (p₁ p₂ : DevelopmentPhase), p₁ < p₂ ↔ p₁ ≤ p₂ ∧ ¬(p₂ ≤ p₁) := by
-  intro _p₁ _p₂; exact Nat.lt_iff_le_not_le
+  intro _p₁ _p₂; exact Nat.lt_iff_le_and_not_ge
 ```
 
 ## D5 Specification Test and Implementation Three-Layer Architecture
@@ -808,7 +808,7 @@ Consistency of LT and LE: l₁ < l₂ iff l₁ <= l₂ and not (l₂ <= l₁).
 ```
 theorem specLayer_lt_iff_le_not_le :
     ∀ (l₁ l₂ : SpecLayer), l₁ < l₂ ↔ l₁ ≤ l₂ ∧ ¬(l₂ ≤ l₁) := by
-  intro _l₁ _l₂; exact Nat.lt_iff_le_not_le
+  intro _l₁ _l₂; exact Nat.lt_iff_le_and_not_ge
 ```
 
 ## D6 Three-Stage Design
@@ -1124,7 +1124,7 @@ Consistency of LT and LE: s₁ < s₂ iff s₁ <= s₂ and not (s₂ <= s₁).
 ```
 theorem designStage_lt_iff_le_not_le :
     ∀ (s₁ s₂ : DesignStage), s₁ < s₂ ↔ s₁ ≤ s₂ ∧ ¬(s₂ ≤ s₁) := by
-  intro _s₁ _s₂; exact Nat.lt_iff_le_not_le
+  intro _s₁ _s₂; exact Nat.lt_iff_le_and_not_ge
 ```
 
 ## D7 Trust Asymmetry Part 2
