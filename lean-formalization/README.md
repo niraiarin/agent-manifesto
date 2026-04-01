@@ -16,7 +16,7 @@ lake build Manifest  →  Build completed successfully
 | sorry | 0 |
 | compression | 7.31x (373 theorems / 51 axioms) |
 | Lean ソース | ~9,000 行 (16 モジュール + root) |
-| テスト | 314 acceptance tests |
+| テスト | 493 acceptance tests |
 
 ## 認識論的層構造（Epistemic Layer Architecture）
 
