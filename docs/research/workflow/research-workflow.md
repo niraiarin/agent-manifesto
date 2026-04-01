@@ -94,15 +94,98 @@ Parent: #N
 **次のアクション**: ...
 ```
 
-### 4. Gate Judgment
+### 4. Git Worktree for Isolation
+
+Each research task gets its own git worktree:
+
+```bash
+git worktree add ../project-research-45 -b research/45-topic-name main
+```
+
+**Why worktrees**:
+- Research artifacts (scripts, data, reports) don't pollute the main branch
+- Multiple research tasks can run in parallel without conflicts
+- Easy to discard if the gate judges FAIL
+- Easy to merge if the gate judges PASS and artifacts are worth keeping
+
+**Worktree conventions**:
+- Branch name: `research/<issue-number>-<short-name>`
+- Scripts go in `scripts/` within the worktree
+- Results go in `docs/research/` within the worktree
+- Reference data from main repo via absolute paths or symlinks
+
+### 5. Experiment Execution
+
+Run experiments from the worktree. Record results incrementally as issue comments — don't wait until everything is done.
+
+**Comment structure for experiments**:
+
+```markdown
+### [YYYY-MM-DD] Experiment: [name]
+
+**条件**:
+- Parameter A: value
+- Parameter B: value
+
+**結果**:
+
+| Metric | Value | Threshold | Status |
+|--------|-------|-----------|--------|
+| Metric 1 | X | ≥ Y | PASS/FAIL |
+
+**考察**: [interpretation]
+**次のアクション**: [what to do next]
+```
+
+**Rules**:
+- Always include raw numbers, not just pass/fail
+- Always state conditions precisely enough to reproduce
+- Always state what you'll do next — even if it's "wait for #XX"
+
+### 6. Judge Evaluation + Gate Judgment
+
+Before gate judgment, conduct structured evaluation using LLM-as-a-judge (`.claude/agents/judge.md`).
+
+#### 6a. Judge Evaluation
+
+Pass the following to the Judge agent:
+- Experiment results (issue comments)
+- Gate PASS/FAIL criteria defined in the sub-issue
+- Artifact file list
+
+Judge evaluates on G1-G4 criteria:
+
+| # | Criterion | Question |
+|---|-----------|----------|
+| G1 | Question Response | Does it answer the sub-issue's question? |
+| G2 | Reproducibility | Can the results be reproduced? |
+| G3 | Judgment Basis | Is the PASS/FAIL rationale quantitative? |
+| G4 | Next Action | Is the next step clear? |
+
+Judge recommendation: average ≥ 3.5 → PASS recommended, < 3.5 → reconsider.
+Final judgment is made by human (T6). Judge results are reference material.
+
+#### 6b. Gate Judgment
 
 The gate is the most important part. After each experiment, record a judgment as an issue comment:
 
 ```markdown
+### Judge 評価
+
+| 基準 | スコア | 根拠 |
+|------|--------|------|
+| G1 Question Response | N/5 | ... |
+| G2 Reproducibility | N/5 | ... |
+| G3 Judgment Basis | N/5 | ... |
+| G4 Next Action | N/5 | ... |
+
+**総合スコア**: X.X/5.0
+
 ### Gate: [判定名]
 
 **日付**: YYYY-MM-DD
 **判定**: PASS / CONDITIONAL / FAIL
+**Judge スコア**: X.X/5.0
 **根拠**: [quantitative data or qualitative assessment]
 **追加研究**: 必要 → #XX / 不要
 **次のアクション**: ...
@@ -130,54 +213,6 @@ The gate is the most important part. After each experiment, record a judgment as
 ├── #48 Prompt adaptation (depends on #45)
 └── #49 Job queue design (parallel, no LLM dependency)
 ```
-
-### 5. Git Worktree for Isolation
-
-Each research task gets its own git worktree:
-
-```bash
-git worktree add ../project-research-45 -b research/45-topic-name main
-```
-
-**Why worktrees**:
-- Research artifacts (scripts, data, reports) don't pollute the main branch
-- Multiple research tasks can run in parallel without conflicts
-- Easy to discard if the gate judges FAIL
-- Easy to merge if the gate judges PASS and artifacts are worth keeping
-
-**Worktree conventions**:
-- Branch name: `research/<issue-number>-<short-name>`
-- Scripts go in `scripts/` within the worktree
-- Results go in `docs/research/` within the worktree
-- Reference data from main repo via absolute paths or symlinks
-
-### 6. Experiment Execution
-
-Run experiments from the worktree. Record results incrementally as issue comments — don't wait until everything is done.
-
-**Comment structure for experiments**:
-
-```markdown
-### [YYYY-MM-DD] Experiment: [name]
-
-**条件**:
-- Parameter A: value
-- Parameter B: value
-
-**結果**:
-
-| Metric | Value | Threshold | Status |
-|--------|-------|-----------|--------|
-| Metric 1 | X | ≥ Y | PASS/FAIL |
-
-**考察**: [interpretation]
-**次のアクション**: [what to do next]
-```
-
-**Rules**:
-- Always include raw numbers, not just pass/fail
-- Always state conditions precisely enough to reproduce
-- Always state what you'll do next — even if it's "wait for #XX"
 
 ### 7. Closing the Loop
 
