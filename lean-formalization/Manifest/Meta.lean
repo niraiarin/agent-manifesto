@@ -133,7 +133,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
 def currentTheoremDistribution : TheoremDistribution :=
   { ontologyM              := 21
     axiomsM                := 3
-    empiricalPostulatesM   := 1
+    empiricalPostulatesM   := 2
     observableM            := 30  -- Observable.lean + ObservableDesign.lean
     principlesM            := 14
     metaM                  := 12
@@ -158,20 +158,20 @@ def currentTheoremDistribution : TheoremDistribution :=
     axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
 def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 11
-    empiricalCount   := 4
+    empiricalCount   := 3
     observableCount  := 25
     applicationCount := 20
     structuralCount  := 1
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
-/-- 現在の公理系の総 axiom 数は 61。 -/
+/-- 現在の公理系の総 axiom 数は 60。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 61 := by rfl
+  currentProfile.totalAxioms = 60 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 363 := by rfl
+  currentProfile.theoremCount = 364 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :

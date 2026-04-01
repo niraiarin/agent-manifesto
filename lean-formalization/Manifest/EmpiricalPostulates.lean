@@ -62,7 +62,21 @@ E1 is decomposed into three axioms:
           The agent that generated an action and the agent that verifies it
           must be distinct individuals that do not share internal state.
     Basis: A principle repeatedly demonstrated in scientific peer review,
-          financial auditing, software testing, etc.
+          financial auditing, software testing, etc. Grounded in statistical
+          independence requirements for hypothesis testing.
+
+    Theoretical grounding (Foundation/StatisticalTesting.lean):
+      [R61] Neyman & Pearson (1933) "On the Problem of the Most Efficient Tests"
+            — Independent testing maximizes detection power
+      [R62] Podsakoff et al. (2003) "Common Method Biases in Behavioral Research"
+            — Shared method/source biases reduce detection ability
+      [R63] AICPA / ISA 610 — Auditing standards requiring independence
+      Formally proven: self_id_not_distinct, independence_symmetric (0 sorry)
+      Derived theorem: no_self_verification (demoted from axiom — derives from this axiom)
+
+    降格判定: 導出不可能 — generates, verifies, sharesInternalState が opaque のため、
+    独立性要件を型から導出できない。axiom として維持。
+
     Source: manifesto.md E1 "Verification Requires Independence"
     Refutation condition: If self-verification is demonstrated to have detection power
               equal to external verification (e.g., realization of complete self-awareness) -/
@@ -72,19 +86,28 @@ axiom verification_requires_independence :
     verifies ver action w →
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver
 
-/-- [Axiom Card]
-    Layer: Γ \ T₀ (Hypothesis-derived)
+/-- [Derivation Card]
+    Derives from: verification_requires_independence (E1a)
     Content: Prohibition of self-verification.
           The same agent cannot perform both generation and verification.
-          A corollary of E1a (Terminology Reference §4.2 corollary), but declared explicitly.
-    Basis: Due to T4 (probabilistic output), the bias of the same process
-          affects both generation and evaluation, structurally degrading detection power.
-    Source: manifesto.md E1 + Principles.lean e1b_from_e1a proves derivation from E1a
-    Refutation condition: Same as the refutation condition for E1a -/
-axiom no_self_verification :
+          Derived from E1a: if gen.id ≠ ver.id is required, then gen = ver is impossible.
+    Proof strategy: Assume generates and verifies for same agent, derive gen.id ≠ gen.id
+          from verification_requires_independence, contradict with rfl.
+
+    Previously: axiom (declared explicitly as E1b).
+    Demoted: 2026-04-01 — derivable from verification_requires_independence via
+             contradiction (same proof as Principles.lean:e1b_from_e1a).
+
+    Theoretical grounding (Foundation/StatisticalTesting.lean):
+      [R61] Neyman & Pearson (1933) — independent testing maximizes detection power
+      Formally proven: self_id_not_distinct (0 sorry) — ¬(id ≠ id) -/
+theorem no_self_verification :
   ∀ (agent : Agent) (action : Action) (w : World),
     generates agent action w →
-    ¬verifies agent action w
+    ¬verifies agent action w := by
+  intro agent action w h_gen h_ver
+  have h := verification_requires_independence agent agent action w h_gen h_ver
+  exact absurd rfl h.1
 
 /-- [Axiom Card]
     Layer: Γ \ T₀ (Hypothesis-derived)
@@ -94,9 +117,20 @@ axiom no_self_verification :
     Basis: Detection power degradation due to shared bias is empirically
           supported by conflict-of-interest policies in scientific research,
           audit firm rotation requirements, etc.
+
+    Theoretical grounding (Foundation/StatisticalTesting.lean):
+      [R62] Podsakoff et al. (2003) "Common Method Biases"
+            — Shared source biases inflate correlations and reduce detection
+      Formally proven: independence_symmetric (0 sorry)
+            — if A does not share state with B, then B does not share with A
+
+    降格判定: 導出不可能 — sharesInternalState, generates, verifies が opaque。
+    バイアス相関と検出力低下の因果関係は型から導出できない。axiom として維持。
+
     Source: manifesto.md E1 "When a process with the same biases handles both
             generation and evaluation, detection power degrades"
-    Refutation condition: If it is demonstrated that bias correlation has no effect on detection power -/
+    Refutation condition: If it is demonstrated that bias correlation has
+              no effect on detection power -/
 axiom shared_bias_reduces_detection :
   ∀ (a b : Agent) (action : Action) (w : World),
     sharesInternalState a b →

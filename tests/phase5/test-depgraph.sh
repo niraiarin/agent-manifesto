@@ -156,8 +156,8 @@ check "DG.54: impact includes manifesto_probabilistically_interpreted" \
 
 IMPACT_E1="$("$DEPGRAPH" impact verification_requires_independence 2>&1)"
 
-check "DG.55: impact of verification_requires_independence affects 4 nodes" \
-  "echo '$IMPACT_E1' | grep -q 'Total affected: 4'"
+check "DG.55: impact of verification_requires_independence affects 6 nodes" \
+  "echo '$IMPACT_E1' | grep -q 'Total affected: 6'"
 
 check "DG.56: impact of E1 includes cognitive_separation_required (P2)" \
   "echo '$IMPACT_E1' | grep -q 'cognitive_separation_required'"
