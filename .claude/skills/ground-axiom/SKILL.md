@@ -40,9 +40,12 @@ T4 (`output_nondeterministic`) で確立されたパターンを全 axiom に適
 
 ```bash
 # depgraph.json が最新であることを確認（なければ生成）
-if [ ! -f depgraph.json ] || [ lean-formalization/Manifest -nt depgraph.json ]; then
+# Note: Lean ファイル変更後は必ず再生成すること
+if [ ! -f depgraph.json ]; then
   scripts/depgraph.sh generate
 fi
+# Lean ファイルを変更した後は明示的に再生成する:
+#   scripts/depgraph.sh generate
 ```
 
 ### Step 1: 対象選定
@@ -263,6 +266,7 @@ Issue にコメントとして結果を記録:
 
 `scripts/depgraph.sh classify` の出力に対して、
 各 axiom の根拠検証状況を管理する。
+（no-card axiom の件数は `classify` の実行結果で確認すること。固定値をハードコードしない。）
 
 状態:
 - `grounded` — 根拠検証完了（形式証明 + Axiom Card 更新済み）
