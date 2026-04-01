@@ -197,7 +197,7 @@ T₀ の権威（手順書）は型定義の構成子の選択に反映されて
 -/
 
 /-- T₀: 手順書は Phase 1–4 の 4 フェーズで構成される。
-    ソース: docs/formal-derivation-procedure.md §3 -/
+    Source: docs/formal-derivation-procedure.md §3 -/
 theorem procedure_has_four_phases :
   ∀ (p : Phase),
     p = .leanConstruction ∨ p = .derivation ∨
@@ -205,7 +205,7 @@ theorem procedure_has_four_phases :
   intro p; cases p <;> simp
 
 /-- T₀: Phase 1 は 6 つの Step で構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 1 (lines 268-276) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 1 (lines 268-276) -/
 theorem phase1_has_six_steps :
   ∀ (s : ConstructionStep),
     s = .domainDefinition ∨ s = .goalFormulation ∨
@@ -214,14 +214,14 @@ theorem phase1_has_six_steps :
   intro s; cases s <;> simp
 
 /-- T₀: Phase 2 は 3 つの Step で構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 2 (lines 286-298) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 2 (lines 286-298) -/
 theorem phase2_has_three_steps :
   ∀ (s : DerivationStep),
     s = .decomposition ∨ s = .bottomUp ∨ s = .composition := by
   intro s; cases s <;> simp
 
 /-- T₀: Phase 3 は 3 つのサブフェーズで構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3 (lines 300-368) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3 (lines 300-368) -/
 theorem phase3_has_three_components :
   ∀ (c : CorrectionComponent),
     c = .errorInterpretation ∨ c = .modificationDiscipline ∨
@@ -229,7 +229,7 @@ theorem phase3_has_three_components :
   intro c; cases c <;> simp
 
 /-- T₀: Phase 3b の修正は 4 種に分類される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3b (lines 315-335) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3b (lines 315-335) -/
 theorem phase3b_has_four_modification_kinds :
   ∀ (m : ModificationKind),
     m = .definitionalExtension ∨ m = .extensionChange ∨
@@ -237,7 +237,7 @@ theorem phase3b_has_four_modification_kinds :
   intro m; cases m <;> simp
 
 /-- T₀: Phase 3c は 3 つの戦略変更トリガーを定義する。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3c (lines 344-348) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3c (lines 344-348) -/
 theorem phase3c_has_three_strategy_triggers :
   ∀ (t : StrategyChangeTrigger),
     t = .sameErrorRepetition ∨ t = .axiomInflation ∨
@@ -245,7 +245,7 @@ theorem phase3c_has_three_strategy_triggers :
   intro t; cases t <;> simp
 
 /-- T₀: Phase 3c の戦略変更は 4 つの選択肢で構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3c (lines 360-363) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3c (lines 360-363) -/
 theorem phase3c_has_four_strategy_options :
   ∀ (o : StrategyChangeOption),
     o = .reviseExtension ∨ o = .redefDomain ∨
@@ -253,7 +253,7 @@ theorem phase3c_has_four_strategy_options :
   intro o; cases o <;> simp
 
 /-- T₀: 公理ソースは 5 カテゴリで構成される。
-    ソース: docs/formal-derivation-procedure.md §2.4 (lines 135-137, 153-154) -/
+    Source: docs/formal-derivation-procedure.md §2.4 (lines 135-137, 153-154) -/
 theorem axiom_sources_have_five_categories :
   ∀ (s : AxiomSourceCategory),
     s = .contract ∨ s = .naturalLaw ∨ s = .environment ∨
@@ -261,7 +261,7 @@ theorem axiom_sources_have_five_categories :
   intro s; cases s <;> simp
 
 /-- T₀: Phase 3a のエラー種別は 5 つで構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3a (lines 316-322) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3a (lines 316-322) -/
 theorem phase3a_has_five_error_kinds :
   ∀ (e : LeanErrorKind),
     e = .typeMismatch ∨ e = .unknownIdentifier ∨
@@ -269,7 +269,7 @@ theorem phase3a_has_five_error_kinds :
   intro e; cases e <;> simp
 
 /-- T₀: バックトラック時の構成要素は 4 カテゴリで構成される。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 3c (lines 365-369) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 3c (lines 365-369) -/
 theorem phase3c_has_four_backtrack_components :
   ∀ (b : BacktrackComponent),
     b = .baseTheory ∨ b = .extensionAxioms ∨
@@ -277,14 +277,14 @@ theorem phase3c_has_four_backtrack_components :
   intro b; cases b <;> simp
 
 /-- T₀: ワークフローは 3 種の終了条件を持つ。
-    ソース: docs/formal-derivation-procedure.md §4 (lines 432-456) -/
+    Source: docs/formal-derivation-procedure.md §4 (lines 432-456) -/
 theorem workflow_has_three_terminations :
   ∀ (t : TerminationKind),
     t = .success ∨ t = .failure ∨ t = .undecided := by
   intro t; cases t <;> simp
 
 /-- T₀: Phase 4 は 3 つの監査構成要素を持つ。
-    ソース: docs/formal-derivation-procedure.md §3 Phase 4 (lines 370-428) -/
+    Source: docs/formal-derivation-procedure.md §3 Phase 4 (lines 370-428) -/
 theorem phase4_has_three_audit_components :
   ∀ (a : AuditComponent),
     a = .completenessCheck ∨ a = .axiomHygiene ∨
@@ -292,7 +292,7 @@ theorem phase4_has_three_audit_components :
   intro a; cases a <;> simp
 
 /-- T₀: 公理衛生チェックは 5 つの検査項目で構成される。
-    ソース: docs/formal-derivation-procedure.md §2.6 (lines 192-257) -/
+    Source: docs/formal-derivation-procedure.md §2.6 (lines 192-257) -/
 theorem axiom_hygiene_has_five_checks :
   ∀ (h : HygieneCheck),
     h = .nonVacuity ∨ h = .nonLogicalValidity ∨
@@ -301,7 +301,7 @@ theorem axiom_hygiene_has_five_checks :
   intro h; cases h <;> simp
 
 /-- T₀: 形式化ギャップ検証は 3 層で構成される。
-    ソース: docs/formal-derivation-procedure.md §4c (lines 396-428) -/
+    Source: docs/formal-derivation-procedure.md §4c (lines 396-428) -/
 theorem gap_verification_has_three_layers :
   ∀ (g : GapVerificationLayer),
     g = .docstringInspection ∨ g = .independentReview ∨
@@ -309,7 +309,7 @@ theorem gap_verification_has_three_layers :
   intro g; cases g <;> simp
 
 /-- T₀: 公理カードは 5 つの必須フィールドで構成される。
-    ソース: docs/formal-derivation-procedure.md §2.5 (lines 156-190) -/
+    Source: docs/formal-derivation-procedure.md §2.5 (lines 156-190) -/
 theorem axiom_card_has_five_fields :
   ∀ (f : AxiomCardField),
     f = .membership ∨ f = .content ∨ f = .rationale ∨
@@ -317,14 +317,14 @@ theorem axiom_card_has_five_fields :
   intro f; cases f <;> simp
 
 /-- T₀: 前提集合 Γ は T₀ と Γ \ T₀ の 2 区分で構成される。
-    ソース: docs/formal-derivation-procedure.md §2.4 (lines 125-154) -/
+    Source: docs/formal-derivation-procedure.md §2.4 (lines 125-154) -/
 theorem premise_has_two_partitions :
   ∀ (p : PremisePartition),
     p = .baseTheory ∨ p = .extension := by
   intro p; cases p <;> simp
 
 /-- T₀: T₀ のエンコード方法は 2 つの選択肢で構成される。
-    ソース: docs/formal-derivation-procedure.md §2.4 (lines 139-146) -/
+    Source: docs/formal-derivation-procedure.md §2.4 (lines 139-146) -/
 theorem t0_has_two_encoding_methods :
   ∀ (e : T0EncodingMethod),
     e = .definitionalTheorem ∨ e = .axiomWithCard := by
@@ -355,162 +355,162 @@ Lean コンパイラはこれらの真偽を判定できない（SKILL.md の内
     真偽は Γ \ T₀ の公理によってのみ決定される。 -/
 opaque skillCovers : {α : Type} → α → Prop
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 1–4 の全 Phase をセクションとして含む
-    根拠: SKILL.md lines 51-285 に Phase 1–4 が記述されている
-    ソース: .claude/skills/formal-derivation/SKILL.md (Phase 1: L51, Phase 2: L158,
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 1–4 の全 Phase をセクションとして含む
+    Basis: SKILL.md lines 51-285 に Phase 1–4 が記述されている
+    Source: .claude/skills/formal-derivation/SKILL.md (Phase 1: L51, Phase 2: L158,
             Phase 3: L178, Phase 4: L242)
-    反証条件: SKILL.md にいずれかの Phase のセクションが存在しない場合 -/
+    Refutation condition: SKILL.md にいずれかの Phase のセクションが存在しない場合 -/
 axiom skill_covers_all_phases :
   ∀ (p : Phase), skillCovers p
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 1 の全 6 Step を Steps 1.1–1.7 として含む
-    根拠: SKILL.md Steps 1.1(L55), 1.2(L71), 1.3(L90), 1.4(L99),
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 1 の全 6 Step を Steps 1.1–1.7 として含む
+    Basis: SKILL.md Steps 1.1(L55), 1.2(L71), 1.3(L90), 1.4(L99),
           1.5(L112: T₀ 無矛盾性), 1.6(L125: 公理カード), 1.7(L148: コンパイル)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかの Step が存在しない場合。
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかの Step が存在しない場合。
               注: 手順書の step 5 (Γ\T₀ 拡大) と step 6 (補助定義) は
               Step 1.4 内に統合されている -/
 axiom skill_covers_phase1_steps :
   ∀ (s : ConstructionStep), skillCovers s
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 2 の全 3 Step を含む
-    根拠: SKILL.md Steps 2.1(L163), 2.2(L167), 2.3(L171)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかの Step が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 2 の全 3 Step を含む
+    Basis: SKILL.md Steps 2.1(L163), 2.2(L167), 2.3(L171)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかの Step が存在しない場合 -/
 axiom skill_covers_phase2_steps :
   ∀ (s : DerivationStep), skillCovers s
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3 の全 3 構成要素を含む
-    根拠: SKILL.md 3a(L183), 3b(L193), 3c(L215)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかのサブフェーズが存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3 の全 3 構成要素を含む
+    Basis: SKILL.md 3a(L183), 3b(L193), 3c(L215)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかのサブフェーズが存在しない場合 -/
 axiom skill_covers_phase3_components :
   ∀ (c : CorrectionComponent), skillCovers c
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3b の 4 種の修正分類を含む
-    根拠: SKILL.md L197(定義的拡大), L201(Γ\T₀変更), L206(T₀縮小禁止), L210(φ弱化)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかの修正分類が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3b の 4 種の修正分類を含む
+    Basis: SKILL.md L197(定義的拡大), L201(Γ\T₀変更), L206(T₀縮小禁止), L210(φ弱化)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかの修正分類が存在しない場合 -/
 axiom skill_covers_modification_kinds :
   ∀ (m : ModificationKind), skillCovers m
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3c の 3 つの戦略変更トリガーを含む
-    根拠: SKILL.md L220(同一エラー), L221(公理膨張), L222(複雑度増大)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかのトリガーが存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3c の 3 つの戦略変更トリガーを含む
+    Basis: SKILL.md L220(同一エラー), L221(公理膨張), L222(複雑度増大)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかのトリガーが存在しない場合 -/
 axiom skill_covers_strategy_triggers :
   ∀ (t : StrategyChangeTrigger), skillCovers t
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3c の 4 つの戦略変更選択肢を含む
-    根拠: SKILL.md L224-228 に 4 選択肢が列挙されている
-    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3c
-    反証条件: SKILL.md にいずれかの選択肢が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3c の 4 つの戦略変更選択肢を含む
+    Basis: SKILL.md L224-228 に 4 選択肢が列挙されている
+    Source: .claude/skills/formal-derivation/SKILL.md Phase 3c
+    Refutation condition: SKILL.md にいずれかの選択肢が存在しない場合 -/
 axiom skill_covers_strategy_options :
   ∀ (o : StrategyChangeOption), skillCovers o
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は 3 つの終了条件を含む
-    根拠: SKILL.md L289(成功), L297(失敗), L302(未決)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかの終了条件が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は 3 つの終了条件を含む
+    Basis: SKILL.md L289(成功), L297(失敗), L302(未決)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかの終了条件が存在しない場合 -/
 axiom skill_covers_terminations :
   ∀ (t : TerminationKind), skillCovers t
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 4 の全 3 監査構成要素を含む
-    根拠: SKILL.md 4a(L247), 4b(L253), 4c(L261)
-    ソース: .claude/skills/formal-derivation/SKILL.md
-    反証条件: SKILL.md にいずれかの監査構成要素が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 4 の全 3 監査構成要素を含む
+    Basis: SKILL.md 4a(L247), 4b(L253), 4c(L261)
+    Source: .claude/skills/formal-derivation/SKILL.md
+    Refutation condition: SKILL.md にいずれかの監査構成要素が存在しない場合 -/
 axiom skill_covers_audit_components :
   ∀ (a : AuditComponent), skillCovers a
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は公理衛生チェックの全 5 検査項目を含む
-    根拠: SKILL.md L255-259 に 5 項目すべてが列挙されている
-    ソース: .claude/skills/formal-derivation/SKILL.md Phase 4b
-    反証条件: SKILL.md にいずれかの検査項目が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は公理衛生チェックの全 5 検査項目を含む
+    Basis: SKILL.md L255-259 に 5 項目すべてが列挙されている
+    Source: .claude/skills/formal-derivation/SKILL.md Phase 4b
+    Refutation condition: SKILL.md にいずれかの検査項目が存在しない場合 -/
 axiom skill_covers_hygiene_checks :
   ∀ (h : HygieneCheck), skillCovers h
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は形式化ギャップ検証の全 3 層を含む
-    根拠: SKILL.md L263(docstring), L268(独立レビュー), L282(反例探索)
-    ソース: .claude/skills/formal-derivation/SKILL.md Phase 4c
-    反証条件: SKILL.md にいずれかの層が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は形式化ギャップ検証の全 3 層を含む
+    Basis: SKILL.md L263(docstring), L268(独立レビュー), L282(反例探索)
+    Source: .claude/skills/formal-derivation/SKILL.md Phase 4c
+    Refutation condition: SKILL.md にいずれかの層が存在しない場合 -/
 axiom skill_covers_gap_layers :
   ∀ (g : GapVerificationLayer), skillCovers g
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は公理カードの全 5 フィールドを定義している
-    根拠: SKILL.md L130-146 に所属/内容/根拠/ソース/反証条件が記載
-    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.6
-    反証条件: SKILL.md にいずれかのフィールドが存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は公理カードの全 5 フィールドを定義している
+    Basis: SKILL.md L130-146 に所属/内容/根拠/ソース/反証条件が記載
+    Source: .claude/skills/formal-derivation/SKILL.md Step 1.6
+    Refutation condition: SKILL.md にいずれかのフィールドが存在しない場合 -/
 axiom skill_covers_axiom_card_fields :
   ∀ (f : AxiomCardField), skillCovers f
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は T₀ / Γ \ T₀ の 2 区分を明示している
-    根拠: SKILL.md Step 1.4 (L99-110) に基底理論と拡大部分が記述
-    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.4
-    反証条件: SKILL.md に T₀ と Γ \ T₀ の区分が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は T₀ / Γ \ T₀ の 2 区分を明示している
+    Basis: SKILL.md Step 1.4 (L99-110) に基底理論と拡大部分が記述
+    Source: .claude/skills/formal-derivation/SKILL.md Step 1.4
+    Refutation condition: SKILL.md に T₀ と Γ \ T₀ の区分が存在しない場合 -/
 axiom skill_covers_premise_partitions :
   ∀ (p : PremisePartition), skillCovers p
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は T₀ エンコード方法の 2 選択肢を明示している
-    根拠: SKILL.md Step 1.4 に「T₀ のエンコード方法の選択」セクションがあり、
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は T₀ エンコード方法の 2 選択肢を明示している
+    Basis: SKILL.md Step 1.4 に「T₀ のエンコード方法の選択」セクションがあり、
           型定義 + theorem と axiom の 2 選択肢が記述されている
-    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.4
-    反証条件: SKILL.md に T₀ エンコード方法の選択肢が存在しない場合 -/
+    Source: .claude/skills/formal-derivation/SKILL.md Step 1.4
+    Refutation condition: SKILL.md に T₀ エンコード方法の選択肢が存在しない場合 -/
 axiom skill_covers_t0_encoding_methods :
   ∀ (e : T0EncodingMethod), skillCovers e
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は公理ソースの 5 カテゴリを明示している
-    根拠: SKILL.md Step 1.4 に T₀ の 3 カテゴリ（契約/科学/環境）と
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は公理ソースの 5 カテゴリを明示している
+    Basis: SKILL.md Step 1.4 に T₀ の 3 カテゴリ（契約/科学/環境）と
           Γ \ T₀ の 2 カテゴリ（仮説/設計）が記述されている
-    ソース: .claude/skills/formal-derivation/SKILL.md Step 1.4
-    反証条件: SKILL.md にいずれかのカテゴリが存在しない場合 -/
+    Source: .claude/skills/formal-derivation/SKILL.md Step 1.4
+    Refutation condition: SKILL.md にいずれかのカテゴリが存在しない場合 -/
 axiom skill_covers_axiom_source_categories :
   ∀ (s : AxiomSourceCategory), skillCovers s
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3a の 5 つのエラー種別を含む
-    根拠: SKILL.md Phase 3a のテーブルに 5 種のエラーが列挙されている
-    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3a
-    反証条件: SKILL.md にいずれかのエラー種別が存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3a の 5 つのエラー種別を含む
+    Basis: SKILL.md Phase 3a のテーブルに 5 種のエラーが列挙されている
+    Source: .claude/skills/formal-derivation/SKILL.md Phase 3a
+    Refutation condition: SKILL.md にいずれかのエラー種別が存在しない場合 -/
 axiom skill_covers_error_kinds :
   ∀ (e : LeanErrorKind), skillCovers e
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: SKILL.md は Phase 3c のバックトラック保持/破棄ルールの 4 カテゴリを含む
-    根拠: SKILL.md Phase 3c に T₀/Γ\T₀/論議領域/導出済み補題の保持/破棄ルールが記述
-    ソース: .claude/skills/formal-derivation/SKILL.md Phase 3c
-    反証条件: SKILL.md にいずれかのカテゴリが存在しない場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: SKILL.md は Phase 3c のバックトラック保持/破棄ルールの 4 カテゴリを含む
+    Basis: SKILL.md Phase 3c に T₀/Γ\T₀/論議領域/導出済み補題の保持/破棄ルールが記述
+    Source: .claude/skills/formal-derivation/SKILL.md Phase 3c
+    Refutation condition: SKILL.md にいずれかのカテゴリが存在しない場合 -/
 axiom skill_covers_backtrack_components :
   ∀ (b : BacktrackComponent), skillCovers b
 

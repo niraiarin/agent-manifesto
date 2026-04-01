@@ -252,31 +252,31 @@ theorem evolution_uses_extension_ordering :
 /-- docstring が公理カード形式で書かれているかを表す述語。 -/
 opaque hasAxiomCardDocstring : String → Prop
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: Axioms.lean の全 13 axiom が公理カード形式の docstring を持つ
-    根拠: 各 axiom の docstring に [公理カード] ヘッダーと
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: Axioms.lean の全 13 axiom が公理カード形式の docstring を持つ
+    Basis: 各 axiom の docstring に [Axiom Card] ヘッダーと
           所属/内容/根拠/ソースが記載されていることを目視確認
-    ソース: Axioms.lean（修正済み）
-    反証条件: いずれかの axiom に公理カードフィールドが欠如している場合 -/
+    Source: Axioms.lean（修正済み）
+    Refutation condition: いずれかの axiom に公理カードフィールドが欠如している場合 -/
 axiom axioms_have_card_docstrings :
   hasAxiomCardDocstring axiomsFile.name
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: EmpiricalPostulates.lean の全 4 axiom が公理カード + 反証条件を持つ
-    根拠: 各 axiom の docstring に反証条件フィールドが含まれることを確認
-    ソース: EmpiricalPostulates.lean（修正済み）
-    反証条件: いずれかの axiom に反証条件が欠如している場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: EmpiricalPostulates.lean の全 4 axiom が公理カード + 反証条件を持つ
+    Basis: 各 axiom の docstring に反証条件フィールドが含まれることを確認
+    Source: EmpiricalPostulates.lean（修正済み）
+    Refutation condition: いずれかの axiom に反証条件が欠如している場合 -/
 axiom empirical_have_card_docstrings :
   hasAxiomCardDocstring empiricalFile.name
 
-/-- [公理カード]
-    所属: Γ \ T₀（分析由来）
-    内容: Observable.lean の全 24 axiom が公理カード + 反証条件を持つ
-    根拠: 各 axiom の docstring に反証条件フィールドが含まれることを確認
-    ソース: Observable.lean（修正済み）
-    反証条件: いずれかの axiom に反証条件が欠如している場合 -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀（分析由来）
+    Content: Observable.lean の全 24 axiom が公理カード + 反証条件を持つ
+    Basis: 各 axiom の docstring に反証条件フィールドが含まれることを確認
+    Source: Observable.lean（修正済み）
+    Refutation condition: いずれかの axiom に反証条件が欠如している場合 -/
 axiom observable_have_card_docstrings :
   hasAxiomCardDocstring observableFile.name
 
