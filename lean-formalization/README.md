@@ -12,9 +12,9 @@ lake build Manifest  →  Build completed successfully
 | 指標 | 値 |
 |------|-----|
 | axiom | 61 (T: 14, E: 4, V: 25, App: 20, Structural: 1) |
-| theorem | 362 (全て sorry-free) |
+| theorem | 363 (全て sorry-free) |
 | sorry | 0 |
-| compression | 5.93x (362 theorems / 61 axioms) |
+| compression | 5.95x (363 theorems / 61 axioms) |
 | Lean ソース | ~9,000 行 (16 モジュール + root) |
 | テスト | 314 acceptance tests |
 
