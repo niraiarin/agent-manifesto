@@ -123,12 +123,15 @@ structure Structure where
     Represents T3's physical constraint as a type. Corresponds to token limit for LLMs,
     or working memory size for other computational agents.
 
-    - `capacity` is a finite natural number (>= 0)
-    - `used` is the current usage
-    - `used <= capacity` is guaranteed externally as a type invariant (axiom T3) -/
+    The invariants `capacity > 0` and `used ≤ capacity` are embedded in the type
+    (previously axiom context_finite, now structurally enforced).
+    This makes invalid ContextWindows unconstructable — the constraint is a
+    definitional property of the type, not an external assumption. -/
 structure ContextWindow where
   capacity : Nat
   used     : Nat
+  capacity_pos : capacity > 0 := by omega
+  used_le_cap  : used ≤ capacity := by omega
   deriving Repr
 
 -- ============================================================
@@ -202,10 +205,13 @@ structure ResourceAllocation where
 
 /-- Precision level. By T8, all tasks have one.
     Represented as Nat (0-1000 in permillage). Avoids Float to ensure
-    safe comparison at the proposition level. -/
+    safe comparison at the proposition level.
+    The invariant `required > 0` is embedded in the type
+    (previously axiom task_has_precision, now structurally enforced). -/
 structure PrecisionLevel where
   required : Nat   -- 要求精度 (0–1000, 千分率: 1000 = 100%)
-  deriving BEq, Repr
+  required_pos : required > 0 := by omega
+  deriving Repr
 
 /-- Task: a goal to be achieved and its associated constraints.
     In addition to T8's precision level, T3 (context constraint) and T7 (resource constraint)
