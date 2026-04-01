@@ -12,6 +12,16 @@ if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
   exit 0
 fi
 
+# Resolve git working directory for worktree support
+GIT_DIR=""
+if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
+GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*//p')
+fi
+GIT_CMD=(git)
+if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
+GIT_CMD=(git -C "$GIT_DIR")
+fi
+
 # sync-counts.sh の存在確認
 SCRIPT_DIR="$(git rev-parse --show-toplevel 2>/dev/null)/scripts"
 if [[ ! -f "$SCRIPT_DIR/sync-counts.sh" ]]; then

@@ -13,14 +13,24 @@ if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
   exit 0
 fi
 
+# Resolve git working directory for worktree support
+GIT_DIR=""
+if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
+GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
+fi
+GIT_CMD=(git)
+if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
+GIT_CMD=(git -C "$GIT_DIR")
+fi
+
 # Check if any Lean files in Manifest/ are staged
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 if ! echo "$STAGED" | grep -qE 'lean-formalization/Manifest/.*\.lean$'; then
   exit 0
 fi
 
 # Run the linter
-PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+PROJECT_ROOT=$("${GIT_CMD[@]}" rev-parse --show-toplevel 2>/dev/null)
 LINT_OUTPUT=$(cd "$PROJECT_ROOT" && python3 scripts/lint-doc-comments.py 2>&1)
 LINT_EXIT=$?
 
