@@ -1153,8 +1153,18 @@ def PropositionCategory.strength : PropositionCategory → Nat
   | .designTheorem      => 1
   | .hypothesis         => 0  -- 最弱: 未検証の前提は他カテゴリより低い認識論的強度
 
-/-- Dependencies follow descending epistemological strength: dependencies have strength >= the dependent.
-    (Basis for D13's propagation direction: upstream changes affect downstream) -/
+/-- [Axiom Card]
+    Layer: Γ \ T₀ (Design-derived)
+    Content: Dependencies follow descending epistemological strength.
+          If proposition A depends on B, then B.strength ≥ A.strength.
+    Basis: Design decision for D13 propagation direction. Upstream (stronger)
+          propositions affect downstream (weaker) ones, not vice versa.
+
+    降格判定: 導出不可能 — PropositionId.dependencies は def だが、
+    全ケース網羅の decide/native_decide がタイムアウト。axiom として維持。
+
+    Source: Ontology.lean PropositionId.dependencies
+    Refutation condition: If a dependency violating the strength ordering were added -/
 axiom dependency_respects_strength :
   ∀ (a b : PropositionId),
     propositionDependsOn a b = true →
