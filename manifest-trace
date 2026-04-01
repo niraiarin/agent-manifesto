@@ -373,7 +373,7 @@ cmd_coverage() {
       [.[] | select(.refs[] == $p)] | group_by(.type) | map({(.[0].type): length}) | add // {}
     ')
 
-    local hook_count skill_count agent_count rule_count test_count config_count doc_count data_count
+    local hook_count skill_count agent_count rule_count test_count config_count doc_count data_count script_count
     hook_count=$(echo "$type_counts" | jq '.hook // 0')
     skill_count=$(echo "$type_counts" | jq '.skill // 0')
     agent_count=$(echo "$type_counts" | jq '.agent // 0')
@@ -382,6 +382,7 @@ cmd_coverage() {
     config_count=$(echo "$type_counts" | jq '.config // 0')
     doc_count=$(echo "$type_counts" | jq '.document // 0')
     data_count=$(echo "$type_counts" | jq '.data // 0')
+    script_count=$(echo "$type_counts" | jq '.script // 0')
 
     if [[ "$impl_count" -eq 0 ]]; then
       gaps="${gaps}  ${RED}✗ ${prop}${NC}: 実装なし\n"
@@ -402,6 +403,7 @@ cmd_coverage() {
       [[ "$config_count" -gt 0 ]] && detail="${detail} config=${config_count}"
       [[ "$doc_count" -gt 0 ]] && detail="${detail} doc=${doc_count}"
       [[ "$data_count" -gt 0 ]] && detail="${detail} data=${data_count}"
+      [[ "$script_count" -gt 0 ]] && detail="${detail} script=${script_count}"
       echo -e "  ${GREEN}✓ ${prop}${NC}:${detail}"
     fi
   done < <(all_propositions)
@@ -766,7 +768,7 @@ cmd_json() {
             total: ($matching | length),
             by_type: $by_type,
             has_test: ([$matching[] | select(.type == "test")] | length > 0),
-            has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config")] | length > 0),
+            has_implementation: ([$matching[] | select(.type == "hook" or .type == "skill" or .type == "agent" or .type == "config" or .type == "script")] | length > 0),
             has_evidence: ([$evid[] | select(.proposition == $pid)] | length > 0),
             has_derivation: ([$deriv[] | select(.proposition == $pid)] | length > 0)
           }
