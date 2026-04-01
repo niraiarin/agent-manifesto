@@ -26,13 +26,24 @@ T4 (`output_nondeterministic`) で確立されたパターンを全 axiom に適
 | **根拠検証** | 数理理論の特定 → Lean 形式証明 → Axiom Card 記載 | axiom 維持、根拠明示 |
 | **型制約埋め込み** | 構造体に不変条件を追加 → axiom が自明に | axiom → theorem 降格 |
 
-### 学んだ教訓（#160, #163, #164 から）
+### 学んだ教訓（#158, #160, #163, #164 から）
 
 1. 公理の「上流化」（1 axiom → 2+ bridge axioms）は公理インフレであり避ける
 2. opaque 具体化は axiom 降格に寄与しない（型の中身を見ても因果関係は出てこない）
 3. 目的は「降格」ではなく「数学的裏付けの検証」。裏付けが取れれば axiom のまま正当
+4. Foundation ファイルは必ず `Manifest.lean` から import する（オーファン防止）
+5. 依存グラフツール (#158) は事前条件として `depgraph.json` が最新であること
 
 ## ワークフロー
+
+### Step 0: 事前条件
+
+```bash
+# depgraph.json が最新であることを確認（なければ生成）
+if [ ! -f depgraph.json ] || [ lean-formalization/Manifest -nt depgraph.json ]; then
+  scripts/depgraph.sh generate
+fi
+```
 
 ### Step 1: 対象選定
 
@@ -45,10 +56,50 @@ scripts/depgraph.sh subgraph <axiom_name> --format=json
 scripts/depgraph.sh impact <axiom_name>
 ```
 
-選定基準:
-- Axiom Card がない (no-card) → まず Axiom Card を作成
-- 根拠が未検証 (derivable / derivable? / unknown) → 本ワークフローの対象
-- true-axiom (contract) → 根拠は「契約」であることを明示して完了
+対象は以下のいずれかに分類される:
+
+| 状態 | 判断 | アクション |
+|---|---|---|
+| **Axiom Card なし** (no-card) | まず Axiom Card を作成（Step 1a） | Step 1a → Step 2 |
+| **Card あり、根拠未検証** (derivable / derivable? / unknown) | 本ワークフローの対象 | Step 2 → Step 3 |
+| **Card あり、design-axiom** | 設計判断の根拠を明示 | Step 2 → Step 5（形式証明は任意） |
+| **true-axiom** (contract) | 契約であることを明示 | Step 5 のみ |
+
+### Step 1a: Axiom Card のブートストラップ（no-card の場合）
+
+no-card axiom に対して Axiom Card を新規作成する。
+
+```lean
+/-- [Axiom Card]
+    Layer: <層の判定（下記参照）>
+    Content: <axiom の Lean 宣言から内容を記述>
+    Basis: <根拠の種類を特定（下記参照）>
+    Source: <該当する設計文書・マニフェスト箇所>
+    Refutation condition: <この公理が偽になる条件> -/
+```
+
+**Layer の判定基準:**
+
+| axiom の性質 | Layer |
+|---|---|
+| 物理的・環境的制約 | T₀ (Environment-derived) |
+| 自然科学的事実 | T₀ (Natural-science-derived) |
+| 社会的契約・合意 | T₀ (Contract-derived) |
+| 経験的仮説（反駁可能） | Γ \ T₀ (Hypothesis-derived) |
+| 設計判断 | Γ \ T₀ (Design-derived) |
+| 測定可能性の主張 | Γ \ T₀ (Measurability) |
+
+**Basis の特定手順:**
+1. axiom の Lean 宣言を読み、何を主張しているか把握する
+2. その主張が成り立つ理由を自問する（なぜこれが真か？）
+3. Step 2 の根拠対応表から該当する数理理論を特定する
+4. 特定できない場合は `/research` で先行研究を調査する
+
+**Refutation condition の書き方:**
+- 「この公理が偽になるのはどういう状況か」を記述する
+- T₀ の場合: "Not applicable (T₀)" は避ける。代わりに具体的な反駁条件を書く
+  例: "If computational resources become unlimited (e.g., infinite energy)"
+- Γ \ T₀ の場合: 必ず反駁条件を記述する（反駁可能性が E の定義的性質）
 
 ### Step 2: 根拠の特定
 
@@ -89,6 +140,19 @@ Manifest/Foundation/
 - 0 sorry
 - Mathlib の型を活用（`PMF`, `StrictMono`, `MeasureTheory` 等）
 - doc comment に根拠文献の引用を含める
+
+**Foundation ファイルの登録（必須）:**
+
+新しい Foundation ファイルを作成したら、必ず `Manifest.lean` に import を追加する。
+これを忘れると `lake build Manifest` で型検査されないオーファンファイルになる。
+
+```bash
+# Manifest.lean に import を追加
+echo 'import Manifest.Foundation.新ファイル名' >> lean-formalization/Manifest.lean
+
+# 追加後に必ずビルド確認
+cd lean-formalization && lake build Manifest
+```
 
 **形式証明の範囲:**
 - axiom が主張する内容の **数学的裏付け** となる定理を証明する
@@ -160,6 +224,14 @@ scripts/depgraph.sh rebuild  # generate + diff + verify
 bash tests/phase5/test-depgraph.sh
 ```
 
+**P2 検証（新しい Foundation ファイルがある場合）:**
+
+Foundation ファイルは永続する構造的コードなので、コミット前に `/verify` を実行する。
+
+```
+/verify Foundation/新ファイル名.lean
+```
+
 Issue にコメントとして結果を記録:
 ```markdown
 ### [YYYY-MM-DD] <axiom_name> の数学的根拠検証
@@ -179,12 +251,13 @@ Issue にコメントとして結果を記録:
 
 | # | 基準 | 確認方法 |
 |---|---|---|
-| 1 | Axiom Card が存在する | `grep -l 'Axiom Card' Manifest/*.lean` |
-| 2 | `Basis:` に根拠が記載されている | Axiom Card の Basis フィールド |
-| 3 | 数学的根拠が `Foundation/` に形式証明されている | `lake build`, 0 sorry |
-| 4 | Axiom Card に文献引用の導出チェーンがある | [R1]→[R2]→... 形式 |
-| 5 | 降格可能性が判定されている | Derivation Card または Axiom Card に記載 |
-| 6 | `depgraph-verify.sh` PASS | スクリプト実行 |
+| 1 | Axiom Card が存在する | `grep -rl 'Axiom Card' Manifest/ --include="*.lean"` で対象 axiom のファイルがヒット |
+| 2 | `Basis:` に根拠が記載されている | Axiom Card の Basis フィールドが空でない |
+| 3 | 数学的根拠が `Foundation/` に形式証明されている | `lake build Manifest.Foundation.XXX` 成功, 0 sorry |
+| 4 | Foundation ファイルが `Manifest.lean` から import されている | `grep 'Foundation' Manifest.lean` |
+| 5 | Axiom Card に文献引用の導出チェーンがある | `Mathematical grounding` セクションに [R1]→[R2]→... 形式 |
+| 6 | 降格可能性が判定されている | Derivation Card（降格済み）または Axiom Card（維持理由記載） |
+| 7 | `depgraph-verify.sh` PASS | スクリプト実行 |
 
 ## 全 axiom の進捗追跡
 
@@ -202,7 +275,9 @@ Issue にコメントとして結果を記録:
 
 | やってはいけないこと | 理由 | 代わりに |
 |---|---|---|
-| 1 axiom → 2+ bridge axioms | 公理インフレ | 根拠を Axiom Card に記載 |
+| 1 axiom → 2+ bridge axioms | 公理インフレ (#164 FAIL) | 根拠を Axiom Card に記載 |
 | opaque 具体化で降格を試みる | 因果関係は型から出ない (#163 FAIL) | 数理理論を Foundation に形式化 |
 | 形式証明なしに Axiom Card だけ更新 | 検証可能性がない | Foundation/ に Lean で証明 |
 | 全 axiom を一括処理 | 品質が下がる | 1 つずつ丁寧に |
+| Foundation ファイルを Manifest.lean に import しない | オーファン — `lake build` で検査されない | 作成直後に import 追加 + ビルド確認 |
+| `lake build Manifest` だけで Foundation を検証した気になる | import がなければ Foundation は検査対象外 | `lake build Manifest.Foundation.XXX` を個別に確認 |

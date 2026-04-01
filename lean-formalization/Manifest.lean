@@ -1,3 +1,5 @@
+-- Tier 0: 数学的基盤（Mathlib 上の形式証明）
+import Manifest.Foundation.Probability
 -- Tier A: 定義的基盤
 import Manifest.Ontology
 -- Tier B: 命題層（strength 降順）
