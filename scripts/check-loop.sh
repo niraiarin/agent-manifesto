@@ -25,6 +25,15 @@ for i in $(seq 1 "$MAX_ITER"); do
   echo "=== Iteration $i / $MAX_ITER ==="
   FAILED=0
 
+  # --- 0. Lean import integrity ---
+  echo "--- check-lean-imports ---"
+  if bash "$BASE/scripts/check-lean-imports.sh" 2>&1; then
+    echo "PASS"
+  else
+    echo "FAIL: Lean import integrity check failed. Fix before building."
+    FAILED=$((FAILED + 1))
+  fi
+
   # --- 1. Lean build ---
   echo "--- lake build ---"
   BUILD_OUT=$(cd "$LEAN_DIR" && export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest 2>&1)
