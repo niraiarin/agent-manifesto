@@ -218,6 +218,29 @@ structure Task where
   deriving Repr
 
 -- ============================================================
+-- Context Item — T3+T8: コンテキスト内情報のタスク精度への寄与度
+-- ============================================================
+
+/-- An item within the context window. By T3, context is finite,
+    so only a bounded number of items can be present.
+
+    Each item has a precision contribution relative to a given task (T8).
+    This contribution is not uniform across items — a mathematical fact
+    from information theory (not all information is equally relevant
+    to all tasks). -/
+opaque ContextItem : Type
+instance : Repr ContextItem := ⟨fun _ _ => "«ContextItem»"⟩
+
+/-- Precision contribution of a context item to a task.
+    Returns a Nat (0 = zero contribution, higher = more contribution).
+    This is a function, not a constant: the same item may have different
+    contributions to different tasks.
+
+    Technology-independent: applies to any agent architecture where
+    context is finite and tasks have precision requirements. -/
+opaque precisionContribution : ContextItem → Task → Nat
+
+-- ============================================================
 -- Action & Severity
 -- ============================================================
 

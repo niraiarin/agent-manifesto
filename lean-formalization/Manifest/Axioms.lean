@@ -45,6 +45,7 @@ in Ontology.lean as definitional extensions (Terminology Reference §5.5).
 | `structure_accumulates` | T2 | Improvements accumulate in structure | Environment-derived |
 | `context_finite` | T3 | Working memory (processable information) is finite | Environment-derived |
 | `context_bounds_action` | T3 | Processing is possible only within context capacity | Environment-derived |
+| `context_contribution_nonuniform` | T3 | Not all context items contribute equally to task precision | Natural-science-derived |
 | `output_nondeterministic` | T4 | Different outputs possible for the same input | Natural-science-derived |
 | `no_improvement_without_feedback` | T5 | No improvement without feedback loop | Natural-science-derived |
 | `human_resource_authority` | T6 | Humans are the final decision-makers for resources | Contract-derived |
@@ -214,6 +215,22 @@ axiom context_bounds_action :
   ∀ (agent : Agent) (action : Action) (w : World),
     agent.contextWindow.used > agent.contextWindow.capacity →
     actionBlocked agent action w
+
+/-- [Axiom Card]
+    Layer: T₀ (Natural-science-derived)
+    Content: Not all information in the context contributes equally to task precision.
+          There exist context items whose precision contribution to a given task is zero.
+    Basis: Information-theoretic fact. In any finite information set, the relevance
+          of individual items to a specific objective varies. This is independent of
+          the agent architecture (applies to LLMs, FSMs, human cognition alike).
+    Source: ForgeCode analysis #147 — identified as common root of B1/B3/B5/B6.
+    Refutation condition: If it were shown that all information contributes equally
+          to all tasks (contradicts information theory). -/
+axiom context_contribution_nonuniform :
+  ∀ (task : Task),
+    task.precisionRequired.required > 0 →
+    ∃ (item : ContextItem),
+      precisionContribution item task = 0
 
 -- ============================================================
 -- T4: エージェントの出力は確率的である

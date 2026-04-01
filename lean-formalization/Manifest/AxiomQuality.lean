@@ -52,7 +52,7 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 353 theorems / 63 axioms = 560 (= 5.60x) -/
+    例: 359 theorems / 64 axioms = 560 (= 5.60x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
