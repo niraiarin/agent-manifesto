@@ -6,6 +6,7 @@ import Manifest.Foundation.RiskTheory
 import Manifest.Foundation.ProcessModel
 import Manifest.Foundation.ControlTheory
 import Manifest.Foundation.InformationTheory
+import Manifest.Foundation.StatisticalTesting
 -- Tier B: 命題層（strength 降順）
 import Manifest.Axioms              -- strength 5: constraint
 import Manifest.EmpiricalPostulates -- strength 4: empiricalPostulate
