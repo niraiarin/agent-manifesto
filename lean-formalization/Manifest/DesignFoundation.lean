@@ -182,10 +182,11 @@ inductive VerificationRisk where
   deriving BEq, Repr
 
 /-- Required independence conditions for each risk level.
+    The model is quantitative: any N conditions out of 4 suffice.
     critical: All 4 conditions required (verification by human or different model)
-    high: 3 conditions (framing independence + automatic execution + context separation)
-    moderate: 2 conditions (context separation + automatic execution)
-    low: 1 condition (context separation only, Subagent suffices) -/
+    high: Any 3 of 4 conditions (e.g. context separation + framing independence + evaluator independence)
+    moderate: Any 2 of 4 conditions (e.g. context separation + automatic execution)
+    low: Any 1 of 4 conditions (context separation alone suffices) -/
 def requiredConditions : VerificationRisk → Nat
   | .critical => 4
   | .high     => 3
