@@ -6,3 +6,7 @@ package «agent-manifest» where
 
 lean_lib «Manifest» where
   srcDir := "."
+
+lean_exe «extractdeps» where
+  root := `ExtractDeps
+  moreLinkArgs := #["-rdynamic"]
