@@ -10,6 +10,9 @@
 #   depgraph.sh dot [--axiom-theorem]  — Output DOT format graph
 #   depgraph.sh subgraph <name> [--format=dot|json] [--depth=N] [--direction=both|up|down]
 #                                      — Extract subgraph around <name>
+#   depgraph.sh diff <old.json> [new.json] — Compare two graphs
+#   depgraph.sh rebuild                — Generate + verify in one step
+#   depgraph.sh classify              — Show axiom classification (basis category)
 #
 # Reference: #158, #157
 
@@ -590,6 +593,184 @@ print(f"Total: {total_changes} changes "
 PYEOF
 }
 
+cmd_rebuild() {
+  local snapshot="${1:-}"
+
+  echo "=== Rebuild: generate + verify ===" >&2
+
+  # Auto-snapshot before regeneration if depgraph.json exists
+  if [ -f "$DEPGRAPH" ]; then
+    local ts
+    ts="$(date +%Y%m%d-%H%M%S)"
+    local snap="$PROJECT_DIR/depgraph-${ts}.json"
+    cp "$DEPGRAPH" "$snap"
+    echo "Snapshot saved: $snap" >&2
+    snapshot="$snap"
+  fi
+
+  # Step 1: Build extractor (if source changed)
+  echo "" >&2
+  echo "--- Step 1: Build ---" >&2
+  cd "$LEAN_DIR"
+  export PATH="$HOME/.elan/bin:$PATH"
+  if ! lake build extractdeps 2>&1 | tail -3; then
+    echo "ERROR: lake build failed" >&2
+    exit 1
+  fi
+
+  # Step 2: Generate
+  echo "" >&2
+  echo "--- Step 2: Generate ---" >&2
+  lake exe extractdeps > "$DEPGRAPH"
+  python3 -c "
+import json
+with open('$DEPGRAPH') as f:
+    data = json.load(f)
+print(f'Nodes: {len(data[\"nodes\"])}, Edges: {len(data[\"edges\"])}')
+kinds = {}
+for n in data['nodes']:
+    kinds[n['kind']] = kinds.get(n['kind'], 0) + 1
+for k, v in sorted(kinds.items(), key=lambda x: -x[1]):
+    print(f'  {k}: {v}')
+"
+
+  # Step 3: Diff (if snapshot exists)
+  if [ -n "$snapshot" ] && [ -f "$snapshot" ]; then
+    echo "" >&2
+    echo "--- Step 3: Diff ---" >&2
+    cd "$PROJECT_DIR"
+    cmd_diff "$snapshot" "$DEPGRAPH"
+  fi
+
+  # Step 4: Verify
+  echo "" >&2
+  echo "--- Step 4: Verify ---" >&2
+  cd "$PROJECT_DIR"
+  "$SCRIPT_DIR/depgraph-verify.sh" "$DEPGRAPH"
+}
+
+cmd_classify() {
+  python3 - "$DEPGRAPH" "$LEAN_DIR" << 'PYEOF'
+import json
+import sys
+import os
+import re
+
+depgraph_path = sys.argv[1]
+lean_dir = sys.argv[2]
+
+with open(depgraph_path) as f:
+    data = json.load(f)
+
+axioms = [n for n in data['nodes'] if n['kind'] == 'axiom']
+edges = data['edges']
+
+# Extract Axiom Card metadata from Lean source
+axiom_info = {}
+manifest_dir = os.path.join(lean_dir, 'Manifest')
+
+for root, dirs, files in os.walk(manifest_dir):
+    for fname in files:
+        if not fname.endswith('.lean'):
+            continue
+        fpath = os.path.join(root, fname)
+        with open(fpath) as f:
+            content = f.read()
+
+        # Find axiom cards: /-- [Axiom Card] ... -/ followed by axiom declaration
+        # Match doc comment blocks before axiom declarations
+        pattern = r'/--\s*\[Axiom Card\](.*?)-/\s*axiom\s+(\w+)'
+        for m in re.finditer(pattern, content, re.DOTALL):
+            card_text = m.group(1)
+            axiom_name = m.group(2)
+
+            # Extract Layer
+            layer_match = re.search(r'Layer:\s*(.+?)(?:\n|$)', card_text)
+            layer = layer_match.group(1).strip() if layer_match else 'unknown'
+
+            # Extract Refutation condition
+            refut_match = re.search(r'Refutation condition:\s*(.+?)(?:\n\s*\w|\Z)', card_text, re.DOTALL)
+            refutation = refut_match.group(1).strip() if refut_match else 'unknown'
+
+            # Classify basis
+            if 'Environment-derived' in layer:
+                basis = 'environment'
+            elif 'Contract-derived' in layer:
+                basis = 'contract'
+            elif 'Natural-science-derived' in layer:
+                basis = 'natural-science'
+            elif 'Hypothesis-derived' in layer:
+                basis = 'hypothesis'
+            elif 'Design-derived' in layer or 'Design' in layer:
+                basis = 'design'
+            else:
+                basis = 'other'
+
+            # Classify reclassification potential
+            if basis in ('environment', 'natural-science'):
+                potential = 'derivable'  # potentially derivable from math foundations
+            elif basis == 'hypothesis':
+                potential = 'derivable?'  # potentially derivable from statistics
+            elif basis == 'contract':
+                potential = 'true-axiom'  # must remain axiom
+            elif basis == 'design':
+                potential = 'design-axiom'  # design choice, may remain
+            else:
+                potential = 'unknown'
+
+            axiom_info[axiom_name] = {
+                'layer': layer,
+                'basis': basis,
+                'potential': potential,
+                'refutation': refutation[:60] + '...' if len(refutation) > 60 else refutation,
+            }
+
+# Count rdeps for each axiom
+rdeps_count = {}
+for a in axioms:
+    rdeps_count[a['fullName']] = sum(1 for e in edges if e['target'] == a['fullName'])
+
+# Output classification table
+print(f"{'Axiom':<50s} {'Basis':<16s} {'Potential':<14s} {'rdeps':>5s}")
+print("-" * 90)
+
+# Group by basis
+groups = {}
+for a in sorted(axioms, key=lambda x: x['name']):
+    short = a['name']
+    # Strip namespace prefix for lookup
+    lookup = short.split('.')[-1] if '.' in short else short
+    info = axiom_info.get(lookup, {})
+    basis = info.get('basis', 'no-card')
+    potential = info.get('potential', 'no-card')
+    rdeps = rdeps_count.get(a['fullName'], 0)
+    groups.setdefault(basis, []).append((short, potential, rdeps))
+
+order = ['environment', 'natural-science', 'contract', 'hypothesis', 'design', 'other', 'no-card']
+for basis in order:
+    items = groups.get(basis, [])
+    if not items:
+        continue
+    print(f"\n[{basis}] ({len(items)} axioms)")
+    for name, potential, rdeps in items:
+        print(f"  {name:<48s} {potential:<14s} {rdeps:>5d}")
+
+# Summary
+print()
+print("=" * 50)
+print("Classification Summary")
+print("=" * 50)
+potentials = {}
+for items in groups.values():
+    for _, pot, _ in items:
+        potentials[pot] = potentials.get(pot, 0) + 1
+for pot in ['derivable', 'derivable?', 'true-axiom', 'design-axiom', 'no-card', 'unknown']:
+    count = potentials.get(pot, 0)
+    if count:
+        print(f"  {pot:<16s} {count:>3d}")
+PYEOF
+}
+
 case "${1:-help}" in
   generate) cmd_generate ;;
   stats) cmd_stats ;;
@@ -600,8 +781,10 @@ case "${1:-help}" in
   dot) cmd_dot "${2:-}" ;;
   subgraph) shift; cmd_subgraph "$@" ;;
   diff) cmd_diff "${2:?Usage: depgraph.sh diff <old.json> [new.json]}" "${3:-$DEPGRAPH}" ;;
+  rebuild) cmd_rebuild "${2:-}" ;;
+  classify) cmd_classify ;;
   *)
-    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot|subgraph|diff}" >&2
+    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot|subgraph|diff|rebuild|classify}" >&2
     exit 1
     ;;
 esac

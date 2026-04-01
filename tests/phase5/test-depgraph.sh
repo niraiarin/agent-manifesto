@@ -462,6 +462,76 @@ rm -f "$DIFF_TMP"
 echo ""
 
 # ============================================================
+# classify コマンド
+# ============================================================
+echo "--- classify ---"
+
+CLASSIFY_OUT="$("$DEPGRAPH" classify 2>&1)"
+
+check "DG.150: classify outputs classification summary" \
+  "echo '$CLASSIFY_OUT' | grep -q 'Classification Summary'"
+
+check "DG.151: classify detects environment-derived axioms" \
+  "echo '$CLASSIFY_OUT' | grep -q 'environment'"
+
+check "DG.152: classify detects contract-derived axioms" \
+  "echo '$CLASSIFY_OUT' | grep -q 'contract'"
+
+check "DG.153: classify shows derivable potential" \
+  "echo '$CLASSIFY_OUT' | grep -q 'derivable'"
+
+check "DG.154: classify shows true-axiom potential" \
+  "echo '$CLASSIFY_OUT' | grep -q 'true-axiom'"
+
+check "DG.155: classify includes output_nondeterministic as derivable" \
+  "echo '$CLASSIFY_OUT' | grep 'output_nondeterministic' | grep -q 'derivable'"
+
+check "DG.156: classify includes human_resource_authority as true-axiom" \
+  "echo '$CLASSIFY_OUT' | grep 'human_resource_authority' | grep -q 'true-axiom'"
+
+echo ""
+
+# ============================================================
+# rebuild コマンド (structural verification only)
+# ============================================================
+echo "--- rebuild (structure) ---"
+
+check "DG.160: rebuild command is defined in depgraph.sh" \
+  "grep -q 'cmd_rebuild' '$DEPGRAPH'"
+
+check "DG.161: rebuild calls depgraph-verify.sh" \
+  "grep -q 'depgraph-verify.sh' '$DEPGRAPH'"
+
+check "DG.162: rebuild creates snapshot" \
+  "grep -q 'snapshot' '$DEPGRAPH'"
+
+echo ""
+
+# ============================================================
+# workflow doc
+# ============================================================
+echo "--- workflow doc ---"
+
+check "DG.170: workflow doc exists" \
+  "[ -f '$BASE/docs/research/157-axiom-restructuring-workflow.md' ]"
+
+check "DG.171: workflow doc covers all phases" \
+  "grep -q 'Phase 0' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'Phase 1' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'Phase 2' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'Phase 3' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'Phase 4' '$BASE/docs/research/157-axiom-restructuring-workflow.md'"
+
+check "DG.172: workflow doc references all tools" \
+  "grep -q 'classify' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'subgraph' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'rebuild' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'diff' '$BASE/docs/research/157-axiom-restructuring-workflow.md' && \
+   grep -q 'verify' '$BASE/docs/research/157-axiom-restructuring-workflow.md'"
+
+echo ""
+
+# ============================================================
 # depgraph-verify.sh
 # ============================================================
 echo "--- verify ---"
