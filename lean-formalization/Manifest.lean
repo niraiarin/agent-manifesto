@@ -3,6 +3,7 @@ import Manifest.Ontology
 -- Tier 0: 数学的基盤（Mathlib 上の形式証明、Ontology に依存）
 import Manifest.Foundation.Probability
 import Manifest.Foundation.RiskTheory
+import Manifest.Foundation.ProcessModel
 -- Tier B: 命題層（strength 降順）
 import Manifest.Axioms              -- strength 5: constraint
 import Manifest.EmpiricalPostulates -- strength 4: empiricalPostulate
