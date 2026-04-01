@@ -188,6 +188,62 @@ scripts/depgraph-verify.sh
 SYNC_SKIP_TESTS=1 bash scripts/sync-counts.sh --update
 ```
 
+### Step 4a: 変更波及の再帰的検証
+
+axiom の変更（降格、Axiom Card 更新、Foundation 追加）を行ったら、
+**グラフ上の関連要素を全て検証し、必要なら修正する**。
+
+`lake build` は型エラーを検出するが、doc comment の記述整合性や
+トレーサビリティの正確性は検出しない。このステップでそれを補う。
+
+#### 4a-1. 影響範囲の取得
+
+```bash
+# 変更した要素の影響範囲を取得
+scripts/depgraph.sh impact <変更した要素名>
+
+# サブグラフとして構造を確認
+scripts/depgraph.sh subgraph <変更した要素名> --direction=up --format=json
+```
+
+#### 4a-2. 各影響要素の検証
+
+影響を受ける各要素について、以下を確認する:
+
+| 検証項目 | 確認内容 | 修正が必要な例 |
+|---|---|---|
+| **Lean 型検査** | `lake build Manifest` が通るか | 降格で型が変わり依存 theorem が壊れた |
+| **doc comment の参照** | 変更した要素を参照する doc comment は正確か | 「axiom X に基づく」→ X が theorem に降格 |
+| **Derivation Card** | 導出チェーンの参照は有効か | 根拠の axiom 名が変わった |
+| **Axiom Card の Basis** | 根拠の記述が変更を反映しているか | 前提 axiom が降格された |
+| **PropositionId.dependencies** | Ontology.lean の依存定義と整合するか | 依存構造が変わった |
+
+#### 4a-3. 再帰的修正
+
+修正を行った場合、**修正した要素自体の影響範囲も検証する**（再帰）。
+
+```
+変更 A → impact(A) = {B, C}
+  → B を検証 → 修正あり → impact(B) = {D}
+    → D を検証 → 修正なし → 終了
+  → C を検証 → 修正なし → 終了
+```
+
+**終了条件（不動点）:** 全ての影響要素が検証済みで、追加の修正が不要。
+
+#### 4a-4. 修正の記録
+
+影響範囲の検証結果を記録する:
+
+```markdown
+#### 波及検証
+
+| 影響要素 | 検証結果 | 修正内容 |
+|---|---|---|
+| `context_bounds_action` | doc comment 修正 | 「axiom context_finite」→「theorem context_finite」 |
+| `d11_context_finite` | 整合 | 修正不要 |
+```
+
 ### Step 5: Axiom Card の更新
 
 Axiom Card に数学的根拠の導出チェーンを記載する。
@@ -260,7 +316,8 @@ Issue にコメントとして結果を記録:
 | 4 | Foundation ファイルが `Manifest.lean` から import されている | `grep 'Foundation' Manifest.lean` |
 | 5 | Axiom Card に文献引用の導出チェーンがある | `Mathematical grounding` セクションに [R1]→[R2]→... 形式 |
 | 6 | 降格可能性が判定されている | Derivation Card（降格済み）または Axiom Card（維持理由記載） |
-| 7 | `depgraph-verify.sh` PASS | スクリプト実行 |
+| 7 | 影響範囲の波及検証が完了している | Step 4a の記録テーブルに全影響要素がリスト |
+| 8 | `depgraph-verify.sh` PASS | スクリプト実行 |
 
 ## 全 axiom の進捗追跡
 
@@ -285,3 +342,5 @@ Issue にコメントとして結果を記録:
 | 全 axiom を一括処理 | 品質が下がる | 1 つずつ丁寧に |
 | Foundation ファイルを Manifest.lean に import しない | オーファン — `lake build` で検査されない | 作成直後に import 追加 + ビルド確認 |
 | `lake build Manifest` だけで Foundation を検証した気になる | import がなければ Foundation は検査対象外 | `lake build Manifest.Foundation.XXX` を個別に確認 |
+| 変更した要素の影響範囲を検証しない | doc comment やトレーサビリティの不整合が残る | Step 4a で再帰的に検証 |
+| `lake build` 成功で波及検証を省略する | 型エラーは検出するが意味的整合性は検出しない | Step 4a の 5 項目を全て確認 |
