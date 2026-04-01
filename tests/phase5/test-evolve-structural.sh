@@ -255,10 +255,10 @@ grep -q "^theorem degradation_detectable_observable" "$OBSERVABLE" && pass "degr
 # T3/T4/T5/T8/E2 axiom アサーション（Run 76）
 AXIOMS_FILE="lean-formalization/Manifest/Axioms.lean"
 EMPIRICAL_FILE="lean-formalization/Manifest/EmpiricalPostulates.lean"
-grep -q "^axiom context_finite" "$AXIOMS_FILE" && pass "T3: context_finite axiom exists in Axioms.lean" || fail "T3: context_finite axiom not found in Axioms.lean"
+grep -q "^theorem context_finite" "$AXIOMS_FILE" && pass "T3: context_finite theorem exists in Axioms.lean" || fail "T3: context_finite theorem not found in Axioms.lean"
 grep -q "^axiom output_nondeterministic" "$AXIOMS_FILE" && pass "T4: output_nondeterministic axiom exists in Axioms.lean" || fail "T4: output_nondeterministic axiom not found in Axioms.lean"
 grep -q "^axiom no_improvement_without_feedback" "$AXIOMS_FILE" && pass "T5: no_improvement_without_feedback axiom exists in Axioms.lean" || fail "T5: no_improvement_without_feedback axiom not found in Axioms.lean"
-grep -q "^axiom task_has_precision" "$AXIOMS_FILE" && pass "T8: task_has_precision axiom exists in Axioms.lean" || fail "T8: task_has_precision axiom not found in Axioms.lean"
+grep -q "^theorem task_has_precision" "$AXIOMS_FILE" && pass "T8: task_has_precision theorem exists in Axioms.lean" || fail "T8: task_has_precision theorem not found in Axioms.lean"
 grep -q "^axiom capability_risk_coscaling" "$EMPIRICAL_FILE" && pass "E2: capability_risk_coscaling axiom exists in EmpiricalPostulates.lean" || fail "E2: capability_risk_coscaling axiom not found in EmpiricalPostulates.lean"
 
 echo ""

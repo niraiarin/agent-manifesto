@@ -64,7 +64,7 @@ git checkout -b evolve/run-<N>
 export PATH="$HOME/.elan/bin:$PATH" && cd lean-formalization && lake build Manifest
 
 # 全テスト
-cd /path/to/agent-manifesto && bash tests/test-all.sh
+bash tests/test-all.sh
 ```
 
 ### 仮説テーブル更新時の照合手順

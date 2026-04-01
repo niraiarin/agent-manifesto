@@ -407,14 +407,7 @@ fi
 # Saturation detection (R6): consecutive zero-delta runs for test count
 SAT_CONSECUTIVE=0
 if [ -f "$HISTORY_FILE" ]; then
-  SAT_CONSECUTIVE=$(jq -s '
-    [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
-    if length > 1 then
-      [range(length-1; 0; -1) | select(.[.] == .[.-1])] | length
-      | if . > (input | length - 2) then (input | length - 1) else . end
-    else 0 end
-  ' "$HISTORY_FILE" 2>/dev/null || echo 0)
-  # Simpler approach: count trailing identical values
+  # Count trailing identical values for saturation detection
   SAT_CONSECUTIVE=$(jq -s '
     [.[] | select(.result != "observation" and .tests.passed != null) | .tests.passed] |
     . as $a | $a[-1] as $last |
@@ -522,8 +515,10 @@ fi
 echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"observation_error_active\": ${V3_HALL_OBS_ACTIVE:-0}, \"hypothesis_error_active\": ${V3_HALL_HYP_ACTIVE:-0}, \"assumption_error_active\": ${V3_HALL_ASS_ACTIVE:-0}, \"precondition_error_active\": ${V3_HALL_PRE_ACTIVE:-0}, \"observation_error_post_gate\": $V3_HALL_OBS_POST_GATE, \"hypothesis_error_post_gate\": $V3_HALL_HYP_POST_GATE, \"assumption_error_post_gate\": $V3_HALL_ASS_POST_GATE, \"precondition_error_post_gate\": $V3_HALL_PRE_POST_GATE, \"subtype_post_gate\": { \"H_wrong_premise\": ${V3_HALL_SUBTYPE_WRONG_PREMISE:-0}, \"H_impl_specification\": ${V3_HALL_SUBTYPE_IMPL_SPEC:-0}, \"H_trivially_true\": ${V3_HALL_SUBTYPE_TRIVIALLY_TRUE:-0}, \"none\": ${V3_HALL_SUBTYPE_NONE:-0} }, \"quality_gate_run\": 57, \"note\": \"failure_type 標準化は Run 54 から。_post_gate は Run 57 品質ゲート導入後のみ\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"blocked_excluded\": $V4_BLOCKED_EXCLUDED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
-MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
-MEMORY_DIR="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory"
+REPO_PATH=$(cd "$(dirname "$0")/../../.." && pwd)
+ESCAPED_REPO=$(echo "$REPO_PATH" | sed 's|/|-|g; s|^-||')
+MEMORY_DIR="$HOME/.claude/projects/-${ESCAPED_REPO}/memory"
+MEMORY_MD="$MEMORY_DIR/MEMORY.md"
 V6_MEMORY_ENTRIES=$(grep -c "^- \[" "$MEMORY_MD" 2>/dev/null || echo "0")
 V6_MEMORY_FILES=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null | wc -l | tr -d ' ' || echo "0")
 V6_MEMORY_ENTRIES=${V6_MEMORY_ENTRIES:-0}

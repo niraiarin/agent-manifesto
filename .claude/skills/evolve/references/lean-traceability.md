@@ -106,8 +106,8 @@
 | `all_components_enumerated` | φ₈ | D9 セクション: 構成要素リスト | "φ₈: all components enumerated" |
 | `observability_first` | φ₉ | Step 1: Observer が最初のフェーズ | "φ₉: observability first" |
 | `verification_precedes_integration` | φ₉ | Step 3 → Step 5 の順序 | "φ₉: verification precedes integration" |
-| `all_hypotheses_enumerated` | φ₁₀ | 仮説テーブル（H1-H5） | "φ₁₀: all hypotheses enumerated" |
-| `hypothesis_count` | φ₁₀ | 仮説数 = 5 | "φ₁₀: hypothesis count" |
+| `all_hypotheses_enumerated` | φ₁₀ | 仮説テーブル（H1-H6） | "φ₁₀: all hypotheses enumerated" |
+| `hypothesis_count` | φ₁₀ | 仮説数 = 6 | "φ₁₀: hypothesis count" |
 | `deferral_requires_justification` | φ₁₁ | Step 0: 引き継ぎ条件（3 条件） | "φ₁₁: deferral requires justification" |
 | `deferral_status_exhaustive` | φ₁₁ | Step 0: DeferralStatus（open/resolved/abandoned） | "φ₁₁: deferral status exhaustive" |
 | `loopback_target_valid_transition` | φ₁₂ | Step 3: FAIL 分析（ループバック遷移の有効性） | "φ₁₂: loopback target valid transition" |
