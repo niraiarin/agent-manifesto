@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Manifesto — Dependency Graph</title>
+<script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --border: #0f3460;
+  --text: #e6e6e6;
+  --text-muted: #8892a4;
+  --axiom: #e94560;
+  --theorem: #4ea8de;
+  --def: #6c757d;
+  --inductive: #9b59b6;
+  --opaque: #7f8c8d;
+  --highlight: #f0c040;
+  --edge-default: #334155;
+  --edge-highlight: #f0c040;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+}
+#cy {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Controls panel */
+#controls {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  width: 280px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  font-size: 13px;
+}
+#controls h1 {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+#search {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#search::placeholder { color: var(--text-muted); }
+
+.filter-group {
+  margin-bottom: 8px;
+}
+.filter-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.filter-group label .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.stats {
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+.stats span { display: block; margin-bottom: 2px; }
+
+/* Detail panel */
+#detail {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  width: 360px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  font-size: 13px;
+  display: none;
+}
+#detail h2 {
+  font-size: 15px;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+#detail .kind-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+#detail .module-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: var(--border);
+  color: var(--text-muted);
+  margin-left: 4px;
+  margin-bottom: 4px;
+}
+#detail .detail-fullname {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  word-break: break-all;
+  font-family: inherit;
+}
+#detail .detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+#detail .detail-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: background 0.15s, border-color 0.15s;
+}
+#detail .detail-links a:hover {
+  background: var(--border);
+  border-color: var(--text-muted);
+}
+#detail .detail-links a.link-verso {
+  color: #4ea8de;
+}
+#detail .detail-links a.link-source {
+  color: #2ecc71;
+}
+#detail .detail-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  font-size: 11px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+#detail .detail-meta dt {
+  color: var(--text-muted);
+}
+#detail .detail-meta dd {
+  color: var(--text);
+}
+#detail ul {
+  list-style: none;
+  padding: 0;
+  max-height: 180px;
+  overflow-y: auto;
+}
+#detail ul li {
+  padding: 3px 0;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#detail ul li:hover { color: var(--highlight); }
+#detail ul li .dep-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+#detail ul li .dep-kind {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+#detail .section-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+#detail .impact-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 4px 0 8px;
+  overflow: hidden;
+}
+#detail .impact-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* View toggle */
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.view-toggle button {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+.view-toggle button.active {
+  background: var(--border);
+  color: var(--text);
+}
+.view-toggle button:hover { color: var(--text); }
+
+/* Layout buttons */
+.layout-group {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.layout-group button {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+.layout-group button:hover { color: var(--text); }
+
+/* Loading overlay */
+#loading {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+<div id="loading">Loading dependency graph...</div>
+<div id="cy"></div>
+
+<div id="controls">
+  <h1>Dependency Graph</h1>
+
+  <div class="view-toggle">
+    <button id="btn-overview" class="active" onclick="switchView('overview')">Overview (36)</button>
+    <button id="btn-detail" onclick="switchView('detail')">Full Graph</button>
+  </div>
+
+  <input type="text" id="search" placeholder="Search node..." />
+
+  <div class="filter-group">
+    <label><input type="checkbox" data-kind="axiom" checked /><span class="dot" style="background:var(--axiom)"></span> axiom</label>
+    <label><input type="checkbox" data-kind="theorem" checked /><span class="dot" style="background:var(--theorem)"></span> theorem</label>
+    <label><input type="checkbox" data-kind="def" /><span class="dot" style="background:var(--def)"></span> def</label>
+    <label><input type="checkbox" data-kind="inductive" /><span class="dot" style="background:var(--inductive)"></span> inductive</label>
+    <label><input type="checkbox" data-kind="opaque" /><span class="dot" style="background:var(--opaque)"></span> opaque</label>
+  </div>
+
+  <div class="layout-group">
+    <button onclick="runLayout('dagre')">Layered</button>
+    <button onclick="runLayout('force')">Force</button>
+    <button onclick="if(cy)cy.fit(undefined,30)">Fit</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+</div>
+
+<div id="detail">
+  <h2 id="detail-name"></h2>
+  <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+    <span id="detail-kind" class="kind-badge"></span>
+    <span id="detail-module" class="module-badge"></span>
+  </div>
+  <div id="detail-fullname" class="detail-fullname"></div>
+  <div id="detail-links" class="detail-links"></div>
+  <dl id="detail-meta" class="detail-meta"></dl>
+  <div class="section-title">Impact scope</div>
+  <div class="impact-bar"><div id="impact-bar-fill" class="impact-bar-fill"></div></div>
+  <div class="section-title">Depends on (<span id="deps-count">0</span>)</div>
+  <ul id="deps-list"></ul>
+  <div class="section-title">Depended by (<span id="rdeps-count">0</span>)</div>
+  <ul id="rdeps-list"></ul>
+</div>
+
+<script>
+// PropositionId overview nodes (36 propositions)
+const PROPOSITION_IDS = [
+  'T1','T2','T3','T4','T5','T6','T7','T8',
+  'E1','E2',
+  'P1','P2','P3','P4','P5','P6',
+  'L1','L2','L3','L4','L5','L6',
+  'D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','D13','D14'
+];
+
+// PropositionId dependencies from Ontology.lean
+const PROP_DEPS = {
+  T1:[],T2:[],T3:[],T4:[],T5:[],T6:[],T7:[],T8:[],
+  E1:['T4'], E2:[],
+  P1:['E2'], P2:['T4','E1'], P3:['T1','T2'], P4:['T5','T7'], P5:['T4'], P6:['T3','T7','T8'],
+  L1:['P1','T6'], L2:['T1','T3','T4'], L3:['T6','T7'], L4:['T6','P1','D8'], L5:[], L6:['T6','P3'],
+  D1:['P5','L1','L2','L3','L4','L5','L6'], D2:['E1','P2'], D3:['P3','T5'],
+  D4:['P4','L1','L2','L3','L4','L5','L6'], D5:['P3','P4'], D6:['P4','T5'],
+  D7:['T5','P4'], D8:['P5','L1','L2','L3','L4','L5','L6'], D9:['P3','P5'],
+  D10:['T5','P2'], D11:['T5','P4','P6'], D12:['P3','P4'], D13:['P3','T5'], D14:['P6','T7','T8']
+};
+
+const PROP_CATEGORIES = {};
+PROPOSITION_IDS.forEach(id => {
+  if (id.startsWith('T')) PROP_CATEGORIES[id] = { cat: 'constraint', strength: 5 };
+  else if (id.startsWith('E')) PROP_CATEGORIES[id] = { cat: 'empirical', strength: 4 };
+  else if (id.startsWith('P')) PROP_CATEGORIES[id] = { cat: 'principle', strength: 3 };
+  else if (id.startsWith('L')) PROP_CATEGORIES[id] = { cat: 'boundary', strength: 2 };
+  else if (id.startsWith('D')) PROP_CATEGORIES[id] = { cat: 'design', strength: 1 };
+});
+
+const KIND_COLORS = {
+  axiom: '#e94560',
+  theorem: '#4ea8de',
+  def: '#6c757d',
+  inductive: '#9b59b6',
+  opaque: '#7f8c8d',
+  constraint: '#e94560',
+  empirical: '#f39c12',
+  principle: '#2ecc71',
+  boundary: '#9b59b6',
+  design: '#4ea8de'
+};
+
+// Verso documentation URL mapping for PropositionIds
+// Base URL is configurable — set VERSO_BASE_URL before loading, or defaults to relative path
+const VERSO_BASE_URL = (typeof window.VERSO_BASE_URL !== 'undefined')
+  ? window.VERSO_BASE_URL
+  : '../lean-formalization/docgen-verso/_out/html/html-single/index.html';
+
+const VERSO_ANCHORS = {
+  T1: 'T1-Agent-Sessions-Are-Ephemeral',
+  T2: 'T2-Structure-Outlives-the-Agent',
+  T3: 'T3-The-Amount-of-Information-Processable-at-Once-Is-Finite',
+  T4: 'T4-Agent-Output-Is-Stochastic',
+  T5: 'T5-Improvement-Is-Impossible-Without-Feedback',
+  T6: 'T6-Humans-Are-the-Final-Decision-Makers-for-Resources',
+  T7: 'T7-Resources-Available-for-Task-Execution-Are-Finite',
+  T8: 'T8-Tasks-Have-a-Precision-Level-to-Be-Achieved',
+  E1: 'E1-Verification-Requires-Independence',
+  E2: 'E2-Capability-Growth-Is-Inseparable-from-Risk-Growth',
+  P1: 'P1-Co-scaling-of-Autonomy-and-Vulnerability',
+  P2: 'P2-Cognitive-Separation-of-Concerns',
+  P3: 'P3-Governed-Learning',
+  P4: 'P4-Observable-Degradation',
+  P5: 'P5-Probabilistic-Interpretation-of-Structure',
+  P6: 'P6-Task-Design-as-Constraint-Satisfaction',
+  L1: 'L1-Ethical___Safety-Boundary',
+  L2: 'L2-Ontological-Boundary',
+  L3: 'L3-Resource-Boundary',
+  L4: 'L4-Action-Space-Boundary',
+  L5: 'L5-Platform-Boundary',
+  L6: 'L6-Architectural-Convention-Boundary',
+};
+
+// Verso section URL mapping for Lean modules
+const VERSO_SECTIONS = {
+  'Axioms': 'Axioms___-Base-Theory-T0',
+  'EmpiricalPostulates': 'Empirical-Postulates___-E1-E2',
+  'Principles': 'Principles___-P1-P6',
+  'Observable': 'Observable-Variables___-V1-V7',
+  'ObservableDesign': 'Observable-Variables___-V1-V7',
+  'DesignFoundation': 'Design-Foundation___-D1-D14',
+  'Ontology': 'Ontology___-Core-Type-Definitions',
+};
+
+// Lean source file mapping: module prefix → file path
+const SOURCE_FILES = {
+  'Axioms': 'Manifest/Axioms.lean',
+  'EmpiricalPostulates': 'Manifest/EmpiricalPostulates.lean',
+  'Principles': 'Manifest/Principles.lean',
+  'Observable': 'Manifest/Observable.lean',
+  'ObservableDesign': 'Manifest/ObservableDesign.lean',
+  'DesignFoundation': 'Manifest/DesignFoundation.lean',
+  'Ontology': 'Manifest/Ontology.lean',
+  'Meta': 'Manifest/Meta.lean',
+  'EpistemicLayer': 'Manifest/EpistemicLayer.lean',
+  'Evolution': 'Manifest/Evolution.lean',
+  'Workflow': 'Manifest/Workflow.lean',
+  'Terminology': 'Manifest/Terminology.lean',
+  'Procedure': 'Manifest/Procedure.lean',
+  'FormalDerivationSkill': 'Manifest/FormalDerivationSkill.lean',
+  'ConformanceVerification': 'Manifest/ConformanceVerification.lean',
+  'AxiomQuality': 'Manifest/AxiomQuality.lean',
+  'EvolveSkill': 'Manifest/EvolveSkill.lean',
+  'TaskClassification': 'Manifest/TaskClassification.lean',
+};
+
+// PropositionId human-readable titles
+const PROP_TITLES = {
+  T1: 'Agent Sessions Are Ephemeral',
+  T2: 'Structure Outlives the Agent',
+  T3: 'Information Processable at Once Is Finite',
+  T4: 'Agent Output Is Stochastic',
+  T5: 'Improvement Is Impossible Without Feedback',
+  T6: 'Humans Are the Final Decision Makers',
+  T7: 'Resources for Task Execution Are Finite',
+  T8: 'Tasks Have a Precision Level',
+  E1: 'Verification Requires Independence',
+  E2: 'Capability Growth ≈ Risk Growth',
+  P1: 'Co-scaling of Autonomy and Vulnerability',
+  P2: 'Cognitive Separation of Concerns',
+  P3: 'Governed Learning',
+  P4: 'Observable Degradation',
+  P5: 'Probabilistic Interpretation of Structure',
+  P6: 'Task Design as Constraint Satisfaction',
+  L1: 'Ethical/Safety Boundary',
+  L2: 'Ontological Boundary',
+  L3: 'Resource Boundary',
+  L4: 'Action Space Boundary',
+  L5: 'Platform Boundary',
+  L6: 'Architectural Convention Boundary',
+  D1: 'Structural Enforcement',
+  D2: 'Verification Separation',
+  D3: 'Governed Knowledge Integration',
+  D4: 'Phase Ordering',
+  D5: 'Metric-Driven Adaptation',
+  D6: 'Feedback Loop Optimization',
+  D7: 'Incremental Evolution',
+  D8: 'Equilibrium Search',
+  D9: 'Self-Application',
+  D10: 'Detection Before Action',
+  D11: 'Multi-Signal Integration',
+  D12: 'Observation-Hypothesis Separation',
+  D13: 'Impact Propagation',
+  D14: 'Task-Precision Alignment',
+};
+
+let cy;
+let fullData = null;
+let sourceMap = null;
+let prePositions = null;
+let currentView = 'overview';
+
+/** Extract module name from fullName like "Manifest.EpistemicLayer.foo" → "EpistemicLayer" */
+function getModule(fullName) {
+  const parts = fullName.replace('Manifest.', '').split('.');
+  if (parts.length >= 2) {
+    // Check if first part matches a known module
+    if (SOURCE_FILES[parts[0]]) return parts[0];
+  }
+  return 'root';
+}
+
+/** Get Verso doc URL for a node */
+function getVersoUrl(nodeData) {
+  if (currentView === 'overview') {
+    const anchor = VERSO_ANCHORS[nodeData.id];
+    if (anchor) {
+      // Find the section prefix based on category
+      let prefix = '';
+      const id = nodeData.id;
+      if (id.startsWith('T')) prefix = 'Axioms___-Base-Theory-T0--Epistemic-Layer---Constraint-Strength-5---T1-T8-Base-Theory-T0--';
+      else if (id.startsWith('E')) prefix = 'Empirical-Postulates___-E1-E2--Epistemic-Layer---EmpiricalPostulate-Strength-4---E1-E2-Premise-Set--';
+      else if (id.startsWith('P')) prefix = 'Principles___-P1-P6--Epistemic-Layer---Principle-Strength-3---P1-P6-Theorem-Derivation-Procedure-Phase-2--';
+      else if (id.startsWith('L')) prefix = 'Ontology___-Core-Type-Definitions--Definitional-Foundation---Ontology---Domain-of-Discourse-Definition--';
+      return `${VERSO_BASE_URL}#Agent-Manifesto___-Formal-Specification--${prefix}${anchor}`;
+    }
+  } else {
+    const mod = getModule(nodeData.fullName);
+    const section = VERSO_SECTIONS[mod];
+    if (section) {
+      return `${VERSO_BASE_URL}#Agent-Manifesto___-Formal-Specification--${section}`;
+    }
+  }
+  return null;
+}
+
+/** Get source file info for a node. Returns {file, line, declKind} or fallback. */
+function getSourceInfo(fullName) {
+  if (sourceMap && sourceMap[fullName]) {
+    return sourceMap[fullName];
+  }
+  // Fallback to module-level mapping
+  const mod = getModule(fullName);
+  const file = SOURCE_FILES[mod];
+  return file ? { file, line: null, declKind: null } : null;
+}
+
+/** Compute transitive impact (all nodes reachable via reverse deps) */
+function computeTransitiveImpact(node) {
+  const visited = new Set();
+  const queue = [node];
+  while (queue.length > 0) {
+    const n = queue.shift();
+    const id = n.id();
+    if (visited.has(id)) continue;
+    visited.add(id);
+    n.incomers().nodes().forEach(dep => {
+      if (!visited.has(dep.id())) queue.push(dep);
+    });
+  }
+  visited.delete(node.id()); // exclude self
+  return visited.size;
+}
+
+/** Compute transitive dependencies (all nodes reachable via forward deps) */
+function computeTransitiveDeps(node) {
+  const visited = new Set();
+  const queue = [node];
+  while (queue.length > 0) {
+    const n = queue.shift();
+    const id = n.id();
+    if (visited.has(id)) continue;
+    visited.add(id);
+    n.outgoers().nodes().forEach(dep => {
+      if (!visited.has(dep.id())) queue.push(dep);
+    });
+  }
+  visited.delete(node.id());
+  return visited.size;
+}
+
+async function init() {
+  try {
+    const [depResp, srcResp, posResp] = await Promise.all([
+      fetch('depgraph.json'),
+      fetch('source-map.json').catch(() => null),
+      fetch('positions.json').catch(() => null)
+    ]);
+    fullData = await depResp.json();
+    if (srcResp && srcResp.ok) sourceMap = await srcResp.json();
+    if (posResp && posResp.ok) prePositions = await posResp.json();
+  } catch (e) {
+    document.getElementById('loading').textContent = 'Failed to load depgraph.json. Place this file alongside graph-view.html.';
+    return;
+  }
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)',
+          'font-size': 10,
+          'color': '#e6e6e6',
+          'text-valign': 'bottom',
+          'text-margin-y': 4,
+          'background-color': 'data(color)',
+          'width': 'data(size)',
+          'height': 'data(size)',
+          'border-width': 0,
+          'text-outline-color': '#1a1a2e',
+          'text-outline-width': 2,
+        }
+      },
+      {
+        selector: 'node.highlighted',
+        style: {
+          'border-width': 3,
+          'border-color': '#f0c040',
+          'z-index': 10
+        }
+      },
+      {
+        selector: 'node.searched',
+        style: {
+          'border-width': 3,
+          'border-color': '#00ff88',
+          'z-index': 10
+        }
+      },
+      {
+        selector: 'node.faded',
+        style: { 'opacity': 0.15 }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 1,
+          'line-color': '#334155',
+          'target-arrow-color': '#334155',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier',
+          'arrow-scale': 0.6,
+          'opacity': 0.4
+        }
+      },
+      {
+        selector: 'edge.highlighted',
+        style: {
+          'line-color': '#f0c040',
+          'target-arrow-color': '#f0c040',
+          'width': 2,
+          'opacity': 1,
+          'z-index': 10
+        }
+      },
+      {
+        selector: 'edge.faded',
+        style: { 'opacity': 0.05 }
+      },
+      {
+        selector: 'node.hidden',
+        style: { 'display': 'none' }
+      },
+      {
+        selector: 'edge.hidden',
+        style: { 'display': 'none' }
+      }
+    ],
+    wheelSensitivity: 0.3,
+    minZoom: 0.05,
+    maxZoom: 5
+  });
+
+  cy.on('tap', 'node', onNodeTap);
+  cy.on('tap', function(e) {
+    if (e.target === cy) clearHighlight();
+  });
+
+  switchView('overview');
+  document.getElementById('loading').style.display = 'none';
+
+  // Search
+  document.getElementById('search').addEventListener('input', onSearch);
+
+  // Filters
+  document.querySelectorAll('.filter-group input').forEach(cb => {
+    cb.addEventListener('change', applyFilters);
+  });
+}
+
+function buildOverviewElements() {
+  const elements = [];
+  PROPOSITION_IDS.forEach(id => {
+    const meta = PROP_CATEGORIES[id];
+    elements.push({
+      data: {
+        id: id,
+        label: id,
+        kind: meta.cat,
+        color: KIND_COLORS[meta.cat],
+        size: 30,
+        fullName: id,
+        strength: meta.strength
+      }
+    });
+  });
+  Object.entries(PROP_DEPS).forEach(([target, sources]) => {
+    sources.forEach(source => {
+      elements.push({
+        data: {
+          id: `${source}->${target}`,
+          source: source,
+          target: target
+        }
+      });
+    });
+  });
+  return elements;
+}
+
+function getActiveKinds() {
+  const kinds = new Set();
+  document.querySelectorAll('.filter-group input:checked').forEach(cb => {
+    kinds.add(cb.dataset.kind);
+  });
+  return kinds;
+}
+
+function buildFullElements() {
+  const activeKinds = getActiveKinds();
+  const elements = [];
+  const nodeSet = new Set();
+
+  fullData.nodes.forEach(n => {
+    if (!activeKinds.has(n.kind)) return;
+    nodeSet.add(n.fullName);
+    const sizeMap = { axiom: 18, theorem: 12, def: 8, inductive: 10, opaque: 8 };
+    elements.push({
+      data: {
+        id: n.fullName,
+        label: n.name,
+        kind: n.kind,
+        color: KIND_COLORS[n.kind] || '#6c757d',
+        size: sizeMap[n.kind] || 8,
+        fullName: n.fullName
+      }
+    });
+  });
+
+  fullData.edges.forEach(e => {
+    if (nodeSet.has(e.source) && nodeSet.has(e.target)) {
+      elements.push({
+        data: {
+          id: `${e.source}->${e.target}`,
+          source: e.source,
+          target: e.target,
+          edgeKind: e.edgeKind
+        }
+      });
+    }
+  });
+
+  return elements;
+}
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('btn-overview').classList.toggle('active', view === 'overview');
+  document.getElementById('btn-detail').classList.toggle('active', view === 'detail');
+
+  // Show/hide filter checkboxes (only relevant in full graph)
+  document.querySelector('.filter-group').style.display = view === 'overview' ? 'none' : 'block';
+
+  rebuildGraph();
+}
+
+function rebuildGraph() {
+  const elements = currentView === 'overview' ? buildOverviewElements() : buildFullElements();
+  cy.elements().remove();
+  cy.add(elements);
+  updateStats();
+  runLayout('dagre');
+}
+
+function runLayout(type) {
+  if (type === 'force') {
+    cy.layout({
+      name: 'cose',
+      animate: false,
+      nodeRepulsion: function() { return 4000; },
+      idealEdgeLength: function() { return 40; },
+      numIter: 100,
+      fit: true,
+      padding: 30
+    }).run();
+  } else {
+    // Use precomputed positions if available, else breadthfirst
+    if (currentView === 'overview') {
+      // Simple layered layout for 36 nodes
+      cy.layout({
+        name: 'breadthfirst',
+        directed: true,
+        spacingFactor: 1.2,
+        fit: true,
+        padding: 30,
+        animate: false
+      }).run();
+    } else if (prePositions) {
+      cy.layout({
+        name: 'preset',
+        positions: function(node) {
+          return prePositions[node.id()] || { x: 0, y: 0 };
+        },
+        fit: true,
+        padding: 30,
+        animate: false
+      }).run();
+    } else {
+      cy.layout({
+        name: 'breadthfirst',
+        directed: true,
+        spacingFactor: 0.8,
+        fit: true,
+        padding: 30,
+        animate: false
+      }).run();
+    }
+  }
+}
+
+function onNodeTap(evt) {
+  const node = evt.target;
+  clearHighlight();
+
+  // Highlight connected
+  const deps = node.outgoers();
+  const rdeps = node.incomers();
+  const connected = deps.union(rdeps).union(node);
+
+  cy.elements().addClass('faded');
+  connected.removeClass('faded');
+  node.addClass('highlighted');
+  deps.edges().addClass('highlighted');
+  rdeps.edges().addClass('highlighted');
+
+  const data = node.data();
+  const panel = document.getElementById('detail');
+  panel.style.display = 'block';
+
+  // Name + title
+  const nameEl = document.getElementById('detail-name');
+  const title = PROP_TITLES[data.label];
+  nameEl.textContent = title ? `${data.label}: ${title}` : data.label;
+
+  // Kind badge
+  const badge = document.getElementById('detail-kind');
+  badge.textContent = data.kind;
+  badge.style.background = data.color;
+  badge.style.color = '#fff';
+
+  // Module badge
+  const moduleBadge = document.getElementById('detail-module');
+  const mod = currentView === 'overview' ? '' : getModule(data.fullName);
+  if (mod && mod !== 'root') {
+    moduleBadge.textContent = mod;
+    moduleBadge.style.display = 'inline-block';
+  } else {
+    moduleBadge.style.display = 'none';
+  }
+
+  // Full name
+  document.getElementById('detail-fullname').textContent = data.fullName;
+
+  // Links (Verso doc + source file)
+  const linksEl = document.getElementById('detail-links');
+  linksEl.innerHTML = '';
+
+  const versoUrl = getVersoUrl(data);
+  if (versoUrl) {
+    const a = document.createElement('a');
+    a.href = versoUrl;
+    a.target = '_blank';
+    a.className = 'link-verso';
+    a.innerHTML = '\u{1F4D6} Verso Docs';
+    linksEl.appendChild(a);
+  }
+
+  const srcInfo = currentView === 'overview' ? null : getSourceInfo(data.fullName);
+  if (srcInfo) {
+    const label = srcInfo.line ? `${srcInfo.file}:${srcInfo.line}` : srcInfo.file;
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'link-source';
+    a.innerHTML = `\u{1F4C4} ${label}`;
+    a.onclick = (e) => { e.preventDefault(); navigator.clipboard.writeText(label); a.innerHTML = '\u2705 Copied!'; setTimeout(() => { a.innerHTML = `\u{1F4C4} ${label}`; }, 1500); };
+    linksEl.appendChild(a);
+  }
+
+  // Meta info
+  const metaEl = document.getElementById('detail-meta');
+  metaEl.innerHTML = '';
+
+  const depNodes = node.outgoers().nodes();
+  const rdepNodes = node.incomers().nodes();
+  const transitiveImpact = computeTransitiveImpact(node);
+  const transitiveDeps = computeTransitiveDeps(node);
+  const totalNodes = cy.nodes().length;
+
+  const metaItems = [];
+  if (currentView === 'overview') {
+    const meta = PROP_CATEGORIES[data.id];
+    if (meta) {
+      metaItems.push(['Category', meta.cat]);
+      metaItems.push(['Strength', `${meta.strength}/5`]);
+    }
+  } else if (srcInfo) {
+    if (srcInfo.declKind && srcInfo.declKind !== data.kind) {
+      metaItems.push(['Decl kind', srcInfo.declKind]);
+    }
+    if (srcInfo.file) metaItems.push(['Module', getModule(data.fullName)]);
+  }
+  metaItems.push(['Direct deps', `${depNodes.length}`]);
+  metaItems.push(['Direct rdeps', `${rdepNodes.length}`]);
+  metaItems.push(['Transitive deps', `${transitiveDeps}`]);
+  metaItems.push(['Transitive impact', `${transitiveImpact} (${(transitiveImpact/totalNodes*100).toFixed(1)}%)`]);
+
+  metaItems.forEach(([label, value]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.textContent = value;
+    metaEl.appendChild(dt);
+    metaEl.appendChild(dd);
+  });
+
+  // Impact bar
+  const impactPct = Math.min(100, transitiveImpact / totalNodes * 100);
+  const impactFill = document.getElementById('impact-bar-fill');
+  impactFill.style.width = `${impactPct}%`;
+  impactFill.style.background = impactPct > 50 ? '#e94560' : impactPct > 20 ? '#f39c12' : '#2ecc71';
+
+  // Deps list
+  document.getElementById('deps-count').textContent = depNodes.length;
+  const depsList = document.getElementById('deps-list');
+  depsList.innerHTML = '';
+  depNodes.sort((a, b) => a.data('label').localeCompare(b.data('label'))).forEach(n => {
+    const li = document.createElement('li');
+    const dot = document.createElement('span');
+    dot.className = 'dep-dot';
+    dot.style.background = n.data('color');
+    li.appendChild(dot);
+    const text = document.createElement('span');
+    text.textContent = n.data('label');
+    li.appendChild(text);
+    const kind = document.createElement('span');
+    kind.className = 'dep-kind';
+    kind.textContent = n.data('kind');
+    li.appendChild(kind);
+    li.onclick = () => { cy.center(n); n.emit('tap'); };
+    depsList.appendChild(li);
+  });
+
+  // Rdeps list
+  document.getElementById('rdeps-count').textContent = rdepNodes.length;
+  const rdepsList = document.getElementById('rdeps-list');
+  rdepsList.innerHTML = '';
+  rdepNodes.sort((a, b) => a.data('label').localeCompare(b.data('label'))).forEach(n => {
+    const li = document.createElement('li');
+    const dot = document.createElement('span');
+    dot.className = 'dep-dot';
+    dot.style.background = n.data('color');
+    li.appendChild(dot);
+    const text = document.createElement('span');
+    text.textContent = n.data('label');
+    li.appendChild(text);
+    const kind = document.createElement('span');
+    kind.className = 'dep-kind';
+    kind.textContent = n.data('kind');
+    li.appendChild(kind);
+    li.onclick = () => { cy.center(n); n.emit('tap'); };
+    rdepsList.appendChild(li);
+  });
+}
+
+function clearHighlight() {
+  cy.elements().removeClass('faded highlighted searched');
+  document.getElementById('detail').style.display = 'none';
+}
+
+function onSearch(evt) {
+  const q = evt.target.value.trim().toLowerCase();
+  cy.elements().removeClass('searched faded');
+  if (!q) return;
+
+  const matched = cy.nodes().filter(n =>
+    n.data('label').toLowerCase().includes(q) ||
+    n.data('fullName').toLowerCase().includes(q)
+  );
+
+  if (matched.length > 0) {
+    cy.elements().addClass('faded');
+    matched.removeClass('faded').addClass('searched');
+    matched.connectedEdges().removeClass('faded');
+    if (matched.length <= 5) cy.fit(matched, 50);
+  }
+}
+
+function applyFilters() {
+  if (currentView === 'overview') return;
+  rebuildGraph();
+}
+
+function updateStats() {
+  const nodes = cy.nodes().length;
+  const edges = cy.edges().length;
+  const kinds = {};
+  cy.nodes().forEach(n => {
+    const k = n.data('kind');
+    kinds[k] = (kinds[k] || 0) + 1;
+  });
+  let html = `<span>${nodes} nodes, ${edges} edges</span>`;
+  Object.entries(kinds).sort((a,b) => b[1]-a[1]).forEach(([k,v]) => {
+    html += `<span style="color:${KIND_COLORS[k]||'#999'}">${k}: ${v}</span>`;
+  });
+  document.getElementById('stats').innerHTML = html;
+}
+
+init();
+</script>
+</body>
+</html>
