@@ -229,61 +229,75 @@ definitions. Measurability is guaranteed by external operational systems and is 
 as a non-logical axiom within the formal system.
 -/
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V1 (skill quality) is measurable
     Basis: with/without comparison via benchmark.json exists as a measurement procedure
     Source: Ontology.lean V1 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for skill quality is in principle unconstructible -/
-axiom v1_measurable : Measurable skillQuality
+theorem v1_measurable : Measurable skillQuality := ⟨skillQuality, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V2 (context efficiency) is measurable
     Basis: the ratio of task completion rate to consumed token count exists as a measurement procedure
     Source: Ontology.lean V2 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for context efficiency is in principle unconstructible -/
-axiom v2_measurable : Measurable contextEfficiency
+theorem v2_measurable : Measurable contextEfficiency := ⟨contextEfficiency, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V3 (output quality) is measurable
     Basis: gate pass rate and review finding count exist as measurement procedures
     Source: Ontology.lean V3 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for output quality is in principle unconstructible -/
-axiom v3_measurable : Measurable outputQuality
+theorem v3_measurable : Measurable outputQuality := ⟨outputQuality, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V4 (gate pass rate) is measurable
     Basis: pass/fail statistics exist as a measurement procedure
     Source: Ontology.lean V4 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for gate pass rate is in principle unconstructible -/
-axiom v4_measurable : Measurable gatePassRate
+theorem v4_measurable : Measurable gatePassRate := ⟨gatePassRate, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V5 (proposal accuracy) is measurable
     Basis: human approval/rejection rate exists as a measurement procedure
     Source: Ontology.lean V5 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for proposal accuracy is in principle unconstructible -/
-axiom v5_measurable : Measurable proposalAccuracy
+theorem v5_measurable : Measurable proposalAccuracy := ⟨proposalAccuracy, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V6 (knowledge structure quality) is measurable
     Basis: context restoration speed and retirement target detection rate exist as measurement procedures
     Source: Ontology.lean V6 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for knowledge structure quality is in principle unconstructible -/
-axiom v6_measurable : Measurable knowledgeStructureQuality
+theorem v6_measurable : Measurable knowledgeStructureQuality := ⟨knowledgeStructureQuality, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: V7 (task design efficiency) is measurable
     Basis: task completion rate / consumed resource ratio exists as a measurement procedure
     Source: Ontology.lean V7 definition
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for task design efficiency is in principle unconstructible -/
-axiom v7_measurable : Measurable taskDesignEfficiency
+theorem v7_measurable : Measurable taskDesignEfficiency := ⟨taskDesignEfficiency, fun _ => rfl⟩
 
 -- ============================================================
 -- 系の健全性
@@ -318,23 +332,28 @@ def systemHealthy (threshold : Nat) (w : World) : Prop :=
 -- 信頼度・劣化度の可測性
 -- ============================================================
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: trustLevel is measurable.
              Indirectly observed from investment behavior (fluctuations in resource allocation)
     Basis: trust is concretized as investment behavior (resource allocation fluctuations)
     Source: manifesto.md Section 6
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for trust level is in principle unconstructible -/
-axiom trust_measurable :
-  ∀ (agent : Agent), Measurable (trustLevel agent)
+theorem trust_measurable :
+  ∀ (agent : Agent), Measurable (trustLevel agent) :=
+  fun agent => ⟨trustLevel agent, fun _ => rfl⟩
 
-/-- [Axiom Card]
+/-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
     Content: degradationLevel is measurable. Computed from temporal changes in V1–V7
     Basis: if V1–V7 are Measurable, their rate of change is also computable
     Source: design of P4 (observability of degradation)
+    Demoted: 2026-04-01 — Measurable is trivially satisfied for any World → Nat function.
+          Proof: ⟨m, fun _ => rfl⟩ (witness is the function itself).
     Refutation condition: if it is shown that a measurement procedure for degradation level is in principle unconstructible -/
-axiom degradation_measurable : Measurable degradationLevel
+theorem degradation_measurable : Measurable degradationLevel := ⟨degradationLevel, fun _ => rfl⟩
 
 -- ============================================================
 -- 境界→緩和策→変数の接続 (taxonomy Part II)
