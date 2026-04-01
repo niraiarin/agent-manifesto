@@ -263,11 +263,20 @@ T4 declares as an axiom that "this multiplicity can actually occur."
           sampling (temperature parameter), non-associativity of floating-point arithmetic,
           irreversibility of branching in autoregressive generation — enable different outputs
           for the same input. Even at temperature=0, floating-point-level nondeterminism may persist.
-    Source: manifesto.md T4 "Different outputs may be produced for the same input"
 
-    Since `canTransition` is defined as a relation (Prop),
-    it is not constrained by Lean's function determinism and can naturally express nondeterminism.
-    Refutation condition: Not applicable (T₀) -/
+    Mathematical grounding (Foundation/Probability.lean):
+      Under the conditions τ > 0 and |V| ≥ 2, this axiom is mathematically justified:
+      [R1] Kolmogorov (1933) — probability axioms (Mathlib: PMF)
+      [R2] Gao & Pavel (2017, arXiv:1704.00805) — softmax full support:
+            τ > 0 → ∀ i, softmax(z/τ)_i > 0 (proven: softmax_full_support)
+      [R3] Jang et al. (2017, ICLR, arXiv:1611.01144) — categorical sampling:
+            output ~ Categorical(softmax(z/τ))
+      [R4] Atil et al. (2024, arXiv:2408.04667) — hardware nondeterminism:
+            τ = 0 でも GPU 浮動小数点で非決定性が生じる
+
+    Source: manifesto.md T4 "Different outputs may be produced for the same input"
+    Refutation condition: If all LLM architectures switch to deterministic-only
+          generation (temperature fixed at 0 with no floating-point nondeterminism). -/
 axiom output_nondeterministic :
   ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
     canTransition agent action w w₁ ∧
