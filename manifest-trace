@@ -16,6 +16,7 @@
 #   - lean-formalization/Manifest/{Axioms,EmpiricalPostulates,Observable}.lean（Axiom Card）
 
 set -euo pipefail
+trap '' PIPE
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MANIFEST="$SCRIPT_DIR/artifact-manifest.json"
@@ -124,7 +125,7 @@ _DERIVATION_CACHE=""
 # 出力: "CHILD PARENT" の行（1行1依存）。結果はキャッシュされる。
 parse_lean_dependencies() {
   if [[ -n "$_DEP_CACHE" ]]; then
-    echo "$_DEP_CACHE"
+    echo "$_DEP_CACHE" || true
     return
   fi
 
@@ -148,7 +149,7 @@ parse_lean_dependencies() {
   done)
 
   _DEP_CACHE="$result"
-  echo "$result"
+  echo "$result" || true
 }
 
 # Lean の [Axiom Card] doc comment から Basis/Source/Layer を抽出
@@ -156,7 +157,7 @@ parse_lean_dependencies() {
 # {"proposition":"T1","axiom":"session_bounded","layer":"...","content":"...","basis":"...","source":"...","refutation":"...","file":"Axioms.lean"}
 parse_lean_evidence() {
   if [[ -n "$_EVIDENCE_CACHE" ]]; then
-    echo "$_EVIDENCE_CACHE"
+    echo "$_EVIDENCE_CACHE" || true
     return
   fi
 
@@ -236,11 +237,11 @@ parse_lean_evidence() {
         }
       }
     ' "$lean_file")
-    result+="$file_result"$'\n'
+    [[ -n "$file_result" ]] && result+="$file_result"$'\n'
   done
 
   _EVIDENCE_CACHE="$result"
-  echo "$result"
+  echo "$result" || true
 }
 
 # Lean の [Derivation Card] doc comment からフィールドを抽出
@@ -248,7 +249,7 @@ parse_lean_evidence() {
 # {"proposition":"P3","theorem":"t0_contraction_forbidden","derives_from":"...","content":"...","proof_strategy":"...","file":"Procedure.lean"}
 parse_lean_derivations() {
   if [[ -n "$_DERIVATION_CACHE" ]]; then
-    echo "$_DERIVATION_CACHE"
+    echo "$_DERIVATION_CACHE" || true
     return
   fi
 
@@ -325,11 +326,11 @@ parse_lean_derivations() {
         }
       }
     ' "$lean_file")
-    result+="$file_result"$'\n'
+    [[ -n "$file_result" ]] && result+="$file_result"$'\n'
   done
 
   _DERIVATION_CACHE="$result"
-  echo "$result"
+  echo "$result" || true
 }
 
 # 全 PropositionId のリスト

@@ -553,7 +553,11 @@ def designStageOrder : DesignStage → Nat
   | .designMitigation  => 1
   | .defineVariable    => 2
 
-/-- D6: The three-stage design is strictly ordered. -/
+/-- [Derivation Card]
+    Derives from: designStageOrder (definitional)
+    Proposition: D6
+    Content: The three-stage design is strictly ordered — identifyBoundary < designMitigation < defineVariable. The stage ordering function assigns monotonically increasing natural numbers.
+    Proof strategy: simp [designStageOrder] — unfold the ordering function and reduce to Nat inequalities -/
 theorem d6_stage_sequential :
   designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
   designStageOrder .designMitigation < designStageOrder .defineVariable := by
@@ -923,8 +927,11 @@ def contextCost : EnforcementLayer → Nat
   | .procedural => 1   -- プロセスは存在するがコンテキストに常駐しない
   | .normative  => 2   -- 毎セッション読み込まれ、コンテキストを占有する
 
-/-- D11: Enforcement power and context cost are inversely correlated.
-    Higher enforcement power means lower context cost. -/
+/-- [Derivation Card]
+    Derives from: contextCost (definitional)
+    Proposition: D11
+    Content: Enforcement power and context cost are inversely correlated — structural (0) < procedural (1) < normative (2). Higher enforcement power means lower context cost.
+    Proof strategy: simp [contextCost] — unfold the cost function and reduce to Nat inequalities -/
 theorem d11_enforcement_cost_inverse :
   contextCost .structural < contextCost .procedural ∧
   contextCost .procedural < contextCost .normative := by
@@ -959,8 +966,11 @@ within finite cognitive space (T3) and finite resources (T7).
 Connects with P6 theorem group in Principles.lean.
 -/
 
-/-- D12: Task design is a constraint satisfaction problem over T3+T7+T8.
-    Restatement of P6a (task_is_constraint_satisfaction). -/
+/-- [Derivation Card]
+    Derives from: task_is_constraint_satisfaction (P6)
+    Proposition: D12
+    Content: Task design is a constraint satisfaction problem over T3+T7+T8. A feasible strategy must satisfy context capacity (T3), resource budget (T7), and precision requirement (T8) simultaneously.
+    Proof strategy: Direct application of task_is_constraint_satisfaction (P6) — restatement at the design principle level -/
 theorem d12_task_is_csp :
   ∀ (task : Task) (agent : Agent),
     agent.contextWindow.capacity > 0 →
@@ -1132,9 +1142,11 @@ Information gain, risk-order (fail-fast), and cost-order are all models satisfyi
 The choice of specific method is at the L6 (design convention) level.
 -/
 
-/-- D14: When resources are finite (T7) and precision requirements exist (T8),
-    task strategy feasibility is within the scope of constraint satisfaction (restatement of D12).
-    The choice of verification order is part of this constraint satisfaction problem. -/
+/-- [Derivation Card]
+    Derives from: task_is_constraint_satisfaction (P6)
+    Proposition: D14
+    Content: Verification order is part of the constraint satisfaction problem — when resources are finite (T7) and precision requirements exist (T8), the choice of verification order is within the scope of P6 constraint satisfaction.
+    Proof strategy: Direct application of task_is_constraint_satisfaction (P6) — same proof term as D12, applied to verification ordering context -/
 theorem d14_verification_order_is_csp :
   ∀ (task : Task) (agent : Agent),
     agent.contextWindow.capacity > 0 →
