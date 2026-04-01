@@ -497,7 +497,7 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 |------|---------|--------|---------------|
 | test pass count (絶対数) | `bash tests/test-all.sh` | 290+ | 直接最適化すると自明なテスト追加を誘発 |
 | axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 63 (安定) | 不要な公理追加は形式系を弱める |
-| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 353+ (増加) | delta は最適化、絶対数はガバナンス |
+| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 359+ (増加) | delta は最適化、絶対数はガバナンス |
 | sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
 | warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
 | De Bruijn factor | AxiomQuality.lean より | ≈4.0 | 直接最適化すると冗長な証明を誘発 |
