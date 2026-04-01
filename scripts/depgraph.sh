@@ -424,6 +424,172 @@ print(f'Subgraph around {matches[0]["name"]}: {len(sub_nodes)} nodes, {len(sub_e
 PYEOF
 }
 
+cmd_diff() {
+  local old_json="$1"
+  local new_json="${2:-$DEPGRAPH}"
+
+  if [ ! -f "$old_json" ]; then
+    echo "ERROR: $old_json not found" >&2; exit 1
+  fi
+  if [ ! -f "$new_json" ]; then
+    echo "ERROR: $new_json not found" >&2; exit 1
+  fi
+
+  python3 - "$old_json" "$new_json" << 'PYEOF'
+import json
+import sys
+
+old_path = sys.argv[1]
+new_path = sys.argv[2]
+
+with open(old_path) as f:
+    old = json.load(f)
+with open(new_path) as f:
+    new = json.load(f)
+
+old_nodes = {n['fullName']: n for n in old['nodes']}
+new_nodes = {n['fullName']: n for n in new['nodes']}
+old_edges = set((e['source'], e['target'], e['edgeKind']) for e in old['edges'])
+new_edges = set((e['source'], e['target'], e['edgeKind']) for e in new['edges'])
+
+# --- Node changes ---
+added_nodes = sorted(set(new_nodes) - set(old_nodes))
+removed_nodes = sorted(set(old_nodes) - set(new_nodes))
+common_nodes = set(old_nodes) & set(new_nodes)
+
+kind_changes = []
+for name in sorted(common_nodes):
+    ok = old_nodes[name]['kind']
+    nk = new_nodes[name]['kind']
+    if ok != nk:
+        kind_changes.append((name.replace('Manifest.', ''), ok, nk))
+
+# --- Edge changes ---
+added_edges = sorted(new_edges - old_edges)
+removed_edges = sorted(old_edges - new_edges)
+
+# --- Stats comparison ---
+def count_by_kind(nodes_dict):
+    kinds = {}
+    for n in nodes_dict.values():
+        k = n['kind']
+        kinds[k] = kinds.get(k, 0) + 1
+    return kinds
+
+old_kinds = count_by_kind(old_nodes)
+new_kinds = count_by_kind(new_nodes)
+all_kinds = sorted(set(old_kinds) | set(new_kinds))
+
+# --- Isolated axiom comparison ---
+def get_isolated_axioms(nodes_dict, edges_list):
+    axiom_names = set(n for n, v in nodes_dict.items() if v['kind'] == 'axiom')
+    has_rdeps = set(e[1] for e in edges_list)
+    return axiom_names - has_rdeps
+
+# Reconstruct edge tuple sets with only (src, tgt) for rdeps check
+old_edge_pairs = set((e['source'], e['target']) for e in old['edges'])
+new_edge_pairs = set((e['source'], e['target']) for e in new['edges'])
+
+old_isolated = get_isolated_axioms(old_nodes, [(s,t) for s,t in old_edge_pairs])
+new_isolated = get_isolated_axioms(new_nodes, [(s,t) for s,t in new_edge_pairs])
+newly_connected = sorted((old_isolated - new_isolated))
+newly_isolated = sorted((new_isolated - old_isolated))
+
+# --- Output ---
+print("=" * 60)
+print("Dependency Graph Diff")
+print("=" * 60)
+print(f"Old: {old_path}")
+print(f"New: {new_path}")
+print()
+
+# Stats table
+print("--- Stats ---")
+print(f"{'':20s} {'Old':>8s} {'New':>8s} {'Delta':>8s}")
+print(f"{'Nodes':20s} {len(old_nodes):8d} {len(new_nodes):8d} {len(new_nodes)-len(old_nodes):+8d}")
+print(f"{'Edges':20s} {len(old_edges):8d} {len(new_edges):8d} {len(new_edges)-len(old_edges):+8d}")
+for k in all_kinds:
+    ov = old_kinds.get(k, 0)
+    nv = new_kinds.get(k, 0)
+    if ov != nv:
+        print(f"  {k:18s} {ov:8d} {nv:8d} {nv-ov:+8d}")
+print()
+
+# Kind changes (the key signal for axiom→theorem demotion)
+if kind_changes:
+    print(f"--- Kind Changes ({len(kind_changes)}) ---")
+    for name, ok, nk in kind_changes:
+        print(f"  {name}: {ok} → {nk}")
+    print()
+else:
+    print("--- Kind Changes: none ---")
+    print()
+
+# Added nodes
+if added_nodes:
+    print(f"--- Added Nodes ({len(added_nodes)}) ---")
+    for name in added_nodes:
+        short = name.replace('Manifest.', '')
+        kind = new_nodes[name]['kind']
+        print(f"  + {short} ({kind})")
+    print()
+
+# Removed nodes
+if removed_nodes:
+    print(f"--- Removed Nodes ({len(removed_nodes)}) ---")
+    for name in removed_nodes:
+        short = name.replace('Manifest.', '')
+        kind = old_nodes[name]['kind']
+        print(f"  - {short} ({kind})")
+    print()
+
+# Edge changes (summarized)
+if added_edges or removed_edges:
+    print(f"--- Edge Changes ---")
+    print(f"  Added:   {len(added_edges)}")
+    print(f"  Removed: {len(removed_edges)}")
+
+    # Show edge changes involving kind-changed nodes (most relevant)
+    changed_names = set('Manifest.' + kc[0] for kc in kind_changes)
+    relevant_added = [(s,t,k) for s,t,k in added_edges
+                      if s in changed_names or t in changed_names]
+    relevant_removed = [(s,t,k) for s,t,k in removed_edges
+                        if s in changed_names or t in changed_names]
+
+    if relevant_added or relevant_removed:
+        print(f"  Involving kind-changed nodes:")
+        for s, t, k in relevant_added[:10]:
+            print(f"    + {s.replace('Manifest.', '')} →[{k}]→ {t.replace('Manifest.', '')}")
+        for s, t, k in relevant_removed[:10]:
+            print(f"    - {s.replace('Manifest.', '')} →[{k}]→ {t.replace('Manifest.', '')}")
+    print()
+
+# Isolated axiom changes
+if newly_connected or newly_isolated:
+    print("--- Isolated Axiom Changes ---")
+    for name in newly_connected:
+        print(f"  ✅ {name.replace('Manifest.', '')} — now connected (was isolated)")
+    for name in newly_isolated:
+        print(f"  ⚠️  {name.replace('Manifest.', '')} — now isolated (was connected)")
+    print()
+
+# No changes
+if (not added_nodes and not removed_nodes and not kind_changes
+    and not added_edges and not removed_edges
+    and not newly_connected and not newly_isolated):
+    print("No changes detected.")
+    print()
+
+# Summary
+total_changes = (len(added_nodes) + len(removed_nodes) + len(kind_changes)
+                 + len(added_edges) + len(removed_edges))
+print(f"Total: {total_changes} changes "
+      f"({len(kind_changes)} kind, "
+      f"+{len(added_nodes)}/{'-' + str(len(removed_nodes))} nodes, "
+      f"+{len(added_edges)}/{'-' + str(len(removed_edges))} edges)")
+PYEOF
+}
+
 case "${1:-help}" in
   generate) cmd_generate ;;
   stats) cmd_stats ;;
@@ -433,8 +599,9 @@ case "${1:-help}" in
   axioms) cmd_axioms ;;
   dot) cmd_dot "${2:-}" ;;
   subgraph) shift; cmd_subgraph "$@" ;;
+  diff) cmd_diff "${2:?Usage: depgraph.sh diff <old.json> [new.json]}" "${3:-$DEPGRAPH}" ;;
   *)
-    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot|subgraph}" >&2
+    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot|subgraph|diff}" >&2
     exit 1
     ;;
 esac

@@ -378,6 +378,90 @@ check "DG.112: subgraph error on nonexistent name" \
 echo ""
 
 # ============================================================
+# diff コマンド
+# ============================================================
+echo "--- diff ---"
+
+# Create a modified graph for diff testing
+DIFF_TMP="$(mktemp)"
+python3 -c "
+import json
+with open('$GRAPH_JSON') as f:
+    data = json.load(f)
+
+# Simulate axiom→theorem demotion
+for n in data['nodes']:
+    if n['fullName'] == 'Manifest.output_nondeterministic':
+        n['kind'] = 'theorem'
+
+# Simulate new foundation node
+data['nodes'].append({
+    'name': 'SoftmaxDistribution',
+    'fullName': 'Manifest.SoftmaxDistribution',
+    'kind': 'def'
+})
+
+# Simulate new edge
+data['edges'].append({
+    'source': 'Manifest.output_nondeterministic',
+    'target': 'Manifest.SoftmaxDistribution',
+    'edgeKind': 'value'
+})
+
+# Simulate removed node
+data['nodes'] = [n for n in data['nodes'] if n['fullName'] != 'Manifest.governanceNecessityExplanation']
+
+with open('$DIFF_TMP', 'w') as f:
+    json.dump(data, f)
+" 2>/dev/null
+
+DIFF_OUT="$("$DEPGRAPH" diff "$GRAPH_JSON" "$DIFF_TMP" 2>&1)"
+
+check "DG.130: diff outputs header" \
+  "echo '$DIFF_OUT' | grep -q 'Dependency Graph Diff'"
+
+check "DG.131: diff detects kind change (axiom→theorem)" \
+  "echo '$DIFF_OUT' | grep -q 'output_nondeterministic: axiom.*theorem'"
+
+check "DG.132: diff detects added node" \
+  "echo '$DIFF_OUT' | grep -q 'SoftmaxDistribution'"
+
+check "DG.133: diff detects removed node" \
+  "echo '$DIFF_OUT' | grep -q 'governanceNecessityExplanation'"
+
+check "DG.134: diff detects edge changes" \
+  "echo '$DIFF_OUT' | grep -q 'Edge Changes'"
+
+check "DG.135: diff shows stats delta" \
+  "echo '$DIFF_OUT' | grep -q 'Delta'"
+
+check "DG.136: diff shows axiom count -1" \
+  "echo '$DIFF_OUT' | grep 'axiom' | grep -q '\-1'"
+
+check "DG.137: diff shows theorem count +1" \
+  "echo '$DIFF_OUT' | grep 'theorem' | grep -q '+1'"
+
+check "DG.138: diff shows edge involving kind-changed node" \
+  "echo '$DIFF_OUT' | grep -q 'output_nondeterministic.*SoftmaxDistribution'"
+
+# Self-diff should show no changes
+SELFDIFF_OUT="$("$DEPGRAPH" diff "$GRAPH_JSON" "$GRAPH_JSON" 2>&1)"
+
+check "DG.139: self-diff reports no changes" \
+  "echo '$SELFDIFF_OUT' | grep -q 'No changes detected'"
+
+check "DG.140: self-diff total is 0" \
+  "echo '$SELFDIFF_OUT' | grep -q 'Total: 0 changes'"
+
+# Error case
+check "DG.141: diff with nonexistent file returns error" \
+  "! '$DEPGRAPH' diff /nonexistent/file.json 2>/dev/null"
+
+rm -f "$DIFF_TMP"
+
+echo ""
+
+# ============================================================
 # depgraph-verify.sh
 # ============================================================
 echo "--- verify ---"
