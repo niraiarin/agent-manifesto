@@ -191,18 +191,19 @@ T3 is decomposed into two axioms:
 2. Processing is possible only within working memory capacity (constraint)
 -/
 
-/-- [Axiom Card]
-    Layer: T₀ (Environment-derived)
-    Content: Working memory (ContextWindow) has finite capacity.
-          The contextWindow.capacity of all agents is bounded.
-    Basis: The working memory of computational agents is physically finite.
-          Reference examples: LLM token count limits, FSM state buffer sizes.
-    Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once"
-    Refutation condition: Not applicable (T₀) -/
-axiom context_finite :
+/-- [Derivation Card]
+    Previously: axiom context_finite (T₀, Environment-derived)
+    Now: theorem derived from ContextWindow type invariants
+    Derivation: ContextWindow.capacity_pos and ContextWindow.used_le_cap
+          are embedded in the ContextWindow structure as type-level invariants.
+          Every valid ContextWindow satisfies these by construction.
+    Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once" -/
+theorem context_finite :
   ∀ (agent : Agent),
     agent.contextWindow.capacity > 0 ∧
-    agent.contextWindow.used ≤ agent.contextWindow.capacity
+    agent.contextWindow.used ≤ agent.contextWindow.capacity := by
+  intro agent
+  exact ⟨agent.contextWindow.capacity_pos, agent.contextWindow.used_le_cap⟩
 
 /-- [Derivation Card]
     Previously: axiom context_bounds_action (T₀, Environment-derived)
@@ -387,17 +388,17 @@ axiom resource_finite :
   tasks without a precision level cannot be optimization targets."
 -/
 
-/-- [Axiom Card]
-    Layer: T₀ (Contract-derived)
-    Content: All tasks have a precision level.
-          The precision level must be a positive value (greater than 0).
-          Tasks with a precision level of 0 cannot be optimization targets (= do not constitute valid tasks).
-    Basis: Structural requirement of task definitions. Tasks without a precision level cannot be optimized.
-    Source: manifesto.md T8 "Whether self-imposed or externally imposed"
-    Refutation condition: Not applicable (T₀) -/
-axiom task_has_precision :
+/-- [Derivation Card]
+    Previously: axiom task_has_precision (T₀, Contract-derived)
+    Now: theorem derived from PrecisionLevel type invariant
+    Derivation: PrecisionLevel.required_pos is embedded in the PrecisionLevel structure.
+          Every valid Task has a PrecisionLevel with required > 0 by construction.
+    Source: manifesto.md T8 "Whether self-imposed or externally imposed" -/
+theorem task_has_precision :
   ∀ (task : Task),
-    task.precisionRequired.required > 0
+    task.precisionRequired.required > 0 := by
+  intro task
+  exact task.precisionRequired.required_pos
 
 -- ============================================================
 -- Sorry Inventory
