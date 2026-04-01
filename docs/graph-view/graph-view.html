@@ -384,9 +384,10 @@ const KIND_COLORS = {
 
 // Verso documentation URL mapping for PropositionIds
 // Base URL is configurable — set VERSO_BASE_URL before loading, or defaults to relative path
+// Auto-detect: if served from Verso output (graph-view/ subdir), parent is Verso docs
 const VERSO_BASE_URL = (typeof window.VERSO_BASE_URL !== 'undefined')
   ? window.VERSO_BASE_URL
-  : '../lean-formalization/docgen-verso/_out/html/html-single/index.html';
+  : (location.pathname.includes('/graph-view') ? '../index.html' : '../lean-formalization/docgen-verso/_out/html/html-single/index.html');
 
 const VERSO_ANCHORS = {
   T1: 'T1-Agent-Sessions-Are-Ephemeral',
@@ -494,9 +495,15 @@ let currentView = 'overview';
 
 /** Extract module name from fullName like "Manifest.EpistemicLayer.foo" → "EpistemicLayer" */
 function getModule(fullName) {
+  // Try source-map first (most accurate)
+  if (sourceMap && sourceMap[fullName]) {
+    const file = sourceMap[fullName].file; // e.g. "Manifest/EmpiricalPostulates.lean"
+    const mod = file.replace('Manifest/', '').replace('.lean', '');
+    if (SOURCE_FILES[mod]) return mod;
+  }
+  // Fallback: infer from fullName
   const parts = fullName.replace('Manifest.', '').split('.');
   if (parts.length >= 2) {
-    // Check if first part matches a known module
     if (SOURCE_FILES[parts[0]]) return parts[0];
   }
   return 'root';
