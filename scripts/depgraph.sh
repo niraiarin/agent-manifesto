@@ -8,6 +8,8 @@
 #   depgraph.sh impact <name>          — Transitive forward trace (all affected)
 #   depgraph.sh axioms                 — List all axioms
 #   depgraph.sh dot [--axiom-theorem]  — Output DOT format graph
+#   depgraph.sh subgraph <name> [--format=dot|json] [--depth=N] [--direction=both|up|down]
+#                                      — Extract subgraph around <name>
 #
 # Reference: #158, #157
 
@@ -274,6 +276,154 @@ print('}')
 "
 }
 
+cmd_subgraph() {
+  local name="$1"; shift
+  local format="dot"
+  local depth="0"  # 0 = unlimited
+  local direction="both"
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --format=*) format="${1#--format=}" ;;
+      --depth=*) depth="${1#--depth=}" ;;
+      --direction=*) direction="${1#--direction=}" ;;
+      *) echo "Unknown option: $1" >&2; exit 1 ;;
+    esac
+    shift
+  done
+
+  python3 - "$DEPGRAPH" "$name" "$format" "$depth" "$direction" << 'PYEOF'
+import json
+import sys
+from collections import deque
+
+depgraph_path = sys.argv[1]
+name = sys.argv[2]
+fmt = sys.argv[3]
+max_depth = int(sys.argv[4])
+direction = sys.argv[5]
+
+with open(depgraph_path) as f:
+    data = json.load(f)
+
+nodes = data['nodes']
+edges = data['edges']
+node_map = {n['fullName']: n for n in nodes}
+
+# Resolve name
+matches = [n for n in nodes if name in n['fullName'] or name in n['name']]
+if not matches:
+    print(f'No node matching "{name}"', file=sys.stderr)
+    sys.exit(1)
+if len(matches) > 1:
+    exact = [m for m in matches if m['name'] == name or m['fullName'] == 'Manifest.' + name]
+    if exact:
+        matches = exact
+    else:
+        print(f'Ambiguous: {[m["name"] for m in matches[:10]]}', file=sys.stderr)
+        sys.exit(1)
+
+root = matches[0]['fullName']
+
+# Build adjacency lists
+downstream = {}  # source -> targets (what source depends on)
+upstream = {}    # target -> sources (what depends on target)
+for e in edges:
+    downstream.setdefault(e['source'], []).append(e['target'])
+    upstream.setdefault(e['target'], []).append(e['source'])
+
+# BFS with depth limit
+def bfs(start, adj_map, max_d):
+    visited = {}  # node -> depth
+    queue = deque([(start, 0)])
+    while queue:
+        node, depth = queue.popleft()
+        if node in visited:
+            continue
+        if max_d > 0 and depth > max_d:
+            continue
+        visited[node] = depth
+        for neighbor in adj_map.get(node, []):
+            if neighbor not in visited:
+                queue.append((neighbor, depth + 1))
+    return visited
+
+# Collect nodes in both directions
+collected = {root: 0}
+
+if direction in ('both', 'down'):
+    # Downstream: what root depends on (follow dependency edges)
+    down_nodes = bfs(root, downstream, max_depth)
+    collected.update(down_nodes)
+
+if direction in ('both', 'up'):
+    # Upstream: what depends on root (follow reverse edges)
+    up_nodes = bfs(root, upstream, max_depth)
+    collected.update(up_nodes)
+
+collected_names = set(collected.keys())
+
+# Collect relevant edges (both endpoints in subgraph)
+sub_edges = [e for e in edges
+             if e['source'] in collected_names and e['target'] in collected_names]
+sub_nodes = [n for n in nodes if n['fullName'] in collected_names]
+
+if fmt == 'json':
+    # Add depth info to nodes
+    enriched_nodes = []
+    for n in sub_nodes:
+        enriched = dict(n)
+        enriched['depth'] = collected.get(n['fullName'], -1)
+        enriched['isRoot'] = n['fullName'] == root
+        enriched_nodes.append(enriched)
+
+    output = {
+        'root': root,
+        'direction': direction,
+        'maxDepth': max_depth if max_depth > 0 else 'unlimited',
+        'nodes': enriched_nodes,
+        'edges': sub_edges,
+    }
+    print(json.dumps(output, indent=2, ensure_ascii=False))
+
+elif fmt == 'dot':
+    colors = {
+        'axiom': '#e74c3c',
+        'theorem': '#3498db',
+        'def': '#2ecc71',
+        'opaque': '#9b59b6',
+        'inductive': '#f39c12',
+    }
+    print('digraph SubGraph {')
+    print('  rankdir=BT;')
+    print('  node [style=filled, fontsize=10];')
+    print(f'  label="Subgraph: {matches[0]["name"]} (direction={direction})";')
+    print('  labelloc=t;')
+    print()
+
+    for n in sub_nodes:
+        short = n['name']
+        color = colors.get(n['kind'], '#95a5a6')
+        shape = 'box' if n['kind'] == 'axiom' else 'ellipse'
+        penwidth = '3' if n['fullName'] == root else '1'
+        print(f'  "{n["fullName"]}" [label="{short}", fillcolor="{color}", shape={shape}, penwidth={penwidth}];')
+
+    print()
+    for e in sub_edges:
+        style = 'solid' if e['edgeKind'] == 'value' else 'dashed'
+        print(f'  "{e["source"]}" -> "{e["target"]}" [style={style}];')
+
+    print('}')
+
+else:
+    print(f'Unknown format: {fmt}', file=sys.stderr)
+    sys.exit(1)
+
+# Summary to stderr
+print(f'Subgraph around {matches[0]["name"]}: {len(sub_nodes)} nodes, {len(sub_edges)} edges', file=sys.stderr)
+PYEOF
+}
+
 case "${1:-help}" in
   generate) cmd_generate ;;
   stats) cmd_stats ;;
@@ -282,8 +432,9 @@ case "${1:-help}" in
   impact) cmd_impact "${2:?Usage: depgraph.sh impact <name>}" ;;
   axioms) cmd_axioms ;;
   dot) cmd_dot "${2:-}" ;;
+  subgraph) shift; cmd_subgraph "$@" ;;
   *)
-    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot}" >&2
+    echo "Usage: depgraph.sh {generate|stats|deps|rdeps|impact|axioms|dot|subgraph}" >&2
     exit 1
     ;;
 esac
