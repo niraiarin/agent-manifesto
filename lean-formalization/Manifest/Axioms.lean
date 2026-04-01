@@ -255,19 +255,30 @@ multiple w' can satisfy canTransition for the same (agent, action, w).
 T4 declares as an axiom that "this multiplicity can actually occur."
 -/
 
-/-- [Axiom Card]
+/-- [Axiom Card — with Derivation Trace]
     Layer: T₀ (Natural-science-derived)
     Content: Nondeterminism of output. For the same agent, action, and world state,
           different transition targets may exist.
-    Basis: Nondeterminism inherent in the agent's generation process. Multiple sources —
-          sampling (temperature parameter), non-associativity of floating-point arithmetic,
-          irreversibility of branching in autoregressive generation — enable different outputs
-          for the same input. Even at temperature=0, floating-point-level nondeterminism may persist.
-    Source: manifesto.md T4 "Different outputs may be produced for the same input"
 
-    Since `canTransition` is defined as a relation (Prop),
-    it is not constrained by Lean's function determinism and can naturally express nondeterminism.
-    Refutation condition: Not applicable (T₀) -/
+    Derivation chain (traceability):
+      This axiom is derivable under the following conditions (proven in
+      Foundation/Bridge.lean as `output_nondeterministic_from_softmax`):
+      - Vocabulary V is a Fintype with |V| ≥ 2
+      - Temperature τ > 0
+      - Logits z : V → ℝ are given
+
+      Proof:
+      [R1] Kolmogorov (1933) → Mathlib PMF
+      [R2] Gao & Pavel (2017, arXiv:1704.00805) → softmax_full_support
+      [R3] Jang et al. (2017, ICLR, arXiv:1611.01144) → tokenWorld_is_transition
+      [Architecture] Autoregressive generation → distinct_tokens_distinct_worlds
+
+    Status: Remains as axiom for backward compatibility (existentially quantified form).
+          The conditional derivation in Foundation/Bridge.lean provides the
+          mathematical grounding and traceability.
+    Source: manifesto.md T4 "Different outputs may be produced for the same input"
+    Refutation condition: If all LLM architectures switch to deterministic-only
+          generation (temperature fixed at 0 with no floating-point nondeterminism). -/
 axiom output_nondeterministic :
   ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
     canTransition agent action w w₁ ∧
