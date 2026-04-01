@@ -83,10 +83,23 @@ T1 is decomposed into three axioms:
     Layer: T₀ (Environment-derived)
     Content: Sessions terminate in finite time.
           For all sessions, they become terminated at some point.
-    Basis: Execution of computational agents consumes finite resources and therefore terminates in finite time (related to T7).
+    Basis: Execution of computational agents consumes finite resources and
+          therefore terminates in finite time (related to T7).
           Reference examples: LLM session timeouts, resource consumption limits.
+
+    Theoretical grounding (not formally proven — T₀ environment constraint):
+      [R33] Hoare (1978) "Communicating Sequential Processes"
+            — Process termination: a terminated process engages in no further events
+      Note: T₀ axioms encode physical facts, not mathematical theorems.
+            Session boundedness follows from finite resource consumption (T7),
+            but this causal chain cannot be formalized because canTransition is opaque.
+
+    降格判定: 導出不可能 — canTransition, validTransition が opaque のため、
+    有限時間での終了を型から導出できない。axiom として維持。
+
     Source: manifesto.md T1 "There is no memory across sessions"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If computational processes could run indefinitely
+              without resource consumption (e.g., infinite energy source) -/
 axiom session_bounded :
   ∀ (w : World) (s : Session),
     s ∈ w.sessions →
@@ -99,11 +112,24 @@ axiom session_bounded :
     Content: No state sharing across sessions.
           Between two sessions with different session IDs,
           actions in one cannot affect the observable state of the other.
-    Basis: Ephemeral computational processes lose internal state upon process termination.
-          State isolation across sessions is guaranteed at the execution environment level.
-          Reference example: session isolation in LLM architectures.
+    Basis: Ephemeral computational processes lose internal state upon process
+          termination. State isolation across sessions is guaranteed at the
+          execution environment level (process-level memory isolation).
+
+    Theoretical grounding (not formally proven — T₀ environment constraint):
+      [R31] Milner (1989) "Communication and Concurrency"
+            — CCS: parallel composition with no shared names = causal independence
+      Note: T₀ axioms encode physical facts, not mathematical theorems.
+            Session memory isolation is guaranteed by the execution environment
+            (process-level memory isolation), formalized in CCS as P | Q with
+            disjoint name spaces.
+
+    降格判定: 導出不可能 — AuditEntry の preHash/postHash が opaque のため、
+    因果的独立性を型から導出できない。axiom として維持。
+
     Source: manifesto.md T1 "There is no continuous 'self'"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If session state could leak across process boundaries
+              (e.g., shared mutable memory between independent processes) -/
 axiom no_cross_session_memory :
   ∀ (w : World) (e1 e2 : AuditEntry),
     e1 ∈ w.auditLog → e2 ∈ w.auditLog →
@@ -116,10 +142,27 @@ axiom no_cross_session_memory :
     Layer: T₀ (Environment-derived)
     Content: No mutable state sharing across different sessions.
           Even with the same AgentId, instances in different sessions
-          do not directly share state. Influence propagates only indirectly through structure (T2).
-    Basis: Causal independence across sessions. Each instance is an independent entity.
+          do not directly share state. Influence propagates only indirectly
+          through structure (T2).
+    Basis: Causal independence across sessions. Each instance is an
+          independent entity. In process algebra terms, sessions are
+          composed in parallel with no shared channels.
+
+    Theoretical grounding (not formally proven — T₀ environment constraint):
+      [R31] Milner (1989) "Communication and Concurrency"
+            — CCS parallel composition: P | Q with disjoint names
+      [R32] Honda (1993) "Types for Dyadic Interaction"
+            — Session types: typed channels confined to session scope
+      Note: T₀ axioms encode physical facts, not mathematical theorems.
+            State non-sharing follows from process-level isolation — each session
+            runs in a separate process with no shared mutable channels.
+
+    降格判定: 導出不可能 — canTransition が opaque のため、
+    セッション間の遷移独立性を型から導出できない。axiom として維持。
+
     Source: manifesto.md T1 "Each instance is an independent entity"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If inter-session communication channels existed
+              (e.g., shared mutable state accessible across sessions) -/
 axiom session_no_shared_state :
   ∀ (agent1 agent2 : Agent) (action1 action2 : Action)
     (w w' : World),
@@ -152,9 +195,23 @@ T2 is decomposed into two axioms:
           Even when a session becomes terminated,
           structures referenced by that session do not disappear from the World.
     Basis: Persistence on the file system. Structures (documents, tests, etc.)
-          reside in storage outside the session.
+          reside in storage outside the session. The persistence set is
+          monotonically non-decreasing across valid transitions.
+
+    Mathematical grounding (Foundation/ProcessModel.lean):
+      [R34] Lamport (1978) "Time, Clocks, and the Ordering of Events"
+            — Monotonic logical clocks: once recorded, events remain in causal history
+      Compositional property proven: persistence_composes (0 sorry)
+            — structure_persists applied to transition chains yields multi-step persistence
+      Note: The axiom itself is a T₀ environment constraint (persistent storage).
+            The Foundation theorem proves a *consequence* (compositionality), not a derivation.
+
+    降格判定: 導出不可能 — validTransition が opaque のため、
+    遷移後の structures 集合の単調性を型から導出できない。axiom として維持。
+
     Source: manifesto.md T2 "The place where improvements accumulate is within structure"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If persistent storage could lose data across valid
+              transitions (e.g., volatile-only storage with no durability guarantee) -/
 axiom structure_persists :
   ∀ (w w' : World) (s : Session) (st : Structure),
     s ∈ w.sessions →
@@ -169,8 +226,22 @@ axiom structure_persists :
           As epochs advance, structures may be updated (lastModifiedAt is non-decreasing).
           Contrast with T1: agents are ephemeral, but structure grows.
     Basis: Monotonic epoch increase guaranteed by version control systems (git).
+          Epoch is a logical clock — append-only logs ensure monotonicity.
+
+    Mathematical grounding (Foundation/ProcessModel.lean):
+      [R34] Lamport (1978) "Time, Clocks, and the Ordering of Events"
+            — Logical clock monotonicity: e₁ → e₂ ⟹ C(e₁) < C(e₂)
+      Compositional property proven: epoch_monotone_composes (0 sorry)
+            — epoch monotonicity composes across transition chains via Nat.le_trans
+      Note: The axiom itself is a T₀ environment constraint (append-only version control).
+            The Foundation theorem proves a *consequence* (compositionality), not a derivation.
+
+    降格判定: 導出不可能 — validTransition が opaque のため、
+    epoch の単調性を型から導出できない。axiom として維持。
+
     Source: manifesto.md T2 "Structure outlives the agent"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If version control allowed epoch regression
+              (e.g., non-monotonic clock or destructive history rewrite) -/
 axiom structure_accumulates :
   ∀ (w w' : World),
     validTransition w w' →
@@ -230,6 +301,17 @@ theorem context_bounds_action :
     Basis: Information-theoretic fact. In any finite information set, the relevance
           of individual items to a specific objective varies. This is independent of
           the agent architecture (applies to LLMs, FSMs, human cognition alike).
+
+    Theoretical grounding (Foundation/InformationTheory.lean):
+      [R51] Shannon (1948) "A Mathematical Theory of Communication"
+            — Information content varies across symbols in any non-trivial source
+      [R52] Tishby et al. (1999) "The Information Bottleneck Method"
+            — Relevance is task-dependent; optimal compression discards irrelevant items
+      Note: T₀ natural-science constraint. The existence of zero-contribution items
+            cannot be derived from type definitions (precisionContribution is opaque).
+
+    降格判定: 導出不可能 — precisionContribution が opaque。axiom として維持。
+
     Source: ForgeCode analysis #147 — identified as common root of B1/B3/B5/B6.
     Refutation condition: If it were shown that all information contributes equally
           to all tasks (contradicts information theory). -/
@@ -306,9 +388,24 @@ opaque structureImproved : World → World → Prop
           If structure has improved between two world states,
           then feedback exists in between.
     Basis: Fundamental principle of control theory. Without a loop of
-          measurement, comparison, and adjustment, convergence toward the goal does not occur.
+          measurement, comparison, and adjustment, convergence toward
+          the goal does not occur.
+
+    Theoretical grounding (Foundation/ControlTheory.lean):
+      [R41] Francis & Wonham (1976) "The Internal Model Principle"
+            — Tracking requires a model of the signal generator (= feedback)
+      [R42] Cover & Thomas (1991) "Data Processing Inequality"
+            — Without new information (feedback), no improvement is possible
+      Compositional property proven: feedback_interval_widen (0 sorry)
+      Note: T₀ natural-science constraint. Feedback necessity cannot be derived
+            from type definitions (structureImproved is opaque).
+
+    降格判定: 導出不可能 — structureImproved が opaque。axiom として維持。
+
     Source: manifesto.md T5 "A fundamental of control theory"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If structural improvement without any feedback
+              mechanism were demonstrated (e.g., improvement through
+              purely internal computation without external input) -/
 axiom no_improvement_without_feedback :
   ∀ (w w' : World),
     structureImproved w w' →
@@ -380,8 +477,21 @@ Time and energy.
           Quantified in ∃-∀ order (not ∀-∃), guaranteeing that a single upper bound
           exists for **all** Worlds (non-vacuity, Terminology Reference §6.4).
     Basis: Physical finiteness of computational resources (CPU, memory, API quotas).
+          Every computational system operates within finite energy, memory, and time budgets.
+
+    Mathematical grounding (Foundation/ProcessModel.lean):
+      Compositional property proven: resource_bound_max (0 sorry)
+            — universal bound holds simultaneously across any pair of worlds
+      Note: Physical finiteness is axiomatic in the physical sciences.
+            No formal derivation from more primitive axioms is possible —
+            this is a T₀ environment constraint, not a mathematical theorem.
+
+    降格判定: 導出不可能 — globalResourceBound は opaque 定数であり、
+    有限性は物理的事実として axiom のまま維持。
+
     Source: manifesto.md T7 "Resources available for task execution are finite"
-    Refutation condition: Not applicable (T₀) -/
+    Refutation condition: If computational resources became unlimited
+              (e.g., infinite energy or infinite memory) -/
 axiom resource_finite :
   ∀ (w : World),
     (w.allocations.map (·.amount)).foldl (· + ·) 0 ≤ globalResourceBound
