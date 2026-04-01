@@ -253,7 +253,7 @@ theorem evolution_uses_extension_ordering :
 opaque hasAxiomCardDocstring : String → Prop
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: Axioms.lean の全 13 axiom が公理カード形式の docstring を持つ
     Basis: 各 axiom の docstring に [Axiom Card] ヘッダーと
           所属/内容/根拠/ソースが記載されていることを目視確認
@@ -263,7 +263,7 @@ axiom axioms_have_card_docstrings :
   hasAxiomCardDocstring axiomsFile.name
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: EmpiricalPostulates.lean の全 4 axiom が公理カード + 反証条件を持つ
     Basis: 各 axiom の docstring に反証条件フィールドが含まれることを確認
     Source: EmpiricalPostulates.lean（修正済み）
@@ -272,7 +272,7 @@ axiom empirical_have_card_docstrings :
   hasAxiomCardDocstring empiricalFile.name
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: Observable.lean の全 24 axiom が公理カード + 反証条件を持つ
     Basis: 各 axiom の docstring に反証条件フィールドが含まれることを確認
     Source: Observable.lean（修正済み）

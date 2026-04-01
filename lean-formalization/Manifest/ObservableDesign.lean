@@ -69,7 +69,7 @@ def TradeoffExists (m₁ m₂ : World → Nat) : Prop :=
   ∃ w w', m₁ w < m₁ w' ∧ m₂ w' < m₂ w
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V1↑ → V2↓ のトレードオフ。
           スキルがコンテキストを消費するため、スキル品質の向上は
           コンテキスト効率を圧迫しうる
@@ -80,7 +80,7 @@ def TradeoffExists (m₁ m₂ : World → Nat) : Prop :=
 axiom tradeoff_v1_v2 : TradeoffExists skillQuality contextEfficiency
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V6↑ → V2↓ のトレードオフ。
           詳細な知識ほどコンテキストを占有するため、
           知識構造の質の向上はコンテキスト効率を圧迫しうる
@@ -90,7 +90,7 @@ axiom tradeoff_v1_v2 : TradeoffExists skillQuality contextEfficiency
 axiom tradeoff_v6_v2 : TradeoffExists knowledgeStructureQuality contextEfficiency
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V2↑ → V1↓ のトレードオフ。
           効率追求で必要なスキル情報を圧縮しすぎるリスク
     Basis: 圧縮は情報損失を伴いうるという情報理論的制約
@@ -99,7 +99,7 @@ axiom tradeoff_v6_v2 : TradeoffExists knowledgeStructureQuality contextEfficienc
 axiom tradeoff_v2_v1 : TradeoffExists contextEfficiency skillQuality
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V2↑ → V6↓ のトレードオフ。
           効率追求で必要な知識を圧縮しすぎるリスク
     Basis: 圧縮は情報損失を伴いうるという情報理論的制約
@@ -108,7 +108,7 @@ axiom tradeoff_v2_v1 : TradeoffExists contextEfficiency skillQuality
 axiom tradeoff_v2_v6 : TradeoffExists contextEfficiency knowledgeStructureQuality
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V7↑ → V2↓ のトレードオフ。
           高度な分散設計がコンテキストを消費するリスク
     Basis: T3（コンテキスト有限性）の帰結。設計の複雑性はコンテキストを消費する
@@ -117,7 +117,7 @@ axiom tradeoff_v2_v6 : TradeoffExists contextEfficiency knowledgeStructureQualit
 axiom tradeoff_v7_v2 : TradeoffExists taskDesignEfficiency contextEfficiency
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V3↑ → V2↓ のトレードオフ。
           品質向上のための追加検証（レビュー、テスト実行、ゲート確認）は
           コンテキストを消費するため、出力品質の向上はコンテキスト効率を圧迫しうる
@@ -127,7 +127,7 @@ axiom tradeoff_v7_v2 : TradeoffExists taskDesignEfficiency contextEfficiency
 axiom tradeoff_v3_v2 : TradeoffExists outputQuality contextEfficiency
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V5↑ → V2↓ のトレードオフ。
           提案精度の向上には詳細な要求分析とコンテキスト把握が必要であり、
           精度の高い提案ほど多くのコンテキストを消費しうる
@@ -163,7 +163,7 @@ def GoodhartVulnerable (m : World → Nat) : Prop :=
     ∃ w', approx w' ≠ m w'    -- しかし乖離するワールドが存在する
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V4（ゲート通過率）は Goodhart 脆弱性を持つ。
           ゲートが通りやすいタスクに偏るリスク
     Basis: Goodhart の法則は経済学・教育学で繰り返し観測されている
@@ -173,7 +173,7 @@ def GoodhartVulnerable (m : World → Nat) : Prop :=
 axiom v4_goodhart : GoodhartVulnerable gatePassRate
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: V7（タスク設計効率）は Goodhart 脆弱性を持つ。
           測定しやすいタスクに偏るリスク
     Basis: Goodhart の法則の適用
@@ -234,7 +234,7 @@ Principles.lean の3つの sorry を解消するための axiom。
 -/
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（仮説由来）
+    Layer: Γ \ T₀ (Hypothesis-derived)
     Content: リスクが顕在化した場合、信頼度は低下する。
           行動空間の拡大後にリスクが顕在化した場合、
           信頼度は拡大前の水準を下回る
@@ -250,7 +250,7 @@ axiom trust_decreases_on_materialized_risk :
     trustLevel agent w' < trustLevel agent w
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: 劣化レベルは任意の自然数を取りうる（全射性）。
           「制約は壁（バイナリ）ではなく勾配（グラデーション）」
           という P4 の概念を、degradationLevel の値域が Nat 全体に
@@ -263,7 +263,7 @@ axiom degradation_level_surjective :
   ∀ (n : Nat), ∃ (w : World), degradationLevel w = n
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（設計由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: 構造の解釈は非決定的。
           同一の構造を読んでも、異なるアクションが生成されうる
     Basis: T4 (`output_nondeterministic`) の高水準再述。
@@ -554,7 +554,7 @@ theorem health_robust_unfolds :
 opaque trustIncrementBound : Nat
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（仮説由来）
+    Layer: Γ \ T₀ (Hypothesis-derived)
     Content: 信頼の漸進的蓄積。構造品質が改善された場合、信頼は（小さく）増加する。
           非対称性の「蓄積は漸進」の半分
     Basis: 信頼蓄積の漸進性は組織心理学で繰り返し観測されている
@@ -572,7 +572,7 @@ axiom trust_accumulates_gradually :
     trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（仮説由来）
+    Layer: Γ \ T₀ (Hypothesis-derived)
     Content: 投資は信頼に駆動される。信頼が高い → 投資が増加する
     Basis: 構造品質の改善 → 利益 → 投資意欲の変化
     Source: manifesto.md Section 6 投資サイクル
@@ -589,7 +589,7 @@ axiom trust_drives_investment :
     investmentLevel w ≤ investmentLevel w'
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（仮説由来）
+    Layer: Γ \ T₀ (Hypothesis-derived)
     Content: 逆サイクル: 品質事故は投資を縮小させる。
           リスク顕在化 → 信頼減少 → 投資縮小
     Basis: 信頼毀損→投資縮小のサイクルは経済学・組織論で観測されている
@@ -640,7 +640,7 @@ def atEquilibrium (agent : Agent) (w : World) : Prop :=
     collaborativeValue w' ≤ collaborativeValue w
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（仮説由来）
+    Layer: Γ \ T₀ (Hypothesis-derived)
     Content: 過剰拡大は協働価値を減少させうる。
           行動空間の拡大が価値を減少させるシナリオが存在する
     Basis: P1 (capability_risk_coscaling) の帰結として

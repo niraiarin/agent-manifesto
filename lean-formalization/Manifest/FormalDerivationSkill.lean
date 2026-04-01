@@ -356,7 +356,7 @@ Lean コンパイラはこれらの真偽を判定できない（SKILL.md の内
 opaque skillCovers : {α : Type} → α → Prop
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 1–4 の全 Phase をセクションとして含む
     Basis: SKILL.md lines 51-285 に Phase 1–4 が記述されている
     Source: .claude/skills/formal-derivation/SKILL.md (Phase 1: L51, Phase 2: L158,
@@ -366,7 +366,7 @@ axiom skill_covers_all_phases :
   ∀ (p : Phase), skillCovers p
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 1 の全 6 Step を Steps 1.1–1.7 として含む
     Basis: SKILL.md Steps 1.1(L55), 1.2(L71), 1.3(L90), 1.4(L99),
           1.5(L112: T₀ 無矛盾性), 1.6(L125: 公理カード), 1.7(L148: コンパイル)
@@ -378,7 +378,7 @@ axiom skill_covers_phase1_steps :
   ∀ (s : ConstructionStep), skillCovers s
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 2 の全 3 Step を含む
     Basis: SKILL.md Steps 2.1(L163), 2.2(L167), 2.3(L171)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -387,7 +387,7 @@ axiom skill_covers_phase2_steps :
   ∀ (s : DerivationStep), skillCovers s
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3 の全 3 構成要素を含む
     Basis: SKILL.md 3a(L183), 3b(L193), 3c(L215)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -396,7 +396,7 @@ axiom skill_covers_phase3_components :
   ∀ (c : CorrectionComponent), skillCovers c
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3b の 4 種の修正分類を含む
     Basis: SKILL.md L197(定義的拡大), L201(Γ\T₀変更), L206(T₀縮小禁止), L210(φ弱化)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -405,7 +405,7 @@ axiom skill_covers_modification_kinds :
   ∀ (m : ModificationKind), skillCovers m
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3c の 3 つの戦略変更トリガーを含む
     Basis: SKILL.md L220(同一エラー), L221(公理膨張), L222(複雑度増大)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -414,7 +414,7 @@ axiom skill_covers_strategy_triggers :
   ∀ (t : StrategyChangeTrigger), skillCovers t
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3c の 4 つの戦略変更選択肢を含む
     Basis: SKILL.md L224-228 に 4 選択肢が列挙されている
     Source: .claude/skills/formal-derivation/SKILL.md Phase 3c
@@ -423,7 +423,7 @@ axiom skill_covers_strategy_options :
   ∀ (o : StrategyChangeOption), skillCovers o
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は 3 つの終了条件を含む
     Basis: SKILL.md L289(成功), L297(失敗), L302(未決)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -432,7 +432,7 @@ axiom skill_covers_terminations :
   ∀ (t : TerminationKind), skillCovers t
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 4 の全 3 監査構成要素を含む
     Basis: SKILL.md 4a(L247), 4b(L253), 4c(L261)
     Source: .claude/skills/formal-derivation/SKILL.md
@@ -441,7 +441,7 @@ axiom skill_covers_audit_components :
   ∀ (a : AuditComponent), skillCovers a
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は公理衛生チェックの全 5 検査項目を含む
     Basis: SKILL.md L255-259 に 5 項目すべてが列挙されている
     Source: .claude/skills/formal-derivation/SKILL.md Phase 4b
@@ -450,7 +450,7 @@ axiom skill_covers_hygiene_checks :
   ∀ (h : HygieneCheck), skillCovers h
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は形式化ギャップ検証の全 3 層を含む
     Basis: SKILL.md L263(docstring), L268(独立レビュー), L282(反例探索)
     Source: .claude/skills/formal-derivation/SKILL.md Phase 4c
@@ -459,7 +459,7 @@ axiom skill_covers_gap_layers :
   ∀ (g : GapVerificationLayer), skillCovers g
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は公理カードの全 5 フィールドを定義している
     Basis: SKILL.md L130-146 に所属/内容/根拠/ソース/反証条件が記載
     Source: .claude/skills/formal-derivation/SKILL.md Step 1.6
@@ -468,7 +468,7 @@ axiom skill_covers_axiom_card_fields :
   ∀ (f : AxiomCardField), skillCovers f
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は T₀ / Γ \ T₀ の 2 区分を明示している
     Basis: SKILL.md Step 1.4 (L99-110) に基底理論と拡大部分が記述
     Source: .claude/skills/formal-derivation/SKILL.md Step 1.4
@@ -477,7 +477,7 @@ axiom skill_covers_premise_partitions :
   ∀ (p : PremisePartition), skillCovers p
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は T₀ エンコード方法の 2 選択肢を明示している
     Basis: SKILL.md Step 1.4 に「T₀ のエンコード方法の選択」セクションがあり、
           型定義 + theorem と axiom の 2 選択肢が記述されている
@@ -487,7 +487,7 @@ axiom skill_covers_t0_encoding_methods :
   ∀ (e : T0EncodingMethod), skillCovers e
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は公理ソースの 5 カテゴリを明示している
     Basis: SKILL.md Step 1.4 に T₀ の 3 カテゴリ（契約/科学/環境）と
           Γ \ T₀ の 2 カテゴリ（仮説/設計）が記述されている
@@ -497,7 +497,7 @@ axiom skill_covers_axiom_source_categories :
   ∀ (s : AxiomSourceCategory), skillCovers s
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3a の 5 つのエラー種別を含む
     Basis: SKILL.md Phase 3a のテーブルに 5 種のエラーが列挙されている
     Source: .claude/skills/formal-derivation/SKILL.md Phase 3a
@@ -506,7 +506,7 @@ axiom skill_covers_error_kinds :
   ∀ (e : LeanErrorKind), skillCovers e
 
 /-- [Axiom Card]
-    Layer: Γ \ T₀（分析由来）
+    Layer: Γ \ T₀ (Design-derived)
     Content: SKILL.md は Phase 3c のバックトラック保持/破棄ルールの 4 カテゴリを含む
     Basis: SKILL.md Phase 3c に T₀/Γ\T₀/論議領域/導出済み補題の保持/破棄ルールが記述
     Source: .claude/skills/formal-derivation/SKILL.md Phase 3c
