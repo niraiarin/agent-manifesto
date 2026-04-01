@@ -49,7 +49,7 @@ When reviewing critical-risk changes (L1, safety, permissions), always state:
    - Logic errors
    - Security issues (L1 violations)
    - Test coverage gaps
-   - Manifest compliance (D1-D16)
+   - Manifest compliance (D1-D14)
    - Lean theorem quality (when proposal includes Lean theorems):
      - Is the theorem provable by `rfl` alone (definitional equality)?
      - Is the conclusion a direct restatement of the premise (definitional unfolding)?

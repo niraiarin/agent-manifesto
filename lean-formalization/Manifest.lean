@@ -26,6 +26,7 @@ import Manifest.ConformanceVerification
 import Manifest.AxiomQuality
 import Manifest.EvolveSkill
 import Manifest.TaskClassification
+import Manifest.Traceability
 
 /-!
 # Agent Manifest — Formal Specification
@@ -33,7 +34,7 @@ import Manifest.TaskClassification
 マニフェスト「永続する構造と一時的なエージェントの協約」の
 公理系を Lean 4 で形式化した仕様書。
 
-63 axioms, 316 theorems, 0 sorry. Compression 5.01x.
+51 axioms, 386 theorems, 0 sorry. Compression 7.56x.
 
 ## モジュール構成（認識論的層構造）
 

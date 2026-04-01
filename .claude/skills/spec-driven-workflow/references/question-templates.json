@@ -1,0 +1,92 @@
+{
+  "_comment": "Phase 0 聞き取り質問テンプレートDB。ドメインごとに追加可能。各質問は公理系のどの層に対応するかを明記。",
+  "version": "0.1.0",
+  "universal": {
+    "_comment": "全ドメイン共通の質問。条件付き公理系の A/C/H/D 分類に対応。",
+    "constraints_physical": [
+      {"q": "物理的に不可能なことは何か？（例: 光速を超える通信、無限のメモリ）", "maps_to": "T (constraint)", "why": "物理法則は否定不可能 → T₀ の axiom 候補"},
+      {"q": "時間制約はあるか？ リアルタイム性の要件は？", "maps_to": "T7 (resource_finite)", "why": "計算リソースは有限"},
+      {"q": "データの精度・分解能の限界は？", "maps_to": "T3 (context_finite)", "why": "情報は有限精度"}
+    ],
+    "constraints_legal": [
+      {"q": "法的・規制上の制約は？（GDPR, HIPAA, 業界規制）", "maps_to": "T (constraint)", "why": "法的制約は覆らない前提"},
+      {"q": "データの保持期間・削除義務は？", "maps_to": "T (constraint)", "why": "法的義務"},
+      {"q": "監査要件・説明責任の範囲は？", "maps_to": "T6 (human_resource_authority)", "why": "人間の最終決定権"}
+    ],
+    "constraints_contractual": [
+      {"q": "SLA（サービスレベル契約）はあるか？ 具体的な数値は？", "maps_to": "C (constraint)", "why": "統括責任者がオーソライズした決定"},
+      {"q": "外部システムとの契約上のインターフェース仕様は？", "maps_to": "C (constraint)", "why": "契約的制約"},
+      {"q": "予算・人員・期間の制約は？", "maps_to": "T7 (resource_finite)", "why": "リソースは有限"}
+    ],
+    "assumptions": [
+      {"q": "まだ検証されていないが、正しいと仮定していることは何か？", "maps_to": "H (hypothesis)", "why": "仮定は明示的に管理すべき"},
+      {"q": "外部システムの可用性・信頼性について、どの程度信頼しているか？", "maps_to": "H (hypothesis)", "why": "外部依存は仮定"},
+      {"q": "ユーザーの行動パターンについて、何を前提としているか？", "maps_to": "H (hypothesis)", "why": "ユーザー行動は未検証の前提"},
+      {"q": "技術的な前提（言語、フレームワーク、インフラ）で、変更の可能性があるものは？", "maps_to": "H (hypothesis)", "why": "技術選択は仮定"}
+    ],
+    "requirements_functional": [
+      {"q": "システムの主要な入力と出力は何か？", "maps_to": "D (derivation)", "why": "入出力仕様は制約から導出"},
+      {"q": "正常系のシナリオを3つ挙げてください", "maps_to": "D (derivation)", "why": "正常系は仕様の核"},
+      {"q": "異常系・エラー時の振る舞いは？", "maps_to": "D (derivation)", "why": "異常系も仕様の一部"},
+      {"q": "冪等性は必要か？ 同じ操作を2回実行した場合の期待される結果は？", "maps_to": "D (derivation)", "why": "操作の性質は導出可能"}
+    ],
+    "requirements_nonfunctional": [
+      {"q": "性能要件: 応答時間、スループット、同時接続数の目標値は？", "maps_to": "D (derivation)", "why": "SLA 等の制約から導出"},
+      {"q": "可用性要件: ダウンタイムの許容範囲は？", "maps_to": "D (derivation)", "why": "契約から導出"},
+      {"q": "セキュリティ要件: 認証・認可・暗号化の要件は？", "maps_to": "L1 (safety)", "why": "安全境界に直結"},
+      {"q": "拡張性要件: 将来のスケールアップの見込みは？", "maps_to": "H (hypothesis)", "why": "将来予測は仮定"}
+    ],
+    "safety_boundary": [
+      {"q": "絶対にやってはいけないことは何か？（データ破壊、情報漏洩、物理的危害）", "maps_to": "L1 (safety)", "why": "安全境界は固定"},
+      {"q": "人間の承認なしに実行してはいけない操作は？", "maps_to": "T6 (human_resource_authority)", "why": "人間の最終決定権"},
+      {"q": "最悪のシナリオは何か？ その発生確率と影響は？", "maps_to": "E2 (capability_risk_coscaling)", "why": "自律性と脆弱性の共成長"}
+    ]
+  },
+  "domains": {
+    "iot_monitoring": {
+      "_comment": "IoT デバイス監視システム固有の質問",
+      "questions": [
+        {"q": "センサーの種類と数は？（温度、湿度、振動、電流 etc.）", "maps_to": "T (domain constraint)", "why": "物理センサーの特性は制約"},
+        {"q": "サンプリングレートとデータ形式は？", "maps_to": "T3 (context_finite)", "why": "データ量はコンテキストの有限性に直結"},
+        {"q": "異常の定義は？（閾値超過、統計的外れ値、パターン逸脱、欠損）", "maps_to": "D (derivation)", "why": "要件から導出される仕様"},
+        {"q": "検知遅延の許容範囲は？（リアルタイム? 分単位? 時間単位?）", "maps_to": "C (SLA)", "why": "契約的制約"},
+        {"q": "誤検知(FP)と見逃し(FN)のどちらがより深刻か？", "maps_to": "E2 (risk tradeoff)", "why": "リスクのトレードオフ"},
+        {"q": "デバイスがオフラインになった場合の振る舞いは？", "maps_to": "H (hypothesis)", "why": "ネットワーク信頼性は仮定"},
+        {"q": "検知結果の通知先と方法は？（Slack, メール, PagerDuty）", "maps_to": "D (derivation)", "why": "要件から導出"}
+      ]
+    },
+    "web_application": {
+      "_comment": "Web アプリケーション固有の質問",
+      "questions": [
+        {"q": "認証方式は？（OAuth, JWT, セッション, API Key）", "maps_to": "L1 (safety)", "why": "セキュリティ境界"},
+        {"q": "同時接続ユーザー数の想定は？", "maps_to": "T7 (resource_finite)", "why": "リソース制約"},
+        {"q": "データの一貫性要件は？（強一貫性, 結果整合性）", "maps_to": "C (constraint)", "why": "設計上の制約"},
+        {"q": "多言語対応・タイムゾーン対応は必要か？", "maps_to": "H (hypothesis)", "why": "将来要件は仮定"},
+        {"q": "SEO, アクセシビリティの要件は？", "maps_to": "C (constraint)", "why": "規制・契約的制約"},
+        {"q": "バックエンドとフロントエンドの責任分界点は？", "maps_to": "D (derivation)", "why": "アーキテクチャ上の導出"}
+      ]
+    },
+    "data_pipeline": {
+      "_comment": "データパイプライン固有の質問",
+      "questions": [
+        {"q": "データソースの種類と数は？（DB, API, ファイル, ストリーム）", "maps_to": "T (domain constraint)", "why": "入力の物理的制約"},
+        {"q": "データ量: 日次/月次のレコード数・サイズは？", "maps_to": "T7 (resource_finite)", "why": "リソース制約"},
+        {"q": "データの鮮度要件は？（リアルタイム, ニアリアルタイム, バッチ）", "maps_to": "C (SLA)", "why": "契約的制約"},
+        {"q": "データ品質の定義は？（欠損許容率, 重複許容, スキーマ検証）", "maps_to": "D (derivation)", "why": "要件から導出"},
+        {"q": "リトライ・デッドレターの戦略は？", "maps_to": "D (derivation)", "why": "耐障害性の導出"},
+        {"q": "データリネージュ（変換履歴の追跡）は必要か？", "maps_to": "P4 (observability)", "why": "可観測性"}
+      ]
+    },
+    "cli_tool": {
+      "_comment": "CLI ツール固有の質問",
+      "questions": [
+        {"q": "対象 OS・シェルは？（Linux, macOS, Windows, bash, zsh, PowerShell）", "maps_to": "L5 (platform)", "why": "プラットフォーム境界"},
+        {"q": "インタラクティブ or バッチ実行？", "maps_to": "D (derivation)", "why": "使用パターンの導出"},
+        {"q": "設定ファイルの形式と配置場所は？", "maps_to": "C (constraint)", "why": "規約的制約"},
+        {"q": "他のツールとのパイプライン連携は必要か？", "maps_to": "D (derivation)", "why": "インターフェース仕様"},
+        {"q": "エラーメッセージの詳細度とログレベルの設計は？", "maps_to": "P4 (observability)", "why": "可観測性"},
+        {"q": "バージョニング戦略は？（semver, calver）", "maps_to": "D9 (maintenance)", "why": "保守原則"}
+      ]
+    }
+  }
+}

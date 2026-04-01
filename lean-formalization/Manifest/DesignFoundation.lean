@@ -1175,14 +1175,14 @@ theorems were identified as derivable but previously unstated.
 
 Reference: GitHub Issue #147, #148 (S1 analysis).
 
-### D15a: Unbounded retry under finite resources is infeasible
+## D15a Unbounded retry under finite resources is infeasible
 Rationale: T7 (resource_finite) + T4 (output_nondeterministic)
 
 Under finite resources (T7) and nondeterministic output (T4),
 a strategy with unbounded retries cannot satisfy the resource constraint.
 ForgeCode implements this as `max_tool_failure_per_turn`.
 
-### D15b: Non-converging agent loops require human intervention
+## D15b Non-converging agent loops require human intervention
 Rationale: T6 (human_resource_authority, resource_revocable) + T5 (no_improvement_without_feedback)
 
 When an agent loop fails to converge, continued execution without human
@@ -1190,7 +1190,7 @@ feedback violates both T6 (human authority over resources) and T5
 (no improvement without feedback). ForgeCode implements this as
 `max_requests_per_turn`.
 
-### D15c: Context eviction preserving feasibility
+## D15c Context eviction preserving feasibility
 Rationale: T3 (context_finite) + T8 (task_has_precision) + P6 (task_is_constraint_satisfaction)
 
 When context usage exceeds capacity (T3), evicting messages that do not
@@ -1271,16 +1271,16 @@ Derived from the new T₀ axiom `context_contribution_nonuniform` (T3 extension)
 combined with existing axioms. These theorems formalize the consequences of
 non-uniform information relevance identified in ForgeCode analysis #147/#150 (S3).
 
-### D16a: Zero-contribution items exist and can be evicted
+## D16a Zero-contribution items exist and can be evicted
 Rationale: context_contribution_nonuniform + D15c (eviction preserves feasibility)
 
-### D16b: Input design affects output quality
+## D16b Input design affects output quality
 Rationale: context_contribution_nonuniform + T4 (nondeterminism) + T8 (precision)
 
 Applicable to B3 (tool naming alignment with training data) and
 B6 (prompt composition optimization).
 
-### D16c: Resource allocation should follow contribution
+## D16c Resource allocation should follow contribution
 Rationale: context_contribution_nonuniform + T7 (resource finite) + T3 (context finite)
 
 Applicable to B5 (progressive thinking policy).
