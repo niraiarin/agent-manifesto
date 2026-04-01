@@ -470,6 +470,10 @@ V3_HALL_ASS=0
 V3_HALL_PRE=0
 V3_HALL_LOOPBACK_TOTAL=0
 V3_HALL_REJECTED_TOTAL=0
+V3_HALL_OBS_ACTIVE=0
+V3_HALL_HYP_ACTIVE=0
+V3_HALL_ASS_ACTIVE=0
+V3_HALL_PRE_ACTIVE=0
 if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_OBS=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
   V3_HALL_HYP=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
@@ -481,8 +485,41 @@ if [ -f "$HISTORY_FILE" ]; then
   V3_HALL_PRE=${V3_HALL_PRE:-0}
   V3_HALL_LOOPBACK_TOTAL=$({ jq -r '.rejected[]?.loopback_count // 0' "$HISTORY_FILE" 2>/dev/null | awk '{s+=$1} END{print s+0}'; } || echo 0)
   V3_HALL_REJECTED_TOTAL=$({ jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
+  # resolved filter: select(.resolved != true) を適用したアクティブ件数
+  V3_HALL_OBS_ACTIVE=$({ jq -r '.rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
+  V3_HALL_HYP_ACTIVE=$({ jq -r '.rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
+  V3_HALL_ASS_ACTIVE=$({ jq -r '.rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^assumption_error$"; } || true)
+  V3_HALL_PRE_ACTIVE=$({ jq -r '.rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^precondition_error$"; } || true)
+  V3_HALL_OBS_ACTIVE=${V3_HALL_OBS_ACTIVE:-0}
+  V3_HALL_HYP_ACTIVE=${V3_HALL_HYP_ACTIVE:-0}
+  V3_HALL_ASS_ACTIVE=${V3_HALL_ASS_ACTIVE:-0}
+  V3_HALL_PRE_ACTIVE=${V3_HALL_PRE_ACTIVE:-0}
+  # post-quality-gate filter: Run 57+ (quality gate introduced in commit 99cc654)
+  V3_HALL_OBS_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^observation_error$"; } || true)
+  V3_HALL_HYP_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^hypothesis_error$"; } || true)
+  V3_HALL_ASS_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^assumption_error$"; } || true)
+  V3_HALL_PRE_POST_GATE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^precondition_error$"; } || true)
+  V3_HALL_OBS_POST_GATE=${V3_HALL_OBS_POST_GATE:-0}
+  V3_HALL_HYP_POST_GATE=${V3_HALL_HYP_POST_GATE:-0}
+  V3_HALL_ASS_POST_GATE=${V3_HALL_ASS_POST_GATE:-0}
+  V3_HALL_PRE_POST_GATE=${V3_HALL_PRE_POST_GATE:-0}
+  # failure_subtype post-gate: H_wrong_premise, H_impl_specification, H_trivially_true, none (null/missing)
+  V3_HALL_SUBTYPE_WRONG_PREMISE=0
+  V3_HALL_SUBTYPE_IMPL_SPEC=0
+  V3_HALL_SUBTYPE_TRIVIALLY_TRUE=0
+  V3_HALL_SUBTYPE_NONE=0
+  if [ -f "$HISTORY_FILE" ]; then
+    V3_HALL_SUBTYPE_WRONG_PREMISE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_subtype // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^H_wrong_premise$"; } || true)
+    V3_HALL_SUBTYPE_IMPL_SPEC=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_subtype // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^H_impl_specification$"; } || true)
+    V3_HALL_SUBTYPE_TRIVIALLY_TRUE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | .failure_subtype // empty' "$HISTORY_FILE" 2>/dev/null | grep -c "^H_trivially_true$"; } || true)
+    V3_HALL_SUBTYPE_NONE=$({ jq -r 'select(.run != null and .run >= 57) | .rejected[]? | select((.resolved // false) != true) | select(.failure_subtype == null or .failure_subtype == "") | .failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' '; } || echo 0)
+    V3_HALL_SUBTYPE_WRONG_PREMISE=${V3_HALL_SUBTYPE_WRONG_PREMISE:-0}
+    V3_HALL_SUBTYPE_IMPL_SPEC=${V3_HALL_SUBTYPE_IMPL_SPEC:-0}
+    V3_HALL_SUBTYPE_TRIVIALLY_TRUE=${V3_HALL_SUBTYPE_TRIVIALLY_TRUE:-0}
+    V3_HALL_SUBTYPE_NONE=${V3_HALL_SUBTYPE_NONE:-0}
+  fi
 fi
-echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"note\": \"failure_type 標準化は Run 54 から。データ蓄積前は全値 0\" } },"
+echo "    \"v3_output_quality\": { \"total_commits\": $V3_TOTAL_COMMITS, \"test_pass_rate\": $V3_TEST_PASS_RATE, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\", \"hallucination_proxy\": { \"observation_error\": $V3_HALL_OBS, \"hypothesis_error\": $V3_HALL_HYP, \"assumption_error\": $V3_HALL_ASS, \"precondition_error\": $V3_HALL_PRE, \"loopback_total\": $V3_HALL_LOOPBACK_TOTAL, \"typed_rejected_total\": $V3_HALL_REJECTED_TOTAL, \"observation_error_active\": ${V3_HALL_OBS_ACTIVE:-0}, \"hypothesis_error_active\": ${V3_HALL_HYP_ACTIVE:-0}, \"assumption_error_active\": ${V3_HALL_ASS_ACTIVE:-0}, \"precondition_error_active\": ${V3_HALL_PRE_ACTIVE:-0}, \"observation_error_post_gate\": $V3_HALL_OBS_POST_GATE, \"hypothesis_error_post_gate\": $V3_HALL_HYP_POST_GATE, \"assumption_error_post_gate\": $V3_HALL_ASS_POST_GATE, \"precondition_error_post_gate\": $V3_HALL_PRE_POST_GATE, \"subtype_post_gate\": { \"H_wrong_premise\": ${V3_HALL_SUBTYPE_WRONG_PREMISE:-0}, \"H_impl_specification\": ${V3_HALL_SUBTYPE_IMPL_SPEC:-0}, \"H_trivially_true\": ${V3_HALL_SUBTYPE_TRIVIALLY_TRUE:-0}, \"none\": ${V3_HALL_SUBTYPE_NONE:-0} }, \"quality_gate_run\": 57, \"note\": \"failure_type 標準化は Run 54 から。_post_gate は Run 57 品質ゲート導入後のみ\" } },"
 echo "    \"v4_gate_pass_rate\": { \"passed\": $V4_PASSED, \"blocked\": $V4_BLOCKED, \"blocked_excluded\": $V4_BLOCKED_EXCLUDED, \"total\": $V4_TOTAL, \"rate_percent\": $V4_RATE },"
 echo "    \"v5_proposal_accuracy\": { \"approved\": $V5_APPROVED, \"total\": $V5_TOTAL, \"rate_percent\": $V5_RATE, \"grep_crosscheck\": $V5_GREP_APPROVED, \"schema_drift\": $V5_SCHEMA_DRIFT },"
 MEMORY_MD="$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md"
@@ -503,7 +540,37 @@ if [ -f "$HISTORY_FILE" ]; then
   V6_RETIRED_COUNT=$({ grep '"retired"' "$HISTORY_FILE" 2>/dev/null || true; } | wc -l | tr -d ' ')
   V6_RETIRED_COUNT=${V6_RETIRED_COUNT:-0}
 fi
-echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"note\": \"proxy: entry_count + staleness\" },"
+# type_distribution: MEMORY エントリの type 別件数（frontmatter type: フィールドを集計）
+V6_TYPE_FEEDBACK=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: feedback" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_PROJECT=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: project" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_REFERENCE=$(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null -exec grep -l "^type: reference" {} \; 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+V6_TYPE_OTHER=0
+if [ "$V6_MEMORY_FILES" -gt 0 ] 2>/dev/null; then
+  V6_TYPE_OTHER=$(( V6_MEMORY_FILES - V6_TYPE_FEEDBACK - V6_TYPE_PROJECT - V6_TYPE_REFERENCE ))
+  [ "$V6_TYPE_OTHER" -lt 0 ] && V6_TYPE_OTHER=0
+fi
+# index_consistency: MEMORY.md インデックスと実ファイルの整合性チェック
+V6_ORPHAN_FILES=0
+V6_MISSING_FILES=0
+if [ -f "$MEMORY_MD" ] && [ -d "$MEMORY_DIR" ]; then
+  # インデックスに記載されたファイル名を抽出（[label](filename.md) 形式）
+  INDEX_FILES=$(grep -oE '\([a-zA-Z0-9_-]+\.md\)' "$MEMORY_MD" 2>/dev/null | tr -d '()' || true)
+  # orphan_files: ファイルあり・インデックスなし
+  while IFS= read -r f; do
+    fname=$(basename "$f")
+    if ! echo "$INDEX_FILES" | grep -qF "$fname" 2>/dev/null; then
+      V6_ORPHAN_FILES=$(( V6_ORPHAN_FILES + 1 ))
+    fi
+  done < <(find "$MEMORY_DIR" -maxdepth 1 -name "*.md" ! -name "MEMORY.md" 2>/dev/null)
+  # missing_files: インデックスあり・ファイルなし
+  while IFS= read -r fname; do
+    [ -z "$fname" ] && continue
+    if [ ! -f "$MEMORY_DIR/$fname" ]; then
+      V6_MISSING_FILES=$(( V6_MISSING_FILES + 1 ))
+    fi
+  done <<< "$INDEX_FILES"
+fi
+echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, \"memory_files\": $V6_MEMORY_FILES, \"last_update_days_ago\": $V6_LAST_UPDATE_DAYS, \"retired_count\": $V6_RETIRED_COUNT, \"type_distribution\": {\"feedback\": $V6_TYPE_FEEDBACK, \"project\": $V6_TYPE_PROJECT, \"reference\": $V6_TYPE_REFERENCE, \"other\": $V6_TYPE_OTHER}, \"index_consistency\": {\"orphan_files\": $V6_ORPHAN_FILES, \"missing_files\": $V6_MISSING_FILES}, \"note\": \"proxy: entry_count + staleness\" },"
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_status\": \"suppressed_single_agent\" }"
 echo "  },"
 
@@ -694,19 +761,29 @@ echo "  },"
 # --- priority_bias_review: review_policy トリガー検出 ---
 BENCHMARK_FILE="$METRICS_DIR/benchmark.json"
 PBR_CURRENT_RUN=$MAX_RUN
-PBR_RUN_AT_DECISION=63
+PBR_RUN_AT_DECISION=$(jq -r '.priority_bias.current_snapshot.run_at_decision // empty' "$BENCHMARK_FILE" 2>/dev/null)
+if [ -z "$PBR_RUN_AT_DECISION" ] || ! [ "$PBR_RUN_AT_DECISION" -eq "$PBR_RUN_AT_DECISION" ] 2>/dev/null; then
+  PBR_RUN_AT_DECISION=76  # fallback: last known value from Run 76 decision
+fi
 PBR_RUNS_SINCE=$((PBR_CURRENT_RUN - PBR_RUN_AT_DECISION))
 PBR_RUN_THRESHOLD=20
 PBR_NEXT_RUN_TRIGGER=$((PBR_RUN_AT_DECISION + PBR_RUN_THRESHOLD))
 
-# Trigger 0: V1/V3 formal graduation (proxy_classification チェック)
+# Trigger 0: V1/V3 formal graduation (benchmark.json から確認)
 PBR_T0_FIRED=false
+PBR_T0_RESOLVED=false
 if [ -f "$BENCHMARK_FILE" ]; then
-  V1_CLASS=$(grep -o '"proxy_classification": *"[^"]*"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null | head -1 | grep -o '"[^"]*"$' | tr -d '"' || echo "unknown")
+  PBR_T0_ACTION=$(jq -r '.priority_bias.review_policy.trigger_log[0].action_taken // ""' "$BENCHMARK_FILE" 2>/dev/null)
+  if echo "$PBR_T0_ACTION" | grep -q "^resolved" 2>/dev/null; then
+    PBR_T0_RESOLVED=true
+  fi
 fi
-# observe.sh 自身の出力から proxy_classification を検出
-if grep -q '"proxy_classification": "formal"' /Users/nirarin/work/agent-manifesto/.claude/skills/evolve/scripts/observe.sh 2>/dev/null; then
-  PBR_T0_FIRED=true
+# Trigger 0 fires only if V1/V3 graduated AND not yet resolved
+if [ "$PBR_T0_RESOLVED" = "false" ]; then
+  V1_CLASS=$(jq -r '.priority_bias.current_snapshot.f_t_observations.system_phase // ""' "$BENCHMARK_FILE" 2>/dev/null)
+  if echo "$V1_CLASS" | grep -q "formal" 2>/dev/null; then
+    PBR_T0_FIRED=true
+  fi
 fi
 PBR_T0_DETAIL=""
 if [ "$PBR_T0_FIRED" = "true" ]; then
@@ -755,12 +832,18 @@ if [ -x "$BASE/manifest-trace" ]; then
   TRACE_S4_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 4)] | length' 2>/dev/null || echo "0")
   TRACE_S3=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
   TRACE_S3_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 3)] | length' 2>/dev/null || echo "0")
+  TRACE_S2=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 2 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S2_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 2)] | length' 2>/dev/null || echo "0")
+  TRACE_S1=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 1 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S1_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 1)] | length' 2>/dev/null || echo "0")
+  TRACE_S0=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 0 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
+  TRACE_S0_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 0)] | length' 2>/dev/null || echo "0")
   echo "  \"manifest_trace\": {"
   echo "    \"version\": $(echo "$TRACE_JSON" | jq '.meta.version // "unknown"' 2>/dev/null || echo '\"unknown\"'),"
   echo "    \"coverage\": {\"covered\": $TRACE_COVERED, \"uncovered\": $TRACE_UNCOVERED, \"weak\": $TRACE_WEAK, \"total\": $TRACE_TOTAL},"
   echo "    \"artifacts\": $TRACE_ARTIFACTS,"
   echo "    \"evidence\": {\"with\": $TRACE_WITH_EVIDENCE, \"without\": $TRACE_WITHOUT_EVIDENCE},"
-  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\"},"
+  echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\", \"s2\": \"${TRACE_S2}/${TRACE_S2_T}\", \"s1\": \"${TRACE_S1}/${TRACE_S1_T}\", \"s0\": \"${TRACE_S0}/${TRACE_S0_T}\"},"
   # G1: 優先修復候補 — uncovered かつ dependents が多い命題 (D13 影響波及順)
   TRACE_PRIORITY=$(cd "$BASE" && ./manifest-trace json 2>/dev/null | python3 -c "
 import sys, json

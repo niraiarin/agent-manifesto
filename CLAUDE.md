@@ -63,6 +63,10 @@
 - `/design-implementation-plan` — D1–D9 のプロバイダマッピング
 - `/package-plugin` — .claude/ 構成を Plugin としてパッケージ化
 - `/research` — P3 Gate-Driven Research Workflow（実装前リサーチ）
+- `/evolve` — P3 構造の漸進的改善（Agent Teams で観察→仮説化→検証→統合）
+- `/trace` — P4+D13 全成果物の半順序導出・カバレッジ・逸脱検出
+- `/formal-derivation` — 形式的導出（Γ ⊢ φ）を Lean 4 で構成
+- `/instantiate-model` — 認識論的層モデルの条件付き公理体系を生成
 
 ## Hook による構造的強制
 
@@ -78,7 +82,7 @@
 > **Note**: `lake build` and `grep ... Manifest/` commands must be run from the `lean-formalization/` directory.
 
 - `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
-- `bash tests/test-all.sh` — run all 290 acceptance tests (Phase 1–5)
+- `bash tests/test-all.sh` — run all 314 acceptance tests (Phase 1–5)
 - `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l` — count axioms
 - `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
 

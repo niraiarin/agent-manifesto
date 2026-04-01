@@ -126,6 +126,7 @@ Observer が検出した退役候補を処理する:
   },
   "v_changes": {},
   "benchmark": {"non_triviality_score": 0, "non_triviality_label": "trivial|moderate|substantial", "saturation_consecutive": 0, "saturation_status": "ok|warning|alert"},
+  "// benchmark note": "non_triviality_score と non_triviality_label は observe.sh の nts セクション出力から直接転記すること。Integrator が独自に算出してはならない。score と label を一致させること。",
   "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],
   "// deferred note": "当該 run で状態が変化した deferred のみ記録。累積スナップショットは記録しない（deferred-status.json が正規ソース）",
   "notes": "次回への引き継ぎ事項（必須）"
@@ -139,6 +140,11 @@ cat >> .claude/metrics/evolve-history.jsonl << EOF
 {"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
 ```
+
+**記録前チェック:**
+- [ ] `len(rejected)` == `phases.verifier.fail_count` であることを確認
+- [ ] `len(improvements)` == `phases.verifier.pass_count` であることを確認
+- [ ] `proposals_count` == `pass_count + fail_count` であることを確認
 
 **notes/deferred 整合性制約**: notes に前方参照（「次回」「蓄積待ち」「可能になる」等）を書く場合、対応する deferred エントリを必ず登録すること。notes だけに未完了タスクを書いて deferred を空にすると、テスト（Section 10）が FAIL する。
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 73,
+  "last_updated_run": 81,
   "items": {
     "h3-v4-semantic-update": {
       "status": "resolved",
@@ -214,6 +214,20 @@
       "opened_in_run": 35,
       "resolved_in_run": 36,
       "note": "manifesto.md T3 の「コンテキストウィンドウ」は LLM 由来用語。技術非依存を宣言するなら「作業メモリ」等への置き換えを検討。Run 35 Phase 2 で不採用（Issue #6 で発見された情報消失の遡及記録）。Run 36 で T3 見出しを「一度に処理できる情報量は有限である」に変更。Lean 型名 ContextWindow は維持（後方互換）。コメント・docstring を更新。"
+    },
+    "run79-v1v7-propositionid-scope": {
+      "status": "abandoned",
+      "reason": "actionSpaceExceeded",
+      "opened_in_run": 79,
+      "abandoned_in_run": 79,
+      "note": "V1-V7 を Lean PropositionId に追加するには Ontology.lean + EpistemicLayer.lean の変更が必要。strength collision (.observable vs .hypothesis が共に 0) と exhaustive match 更新（10+ ファイル）の複雑さにより行動空間外。Run 79-80 で 2 回 Verifier FAIL。"
+    },
+    "run80-dc-coverage-observer-note": {
+      "status": "resolved",
+      "reason": "triagePrioritized",
+      "opened_in_run": 80,
+      "resolved_in_run": 81,
+      "note": "Run 80 notes の前方参照「次回 Observer は Derivation Card カバレッジを確認候補とする」を解消。Run 81 Observer が通常の観察プロセスで DC カバレッジを確認対象として処理。"
     }
   }
 }

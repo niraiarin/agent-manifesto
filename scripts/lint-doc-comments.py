@@ -231,6 +231,15 @@ def lint_file(filepath):
                             "Axiom Card missing 'Refutation condition:'"
                         ))
 
+                # DC1/DC2: Derivation Card checks
+                if "[Derivation Card]" in doc_text:
+                    for field in ["Derives from:", "Proposition:", "Content:", "Proof strategy:"]:
+                        if field not in doc_text:
+                            violations.append(Violation(
+                                filename, decl_doc_start, "DC2", "warning",
+                                f"Derivation Card missing field '{field}'"
+                            ))
+
                 # A1: Check if next line is axiom but no [Axiom Card]
                 # Only for manifesto-derived axioms (T1-T8, E1-E2),
                 # not for formalization-internal axioms

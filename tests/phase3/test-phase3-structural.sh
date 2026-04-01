@@ -38,6 +38,15 @@ check "S3.8 Metrics collector logs to JSONL" \
 check "S3.9 Metrics skill covers V1-V7" \
   "grep -c 'V[1-7]' '$BASE/.claude/skills/metrics/SKILL.md' | xargs test 7 -le"
 
+check "S3.25 h5-doc-lint hook exists and is executable" \
+  "[ -x '$BASE/.claude/hooks/h5-doc-lint.sh' ]"
+
+check "S3.26 p3-axiom-evidence-check hook exists and is executable" \
+  "[ -x '$BASE/.claude/hooks/p3-axiom-evidence-check.sh' ]"
+
+check "S3.27 p4-sync-counts-check hook exists and is executable" \
+  "[ -x '$BASE/.claude/hooks/p4-sync-counts-check.sh' ]"
+
 echo ""
 echo "=== Phase 3: Plugin Drift Tests ==="
 

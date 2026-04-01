@@ -110,7 +110,9 @@
       "path": ".claude/hooks/p4-metrics-collector.sh",
       "refs": [
         "P4",
-        "D3"
+        "D3",
+        "V2",
+        "V4"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -135,7 +137,8 @@
       "path": ".claude/hooks/p4-gate-logger.sh",
       "refs": [
         "P4",
-        "L6"
+        "L6",
+        "V4"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -160,7 +163,8 @@
       "refs": [
         "P4",
         "T6",
-        "D3"
+        "D3",
+        "V5"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -172,7 +176,8 @@
       "path": ".claude/hooks/p4-v7-task-tracker.sh",
       "refs": [
         "P4",
-        "D3"
+        "D3",
+        "V7"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -216,6 +221,33 @@
       "scope": "implementation"
     },
     {
+      "id": "hook:h5-doc-lint",
+      "type": "hook",
+      "path": ".claude/hooks/h5-doc-lint.sh",
+      "refs": ["D5", "D1"],
+      "enforces": "structural",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "hook:p3-axiom-evidence-check",
+      "type": "hook",
+      "path": ".claude/hooks/p3-axiom-evidence-check.sh",
+      "refs": ["P3", "D1", "D8"],
+      "enforces": "structural",
+      "phase": 4,
+      "scope": "implementation"
+    },
+    {
+      "id": "hook:p4-sync-counts-check",
+      "type": "hook",
+      "path": ".claude/hooks/p4-sync-counts-check.sh",
+      "refs": ["P4", "D3"],
+      "enforces": "structural",
+      "phase": 3,
+      "scope": "implementation"
+    },
+    {
       "id": "skill:verify",
       "type": "skill",
       "path": ".claude/skills/verify/SKILL.md",
@@ -235,7 +267,14 @@
       "path": ".claude/skills/metrics/SKILL.md",
       "refs": [
         "P4",
-        "D3"
+        "D3",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -348,7 +387,8 @@
       "refs": [
         "P4",
         "D3",
-        "D13"
+        "D13",
+        "V6"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -375,7 +415,8 @@
       "refs": [
         "P4",
         "D3",
-        "D9"
+        "D9",
+        "V6"
       ],
       "enforces": "procedural",
       "phase": 3,
@@ -564,13 +605,21 @@
       "refs": [
         "T1",
         "T2",
+        "T3",
+        "T4",
+        "T5",
         "T6",
+        "T8",
+        "E2",
         "P2",
         "P3",
         "P4",
-        "D1",
         "D4",
-        "D9"
+        "D5",
+        "D6",
+        "D9",
+        "L1",
+        "L5"
       ],
       "enforces": "verification",
       "phase": 5,
@@ -634,6 +683,38 @@
       ],
       "enforces": "verification",
       "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:scripts-structural",
+      "type": "test",
+      "path": "tests/phase5/test-scripts-structural.sh",
+      "refs": [
+        "D11",
+        "T3",
+        "T7",
+        "P4"
+      ],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:metrics-structural",
+      "type": "test",
+      "path": "tests/phase3/test-metrics-structural.sh",
+      "refs": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "P4"
+      ],
+      "enforces": "verification",
+      "phase": 3,
       "scope": "implementation"
     },
     {
@@ -958,7 +1039,9 @@
       "path": ".claude/metrics/benchmark.json",
       "refs": [
         "P4",
-        "D3"
+        "D3",
+        "V1",
+        "V3"
       ],
       "enforces": "procedural",
       "scope": "data"
@@ -969,7 +1052,8 @@
       "path": ".claude/metrics/sessions.jsonl",
       "refs": [
         "P4",
-        "T1"
+        "T1",
+        "V2"
       ],
       "enforces": "procedural",
       "scope": "data"
@@ -991,7 +1075,8 @@
       "path": ".claude/metrics/v5-approvals.jsonl",
       "refs": [
         "P4",
-        "T6"
+        "T6",
+        "V5"
       ],
       "enforces": "procedural",
       "scope": "data"
@@ -1002,7 +1087,8 @@
       "path": ".claude/metrics/v7-tasks.jsonl",
       "refs": [
         "P4",
-        "D3"
+        "D3",
+        "V7"
       ],
       "enforces": "procedural",
       "scope": "data"
@@ -1023,7 +1109,7 @@
       "id": "data:tool-usage",
       "type": "data",
       "path": ".claude/metrics/tool-usage.jsonl",
-      "refs": ["P4", "D3"],
+      "refs": ["P4", "D3", "V1", "V2", "V3", "V4"],
       "enforces": "procedural",
       "scope": "data"
     },

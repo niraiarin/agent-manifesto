@@ -60,11 +60,11 @@ Concepts P1 adds beyond E2:
   → Asymmetry of trust accumulation (gradual accumulation vs. abrupt destruction)
 -/
 
-/-- P1a [theorem]: Expansion of the action space entails expansion of risk.
-    A direct consequence of E2 (`capability_risk_coscaling`).
-
-    This is the core of P1, close to a restatement of E2, but
-    makes its position as a "design principle" explicit. -/
+/-- [Derivation Card]
+    Derives from: capability_risk_coscaling (E2)
+    Proposition: P1
+    Content: Expansion of the action space entails expansion of risk exposure — autonomy and vulnerability co-scale, so unprotected expansion can destroy accumulated trust.
+    Proof strategy: Direct application of capability_risk_coscaling (E2) -/
 theorem autonomy_vulnerability_coscaling :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
@@ -107,13 +107,11 @@ def verificationSound (w : World) : Prop :=
     verifies ver action w →
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver
 
-/-- P2 [theorem]: Verification soundness requires role separation.
-    From T4 (nondeterminism) and E1 (independence requirement),
-    for a verification framework to be sound, the agents responsible
-    for generation and evaluation must be separated.
-
-    Essentially a restatement of E1a, but clarifies its position
-    as a "principle" by introducing the design concept `verificationSound`. -/
+/-- [Derivation Card]
+    Derives from: verification_requires_independence (E1a)
+    Proposition: P2
+    Content: Verification soundness requires role separation — the generator and evaluator of an action must be distinct agents with no shared internal state.
+    Proof strategy: Direct application of verification_requires_independence (E1a) via verificationSound definition -/
 theorem cognitive_separation_required :
   ∀ (w : World), verificationSound w :=
   fun w gen ver action h_gen h_ver =>
@@ -175,16 +173,11 @@ theorem modification_persists_after_termination :
     st ∈ w'.structures :=
   structure_persists
 
-/-- P3c [theorem]: T1 ∧ T2 → ungoverned integration produces irrecoverable changes.
-    Composition of T1 (agent disappearance) and T2 (change persistence).
-
-    When an ungoverned breakingChange is made:
-    - The change persists (T2: structure_persists)
-    - The agent that made the change disappears (T1: session_bounded)
-    - Result: breaking changes persist uncorrected
-
-    This theorem **essentially uses both** T1 and T2, formally
-    demonstrating that P3 is a compositional consequence of T1 + T2. -/
+/-- [Derivation Card]
+    Derives from: session_bounded (T1), structure_persists (T2)
+    Proposition: P3
+    Content: Ungoverned breaking changes are irrecoverable — the change persists (T2) while the agent that made it disappears (T1), leaving no correcting agent.
+    Proof strategy: intro + apply structure_accumulates — epoch monotonicity via validTransition chain from ki.after -/
 theorem ungoverned_breaking_change_irrecoverable :
   ∀ (w : World) (s : Session) (st : Structure)
     (ki : KnowledgeIntegration),
@@ -250,12 +243,11 @@ what cannot be observed cannot be incorporated into feedback loops.
 Constraints manifest as gradients, not walls (binary).
 -/
 
-/-- P4a [theorem]: Improvement requires observability.
-    If structureImproved holds, then feedback exists (T5), and
-    for feedback to exist, the target must be observable.
-
-    Formalization: improvement occurred → feedback existed.
-    This is a direct consequence of T5. -/
+/-- [Derivation Card]
+    Derives from: no_improvement_without_feedback (T5)
+    Proposition: P4
+    Content: Improvement requires observability — if structure is improved, then feedback must have existed, so the target must have been observable.
+    Proof strategy: Direct application of no_improvement_without_feedback (T5) -/
 theorem improvement_requires_observability :
   ∀ (w w' : World),
     structureImproved w w' →
@@ -285,12 +277,11 @@ Robust design does not assume perfect compliance with structure,
 but rather maintains resilience against interpretation variance.
 -/
 
-/-- P5 [theorem]: Structure interpretation is nondeterministic.
-    From T4, interpreting the same structure can yield different actions.
-
-    T4 (`output_nondeterministic`) declares nondeterminism at the
-    canTransition level, but P5 restates it at the higher abstraction
-    level of "structure interpretation." -/
+/-- [Derivation Card]
+    Derives from: interpretation_nondeterminism (T4)
+    Proposition: P5
+    Content: Structure interpretation is nondeterministic — the same structure can yield different actions from the same agent, so robust design must not assume perfect compliance.
+    Proof strategy: Direct application of interpretation_nondeterminism (T4) -/
 theorem structure_interpretation_nondeterministic :
   ∃ (agent : Agent) (st : Structure) (action₁ action₂ : Action) (w : World),
     interpretsStructure agent st action₁ w ∧
@@ -339,12 +330,11 @@ def strategyFeasible (s : TaskStrategy) (agent : Agent) : Prop :=
   -- T8: 要求精度を達成
   s.achievedPrecision ≥ s.task.precisionRequired.required
 
-/-- P6a [theorem]: Task execution is a constraint satisfaction problem.
-    A strategy must be found that simultaneously satisfies three constraints:
-    T3 (finite context), T7 (finite resources), and T8 (precision requirement).
-
-    This theorem formalizes "the existence of constraints."
-    It does not guarantee the existence of a solution (there may be no solution). -/
+/-- [Derivation Card]
+    Derives from: context_window_finite (T3), resource_budget_finite (T7), precision_requirement (T8)
+    Proposition: P6
+    Content: Task execution is a constraint satisfaction problem — a strategy must simultaneously satisfy T3 (finite context), T7 (finite resources), and T8 (precision requirement).
+    Proof strategy: intro + constructor chain with Nat.le_trans on strategyFeasible components -/
 theorem task_is_constraint_satisfaction :
   ∀ (task : Task) (agent : Agent),
     -- T3: コンテキストは有限
