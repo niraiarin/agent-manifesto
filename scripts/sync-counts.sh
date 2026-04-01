@@ -90,8 +90,17 @@ sync_pattern() {
     diff --unified=0 "$file" "$tmp" | grep '^[+-]' | grep -v '^[+-][+-][+-]' || true
 
     if [[ "$MODE" == "--update" ]]; then
-      cp "$tmp" "$file"
-      echo "  → Updated"
+      # Safety: verify only count-related lines changed, not structure
+      local structural_diff
+      structural_diff=$(diff "$file" "$tmp" | grep '^[<>]' | grep -cvE '[0-9]+ (axioms|theorems|sorry|tests|compression)' || true)
+      if [[ "$structural_diff" -gt 0 ]]; then
+        echo "  ⚠ BLOCKED: Non-count structural changes detected in $desc. Manual review needed." >&2
+        rm -f "$tmp"
+        return
+      fi
+      # Use sed -i for in-place edit (preserves inode, permissions, other content)
+      sed -i '' "$pattern" "$file"
+      echo "  → Updated (in-place)"
     fi
   fi
   rm -f "$tmp"

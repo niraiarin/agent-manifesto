@@ -16,7 +16,7 @@
 - `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
-- `lean-formalization/` — Lean 4 形式検証（51 axioms, 373 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（51 axioms, 386 theorems, 0 sorry）
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
 ## Compact Instructions
@@ -67,6 +67,7 @@
 - `/trace` — P4+D13 全成果物の半順序導出・カバレッジ・逸脱検出
 - `/formal-derivation` — 形式的導出（Γ ⊢ φ）を Lean 4 で構成
 - `/instantiate-model` — 認識論的層モデルの条件付き公理体系を生成
+- `/spec-driven-workflow` — 仕様駆動・テスト駆動開発の完全ワークフロー（設計→テスト→実装→検証→保守）
 
 ## Hook による構造的強制
 
@@ -91,7 +92,7 @@
 - `import` must precede `/-!` doc comments (Lean 4 requirement)
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
-- Current stats: 51 axioms, 373 theorems, 0 sorry
+- Current stats: 51 axioms, 386 theorems, 0 sorry
 
 ## Hook Development Patterns
 

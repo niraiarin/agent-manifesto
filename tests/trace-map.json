@@ -1,0 +1,33 @@
+{
+  "version": "0.1.0",
+  "description": "Test case → PropositionId traceability mapping. Each test declares which propositions it validates.",
+  "mapping": {
+    "phase1/test-l1-structural.sh": {
+      "S1.1":  { "primary": "D1", "secondary": ["L1"] },
+      "S1.2":  { "primary": "D1", "secondary": ["L1"] },
+      "S1.3":  { "primary": "D1", "secondary": ["L1"] },
+      "S1.4":  { "primary": "D1", "secondary": ["L1"] },
+      "S1.5":  { "primary": "L1", "secondary": ["T6"] },
+      "S1.6":  { "primary": "L1", "secondary": ["D1"] },
+      "S1.7":  { "primary": "L1", "secondary": ["D5"] },
+      "S1.8":  { "primary": "L1", "secondary": ["D1"] },
+      "S1.9":  { "primary": "P4", "secondary": ["D11"] },
+      "S1.10": { "primary": "L5", "secondary": [] }
+    },
+    "phase1/test-l1-behavioral.sh": {
+      "B1.1":  { "primary": "L1", "secondary": ["T6"] },
+      "B1.2":  { "primary": "L1", "secondary": ["T6"] },
+      "B1.3":  { "primary": "L1", "secondary": [] },
+      "B1.4":  { "primary": "L1", "secondary": [] },
+      "B1.5":  { "primary": "L1", "secondary": [] },
+      "B1.6":  { "primary": "L1", "secondary": [] },
+      "B1.7":  { "primary": "L1", "secondary": [] },
+      "B1.8":  { "primary": "L1", "secondary": [] },
+      "B2.1":  { "primary": "L1", "secondary": [] },
+      "B2.2":  { "primary": "L1", "secondary": ["D5"] },
+      "B2.3":  { "primary": "L1", "secondary": ["D1"] },
+      "B2.4":  { "primary": "L1", "secondary": [] },
+      "B2.5":  { "primary": "L1", "secondary": ["D5"] }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "skill_name": "spec-driven-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "新しいプロジェクトを仕様駆動で始めたい。IoT デバイスの監視システムで、センサーデータの異常検知が要件。どこから始めればいい？",
+      "expected_output": "Phase 0 から開始。/instantiate-model で条件付き公理系を生成するよう案内し、具体的な手順を示す。Phase 1 のテスト計画導出まで見通しを提示。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "L1 の安全境界の定義を変更したい。影響範囲を知りたいし、何をテストし直せばいいか教えて",
+      "expected_output": "Phase 4 の保守ワークフローを案内。manifest-trace impact L1 を実行し、影響命題・ファイル・テストを特定。再テスト手順を具体的に示す。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "trace-coverage.sh で 19% しかカバーできてない。100% にするにはどう進めればいい？",
+      "expected_output": "Phase 1 のテスト計画に戻るよう案内。未カバー命題一覧を出し、Phase 2-5 テストへの @traces 付与の手順を具体的に示す。移行コスト見積もりに言及。",
+      "files": []
+    }
+  ]
+}
