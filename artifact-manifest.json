@@ -1123,6 +1123,176 @@
       ],
       "enforces": "procedural",
       "scope": "data"
+    },
+
+    {"_comment": "--- scripts (type: script) ---"},
+    {
+      "id": "script:manifest-trace",
+      "type": "script",
+      "path": "manifest-trace",
+      "refs": ["P4", "D3", "D9", "D13", "V6"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:check-loop",
+      "type": "script",
+      "path": "scripts/check-loop.sh",
+      "refs": ["D1", "P2", "T8"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:sync-counts",
+      "type": "script",
+      "path": "scripts/sync-counts.sh",
+      "refs": ["P4", "D3", "V1"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:depgraph",
+      "type": "script",
+      "path": "scripts/depgraph.sh",
+      "refs": ["D13", "P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:depgraph-verify",
+      "type": "script",
+      "path": "scripts/depgraph-verify.sh",
+      "refs": ["D13", "P2"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:implementation-check",
+      "type": "script",
+      "path": "scripts/implementation-check.sh",
+      "refs": ["D8", "L4", "T6"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:l5-query",
+      "type": "script",
+      "path": "scripts/l5-query.sh",
+      "refs": ["L5", "D3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-preflight",
+      "type": "script",
+      "path": "scripts/verify-preflight.sh",
+      "refs": ["P2", "D1"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:generate-verso-source",
+      "type": "script",
+      "path": "scripts/generate-verso-source.py",
+      "refs": ["D5", "T2"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:lean-to-markdown",
+      "type": "script",
+      "path": "scripts/lean-to-markdown.py",
+      "refs": ["D5", "T2"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:lint-doc-comments",
+      "type": "script",
+      "path": "scripts/lint-doc-comments.py",
+      "refs": ["D5", "D1"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:observe",
+      "type": "script",
+      "path": ".claude/skills/evolve/scripts/observe.sh",
+      "refs": ["P4", "D3", "D9", "V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:proxy-correlation",
+      "type": "script",
+      "path": ".claude/skills/evolve/scripts/proxy-correlation.sh",
+      "refs": ["P4", "D3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:package",
+      "type": "script",
+      "path": ".claude/skills/package-plugin/scripts/package.sh",
+      "refs": ["D9", "T2"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+
+    {"_comment": "--- additional skill ---"},
+    {
+      "id": "skill:ground-axiom",
+      "type": "skill",
+      "path": ".claude/skills/ground-axiom/SKILL.md",
+      "refs": ["D1", "D5", "P3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+
+    {"_comment": "--- additional tests ---"},
+    {
+      "id": "test:depgraph",
+      "type": "test",
+      "path": "tests/phase5/test-depgraph.sh",
+      "refs": ["D13", "P4"],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:l5-ssot-structural",
+      "type": "test",
+      "path": "tests/phase5/test-l5-ssot-structural.sh",
+      "refs": ["L5", "D3"],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+
+    {"_comment": "--- additional documents/data ---"},
+    {
+      "id": "data:l5-platform-capabilities",
+      "type": "data",
+      "path": "docs/l5-platform-capabilities.json",
+      "refs": ["L5", "D3"],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "doc:lean-doc-style-guide",
+      "type": "document",
+      "path": "docs/lean-doc-style-guide.md",
+      "refs": ["D5"],
+      "enforces": "normative",
+      "scope": "document"
+    },
+    {
+      "id": "doc:research-workflow",
+      "type": "document",
+      "path": "docs/research/workflow/research-workflow.md",
+      "refs": ["P3", "D13"],
+      "enforces": "normative",
+      "scope": "document"
     }
   ]
 }
