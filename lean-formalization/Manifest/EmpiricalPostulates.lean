@@ -131,11 +131,31 @@ and vulnerability) becomes subject to revision.
     Layer: Γ \ T₀ (Hypothesis-derived)
     Content: Capability growth is inseparable from risk growth.
           When an agent's action space expands, risk exposure necessarily increases.
-    Basis: It has been repeatedly observed across all tools that capability enables
-          both positive and negative outcomes (Terminology Reference §9.1 empirical propositions).
+    Basis: Attack surface monotonicity — each additional capability enables at least
+          one additional adversarial execution trace, strictly increasing the attack
+          surface metric (order-theoretic property, not statistical claim).
     Source: manifesto.md E2 "Capability Growth Is Inseparable from Risk Growth"
     Refutation condition: If means to increase capability while completely containing risk
               are discovered (e.g., a perfect sandbox)
+
+    Mathematical grounding (Foundation/RiskTheory.lean):
+      [R21] Manadhata & Wing (2011) "A Formal Model for a System's Attack Surface"
+            — Attack surface monotonicity: capability ⊃ → attack surface ⊃
+      [R22] Saltzer & Schroeder (1975) "The Protection of Information in Computer Systems"
+            — Principle of Least Privilege: minimizing capability minimizes risk
+      [R23] Dennis & Van Horn (1966) "Programming Semantics for Multiprogrammed Computations"
+            — Capability model: capability set = set of possible actions
+      Formally proven (Foundation/RiskTheory.lean):
+        capability_risk_is_strict_mono, equal_risk_implies_equal_capability,
+        capability_risk_injective, least_privilege_reduces_risk (0 sorry)
+      Bridge (EmpiricalPostulates.lean):
+        e2_equal_risk_equal_capability — contrapositive of E2 on actual opaque functions
+      Derivation: [R21] attack surface monotonicity → StrictMono (Mathlib)
+                  → E2 is precisely the StrictMono property of the risk function
+                  → e2_equal_risk_equal_capability bridges to opaque riskExposure/actionSpaceSize
+
+    降格判定: 導出不可能 — actionSpaceSize, riskExposure が共に opaque のため、
+    型定義から StrictMono 関係を導出できない。axiom として維持、根拠は上記で検証済み。
 
     **Choice of inequality: `<` vs `≤`**
 
@@ -148,6 +168,24 @@ axiom capability_risk_coscaling :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskExposure agent w < riskExposure agent w'
+
+/-- E2 bridge: equal risk exposure implies equal action space size.
+    Contrapositive of capability_risk_coscaling — if two worlds have
+    the same risk exposure for an agent, they must have the same
+    action space size. No "free capability" is possible.
+
+    Bridges Foundation/RiskTheory.lean's abstract StrictMono theorems
+    to the actual opaque functions used in E2.
+
+    Reference: [R22] Saltzer & Schroeder (1975) -/
+theorem e2_equal_risk_equal_capability (agent : Agent) (w w' : World)
+    (h_eq : riskExposure agent w = riskExposure agent w') :
+    actionSpaceSize agent w = actionSpaceSize agent w' :=
+  match Nat.lt_or_ge (actionSpaceSize agent w) (actionSpaceSize agent w'),
+        Nat.lt_or_ge (actionSpaceSize agent w') (actionSpaceSize agent w) with
+  | Or.inl h_lt, _ => absurd h_eq (Nat.ne_of_lt (capability_risk_coscaling agent w w' h_lt))
+  | _, Or.inl h_gt => absurd (h_eq.symm) (Nat.ne_of_lt (capability_risk_coscaling agent w' w h_gt))
+  | Or.inr h_ge, Or.inr h_ge' => Nat.le_antisymm h_ge' h_ge
 
 -- ============================================================
 -- Sorry Inventory (Phase 2)
