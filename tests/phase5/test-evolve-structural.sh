@@ -110,6 +110,8 @@ grep -q "反証条件" "$HYP" && pass "Hypothesizer references refutation" || fa
 grep -q "読み取り専用" "$HYP" && pass "Hypothesizer is read-only" || fail "Hypothesizer missing read-only constraint"
 ! grep -q "Edit\|Write" "$HYP" && pass "Hypothesizer has no Edit/Write tools" || fail "Hypothesizer should not have Edit/Write"
 
+VER=".claude/agents/verifier.md"
+
 # Hypothesizer 事前検証の証跡 (Run 89)
 grep -q "事前検証の証跡\|Verification Evidence" "$HYP" && pass "Hypothesizer has verification evidence section in template" || fail "Hypothesizer missing verification evidence section"
 grep -q "evidence.*quality\|Evidence.*quality\|事前検証の証跡\|insufficient evidence" "$VER" && pass "Verifier has evidence quality check" || fail "Verifier missing evidence quality check"
@@ -121,7 +123,6 @@ grep -q "trivially-true.*回避\|trivially-true 定理の回避" "$HYP" && pass 
 grep -q "L1 行動空間制約\|hooks.*変更不可\|settings.json.*変更不可" "$HYP" && pass "Hypothesizer has L1 action space constraint" || fail "Hypothesizer missing L1 action space constraint"
 
 # Verifier Lean quality gate (obs-3)
-VER=".claude/agents/verifier.md"
 grep -q "trivially-true\|trivial.*theorem\|rfl.*alone\|definitional.*unfolding" "$VER" && pass "Verifier has Lean trivially-true detection" || fail "Verifier missing Lean trivially-true detection"
 
 # failure_subtype definitions (obs-4)
