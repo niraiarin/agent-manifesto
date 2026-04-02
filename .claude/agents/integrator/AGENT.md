@@ -137,7 +137,7 @@ Observer が検出した退役候補を処理する:
   "// benchmark note": "non_triviality_score と non_triviality_label は observe.sh の nts セクション出力から直接転記すること。Integrator が独自に算出してはならない。score と label を一致させること。",
   "deferred": [{"id": "short-kebab-id", "description": "説明", "reason": "resourceExhaustion|dependencyBlocked|actionSpaceExceeded", "status": "open", "opened_in_run": 0}],
   "// deferred note": "当該 run で状態が変化した deferred のみ記録。累積スナップショットは記録しない（deferred-status.json が正規ソース）",
-  "notes": "次回への引き継ぎ事項（必須）"
+  "notes": "Run の実行結果サマリ（必須）"
 }
 ```
 
@@ -206,8 +206,8 @@ Verifier FAIL で実装されなかった項目について、以下を判定す
 
 **notes フィールドのルール:**
 - 必須。省略不可
-- 次回 evolve で Observer が最初に読む引き継ぎ情報
-- 含めるべき内容: Verifier FAIL で再提出が必要な案、未解決の観察、行動空間外で人間介入が必要な事項
+- Run の実行結果サマリ（何を統合し、何をスキップしたか）
+- 含めるべき内容: 統合した改善の要約、Verifier FAIL の要因、スキップした観察項目の理由
 
 ### Step 6: PR 作成とマージ
 
