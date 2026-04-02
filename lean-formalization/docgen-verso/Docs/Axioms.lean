@@ -89,6 +89,11 @@ in Ontology.lean as definitional extensions (Terminology Reference §5.5).
   * Processing is possible only within context capacity
   * Environment-derived
 *
+  * `context_contribution_nonuniform`
+  * T3
+  * Not all context items contribute equally to task precision
+  * Natural-science-derived
+*
   * `output_nondeterministic`
   * T4
   * Different outputs possible for the same input
@@ -142,10 +147,23 @@ T1 is decomposed into three axioms:
    Layer: T₀ (Environment-derived)
    Content: Sessions terminate in finite time.
          For all sessions, they become terminated at some point.
-   Basis: Execution of computational agents consumes finite resources and therefore terminates in finite time (related to T7).
+   Basis: Execution of computational agents consumes finite resources and
+         therefore terminates in finite time (related to T7).
          Reference examples: LLM session timeouts, resource consumption limits.
+
+   Theoretical grounding (not formally proven — T₀ environment constraint):
+     (R33) Hoare (1978) "Communicating Sequential Processes"
+           — Process termination: a terminated process engages in no further events
+     Note: T₀ axioms encode physical facts, not mathematical theorems.
+           Session boundedness follows from finite resource consumption (T7),
+           but this causal chain cannot be formalized because canTransition is opaque.
+
+   降格判定: 導出不可能 — canTransition, validTransition が opaque のため、
+   有限時間での終了を型から導出できない。axiom として維持。
+
    Source: manifesto.md T1 "There is no memory across sessions"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If computational processes could run indefinitely
+             without resource consumption (e.g., infinite energy source) 
 
 *Declaration:* `axiom session_bounded`
 
@@ -163,11 +181,24 @@ axiom session_bounded :
    Content: No state sharing across sessions.
          Between two sessions with different session IDs,
          actions in one cannot affect the observable state of the other.
-   Basis: Ephemeral computational processes lose internal state upon process termination.
-         State isolation across sessions is guaranteed at the execution environment level.
-         Reference example: session isolation in LLM architectures.
+   Basis: Ephemeral computational processes lose internal state upon process
+         termination. State isolation across sessions is guaranteed at the
+         execution environment level (process-level memory isolation).
+
+   Theoretical grounding (not formally proven — T₀ environment constraint):
+     (R31) Milner (1989) "Communication and Concurrency"
+           — CCS: parallel composition with no shared names = causal independence
+     Note: T₀ axioms encode physical facts, not mathematical theorems.
+           Session memory isolation is guaranteed by the execution environment
+           (process-level memory isolation), formalized in CCS as P | Q with
+           disjoint name spaces.
+
+   降格判定: 導出不可能 — AuditEntry の preHash/postHash が opaque のため、
+   因果的独立性を型から導出できない。axiom として維持。
+
    Source: manifesto.md T1 "There is no continuous 'self'"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If session state could leak across process boundaries
+             (e.g., shared mutable memory between independent processes) 
 
 *Declaration:* `axiom no_cross_session_memory`
 
@@ -185,10 +216,27 @@ axiom no_cross_session_memory :
    Layer: T₀ (Environment-derived)
    Content: No mutable state sharing across different sessions.
          Even with the same AgentId, instances in different sessions
-         do not directly share state. Influence propagates only indirectly through structure (T2).
-   Basis: Causal independence across sessions. Each instance is an independent entity.
+         do not directly share state. Influence propagates only indirectly
+         through structure (T2).
+   Basis: Causal independence across sessions. Each instance is an
+         independent entity. In process algebra terms, sessions are
+         composed in parallel with no shared channels.
+
+   Theoretical grounding (not formally proven — T₀ environment constraint):
+     (R31) Milner (1989) "Communication and Concurrency"
+           — CCS parallel composition: P | Q with disjoint names
+     (R32) Honda (1993) "Types for Dyadic Interaction"
+           — Session types: typed channels confined to session scope
+     Note: T₀ axioms encode physical facts, not mathematical theorems.
+           State non-sharing follows from process-level isolation — each session
+           runs in a separate process with no shared mutable channels.
+
+   降格判定: 導出不可能 — canTransition が opaque のため、
+   セッション間の遷移独立性を型から導出できない。axiom として維持。
+
    Source: manifesto.md T1 "Each instance is an independent entity"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If inter-session communication channels existed
+             (e.g., shared mutable state accessible across sessions) 
 
 *Declaration:* `axiom session_no_shared_state`
 
@@ -220,9 +268,23 @@ T2 is decomposed into two axioms:
          Even when a session becomes terminated,
          structures referenced by that session do not disappear from the World.
    Basis: Persistence on the file system. Structures (documents, tests, etc.)
-         reside in storage outside the session.
+         reside in storage outside the session. The persistence set is
+         monotonically non-decreasing across valid transitions.
+
+   Mathematical grounding (Foundation/ProcessModel.lean):
+     (R34) Lamport (1978) "Time, Clocks, and the Ordering of Events"
+           — Monotonic logical clocks: once recorded, events remain in causal history
+     Compositional property proven: `persistence_composes` (0 sorry)
+           — `structure_persists` applied to transition chains yields multi-step persistence
+     Note: The axiom itself is a T₀ environment constraint (persistent storage).
+           The Foundation theorem proves a *consequence* (compositionality), not a derivation.
+
+   降格判定: 導出不可能 — validTransition が opaque のため、
+   遷移後の structures 集合の単調性を型から導出できない。axiom として維持。
+
    Source: manifesto.md T2 "The place where improvements accumulate is within structure"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If persistent storage could lose data across valid
+             transitions (e.g., volatile-only storage with no durability guarantee) 
 
 *Declaration:* `axiom structure_persists`
 
@@ -242,8 +304,22 @@ axiom structure_persists :
          As epochs advance, structures may be updated (lastModifiedAt is non-decreasing).
          Contrast with T1: agents are ephemeral, but structure grows.
    Basis: Monotonic epoch increase guaranteed by version control systems (git).
+         Epoch is a logical clock — append-only logs ensure monotonicity.
+
+   Mathematical grounding (Foundation/ProcessModel.lean):
+     (R34) Lamport (1978) "Time, Clocks, and the Ordering of Events"
+           — Logical clock monotonicity: e₁ → e₂ ⟹ C(e₁) < C(e₂)
+     Compositional property proven: `epoch_monotone_composes` (0 sorry)
+           — epoch monotonicity composes across transition chains via Nat.`le_trans`
+     Note: The axiom itself is a T₀ environment constraint (append-only version control).
+           The Foundation theorem proves a *consequence* (compositionality), not a derivation.
+
+   降格判定: 導出不可能 — validTransition が opaque のため、
+   epoch の単調性を型から導出できない。axiom として維持。
+
    Source: manifesto.md T2 "Structure outlives the agent"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If version control allowed epoch regression
+             (e.g., non-monotonic clock or destructive history rewrite) 
 
 *Declaration:* `axiom structure_accumulates`
 
@@ -263,39 +339,78 @@ T3 is decomposed into two axioms:
 1. Working memory (ContextWindow) capacity is finite (existence)
 2. Processing is possible only within working memory capacity (constraint)
 
-(Axiom Card)
-   Layer: T₀ (Environment-derived)
-   Content: Working memory (ContextWindow) has finite capacity.
-         The contextWindow.capacity of all agents is bounded.
-   Basis: The working memory of computational agents is physically finite.
-         Reference examples: LLM token count limits, FSM state buffer sizes.
-   Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once"
-   Refutation condition: Not applicable (T₀) 
+(Derivation Card)
+   Previously: axiom `context_finite` (T₀, Environment-derived)
+   Now: theorem derived from ContextWindow type invariants
+   Derivation: ContextWindow.`capacity_pos` and ContextWindow.`used_le_cap`
+         are embedded in the ContextWindow structure as type-level invariants.
+         Every valid ContextWindow satisfies these by construction.
+   Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once" 
 
-*Declaration:* `axiom context_finite`
+*Declaration:* `theorem context_finite`
 
 ```
-axiom context_finite :
+theorem context_finite :
   ∀ (agent : Agent),
     agent.contextWindow.capacity > 0 ∧
-    agent.contextWindow.used ≤ agent.contextWindow.capacity
+    agent.contextWindow.used ≤ agent.contextWindow.capacity := by
+  intro agent
+  exact ⟨agent.contextWindow.capacity_pos, agent.contextWindow.used_le_cap⟩
+```
+
+(Derivation Card)
+   Previously: axiom `context_bounds_action` (T₀, Environment-derived)
+   Now: theorem derived from `context_finite`
+   Derivation: By `context_finite`, used ≤ capacity holds for all agents.
+         Therefore used > capacity is a contradiction (Nat.`not_lt`.mpr),
+         and ex falso any conclusion follows.
+   Note: This axiom was vacuously true — its precondition (used > capacity)
+         is always false given `context_finite` (used ≤ capacity).
+         Demoting to theorem makes this explicit.
+   Source: manifesto.md T3 "A constraint on the agent's cognitive space" 
+
+*Declaration:* `theorem context_bounds_action`
+
+```
+theorem context_bounds_action :
+  ∀ (agent : Agent) (action : Action) (w : World),
+    agent.contextWindow.used > agent.contextWindow.capacity →
+    actionBlocked agent action w := by
+  intro agent action w h_overflow
+  have h_finite := context_finite agent
+  omega
 ```
 
 (Axiom Card)
-   Layer: T₀ (Environment-derived)
-   Content: Executing an action requires information processing within the context.
-         When context usage exceeds capacity, the action cannot be executed.
-   Basis: Inability to process when working memory is exceeded is a physical constraint.
-   Source: manifesto.md T3 "A constraint on the agent's cognitive space"
-   Refutation condition: Not applicable (T₀) 
+   Layer: T₀ (Natural-science-derived)
+   Content: Not all information in the context contributes equally to task precision.
+         There exist context items whose precision contribution to a given task is zero.
+   Basis: Information-theoretic fact. In any finite information set, the relevance
+         of individual items to a specific objective varies. This is independent of
+         the agent architecture (applies to LLMs, FSMs, human cognition alike).
 
-*Declaration:* `axiom context_bounds_action`
+   Theoretical grounding (Foundation/InformationTheory.lean):
+     (R51) Shannon (1948) "A Mathematical Theory of Communication"
+           — Information content varies across symbols in any non-trivial source
+     (R52) Tishby et al. (1999) "The Information Bottleneck Method"
+           — Relevance is task-dependent; optimal compression discards irrelevant items
+     Note: T₀ natural-science constraint. The existence of zero-contribution items
+           cannot be derived from type definitions (precisionContribution is opaque).
+
+   降格判定: 導出不可能 — precisionContribution が opaque。axiom として維持。
+
+   Source: ForgeCode analysis #147 — identified as common root of B1/B3/B5/B6.
+   Refutation condition: If it were shown that all information contributes equally
+         to all tasks (contradicts information theory). 
+
+*Declaration:* `axiom context_contribution_nonuniform`
 
 ```
-axiom context_bounds_action :
-  ∀ (agent : Agent) (action : Action) (w : World),
-    agent.contextWindow.used > agent.contextWindow.capacity →
-    actionBlocked agent action w
+axiom context_contribution_nonuniform :
+  ∀ (task : Task),
+    task.precisionRequired.required > 0 →
+    ∃ (item : ContextItem),
+      precisionContribution item task = 0
 ```
 
 ## T4 Agent Output Is Stochastic
@@ -316,11 +431,20 @@ T4 declares as an axiom that "this multiplicity can actually occur."
          sampling (temperature parameter), non-associativity of floating-point arithmetic,
          irreversibility of branching in autoregressive generation — enable different outputs
          for the same input. Even at temperature=0, floating-point-level nondeterminism may persist.
-   Source: manifesto.md T4 "Different outputs may be produced for the same input"
 
-   Since `canTransition` is defined as a relation (Prop),
-   it is not constrained by Lean's function determinism and can naturally express nondeterminism.
-   Refutation condition: Not applicable (T₀) 
+   Mathematical grounding (Foundation/Probability.lean):
+     Under the conditions τ > 0 and |V| ≥ 2, this axiom is mathematically justified:
+     (R1) Kolmogorov (1933) — probability axioms (Mathlib: PMF)
+     (R2) Gao & Pavel (2017, arXiv:1704.00805) — softmax full support:
+           τ > 0 → ∀ i, softmax(z/τ)`_i` > 0 (proven: `softmax_full_support`)
+     (R3) Jang et al. (2017, ICLR, arXiv:1611.01144) — categorical sampling:
+           output ~ Categorical(softmax(z/τ))
+     (R4) Atil et al. (2024, arXiv:2408.04667) — hardware nondeterminism:
+           τ = 0 でも GPU 浮動小数点で非決定性が生じる
+
+   Source: manifesto.md T4 "Different outputs may be produced for the same input"
+   Refutation condition: If all LLM architectures switch to deterministic-only
+         generation (temperature fixed at 0 with no floating-point nondeterminism). 
 
 *Declaration:* `axiom output_nondeterministic`
 
@@ -354,9 +478,24 @@ opaque structureImproved : World → World → Prop
          If structure has improved between two world states,
          then feedback exists in between.
    Basis: Fundamental principle of control theory. Without a loop of
-         measurement, comparison, and adjustment, convergence toward the goal does not occur.
+         measurement, comparison, and adjustment, convergence toward
+         the goal does not occur.
+
+   Theoretical grounding (Foundation/ControlTheory.lean):
+     (R41) Francis & Wonham (1976) "The Internal Model Principle"
+           — Tracking requires a model of the signal generator (= feedback)
+     (R42) Cover & Thomas (1991) "Data Processing Inequality"
+           — Without new information (feedback), no improvement is possible
+     Compositional property proven: `feedback_interval_widen` (0 sorry)
+     Note: T₀ natural-science constraint. Feedback necessity cannot be derived
+           from type definitions (structureImproved is opaque).
+
+   降格判定: 導出不可能 — structureImproved が opaque。axiom として維持。
+
    Source: manifesto.md T5 "A fundamental of control theory"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If structural improvement without any feedback
+             mechanism were demonstrated (e.g., improvement through
+             purely internal computation without external input) 
 
 *Declaration:* `axiom no_improvement_without_feedback`
 
@@ -436,8 +575,21 @@ Time and energy.
          Quantified in ∃-∀ order (not ∀-∃), guaranteeing that a single upper bound
          exists for *all* Worlds (non-vacuity, Terminology Reference §6.4).
    Basis: Physical finiteness of computational resources (CPU, memory, API quotas).
+         Every computational system operates within finite energy, memory, and time budgets.
+
+   Mathematical grounding (Foundation/ProcessModel.lean):
+     Compositional property proven: `resource_bound_max` (0 sorry)
+           — universal bound holds simultaneously across any pair of worlds
+     Note: Physical finiteness is axiomatic in the physical sciences.
+           No formal derivation from more primitive axioms is possible —
+           this is a T₀ environment constraint, not a mathematical theorem.
+
+   降格判定: 導出不可能 — globalResourceBound は opaque 定数であり、
+   有限性は物理的事実として axiom のまま維持。
+
    Source: manifesto.md T7 "Resources available for task execution are finite"
-   Refutation condition: Not applicable (T₀) 
+   Refutation condition: If computational resources became unlimited
+             (e.g., infinite energy or infinite memory) 
 
 *Declaration:* `axiom resource_finite`
 
@@ -452,21 +604,21 @@ axiom resource_finite :
 "Whether self-imposed or externally imposed,
   tasks without a precision level cannot be optimization targets."
 
-(Axiom Card)
-   Layer: T₀ (Contract-derived)
-   Content: All tasks have a precision level.
-         The precision level must be a positive value (greater than 0).
-         Tasks with a precision level of 0 cannot be optimization targets (= do not constitute valid tasks).
-   Basis: Structural requirement of task definitions. Tasks without a precision level cannot be optimized.
-   Source: manifesto.md T8 "Whether self-imposed or externally imposed"
-   Refutation condition: Not applicable (T₀) 
+(Derivation Card)
+   Previously: axiom `task_has_precision` (T₀, Contract-derived)
+   Now: theorem derived from PrecisionLevel type invariant
+   Derivation: PrecisionLevel.`required_pos` is embedded in the PrecisionLevel structure.
+         Every valid Task has a PrecisionLevel with required > 0 by construction.
+   Source: manifesto.md T8 "Whether self-imposed or externally imposed" 
 
-*Declaration:* `axiom task_has_precision`
+*Declaration:* `theorem task_has_precision`
 
 ```
-axiom task_has_precision :
+theorem task_has_precision :
   ∀ (task : Task),
-    task.precisionRequired.required > 0
+    task.precisionRequired.required > 0 := by
+  intro task
+  exact task.precisionRequired.required_pos
 ```
 
 ## Sorry Inventory Phase 1

@@ -383,7 +383,7 @@ D9（分類自体のメンテナンス）は「根拠が失われた定理は再
 
 ### 設計仕様理論との接続
 
-本定理は公理的設計仕様理論（`docs/research/items/design-specification-thoery.md`）の以下の知見を統合する:
+本定理は公理的設計仕様理論（`docs/research/items/design-specification-theory.md`）の以下の知見を統合する:
 
 - **AGM 信念改訂理論**: 前提の否定は AGM の縮約（contraction）操作に対応する。最小変更原理により、影響を受ける導出の集合を最小化する
 - **ATMS（仮定ベース真理維持システム）**: 各導出がどの前提集合に依存しているかの追跡は、de Kleer の ATMS と同構造

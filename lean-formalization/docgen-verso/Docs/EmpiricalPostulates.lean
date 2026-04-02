@@ -86,7 +86,21 @@ E1 is decomposed into three axioms:
          The agent that generated an action and the agent that verifies it
          must be distinct individuals that do not share internal state.
    Basis: A principle repeatedly demonstrated in scientific peer review,
-         financial auditing, software testing, etc.
+         financial auditing, software testing, etc. Grounded in statistical
+         independence requirements for hypothesis testing.
+
+   Theoretical grounding (Foundation/StatisticalTesting.lean):
+     (R61) Neyman & Pearson (1933) "On the Problem of the Most Efficient Tests"
+           — Independent testing maximizes detection power
+     (R62) Podsakoff et al. (2003) "Common Method Biases in Behavioral Research"
+           — Shared method/source biases reduce detection ability
+     (R63) AICPA / ISA 610 — Auditing standards requiring independence
+     Formally proven: `self_id_not_distinct`, `independence_symmetric` (0 sorry)
+     Derived theorem: `no_self_verification` (demoted from axiom — derives from this axiom)
+
+   降格判定: 導出不可能 — generates, verifies, sharesInternalState が opaque のため、
+   独立性要件を型から導出できない。axiom として維持。
+
    Source: manifesto.md E1 "Verification Requires Independence"
    Refutation condition: If self-verification is demonstrated to have detection power
              equal to external verification (e.g., realization of complete self-awareness) 
@@ -101,23 +115,32 @@ axiom verification_requires_independence :
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver
 ```
 
-(Axiom Card)
-   Layer: Γ \ T₀ (Hypothesis-derived)
+(Derivation Card)
+   Derives from: `verification_requires_independence` (E1a)
    Content: Prohibition of self-verification.
          The same agent cannot perform both generation and verification.
-         A corollary of E1a (Terminology Reference §4.2 corollary), but declared explicitly.
-   Basis: Due to T4 (probabilistic output), the bias of the same process
-         affects both generation and evaluation, structurally degrading detection power.
-   Source: manifesto.md E1 + Principles.lean `e1b_from_e1a` proves derivation from E1a
-   Refutation condition: Same as the refutation condition for E1a 
+         Derived from E1a: if gen.id ≠ ver.id is required, then gen = ver is impossible.
+   Proof strategy: Assume generates and verifies for same agent, derive gen.id ≠ gen.id
+         from `verification_requires_independence`, contradict with rfl.
 
-*Declaration:* `axiom no_self_verification`
+   Previously: axiom (declared explicitly as E1b).
+   Demoted: 2026-04-01 — derivable from `verification_requires_independence` via
+            contradiction (same proof as Principles.lean:`e1b_from_e1a`).
+
+   Theoretical grounding (Foundation/StatisticalTesting.lean):
+     (R61) Neyman & Pearson (1933) — independent testing maximizes detection power
+     Formally proven: `self_id_not_distinct` (0 sorry) — ¬(id ≠ id) 
+
+*Declaration:* `theorem no_self_verification`
 
 ```
-axiom no_self_verification :
+theorem no_self_verification :
   ∀ (agent : Agent) (action : Action) (w : World),
     generates agent action w →
-    ¬verifies agent action w
+    ¬verifies agent action w := by
+  intro agent action w h_gen h_ver
+  have h := verification_requires_independence agent agent action w h_gen h_ver
+  exact absurd rfl h.1
 ```
 
 (Axiom Card)
@@ -128,9 +151,20 @@ axiom no_self_verification :
    Basis: Detection power degradation due to shared bias is empirically
          supported by conflict-of-interest policies in scientific research,
          audit firm rotation requirements, etc.
+
+   Theoretical grounding (Foundation/StatisticalTesting.lean):
+     (R62) Podsakoff et al. (2003) "Common Method Biases"
+           — Shared source biases inflate correlations and reduce detection
+     Formally proven: `independence_symmetric` (0 sorry)
+           — if A does not share state with B, then B does not share with A
+
+   降格判定: 導出不可能 — sharesInternalState, generates, verifies が opaque。
+   バイアス相関と検出力低下の因果関係は型から導出できない。axiom として維持。
+
    Source: manifesto.md E1 "When a process with the same biases handles both
            generation and evaluation, detection power degrades"
-   Refutation condition: If it is demonstrated that bias correlation has no effect on detection power 
+   Refutation condition: If it is demonstrated that bias correlation has
+             no effect on detection power 
 
 *Declaration:* `axiom shared_bias_reduces_detection`
 
@@ -164,11 +198,31 @@ and vulnerability) becomes subject to revision.
    Layer: Γ \ T₀ (Hypothesis-derived)
    Content: Capability growth is inseparable from risk growth.
          When an agent's action space expands, risk exposure necessarily increases.
-   Basis: It has been repeatedly observed across all tools that capability enables
-         both positive and negative outcomes (Terminology Reference §9.1 empirical propositions).
+   Basis: Attack surface monotonicity — each additional capability enables at least
+         one additional adversarial execution trace, strictly increasing the attack
+         surface metric (order-theoretic property, not statistical claim).
    Source: manifesto.md E2 "Capability Growth Is Inseparable from Risk Growth"
    Refutation condition: If means to increase capability while completely containing risk
              are discovered (e.g., a perfect sandbox)
+
+   Mathematical grounding (Foundation/RiskTheory.lean):
+     (R21) Manadhata & Wing (2011) "A Formal Model for a System's Attack Surface"
+           — Attack surface monotonicity: capability ⊃ → attack surface ⊃
+     (R22) Saltzer & Schroeder (1975) "The Protection of Information in Computer Systems"
+           — Principle of Least Privilege: minimizing capability minimizes risk
+     (R23) Dennis & Van Horn (1966) "Programming Semantics for Multiprogrammed Computations"
+           — Capability model: capability set = set of possible actions
+     Formally proven (Foundation/RiskTheory.lean):
+       `capability_risk_is_strict_mono`, `equal_risk_implies_equal_capability`,
+       `capability_risk_injective`, `least_privilege_reduces_risk` (0 sorry)
+     Bridge (EmpiricalPostulates.lean):
+       `e2_equal_risk_equal_capability` — contrapositive of E2 on actual opaque functions
+     Derivation: (R21) attack surface monotonicity → StrictMono (Mathlib)
+                 → E2 is precisely the StrictMono property of the risk function
+                 → `e2_equal_risk_equal_capability` bridges to opaque riskExposure/actionSpaceSize
+
+   降格判定: 導出不可能 — actionSpaceSize, riskExposure が共に opaque のため、
+   型定義から StrictMono 関係を導出できない。axiom として維持、根拠は上記で検証済み。
 
    *Choice of inequality: `<` vs `≤`*
 
@@ -185,6 +239,29 @@ axiom capability_risk_coscaling :
   ∀ (agent : Agent) (w w' : World),
     actionSpaceSize agent w < actionSpaceSize agent w' →
     riskExposure agent w < riskExposure agent w'
+```
+
+E2 bridge: equal risk exposure implies equal action space size.
+   Contrapositive of `capability_risk_coscaling` — if two worlds have
+   the same risk exposure for an agent, they must have the same
+   action space size. No "free capability" is possible.
+
+   Bridges Foundation/RiskTheory.lean's abstract StrictMono theorems
+   to the actual opaque functions used in E2.
+
+   Reference: (R22) Saltzer & Schroeder (1975) 
+
+*Declaration:* `theorem e2_equal_risk_equal_capability`
+
+```
+theorem e2_equal_risk_equal_capability (agent : Agent) (w w' : World)
+    (h_eq : riskExposure agent w = riskExposure agent w') :
+    actionSpaceSize agent w = actionSpaceSize agent w' :=
+  match Nat.lt_or_ge (actionSpaceSize agent w) (actionSpaceSize agent w'),
+        Nat.lt_or_ge (actionSpaceSize agent w') (actionSpaceSize agent w) with
+  | Or.inl h_lt, _ => absurd h_eq (Nat.ne_of_lt (capability_risk_coscaling agent w w' h_lt))
+  | _, Or.inl h_gt => absurd (h_eq.symm) (Nat.ne_of_lt (capability_risk_coscaling agent w' w h_gt))
+  | Or.inr h_ge, Or.inr h_ge' => Nat.le_antisymm h_ge' h_ge
 ```
 
 ## Sorry Inventory Phase 2 Additions
