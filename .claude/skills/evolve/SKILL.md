@@ -10,6 +10,9 @@ description: >
 
 # /evolve — 構造の漸進的改善スキル
 
+> **Portability: repo-only** — このスキルは agent-manifesto リポジトリ内でのみ動作する。
+> agents/, hooks/, metrics/, tests/, lean-formalization/ への深い依存があり、plugin 単体での利用は不可。
+
 > 一時的なエージェントインスタンスの連鎖を通じて、永続する構造が自身を改善し続ける。
 > — Axioms.lean T1+T2, Principles.lean P3
 

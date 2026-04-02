@@ -9,6 +9,9 @@ description: >
 
 # /instantiate-model
 
+> **Portability: repo-only** — このスキルは agent-manifesto リポジトリ内でのみ動作する。
+> .claude/agents/model-questioner.md、lean-formalization/Manifest/Models/ への深い依存があり、plugin 単体での利用は不可。
+
 認識論的層モデルのインスタンシエーション・ワークフロー。
 
 人間のプロジェクトのビジョンを聞き取り、要件・仮定・制約を引き出し、

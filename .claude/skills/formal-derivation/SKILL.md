@@ -11,6 +11,9 @@ description: >
 
 # 形式的導出の構成 (Γ ⊢ φ)
 
+> **Portability: repo-only** — このスキルは agent-manifesto リポジトリ内でのみ動作する。
+> docs/, lean-formalization/, .claude/agents/verifier.md への深い依存があり、plugin 単体での利用は不可。
+
 タスクを受け取り、Lean 4 を用いて Γ ⊢ φ の導出を構成する。
 
 ## 前提知識

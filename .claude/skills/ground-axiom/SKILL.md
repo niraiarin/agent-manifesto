@@ -14,6 +14,17 @@ description: >
 指定された axiom の数学的根拠を検証し、
 形式証明とトレーサビリティを確立する反復ワークフロー。
 
+## Manifesto Root Resolution
+
+このスキルは agent-manifesto リポジトリのファイル（Lean 形式化、scripts/）を参照する。
+実行前に以下でリポジトリルートを解決すること:
+
+```bash
+MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
+```
+
+解決できない場合はユーザーに案内する。以降の `lean-formalization/` および `scripts/` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
+
 ## 背景
 
 #157（公理系の数理的基盤整備）の中核プロセス。

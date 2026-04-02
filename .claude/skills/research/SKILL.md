@@ -12,7 +12,18 @@ description: >
 P3（学習の統治）ライフサイクルの運用インスタンス。
 実装前の「should we do X?」型の問いに対して、構造化されたリサーチプロセスを実行する。
 
-詳細な定義: `docs/research/workflow/research-workflow.md`
+## Manifesto Root Resolution
+
+このスキルは agent-manifesto リポジトリのファイル（docs/research/）を参照する。
+実行前に以下でリポジトリルートを解決すること:
+
+```bash
+MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
+```
+
+解決できない場合はユーザーに案内する。以降の `docs/` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
+
+詳細な定義: `${MANIFESTO_ROOT}/docs/research/workflow/research-workflow.md`
 
 ## ワークフロー
 

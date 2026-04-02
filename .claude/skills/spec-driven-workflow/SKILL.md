@@ -12,6 +12,17 @@ description: >
 
 条件付き公理系を設計書とする仕様駆動・テスト駆動開発の完全ワークフロー。
 
+## Manifesto Root Resolution
+
+このスキルは agent-manifesto リポジトリのファイル（Lean 形式化、docs/、scripts/、tests/）を参照する。
+実行前に以下でリポジトリルートを解決すること:
+
+```bash
+MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
+```
+
+解決できない場合はユーザーに案内する。以降の `lean-formalization/`、`docs/`、`scripts/`、`tests/` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
+
 ## 思想
 
 ```

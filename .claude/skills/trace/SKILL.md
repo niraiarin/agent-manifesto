@@ -13,6 +13,17 @@ description: >
 全成果物（hooks, skills, agents, rules, tests）と公理系（T/E/P/L/D）の
 半順序関係を導出し、カバレッジギャップと逸脱を検出する。
 
+## Manifesto Root Resolution
+
+このスキルは agent-manifesto リポジトリのファイル（Lean 形式化、artifact-manifest.json）を参照する。
+実行前に以下でリポジトリルートを解決すること:
+
+```bash
+MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
+```
+
+解決できない場合はユーザーに案内する。以降の `lean-formalization/` および `artifact-manifest.json` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
+
 ## Lean 形式化との対応
 
 | スキルの概念 | Lean ファイル | 定理/定義 |

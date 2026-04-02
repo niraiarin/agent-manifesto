@@ -12,16 +12,27 @@ description: >
 
 マニフェスト準拠システムの設計実装計画書を、指定された Provider に最適化して生成する。
 
+## Manifesto Root Resolution
+
+このスキルは agent-manifesto リポジトリのファイルを参照する。
+実行前に以下でリポジトリルートを解決すること:
+
+```bash
+MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
+```
+
+解決できない場合はユーザーに案内する。以降のファイルパスは `${MANIFESTO_ROOT}/` を前置して解決する。
+
 ## 前提知識
 
 このスキルは以下のファイルを参照する:
 
-1. `docs/design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
-2. `lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
-3. `lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
-4. `lean-formalization/Manifest/Axioms.lean` — T1–T8 公理（T₀ base theory）
-5. `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
-6. `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
+1. `${MANIFESTO_ROOT}/docs/design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
+2. `${MANIFESTO_ROOT}/lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
+3. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
+4. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Axioms.lean` — T1–T8 公理（T₀ base theory）
+5. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
+6. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 
 **重要:** `SelfGoverning` typeclass は、原理を定義する型が自己適用（Section 7）を
 型レベルで強制するメカニズムである。このスキルが生成する計画書、
