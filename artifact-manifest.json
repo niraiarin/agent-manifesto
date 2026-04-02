@@ -5,7 +5,8 @@
     "implementation",
     "config",
     "document",
-    "data"
+    "data",
+    "formalization"
   ],
   "propositions": [
     "T1",
@@ -1293,6 +1294,208 @@
       "refs": ["P3", "D13"],
       "enforces": "normative",
       "scope": "document"
+    },
+
+    {"_comment": "--- formalization scope (Lean sources) ---"},
+    {
+      "id": "lean:ontology",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Ontology.lean",
+      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8","E1","E2","L1","L2","L3","L4","L5","L6"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:axioms",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Axioms.lean",
+      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:empirical-postulates",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/EmpiricalPostulates.lean",
+      "refs": ["E1","E2"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:observable",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Observable.lean",
+      "refs": ["V1","V2","V3","V4","V5","V6","V7","P4"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:observable-design",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/ObservableDesign.lean",
+      "refs": ["V1","V2","V3","V4","V5","V6","V7","P4","D3"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:principles",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Principles.lean",
+      "refs": ["P1","P2","P3","P4","P5","P6"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:meta",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Meta.lean",
+      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8","E1","E2","P1","P2","P3","P4","P5","P6"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:terminology",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Terminology.lean",
+      "refs": ["D5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:formal-derivation-skill",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/FormalDerivationSkill.lean",
+      "refs": ["D1","D5","P5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:conformance-verification",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/ConformanceVerification.lean",
+      "refs": ["P2","E1","D1","D2"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:design-foundation",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/DesignFoundation.lean",
+      "refs": ["D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:procedure",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Procedure.lean",
+      "refs": ["D5","T8","P4"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:evolution",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Evolution.lean",
+      "refs": ["T1","T2","E2","P1","P3","D9"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:evolve-skill",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/EvolveSkill.lean",
+      "refs": ["T1","T2","T6","P2","P3","P4","D1","D4","D9","D10","D13"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:workflow",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Workflow.lean",
+      "refs": ["P3","T1","T2","D9"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:axiom-quality",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/AxiomQuality.lean",
+      "refs": ["D5","D1","V1","V3"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:epistemic-layer",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/EpistemicLayer.lean",
+      "refs": ["D5","D1","D4"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:task-classification",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/TaskClassification.lean",
+      "refs": ["P6","D12","D14","V7"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:traceability",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Traceability.lean",
+      "refs": ["P4","D3","D13","V6"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-control-theory",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/ControlTheory.lean",
+      "refs": ["D1","T5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-information-theory",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/InformationTheory.lean",
+      "refs": ["D1","T3"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-probability",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/Probability.lean",
+      "refs": ["D1","P5","T4"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-process-model",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/ProcessModel.lean",
+      "refs": ["D1","T1","T2"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-risk-theory",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/RiskTheory.lean",
+      "refs": ["D1","P1","E2"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:foundation-statistical-testing",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Foundation/StatisticalTesting.lean",
+      "refs": ["D1","P2","E1"],
+      "enforces": "formal",
+      "scope": "formalization"
     }
   ]
 }
