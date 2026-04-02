@@ -1,5 +1,6 @@
 ---
 name: spec-driven-workflow
+user-invocable: true
 description: >
   仕様駆動・テスト駆動開発の完全ワークフロー。条件付き公理系（Lean 設計書）の
   生成から、テスト計画導出、実装、閉環トレーサビリティ検証、保守運用までを

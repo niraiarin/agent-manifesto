@@ -1,5 +1,6 @@
 ---
 name: design-implementation-plan
+user-invocable: true
 description: >
   マニフェスト準拠の設計実装計画書を任意のプラットフォーム向けに生成する。
   D1-D9 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に

@@ -1,5 +1,6 @@
 ---
 name: adjust-action-space
+user-invocable: true
 description: >
   L4 行動空間の調整（拡張・縮小）を提案する。V4/V5 の実績データに基づき、
   permissions の変更を人間に提案する。D8（均衡探索）に従い、

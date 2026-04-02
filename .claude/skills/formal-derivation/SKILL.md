@@ -1,5 +1,6 @@
 ---
 name: formal-derivation
+user-invocable: true
 description: >
   形式的導出の構成手順（Γ ⊢ φ）を Lean 4 で遂行する。タスクの要件を
   前提集合 Γ、達成条件を目標命題 φ として形式化し、Lean コンパイラを

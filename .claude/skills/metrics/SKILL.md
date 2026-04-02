@@ -1,5 +1,6 @@
 ---
 name: metrics
+user-invocable: true
 description: >
   V1-V7 の現在値を計算して表示する。P4（可観測性）の運用ツール。
   「メトリクス」「V1-V7」「健全性」「system health」「metrics」で起動。

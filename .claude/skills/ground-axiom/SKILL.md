@@ -1,5 +1,6 @@
 ---
 name: ground-axiom
+user-invocable: true
 description: >
   公理の数学的根拠を検証し、形式証明とトレーサビリティを確立する。
   各 axiom について (1) 根拠となる数理理論を特定、(2) 核心的定理を Lean で形式証明、

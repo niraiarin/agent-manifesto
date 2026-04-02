@@ -1,5 +1,6 @@
 ---
 name: verify
+user-invocable: true
 description: >
   P2 (Cognitive Separation of Concerns) の実装。Worker の成果物を独立した
   コンテキストで検証する。コード変更、設計文書、設定変更のレビューに使う。

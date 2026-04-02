@@ -1,5 +1,6 @@
 ---
 name: instantiate-model
+user-invocable: true
 description: >
   認識論的層モデルのインスタンシエーション・ワークフロー。人間のプロジェクトの
   ビジョンを聞き取り、要件・仮定・制約を引き出し、EpistemicLayerClass の

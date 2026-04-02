@@ -1,5 +1,6 @@
 ---
 name: research
+user-invocable: true
 description: >
   Gate-Driven Research Workflow を実行する。P3（学習の統治）の運用インスタンス。
   実装前の技術的リサーチを構造化された手順で進める。
