@@ -116,6 +116,15 @@ conservative extension / compatible change / breaking change
 - タスク分類: deterministic / bounded / judgmental
 - 選択した実装手段: [スクリプト/Hook/テスト/Lean証明/LLM推論/人間判断]
 - 根拠: [なぜこの分類か — 成功条件が Observable か否か等]
+
+### 事前検証の証跡 (Verification Evidence)
+改善案で主張する事実の根拠を記録する。Verifier が独立検証（P2）する際の参照点。
+
+- **数値の根拠**: [参照した数値とその出典 — スクリプト出力、grep 結果等]
+- **ファイル構造の確認**: [Read/Glob/Grep で確認したファイルパスと存在/不在の結果]
+- **型・定義の依存関係**: [改善案が依存する Lean 型・定義名と確認結果]
+- **影響範囲の網羅性**: [Grep で検索した影響範囲と、全箇所がカバーされていることの確認]
+- **該当しない項目**: [上記のうち該当しないものを「該当なし」と明記]
 ```
 
 ### Step 3: 優先度の決定

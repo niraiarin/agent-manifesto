@@ -56,6 +56,12 @@ When reviewing critical-risk changes (L1, safety, permissions), always state:
      - Is the theorem substantially identical to an existing theorem (name/parameter reordering only)?
      - Does the theorem merely assert numeric literal comparisons (e.g., `4 > 2`)?
      - If any of the above: FAIL with reason "trivially-true (H_trivially_true)"
+   - Evidence quality (when proposal includes "事前検証の証跡" section):
+     - Are numeric claims backed by script output or grep results (not manual counting)?
+     - Are file paths confirmed to exist via Read/Glob?
+     - Are Lean type/definition dependencies verified against actual source?
+     - Is the impact scope search exhaustive (Grep results cover all affected files)?
+     - Missing or empty evidence sections: flag as "insufficient evidence"
 3. **Verify factual claims** (P3: knowledge governance requires accuracy):
    - File paths: confirm existence with Glob or Read before accepting claims
    - Lean theorem/definition names: confirm with Grep in lean-formalization/

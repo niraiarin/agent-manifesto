@@ -33,11 +33,12 @@ namespace Manifest.EvolveSkill
 -- 論議領域: /evolve が語る対象の型定義
 -- ============================================================
 
-/-- /evolve のエージェント。4 エージェント構成。 -/
+/-- /evolve のエージェント。5 エージェント構成。 -/
 inductive EvolveAgent where
   | observer       -- P4: 可観測性
   | hypothesizer   -- P3: 仮説化
   | verifier       -- P2: 検証分離
+  | judge          -- 非自明性・品質評価
   | integrator     -- P3: 統合
   deriving BEq, Repr, DecidableEq
 
@@ -46,6 +47,7 @@ inductive EvolvePhase where
   | observe       -- Phase 1: 観察
   | hypothesize   -- Phase 2: 仮説化
   | verify        -- Phase 3: 検証
+  | judge         -- Phase 3.5: 判定（非自明性・品質評価）
   | integrate     -- Phase 4: 統合
   | retire        -- Phase 5: 退役
   deriving BEq, Repr, DecidableEq
@@ -56,6 +58,7 @@ def toWorkflowPhase : EvolvePhase → LearningPhase
   | .observe     => .observation
   | .hypothesize => .hypothesizing
   | .verify      => .verification
+  | .judge       => .judging
   | .integrate   => .integration
   | .retire      => .retirement
 
@@ -66,6 +69,7 @@ def phaseAgent : EvolvePhase → EvolveAgent
   | .observe     => .observer
   | .hypothesize => .hypothesizer
   | .verify      => .verifier
+  | .judge       => .judge
   | .integrate   => .integrator
   | .retire      => .integrator  -- 退役も Integrator が担当
 
@@ -90,22 +94,26 @@ inductive ComplianceProperty where
 
 /-- [目標命題 φ₁]
     タスク: /evolve のフェーズ遷移が Workflow.lean の validPhaseTransition と整合する。
-    形式化の意図: toWorkflowPhase で写した隣接フェーズの遷移が全て有効。 -/
+    形式化の意図: toWorkflowPhase で写した隣接フェーズの遷移が全て有効。
+    verify→judge→integrate のパスと verify→integrate のフォールバックの両方を含む。 -/
 theorem phase_order_aligns_with_workflow :
   validPhaseTransition (toWorkflowPhase .observe) (toWorkflowPhase .hypothesize) ∧
   validPhaseTransition (toWorkflowPhase .hypothesize) (toWorkflowPhase .verify) ∧
+  validPhaseTransition (toWorkflowPhase .verify) (toWorkflowPhase .judge) ∧
+  validPhaseTransition (toWorkflowPhase .judge) (toWorkflowPhase .integrate) ∧
   validPhaseTransition (toWorkflowPhase .verify) (toWorkflowPhase .integrate) ∧
   validPhaseTransition (toWorkflowPhase .integrate) (toWorkflowPhase .retire) := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> trivial
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> trivial
 
-/-- 完全 1 周は Workflow.lean の full_cycle_exists に一致する。 -/
+/-- 完全 1 周は Workflow.lean の full_cycle_exists に一致する（judge フェーズ含む）。 -/
 theorem evolve_full_cycle_matches_workflow :
   (toWorkflowPhase .observe = .observation) ∧
   (toWorkflowPhase .hypothesize = .hypothesizing) ∧
   (toWorkflowPhase .verify = .verification) ∧
+  (toWorkflowPhase .judge = .judging) ∧
   (toWorkflowPhase .integrate = .integration) ∧
   (toWorkflowPhase .retire = .retirement) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> rfl
 
 -- ============================================================
 -- φ₂: 全フェーズにエージェントが割り当てられている
@@ -118,13 +126,14 @@ theorem all_phases_have_agents :
   ∀ (p : EvolvePhase), ∃ (a : EvolveAgent), phaseAgent p = a := by
   intro p; exact ⟨phaseAgent p, rfl⟩
 
-/-- 4 種のエージェントが全て使用されている。 -/
+/-- 5 種のエージェントが全て使用されている。 -/
 theorem all_agents_used :
   (∃ p, phaseAgent p = .observer) ∧
   (∃ p, phaseAgent p = .hypothesizer) ∧
   (∃ p, phaseAgent p = .verifier) ∧
+  (∃ p, phaseAgent p = .judge) ∧
   (∃ p, phaseAgent p = .integrator) := by
-  refine ⟨⟨.observe, rfl⟩, ⟨.hypothesize, rfl⟩, ⟨.verify, rfl⟩, ⟨.integrate, rfl⟩⟩
+  refine ⟨⟨.observe, rfl⟩, ⟨.hypothesize, rfl⟩, ⟨.verify, rfl⟩, ⟨.judge, rfl⟩, ⟨.integrate, rfl⟩⟩
 
 -- ============================================================
 -- φ₃: P2 検証の独立性
@@ -265,6 +274,7 @@ inductive EvolveComponent where
   | hypothesizerAgent -- hypothesizer/AGENT.md
   | integratorAgent   -- integrator/AGENT.md
   | verifierAgent     -- verifier.md
+  | judgeAgent        -- judge.md
   | hooks          -- evolve-*.sh
   deriving BEq, Repr, DecidableEq
 
@@ -280,7 +290,7 @@ instance : SelfGoverning EvolveComponent where
 theorem all_components_enumerated :
   ∀ (c : EvolveComponent),
     c = .skill ∨ c = .observerAgent ∨ c = .hypothesizerAgent ∨
-    c = .integratorAgent ∨ c = .verifierAgent ∨ c = .hooks := by
+    c = .integratorAgent ∨ c = .verifierAgent ∨ c = .judgeAgent ∨ c = .hooks := by
   intro c; cases c <;> simp
 
 -- ============================================================
@@ -446,6 +456,16 @@ theorem loopback_budget_is_parameter :
   ∀ (n : Nat), (⟨n⟩ : LoopbackBudget).maxRetries = n := by
   intro n; rfl
 
+/-- φ₁₈: Judge FAIL 時は Hypothesizer にループバックする。
+    SKILL.md Step 3.5: Judge FAIL → FAIL_LIST → 再仮説化。
+    judging→hypothesizing の遷移が validPhaseTransition で正当化される。 -/
+theorem judge_fail_loops_to_hypothesizer :
+  validPhaseTransition (toWorkflowPhase .judge) (toWorkflowPhase .hypothesize) ∧
+  phaseAgent .hypothesize = .hypothesizer := by
+  constructor
+  · trivial
+  · rfl
+
 -- ============================================================
 -- 合成命題 φ: 全性質の合取
 -- ============================================================
@@ -453,15 +473,18 @@ theorem loopback_budget_is_parameter :
 /-- [目標命題 φ — 全性質の合取]
     タスク: /evolve スキルはマニフェスト準拠の構造的要件を全て満たす。 -/
 theorem evolve_skill_compliant :
-  -- φ₁: フェーズ順序が学習ライフサイクルに整合
+  -- φ₁: フェーズ順序が学習ライフサイクルに整合（judge フェーズ含む）
   (validPhaseTransition (toWorkflowPhase .observe) (toWorkflowPhase .hypothesize) ∧
    validPhaseTransition (toWorkflowPhase .hypothesize) (toWorkflowPhase .verify) ∧
+   validPhaseTransition (toWorkflowPhase .verify) (toWorkflowPhase .judge) ∧
+   validPhaseTransition (toWorkflowPhase .judge) (toWorkflowPhase .integrate) ∧
    validPhaseTransition (toWorkflowPhase .verify) (toWorkflowPhase .integrate) ∧
    validPhaseTransition (toWorkflowPhase .integrate) (toWorkflowPhase .retire)) ∧
   -- φ₂: 全エージェントが使用されている
   ((∃ p, phaseAgent p = EvolveAgent.observer) ∧
    (∃ p, phaseAgent p = EvolveAgent.hypothesizer) ∧
    (∃ p, phaseAgent p = EvolveAgent.verifier) ∧
+   (∃ p, phaseAgent p = EvolveAgent.judge) ∧
    (∃ p, phaseAgent p = EvolveAgent.integrator)) ∧
   -- φ₃: Verifier は low に十分（moderate は不十分 — SKILL.md の改善候補）
   sufficientVerification evolveVerifierProfile .low ∧
