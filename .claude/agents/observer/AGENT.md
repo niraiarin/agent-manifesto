@@ -58,14 +58,7 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 # T6 Issue（人間レビュー待ち）の回収
 gh issue list --label "T6:human-review" --state all --json number,title,state,comments --limit 20 2>/dev/null
 
-# 前回 run の carryover 項目を取得
-tail -5 .claude/metrics/evolve-history.jsonl 2>/dev/null | jq -r 'select(.carryover != null and (.carryover | length) > 0) | "Run \(.run): \(.carryover[] | .item)"' 2>/dev/null | tail -5
 ```
-
-carryover 項目が存在する場合:
-- deferred ほど重くない軽量引き継ぎ（観察・分析候補など）
-- 観察報告の「前回 carryover」セクションに記載し、改善候補の入力とする
-- deferred と異なり、解決を強制されない。次回以降の改善で自然に対処される
 
 T6 Issue の処理:
 - **closed（コメントあり）**: 人間の判断が下された。コメント内容を観察報告の
