@@ -49,6 +49,20 @@ Observer の改善候補を以下の基準で評価する:
 | **互換性** | 既存構造との互換性分類は？ |
 | **可逆性** | 失敗時にロールバック可能か？ |
 
+### Step 1.5: 実装手段の事前分類（TaskClassification.lean）
+
+改善候補のタスク特性を以下の基準で分類する（`taskMinEnforcement` に基づく）:
+
+- **deterministic**: 成功条件が Observable（スクリプトで判定可能）
+  → 実装手段はスクリプト・Hook・構造的強制（`deterministic_must_be_structural`）
+- **bounded**: 成功は有限時間で検証可能だが失敗証明が困難
+  → 実装手段はテスト・Lean 証明・CI
+- **judgmental**: 非機械的評価が必要
+  → 実装手段は LLM 推論・Claude Code 機能・人間判断
+
+**注意**: deterministic タスクを judgmental 層（LLM）で実装するとコスト増大を招く
+（`deterministic_judgmental_wasteful`、`deterministic_minimizes_cost`）。
+
 ### Step 2: 改善案の設計
 
 各改善候補について、以下を設計する:
@@ -97,6 +111,11 @@ conservative extension / compatible change / breaking change
 ### リスク評価
 - リスクレベル: critical / high / moderate / low
 - D2 に基づく検証手段: [必要な検証]
+
+### 実装手段の分類（TaskClassification.lean）
+- タスク分類: deterministic / bounded / judgmental
+- 選択した実装手段: [スクリプト/Hook/テスト/Lean証明/LLM推論/人間判断]
+- 根拠: [なぜこの分類か — 成功条件が Observable か否か等]
 ```
 
 ### Step 3: 優先度の決定
@@ -166,6 +185,9 @@ YYYY-MM-DD HH:MM
 - [ ] 変更対象ファイルの現在の内容を Read で確認した
 - [ ] 「〜を追加」ではなく「〜の後に〜を挿入」等、位置を特定した
 - [ ] テスト計画が「テストが通ること」以上の具体性を持つ
+- [ ] 改善案が前提とする型定義・データ構造・inductiveの構成子を、変更対象ファイル以外も含めてRead/Grepで確認した（※A.155は明示的参照の存在検証。本項目は改善案が暗黙に依存する型構造の検証）
+- [ ] 変更の影響を受けるファイルをGrepで網羅的に列挙し（完了基準: Grep出力の全ファイルが「変更対象ファイル」セクションに含まれること）、実装手順で全箇所をカバーした
+- [ ] 改善案が暗黙に前提とするツール動作・環境仕様（例: 自動読み込みの有無、コマンドの出力形式）を明示し、実行で検証した
 
 ### D. 過去の失敗パターンとの照合
 

@@ -731,10 +731,25 @@ if [ -f "$EVOLVE_HISTORY" ]; then
         fail "Section 17: Run $RUN len(rejected)=$REJECTED_LEN < fail_count=$FAIL_COUNT"
         INCONSISTENT=$((INCONSISTENT+1))
       fi
-      # improvements length must equal pass_count
-      if [ "$IMP_LEN" -ne "$PASS_COUNT" ] 2>/dev/null; then
-        fail "Section 17: Run $RUN len(improvements)=$IMP_LEN != pass_count=$PASS_COUNT"
-        INCONSISTENT=$((INCONSISTENT+1))
+      # improvements length vs pass_count: judge-aware check
+      JUDGE_ACTIVE=$(echo "$entry" | jq '.phases.judge != null and ((.phases.judge.evaluated // 0) > 0)' 2>/dev/null)
+      if [ "$JUDGE_ACTIVE" = "true" ]; then
+        JUDGE_PASS=$(echo "$entry" | jq '.phases.judge.pass // 0' 2>/dev/null)
+        # With active judge: judge.pass <= imp_len <= pass_count
+        if [ "$IMP_LEN" -gt "$PASS_COUNT" ] 2>/dev/null; then
+          fail "Section 17: Run $RUN len(improvements)=$IMP_LEN > pass_count=$PASS_COUNT (judge active)"
+          INCONSISTENT=$((INCONSISTENT+1))
+        fi
+        if [ "$IMP_LEN" -lt "$JUDGE_PASS" ] 2>/dev/null; then
+          fail "Section 17: Run $RUN len(improvements)=$IMP_LEN < judge.pass=$JUDGE_PASS (judge active)"
+          INCONSISTENT=$((INCONSISTENT+1))
+        fi
+      else
+        # Without active judge: strict equality (original invariant)
+        if [ "$IMP_LEN" -ne "$PASS_COUNT" ] 2>/dev/null; then
+          fail "Section 17: Run $RUN len(improvements)=$IMP_LEN != pass_count=$PASS_COUNT"
+          INCONSISTENT=$((INCONSISTENT+1))
+        fi
       fi
       # proposals_count must equal pass_count + fail_count
       EXPECTED_PROPOSALS=$((PASS_COUNT + FAIL_COUNT))
