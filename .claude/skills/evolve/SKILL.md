@@ -63,6 +63,9 @@ description: >
 | D8 過剰拡大リスク | DesignFoundation.lean | `d8_overexpansion_risk` |
 | /evolve 全体の準拠性 | EvolveSkill.lean | `evolve_skill_compliant` (φ₁–φ₁₇) |
 | Deferral 正当性 | EvolveSkill.lean | `deferral_requires_justification` (φ₁₁) |
+| タスク自動化分類 | TaskClassification.lean | `TaskAutomationClass`, `taskMinEnforcement` |
+| 決定論的タスクの構造的強制 | TaskClassification.lean | `deterministic_must_be_structural`, `deterministic_minimizes_cost` |
+| 決定論→judgmental のコスト増大 | TaskClassification.lean | `deterministic_judgmental_wasteful` |
 
 #### Lean 形式化 逆引きチェックリスト（外部ファイル参照）
 
@@ -341,6 +344,18 @@ for each observation in observer_report.findings (優先度順):
   Hypothesizer に当該観察項目を渡し、改善案を設計させる。
   - 改善案が設計不可（行動空間外等）→ 理由を記録し次の項目へ
   - 改善案が設計可能 → Phase 3 へ
+
+  **実装手段の選択（TaskClassification.lean）:**
+  改善案の実装手段を以下の基準で選択する:
+
+  | タスク分類 | 判定基準 | 実装手段 | 形式的根拠 |
+  |-----------|---------|---------|-----------|
+  | **deterministic** | 成功判定が決定可能（Observable な条件） | スクリプト・Hook・構造的強制 | `deterministic_must_be_structural` |
+  | **bounded** | 成功は検証可能だが失敗証明が困難 | テスト・Lean 証明・CI | `taskMinEnforcement .bounded = .procedural` |
+  | **judgmental** | 非機械的評価が必要 | LLM 推論・Claude Code 機能・人間判断 | `taskMinEnforcement .judgmental = .normative` |
+
+  決定論的タスクを LLM に委ねることはコスト増大を招く（`deterministic_judgmental_wasteful`）。
+  例: 定理数カウント → `grep | wc -l`（deterministic）、改善案の品質評価 → Verifier（judgmental）。
 
   **Research Gate（/research 呼び出し条件）:**
   以下のいずれかに該当する改善案を設計する場合、Hypothesizer は /research の Step 0 プロセス
