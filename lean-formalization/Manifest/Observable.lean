@@ -403,8 +403,11 @@ def variableBoundary : VariableId → BoundaryId
   | .v6 => .ontological   -- L2: 記憶喪失 → V6: 知識構造の質
   | .v7 => .resource       -- L3: リソース上限 → V7: タスク設計効率
 
-/-- Variables corresponding to fixed boundaries cannot move the boundary itself;
-    only the quality of mitigations can be improved. -/
+/-- [Derivation Card]
+    Derives from: variableBoundary, boundaryLayer (Observable.lean / Ontology.lean)
+    Proposition: L2
+    Content: L2 (ontological boundary) is fixed — variables V1, V2, V4, V6 mapped to L2 cannot move the boundary itself; only the quality of mitigations can be improved.
+    Proof strategy: simp [variableBoundary, boundaryLayer] (definitional computation) -/
 theorem fixed_boundary_variables_mitigate_only :
   boundaryLayer (variableBoundary .v1) = .fixed ∧
   boundaryLayer (variableBoundary .v2) = .fixed ∧
@@ -448,9 +451,11 @@ theorem constraint_has_boundary :
   intro c
   cases c <;> simp [constraintBoundary]
 
-/-- L5 (platform) is not included in the constraintBoundary of any T1-T8.
-    L5 is a provider-specific environmental constraint and is not derived from
-    the technology-independent constraints T. -/
+/-- [Derivation Card]
+    Derives from: constraintBoundary (Observable.lean)
+    Proposition: L5
+    Content: L5 (platform boundary) is not derived from any technology-independent constraint T1-T8. L5 is a provider-specific environmental constraint arising from human platform selection (upstream of T6).
+    Proof strategy: cases c <;> simp [constraintBoundary] (exhaustive case analysis) -/
 theorem platform_not_in_constraint_boundary :
   ∀ c : ConstraintId, BoundaryId.platform ∉ constraintBoundary c := by
   intro c

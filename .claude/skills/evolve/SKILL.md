@@ -625,6 +625,11 @@ gh pr create --base main --title "Run <N>: <改善サマリ> [要レビュー]" 
   1. 対象フィールドの現在値が null であること（非 null フィールドの上書きは禁止）
   2. 補完値の出典が検証可能であること（例: ccusage session の projectPath 末尾 UUID と session_id の照合）
   3. backfill の実行記録が observe.sh の出力に含まれること（P4 可観測性）
+- **error correction exception**: 既存エントリの非 null フィールドが、evolve-history.jsonl の文書化された不変条件（Section 17 テスト、Integrator AGENT.md 記録前チェック）に違反している場合、当該フィールドの訂正は以下の条件を全て満たす場合にのみ許可される:
+  1. 違反している不変条件を test-evolve-structural.sh の Section 17 テストが検出していること（テスト FAIL が再現可能）
+  2. 訂正値が同一エントリ内の他フィールド（notes 等）から一意に復元可能であること
+  3. 訂正は当該 Run の evolve-history.jsonl 記録のみ対象とし、他エントリへの影響がないこと
+  4. 訂正の実行記録が改善案のコミットメッセージに含まれること（P4 可観測性）
 
 **コスト効率記録フォーマット（T7 可観測性）:**
 evolve-history.jsonl の各エントリに以下のフィールドを追加:
