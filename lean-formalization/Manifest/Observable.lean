@@ -472,6 +472,42 @@ theorem constraint_boundary_covers_except_platform :
   refine ⟨⟨.t6, ?_⟩, ⟨.t1, ?_⟩, ⟨.t3, ?_⟩, ⟨.t6, ?_⟩, ⟨.t8, ?_⟩⟩ <;>
     simp [constraintBoundary]
 
+/-- [Derivation Card]
+    Derives from: constraintBoundary (Observable.lean)
+    Proposition: L1
+    Content: L1 (ethics/safety boundary) is derived from constraint T6 (human authority). T6 maps to ethicsSafety in constraintBoundary, establishing that the safety boundary has a technology-independent grounding.
+    Proof strategy: exact with witness .t6, then simp [constraintBoundary] -/
+theorem ethicsSafety_covered_by_constraint :
+  ∃ c, BoundaryId.ethicsSafety ∈ constraintBoundary c :=
+  ⟨.t6, by simp [constraintBoundary]⟩
+
+/-- [Derivation Card]
+    Derives from: constraintBoundary (Observable.lean)
+    Proposition: L3
+    Content: L3 (resource boundary) is derived from constraints T3 (finite context) and T7 (finite resources). T3 maps to [ontological, resource] and T7 maps to [resource] in constraintBoundary, establishing that the resource boundary has technology-independent grounding.
+    Proof strategy: exact with witness .t3, then simp [constraintBoundary] -/
+theorem resource_covered_by_constraint :
+  ∃ c, BoundaryId.resource ∈ constraintBoundary c :=
+  ⟨.t3, by simp [constraintBoundary]⟩
+
+/-- [Derivation Card]
+    Derives from: constraintBoundary (Observable.lean)
+    Proposition: L4
+    Content: L4 (action space boundary) is derived from constraint T6 (human authority). T6 maps to [ethicsSafety, actionSpace] in constraintBoundary, establishing that the action space boundary is grounded in human decision authority.
+    Proof strategy: exact with witness .t6, then simp [constraintBoundary] -/
+theorem actionSpace_covered_by_constraint :
+  ∃ c, BoundaryId.actionSpace ∈ constraintBoundary c :=
+  ⟨.t6, by simp [constraintBoundary]⟩
+
+/-- [Derivation Card]
+    Derives from: constraintBoundary (Observable.lean)
+    Proposition: L6
+    Content: L6 (architectural convention boundary) is derived from constraint T8 (task has precision). T8 maps to [architecturalConvention] in constraintBoundary, establishing that design conventions are grounded in the precision requirement.
+    Proof strategy: exact with witness .t8, then simp [constraintBoundary] -/
+theorem architecturalConvention_covered_by_constraint :
+  ∃ c, BoundaryId.architecturalConvention ∈ constraintBoundary c :=
+  ⟨.t8, by simp [constraintBoundary]⟩
+
 -- ============================================================
 -- Derived theorems: Measurable → Observable bridge
 -- ============================================================
