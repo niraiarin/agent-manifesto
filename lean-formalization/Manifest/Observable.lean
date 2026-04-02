@@ -231,6 +231,7 @@ as a non-logical axiom within the formal system.
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V1
     Content: V1 (skill quality) is measurable
     Basis: with/without comparison via benchmark.json exists as a measurement procedure
     Source: Ontology.lean V1 definition
@@ -241,6 +242,7 @@ theorem v1_measurable : Measurable skillQuality := ⟨skillQuality, fun _ => rfl
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V2
     Content: V2 (context efficiency) is measurable
     Basis: the ratio of task completion rate to consumed token count exists as a measurement procedure
     Source: Ontology.lean V2 definition
@@ -251,6 +253,7 @@ theorem v2_measurable : Measurable contextEfficiency := ⟨contextEfficiency, fu
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V3
     Content: V3 (output quality) is measurable
     Basis: gate pass rate and review finding count exist as measurement procedures
     Source: Ontology.lean V3 definition
@@ -261,6 +264,7 @@ theorem v3_measurable : Measurable outputQuality := ⟨outputQuality, fun _ => r
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V4
     Content: V4 (gate pass rate) is measurable
     Basis: pass/fail statistics exist as a measurement procedure
     Source: Ontology.lean V4 definition
@@ -271,6 +275,7 @@ theorem v4_measurable : Measurable gatePassRate := ⟨gatePassRate, fun _ => rfl
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V5
     Content: V5 (proposal accuracy) is measurable
     Basis: human approval/rejection rate exists as a measurement procedure
     Source: Ontology.lean V5 definition
@@ -281,6 +286,7 @@ theorem v5_measurable : Measurable proposalAccuracy := ⟨proposalAccuracy, fun 
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V6
     Content: V6 (knowledge structure quality) is measurable
     Basis: context restoration speed and retirement target detection rate exist as measurement procedures
     Source: Ontology.lean V6 definition
@@ -291,6 +297,7 @@ theorem v6_measurable : Measurable knowledgeStructureQuality := ⟨knowledgeStru
 
 /-- [Derivation Card]
     Layer: Gamma \ T_0 (design-derived)
+    Proposition: V7
     Content: V7 (task design efficiency) is measurable
     Basis: task completion rate / consumed resource ratio exists as a measurement procedure
     Source: Ontology.lean V7 definition

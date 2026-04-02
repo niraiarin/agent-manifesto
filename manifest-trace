@@ -280,7 +280,7 @@ parse_lean_derivations() {
             result = lines[i]
             continue
           }
-          if (found && lines[i] ~ /^[[:space:]]*(Derives from|Proposition|Content|Proof strategy):/) {
+          if (found && lines[i] ~ /^[[:space:]]*(Derives from|Proposition|Content|Proof strategy|Layer|Basis|Source|Demoted|Derivation|Previously|Now|Note|Formally proven|Refutation condition|Proof):/) {
             found = 0
             continue
           }

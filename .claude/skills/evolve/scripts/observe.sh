@@ -822,6 +822,8 @@ if [ -x "$BASE/manifest-trace" ]; then
   TRACE_ARTIFACTS=$(echo "$TRACE_JSON" | jq '.meta.total_artifacts // 0' 2>/dev/null || echo "0")
   TRACE_WITH_EVIDENCE=$(echo "$TRACE_JSON" | jq '.summary.with_evidence | length // 0' 2>/dev/null || echo "0")
   TRACE_WITHOUT_EVIDENCE=$(echo "$TRACE_JSON" | jq '.summary.without_evidence | length // 0' 2>/dev/null || echo "0")
+  TRACE_FORMAL_LINKED=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.coverage.has_evidence or .coverage.has_derivation)] | length' 2>/dev/null || echo "0")
+  TRACE_FORMAL_UNLINKED=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.coverage.has_evidence == false and .coverage.has_derivation == false)] | length' 2>/dev/null || echo "0")
   # 深さ別カバレッジ
   TRACE_S5=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
   TRACE_S5_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5)] | length' 2>/dev/null || echo "0")
@@ -840,6 +842,7 @@ if [ -x "$BASE/manifest-trace" ]; then
   echo "    \"coverage\": {\"covered\": $TRACE_COVERED, \"uncovered\": $TRACE_UNCOVERED, \"weak\": $TRACE_WEAK, \"total\": $TRACE_TOTAL},"
   echo "    \"artifacts\": $TRACE_ARTIFACTS,"
   echo "    \"evidence\": {\"with\": $TRACE_WITH_EVIDENCE, \"without\": $TRACE_WITHOUT_EVIDENCE},"
+  echo "    \"formal_links\": {\"linked\": $TRACE_FORMAL_LINKED, \"unlinked\": $TRACE_FORMAL_UNLINKED, \"total\": $TRACE_TOTAL},"
   echo "    \"by_strength\": {\"s5\": \"${TRACE_S5}/${TRACE_S5_T}\", \"s4\": \"${TRACE_S4}/${TRACE_S4_T}\", \"s3\": \"${TRACE_S3}/${TRACE_S3_T}\", \"s2\": \"${TRACE_S2}/${TRACE_S2_T}\", \"s1\": \"${TRACE_S1}/${TRACE_S1_T}\", \"s0\": \"${TRACE_S0}/${TRACE_S0_T}\"},"
   # G1: 優先修復候補 — uncovered かつ dependents が多い命題 (D13 影響波及順)
   TRACE_PRIORITY=$(cd "$BASE" && ./manifest-trace json 2>/dev/null | python3 -c "
