@@ -81,7 +81,7 @@ echo "  \"stale_files\": [$(echo "$STALE_FILES" | sed 's/, $//')],"
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
   # Run 番号ベースのカウント（run=null の human_feedback/旧エントリを除外）
-  EVOLVE_RUNS=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | sort -n | tail -1)
+  EVOLVE_RUNS=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | grep -E '^[0-9]+$' | sort -n | tail -1)
   EVOLVE_RUNS=${EVOLVE_RUNS:-0}
   LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | jq -r '.timestamp // empty' 2>/dev/null)
   LAST_RUN=${LAST_RUN:-never}
@@ -701,7 +701,7 @@ echo "  \"deferred_open\": $DEFERRED_OPEN,"
 # H4: 互換性クラス別改善件数（.improvements[].compatibility）
 # H5: 有効 UUID session_id 件数（UUID v4 パターンに一致し "unknown" を除外）
 if [ -f "$HISTORY_FILE" ]; then
-  MAX_RUN=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | sort -n | tail -1)
+  MAX_RUN=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | grep -E '^[0-9]+$' | sort -n | tail -1)
   MAX_RUN=${MAX_RUN:-0}
   TOTAL_ENTRIES=$(wc -l < "$HISTORY_FILE" | tr -d ' ')
   TOTAL_ENTRIES=${TOTAL_ENTRIES:-0}

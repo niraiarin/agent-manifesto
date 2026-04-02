@@ -570,6 +570,16 @@ Integrator 実行時点では null を記録し、データ照合は observe.sh 
 observe.sh の出力（`v1_v7.v1_skill_quality.non_triviality` セクション）から直接転記すること。
 Integrator が独自に算出してはならない。score と label を一致させること。
 
+**carryover フィールド（軽量引き継ぎ）:**
+evolve-history.jsonl の各エントリに `carryover` フィールドを含める:
+```json
+"carryover": [{"item": "引き継ぎ事項", "context": "背景（任意）"}]
+```
+- deferred の 3 条件（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）に該当しない軽量引き継ぎ用
+- 次回 Observer が機械的に参照すべき具体的アクション項目を構造化して記録
+- notes の自由文を補完する構造化データ。deferred ほど重くない観察・分析候補を渡す
+- 該当なしの場合は空配列 `[]`
+
 ### Step 6: 退役処理
 
 退役には 2 種類の基準がある（混同しないこと）:
@@ -694,6 +704,10 @@ YYYY-MM-DD HH:MM
 ## 次回への引き継ぎ
 [次の evolve 実行で注目すべき観察項目]
 ```
+
+**carryover フィールドへの転記:**
+上記の引き継ぎ事項のうち、次回 Observer が機械的に参照すべき具体的アクション項目は
+evolve-history.jsonl の `carryover` フィールドにも構造化して記録すること。
 
 ## D9: このスキル自身のメンテナンス（自己適用）
 
