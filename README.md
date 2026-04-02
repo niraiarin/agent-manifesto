@@ -150,7 +150,6 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | `/ground-axiom` | 公理の数学的根拠検証 | T₀ | 公理の根拠を形式証明で裏付ける時 |
 | `/design-implementation-plan` | プロバイダマッピング | D1–D9 | 新プラットフォームへの適用設計時 |
 | `/adjust-action-space` | 行動空間の調整 | D8, L4 | 権限の拡張/縮小を提案する時 |
-| `/package-plugin` | Plugin パッケージ化 | D9 | .claude/ 構成を他プロジェクトに配布する時 |
 | `/instantiate-model` | 条件付き公理系生成 | 形式モデル | ドメイン固有の公理系を生成する時 |
 
 ### フック一覧 (16個) — 自動的な構造強制

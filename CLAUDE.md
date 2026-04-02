@@ -61,7 +61,6 @@
 - `/metrics` — P4 V1–V7 ダッシュボード
 - `/adjust-action-space` — D8 行動空間の拡張/縮小提案
 - `/design-implementation-plan` — D1–D9 のプロバイダマッピング
-- `/package-plugin` — .claude/ 構成を Plugin としてパッケージ化
 - `/research` — P3 Gate-Driven Research Workflow（実装前リサーチ）
 - `/evolve` — P3 構造の漸進的改善（Agent Teams で観察→仮説化→検証→統合）
 - `/trace` — P4+D13 全成果物の半順序導出・カバレッジ・逸脱検出
