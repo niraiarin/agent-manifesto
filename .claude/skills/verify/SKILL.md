@@ -179,3 +179,7 @@ D10（構造永続性）: 検証結果はエージェント消滅後も構造に
 - 検証で発見された問題は、修正コミットとして構造に永続化する
 - 検証で PASS した事実は、`#print axioms` 出力として構造に残る
 - 検証結果の要約は、コミットメッセージに含める
+
+### V5 連携: 人間の承認/却下率
+
+V5（`.claude/metrics/v5-approvals.jsonl`）は UserPromptSubmit hook が自動記録する人間の承認/却下率であり、verify スキルの Verifier pass rate (P2) とは異なる指標。verify の結果は P2 検証トークン（p2-verified.jsonl）に記録され、V5 は人間のセッション全体の操作を計測する。

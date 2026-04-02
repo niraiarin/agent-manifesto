@@ -156,9 +156,10 @@ Working memory (ContextWindow): the upper bound on the amount of information an 
    Represents T3's physical constraint as a type. Corresponds to token limit for LLMs,
    or working memory size for other computational agents.
 
-   - `capacity` is a finite natural number (>= 0)
-   - `used` is the current usage
-   - `used <= capacity` is guaranteed externally as a type invariant (axiom T3) 
+   The invariants `capacity > 0` and `used ≤ capacity` are embedded in the type
+   (previously axiom `context_finite`, now structurally enforced).
+   This makes invalid ContextWindows unconstructable — the constraint is a
+   definitional property of the type, not an external assumption. 
 
 *Declaration:* `structure ContextWindow`
 
@@ -166,6 +167,8 @@ Working memory (ContextWindow): the upper bound on the amount of information an 
 structure ContextWindow where
   capacity : Nat
   used     : Nat
+  capacity_pos : capacity > 0 := by omega
+  used_le_cap  : used ≤ capacity := by omega
   deriving Repr
 ```
 
@@ -254,14 +257,17 @@ structure ResourceAllocation where
 
 Precision level. By T8, all tasks have one.
    Represented as Nat (0-1000 in permillage). Avoids Float to ensure
-   safe comparison at the proposition level. 
+   safe comparison at the proposition level.
+   The invariant `required > 0` is embedded in the type
+   (previously axiom `task_has_precision`, now structurally enforced). 
 
 *Declaration:* `structure PrecisionLevel`
 
 ```
 structure PrecisionLevel where
   required : Nat   -- 要求精度 (0–1000, 千分率: 1000 = 100%)
-  deriving BEq, Repr
+  required_pos : required > 0 := by omega
+  deriving Repr
 ```
 
 Task: a goal to be achieved and its associated constraints.
@@ -277,6 +283,34 @@ structure Task where
   contextBudget     : Nat              -- T3 からの制約
   resourceBudget    : Nat              -- T7 からの制約
   deriving Repr
+```
+
+An item within the context window. By T3, context is finite,
+   so only a bounded number of items can be present.
+
+   Each item has a precision contribution relative to a given task (T8).
+   This contribution is not uniform across items — a mathematical fact
+   from information theory (not all information is equally relevant
+   to all tasks). 
+
+*Declaration:* `opaque ContextItem`
+
+```
+opaque ContextItem : Type
+```
+
+Precision contribution of a context item to a task.
+   Returns a Nat (0 = zero contribution, higher = more contribution).
+   This is a function, not a constant: the same item may have different
+   contributions to different tasks.
+
+   Technology-independent: applies to any agent architecture where
+   context is finite and tasks have precision requirements. 
+
+*Declaration:* `opaque precisionContribution`
+
+```
+opaque precisionContribution : ContextItem → Task → Nat
 ```
 
 Severity of an action. Used for reversibility assessment. 
@@ -1385,7 +1419,7 @@ Formalizes manifesto.md Section 8 Property 2 "Self-containment of ordering infor
 Property 3 "Retroactive verification from terminal errors."
 
 Corresponds to ATMS (Assumption-Based Truth Maintenance System) from the research document
-`docs/research/items/design-specification-thoery.md`.
+`docs/research/items/design-specification-theory.md`.
 By having each Structure maintain its own dependencies,
 verification can trace back through the partial order to the axiom level upon terminal errors.
 
@@ -1536,7 +1570,7 @@ This limitation is a Goedelian principled limitation, not a design flaw of Propo
 When new propositions are identified, PropositionId is updated according to D9 (maintenance).
 
 Category of manifesto propositions. 6 layers: T/E/P/L/D/H.
-   Corresponds to the S = (A, C, H, D) four-way classification (design-specification-thoery.md):
+   Corresponds to the S = (A, C, H, D) four-way classification (design-specification-theory.md):
    A = constraint, C = empiricalPostulate + principle, H = hypothesis, D = boundary + designTheorem 
 
 *Declaration:* `inductive PropositionCategory`
@@ -1665,8 +1699,18 @@ def PropositionCategory.strength : PropositionCategory → Nat
   | .hypothesis         => 0  -- 最弱: 未検証の前提は他カテゴリより低い認識論的強度
 ```
 
-Dependencies follow descending epistemological strength: dependencies have strength >= the dependent.
-   (Basis for D13's propagation direction: upstream changes affect downstream) 
+(Axiom Card)
+   Layer: Γ \ T₀ (Design-derived)
+   Content: Dependencies follow descending epistemological strength.
+         If proposition A depends on B, then B.strength ≥ A.strength.
+   Basis: Design decision for D13 propagation direction. Upstream (stronger)
+         propositions affect downstream (weaker) ones, not vice versa.
+
+   降格判定: 導出不可能 — PropositionId.dependencies は def だが、
+   全ケース網羅の decide/`native_decide` がタイムアウト。axiom として維持。
+
+   Source: Ontology.lean PropositionId.dependencies
+   Refutation condition: If a dependency violating the strength ordering were added 
 
 *Declaration:* `axiom dependency_respects_strength`
 

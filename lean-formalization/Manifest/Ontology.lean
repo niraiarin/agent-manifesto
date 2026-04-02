@@ -935,7 +935,7 @@ Formalizes manifesto.md Section 8 Property 2 "Self-containment of ordering infor
 Property 3 "Retroactive verification from terminal errors."
 
 Corresponds to ATMS (Assumption-Based Truth Maintenance System) from the research document
-`docs/research/items/design-specification-thoery.md`.
+`docs/research/items/design-specification-theory.md`.
 By having each Structure maintain its own dependencies,
 verification can trace back through the partial order to the axiom level upon terminal errors.
 -/
@@ -1059,7 +1059,7 @@ When new propositions are identified, PropositionId is updated according to D9 (
 -/
 
 /-- Category of manifesto propositions. 6 layers: T/E/P/L/D/H.
-    Corresponds to the S = (A, C, H, D) four-way classification (design-specification-thoery.md):
+    Corresponds to the S = (A, C, H, D) four-way classification (design-specification-theory.md):
     A = constraint, C = empiricalPostulate + principle, H = hypothesis, D = boundary + designTheorem -/
 inductive PropositionCategory where
   | constraint         -- T: 拘束条件 (A: Axioms)
