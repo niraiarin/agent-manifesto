@@ -110,6 +110,10 @@ grep -q "反証条件" "$HYP" && pass "Hypothesizer references refutation" || fa
 grep -q "読み取り専用" "$HYP" && pass "Hypothesizer is read-only" || fail "Hypothesizer missing read-only constraint"
 ! grep -q "Edit\|Write" "$HYP" && pass "Hypothesizer has no Edit/Write tools" || fail "Hypothesizer should not have Edit/Write"
 
+# Hypothesizer 事前検証の証跡 (Run 89)
+grep -q "事前検証の証跡\|Verification Evidence" "$HYP" && pass "Hypothesizer has verification evidence section in template" || fail "Hypothesizer missing verification evidence section"
+grep -q "evidence.*quality\|Evidence.*quality\|事前検証の証跡\|insufficient evidence" "$VER" && pass "Verifier has evidence quality check" || fail "Verifier missing evidence quality check"
+
 # Hypothesizer 品質ゲート (obs-3-A, obs-3-B)
 grep -q "事前検証チェックリスト\|Pre-Proposal Verification" "$HYP" && pass "Hypothesizer has pre-proposal verification checklist" || fail "Hypothesizer missing pre-proposal verification checklist"
 grep -q "繰り返し提案の段階的抑止\|1 回 reject 後\|2 回以上 reject 後" "$HYP" && pass "Hypothesizer has repeated-proposal suppression rule" || fail "Hypothesizer missing repeated-proposal suppression rule"
@@ -212,6 +216,11 @@ grep -qE '\.verification,.*\.hypothesizing.*True|verification.*hypothesizing.*Tr
 
 # retirement -> observation (サイクル循環)
 grep -q "退役\|retir" "$SKILL" && grep -q "観察\|observ" "$SKILL" && pass "Lean trace: retirement -> observation (cycle in SKILL.md)" || fail "Lean trace: retirement -> observation cycle not covered in SKILL.md"
+
+# Judge phase transitions (Run 89: verification->judging, judging->integration, judging->hypothesizing)
+grep -qE '\.verification,.*\.judging.*True|verification.*judging.*True' "$WORKFLOW_LEAN_PATH" && pass "Lean trace: verification -> judging (Phase 3->3.5 in Workflow.lean)" || fail "Missing verification -> judging transition in Workflow.lean"
+grep -qE '\.judging,.*\.integration.*True|judging.*integration.*True' "$WORKFLOW_LEAN_PATH" && pass "Lean trace: judging -> integration (Phase 3.5->4 in Workflow.lean)" || fail "Missing judging -> integration transition in Workflow.lean"
+grep -qE '\.judging,.*\.hypothesizing.*True|judging.*hypothesizing.*True' "$WORKFLOW_LEAN_PATH" && pass "Lean trace: judging -> hypothesizing (Judge FAIL loopback)" || fail "Missing judging -> hypothesizing transition in Workflow.lean"
 
 # Workflow.lean 追加定理（Run 55 Gap 解消: no_self_knowledge_transition, knowledge_full_cycle_exists, feedback_precedes_improvement）
 grep -q "no_self_knowledge_transition" "$WORKFLOW_LEAN_PATH" && pass "Lean trace: no_self_knowledge_transition exists in Workflow.lean" || fail "Lean trace: no_self_knowledge_transition not found in Workflow.lean"
@@ -343,6 +352,16 @@ grep -q "precondition_error_no_loopback" "$EVOLVE_SKILL_LEAN" && \
 grep -q "loopback_budget_is_parameter" "$EVOLVE_SKILL_LEAN" && \
   pass "φ₁₇: loopback budget is parameter" || \
   fail "φ₁₇: loopback_budget_is_parameter not found"
+
+# φ₁₈: judge_fail_loops_to_hypothesizer (Run 89)
+grep -q "judge_fail_loops_to_hypothesizer" "$EVOLVE_SKILL_LEAN" && \
+  pass "φ₁₈: judge fail loops to hypothesizer" || \
+  fail "φ₁₈: judge_fail_loops_to_hypothesizer not found"
+
+# Judge phase in EvolvePhase (Run 89)
+grep -q "| judge" "$EVOLVE_SKILL_LEAN" && \
+  pass "EvolvePhase includes judge phase" || \
+  fail "EvolvePhase missing judge phase"
 
 # Root cause classification completeness: all 4 types documented in SKILL.md
 for rc in observation_error hypothesis_error assumption_error precondition_error; do

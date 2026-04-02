@@ -11,8 +11,12 @@ P3（学習の統治）の統治ライフサイクルを型として表現する
 ## 学習ライフサイクル（manifesto.md Section 3, P3）
 
 ```
-観察 → 仮説化 → 検証 → 統合 → 退役
+観察 → 仮説化 → 検証 → [判定] → 統合 → 退役
 ```
+
+判定（judging）フェーズは検証と統合の間に位置し、
+検証 PASS した改善案の非自明性・品質を評価する。
+Judge FAIL 時は仮説化に戻る。省略時は検証→統合の直接遷移も有効。
 
 各段階にゲートがある。観察がすべて仮説になるわけではなく、
 仮説がすべて統合されるわけではない。
@@ -44,21 +48,28 @@ namespace Manifest
 
 /-- 学習ライフサイクルのフェーズ。
     P3 の統治ライフサイクル:
-    観察 → 仮説化 → 検証 → 統合 → 退役。 -/
+    観察 → 仮説化 → 検証 → 判定 → 統合 → 退役。
+    judging フェーズは検証と統合の間で非自明性判定を行う。 -/
 inductive LearningPhase where
   | observation    -- 観察: 現象の記録
   | hypothesizing  -- 仮説化: 観察からの知識候補の生成
   | verification   -- 検証: 仮説の独立的評価（P2）
+  | judging        -- 判定: 検証済み改善案の非自明性・品質評価
   | integration    -- 統合: 検証済み知識の構造への組み込み
   | retirement     -- 退役: 文脈の変化により無効化された知識の除去
   deriving BEq, Repr
 
 /-- フェーズ間の有効な遷移。
-    学習ライフサイクルは順序を持つ（逆行は退役を除き不可）。 -/
+    学習ライフサイクルは順序を持つ（逆行は退役を除き不可）。
+    judging は verification と integration の間に位置し、
+    FAIL 時は hypothesizing にループバックする。 -/
 def validPhaseTransition : LearningPhase → LearningPhase → Prop
   | .observation,   .hypothesizing => True
   | .hypothesizing, .verification  => True
-  | .verification,  .integration   => True
+  | .verification,  .judging       => True   -- 検証 PASS → Judge 評価
+  | .judging,       .integration   => True   -- Judge PASS → 統合
+  | .judging,       .hypothesizing => True   -- Judge FAIL → 仮説に戻る（再設計）
+  | .verification,  .integration   => True   -- Judge 省略時のフォールバック
   | .integration,   .retirement    => True
   -- 検証の失敗 → 仮説に戻る（再検討）
   | .verification,  .hypothesizing => True
@@ -74,13 +85,23 @@ theorem no_self_phase_transition :
   intro p
   cases p <;> simp [validPhaseTransition]
 
-/-- ライフサイクルの完全な1周は observation から retirement まで。 -/
+/-- ライフサイクルの完全な1周は observation から retirement まで（Judge 省略時）。 -/
 theorem full_cycle_exists :
   validPhaseTransition .observation .hypothesizing ∧
   validPhaseTransition .hypothesizing .verification ∧
   validPhaseTransition .verification .integration ∧
   validPhaseTransition .integration .retirement := by
   constructor <;> trivial
+
+/-- judging フェーズを含む完全な1周。
+    observation → hypothesizing → verification → judging → integration → retirement。 -/
+theorem full_cycle_with_judging :
+  validPhaseTransition .observation .hypothesizing ∧
+  validPhaseTransition .hypothesizing .verification ∧
+  validPhaseTransition .verification .judging ∧
+  validPhaseTransition .judging .integration ∧
+  validPhaseTransition .integration .retirement := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> trivial
 
 -- ============================================================
 -- ゲート
