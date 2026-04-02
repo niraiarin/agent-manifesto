@@ -118,6 +118,7 @@ structure TheoremDistribution where
   axiomQualityM          : Nat  -- AxiomQuality.lean
   epistemicLayerM        : Nat  -- EpistemicLayer.lean
   taskClassificationM    : Nat  -- TaskClassification.lean
+  traceabilityM          : Nat  -- Traceability.lean
   deriving BEq, Repr
 
 /-- モジュール別定理数の合計。 -/
@@ -126,7 +127,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
   d.principlesM + d.metaM + d.terminologyM + d.formalDerivationSkillM +
   d.conformanceVerificationM + d.designFoundationM + d.procedureM +
   d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM +
-  d.epistemicLayerM + d.taskClassificationM
+  d.epistemicLayerM + d.taskClassificationM + d.traceabilityM
 
 /-- 現在のモジュール別定理分布。
     scripts/sync-counts.sh が各モジュールの定理数を自動更新する。 -/
@@ -147,7 +148,8 @@ def currentTheoremDistribution : TheoremDistribution :=
     workflowM              := 7
     axiomQualityM          := 11
     epistemicLayerM        := 47
-    taskClassificationM    := 10 }
+    taskClassificationM    := 10
+    traceabilityM          := 13 }
 
 -- ============================================================
 -- 現在の公理系プロファイル

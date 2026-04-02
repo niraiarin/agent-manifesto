@@ -187,6 +187,7 @@ update_module_count "workflowM" "Workflow.lean"
 update_module_count "axiomQualityM" "AxiomQuality.lean"
 update_module_count "epistemicLayerM" "EpistemicLayer.lean"
 update_module_count "taskClassificationM" "TaskClassification.lean"
+update_module_count "traceabilityM" "Traceability.lean"
 
 # --- Pattern 7: Meta.lean axiom sub-counts (preserve whitespace + comments) ---
 update_axiom_count() {
