@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # test-weak-coverage-structural.sh — 弱カバレッジ構造テスト
-# Phase 5: P5, P6, L2, L6, D7, D10, D12, D14 の弱カバレッジ検証
+# Phase 5: P5, P6, L2, L3, L6, D7, D10, D12, D14 の弱カバレッジ検証
 #
 # テスト対象:
 # - D10: evolve-state-loader.sh の存在と evolve-history.jsonl 参照
@@ -139,6 +139,25 @@ check "WC.18: Principles.lean has structure_interpretation_nondeterministic" \
 
 check "WC.19: lean-formalization/Manifest/Foundation/Probability.lean exists" \
   "[ -f '$BASE/lean-formalization/Manifest/Foundation/Probability.lean' ]"
+
+echo ""
+
+# ============================================================
+# L3: リソース境界 — Ontology.lean + Observable.lean + Axioms.lean
+# ============================================================
+echo "--- L3: Resource boundary (Ontology + Observable + Axioms) ---"
+
+check "WC.20: Ontology.lean defines BoundaryId.resource (L3)" \
+  "grep -q '| resource.*L3' '$BASE/lean-formalization/Manifest/Ontology.lean'"
+
+check "WC.21: Observable.lean has resource_covered_by_constraint theorem (L3 derivation card)" \
+  "grep -q '^theorem resource_covered_by_constraint' '$BASE/lean-formalization/Manifest/Observable.lean'"
+
+check "WC.22: Observable.lean maps V7 to L3 via variableBoundary .v7 = .resource" \
+  "grep -q '| .v7 => .resource' '$BASE/lean-formalization/Manifest/Observable.lean'"
+
+check "WC.23: Axioms.lean has resource_finite axiom (T7 underlying L3)" \
+  "grep -q '^axiom resource_finite' '$BASE/lean-formalization/Manifest/Axioms.lean'"
 
 echo ""
 
