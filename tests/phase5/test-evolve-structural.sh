@@ -860,6 +860,105 @@ fi
 echo ""
 
 # ============================================================
+# Section 19: validate-evolve-entry.sh テスト（Run 94+）
+# ============================================================
+echo "--- Section 19: validate-evolve-entry.sh ---"
+
+VALIDATE_SCRIPT="$BASE/scripts/validate-evolve-entry.sh"
+if [ -f "$VALIDATE_SCRIPT" ]; then
+  # 19.1: valid entry passes
+  VALID_ENTRY='{"run":1,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":1,"fail_count":0},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$VALID_ENTRY" | bash "$VALIDATE_SCRIPT" 2>/dev/null)
+  if echo "$RESULT" | jq -e '.pass == true' > /dev/null 2>&1; then
+    pass "Section 19.1: valid entry passes validation"
+  else
+    fail "Section 19.1: valid entry failed validation unexpectedly"
+  fi
+
+  # 19.2: bad proposals_count detected
+  BAD_PROPOSALS='{"run":2,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":999},"verifier":{"pass_count":1,"fail_count":0},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$BAD_PROPOSALS" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.pass == false' > /dev/null 2>&1 && \
+     echo "$RESULT" | jq -e '.checks[] | select(.id == "C1" and .pass == false)' > /dev/null 2>&1; then
+    pass "Section 19.2: bad proposals_count detected by C1"
+  else
+    fail "Section 19.2: bad proposals_count not detected"
+  fi
+
+  # 19.3: missing rejected entry detected
+  MISSING_REJECTED='{"run":3,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":0,"fail_count":1},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$MISSING_REJECTED" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.pass == false' > /dev/null 2>&1 && \
+     echo "$RESULT" | jq -e '.checks[] | select(.id == "C2" and .pass == false)' > /dev/null 2>&1; then
+    pass "Section 19.3: missing rejected entry detected by C2"
+  else
+    fail "Section 19.3: missing rejected entry not detected"
+  fi
+
+  # 19.4: empty input rejected
+  RESULT=$(echo "" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | grep -q '"pass": false'; then
+    pass "Section 19.4: empty input rejected"
+  else
+    fail "Section 19.4: empty input not rejected"
+  fi
+
+  # 19.5: judge sum inconsistency detected
+  BAD_JUDGE='{"run":5,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":1,"fail_count":0},"judge":{"evaluated":5,"pass":1,"conditional":0,"fail":0},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$BAD_JUDGE" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.pass == false' > /dev/null 2>&1 && \
+     echo "$RESULT" | jq -e '.checks[] | select(.id == "C5" and .pass == false)' > /dev/null 2>&1; then
+    pass "Section 19.5: judge sum inconsistency detected by C5"
+  else
+    fail "Section 19.5: judge sum inconsistency not detected"
+  fi
+
+  # 19.6: missing failure_type detected
+  MISSING_FT='{"run":6,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[],"rejected":[{"title":"foo","reason":"bar"}],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":0,"fail_count":1},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$MISSING_FT" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.pass == false' > /dev/null 2>&1 && \
+     echo "$RESULT" | jq -e '.checks[] | select(.id == "C6" and .pass == false)' > /dev/null 2>&1; then
+    pass "Section 19.6: missing failure_type detected by C6"
+  else
+    fail "Section 19.6: missing failure_type not detected"
+  fi
+else
+  pass "Section 19: validate-evolve-entry.sh not found (not applicable)"
+fi
+
+echo ""
+
+# ============================================================
+# Section 20: failure_subtype diagnostic（警告のみ、Run 77+）
+# ============================================================
+echo "--- Section 20: failure_subtype Coverage Diagnostic ---"
+
+warn() {
+  echo "  WARNING: $1"
+}
+
+EVOLVE_HISTORY_S20="$BASE/.claude/metrics/evolve-history.jsonl"
+if [ -f "$EVOLVE_HISTORY_S20" ]; then
+  ENTRIES_77PLUS=$(jq -c 'select(.run >= 77)' "$EVOLVE_HISTORY_S20" 2>/dev/null)
+  if [ -n "$ENTRIES_77PLUS" ]; then
+    while IFS= read -r entry; do
+      RUN=$(echo "$entry" | jq -r '.run')
+      FAIL_COUNT=$(echo "$entry" | jq '.phases.verifier.fail_count // 0')
+      REJ_LEN=$(echo "$entry" | jq '.rejected | length')
+      if [ "$FAIL_COUNT" -gt 0 ] && [ "$REJ_LEN" -gt 0 ]; then
+        MISSING=$(echo "$entry" | jq '[.rejected[] | select(.failure_type != null and .failure_type != "") | select(.failure_subtype == null or .failure_subtype == "")] | length')
+        if [ "$MISSING" -gt 0 ]; then
+          warn "Run $RUN: $MISSING rejected entries have failure_type but missing failure_subtype"
+        fi
+      fi
+    done < <(echo "$ENTRIES_77PLUS")
+  fi
+fi
+pass "Section 20: failure_subtype diagnostic completed (warnings above are informational)"
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="
