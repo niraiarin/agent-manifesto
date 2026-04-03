@@ -791,6 +791,75 @@ fi
 echo ""
 
 # ============================================================
+# Section 18: SKILL.md H1 Hypothesis Table Drift Detection
+# ============================================================
+echo "--- Section 18: H1 Hypothesis Table Drift Detection ---"
+
+EVOLVE_HISTORY="$BASE/.claude/metrics/evolve-history.jsonl"
+SKILL="$BASE/.claude/skills/evolve/SKILL.md"
+if [ -f "$EVOLVE_HISTORY" ] && [ -f "$SKILL" ]; then
+  H1_DRIFT=$(python3 -c "
+import json, re, sys
+TOLERANCE_RESULT = 5
+TOLERANCE_VERIFIER = 25
+success = partial = observation = 0
+ver_pass = ver_fail = 0
+with open('$EVOLVE_HISTORY') as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+        except:
+            continue
+        r = rec.get('result', '')
+        if r == 'success': success += 1
+        elif r == 'partial': partial += 1
+        elif r == 'observation': observation += 1
+        vp = (rec.get('phases') or {}).get('verifier') or {}
+        ver_pass += vp.get('pass_count') or 0
+        ver_fail += vp.get('fail_count') or 0
+ver_total = ver_pass + ver_fail
+h1_line = ''
+with open('$SKILL') as f:
+    for line in f:
+        if 'H1:' in line and 'success' in line:
+            h1_line = line
+            break
+if not h1_line:
+    print('H1 line not found', file=sys.stderr)
+    print(1)
+    sys.exit(0)
+m_s = re.search(r'(\d+)回 success', h1_line)
+m_p = re.search(r'(\d+)回 partial', h1_line)
+m_o = re.search(r'(\d+)回 observation', h1_line)
+m_v = re.search(r'(\d+)/(\d+) PASS', h1_line)
+if not all([m_s, m_p, m_o, m_v]):
+    print('H1 parse error', file=sys.stderr)
+    print(1)
+    sys.exit(0)
+errs = 0
+if abs(int(m_s.group(1)) - success) > TOLERANCE_RESULT: errs += 1
+if abs(int(m_p.group(1)) - partial) > TOLERANCE_RESULT: errs += 1
+if abs(int(m_o.group(1)) - observation) > TOLERANCE_RESULT: errs += 1
+if abs(int(m_v.group(1)) - ver_pass) > TOLERANCE_VERIFIER: errs += 1
+if abs(int(m_v.group(2)) - ver_total) > TOLERANCE_VERIFIER: errs += 1
+print(errs)
+" 2>/dev/null)
+  echo -n "  H1 hypothesis table numbers within drift tolerance... "
+  if [ "${H1_DRIFT:-1}" -eq 0 ]; then
+    pass "Section 18: H1 table consistent with evolve-history.jsonl (tolerance: result<=5, verifier<=25)"
+  else
+    fail "Section 18: H1 table drifted from evolve-history.jsonl (${H1_DRIFT} field(s) exceeded tolerance)"
+  fi
+else
+  pass "Section 18: Prerequisites not found (not applicable)"
+fi
+
+echo ""
+
+# ============================================================
 # 結果サマリ
 # ============================================================
 echo "=== Results: $PASS passed, $FAIL failed ==="
