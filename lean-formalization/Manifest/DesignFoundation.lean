@@ -700,8 +700,8 @@ To express this at the type level (§7.1 Curry-Howard correspondence):
 3. Structurally enforce via the SelfGoverning type class (§9.4)
 -/
 
-/-- Design principle identifiers. Enumerates D1–D12 as values.
-    This allows D1–D12 themselves to be treated at the type level as "targets of updates". -/
+/-- Design principle identifiers. Enumerates D1–D14 as values.
+    This allows D1–D14 themselves to be treated at the type level as "targets of updates". -/
 inductive DesignPrinciple where
   | d1_enforcementLayering
   | d2_workerVerifierSeparation
