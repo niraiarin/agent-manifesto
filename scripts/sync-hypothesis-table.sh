@@ -162,19 +162,8 @@ content = re.sub(
     content
 )
 
-# H6: data points count
-content = re.sub(
-    r'(\| H6:.*?)\d+ データポイント',
-    lambda m: f'{m.group(1)}{len(cpi_vals)} データポイント',
-    content
-)
-
-# H6: "CPI mean N USD/improvement, median N USD"
-content = re.sub(
-    r'CPI mean [\d.]+ USD/improvement, median [\d.]+ USD \(range [\d.]+-[\d.]+ USD\)',
-    f'CPI mean {mean_cpi} USD/improvement, median {median_cpi} USD (range {min_cpi}-{max_cpi} USD)',
-    content
-)
+# H6: 退役済み（#217）。CPI 数値の自動同期は停止。
+# observe.sh の evolve_cost_efficiency でガバナンス指標として監視は継続。
 
 if content == original:
     print("NO_CHANGE")

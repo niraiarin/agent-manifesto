@@ -821,9 +821,11 @@ compatible change または breaking change に該当しうる。
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=51、theorems=400（Run 95 時点。初期 392→#225 で +2→main 統合で 400）。compression 7.84x（784%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
 | H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間377改善統合（221 conservative extension, 153 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。34 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63, 72, 73, 74, 75, 77, 78, 79, 80, 81, 84, 86, 87, 87b, 88, 89, 90, 91, 92, 93, 94）。session cost: mean 8.54 USD, median 7.26 USD, range 0.15-24.52 USD。コスト分布は bimodal 化（前半 16 runs mean 4.31 USD、後半 17 runs mean 12.31 USD）。セッション粒度は維持されているが、コスト増大傾向の要因分析が必要 |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 反証的証拠あり。34 データポイント: CPI mean 2.36 USD/improvement, median 1.72 USD (range 0.03-6.96 USD)。前半 16 runs CPI mean 1.11 USD → 後半 17 runs CPI mean 3.49 USD（214% 増加）。Run 77 以降のコスト増大が顕著（model 変更・タスク複雑度上昇が寄与要因の候補）。反証条件「10 runs 以上で単調増加」は後半 17 runs で成立しており、仮説の見直しが必要 |
+| ~~H6: /evolve のコスト効率は経時的に改善する~~ | ~~cost/improvement が 10 runs 以上で単調増加~~ | **退役（Run 95, #217）。** 34 データポイントで反証条件成立（後半 17 runs CPI 214% 増加）。因果メカニズムなき楽観的仮説であった。CPI はガバナンス指標に降格し observe.sh で監視継続。教訓: 因果モデルのない指標に改善目標を設定しない |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
+
+> **H6 退役の教訓:** 計測能力の獲得が仮説の生成を誘発した事例。「計測できるから仮説を置く」のではなく、因果メカニズムを先に特定すること。
 
 ## Claude Code 機能の活用マップ
 
