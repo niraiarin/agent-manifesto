@@ -369,7 +369,7 @@ def generate_combined_document(file_paths: list[str]) -> str:
         This document is generated from the Lean 4 source files in
         `lean-formalization/Manifest/`. Every axiom, theorem, and definition
         presented here has been verified by the Lean type checker --
-        51 axioms, 392 theorems, 0 sorry.
+        51 axioms, 398 theorems, 0 sorry.
 
         The manifesto rests on a layered epistemic architecture:
 
