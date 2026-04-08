@@ -760,7 +760,7 @@ BENCHMARK_FILE="$METRICS_DIR/benchmark.json"
 PBR_CURRENT_RUN=$MAX_RUN
 PBR_RUN_AT_DECISION=$(jq -r '.priority_bias.current_snapshot.run_at_decision // empty' "$BENCHMARK_FILE" 2>/dev/null)
 if [ -z "$PBR_RUN_AT_DECISION" ] || ! [ "$PBR_RUN_AT_DECISION" -eq "$PBR_RUN_AT_DECISION" ] 2>/dev/null; then
-  PBR_RUN_AT_DECISION=76  # fallback: last known value from Run 76 decision
+  PBR_RUN_AT_DECISION=97  # fallback: last known value from Run 97 decision
 fi
 PBR_RUNS_SINCE=$((PBR_CURRENT_RUN - PBR_RUN_AT_DECISION))
 PBR_RUN_THRESHOLD=20

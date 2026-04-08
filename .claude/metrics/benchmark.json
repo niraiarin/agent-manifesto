@@ -287,26 +287,26 @@
     "_model": "priority(V_i, V_j) = g(f(t), bias(t)) where f(t) = system state function, bias(t) = priority bias function",
     "_authority": "T6 delegated to AI (2026-03-27)",
     "current_snapshot": {
-      "timestamp": "2026-03-30",
-      "run_at_decision": 76,
-      "bias_setter": "human (via #145 comment)",
+      "timestamp": "2026-04-08",
+      "run_at_decision": 97,
+      "bias_setter": "human (via #250 comment)",
       "f_t_observations": {
-        "system_phase": "post-formal-graduation — V1/V3 formal achieved (#77), human redirected to V6 (traceability/observability)",
-        "theorem_growth_rate": "1.5/run (last 10) — decelerating",
-        "test_growth_rate": "4.1/run (last 10) — Run 76 added +20",
-        "verifier_pass_rate": "77% — stable",
+        "system_phase": "post-saturation — non_triviality=0 x2 consecutive (Run 95,96). Human strategic pivot: 内部研磨から外部適用へ軸足を移す. 2本柱: 外向き plugin + 内向きスクリプト化",
+        "theorem_growth_rate": "saturated — theorems=400, tests=530, evidence/derivation=100%",
+        "test_growth_rate": "saturated — 530 tests stable",
+        "verifier_pass_rate": "76% — stable",
         "success_rate": "98% — saturated",
         "test_pass_rate": "100% — saturated",
-        "r3_correlation_trend": "weakening for theorem-related pairs"
+        "r3_correlation_trend": "non_triviality=0 consecutive signals internal improvement exhaustion"
       },
       "priority_order": [
-        {"rank": 1, "variable": "V6", "reason": "human directive (#145): V6 priority with traceability and observability focus"},
-        {"rank": 2, "variable": "V3", "reason": "formal graduation achieved (#77). Maintain quality but no longer top priority"},
-        {"rank": 3, "variable": "V1", "reason": "formal graduation achieved (#77). Maintain quality but no longer top priority"},
-        {"rank": 4, "variable": "V4", "reason": "gate_blocked logging implemented (PR #76). Signal now functional"},
-        {"rank": 5, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly (tradeoff with V1/V3)"},
-        {"rank": 6, "variable": "V5", "reason": "secondary — observability improvements may lift this indirectly"},
-        {"rank": 7, "variable": "V7", "reason": "secondary"}
+        {"rank": 1, "variable": "V7", "reason": "human directive (#250): external application pivot — Claude Code plugin with conditional axiom system"},
+        {"rank": 2, "variable": "V5", "reason": "human directive (#250): external application delivery quality"},
+        {"rank": 3, "variable": "V1", "reason": "maintain formal structure quality (graduation achieved #77)"},
+        {"rank": 4, "variable": "V4", "reason": "gate_blocked logging functional (PR #76). Monitor for external-facing workflows"},
+        {"rank": 5, "variable": "V3", "reason": "internal scripting improvements (V2/V7 improvement axis) — secondary"},
+        {"rank": 6, "variable": "V6", "reason": "V6 priority period complete (theorems 400, evidence 100%). Deprioritized after saturation"},
+        {"rank": 7, "variable": "V2", "reason": "hub variable — monitor but do not optimize directly"}
       ]
     },
     "review_policy": {
@@ -314,10 +314,10 @@
       "triggers": [
         {"condition": "V1 or V3 proxy graduates to formal", "action": "Re-evaluate full priority order"},
         {"condition": "Saturation alert (R6) fires", "action": "Re-evaluate affected V's priority"},
-        {"condition": "20 runs elapsed since last review (next: Run 96)", "action": "Full bias(t) re-evaluation"},
+        {"condition": "20 runs elapsed since last review (next: Run 117)", "action": "Full bias(t) re-evaluation"},
         {"condition": "Human explicitly requests re-evaluation", "action": "Full bias(t) re-evaluation"}
       ],
-      "next_mandatory_review": "Run 96 (20 runs from Run 76)",
+      "next_mandatory_review": "Run 117 (20 runs from Run 97)",
       "trigger_log": [
         {
           "trigger_index": 0,
@@ -327,6 +327,15 @@
           "detected_at_run": 73,
           "action_taken": "resolved — human reviewed via #145 at Run 76. V6 prioritized.",
           "notes": "V1/V3 both graduated in #77. Human response: 'V6を優先したい。様々な観点・視点におけるトレーサビリティと可観測性も関連する。'"
+        },
+        {
+          "trigger_index": 2,
+          "condition": "20 runs elapsed since last review",
+          "fired_at": "2026-04-08",
+          "fired_at_run": 96,
+          "detected_at_run": 96,
+          "action_taken": "resolved — human reviewed via #250 at Run 97. Bias reorder: V7>V5>V1>V4>V3>V6>V2. Strategic pivot to external application.",
+          "notes": "non_triviality=0 x2 consecutive (Run 95,96). Human decided: 内部研磨から外部適用へ軸足を移す. 2本柱: 外向き plugin + 内向きスクリプト化"
         }
       ]
     }
