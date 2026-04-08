@@ -1158,13 +1158,13 @@ Corresponds to ATMS labeling from the research document.
 
 /-- Set of PropositionIds corresponding to each StructureKind.
     manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
-    designConvention encompasses design theorems D1-D13.
+    designConvention encompasses design theorems D1-D14.
     skill/test/document are empty sets due to individual definitions (room for future extension). -/
 def structurePropositions : StructureKind → List PropositionId
   | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
                            .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
   | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
-                           .d9, .d10, .d11, .d12, .d13]
+                           .d9, .d10, .d11, .d12, .d13, .d14]
   | .skill            => []
   | .test             => []
   | .document         => []

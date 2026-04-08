@@ -116,14 +116,19 @@ def Assumption.hasPeriodicReview (a : Assumption) : Bool :=
 
 /-- 仮定の失効イベント。
     D13（前提否定の影響波及）を仮定レベルに拡張する。
-    仮定が失効した場合、この仮定に依存する全ての導出が再検証対象となる。 -/
+    仮定が失効した場合、この仮定に依存する全ての導出が再検証対象となる。
+
+    affectedDerivations は PropositionId のリストであり、
+    DesignFoundation.lean の `assumptionImpact` / `affected` と
+    同じ型を使用する（型的接続の保証）。 -/
 structure AssumptionExpiration where
   /-- 失効した仮定の識別子 -/
   assumptionId : String
   /-- 失効の理由（外部ソースの変更内容、期限到来等） -/
   reason : String
-  /-- この仮定に依存する導出の識別子リスト（D13 の affected に相当） -/
-  affectedDerivations : List String
+  /-- この仮定に依存する導出の PropositionId リスト。
+      DesignFoundation.lean の affected / assumptionImpact と型が一致する。 -/
+  affectedDerivations : List PropositionId
   deriving Repr
 
 -- ============================================================
