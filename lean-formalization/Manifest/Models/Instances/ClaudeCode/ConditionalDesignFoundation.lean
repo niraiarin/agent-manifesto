@@ -281,8 +281,10 @@ def hasCCMapping : DesignPrinciple → Bool
   | .d9_selfMaintenance                => false -- methodological
   | .d12_constraintSatisfactionTaskDesign => false -- methodological
   | .d14_verificationOrderConstraint   => false -- methodological
+  | .d15_harnessEngineering            => false -- methodological (platform-specific patterns)
+  | .d16_informationRelevance          => false -- methodological (context composition strategy)
 
-/-- All 14 design principles enumerated. -/
+/-- All 16 design principles enumerated. -/
 def allDesignPrinciples : List DesignPrinciple :=
   [.d1_enforcementLayering, .d2_workerVerifierSeparation,
    .d3_observabilityFirst, .d4_progressiveSelfApplication,
@@ -290,14 +292,15 @@ def allDesignPrinciples : List DesignPrinciple :=
    .d7_trustAsymmetry, .d8_equilibriumSearch,
    .d9_selfMaintenance, .d10_structuralPermanence,
    .d11_contextEconomy, .d12_constraintSatisfactionTaskDesign,
-   .d13_premiseNegationPropagation, .d14_verificationOrderConstraint]
+   .d13_premiseNegationPropagation, .d14_verificationOrderConstraint,
+   .d15_harnessEngineering, .d16_informationRelevance]
 
 /-- [Derivation Card]
     Derives from: hasCCMapping, allDesignPrinciples
     Proposition: CC-coverage
-    Content: At least 8 of 14 design principles have direct CC primitive mappings.
-      The remaining 6 are methodological principles that CC primitives do not obstruct.
-    Proof strategy: native_decide on the filtered list of all 14 principles -/
+    Content: At least 8 of 16 design principles have direct CC primitive mappings.
+      The remaining 8 are methodological principles that CC primitives do not obstruct.
+    Proof strategy: native_decide on the filtered list of all 16 principles -/
 theorem cc_coverage_at_least_half :
   (allDesignPrinciples.filter hasCCMapping).length ≥ 8 := by
   native_decide
