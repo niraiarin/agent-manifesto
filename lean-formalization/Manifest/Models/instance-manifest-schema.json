@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "instance-manifest-schema",
+  "title": "Conditional Axiom System Instance Manifest",
+  "description": "条件付き公理系インスタンスのトレーサビリティマニフェスト。任意のプラットフォーム（Claude Code, GitHub Actions 等）に対して、公理↔実装の双方向マッピングを定義する共通スキーマ。",
+  "type": "object",
+  "required": ["version", "system", "assumptions", "axiom_to_config", "config_to_axiom"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "スキーマバージョン (semver)"
+    },
+    "system": {
+      "type": "object",
+      "required": ["name", "leanModule"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "インスタンス名（例: claude-code, github-actions）"
+        },
+        "leanModule": {
+          "type": "string",
+          "description": "Lean モジュールパス（例: Manifest.Models.Instances.ClaudeCode）"
+        },
+        "description": {
+          "type": "string",
+          "description": "インスタンスの説明"
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "description": "このインスタンスの仮定 (C/H)。Assumptions.lean と同期。",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "content"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "仮定の一意識別子（例: CC-C1, CC-H3）"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["C", "H"],
+            "description": "C=人間判断, H=LLM推論"
+          },
+          "content": {
+            "type": "string",
+            "description": "仮定の内容"
+          },
+          "sourceRef": {
+            "type": "string",
+            "description": "TemporalValidity: 再 fetch 可能な外部ソース参照"
+          },
+          "lastVerified": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "TemporalValidity: 最終検証日 (YYYY-MM-DD)"
+          },
+          "reviewInterval": {
+            "type": ["integer", "null"],
+            "description": "TemporalValidity: 見直し間隔（日数）。null=明示的トリガーのみ"
+          },
+          "refutation": {
+            "type": "string",
+            "description": "H のみ: 反証条件"
+          }
+        }
+      }
+    },
+    "axiom_to_config": {
+      "type": "array",
+      "description": "順方向マッピング: CC axiom → 実装ファイル",
+      "items": {
+        "type": "object",
+        "required": ["axiomId", "designPrinciple", "claim"],
+        "properties": {
+          "axiomId": {
+            "type": "string",
+            "description": "CC axiom の識別子（例: CC1, CC5b）"
+          },
+          "designPrinciple": {
+            "type": "string",
+            "description": "対応する D 定理（例: D1, D2, D11）"
+          },
+          "claim": {
+            "type": "string",
+            "description": "この axiom が主張する内容"
+          },
+          "implements": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "実装ファイルパスのリスト"
+          },
+          "dependsOnAssumptions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "この axiom が依存する仮定 ID のリスト"
+          },
+          "note": {
+            "type": "string",
+            "description": "補足情報"
+          }
+        }
+      }
+    },
+    "config_to_axiom": {
+      "type": "array",
+      "description": "逆方向マッピング: 実装ファイル → CC axiom",
+      "items": {
+        "type": "object",
+        "required": ["config", "role"],
+        "properties": {
+          "config": {
+            "type": "string",
+            "description": "実装ファイルパス"
+          },
+          "axiomIds": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "正当化する CC axiom ID のリスト。空=CC axiom 根拠なし"
+          },
+          "role": {
+            "type": "string",
+            "description": "このファイルの役割"
+          }
+        }
+      }
+    }
+  }
+}
