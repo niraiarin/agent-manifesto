@@ -72,7 +72,21 @@ model-questioner エージェントを起動し、人間との対話を行う。
 ```
 Phase 0: 「どんなものを作ろうとしていますか？」
 Phase 1: 回答から要件・仮定・制約を引き出す
+  Phase 1a: 各仮定の時間的有効性を確認する（#225）
 ```
+
+#### Phase 1a: 時間的有効性の確認
+
+各 C/H について以下を確認する（TemporalValidity、#225）:
+
+- **ソース参照**: 「この仮定の根拠となるドキュメント・URL・リポジトリは？」
+- **鮮度**: 「このソースを最後に確認したのはいつですか？」
+- **見直し間隔**: 「このソースはどのくらいの頻度で変わりますか？」
+  - 頻繁に変化 → reviewInterval を設定（例: 90 日）
+  - 安定している → reviewInterval = None（明示的トリガーのみ）
+  - 不明 → デフォルト 180 日を提案
+
+これにより、生成される Assumption に `validity` フィールドが付与される。
 
 ### Step 2: 構造推論（Phase 2）
 
@@ -91,6 +105,29 @@ Phase 2 で矛盾が検出された場合、人間に平易な言葉で確認す
 ### Step 4: ModelSpec JSON の生成
 
 Phase 2 の出力を JSON ファイルに書き出す。
+
+各 Assumption の `validity` を JSON に含める:
+
+```json
+{
+  "assumptions": [
+    {
+      "id": "C1",
+      "source": { "humanDecision": { "phase": 1, "question": "Q1", "date": "2026-04-08" } },
+      "content": "...",
+      "validity": {
+        "sourceRef": "https://docs.example.com/api/v2",
+        "lastVerified": "2026-04-08",
+        "reviewInterval": 90
+      }
+    }
+  ]
+}
+```
+
+`validity` フィールドは Optional。既存の JSON（`validity` なし）はそのまま互換。
+`generate-conditional-axiom-system.sh` と `check-monotonicity.sh` は `validity` を
+パースしない（層分類と単調性のみ検証）ため、スクリプト変更は不要。
 
 ### Step 5: 事前検証
 
@@ -116,6 +153,24 @@ bash lean-formalization/Manifest/Models/generate-conditional-axiom-system.sh \
 
 Phase 1-3 で得た C と H を `Assumptions/EpistemicLayer.lean` に書き出す。
 
+各 Assumption には Phase 1a で収集した `validity` を付与する:
+
+```lean
+def c1 : Assumption := {
+  id := "C1"
+  source := .humanDecision 1 "Q1" "2026-04-08"
+  content := "..."
+  validity := some {
+    sourceRef := "https://docs.example.com/api/v2"
+    lastVerified := "2026-04-08"
+    reviewInterval := some 90  -- 90日ごとに見直し
+  }
+}
+```
+
+`validity` が `none` の仮定は「恒久的」と見なされるが、
+条件付き公理系の仮定は外部ソースに由来するため `some` を推奨する。
+
 ### Step 8: 完了
 
 git commit を提案する（人間の承認を待つ）。
@@ -130,3 +185,18 @@ git commit を提案する（人間の承認を待つ）。
 | D (導出) | ConditionalAxiomSystem.lean | 生成スクリプトで出力 |
 
 C と H は Lean の `EpistemicSource` 型で型レベルで区別される。
+各仮定の時間的有効性は `TemporalValidity` 型で追跡される（#225）。
+
+## 仮定の時間的有効性（#225）
+
+条件付き公理系の仮定 (C/H) は外部ソースに由来し、時間とともに変化しうる。
+Phase 1a で各仮定の `TemporalValidity` を収集し、Assumption に付与する。
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| sourceRef | String | 再 fetch 可能な外部ソース参照 |
+| lastVerified | String | 最終検証日 (YYYY-MM-DD) |
+| reviewInterval | Option Nat | 見直し間隔（日数）。None = 明示的トリガーのみ |
+
+仮定が失効した場合、D13 の影響波及が発動する:
+依存する導出は再検証対象となる（DesignFoundation.lean の `assumptionImpact`）。
