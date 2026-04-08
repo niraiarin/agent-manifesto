@@ -1082,6 +1082,7 @@ inductive PropositionId where
   | l1 | l2 | l3 | l4 | l5 | l6
   -- D: 設計定理
   | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
+  | d15 | d16
   deriving BEq, Repr
 
 /-- Returns the category of a proposition. -/
@@ -1091,7 +1092,8 @@ def PropositionId.category : PropositionId → PropositionCategory
   | .p1 | .p2 | .p3 | .p4 | .p5 | .p6 => .principle
   | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
   | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
-  | .d9 | .d10 | .d11 | .d12 | .d13 | .d14 => .designTheorem
+  | .d9 | .d10 | .d11 | .d12 | .d13 | .d14
+  | .d15 | .d16 => .designTheorem
 
 /-- Returns the direct dependencies of a proposition. Encodes the derivation structure of the manifesto.
 
@@ -1132,6 +1134,10 @@ def PropositionId.dependencies : PropositionId → List PropositionId
   | .d12 => [.p6, .t3, .t7, .t8]
   | .d13 => [.p3, .t5]
   | .d14 => [.p6, .t7, .t8]
+  -- D15: ハーネス工学定理（T3+T4+T5+T6+T7+T8+P6）
+  | .d15 => [.t3, .t4, .t5, .t6, .t7, .t8, .p6]
+  -- D16: 情報関連性定理（context_contribution_nonuniform + T7 + T8）
+  | .d16 => [.t3, .t7, .t8]
 
 /-- A proposition directly depends on another proposition. -/
 def propositionDependsOn (a b : PropositionId) : Bool :=
