@@ -141,35 +141,55 @@ theorem cc4_normative_exists :
 -- D2 マッピング: Subagent の独立性条件
 -- ============================================================
 
-/-- Claude Code subagent が満たす VerificationIndependence 条件。
-    CC-H1 (executionAutomatic via hook) + CC-H2 (contextSeparated) を反映。
-    framingIndependent は verifier.md の設計による（Worker が基準を定義しない）。
+/-- Claude Code subagent の独立性条件（hook 経由で自動起動時）。
+    CC-H1 (executionAutomatic) + CC-H2 (contextSeparated) を反映。
+    framingIndependent は verifier.md の設計による。
     evaluatorIndependent は false（同一モデルファミリ）。 -/
-def ccSubagentIndependence : VerificationIndependence := {
+def ccSubagentHookInvoked : VerificationIndependence := {
   contextSeparated := true      -- CC-H2: 独立コンテキストウィンドウ
   framingIndependent := true    -- verifier.md: Verifier が自身の基準で判断
-  executionAutomatic := true    -- CC-H1: hook 経由で自動起動時
+  executionAutomatic := true    -- CC-H1: hook 経由で Worker が回避不可
+  evaluatorIndependent := false -- 同一モデルファミリ（Anthropic Claude）
+}
+
+/-- Claude Code subagent の独立性条件（Worker が手動で /verify を呼出時）。
+    手動呼出しでは executionAutomatic=false（Worker の裁量で呼ばないことが可能）。 -/
+def ccSubagentManualInvoked : VerificationIndependence := {
+  contextSeparated := true      -- CC-H2: 独立コンテキストウィンドウ
+  framingIndependent := true    -- verifier.md: Verifier が自身の基準で判断
+  executionAutomatic := false   -- 手動呼出し: Worker が検証を回避可能
   evaluatorIndependent := false -- 同一モデルファミリ（Anthropic Claude）
 }
 
 /-- [Derivation Card]
-    Derives from: requiredConditions (D2), ccSubagentIndependence
+    Derives from: requiredConditions (D2), ccSubagentHookInvoked
     Proposition: CC5
-    Content: Claude Code subagent satisfies 3 of 4 independence conditions.
+    Content: Hook-invoked subagent satisfies 3 of 4 independence conditions.
       Sufficient for high risk (3 required), insufficient for critical (4 required).
     Proof strategy: simp on satisfiedConditions -/
-theorem cc5_subagent_satisfies_high :
-  satisfiedConditions ccSubagentIndependence ≥ requiredConditions .high := by
-  simp [satisfiedConditions, ccSubagentIndependence, requiredConditions]
+theorem cc5_subagent_hook_satisfies_high :
+  satisfiedConditions ccSubagentHookInvoked ≥ requiredConditions .high := by
+  simp [satisfiedConditions, ccSubagentHookInvoked, requiredConditions]
 
 /-- [Derivation Card]
-    Derives from: requiredConditions (D2), ccSubagentIndependence
+    Derives from: requiredConditions (D2), ccSubagentManualInvoked
+    Proposition: CC5b
+    Content: Manually-invoked subagent satisfies only 2 of 4 conditions.
+      Sufficient for moderate risk (2 required), insufficient for high (3 required).
+    Proof strategy: native_decide -/
+theorem cc5b_subagent_manual_satisfies_moderate :
+  satisfiedConditions ccSubagentManualInvoked ≥ requiredConditions .moderate ∧
+  satisfiedConditions ccSubagentManualInvoked < requiredConditions .high := by
+  constructor <;> native_decide
+
+/-- [Derivation Card]
+    Derives from: requiredConditions (D2), ccSubagentHookInvoked
     Proposition: CC6
-    Content: Claude Code subagent is insufficient for critical risk verification.
+    Content: Even hook-invoked subagent is insufficient for critical risk.
       evaluatorIndependent=false means human review is required for L1 changes.
     Proof strategy: native_decide -/
 theorem cc6_subagent_insufficient_critical :
-  satisfiedConditions ccSubagentIndependence < requiredConditions .critical := by
+  satisfiedConditions ccSubagentHookInvoked < requiredConditions .critical := by
   native_decide
 
 -- ============================================================
@@ -262,21 +282,24 @@ def hasCCMapping : DesignPrinciple → Bool
   | .d12_constraintSatisfactionTaskDesign => false -- methodological
   | .d14_verificationOrderConstraint   => false -- methodological
 
+/-- All 14 design principles enumerated. -/
+def allDesignPrinciples : List DesignPrinciple :=
+  [.d1_enforcementLayering, .d2_workerVerifierSeparation,
+   .d3_observabilityFirst, .d4_progressiveSelfApplication,
+   .d5_specTestImpl, .d6_boundaryMitigationVariable,
+   .d7_trustAsymmetry, .d8_equilibriumSearch,
+   .d9_selfMaintenance, .d10_structuralPermanence,
+   .d11_contextEconomy, .d12_constraintSatisfactionTaskDesign,
+   .d13_premiseNegationPropagation, .d14_verificationOrderConstraint]
+
 /-- [Derivation Card]
-    Derives from: hasCCMapping
+    Derives from: hasCCMapping, allDesignPrinciples
     Proposition: CC-coverage
     Content: At least 8 of 14 design principles have direct CC primitive mappings.
       The remaining 6 are methodological principles that CC primitives do not obstruct.
-    Proof strategy: native_decide on the count -/
+    Proof strategy: native_decide on the filtered list of all 14 principles -/
 theorem cc_coverage_at_least_half :
-  ([DesignPrinciple.d1_enforcementLayering,
-    .d2_workerVerifierSeparation,
-    .d3_observabilityFirst,
-    .d4_progressiveSelfApplication,
-    .d5_specTestImpl,
-    .d10_structuralPermanence,
-    .d11_contextEconomy,
-    .d13_premiseNegationPropagation].filter hasCCMapping).length ≥ 8 := by
+  (allDesignPrinciples.filter hasCCMapping).length ≥ 8 := by
   native_decide
 
 end Manifest.Models.Instances.ClaudeCode
