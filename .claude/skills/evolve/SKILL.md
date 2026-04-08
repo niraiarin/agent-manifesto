@@ -578,9 +578,11 @@ Integrator は以下を実行:
    （sync-counts → lake build → test-all.sh を自動ループ。不整合は自動修正）
    （注: プロジェクトルートの `scripts/check-loop.sh` を指す。スキルディレクトリの `scripts/` ではない）
 4. git commit（互換性分類付き）
-5. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
-6. `echo '<entry>' | bash scripts/validate-evolve-entry.sh` で JSONL エントリを事前検証（C1-C7）
-7. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
+5. `bash scripts/generate-evolve-entry.sh` でテンプレート生成（session_id, lean, tests, benchmark 自動取得）
+6. テンプレートに judgmental フィールド（improvements, rejected, phases, v_changes, notes）を埋める
+7. `echo '<entry>' | bash scripts/validate-evolve-entry.sh` で JSONL エントリを事前検証（C1-C7）
+8. evolve-history.jsonl に記録
+9. `bash scripts/sync-hypothesis-table.sh` で SKILL.md 仮説テーブルを自動同期
 
 ### Step 5: PR 作成とマージ
 
@@ -812,14 +814,14 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（94回実行データ、Run 95 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（95回実行データ、Run 95 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。96回 success / 1回 partial / 3回 observation。Verifier pass rate: 全期間 323/422 PASS（76%） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。97回 success / 1回 partial / 3回 observation。Verifier pass rate: 全期間 327/427 PASS（76%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
-| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=51、theorems=392。compression 7.68x（768%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間373改善統合（220 conservative extension, 150 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
-| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。33 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63, 72, 73, 74, 75, 77, 78, 79, 80, 81, 84, 86, 87, 87b, 88, 89, 90, 91, 92, 93, 94）。session cost: mean 8.43 USD, median 6.73 USD, range 0.15-24.52 USD。コスト分布は bimodal 化（前半 16 runs mean 4.31 USD、後半 17 runs mean 12.31 USD）。セッション粒度は維持されているが、コスト増大傾向の要因分析が必要 |
-| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 反証的証拠あり。33 データポイント: CPI mean 2.34 USD/improvement, median 1.62 USD (range 0.02-6.96 USD)。前半 16 runs CPI mean 1.11 USD → 後半 17 runs CPI mean 3.49 USD（214% 増加）。Run 77 以降のコスト増大が顕著（model 変更・タスク複雑度上昇が寄与要因の候補）。反証条件「10 runs 以上で単調増加」は後半 17 runs で成立しており、仮説の見直しが必要 |
+| H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=51、theorems=400（Run 95 時点。初期 392→#225 で +2→main 統合で 400）。compression 7.84x（784%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間377改善統合（221 conservative extension, 153 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
+| H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。34 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63, 72, 73, 74, 75, 77, 78, 79, 80, 81, 84, 86, 87, 87b, 88, 89, 90, 91, 92, 93, 94）。session cost: mean 8.54 USD, median 7.26 USD, range 0.15-24.52 USD。コスト分布は bimodal 化（前半 16 runs mean 4.31 USD、後半 17 runs mean 12.31 USD）。セッション粒度は維持されているが、コスト増大傾向の要因分析が必要 |
+| H6: /evolve のコスト効率は経時的に改善する | cost/improvement が 10 runs 以上で単調増加 | 反証的証拠あり。34 データポイント: CPI mean 2.36 USD/improvement, median 1.72 USD (range 0.03-6.96 USD)。前半 16 runs CPI mean 1.11 USD → 後半 17 runs CPI mean 3.49 USD（214% 増加）。Run 77 以降のコスト増大が顕著（model 変更・タスク複雑度上昇が寄与要因の候補）。反証条件「10 runs 以上で単調増加」は後半 17 runs で成立しており、仮説の見直しが必要 |
 
 これらの仮説は evolve の実行を通じて検証・更新される。
 

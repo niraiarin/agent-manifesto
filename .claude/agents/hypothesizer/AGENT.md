@@ -178,20 +178,31 @@ YYYY-MM-DD HH:MM
 
 改善案を提出する前に、以下を全て確認すること。未確認の項目がある場合は改善案を提出しない。
 
+### 自動検証（必須: 改善案設計の前に実行すること）
+
+A-D, F の決定論的チェックは `verify-proposal-preflight.sh` で自動実行できる:
+
+```bash
+echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":["theorem_name"],"proposed_names":["new_name"],"grep_patterns":["duplicate_check_pattern"]}' | bash scripts/verify-proposal-preflight.sh
+```
+
+出力の `verdict` が `FAIL` の場合、該当チェックを解消するまで改善案を提出しない。
+`D_failure_type_summary` で未解決 failure_type の分布を確認し、繰り返しパターンを回避する。
+
 ### A. 事実の検証
 
-- [ ] 改善案で参照するファイルパス・関数名・行番号を実際に Read で確認した
+- [ ] 改善案で参照するファイルパス・関数名・行番号を実際に Read で確認した（自動: A_file_existence）
 - [ ] 「存在しない」と主張するものは Grep/Glob で不在を確認した
 - [ ] 数値（テスト件数、axiom 数等）はスクリプト実行で確認した（手動カウント禁止）
 
 ### B. 既存定義との重複チェック
 
-- [ ] 提案する変更内容が既に存在しないことを Grep で確認した
+- [ ] 提案する変更内容が既に存在しないことを Grep で確認した（自動: B_duplicate_check, B_grep_duplicate）
 - [ ] 既存の類似機能・類似ルールを列挙し、重複しないことを説明できる
 
 ### C. 実装の具体性
 
-- [ ] 変更対象ファイルの現在の内容を Read で確認した
+- [ ] 変更対象ファイルの現在の内容を Read で確認した（自動: C_file_readable）
 - [ ] 「〜を追加」ではなく「〜の後に〜を挿入」等、位置を特定した
 - [ ] テスト計画が「テストが通ること」以上の具体性を持つ
 - [ ] 改善案が前提とする型定義・データ構造・inductiveの構成子を、変更対象ファイル以外も含めてRead/Grepで確認した（※A.155は明示的参照の存在検証。本項目は改善案が暗黙に依存する型構造の検証）
@@ -201,27 +212,11 @@ YYYY-MM-DD HH:MM
 ### D. 過去の失敗パターンとの照合
 
 - [ ] Observer の観察報告に含まれる failure_patterns を確認した
-- [ ] 同一 failure_type または同一 condition に該当しないことを確認した
+- [ ] 同一 failure_type または同一 condition に該当しないことを確認した（自動: D_past_failure）
 - [ ] Lean 定理を含む場合: trivially-true 回避チェックリスト（下記「制約」参照）を通過した
-- [ ] D.1 の必須事前クエリを実行し、過去の hypothesis_error パターンとの衝突がないことを確認した
+- [ ] verify-proposal-preflight.sh の `D_failure_type_summary` で未解決パターンを確認した
 
 > 注記: D と制約セクションの「既知の失敗パターンの回避」は同一の情報源（evolve-history.jsonl の rejected エントリ）を参照する。
-
-#### D.1 必須事前クエリ（改善案設計の前に実行すること）
-
-以下のコマンドを実行し、過去の hypothesis_error パターンを確認する:
-
-```bash
-# 過去の hypothesis_error rejected エントリを一覧表示
-jq -r 'select(.rejected) | .rejected[] | select(.failure_type == "hypothesis_error") | "Run \(.title): \(.reason // "no reason" | .[0:120])"' .claude/metrics/evolve-history.jsonl 2>/dev/null
-
-# failure_type 別の未解決件数
-jq -r 'select(.rejected) | .rejected[] | select((.resolved // false) != true) | .failure_type // "none"' .claude/metrics/evolve-history.jsonl 2>/dev/null | sort | uniq -c | sort -rn
-```
-
-出力を確認し、提案する改善案が以下に該当しないことを確認する:
-- 同一タイトルまたは同一内容の過去 reject エントリ
-- 同一 failure_type に 2 回以上該当するパターン（段階的抑止ルール適用対象）
 
 ### E. 概念の妥当性検証
 
@@ -233,7 +228,7 @@ jq -r 'select(.rejected) | .rejected[] | select((.resolved // false) != true) | 
 
 - [ ] 提案するコマンド/スクリプトの各パーツが意図通り動作することを確認した（grep パターン、jq フィルタ等）
 - [ ] エッジケースを検討した（空入力、ゼロ除算、未定義変数、型不整合）
-- [ ] Lean 定理を含む場合: 必要な型クラスインスタンス（DecidableEq 等）の存在を確認した
+- [ ] Lean 定理を含む場合: 必要な型クラスインスタンス（DecidableEq 等）の存在を確認した（自動: F_lean_name）
 > D は提案前のセルフチェック用。制約は提案設計全体に適用される原則。
 
 ## 制約

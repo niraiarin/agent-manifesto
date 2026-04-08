@@ -3,7 +3,7 @@ name: design-implementation-plan
 user-invocable: true
 description: >
   マニフェスト準拠の設計実装計画書を任意のプラットフォーム向けに生成する。
-  D1-D9 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に
+  D1-D14 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に
   マッピングし、フェーズ別ロードマップ、テストケース、V1-V7 計測設計を含む計画書を出力する。
   「実装計画」「設計計画」「ロードマップ」「design plan」「implementation plan」
   「何から実装すべき」で起動。
@@ -28,8 +28,8 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 このスキルは以下のファイルを参照する:
 
-1. `${MANIFESTO_ROOT}/docs/design-development-foundation.md` — D1–D9 の設計開発基礎論（プラットフォーム非依存）
-2. `${MANIFESTO_ROOT}/lean-formalization/Manifest/DesignFoundation.lean` — D1–D9 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型を含む）
+1. `${MANIFESTO_ROOT}/docs/design-development-foundation.md` — D1–D14 の設計開発基礎論（プラットフォーム非依存）
+2. `${MANIFESTO_ROOT}/lean-formalization/Manifest/DesignFoundation.lean` — D1–D14 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型, `assumptionImpact` 等を含む）
 3. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
 4. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Axioms.lean` — T1–T8 公理（T₀ base theory）
 5. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
@@ -111,7 +111,7 @@ Step 0 の成果を以下の形式でまとめる:
 
 以下のファイルを読み込む:
 
-- `docs/design-development-foundation.md` の D1–D9 全文
+- `docs/design-development-foundation.md` の D1–D14 全文
 - `lean-formalization/Manifest/Ontology.lean` の L1–L6（境界条件セクションの doc comment）
 - `lean-formalization/Manifest/Observable.lean` の V1–V7（変数セクションの doc comment）
 - `lean-formalization/Manifest/Axioms.lean` の T1–T8, `EmpiricalPostulates.lean` の E1–E2, `Principles.lean` の P1–P6
@@ -225,6 +225,76 @@ Phase 5: 動的調整
 - **D8（均衡探索）**: 拡張トリガーと**縮小トリガー**の両方が設計されているか
 - **D9（メンテナンス）**: 計画自体の更新手順が含まれているか
 
+### Step 8b: D10–D14 の検証
+
+D10–D14 は D1–D9 を補完する設計定理。Provider マッピングにおいて以下を検証する。
+
+#### D10（構造永続性）: T1 + T2
+
+エージェントは一時的だが構造は永続する。
+
+- Provider のプリミティブを **T1（セッション内で消滅）** と **T2（セッション跨ぎで永続）** に分類する
+- 改善の蓄積は T2 プリミティブを通じてのみ可能
+- T2 プリミティブで作成される構造は、**書いたエージェントの文脈なしに読める**か確認する
+
+確認項目:
+- [ ] 各プリミティブの T1/T2 分類が Step 2 の表に含まれている
+- [ ] 設計判断・学習は T2 プリミティブに符号化される手順がある
+- [ ] T1 プリミティブに蓄積された情報が消失するリスクが識別されている
+
+#### D11（コンテキスト経済）: T3 + D1 + D3
+
+コンテキスト（作業メモリ）は有限であり、全構造要素にコンテキストコストがある。
+
+- D1 の強制レイヤーとコンテキストコストは**逆相関**する:
+  構造的強制（低コスト）> 手続的強制（中コスト）> 規範的指針（高コスト）
+- 規範的指針の肥大化は V2（コンテキスト効率）を直接劣化させる
+- 構造的強制への昇格はコンテキスト経済の観点からも正当化される
+
+確認項目:
+- [ ] Provider の各プリミティブにコンテキストコスト（高/中/低）が割り当てられている
+- [ ] 規範的指針の肥大化リスクが識別されている
+- [ ] D3 に従い、コンテキストコストが測定可能である（V2 計測手段が Step 5 に含まれる）
+
+#### D12（制約充足タスク設計）: P6 + T3 + T7 + T8
+
+タスク遂行は有限リソース下の制約充足問題（CSP）である。
+
+- 「常に小さく分割する」は原理ではない。制約値（コンテキスト余裕、時間、精度要求）に応じて最適粒度が異なる
+- タスク分解・並列化は CSP の解であり、原理ではない
+- タスク設計自体が P2 の検証対象
+
+確認項目:
+- [ ] Provider のタスク分割手段（サブエージェント、並列実行等）が列挙されている
+- [ ] 分割粒度の判断基準が T3/T7/T8 の制約値に基づいている
+- [ ] タスク設計の検証手順が Step 4 (D2) と連携している
+
+#### D13（前提否定の影響波及）: P3 + Section 8 + T5
+
+前提が否定されたとき、依存する全導出を特定し再検証する。
+
+- Provider の依存追跡手段（バージョン管理、設定の依存関係、テストカバレッジ等）を特定する
+- 条件付き公理系の仮定 (C/H) が失効した場合の影響波及パスを設計する
+- TemporalValidity (#225) に基づき、仮定の見直しメカニズムを含める
+
+確認項目:
+- [ ] Provider 上での依存追跡手段が特定されている
+- [ ] 前提変更時の影響集合の計算方法がある（手動 or 自動）
+- [ ] 条件付き公理系の仮定に TemporalValidity（sourceRef, lastVerified, reviewInterval）が設定されている
+
+#### D14（検証順序の制約充足性）: P6 + T7 + T8
+
+有限リソース下では検証順序が結果に影響する。最適な順序は公理で定まらない。
+
+- 検証順序の選択は P6 の CSP の一部
+- 本プロジェクトの /research では fail-fast（リスク降順）を設計規約として採用
+- 具体的な順序決定方法は L6（設計規約）レベルの判断
+
+確認項目:
+- [ ] Provider 上での検証順序の選択基準が明示されている
+- [ ] 検証コストが非一様であることが認識されている
+- [ ] 選択基準が L6 の設計規約として記録されている（公理として主張しない）
+
 ## 出力
 
 以下の構成の設計実装計画書を生成する:
@@ -253,8 +323,8 @@ Phase 5: 動的調整
 ## 6. テストケース一覧
 （Step 7 の結果: 各フェーズの構造的/行動的テスト）
 
-## 7. D6–D9 チェックリスト
-（Step 8 の結果）
+## 7. D6–D14 チェックリスト
+（Step 8 + 8b の結果）
 
 ## 8. リスクと未解決事項
 （Provider の制約により D が完全に実現できない場合の記録）
@@ -268,7 +338,7 @@ Phase 5: 動的調整
 **このステップは出力の検証ではなく、生成プロセス自体の検証。**
 
 DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
-設計実装計画書を生成する行為自体が D1–D9 に従っているかを検証する。
+設計実装計画書を生成する行為自体が D1–D14 に従っているかを検証する。
 
 確認項目:
 
@@ -292,7 +362,7 @@ DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
 
 以下のいずれかが発生した場合、このスキルの更新を検討する:
 
-- `docs/design-development-foundation.md` の D1–D9 に変更があった
+- `docs/design-development-foundation.md` の D1–D14 に変更があった
 - `DesignFoundation.lean` に新しい型・定理が追加された
 - テスト実行で品質基準を満たさない出力が繰り返し生成された
 - 新しい Provider への適用で、Step 2–8 が不十分であることが判明した
@@ -322,7 +392,7 @@ DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
 - [ ] Provider の仕様が公式ドキュメントに基づいて調査されている（Step 0a）
 - [ ] リスクの高い構成について PoC が実施されている（Step 0c）
 - [ ] 想定と実態の乖離が記録されている（Step 0d）
-- [ ] D1–D9 の全原理が Provider プリミティブにマッピングされている
+- [ ] D1–D14 の全原理が Provider プリミティブにマッピングされている
 - [ ] L1 が構造的強制で実装されている（D1）
 - [ ] P2 が3条件を満たす形で実現されている（D2）
 - [ ] V1–V7 の各変数に測定方法が割り当てられている（D3）
