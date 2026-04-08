@@ -21,7 +21,8 @@ MODE="${1:---update}"
 
 THEOREM_COUNT=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ')
 AXIOM_COUNT=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ')
-SORRY_COUNT=0  # lake build の rfl 証明で保証
+# sorry タクティクの実使用を検出（コメント・識別子内の言及は除外）
+SORRY_COUNT=$({ grep -E '^\s*sorry\s*$|:=\s*sorry\s*$|\bby\s+sorry\b' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null || true; } | wc -l | tr -d ' ')
 COMPRESSION=$((THEOREM_COUNT * 100 / AXIOM_COUNT))
 COMPRESSION_DECIMAL=$(echo "scale=2; $COMPRESSION / 100" | bc)
 
