@@ -60,7 +60,8 @@ if [[ -d "$LEAN_DIR/Manifest" ]]; then
   # Match sync-counts.sh: top-level Manifest/*.lean only (NOT recursive)
   AXIOMS=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null | wc -l | tr -d ' ')
   THEOREMS=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null | wc -l | tr -d ' ')
-  SORRY=0  # lake build guarantees sorry=0
+  # sorry タクティクの実使用を検出（コメント・識別子内の言及は除外）
+  SORRY=$({ grep -E '^\s*sorry\s*$|:=\s*sorry\s*$|\bby\s+sorry\b' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null || true; } | wc -l | tr -d ' ')
 fi
 
 # Test results
