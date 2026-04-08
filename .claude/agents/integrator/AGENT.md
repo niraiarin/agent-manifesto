@@ -114,6 +114,10 @@ Observer が検出した退役候補を処理する:
 
 以下の標準スキーマに従って記録する。**全フィールドが必須。値が不明な場合は 0 または null を記入。省略不可。**
 
+**テンプレート生成（推奨）:** `bash scripts/generate-evolve-entry.sh` で deterministic フィールド
+（run, timestamp, session_id, lean, tests, benchmark）が自動取得されたテンプレートを生成し、
+judgmental フィールド（improvements, rejected, phases, v_changes, notes）を埋める。
+
 **重要: session_id 取得と JSONL 記録は 1 つの Bash 呼び出しで実行する。**
 分離すると session_id 取得がスキップされる（Run 56-59 で発生済み）。
 

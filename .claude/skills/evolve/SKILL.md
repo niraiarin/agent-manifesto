@@ -578,9 +578,11 @@ Integrator は以下を実行:
    （sync-counts → lake build → test-all.sh を自動ループ。不整合は自動修正）
    （注: プロジェクトルートの `scripts/check-loop.sh` を指す。スキルディレクトリの `scripts/` ではない）
 4. git commit（互換性分類付き）
-5. **session_id を tool-usage.jsonl から取得**（H5 コスト追跡に必須）
-6. `echo '<entry>' | bash scripts/validate-evolve-entry.sh` で JSONL エントリを事前検証（C1-C7）
-7. evolve-history.jsonl に記録（session_id と `cost` フィールドを含む）
+5. `bash scripts/generate-evolve-entry.sh` でテンプレート生成（session_id, lean, tests, benchmark 自動取得）
+6. テンプレートに judgmental フィールド（improvements, rejected, phases, v_changes, notes）を埋める
+7. `echo '<entry>' | bash scripts/validate-evolve-entry.sh` で JSONL エントリを事前検証（C1-C7）
+8. evolve-history.jsonl に記録
+9. `bash scripts/sync-hypothesis-table.sh` で SKILL.md 仮説テーブルを自動同期
 
 ### Step 5: PR 作成とマージ
 
