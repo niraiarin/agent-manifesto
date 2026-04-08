@@ -918,7 +918,7 @@ echo "  },"
 MEMORY_DIR_PATH=""
 for candidate in \
   "$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory" \
-  "$HOME/.claude/projects/$(echo "$PROJECT_ROOT" | tr '/' '-' | sed 's/^-//')/memory"; do
+  "$HOME/.claude/projects/$(echo "$BASE" | tr '/' '-')/memory"; do
   if [ -d "$candidate" ]; then
     MEMORY_DIR_PATH="$candidate"
     break

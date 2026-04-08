@@ -378,6 +378,17 @@ Agent tool を複数同時に使用（1 つの response 内で N 個起動）:
     subagent_type: hypothesizer
     prompt: 観察項目 + PASS_LIST = []（並列実行のため他の結果は未知）
 
+  **事前検証（必須 — 改善案設計の前に実行）:**
+  各 Hypothesizer は改善案の設計前に `verify-proposal-preflight.sh` を実行し、
+  過去の FAIL パターンとの衝突を検出する:
+  ```bash
+  echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":[],"proposed_names":[],"grep_patterns":[]}' | bash scripts/verify-proposal-preflight.sh
+  ```
+  出力の `verdict` が `FAIL` の場合、該当チェック（特に `D_past_failure`）を
+  解消するまで改善案を提出しない。
+  `D_failure_type_summary` で未解決 failure_type の分布を確認し、
+  繰り返しパターンを回避する（`deterministic_must_be_structural`）。
+
 各 Hypothesizer は独立に改善案を設計する:
   - 改善案が設計不可（行動空間外等）→ 理由を付けて `skipped` として記録
   - 改善案が設計可能 → proposals に追加
