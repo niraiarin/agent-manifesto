@@ -148,7 +148,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     workflowM              := 8
     axiomQualityM          := 11
     epistemicLayerM        := 47
-    taskClassificationM    := 10
+    taskClassificationM    := 16
     traceabilityM          := 13 }
 
 -- ============================================================
@@ -173,7 +173,7 @@ theorem current_total_axioms :
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 394 := by rfl
+  currentProfile.theoremCount = 400 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
