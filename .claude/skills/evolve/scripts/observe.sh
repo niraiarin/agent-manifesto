@@ -860,9 +860,122 @@ try:
 except: print('[]')
 " 2>/dev/null || echo "[]")
   echo "    \"priority_repairs\": $TRACE_PRIORITY"
-  echo "  }"
+  echo "  },"
 else
-  echo "  \"manifest_trace\": null"
+  echo "  \"manifest_trace\": null,"
 fi
+
+# ============================================================
+# Observer 決定論的データ収集（G1 #232: judgmental→structural 移行）
+# 以下のセクションは、従来 Observer Agent が手動で実行していた
+# 決定論的データ収集をスクリプト化したもの。
+# 根拠: mixed_task_decomposition (TaskClassification.lean)
+# ============================================================
+
+# --- GAP 1: Human Feedback History ---
+EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
+if [ -f "$EVOLVE_HISTORY" ]; then
+  HUMAN_FEEDBACK=$(jq -s -c '[.[] | select(.type=="human_feedback") | {run: .run, timestamp: .timestamp, notes: .notes}] | .[-5:]' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
+else
+  HUMAN_FEEDBACK="[]"
+fi
+echo "  \"human_feedback_recent\": $HUMAN_FEEDBACK,"
+
+# --- GAP 2: T6 Issues from GitHub ---
+if command -v gh >/dev/null 2>&1; then
+  T6_ISSUES=$(gh issue list --label "T6:human-review" --state all --json number,title,state,comments --limit 20 2>/dev/null | \
+    jq -c '[.[] | {number, title, state, has_comments: ((.comments // []) | length > 0), comment_count: ((.comments // []) | length)}]' 2>/dev/null || echo "[]")
+  T6_OPEN=$(echo "$T6_ISSUES" | jq '[.[] | select(.state == "OPEN")] | length' 2>/dev/null || echo "0")
+  T6_WITH_RESPONSE=$(echo "$T6_ISSUES" | jq '[.[] | select(.state == "OPEN" and .has_comments == true)] | length' 2>/dev/null || echo "0")
+else
+  T6_ISSUES="[]"
+  T6_OPEN=0
+  T6_WITH_RESPONSE=0
+fi
+echo "  \"t6_issues\": {"
+echo "    \"items\": $T6_ISSUES,"
+echo "    \"open_count\": $T6_OPEN,"
+echo "    \"open_with_response\": $T6_WITH_RESPONSE"
+echo "  },"
+
+# --- GAP 3: Failure Pattern Analysis (unresolved, by type and subtype) ---
+if [ -f "$EVOLVE_HISTORY" ]; then
+  FAILURE_BY_TYPE=$(jq -s '[.[].rejected[]? | select(.failure_type != null) | select((.resolved // false) != true) | .failure_type] | group_by(.) | map({type: .[0], count: length}) | sort_by(-.count)' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
+  FAILURE_BY_SUBTYPE=$(jq -s '[.[].rejected[]? | select(.failure_subtype != null) | select((.resolved // false) != true) | {type: .failure_type, subtype: .failure_subtype}] | group_by(.subtype) | map({subtype: .[0].subtype, type: .[0].type, count: length}) | sort_by(-.count)' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
+  UNRESOLVED_TOTAL=$(echo "$FAILURE_BY_TYPE" | jq '[.[].count] | add // 0' 2>/dev/null || echo "0")
+else
+  FAILURE_BY_TYPE="[]"
+  FAILURE_BY_SUBTYPE="[]"
+  UNRESOLVED_TOTAL=0
+fi
+echo "  \"failure_patterns\": {"
+echo "    \"unresolved_total\": $UNRESOLVED_TOTAL,"
+echo "    \"by_type\": $FAILURE_BY_TYPE,"
+echo "    \"by_subtype\": $FAILURE_BY_SUBTYPE"
+echo "  },"
+
+# --- GAP 4: MEMORY Retirement Candidates (6+ months without update) ---
+MEMORY_DIR_PATH=""
+for candidate in \
+  "$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory" \
+  "$HOME/.claude/projects/$(echo "$PROJECT_ROOT" | tr '/' '-' | sed 's/^-//')/memory"; do
+  if [ -d "$candidate" ]; then
+    MEMORY_DIR_PATH="$candidate"
+    break
+  fi
+done
+
+if [ -n "$MEMORY_DIR_PATH" ] && [ -f "$MEMORY_DIR_PATH/MEMORY.md" ]; then
+  RETIREMENT_CANDIDATES=$(python3 -c "
+import os, sys, json
+from datetime import datetime, timedelta
+memory_dir = '$MEMORY_DIR_PATH'
+threshold = datetime.now() - timedelta(days=180)
+candidates = []
+for f in os.listdir(memory_dir):
+    if f.endswith('.md') and f != 'MEMORY.md':
+        path = os.path.join(memory_dir, f)
+        mtime = datetime.fromtimestamp(os.path.getmtime(path))
+        if mtime < threshold:
+            candidates.append({'file': f, 'last_modified': mtime.strftime('%Y-%m-%d'), 'days_ago': (datetime.now() - mtime).days})
+print(json.dumps(sorted(candidates, key=lambda x: -x['days_ago'])))
+" 2>/dev/null || echo "[]")
+else
+  RETIREMENT_CANDIDATES="[]"
+fi
+echo "  \"memory_retirement_candidates\": $RETIREMENT_CANDIDATES,"
+
+# --- GAP 5: Structure File Currency (last update per key file) ---
+STRUCTURE_CURRENCY=$(python3 -c "
+import subprocess, json, os
+files = [
+    '.claude/skills/evolve/SKILL.md',
+    '.claude/agents/observer/AGENT.md',
+    '.claude/agents/hypothesizer/AGENT.md',
+    '.claude/agents/integrator/AGENT.md',
+    '.claude/agents/verifier.md',
+    '.claude/agents/judge.md',
+]
+result = []
+for f in files:
+    if os.path.exists(f):
+        try:
+            out = subprocess.check_output(['git', 'log', '-1', '--format=%ci', '--', f], stderr=subprocess.DEVNULL, text=True).strip()
+            result.append({'file': f, 'last_commit': out})
+        except:
+            result.append({'file': f, 'last_commit': 'unknown'})
+print(json.dumps(result))
+" 2>/dev/null || echo "[]")
+echo "  \"structure_file_currency\": $STRUCTURE_CURRENCY,"
+
+# --- GAP 6: Failed Test Details (cached from earlier test run) ---
+# TEST_FAILED is set at line 58 from the test run earlier in this script.
+# If tests failed, report the cached output. No re-run needed.
+if [ "${TEST_FAILED:-0}" -gt 0 ] 2>/dev/null; then
+  FAILED_TESTS=$(echo "$TEST_OUTPUT" | grep "FAIL" | grep -v "^TOTAL:" | head -20 | jq -R -s -c 'split("\n") | map(select(length > 0))' 2>/dev/null || echo "[]")
+else
+  FAILED_TESTS="[]"
+fi
+echo "  \"failed_test_details\": $FAILED_TESTS"
 
 echo "}"
