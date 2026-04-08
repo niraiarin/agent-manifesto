@@ -52,13 +52,13 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 398 theorems / 51 axioms = 780 (= 7.80x) -/
+    例: 400 theorems / 51 axioms = 784 (= 7.84x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
-/-- 現在の公理系の圧縮比は 780 (= 7.80x)。 -/
+/-- 現在の公理系の圧縮比は 784 (= 7.84x)。 -/
 theorem current_compression :
-  compressionRatio currentProfile = 780 := by rfl
+  compressionRatio currentProfile = 784 := by rfl
 
 /-- 圧縮比 ≥ 200 (= 2.0x) は暫定的な健全条件 (H7)。 -/
 theorem current_compression_healthy :

@@ -1076,6 +1076,72 @@ theorem d13_l5_limited_impact :
   (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
 
 -- ============================================================
+-- D13 Extension: Assumption-level Impact Propagation (#225)
+-- ============================================================
+
+/-!
+## D13 Extension: Temporal Expiration of Assumptions
+
+Extends D13 from PropositionId-level to assumption-level propagation.
+
+Conditional axiom systems S=(A,C,H,D) derive conclusions D from assumptions C/H.
+C/H originate from external sources that change over time (#225).
+When an assumption expires (its external source changes or its review period elapses),
+all derivations depending on that assumption require re-verification.
+
+This is the principle-level formalization. Operational types (TemporalValidity,
+AssumptionExpiration) are defined in Models/Assumptions/EpistemicLayer.lean.
+DesignFoundation.lean does not import Models to preserve the dependency direction
+(core formalization must not depend on model instances).
+
+The bridge: an assumption maps to a set of PropositionIds it supports.
+When the assumption expires, all dependents of those PropositionIds are affected.
+-/
+
+/-- Computes the impact set when an assumption expires.
+    An assumption supports a set of propositions (its dependencies).
+    Expiration propagates through all dependents of those propositions.
+
+    This generalizes d13_propagation (single PropositionId) to
+    assumption-level expiration (set of PropositionIds). -/
+def assumptionImpact (supportedPropositions : List PropositionId) : List PropositionId :=
+  (supportedPropositions.flatMap (fun p => affected p)).eraseDups
+
+/-- Raw (pre-dedup) impact set for assumption expiration.
+    Used internally for proofs; assumptionImpact applies eraseDups on top. -/
+def assumptionImpactRaw (supportedPropositions : List PropositionId) : List PropositionId :=
+  supportedPropositions.flatMap (fun p => affected p)
+
+/-- [Derivation Card]
+    Derives from: d13_propagation (D13), affected (D13)
+    Proposition: D13 (extension)
+    Content: Assumption expiration subsumes individual proposition negation — if an assumption supports proposition p, then the raw impact of the assumption's expiration includes all of d13_propagation p.
+    Proof strategy: List.mem_flatMap propagation -/
+theorem d13_assumption_subsumes_proposition :
+  ∀ (p : PropositionId) (supported : List PropositionId),
+    p ∈ supported →
+    ∀ (q : PropositionId),
+      q ∈ d13_propagation p →
+      q ∈ assumptionImpactRaw supported := by
+  intro p supported hp q hq
+  simp only [assumptionImpactRaw, d13_propagation] at *
+  exact List.mem_flatMap.mpr ⟨p, hp, hq⟩
+
+/-- [Derivation Card]
+    Derives from: assumptionImpactRaw (D13 extension)
+    Proposition: D13 (extension)
+    Content: Broader assumptions have broader impact — if s₁ ⊆ s₂ then assumptionImpactRaw s₁ ⊆ assumptionImpactRaw s₂. Monotonicity with respect to support set inclusion.
+    Proof strategy: Monotonicity of flatMap — superset of inputs produces superset of outputs -/
+theorem d13_assumption_impact_monotone :
+  ∀ (s₁ s₂ : List PropositionId),
+    (∀ p, p ∈ s₁ → p ∈ s₂) →
+    ∀ q, q ∈ assumptionImpactRaw s₁ → q ∈ assumptionImpactRaw s₂ := by
+  intro s₁ s₂ hsub q hq
+  simp only [assumptionImpactRaw] at *
+  obtain ⟨p, hp, hpq⟩ := List.mem_flatMap.mp hq
+  exact List.mem_flatMap.mpr ⟨p, hsub p hp, hpq⟩
+
+-- ============================================================
 -- Structure-PropositionId Bridge — 二層依存追跡の統合
 -- ============================================================
 
@@ -1092,13 +1158,13 @@ Corresponds to ATMS labeling from the research document.
 
 /-- Set of PropositionIds corresponding to each StructureKind.
     manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
-    designConvention encompasses design theorems D1-D13.
+    designConvention encompasses design theorems D1-D14.
     skill/test/document are empty sets due to individual definitions (room for future extension). -/
 def structurePropositions : StructureKind → List PropositionId
   | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
                            .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
   | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
-                           .d9, .d10, .d11, .d12, .d13]
+                           .d9, .d10, .d11, .d12, .d13, .d14]
   | .skill            => []
   | .test             => []
   | .document         => []
