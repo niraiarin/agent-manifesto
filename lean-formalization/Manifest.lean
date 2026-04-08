@@ -27,6 +27,9 @@ import Manifest.AxiomQuality
 import Manifest.EvolveSkill
 import Manifest.TaskClassification
 import Manifest.Traceability
+-- Tier D: 条件付き公理系インスタンス
+import Manifest.Models.Instances.ClaudeCode.Assumptions
+import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 
 /-!
 # Agent Manifest — Formal Specification
