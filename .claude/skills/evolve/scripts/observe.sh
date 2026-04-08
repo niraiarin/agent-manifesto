@@ -821,11 +821,13 @@ if [ -x "$BASE/manifest-trace" ]; then
   TRACE_TOTAL=$(echo "$TRACE_JSON" | jq '.meta.total_propositions // 0' 2>/dev/null || echo "0")
   TRACE_ARTIFACTS=$(echo "$TRACE_JSON" | jq '.meta.total_artifacts // 0' 2>/dev/null || echo "0")
   # evidence_coverage: axioms + empirical postulates のみ（公理の証拠カバレッジ）
-  TRACE_EC_WITH=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "constraint" or .category == "empiricalPostulate") | select(.coverage.has_evidence)] | length' 2>/dev/null || echo "0")
-  TRACE_EC_TOTAL=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "constraint" or .category == "empiricalPostulate")] | length' 2>/dev/null || echo "0")
-  # derivation_completeness: 導出命題のみ（principle, boundary, designTheorem, observable）
-  TRACE_DC_WITH=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "principle" or .category == "boundary" or .category == "designTheorem" or .category == "observable") | select(.coverage.has_derivation)] | length' 2>/dev/null || echo "0")
-  TRACE_DC_TOTAL=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "principle" or .category == "boundary" or .category == "designTheorem" or .category == "observable")] | length' 2>/dev/null || echo "0")
+  # 導出のみの constraint（has_derivation=true, has_evidence=false）は derivation_completeness で追跡するため除外
+  # 現在: T8 が該当（axiom→theorem 降格済み、Derivation Card あり、Axiom Card なし）
+  TRACE_EC_WITH=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "constraint" or .category == "empiricalPostulate") | select((.category == "constraint" and .coverage.has_derivation == true and (.coverage.has_evidence | not)) | not) | select(.coverage.has_evidence)] | length' 2>/dev/null || echo "0")
+  TRACE_EC_TOTAL=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "constraint" or .category == "empiricalPostulate") | select((.category == "constraint" and .coverage.has_derivation == true and (.coverage.has_evidence | not)) | not)] | length' 2>/dev/null || echo "0")
+  # derivation_completeness: 導出命題（principle, boundary, designTheorem, observable）+ 導出のみの constraint
+  TRACE_DC_WITH=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "principle" or .category == "boundary" or .category == "designTheorem" or .category == "observable" or (.category == "constraint" and .coverage.has_derivation == true and (.coverage.has_evidence | not))) | select(.coverage.has_derivation)] | length' 2>/dev/null || echo "0")
+  TRACE_DC_TOTAL=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.category == "principle" or .category == "boundary" or .category == "designTheorem" or .category == "observable" or (.category == "constraint" and .coverage.has_derivation == true and (.coverage.has_evidence | not)))] | length' 2>/dev/null || echo "0")
   # 深さ別カバレッジ
   TRACE_S5=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5 and .coverage.total > 0)] | length' 2>/dev/null || echo "0")
   TRACE_S5_T=$(echo "$TRACE_JSON" | jq '[.propositions[] | select(.strength == 5)] | length' 2>/dev/null || echo "0")

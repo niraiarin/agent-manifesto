@@ -173,3 +173,4 @@ json 分析結果から改善提案を生成する:
 - `artifact-manifest.json` のメタデータは手動付与。成果物の追加・変更時に更新が必要
 - L5 (プラットフォーム境界) や T3 (有限コンテキスト) など、環境制約として暗黙的に実装されている命題もある
 - violations の結果は「潜在的」違反。全てが修正必須ではない
+- T8 (grounded constraint) は axiom から theorem に降格済み。Derivation Card で追跡され、Axiom Card (evidence) は不要。observe.sh の evidence_coverage からは除外し、derivation_completeness に含める
