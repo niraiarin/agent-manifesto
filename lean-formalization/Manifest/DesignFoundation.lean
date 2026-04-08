@@ -1012,17 +1012,24 @@ Based on PropositionId.dependencies from Ontology.lean,
 defines impact set computation functions and basic properties.
 -/
 
-/-- [Derivation Card]
-    Derives from: Structure.lastModifiedAt (definitional — timestamp ordering)
-    Proposition: D13
-    Content: High-priority structural changes propagate to lower-priority structures — when s₁ has higher priority and s₂ was last modified no later than s₁, the temporal ordering constraint is preserved, requiring review of s₂.
-    Proof strategy: fun _ _ _ h => h — identity proof on the timestamp ordering hypothesis -/
-theorem d13_coherence_implies_propagation :
-  ∀ (s₁ s₂ : Structure),
-    s₁.kind.priority > s₂.kind.priority →
-    s₂.lastModifiedAt ≤ s₁.lastModifiedAt →
-    s₂.lastModifiedAt ≤ s₁.lastModifiedAt :=
-  fun _ _ _ h => h
+/-!
+### Note on coherenceRequirement (#243)
+
+The original `d13_coherence_implies_propagation` theorem was removed because it was
+trivially-true: its conclusion was a direct restatement of its premise.
+
+The root cause is that `coherenceRequirement` (Ontology.lean) has `True` as its conclusion,
+making any theorem built on it vacuously true. Strengthening `coherenceRequirement` to use
+a meaningful review obligation type (e.g., `NeedsReview`) would be a breaking change to
+Ontology.lean and is deferred.
+
+D13's substantive content is captured by:
+- `affected` / `d13_propagation`: Impact set computation via transitive dependency closure
+- `d13_constraint_negation_has_impact`: T4 negation produces non-empty impact
+- `d13_retirement_requires_feedback`: P3 retirement presupposes T5
+- `assumptionImpact` / `d13_assumption_subsumes_proposition`: Assumption-level propagation (#225)
+- `d13_assumption_impact_monotone`: Monotonicity of assumption impact
+-/
 
 /-- D13: P3's retirement operation presupposes T5 (feedback).
     Without feedback, negation of premises cannot be detected. -/
