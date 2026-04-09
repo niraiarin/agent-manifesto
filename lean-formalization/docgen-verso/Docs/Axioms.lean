@@ -345,6 +345,7 @@ T3 is decomposed into two axioms:
    Derivation: ContextWindow.`capacity_pos` and ContextWindow.`used_le_cap`
          are embedded in the ContextWindow structure as type-level invariants.
          Every valid ContextWindow satisfies these by construction.
+   Proposition: T3
    Source: manifesto.md T3 "There is a physical upper limit on the amount of information processable at once" 
 
 *Declaration:* `theorem context_finite`
@@ -367,6 +368,7 @@ theorem context_finite :
    Note: This axiom was vacuously true — its precondition (used > capacity)
          is always false given `context_finite` (used ≤ capacity).
          Demoting to theorem makes this explicit.
+   Proposition: T3
    Source: manifesto.md T3 "A constraint on the agent's cognitive space" 
 
 *Declaration:* `theorem context_bounds_action`
@@ -399,7 +401,7 @@ theorem context_bounds_action :
 
    降格判定: 導出不可能 — precisionContribution が opaque。axiom として維持。
 
-   Source: ForgeCode analysis #147 — identified as common root of B1/B3/B5/B6.
+   Source: manifesto.md T3 — ForgeCode analysis #147 identified as common root of B1/B3/B5/B6.
    Refutation condition: If it were shown that all information contributes equally
          to all tasks (contradicts information theory). 
 
@@ -609,6 +611,7 @@ axiom resource_finite :
    Now: theorem derived from PrecisionLevel type invariant
    Derivation: PrecisionLevel.`required_pos` is embedded in the PrecisionLevel structure.
          Every valid Task has a PrecisionLevel with required > 0 by construction.
+   Proposition: T8
    Source: manifesto.md T8 "Whether self-imposed or externally imposed" 
 
 *Declaration:* `theorem task_has_precision`
