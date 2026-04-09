@@ -322,6 +322,7 @@ as a non-logical axiom within the formal system.
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V1
    Content: V1 (skill quality) is measurable
    Basis: with/without comparison via benchmark.json exists as a measurement procedure
    Source: Ontology.lean V1 definition
@@ -337,6 +338,7 @@ theorem v1_measurable : Measurable skillQuality := ⟨skillQuality, fun _ => rfl
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V2
    Content: V2 (context efficiency) is measurable
    Basis: the ratio of task completion rate to consumed token count exists as a measurement procedure
    Source: Ontology.lean V2 definition
@@ -352,6 +354,7 @@ theorem v2_measurable : Measurable contextEfficiency := ⟨contextEfficiency, fu
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V3
    Content: V3 (output quality) is measurable
    Basis: gate pass rate and review finding count exist as measurement procedures
    Source: Ontology.lean V3 definition
@@ -367,6 +370,7 @@ theorem v3_measurable : Measurable outputQuality := ⟨outputQuality, fun _ => r
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V4
    Content: V4 (gate pass rate) is measurable
    Basis: pass/fail statistics exist as a measurement procedure
    Source: Ontology.lean V4 definition
@@ -382,6 +386,7 @@ theorem v4_measurable : Measurable gatePassRate := ⟨gatePassRate, fun _ => rfl
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V5
    Content: V5 (proposal accuracy) is measurable
    Basis: human approval/rejection rate exists as a measurement procedure
    Source: Ontology.lean V5 definition
@@ -397,6 +402,7 @@ theorem v5_measurable : Measurable proposalAccuracy := ⟨proposalAccuracy, fun 
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V6
    Content: V6 (knowledge structure quality) is measurable
    Basis: context restoration speed and retirement target detection rate exist as measurement procedures
    Source: Ontology.lean V6 definition
@@ -412,6 +418,7 @@ theorem v6_measurable : Measurable knowledgeStructureQuality := ⟨knowledgeStru
 
 (Derivation Card)
    Layer: Gamma \ `T_0` (design-derived)
+   Proposition: V7
    Content: V7 (task design efficiency) is measurable
    Basis: task completion rate / consumed resource ratio exists as a measurement procedure
    Source: Ontology.lean V7 definition
@@ -531,8 +538,11 @@ def variableBoundary : VariableId → BoundaryId
   | .v7 => .resource       -- L3: リソース上限 → V7: タスク設計効率
 ```
 
-Variables corresponding to fixed boundaries cannot move the boundary itself;
-   only the quality of mitigations can be improved. 
+(Derivation Card)
+   Derives from: variableBoundary, boundaryLayer (Observable.lean / Ontology.lean)
+   Proposition: L2
+   Content: L2 (ontological boundary) is fixed — variables V1, V2, V4, V6 mapped to L2 cannot move the boundary itself; only the quality of mitigations can be improved.
+   Proof strategy: simp (variableBoundary, boundaryLayer) (definitional computation) 
 
 *Declaration:* `theorem fixed_boundary_variables_mitigate_only`
 
@@ -591,9 +601,11 @@ theorem constraint_has_boundary :
   cases c <;> simp [constraintBoundary]
 ```
 
-L5 (platform) is not included in the constraintBoundary of any T1-T8.
-   L5 is a provider-specific environmental constraint and is not derived from
-   the technology-independent constraints T. 
+(Derivation Card)
+   Derives from: constraintBoundary (Observable.lean)
+   Proposition: L5
+   Content: L5 (platform boundary) is not derived from any technology-independent constraint T1-T8. L5 is a provider-specific environmental constraint arising from human platform selection (upstream of T6).
+   Proof strategy: cases c <;> simp (constraintBoundary) (exhaustive case analysis) 
 
 *Declaration:* `theorem platform_not_in_constraint_boundary`
 
@@ -618,6 +630,62 @@ theorem constraint_boundary_covers_except_platform :
   (∃ c, BoundaryId.architecturalConvention ∈ constraintBoundary c) := by
   refine ⟨⟨.t6, ?_⟩, ⟨.t1, ?_⟩, ⟨.t3, ?_⟩, ⟨.t6, ?_⟩, ⟨.t8, ?_⟩⟩ <;>
     simp [constraintBoundary]
+```
+
+(Derivation Card)
+   Derives from: constraintBoundary (Observable.lean)
+   Proposition: L1
+   Content: L1 (ethics/safety boundary) is derived from constraint T6 (human authority). T6 maps to ethicsSafety in constraintBoundary, establishing that the safety boundary has a technology-independent grounding.
+   Proof strategy: exact with witness .t6, then simp (constraintBoundary) 
+
+*Declaration:* `theorem ethicsSafety_covered_by_constraint`
+
+```
+theorem ethicsSafety_covered_by_constraint :
+  ∃ c, BoundaryId.ethicsSafety ∈ constraintBoundary c :=
+  ⟨.t6, by simp [constraintBoundary]⟩
+```
+
+(Derivation Card)
+   Derives from: constraintBoundary (Observable.lean)
+   Proposition: L3
+   Content: L3 (resource boundary) is derived from constraints T3 (finite context) and T7 (finite resources). T3 maps to (ontological, resource) and T7 maps to (resource) in constraintBoundary, establishing that the resource boundary has technology-independent grounding.
+   Proof strategy: exact with witness .t3, then simp (constraintBoundary) 
+
+*Declaration:* `theorem resource_covered_by_constraint`
+
+```
+theorem resource_covered_by_constraint :
+  ∃ c, BoundaryId.resource ∈ constraintBoundary c :=
+  ⟨.t3, by simp [constraintBoundary]⟩
+```
+
+(Derivation Card)
+   Derives from: constraintBoundary (Observable.lean)
+   Proposition: L4
+   Content: L4 (action space boundary) is derived from constraint T6 (human authority). T6 maps to (ethicsSafety, actionSpace) in constraintBoundary, establishing that the action space boundary is grounded in human decision authority.
+   Proof strategy: exact with witness .t6, then simp (constraintBoundary) 
+
+*Declaration:* `theorem actionSpace_covered_by_constraint`
+
+```
+theorem actionSpace_covered_by_constraint :
+  ∃ c, BoundaryId.actionSpace ∈ constraintBoundary c :=
+  ⟨.t6, by simp [constraintBoundary]⟩
+```
+
+(Derivation Card)
+   Derives from: constraintBoundary (Observable.lean)
+   Proposition: L6
+   Content: L6 (architectural convention boundary) is derived from constraint T8 (task has precision). T8 maps to (architecturalConvention) in constraintBoundary, establishing that design conventions are grounded in the precision requirement.
+   Proof strategy: exact with witness .t8, then simp (constraintBoundary) 
+
+*Declaration:* `theorem architecturalConvention_covered_by_constraint`
+
+```
+theorem architecturalConvention_covered_by_constraint :
+  ∃ c, BoundaryId.architecturalConvention ∈ constraintBoundary c :=
+  ⟨.t8, by simp [constraintBoundary]⟩
 ```
 
 ## Measurable to Observable Bridge

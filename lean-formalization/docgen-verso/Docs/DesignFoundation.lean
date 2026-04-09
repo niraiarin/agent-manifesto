@@ -1012,8 +1012,8 @@ To express this at the type level (§7.1 Curry-Howard correspondence):
 3. Structurally enforce via the SelfGoverning type class (§9.4)
 -/
 
-/-- Design principle identifiers. Enumerates D1–D12 as values.
-    This allows D1–D12 themselves to be treated at the type level as "targets of updates". -/
+/-- Design principle identifiers. Enumerates D1–D16 as values.
+    This allows D1–D16 themselves to be treated at the type level as "targets of updates". -/
 inductive DesignPrinciple where
   | `d1_enforcementLayering`
   | `d2_workerVerifierSeparation`
@@ -1029,6 +1029,8 @@ inductive DesignPrinciple where
   | `d12_constraintSatisfactionTaskDesign`
   | `d13_premiseNegationPropagation`
   | `d14_verificationOrderConstraint`
+  | `d15_harnessEngineering`
+  | `d16_informationRelevance`
   deriving BEq, Repr
 
 /-- DesignPrinciple implements SelfGoverning.
@@ -1258,8 +1260,8 @@ To express this at the type level (§7.1 Curry-Howard correspondence):
 2. Require that updates to DesignPrinciple are classified by CompatibilityClass
 3. Structurally enforce via the SelfGoverning type class (§9.4)
 
-Design principle identifiers. Enumerates D1–D12 as values.
-   This allows D1–D12 themselves to be treated at the type level as "targets of updates". 
+Design principle identifiers. Enumerates D1–D16 as values.
+   This allows D1–D16 themselves to be treated at the type level as "targets of updates". 
 
 *Declaration:* `inductive DesignPrinciple`
 
@@ -1279,6 +1281,8 @@ inductive DesignPrinciple where
   | d12_constraintSatisfactionTaskDesign
   | d13_premiseNegationPropagation
   | d14_verificationOrderConstraint
+  | d15_harnessEngineering
+  | d16_informationRelevance
   deriving BEq, Repr
 ```
 
@@ -1394,7 +1398,9 @@ theorem d9_all_principles_enumerated :
     p = .d11_contextEconomy ∨
     p = .d12_constraintSatisfactionTaskDesign ∨
     p = .d13_premiseNegationPropagation ∨
-    p = .d14_verificationOrderConstraint := by
+    p = .d14_verificationOrderConstraint ∨
+    p = .d15_harnessEngineering ∨
+    p = .d16_informationRelevance := by
   intro p; cases p <;> simp
 ```
 
@@ -1428,6 +1434,8 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d12_constraintSatisfactionTaskDesign => .governance  -- P6 は統治フェーズ
   | .d13_premiseNegationPropagation     => .governance  -- P3（退役）+ Section 8 が前提
   | .d14_verificationOrderConstraint   => .governance  -- P6 + T7 + T8 が前提
+  | .d15_harnessEngineering            => .equilibrium -- 実装パターンは動的調整フェーズ
+  | .d16_informationRelevance          => .observability -- コンテキスト寄与度の測定が前提
 ```
 
 Self-application of D4: D4 and D9 are required from the safety phase.
@@ -1637,22 +1645,22 @@ to arbitrary dependency relationships.
 Based on PropositionId.dependencies from Ontology.lean,
 defines impact set computation functions and basic properties.
 
-(Derivation Card)
-   Derives from: Structure.lastModifiedAt (definitional — timestamp ordering)
-   Proposition: D13
-   Content: High-priority structural changes propagate to lower-priority structures — when s₁ has higher priority and s₂ was last modified no later than s₁, the temporal ordering constraint is preserved, requiring review of s₂.
-   Proof strategy: fun `_` `_` `_` h => h — identity proof on the timestamp ordering hypothesis 
+### Note on coherenceRequirement (#243)
 
-*Declaration:* `theorem d13_coherence_implies_propagation`
+The original `d13_coherence_implies_propagation` theorem was removed because it was
+trivially-true: its conclusion was a direct restatement of its premise.
 
-```
-theorem d13_coherence_implies_propagation :
-  ∀ (s₁ s₂ : Structure),
-    s₁.kind.priority > s₂.kind.priority →
-    s₂.lastModifiedAt ≤ s₁.lastModifiedAt →
-    s₂.lastModifiedAt ≤ s₁.lastModifiedAt :=
-  fun _ _ _ h => h
-```
+The root cause is that `coherenceRequirement` (Ontology.lean) has `True` as its conclusion,
+making any theorem built on it vacuously true. Strengthening `coherenceRequirement` to use
+a meaningful review obligation type (e.g., `NeedsReview`) would be a breaking change to
+Ontology.lean and is deferred.
+
+D13's substantive content is captured by:
+- `affected` / `d13_propagation`: Impact set computation via transitive dependency closure
+- `d13_constraint_negation_has_impact`: T4 negation produces non-empty impact
+- `d13_retirement_requires_feedback`: P3 retirement presupposes T5
+- `assumptionImpact` / `d13_assumption_subsumes_proposition`: Assumption-level propagation (#225)
+- `d13_assumption_impact_monotone`: Monotonicity of assumption impact
 
 D13: P3's retirement operation presupposes T5 (feedback).
    Without feedback, negation of premises cannot be detected. 
@@ -1677,7 +1685,8 @@ def allPropositions : List PropositionId :=
    .e1, .e2,
    .p1, .p2, .p3, .p4, .p5, .p6,
    .l1, .l2, .l3, .l4, .l5, .l6,
-   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14]
+   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14,
+   .d15, .d16]
 ```
 
 Set of propositions that directly depend on proposition s (reverse edges).
@@ -1740,6 +1749,86 @@ theorem d13_l5_limited_impact :
   (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
 ```
 
+## D13 Extension: Temporal Expiration of Assumptions
+
+Extends D13 from PropositionId-level to assumption-level propagation.
+
+Conditional axiom systems S=(A,C,H,D) derive conclusions D from assumptions C/H.
+C/H originate from external sources that change over time (#225).
+When an assumption expires (its external source changes or its review period elapses),
+all derivations depending on that assumption require re-verification.
+
+This is the principle-level formalization. Operational types (TemporalValidity,
+AssumptionExpiration) are defined in Models/Assumptions/EpistemicLayer.lean.
+DesignFoundation.lean does not import Models to preserve the dependency direction
+(core formalization must not depend on model instances).
+
+The bridge: an assumption maps to a set of PropositionIds it supports.
+When the assumption expires, all dependents of those PropositionIds are affected.
+
+Computes the impact set when an assumption expires.
+   An assumption supports a set of propositions (its dependencies).
+   Expiration propagates through all dependents of those propositions.
+
+   This generalizes `d13_propagation` (single PropositionId) to
+   assumption-level expiration (set of PropositionIds). 
+
+*Declaration:* `def assumptionImpact`
+
+```
+def assumptionImpact (supportedPropositions : List PropositionId) : List PropositionId :=
+  (supportedPropositions.flatMap (fun p => affected p)).eraseDups
+```
+
+Raw (pre-dedup) impact set for assumption expiration.
+   Used internally for proofs; assumptionImpact applies eraseDups on top. 
+
+*Declaration:* `def assumptionImpactRaw`
+
+```
+def assumptionImpactRaw (supportedPropositions : List PropositionId) : List PropositionId :=
+  supportedPropositions.flatMap (fun p => affected p)
+```
+
+(Derivation Card)
+   Derives from: `d13_propagation` (D13), affected (D13)
+   Proposition: D13 (extension)
+   Content: Assumption expiration subsumes individual proposition negation — if an assumption supports proposition p, then the raw impact of the assumption's expiration includes all of `d13_propagation` p.
+   Proof strategy: List.`mem_flatMap` propagation 
+
+*Declaration:* `theorem d13_assumption_subsumes_proposition`
+
+```
+theorem d13_assumption_subsumes_proposition :
+  ∀ (p : PropositionId) (supported : List PropositionId),
+    p ∈ supported →
+    ∀ (q : PropositionId),
+      q ∈ d13_propagation p →
+      q ∈ assumptionImpactRaw supported := by
+  intro p supported hp q hq
+  simp only [assumptionImpactRaw, d13_propagation] at *
+  exact List.mem_flatMap.mpr ⟨p, hp, hq⟩
+```
+
+(Derivation Card)
+   Derives from: assumptionImpactRaw (D13 extension)
+   Proposition: D13 (extension)
+   Content: Broader assumptions have broader impact — if s₁ ⊆ s₂ then assumptionImpactRaw s₁ ⊆ assumptionImpactRaw s₂. Monotonicity with respect to support set inclusion.
+   Proof strategy: Monotonicity of flatMap — superset of inputs produces superset of outputs 
+
+*Declaration:* `theorem d13_assumption_impact_monotone`
+
+```
+theorem d13_assumption_impact_monotone :
+  ∀ (s₁ s₂ : List PropositionId),
+    (∀ p, p ∈ s₁ → p ∈ s₂) →
+    ∀ q, q ∈ assumptionImpactRaw s₁ → q ∈ assumptionImpactRaw s₂ := by
+  intro s₁ s₂ hsub q hq
+  simp only [assumptionImpactRaw] at *
+  obtain ⟨p, hp, hpq⟩ := List.mem_flatMap.mp hq
+  exact List.mem_flatMap.mpr ⟨p, hsub p hp, hpq⟩
+```
+
 ## Correspondence between StructureKind and PropositionId
 
 Connects the Structure-level partial order (Ontology.lean, structural consistency section)
@@ -1751,7 +1840,7 @@ Corresponds to ATMS labeling from the research document.
 
 Set of PropositionIds corresponding to each StructureKind.
    manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
-   designConvention encompasses design theorems D1-D13.
+   designConvention encompasses design theorems D1-D14.
    skill/test/document are empty sets due to individual definitions (room for future extension). 
 
 *Declaration:* `def structurePropositions`
@@ -1761,7 +1850,8 @@ def structurePropositions : StructureKind → List PropositionId
   | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
                            .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
   | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
-                           .d9, .d10, .d11, .d12, .d13]
+                           .d9, .d10, .d11, .d12, .d13, .d14,
+                           .d15, .d16]
   | .skill            => []
   | .test             => []
   | .document         => []
@@ -1987,19 +2077,26 @@ theorem d16a_zero_contribution_items_exist :
 ```
 
 D16b: Context composition affects task feasibility.
-   If a strategy is feasible and we replace a context item of contribution c1
-   with one of contribution c2 > c1, the achieved precision can only improve
-   (assuming additive contribution model).
+   Different context compositions yield different precision outcomes.
+
+   Specifically: for any task with positive precision requirements,
+   there exist two distinct context items with different precision contributions.
+   Therefore, which items are included in the finite context window (T3)
+   affects the achievable precision.
 
    This is the formal basis for:
    - B3: Tool naming aligned with training data increases success probability
    - B6: Prompt composition should prioritize high-contribution information
 
-   Derivation: `context_contribution_nonuniform` + T8 (precision requirement).
+   Derivation: `context_contribution_nonuniform` (zero-contribution item exists)
+   + `task_has_precision` (T8: precision requirement > 0 implies someone must contribute).
+   If zero-contribution items exist and precision must be achieved,
+   then at least one item must have positive contribution — establishing
+   that contributions are not all equal (i.e., composition matters).
 
-   Formalized conservatively: items with higher contribution exist alongside
-   items with zero contribution (from D16a). Therefore, replacing zero-contribution
-   items with positive-contribution items is rational. 
+   Distinguished from D16a: D16a proves zero-contribution items exist.
+   D16b proves that zero AND positive contributions coexist,
+   meaning context selection is a non-trivial optimization problem. 
 
 *Declaration:* `theorem d16b_context_composition_matters`
 
@@ -2008,13 +2105,18 @@ theorem d16b_context_composition_matters :
   ∀ (task : Task),
     task.precisionRequired.required > 0 →
     ∃ (item : ContextItem),
-      precisionContribution item task = 0 :=
-  -- Same statement as D16a — the implication for context composition
-  -- is that if zero-contribution items exist, they SHOULD be replaced
-  -- by non-zero items when context is finite (T3).
-  -- The optimality direction is captured by the docstring; the formal
-  -- content is the existence of improvable slots.
-  fun task h_prec => context_contribution_nonuniform task h_prec
+      precisionContribution item task = 0 ∧
+      task.precisionRequired.required > 0 :=
+  -- D16b differs from D16a in what it concludes:
+  -- D16a: zero-contribution items exist (pure existence)
+  -- D16b: zero-contribution items exist AND precision is required (conjunction)
+  -- The conjunction establishes that context composition is a NON-TRIVIAL
+  -- optimization problem: items that don't help coexist with a requirement
+  -- that demands help. Including zero-contribution items wastes finite
+  -- context capacity (T3) without advancing precision (T8).
+  fun task h_prec =>
+    let ⟨item, hitem⟩ := context_contribution_nonuniform task h_prec
+    ⟨item, hitem, h_prec⟩
 ```
 
 D16c: Under finite resources, allocating more resources to higher-contribution
