@@ -519,6 +519,16 @@ Global resource upper bound for the entire system.
 opaque globalResourceBound : Nat
 ```
 
+Execution duration of a task or subtask.
+   Opaque: concrete measurement is domain-specific (wall-clock, tokens, API calls).
+   Used by T7b (sequential time additivity) to reason about parallel vs sequential. 
+
+*Declaration:* `opaque executionDuration`
+
+```
+opaque executionDuration : Task → Nat
+```
+
 Trust level. Accumulated incrementally, can be damaged rapidly.
    Used in P1b (expansion without protection damages trust). 
 
@@ -1602,7 +1612,7 @@ inductive PropositionId where
   | l1 | l2 | l3 | l4 | l5 | l6
   -- D: 設計定理
   | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
-  | d15 | d16 | d17
+  | d15 | d16 | d17 | d18
   deriving BEq, Repr
 ```
 
@@ -1618,7 +1628,7 @@ def PropositionId.category : PropositionId → PropositionCategory
   | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
   | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
   | .d9 | .d10 | .d11 | .d12 | .d13 | .d14
-  | .d15 | .d16 | .d17 => .designTheorem
+  | .d15 | .d16 | .d17 | .d18 => .designTheorem
 ```
 
 Returns the direct dependencies of a proposition. Encodes the derivation structure of the manifesto.
@@ -1670,6 +1680,8 @@ def PropositionId.dependencies : PropositionId → List PropositionId
   | .d16 => [.t3, .t7, .t8]
   -- D17: 演繹的設計ワークフロー（T5+D3+P3+T6+D5+D9+E1+D2+D13）
   | .d17 => [.t5, .t6, .e1, .p3, .d2, .d3, .d5, .d9, .d13]
+  -- D18: マルチエージェント協調（T7b + D12 + T3）
+  | .d18 => [.t3, .t7, .d12]
 ```
 
 A proposition directly depends on another proposition. 
