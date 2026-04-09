@@ -80,7 +80,7 @@ echo "  \"stale_files\": [$(echo "$STALE_FILES" | sed 's/, $//')],"
 # --- evolve 履歴 ---
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
-  # Run 番号ベースのカウント（run=null の human_feedback/旧エントリを除外）
+  # 最新 Run 番号の取得（run フィールドが整数のエントリの最大値）
   EVOLVE_RUNS=$(jq -r '.run // empty' "$HISTORY_FILE" 2>/dev/null | grep -E '^[0-9]+$' | sort -n | tail -1)
   EVOLVE_RUNS=${EVOLVE_RUNS:-0}
   LAST_RUN=$(tail -1 "$HISTORY_FILE" 2>/dev/null | jq -r '.timestamp // empty' 2>/dev/null)
@@ -97,7 +97,8 @@ else
   PHASES_NULL_COUNT=0
 fi
 echo "  \"evolve_history\": {"
-echo "    \"total_runs\": $EVOLVE_RUNS,"
+echo "    \"latest_run_number\": $EVOLVE_RUNS,"
+echo "    \"total_entries\": $(wc -l < "$HISTORY_FILE"),"
 echo "    \"last_run\": \"$LAST_RUN\","
 echo "    \"phases_totals\": {"
 echo "      \"observer_findings\": ${PHASES_OBSERVER_SUM:-0},"

@@ -83,7 +83,7 @@ structure AxiomSystemProfile where
   applicationCount      : Nat
   /-- 構造的 axiom（Ontology.lean: dependency_respects_strength 等）の axiom 数 -/
   structuralCount       : Nat
-  /-- theorem 数（全モジュール合計）-/
+  /-- theorem 数（Manifest/*.lean フラットスコープ。Models/, Foundation/ は含まない）-/
   theoremCount          : Nat
   /-- sorry の数 -/
   sorryCount            : Nat
@@ -97,8 +97,9 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 -- モジュール別定理分布（currentProfile.theoremCount の計算に先行して定義）
 -- ============================================================
 
-/-- 各 Lean モジュールの定理数。
-    定理がどのモジュールに分布しているかを型レベルで記録する。
+/-- 各 Lean モジュールの定理数（Manifest/*.lean フラットスコープのみ）。
+    追跡対象は Manifest/ 直下の 18 モジュール。
+    Models/（PoC, Instances）および Foundation/ サブディレクトリの定理は含まない。
     scripts/sync-counts.sh が grep で算出した値を自動同期する。 -/
 structure TheoremDistribution where
   ontologyM              : Nat  -- Ontology.lean
@@ -182,6 +183,21 @@ theorem current_sorry_free :
 /-- モジュール別定理数の合計が currentProfile.theoremCount と一致する（定義から自明）。 -/
 theorem theorem_distribution_consistent :
   currentTheoremDistribution.total = currentProfile.theoremCount := by rfl
+
+/-!
+## スコープ注記
+
+currentProfile および currentTheoremDistribution が追跡する範囲:
+- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (404 theorems, 52 axioms)
+- **追跡対象外**: `Manifest/Models/` (1083 theorems), `Manifest/Foundation/` (17 theorems)
+- **全再帰スコープ**: `Manifest/` 全体で 1504 theorems, 52 axioms
+
+この区別の理由:
+- 公理系の「コア理論」は Manifest/*.lean のモジュールで構成される
+- Models/ は PoC パイプラインが生成するインスタンス検証
+- Foundation/ は数学的基盤の補助定理
+- sync-counts.sh が同期するのはコアスコープのみ
+-/
 
 -- ============================================================
 -- 層の独立性

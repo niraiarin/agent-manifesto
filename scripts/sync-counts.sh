@@ -9,6 +9,8 @@
 #   --update  (default) 実更新 + 差分表示
 #   --check   差分があれば exit 1（pre-commit 用）。ファイル変更なし
 #   --dry-run 差分表示のみ、ファイル変更なし
+# Scope: Manifest/*.lean (flat, top-level modules only).
+# Does NOT count Manifest/Models/ or Manifest/Foundation/ subdirectories.
 set -euo pipefail
 
 BASE="$(cd "$(dirname "$0")/.." && pwd)"
@@ -19,8 +21,8 @@ MODE="${1:---update}"
 # Step 1: カウント算出
 # ============================================================
 
-THEOREM_COUNT=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ')
-AXIOM_COUNT=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ')
+THEOREM_COUNT=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ') # flat scope only
+AXIOM_COUNT=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ') # flat scope only
 # sorry タクティクの実使用を検出（コメント・識別子内の言及は除外）
 SORRY_COUNT=$({ grep -E '^\s*sorry\s*$|:=\s*sorry\s*$|\bby\s+sorry\b' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null || true; } | wc -l | tr -d ' ')
 COMPRESSION=$((THEOREM_COUNT * 100 / AXIOM_COUNT))
