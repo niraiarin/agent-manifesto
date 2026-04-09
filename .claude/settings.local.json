@@ -4,7 +4,8 @@
       "Bash(jq -r \"select\\(.deferred | length > 0\\) | \"\"Run \\\\\\(.run\\): \\\\\\([.deferred[].id // .deferred[].title] | join\\(\"\", \"\"\\)\\)\"\"\")",
       "Bash(jq -r \"select\\(.run >= 7 and .run <= 12\\) | \"\"Run \\\\\\(.run\\): deferred=\\\\\\(.deferred | length\\), notes=\\\\\\(.notes[:80]\\)\"\"\")",
       "Bash(gh issue:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(git worktree:*)"
     ]
   }
 }

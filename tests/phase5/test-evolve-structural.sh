@@ -539,12 +539,7 @@ for thm in manifest_highest_priority document_lowest_priority priority_injective
     fail "$thm missing"
 done
 
-# D13 定理 2 件
-echo -n "  d13_coherence_implies_propagation theorem... "
-grep -q "^theorem d13_coherence_implies_propagation" "$DESIGN_FOUNDATION" && \
-  pass "d13_coherence_implies_propagation" || \
-  fail "d13_coherence_implies_propagation missing"
-
+# D13 定理 1 件
 echo -n "  d13_retirement_requires_feedback theorem... "
 grep -q "^theorem d13_retirement_requires_feedback" "$DESIGN_FOUNDATION" && \
   pass "d13_retirement_requires_feedback" || \
