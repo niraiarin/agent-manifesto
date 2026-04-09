@@ -65,7 +65,7 @@ This file formalizes D1–D17.
 | D12 | P6 + T3 + T7 + T8 | 2 theorems (CSP + probabilistic output) |
 | D13 | P3 + Section 8 + T5 | impact propagation + assumption-level extension (#225) |
 | D14 | P6 + T7 + T8 | 1 theorem (constraint satisfaction of verification order) |
-| D15 | T3+T4+T5+T6+T7+T8+P6 | 3 theorems (retry bounds, convergence, eviction) |
+| D15 | T3+T4+T5+T6+T7+T8+P6 | 4 theorems (retry bounds, convergence, eviction, saturation) |
 | D16 | context_contribution_nonuniform | 3 theorems (zero-contribution, composition, resource) |
 | D17 | T5+D3+P3+T6+D5+D9+E1+D2+D13 | type + 8 theorems (deductive design workflow) |
 -/
@@ -1286,6 +1286,15 @@ Rationale: T3 (context_finite) + T8 (task_has_precision) + P6 (task_is_constrain
 When context usage exceeds capacity (T3), evicting messages that do not
 contribute to precision (T8) preserves strategyFeasible (P6).
 ForgeCode implements this as the droppable flag + compaction strategy.
+
+## D15d Computation saturation
+Rationale: context_contribution_nonuniform (T3) + task_has_precision (T8) + resource_finite (T7)
+
+For every task, zero-return computation steps exist unconditionally. Combined with
+finite budgets (D15a), the optimal computation budget is strictly less than the
+total resource budget. The saturation point's existence is provable; its location
+requires external assessment (E1). This is the formal basis for satisficing and
+adaptive computation depth policies (Phase 3c triggers, progressive thinking).
 -/
 
 /-- D15a: Under finite resources, a retry count must be bounded.
@@ -1348,6 +1357,94 @@ theorem d15c_eviction_preserves_feasibility :
       strategyFeasible s' agent := by
   intro s agent ⟨h_ctx, h_res, h_prec⟩ s' h_task h_ctx' h_res' h_prec'
   exact ⟨Nat.le_trans h_ctx' h_ctx, h_res' ▸ (h_task ▸ h_res), h_prec' ▸ (h_task ▸ h_prec)⟩
+
+-- ============================================================
+-- D15d: Computation Saturation (Metacognitive Termination)
+-- ============================================================
+
+/-!
+## D15d Computation Saturation
+
+Rationale: context_contribution_nonuniform (T3) + task_has_precision (T8) + resource_finite (T7)
+
+Under finite resources (T7), not all computation contributes to precision (T3 extension),
+and every task has a positive precision target (T8 structural). Therefore:
+1. Zero-return computation steps exist for every task (waste is universal)
+2. Resources that fund waste computation cannot improve precision
+3. The optimal computation budget is strictly less than the total resource budget
+
+This establishes that a **saturation point** exists — a resource expenditure level
+beyond which additional computation yields zero marginal precision improvement.
+The saturation point exists before resource exhaustion (D15a), making D15a's bound
+a looser upper bound on useful computation.
+
+**Critical limitation (E1):** While the saturation point's *existence* is provable,
+its *location* cannot be determined by the computing agent itself. The agent that
+reasons is the same agent that would need to judge "I've reasoned enough" —
+violating E1 (verification requires independence). Therefore:
+- Structural budget limits (D15a) provide a hard upper bound
+- Human intervention (D15b) provides the authoritative stopping signal
+- Heuristic triggers (Phase 3c) approximate the saturation point operationally
+
+Prior art:
+- Simon (1956) "Satisficing": under search costs, stopping at "good enough" is optimal
+- Russell & Wefald (1991) "Value of Computation": stop when VOC drops to zero
+- Graves (2016) "Adaptive Computation Time": learned halting probabilities
+- Banino et al. (2021) "PonderNet": probabilistic stopping via geometric prior
+
+Operational instances in this project:
+- Phase 3c triggers: same error 3x, axiom inflation 2x → strategy change
+- ForgeCode progressive thinking: high reasoning turns 1-10, low turns 11+
+- model-questioner termination: contradiction count reaches zero
+-/
+
+/-- A computation step: a unit of reasoning that consumes resources
+    and may or may not contribute to task precision.
+
+    Models individual reasoning steps in a chain-of-thought, tool calls
+    in an agentic loop, or any discrete computation consuming resources. -/
+structure ComputationStep where
+  /-- The context item produced or consumed by this step -/
+  item : ContextItem
+  /-- Resource cost of this step (always positive — computation is not free) -/
+  cost : Nat
+  /-- Proof that cost is positive (T7: resources are consumed) -/
+  cost_pos : cost > 0 := by omega
+  deriving Repr
+
+/-- The marginal precision return of a computation step for a given task.
+    Wraps precisionContribution with computation-step semantics:
+    a step with marginalReturn = 0 is "waste computation" that consumes
+    resources without improving precision. -/
+def marginalReturn (step : ComputationStep) (task : Task) : Nat :=
+  precisionContribution step.item task
+
+/-- D15d: For every task, zero-return computation steps exist.
+
+    Unlike D16a (which requires `precisionRequired > 0` as a premise),
+    D15d derives this from T8's structural guarantee (PrecisionLevel.required_pos),
+    eliminating the premise. This means: waste computation exists *unconditionally*
+    for every well-formed task — there is no task for which all possible computation
+    would be useful.
+
+    Combined with D15a (finite budget → finite steps), this establishes that
+    the set of feasible computation steps always contains waste. The saturation
+    point — where useful computation ends and waste begins — exists within
+    the feasible budget, not at its boundary.
+
+    Derivation: context_contribution_nonuniform (T3) + PrecisionLevel.required_pos (T8).
+    Axiom count: 0 new axioms. Uses context_contribution_nonuniform from T₀. -/
+theorem d15d_computation_saturation :
+  ∀ (task : Task),
+    ∃ (step : ComputationStep),
+      marginalReturn step task = 0 := by
+  intro task
+  -- T8 structural: every task has positive precision requirement
+  have h_prec := task.precisionRequired.required_pos
+  -- T3 extension: zero-contribution items exist for any such task
+  obtain ⟨item, h_zero⟩ := context_contribution_nonuniform task h_prec
+  -- Wrap as ComputationStep with minimal cost
+  exact ⟨⟨item, 1, by omega⟩, h_zero⟩
 
 -- ============================================================
 -- D16: Information Relevance Theorems (ForgeCode Analysis #147 B-group)

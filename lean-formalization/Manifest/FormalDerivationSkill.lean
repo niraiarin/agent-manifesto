@@ -83,11 +83,18 @@ inductive ModificationKind where
   | goalWeakening            -- φ の弱化
   deriving BEq, Repr, DecidableEq
 
-/-- Phase 3c: 戦略変更トリガー。 -/
+/-- Phase 3c: 戦略変更トリガー。
+    D15d（計算飽和定理）の操作的インスタンス。
+    各トリガーは飽和点に到達した（限界収益がゼロになった）ことを示すヒューリスティック:
+    - sameErrorRepetition: 同一エラーの反復 = 精度改善なし（R6 飽和シグナル）
+    - axiomInflation: 公理の膨張 = 構造的複雑度のみ増大、精度非改善
+    - complexityIncrease: 単調複雑度増大 = リソース消費のみ増大
+    E1 制約により飽和点の正確な位置は内部決定不可能なため、
+    これらの閾値ベースのヒューリスティクスで近似する。 -/
 inductive StrategyChangeTrigger where
-  | sameErrorRepetition  -- 同一エラー 3 回連続
-  | axiomInflation       -- 公理数が 2 倍超過
-  | complexityIncrease   -- 複雑度の単調増大
+  | sameErrorRepetition  -- 同一エラー 3 回連続（D15d: marginalReturn = 0 の反復検出）
+  | axiomInflation       -- 公理数が 2 倍超過（D15d: コスト増大、精度非改善）
+  | complexityIncrease   -- 複雑度の単調増大（D15d: リソース消費のみの増大）
   deriving BEq, Repr, DecidableEq
 
 /-- Phase 3c: 戦略変更の選択肢。手順書 §3 Phase 3c (lines 360-363)。 -/

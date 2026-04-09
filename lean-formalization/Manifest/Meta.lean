@@ -138,13 +138,13 @@ def currentTheoremDistribution : TheoremDistribution :=
   { ontologyM              := 21
     axiomsM                := 3
     empiricalPostulatesM   := 2
-    observableM            := 43  -- Observable.lean + ObservableDesign.lean
+    observableM            := 45  -- Observable.lean + ObservableDesign.lean
     principlesM            := 14
     metaM                  := 12
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 68
+    designFoundationM      := 69
     procedureM             := 25
     evolutionM             := 16
     evolveSkillM           := 30
@@ -177,7 +177,7 @@ theorem current_total_axioms :
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 454 := by rfl
+  currentProfile.theoremCount = 457 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :

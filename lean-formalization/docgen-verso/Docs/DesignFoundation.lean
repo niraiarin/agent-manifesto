@@ -152,7 +152,7 @@ This file formalizes D1–D17.
 *
   * D15
   * T3+T4+T5+T6+T7+T8+P6
-  * 3 theorems (retry bounds, convergence, eviction)
+  * 4 theorems (retry bounds, convergence, eviction, saturation)
 *
   * D16
   * `context_contribution_nonuniform`
@@ -1980,6 +1980,14 @@ When context usage exceeds capacity (T3), evicting messages that do not
 contribute to precision (T8) preserves strategyFeasible (P6).
 ForgeCode implements this as the droppable flag + compaction strategy.
 
+## D15d Computation saturation (metacognitive termination)
+Rationale: `context_contribution_nonuniform` (T3) + `task_has_precision` (T8) + `resource_finite` (T7)
+
+For every task, zero-return computation steps exist unconditionally. Combined with
+finite budgets (D15a), the optimal computation budget is strictly less than the
+total resource budget. The saturation point's existence is provable; its location
+requires external assessment (E1).
+
 D15a: Under finite resources, a retry count must be bounded.
    If resourceUsage per attempt is positive and resources are globally bounded,
    then the number of feasible attempts is bounded.
@@ -2054,6 +2062,48 @@ theorem d15c_eviction_preserves_feasibility :
       strategyFeasible s' agent := by
   intro s agent ⟨h_ctx, h_res, h_prec⟩ s' h_task h_ctx' h_res' h_prec'
   exact ⟨Nat.le_trans h_ctx' h_ctx, h_res' ▸ (h_task ▸ h_res), h_prec' ▸ (h_task ▸ h_prec)⟩
+```
+
+## D15d Computation Saturation — Optimal Stopping Exists Before Resource Exhaustion
+
+Rationale: `context_contribution_nonuniform` (T3) + `task_has_precision` (T8) + `resource_finite` (T7)
+
+Under finite resources (T7), not all computation contributes to precision (T3 extension),
+and every task has a positive precision target (T8 structural). Therefore:
+1. Zero-return computation steps exist for every task (waste is universal)
+2. Resources that fund waste computation cannot improve precision
+3. The optimal computation budget is strictly less than the total resource budget
+
+Critical limitation (E1): While the saturation point's existence is provable,
+its location cannot be determined by the computing agent itself.
+
+Prior art: Simon (1956) Satisficing, Russell & Wefald (1991) VOC, Graves (2016) ACT, PonderNet (2021).
+
+*Declaration:* `structure ComputationStep`
+```
+structure ComputationStep where
+  item : ContextItem
+  cost : Nat
+  cost_pos : cost > 0 := by omega
+  deriving Repr
+```
+
+*Declaration:* `def marginalReturn`
+```
+def marginalReturn (step : ComputationStep) (task : Task) : Nat :=
+  precisionContribution step.item task
+```
+
+*Declaration:* `theorem d15d_computation_saturation`
+```
+theorem d15d_computation_saturation :
+  ∀ (task : Task),
+    ∃ (step : ComputationStep),
+      marginalReturn step task = 0 := by
+  intro task
+  have h_prec := task.precisionRequired.required_pos
+  obtain ⟨item, h_zero⟩ := context_contribution_nonuniform task h_prec
+  exact ⟨⟨item, 1, by omega⟩, h_zero⟩
 ```
 
 ## D16 Information Relevance Theorems

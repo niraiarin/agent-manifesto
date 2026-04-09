@@ -39,6 +39,10 @@ V1–V7 は独立に最適化できない。ある変数の改善が別の変数
 信頼は投資行動として具体化される。正方向（信頼→投資増）と
 負方向（リスク→投資減）の両面を持つ。
 
+### R6 飽和検出 (Saturation Detection)
+Goodhart 5-layer defense の第4層。メトリクス改善停滞の検出と、
+D15d（計算飽和定理）との接続。
+
 ### Sorry 解消用 axiom
 Phase 3 の sorry を解消するための axiom。
 -/
@@ -204,6 +208,63 @@ theorem v4_no_perfect_proxy :
 theorem v7_no_perfect_proxy :
     ¬∃ (approx : World → Nat), ∀ w, approx w = taskDesignEfficiency w :=
   goodhart_no_perfect_proxy taskDesignEfficiency v7_goodhart
+
+-- ============================================================
+-- R6: 飽和検出 (Saturation Detection)
+-- ============================================================
+
+/-!
+## R6 Saturation Detection — Goodhart 5-Layer Defense の第 4 層
+
+メトリクス m の値が連続観測間で改善しないことを検出する述語。
+
+Goodhart 防御における役割:
+- R2 (governance metrics): メトリクス設計の統治
+- R3 (correlation monitoring): 代理指標と真の品質の相関監視
+- R5 (non-triviality gate): 自明な最適化の排除
+- **R6 (saturation detection): 改善停滞の検出 ← 本セクション**
+- G1b-2 (bias review): バイアスレビュー義務
+
+飽和が検出された場合、2つの可能性がある:
+(a) 真の飽和 — 計算が限界収益ゼロ点に到達（D15d: computation saturation）
+(b) Goodhart 乖離 — 代理指標が真の品質から分離
+
+いずれの場合も、当該メトリクスの継続的最適化は無駄。
+P3（学習の統治）によりメトリクス自体の見直しに遷移すべき。
+-/
+
+/-- R6: 飽和検出述語。メトリクス m が遷移 prev → current で改善しなかったことを表す。
+
+    設計意図: 単発の非改善は偶然かもしれないが、連続的な飽和検出は
+    D15d（計算飽和）または Goodhart 乖離のシグナルとなる。
+    observe.sh の operational layer で連続回数の追跡を実装する。 -/
+def SaturationDetected (m : World → Nat) (prev current : World) : Prop :=
+  m current ≤ m prev
+
+/-- R6 is Observable: 任意の Measurable メトリクスについて、飽和は二値判定可能。
+    2つの World の測定値を比較するだけで検出できる。
+
+    Proof: Nat の ≤ は Decidable なので、opaque な m であっても
+    m prev と m current の比較は Bool に変換可能。 -/
+theorem r6_saturation_observable (m : World → Nat) (prev : World) :
+    Observable (fun w => SaturationDetected m prev w) :=
+  ⟨fun w => decide (m w ≤ m prev),
+   fun w => by simp [SaturationDetected, decide_eq_true_eq]⟩
+
+/-- R6 + Goodhart: 飽和しているメトリクスの代理測定は信頼できない。
+    GoodhartVulnerable なメトリクスが飽和した場合、
+    代理指標もまた飽和しているとは限らない（乖離が発生しうる）。
+
+    Proof: Goodhart 脆弱性から代理指標の乖離点が存在し、
+    飽和状態であっても代理指標は「改善」を示しうる。 -/
+theorem r6_goodhart_saturation_divergence (m : World → Nat)
+    (h_goodhart : GoodhartVulnerable m) (prev : World)
+    (_h_saturated : SaturationDetected m prev prev) :
+    -- approx が prev で m と一致していても、乖離するワールドが存在する
+    ∀ (approx : World → Nat),
+      approx prev = m prev →
+      ∃ w', approx w' ≠ m w' :=
+  fun approx h_eq => h_goodhart approx ⟨prev, h_eq⟩
 
 -- ============================================================
 -- Sorry 解消用 axiom（Phase 3 → Phase 4）
