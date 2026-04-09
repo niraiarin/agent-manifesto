@@ -7,179 +7,314 @@
   },
   "assumptions": [
     {
-      "id": "CC-C1", "type": "C",
+      "id": "CC-C1",
+      "type": "C",
       "content": "L1 制約は PreToolUse hook で構造的に強制する",
       "sourceRef": ".claude/settings.json + .claude/hooks/l1-safety-check.sh",
-      "lastVerified": "2026-04-08", "reviewInterval": 90
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 90,
+      "derivedFromPDs": [
+        "PD-11",
+        "PD-13"
+      ]
     },
     {
-      "id": "CC-C2", "type": "C",
+      "id": "CC-C2",
+      "type": "C",
       "content": "破壊的操作は settings.json の deny rules で補助的に制限する（hook が主防衛線）",
       "sourceRef": ".claude/settings.json permissions.deny",
-      "lastVerified": "2026-04-08", "reviewInterval": 90
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 90,
+      "derivedFromPDs": [
+        "PD-22",
+        "PD-27"
+      ]
     },
     {
-      "id": "CC-C3", "type": "C",
+      "id": "CC-C3",
+      "type": "C",
       "content": "P2 検証は subagent（verifier 型）で行う",
       "sourceRef": ".claude/agents/verifier.md + .claude/skills/verify/SKILL.md",
-      "lastVerified": "2026-04-08", "reviewInterval": 90
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 90,
+      "derivedFromPDs": [
+        "PD-41"
+      ]
     },
     {
-      "id": "CC-C4", "type": "C",
+      "id": "CC-C4",
+      "type": "C",
       "content": "規範的指針は .claude/rules/ と CLAUDE.md に配置する",
       "sourceRef": ".claude/rules/ + CLAUDE.md",
-      "lastVerified": "2026-04-08", "reviewInterval": 180
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 180,
+      "derivedFromPDs": [
+        "PD-1",
+        "PD-2",
+        "PD-8"
+      ]
     },
     {
-      "id": "CC-C5", "type": "C",
+      "id": "CC-C5",
+      "type": "C",
       "content": "スキルは再利用可能な手順をセッション跨ぎで永続化する（D10）",
       "sourceRef": ".claude/skills/",
-      "lastVerified": "2026-04-08", "reviewInterval": 180
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 180,
+      "derivedFromPDs": [
+        "PD-5"
+      ]
     },
     {
-      "id": "CC-H1", "type": "H",
+      "id": "CC-H1",
+      "type": "H",
       "content": "PreToolUse hook はエージェントがバイパスできない（ハーネスレベル強制）",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
-      "lastVerified": "2026-04-08", "reviewInterval": 60,
-      "refutation": "Claude Code が hook 実行をオプトアウト可能にした場合"
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 60,
+      "refutation": "Claude Code が hook 実行をオプトアウト可能にした場合",
+      "derivedFromPDs": [
+        "PD-13",
+        "PD-11"
+      ]
     },
     {
-      "id": "CC-H2", "type": "H",
+      "id": "CC-H2",
+      "type": "H",
       "content": "Agent tool で起動された subagent は独立コンテキストウィンドウを持つ",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/agent-tool",
-      "lastVerified": "2026-04-08", "reviewInterval": 60,
-      "refutation": "Agent tool が親コンテキストを共有する仕様変更があった場合"
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 60,
+      "refutation": "Agent tool が親コンテキストを共有する仕様変更があった場合",
+      "derivedFromPDs": [
+        "PD-41"
+      ]
     },
     {
-      "id": "CC-H3", "type": "H",
+      "id": "CC-H3",
+      "type": "H",
       "content": "Permission deny rules は間接実行でバイパス可能。procedural レベル。",
       "sourceRef": ".claude/rules/l1-sandbox-recommendation.md",
-      "lastVerified": "2026-04-08", "reviewInterval": 90,
-      "refutation": "Claude Code が deny rules をサンドボックスレベルで強制するようになった場合"
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 90,
+      "refutation": "Claude Code が deny rules をサンドボックスレベルで強制するようになった場合",
+      "derivedFromPDs": [
+        "PD-22",
+        "PD-36"
+      ]
     },
     {
-      "id": "CC-H4", "type": "H",
+      "id": "CC-H4",
+      "type": "H",
       "content": "CLAUDE.md と rules/ は毎セッション読み込まれ、コンテキストを消費する",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory#project-instructions",
-      "lastVerified": "2026-04-08", "reviewInterval": 60,
-      "refutation": "Claude Code がルールの遅延/選択的読み込みを実装した場合"
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 60,
+      "refutation": "Claude Code がルールの遅延/選択的読み込みを実装した場合",
+      "derivedFromPDs": [
+        "PD-1",
+        "PD-2"
+      ]
     },
     {
-      "id": "CC-H5", "type": "H",
+      "id": "CC-H5",
+      "type": "H",
       "content": "PostToolUse hook は async 可能、ブロック不可。P4 メトリクス収集に適する。",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
-      "lastVerified": "2026-04-08", "reviewInterval": 60,
-      "refutation": "PostToolUse の async オプションが削除された場合"
+      "lastVerified": "2026-04-08",
+      "reviewInterval": 60,
+      "refutation": "PostToolUse の async オプションが削除された場合",
+      "derivedFromPDs": [
+        "PD-17",
+        "PD-71"
+      ]
     },
     {
-      "id": "CC-C6", "type": "C",
+      "id": "CC-C6",
+      "type": "C",
       "content": "Auto memory は git リポジトリ単位でスコープされる",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory",
-      "lastVerified": "2026-04-09", "reviewInterval": 90
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": [
+        "PD-7"
+      ]
     },
     {
-      "id": "CC-H6", "type": "H",
+      "id": "CC-H6",
+      "type": "H",
       "content": "同一イベントの全 matching hooks は並列実行。deny > defer > ask > allow で競合解決",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
-      "lastVerified": "2026-04-09", "reviewInterval": 60,
-      "refutation": "hooks が逐次実行に変更された場合"
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "hooks が逐次実行に変更された場合",
+      "derivedFromPDs": [
+        "PD-14"
+      ]
     },
     {
-      "id": "CC-H7", "type": "H",
+      "id": "CC-H7",
+      "type": "H",
       "content": "Auto mode は AI classifier で自然言語 policy rules を動的に評価してツール許可を判定",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions",
-      "lastVerified": "2026-04-09", "reviewInterval": 60,
-      "refutation": "Auto mode が廃止またはルールベースに変更された場合"
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "Auto mode が廃止またはルールベースに変更された場合",
+      "derivedFromPDs": [
+        "PD-28"
+      ]
     },
     {
-      "id": "CC-C8", "type": "C",
+      "id": "CC-C8",
+      "type": "C",
       "content": "D18 の実現として Subagent (1:N, session 内) と Agent Teams (N:N, session 間) の 2 つの協調プリミティブを使用",
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/sub-agents",
-      "lastVerified": "2026-04-09", "reviewInterval": 60
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "derivedFromPDs": [
+        "PD-48",
+        "PD-41"
+      ]
     }
   ],
   "axiom_to_config": [
     {
-      "axiomId": "CC1", "designPrinciple": "D1",
+      "axiomId": "CC1",
+      "designPrinciple": "D1",
       "claim": "PreToolUse hook は構造的強制",
       "implements": [
-        ".claude/hooks/l1-safety-check.sh", ".claude/hooks/l1-file-guard.sh",
-        ".claude/hooks/p3-compatibility-check.sh", ".claude/hooks/p3-axiom-evidence-check.sh",
-        ".claude/hooks/p4-sync-counts-check.sh", ".claude/hooks/p2-verify-on-commit.sh",
-        ".claude/hooks/p4-temporal-tracker.sh", ".claude/hooks/h5-doc-lint.sh",
+        ".claude/hooks/l1-safety-check.sh",
+        ".claude/hooks/l1-file-guard.sh",
+        ".claude/hooks/p3-compatibility-check.sh",
+        ".claude/hooks/p3-axiom-evidence-check.sh",
+        ".claude/hooks/p4-sync-counts-check.sh",
+        ".claude/hooks/p2-verify-on-commit.sh",
+        ".claude/hooks/p4-temporal-tracker.sh",
+        ".claude/hooks/h5-doc-lint.sh",
         ".claude/hooks/hallucination-check.sh"
       ],
-      "dependsOnAssumptions": ["CC-C1", "CC-H1"]
+      "dependsOnAssumptions": [
+        "CC-C1",
+        "CC-H1"
+      ]
     },
     {
-      "axiomId": "CC2", "designPrinciple": "D1",
+      "axiomId": "CC2",
+      "designPrinciple": "D1",
       "claim": "Sandbox は構造的強制（有効化時）",
       "implements": [],
       "dependsOnAssumptions": [],
       "note": "現在未有効化。.claude/rules/l1-sandbox-recommendation.md に推奨として記載"
     },
     {
-      "axiomId": "CC3", "designPrinciple": "D1",
+      "axiomId": "CC3",
+      "designPrinciple": "D1",
       "claim": "Permission deny rules は手続的強制（バイパス可能）",
-      "implements": [".claude/settings.json"],
-      "dependsOnAssumptions": ["CC-C2", "CC-H3"]
+      "implements": [
+        ".claude/settings.json"
+      ],
+      "dependsOnAssumptions": [
+        "CC-C2",
+        "CC-H3"
+      ]
     },
     {
-      "axiomId": "CC4", "designPrinciple": "D1",
+      "axiomId": "CC4",
+      "designPrinciple": "D1",
       "claim": "Rules と CLAUDE.md は規範的指針",
       "implements": [
-        "CLAUDE.md", ".claude/rules/l1-safety.md",
-        ".claude/rules/l1-sandbox-recommendation.md", ".claude/rules/p3-governed-learning.md"
+        "CLAUDE.md",
+        ".claude/rules/l1-safety.md",
+        ".claude/rules/l1-sandbox-recommendation.md",
+        ".claude/rules/p3-governed-learning.md"
       ],
-      "dependsOnAssumptions": ["CC-C4", "CC-H4"]
+      "dependsOnAssumptions": [
+        "CC-C4",
+        "CC-H4"
+      ]
     },
     {
-      "axiomId": "CC5", "designPrinciple": "D2",
+      "axiomId": "CC5",
+      "designPrinciple": "D2",
       "claim": "Hook 経由 subagent は high リスクまで十分 (3/4 条件)",
-      "implements": [".claude/agents/verifier.md", ".claude/skills/verify/SKILL.md"],
-      "dependsOnAssumptions": ["CC-C3", "CC-H1", "CC-H2"]
+      "implements": [
+        ".claude/agents/verifier.md",
+        ".claude/skills/verify/SKILL.md"
+      ],
+      "dependsOnAssumptions": [
+        "CC-C3",
+        "CC-H1",
+        "CC-H2"
+      ]
     },
     {
-      "axiomId": "CC5b", "designPrinciple": "D2",
+      "axiomId": "CC5b",
+      "designPrinciple": "D2",
       "claim": "手動呼出し subagent は moderate まで (2/4 条件)",
-      "implements": [".claude/skills/verify/SKILL.md"],
-      "dependsOnAssumptions": ["CC-C3", "CC-H2"]
+      "implements": [
+        ".claude/skills/verify/SKILL.md"
+      ],
+      "dependsOnAssumptions": [
+        "CC-C3",
+        "CC-H2"
+      ]
     },
     {
-      "axiomId": "CC6", "designPrinciple": "D2",
+      "axiomId": "CC6",
+      "designPrinciple": "D2",
       "claim": "Critical リスクには人間レビュー必須（CC プリミティブのみでは不十分）",
       "implements": [],
-      "dependsOnAssumptions": ["CC-H2"],
+      "dependsOnAssumptions": [
+        "CC-H2"
+      ],
       "note": "evaluatorIndependent=false のため"
     },
     {
-      "axiomId": "CC7", "designPrinciple": "D11",
+      "axiomId": "CC7",
+      "designPrinciple": "D11",
       "claim": "構造的強制のコンテキストコストは低く、規範的指針は高い（逆相関）",
       "implements": [
-        ".claude/hooks/", "CLAUDE.md", ".claude/rules/"
+        ".claude/hooks/",
+        "CLAUDE.md",
+        ".claude/rules/"
       ],
-      "dependsOnAssumptions": ["CC-H4"]
+      "dependsOnAssumptions": [
+        "CC-H4"
+      ]
     },
     {
-      "axiomId": "CC8", "designPrinciple": "D10",
+      "axiomId": "CC8",
+      "designPrinciple": "D10",
       "claim": "Agent のみ T1（一時的）、他は全て T2（永続）",
       "implements": [
-        ".claude/hooks/", ".claude/rules/", ".claude/skills/", ".claude/settings.json"
+        ".claude/hooks/",
+        ".claude/rules/",
+        ".claude/skills/",
+        ".claude/settings.json"
       ],
-      "dependsOnAssumptions": ["CC-C5"]
+      "dependsOnAssumptions": [
+        "CC-C5"
+      ]
     },
     {
-      "axiomId": "CC-D3", "designPrinciple": "D3",
+      "axiomId": "CC-D3",
+      "designPrinciple": "D3",
       "claim": "PostToolUse hooks が可観測性を提供",
       "implements": [
-        ".claude/hooks/p4-metrics-collector.sh", ".claude/hooks/p4-v5-approval-tracker.sh",
-        ".claude/hooks/p4-v7-task-tracker.sh", ".claude/hooks/p4-gate-logger.sh",
-        ".claude/hooks/p4-drift-detector.sh", ".claude/hooks/evolve-metrics-recorder.sh"
+        ".claude/hooks/p4-metrics-collector.sh",
+        ".claude/hooks/p4-v5-approval-tracker.sh",
+        ".claude/hooks/p4-v7-task-tracker.sh",
+        ".claude/hooks/p4-gate-logger.sh",
+        ".claude/hooks/p4-drift-detector.sh",
+        ".claude/hooks/evolve-metrics-recorder.sh"
       ],
-      "dependsOnAssumptions": ["CC-H5"]
+      "dependsOnAssumptions": [
+        "CC-H5"
+      ]
     },
     {
-      "axiomId": "CC-D4", "designPrinciple": "D4",
+      "axiomId": "CC-D4",
+      "designPrinciple": "D4",
       "claim": "Hook の層構造がフェーズ順序を実現",
       "implements": [
         ".claude/hooks/l1-safety-check.sh",
@@ -187,10 +322,14 @@
         ".claude/hooks/p4-metrics-collector.sh",
         ".claude/hooks/p3-compatibility-check.sh"
       ],
-      "dependsOnAssumptions": ["CC-C1", "CC-H1"]
+      "dependsOnAssumptions": [
+        "CC-C1",
+        "CC-H1"
+      ]
     },
     {
-      "axiomId": "CC-D5", "designPrinciple": "D5",
+      "axiomId": "CC-D5",
+      "designPrinciple": "D5",
       "claim": "Lean spec → test → skill/hook の三層",
       "implements": [
         "lean-formalization/Manifest/",
@@ -201,7 +340,8 @@
       "dependsOnAssumptions": []
     },
     {
-      "axiomId": "CC-D13", "designPrinciple": "D13",
+      "axiomId": "CC-D13",
+      "designPrinciple": "D13",
       "claim": "依存追跡による影響波及",
       "implements": [
         ".claude/skills/trace/SKILL.md",
@@ -211,28 +351,172 @@
     }
   ],
   "config_to_axiom": [
-    { "config": ".claude/hooks/l1-safety-check.sh", "axiomIds": ["CC1"], "role": "L1 構造的強制 (PreToolUse)" },
-    { "config": ".claude/hooks/l1-file-guard.sh", "axiomIds": ["CC1"], "role": "L1 ファイル保護 (Edit/Write)" },
-    { "config": ".claude/hooks/p2-verify-on-commit.sh", "axiomIds": ["CC1", "CC5"], "role": "P2 検証トークンチェック" },
-    { "config": ".claude/hooks/p3-compatibility-check.sh", "axiomIds": ["CC1"], "role": "P3 互換性分類チェック" },
-    { "config": ".claude/hooks/p3-axiom-evidence-check.sh", "axiomIds": ["CC1"], "role": "公理エビデンスチェック" },
-    { "config": ".claude/hooks/p4-metrics-collector.sh", "axiomIds": ["CC7", "CC-D3"], "role": "P4 メトリクス収集 (PostToolUse)" },
-    { "config": ".claude/hooks/p4-gate-logger.sh", "axiomIds": ["CC-D3"], "role": "P4 セッションログ (SessionStart)" },
-    { "config": ".claude/hooks/p4-drift-detector.sh", "axiomIds": ["CC-D3"], "role": "P4 ドリフト検知 (SessionStart)" },
-    { "config": ".claude/hooks/p4-v5-approval-tracker.sh", "axiomIds": ["CC-D3"], "role": "V5 承認率追跡 (UserPromptSubmit)" },
-    { "config": ".claude/hooks/p4-v7-task-tracker.sh", "axiomIds": ["CC-D3"], "role": "V7 タスク追跡 (TaskCompleted)" },
-    { "config": ".claude/hooks/p4-sync-counts-check.sh", "axiomIds": ["CC1"], "role": "カウント同期チェック" },
-    { "config": ".claude/hooks/p4-temporal-tracker.sh", "axiomIds": ["CC1"], "role": "時間的追跡" },
-    { "config": ".claude/hooks/h5-doc-lint.sh", "axiomIds": ["CC1"], "role": "ドキュメント lint" },
-    { "config": ".claude/hooks/hallucination-check.sh", "axiomIds": ["CC1"], "role": "幻覚チェック (Edit/Write)" },
-    { "config": ".claude/hooks/evolve-metrics-recorder.sh", "axiomIds": ["CC-D3"], "role": "/evolve メトリクス (PostToolUse)" },
-    { "config": ".claude/hooks/evolve-state-loader.sh", "axiomIds": ["CC-D3"], "role": "/evolve 状態読み込み (SessionStart)" },
-    { "config": ".claude/settings.json", "axiomIds": ["CC3"], "role": "Permission deny rules + hook 定義" },
-    { "config": "CLAUDE.md", "axiomIds": ["CC4", "CC7"], "role": "プロジェクト指示（規範的指針）" },
-    { "config": ".claude/rules/l1-safety.md", "axiomIds": ["CC4"], "role": "L1 規範的補完" },
-    { "config": ".claude/rules/l1-sandbox-recommendation.md", "axiomIds": ["CC2", "CC4"], "role": "Sandbox 推奨" },
-    { "config": ".claude/rules/p3-governed-learning.md", "axiomIds": ["CC4"], "role": "P3 学習統治" },
-    { "config": ".claude/agents/verifier.md", "axiomIds": ["CC5"], "role": "Verifier エージェント定義" },
-    { "config": ".claude/skills/verify/SKILL.md", "axiomIds": ["CC5", "CC5b", "CC6"], "role": "検証スキル" }
+    {
+      "config": ".claude/hooks/l1-safety-check.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "L1 構造的強制 (PreToolUse)"
+    },
+    {
+      "config": ".claude/hooks/l1-file-guard.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "L1 ファイル保護 (Edit/Write)"
+    },
+    {
+      "config": ".claude/hooks/p2-verify-on-commit.sh",
+      "axiomIds": [
+        "CC1",
+        "CC5"
+      ],
+      "role": "P2 検証トークンチェック"
+    },
+    {
+      "config": ".claude/hooks/p3-compatibility-check.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "P3 互換性分類チェック"
+    },
+    {
+      "config": ".claude/hooks/p3-axiom-evidence-check.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "公理エビデンスチェック"
+    },
+    {
+      "config": ".claude/hooks/p4-metrics-collector.sh",
+      "axiomIds": [
+        "CC7",
+        "CC-D3"
+      ],
+      "role": "P4 メトリクス収集 (PostToolUse)"
+    },
+    {
+      "config": ".claude/hooks/p4-gate-logger.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "P4 セッションログ (SessionStart)"
+    },
+    {
+      "config": ".claude/hooks/p4-drift-detector.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "P4 ドリフト検知 (SessionStart)"
+    },
+    {
+      "config": ".claude/hooks/p4-v5-approval-tracker.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "V5 承認率追跡 (UserPromptSubmit)"
+    },
+    {
+      "config": ".claude/hooks/p4-v7-task-tracker.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "V7 タスク追跡 (TaskCompleted)"
+    },
+    {
+      "config": ".claude/hooks/p4-sync-counts-check.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "カウント同期チェック"
+    },
+    {
+      "config": ".claude/hooks/p4-temporal-tracker.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "時間的追跡"
+    },
+    {
+      "config": ".claude/hooks/h5-doc-lint.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "ドキュメント lint"
+    },
+    {
+      "config": ".claude/hooks/hallucination-check.sh",
+      "axiomIds": [
+        "CC1"
+      ],
+      "role": "幻覚チェック (Edit/Write)"
+    },
+    {
+      "config": ".claude/hooks/evolve-metrics-recorder.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "/evolve メトリクス (PostToolUse)"
+    },
+    {
+      "config": ".claude/hooks/evolve-state-loader.sh",
+      "axiomIds": [
+        "CC-D3"
+      ],
+      "role": "/evolve 状態読み込み (SessionStart)"
+    },
+    {
+      "config": ".claude/settings.json",
+      "axiomIds": [
+        "CC3"
+      ],
+      "role": "Permission deny rules + hook 定義"
+    },
+    {
+      "config": "CLAUDE.md",
+      "axiomIds": [
+        "CC4",
+        "CC7"
+      ],
+      "role": "プロジェクト指示（規範的指針）"
+    },
+    {
+      "config": ".claude/rules/l1-safety.md",
+      "axiomIds": [
+        "CC4"
+      ],
+      "role": "L1 規範的補完"
+    },
+    {
+      "config": ".claude/rules/l1-sandbox-recommendation.md",
+      "axiomIds": [
+        "CC2",
+        "CC4"
+      ],
+      "role": "Sandbox 推奨"
+    },
+    {
+      "config": ".claude/rules/p3-governed-learning.md",
+      "axiomIds": [
+        "CC4"
+      ],
+      "role": "P3 学習統治"
+    },
+    {
+      "config": ".claude/agents/verifier.md",
+      "axiomIds": [
+        "CC5"
+      ],
+      "role": "Verifier エージェント定義"
+    },
+    {
+      "config": ".claude/skills/verify/SKILL.md",
+      "axiomIds": [
+        "CC5",
+        "CC5b",
+        "CC6"
+      ],
+      "role": "検証スキル"
+    }
   ]
 }

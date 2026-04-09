@@ -167,6 +167,43 @@ if [ "$ORPHAN_COUNT" -eq 0 ]; then
 fi
 
 # ============================================================
+# 6. PD トレーサビリティ（D17 Step 0 → Step 1）
+# ============================================================
+echo "--- 6. PD Traceability ---"
+
+# platform-decisions.json の存在確認
+MANIFEST_DIR=$(dirname "$MANIFEST")
+PD_FILE="$MANIFEST_DIR/platform-decisions.json"
+
+if [ -f "$PD_FILE" ]; then
+  pass "platform-decisions.json exists"
+
+  # 各仮定に derivedFromPDs があるか
+  ASSUMPTIONS_WITH_PD=$(jq '[.assumptions[] | select(.derivedFromPDs != null and (.derivedFromPDs | length) > 0)] | length' "$MANIFEST")
+  ASSUMPTIONS_WITHOUT_PD=$(jq '[.assumptions[] | select(.derivedFromPDs == null or (.derivedFromPDs | length) == 0)] | length' "$MANIFEST")
+
+  pass "Assumptions with PD traceability: $ASSUMPTIONS_WITH_PD"
+  if [ "$ASSUMPTIONS_WITHOUT_PD" -gt 0 ]; then
+    warn "$ASSUMPTIONS_WITHOUT_PD assumptions lack derivedFromPDs"
+  fi
+
+  # derivedFromPDs の PD ID が platform-decisions.json に存在するか
+  PD_IDS=$(jq -r '.decisions[].id' "$PD_FILE" 2>/dev/null | sort -u)
+  ORPHAN_PD=0
+  for pid in $(jq -r '.assumptions[].derivedFromPDs[]?' "$MANIFEST" 2>/dev/null | sort -u); do
+    if ! echo "$PD_IDS" | grep -qx "$pid"; then
+      warn "Assumption references PD $pid not found in platform-decisions.json"
+      ORPHAN_PD=$((ORPHAN_PD + 1))
+    fi
+  done
+  if [ "$ORPHAN_PD" -eq 0 ] && [ "$ASSUMPTIONS_WITH_PD" -gt 0 ]; then
+    pass "All referenced PDs exist in platform-decisions.json"
+  fi
+else
+  warn "platform-decisions.json not found (Step 0 output not persisted)"
+fi
+
+# ============================================================
 # Summary
 # ============================================================
 echo ""

@@ -1,0 +1,53 @@
+{
+  "_description": "D17 Step 0 (investigate) の構造化出力。Claude Code プラットフォームの設計判断を永続化。",
+  "_lastInvestigated": "2026-04-08",
+  "_sources": [
+    "https://docs.anthropic.com/en/docs/claude-code/overview",
+    "https://docs.anthropic.com/en/docs/claude-code/hooks",
+    "https://docs.anthropic.com/en/docs/claude-code/memory",
+    "https://docs.anthropic.com/en/docs/claude-code/settings",
+    "https://docs.anthropic.com/en/docs/claude-code/security",
+    "https://docs.anthropic.com/en/docs/claude-code/sub-agents",
+    "https://docs.anthropic.com/en/docs/claude-code/skills",
+    "https://docs.anthropic.com/en/docs/claude-code/mcp",
+    "https://docs.anthropic.com/en/docs/claude-code/permissions",
+    "https://docs.anthropic.com/en/docs/claude-code/cli-reference"
+  ],
+  "_investigationPasses": 2,
+  "_categoriesTotal": 9,
+  "_categoriesCovered": 9,
+  "categories": {
+    "hooks": { "count": 10, "pdIds": ["PD-11","PD-12","PD-13","PD-14","PD-15","PD-16","PD-17","PD-18","PD-19","PD-20"] },
+    "permissions": { "count": 8, "pdIds": ["PD-21","PD-22","PD-23","PD-24","PD-25","PD-26","PD-27","PD-28"] },
+    "memory": { "count": 10, "pdIds": ["PD-1","PD-2","PD-3","PD-4","PD-5","PD-6","PD-7","PD-8","PD-9","PD-10"] },
+    "security": { "count": 7, "pdIds": ["PD-34","PD-35","PD-36","PD-37","PD-38","PD-39","PD-40"] },
+    "agents": { "count": 8, "pdIds": ["PD-41","PD-42","PD-43","PD-44","PD-45","PD-46","PD-47","PD-48"] },
+    "skills": { "count": 8, "pdIds": ["PD-49","PD-50","PD-51","PD-52","PD-53","PD-54","PD-55","PD-56"] },
+    "mcp": { "count": 4, "pdIds": ["PD-57","PD-58","PD-59","PD-60"] },
+    "settings": { "count": 5, "pdIds": ["PD-29","PD-30","PD-31","PD-32","PD-33"] },
+    "workflow": { "count": 10, "pdIds": ["PD-61","PD-62","PD-63","PD-64","PD-65","PD-66","PD-67","PD-68","PD-69","PD-70"] }
+  },
+  "decisions": [
+    { "id": "PD-1", "description": "Hierarchical CLAUDE.md with 4+ scopes", "category": "memory", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory", "lastVerified": "2026-04-08" },
+    { "id": "PD-2", "description": "CLAUDE.md injected as user-message, not system prompt", "category": "memory", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory", "lastVerified": "2026-04-08" },
+    { "id": "PD-5", "description": "Dual memory: human-authored (CLAUDE.md) + agent-authored (auto memory)", "category": "memory", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory", "lastVerified": "2026-04-08" },
+    { "id": "PD-7", "description": "Auto memory scoped per git repository", "category": "memory", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory", "lastVerified": "2026-04-08" },
+    { "id": "PD-8", "description": ".claude/rules/ for modular path-scoped instructions", "category": "memory", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory", "lastVerified": "2026-04-08" },
+    { "id": "PD-11", "description": "Lifecycle hook system with 24+ event types", "category": "hooks", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks", "lastVerified": "2026-04-08" },
+    { "id": "PD-13", "description": "Exit code 2 is the ONLY blocking exit code", "category": "hooks", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks", "lastVerified": "2026-04-08" },
+    { "id": "PD-14", "description": "All matching hooks within an event run in parallel", "category": "hooks", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks", "lastVerified": "2026-04-08" },
+    { "id": "PD-17", "description": "Async fire-and-forget hooks", "category": "hooks", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks", "lastVerified": "2026-04-08" },
+    { "id": "PD-21", "description": "Three-tier tool permission classification", "category": "permissions", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions", "lastVerified": "2026-04-08" },
+    { "id": "PD-22", "description": "Deny > Ask > Allow evaluation order", "category": "permissions", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions", "lastVerified": "2026-04-08" },
+    { "id": "PD-27", "description": "Protected directory writes even in bypassPermissions mode", "category": "permissions", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions", "lastVerified": "2026-04-08" },
+    { "id": "PD-28", "description": "Auto mode classifier with natural-language policy rules", "category": "permissions", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions", "lastVerified": "2026-04-08" },
+    { "id": "PD-36", "description": "Sandbox as complementary OS-level enforcement", "category": "security", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/security", "lastVerified": "2026-04-08" },
+    { "id": "PD-41", "description": "Subagents run in isolated context windows", "category": "agents", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/sub-agents", "lastVerified": "2026-04-08" },
+    { "id": "PD-48", "description": "Agent teams vs subagents as distinct coordination models", "category": "agents", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/sub-agents", "lastVerified": "2026-04-08" },
+    { "id": "PD-66", "description": "Max-turns and max-budget-usd for cost/runaway control", "category": "workflow", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/cli-reference", "lastVerified": "2026-04-08" },
+    { "id": "PD-71", "description": "Non-blocking default for hook failures", "category": "security", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks", "lastVerified": "2026-04-08" },
+    { "id": "PD-72", "description": "Separation of enforcement (settings/sandbox) from guidance (CLAUDE.md)", "category": "security", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/security", "lastVerified": "2026-04-08" },
+    { "id": "PD-73", "description": "Defense-in-depth with independent layers", "category": "security", "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/security", "lastVerified": "2026-04-08" }
+  ],
+  "_note": "Above is a representative subset of 75 PDs. Full list was collected in #256 experiment comments. Key PDs referenced by CC assumptions are included here for traceability."
+}
