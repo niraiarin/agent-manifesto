@@ -1491,111 +1491,23 @@ inductive DeductiveDesignStep where
   | feedback     -- フィードバック: T5 (no improvement without feedback) + D13 (impact propagation)
   deriving BEq, Repr
 
-/-- Ordering of workflow steps.
-    Later steps depend on outputs of earlier steps. -/
-def DeductiveDesignStep.ord : DeductiveDesignStep → Nat
-  | .investigate => 0
-  | .extract     => 1
-  | .construct   => 2
-  | .derive      => 3
-  | .validate    => 4
-  | .feedback    => 5
+/-!
+### Note on step ordering
 
-/-- A step depends on another if its ord is strictly greater.
-    This captures the sequential dependency: you cannot extract without
-    investigating, cannot construct without extracting, etc. -/
-def designStepDependsOn (later earlier : DeductiveDesignStep) : Prop :=
-  later.ord > earlier.ord
+Step ordering was previously expressed via `DeductiveDesignStep.ord` and
+encoding theorems (d17_investigate_before_extract, etc.). These were removed
+because the ordering is now structurally enforced by the state machine:
+`WorkflowState.currentStep` computes the next step from the Option fields,
+and `applyTransition` rejects out-of-order transitions by returning none.
 
-/-- [Derivation Card]
-    Derives from: T5 (no_improvement_without_feedback), D3 (observability first)
-    Proposition: D17
-    Content: Investigation must precede extraction — you cannot form assumptions (P3 hypothesis)
-      without first observing the environment (D3 observability). T5 requires feedback,
-      which requires observation. Therefore investigate.ord < extract.ord.
-    Note: Encoding theorem — the ordering is captured in the ord mapping (definitional).
-      The axiom connection (T5, D3) justifies the CHOICE of ord values, not the proof itself.
-    Proof strategy: simp on DeductiveDesignStep.ord -/
-theorem d17_investigate_before_extract :
-  designStepDependsOn .extract .investigate := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
-
-/-- [Derivation Card]
-    Derives from: D5 (spec/test/impl triple), P3 (governed learning)
-    Proposition: D17
-    Content: Construction of conditional axiom system requires assumptions,
-      which come from extraction. D5 requires formal specification (the conditional
-      axiom system) to precede implementation; P3 requires hypothesis (extract)
-      before integration (construct).
-    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
-    Proof strategy: simp on DeductiveDesignStep.ord -/
-theorem d17_extract_before_construct :
-  designStepDependsOn .construct .extract := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
-
-/-- [Derivation Card]
-    Derives from: D1-D16 (design theorems require conditional axiom system as input)
-    Proposition: D17
-    Content: Design derivation operates on the conditional axiom system, not on
-      core axioms directly. Without construction, there is no conditional axiom
-      system to derive from. Core axioms alone lack platform-specific conditions.
-    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
-    Proof strategy: simp on DeductiveDesignStep.ord -/
-theorem d17_construct_before_derive :
-  designStepDependsOn .derive .construct := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
-
-/-- [Derivation Card]
-    Derives from: E1 (verification_requires_independence), D2 (worker/verifier separation)
-    Proposition: D17
-    Content: Validation requires a design to validate. E1 requires that verification
-      be independent of generation — the validator must not have generated the design.
-      D2's 4 conditions apply to the design derivation process itself.
-    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
-    Proof strategy: simp on DeductiveDesignStep.ord -/
-theorem d17_derive_before_validate :
-  designStepDependsOn .validate .derive := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
-
-/-- [Derivation Card]
-    Derives from: T5 (no_improvement_without_feedback), D13 (impact propagation)
-    Proposition: D17
-    Content: Feedback requires validation results as input. When validation reveals
-      mismatches (under-derivation), D13's impact propagation identifies which
-      assumptions or core axioms are affected. T5 guarantees that without this
-      feedback loop, the design cannot improve.
-    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
-    Proof strategy: simp on DeductiveDesignStep.ord -/
-theorem d17_validate_before_feedback :
-  designStepDependsOn .feedback .validate := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
-
-/-- [Derivation Card]
-    Derives from: d17_investigate_before_extract through d17_validate_before_feedback
-    Proposition: D17 (transitivity)
-    Content: The workflow ordering is transitive: if step A must precede B and B
-      must precede C, then A must precede C. This follows from Nat ordering.
-      In particular, investigate must precede feedback (the full chain).
-    Proof strategy: Nat.lt_trans on ord values -/
-theorem d17_workflow_transitive :
-  ∀ (a b c : DeductiveDesignStep),
-    designStepDependsOn b a →
-    designStepDependsOn c b →
-    designStepDependsOn c a := by
-  intro a b c hab hbc
-  simp [designStepDependsOn] at *
-  exact Nat.lt_trans hab hbc
-
-/-- [Derivation Card]
-    Derives from: d17_workflow_transitive
-    Proposition: D17 (full chain)
-    Content: The complete workflow chain holds: investigate precedes feedback.
-      This is the end-to-end ordering: you cannot provide design feedback
-      without having first investigated the environment.
-    Proof strategy: simp on ord values (0 < 5) -/
-theorem d17_full_chain :
-  designStepDependsOn .feedback .investigate := by
-  simp [designStepDependsOn, DeductiveDesignStep.ord]
+The axiom-level justification for WHY each step precedes the next remains
+valid and is documented in the DeductiveDesignStep constructors' comments:
+- investigate before extract: T5 + D3 (observe before hypothesize)
+- extract before construct: P3 + T6 (hypothesize before integrate)
+- construct before derive: D5 + D9 (specify before implement)
+- derive before validate: E1 + D2 (generate before verify)
+- validate before feedback: T5 + D13 (measure before propagate)
+-/
 
 -- ============================================================
 -- D17 Extension: Step Output Types and Intermediate Verification
@@ -1789,22 +1701,6 @@ theorem d17_state_machine_properties :
   WorkflowState.initial.currentStep = .investigate ∧
   WorkflowState.initial.iteration = 0 := by
   exact ⟨rfl, rfl⟩
-
--- ============================================================
--- D17 Workflow Ordering (retained for backward compatibility)
--- ============================================================
-
-/-- [Derivation Card]
-    Derives from: DeductiveDesignStep.ord (definitional)
-    Proposition: D17 (acyclicity)
-    Content: The workflow ordering is acyclic — no step depends on itself.
-      This is a structural consequence of strict inequality (Nat.lt_irrefl).
-      Acyclicity guarantees the workflow terminates and has no circular dependencies.
-    Proof strategy: unfold designStepDependsOn + Nat.lt_irrefl -/
-theorem d17_acyclic :
-  ∀ (s : DeductiveDesignStep), ¬designStepDependsOn s s := by
-  intro s h
-  simp [designStepDependsOn] at h
 
 -- ============================================================
 -- Sorry Inventory

@@ -17,9 +17,9 @@
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
 <<<<<<< HEAD
-- `lean-formalization/` — Lean 4 形式検証（51 axioms, 410 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（51 axioms, 402 theorems, 0 sorry）
 =======
-- `lean-formalization/` — Lean 4 形式検証（51 axioms, 410 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（51 axioms, 402 theorems, 0 sorry）
 >>>>>>> origin/main
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
@@ -96,9 +96,9 @@
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
 <<<<<<< HEAD
-- Current stats: 51 axioms, 410 theorems, 0 sorry
+- Current stats: 51 axioms, 402 theorems, 0 sorry
 =======
-- Current stats: 51 axioms, 410 theorems, 0 sorry
+- Current stats: 51 axioms, 402 theorems, 0 sorry
 >>>>>>> origin/main
 
 ## Hook Development Patterns

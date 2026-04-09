@@ -32,9 +32,9 @@ Lean 4 formalization. The project encodes a set of axioms, boundary conditions,
 observable variables, and design principles as formal Lean definitions and theorems.
 
 <<<<<<< HEAD
-*Project statistics:* 51 axioms, 410 theorems, 0 sorry.
+*Project statistics:* 51 axioms, 402 theorems, 0 sorry.
 =======
-*Project statistics:* 51 axioms, 410 theorems, 0 sorry.
+*Project statistics:* 51 axioms, 402 theorems, 0 sorry.
 >>>>>>> origin/main
 
 # Structure
