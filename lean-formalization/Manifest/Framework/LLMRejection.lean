@@ -1,4 +1,5 @@
 import Manifest.Framework.DanglingDetection
+import Manifest.Models.Assumptions.EpistemicLayer
 
 /-!
 # Worker/Verifier Separation Architecture — Soundness
@@ -298,5 +299,63 @@ theorem invalidation_assumption_bound [BEq α] [DecidableEq α]
     (g : AcyclicGraph α) (id : α) :
     (g.invalidate id).length = g.nodes.length := by
   exact invalidate_preserves_length g id
+
+-- ============================================================
+-- EpistemicSource type-level connection
+-- ============================================================
+
+open Manifest.Models.Assumptions in
+
+/-- Predicate: a CandidateSource corresponds to an EpistemicSource.
+    - human ↔ humanDecision (any phase/question/date)
+    - llm ↔ llmInference (any basis/refutation) -/
+def CandidateSource.matchesEpistemic : CandidateSource → EpistemicSource → Prop
+  | .human, .humanDecision _ _ _ => True
+  | .llm,   .llmInference _ _   => True
+  | .human, .llmInference _ _   => False
+  | .llm,   .humanDecision _ _ _ => False
+
+open Manifest.Models.Assumptions in
+
+/-- Every humanDecision matches CandidateSource.human. -/
+theorem human_matches_humanDecision (p : Nat) (q : String) (d : String) :
+    CandidateSource.matchesEpistemic .human (.humanDecision p q d) := by
+  simp [CandidateSource.matchesEpistemic]
+
+open Manifest.Models.Assumptions in
+
+/-- Every llmInference matches CandidateSource.llm. -/
+theorem llm_matches_llmInference (basis : List String) (refutation : String) :
+    CandidateSource.matchesEpistemic .llm (.llmInference basis refutation) := by
+  simp [CandidateSource.matchesEpistemic]
+
+open Manifest.Models.Assumptions in
+
+/-- The matching is exclusive: human never matches llmInference. -/
+theorem human_not_llm (basis : List String) (refutation : String) :
+    ¬ CandidateSource.matchesEpistemic .human (.llmInference basis refutation) := by
+  simp [CandidateSource.matchesEpistemic]
+
+open Manifest.Models.Assumptions in
+
+/-- The matching is exclusive: llm never matches humanDecision. -/
+theorem llm_not_human (p : Nat) (q : String) (d : String) :
+    ¬ CandidateSource.matchesEpistemic .llm (.humanDecision p q d) := by
+  simp [CandidateSource.matchesEpistemic]
+
+open Manifest.Models.Assumptions in
+
+/-- needsVerification is consistent with EpistemicSource:
+    an LLM-sourced candidate (which needs verification) matches only llmInference. -/
+theorem needs_verification_matches_llm
+    (c : Candidate α) (es : EpistemicSource)
+    (hv : c.needsVerification = true)
+    (hm : c.source.matchesEpistemic es) :
+    ∃ basis refutation, es = .llmInference basis refutation := by
+  have hsrc := (needs_verification_iff_llm c).mp hv
+  rw [hsrc] at hm
+  match es with
+  | .humanDecision p q d => simp [CandidateSource.matchesEpistemic] at hm
+  | .llmInference b r => exact ⟨b, r, rfl⟩
 
 end Manifest.Framework
