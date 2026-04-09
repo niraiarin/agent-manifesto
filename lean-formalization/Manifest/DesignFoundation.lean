@@ -1521,12 +1521,28 @@ The type connection replaces the encoding theorem ordering with
 a structural dependency: step N's output type IS step N+1's input.
 -/
 
-/-- Output of Step 0 (investigate): collected platform design decisions. -/
+/-- Output of Step 0 (investigate): collected platform design decisions.
+    T4 (nondeterministic output) means a single investigation may miss PDs.
+    Mitigation: parallel agents + iterative loop + category coverage check. -/
 structure InvestigationReport where
   platformName : String
   decisionCount : Nat
   sourceCount : Nat
+  /-- Number of independent investigation passes (T4 mitigation: parallel agents) -/
+  investigationPasses : Nat
+  /-- Number of platform primitive categories covered (structural completeness check) -/
+  categoriesCovered : Nat
+  /-- Total known categories for this platform -/
+  categoriesTotal : Nat
   deriving Repr
+
+/-- Investigation completeness check.
+    Requires multiple passes (T4 mitigation) and category coverage. -/
+def investigateStepValid (r : InvestigationReport) : Bool :=
+  r.investigationPasses ≥ 2 &&    -- At least 2 independent passes
+  r.categoriesCovered == r.categoriesTotal &&  -- All categories covered
+  r.decisionCount > 0 &&
+  r.sourceCount > 0
 
 /-- Output of Step 1 (extract): assumptions with epistemic source tracking. -/
 structure AssumptionSet where
@@ -1560,7 +1576,7 @@ structure ValidationMetrics where
 /-- Verification risk level for step transitions.
     Maps to D2's VerificationRisk via the transition's impact on soundness. -/
 def stepTransitionRisk : DeductiveDesignStep → VerificationRisk
-  | .investigate => .moderate  -- 0→1: information completeness
+  | .investigate => .high      -- 0→1: investigation completeness determines all downstream quality
   | .extract     => .high      -- 1→2: assumption correctness
   | .construct   => .high      -- 2→3: axiom system soundness
   | .derive      => .moderate  -- 3→4: derivation traceability
@@ -1570,10 +1586,12 @@ def stepTransitionRisk : DeductiveDesignStep → VerificationRisk
 /-- [Derivation Card]
     Derives from: D2 (VerificationRisk, requiredConditions), stepTransitionRisk
     Proposition: D17 (intermediate verification)
-    Content: Steps with high-risk transitions (extract, construct) require
+    Content: Steps with high-risk transitions (investigate, extract, construct) require
       at least 3/4 independence conditions for verification.
-      This means hook-invoked subagent verification is needed, not manual. -/
+      investigate is high because its completeness determines all downstream quality
+      (D13 impact propagation from Step 0 deficiency reaches Step 5). -/
 theorem d17_high_risk_transitions_need_hook_verify :
+  requiredConditions (stepTransitionRisk .investigate) ≥ 3 ∧
   requiredConditions (stepTransitionRisk .extract) ≥ 3 ∧
   requiredConditions (stepTransitionRisk .construct) ≥ 3 := by
   simp [stepTransitionRisk, requiredConditions]
@@ -1643,6 +1661,7 @@ inductive FeedbackAction where
 /-- Workflow transitions with verify gates on high-risk steps. -/
 inductive WorkflowTransition where
   | completeInvestigation (report : InvestigationReport)
+      (verified : investigateStepValid report = true)
   | completeExtraction (aset : AssumptionSet)
       (verified : extractStepValid aset = true)
   | completeConstruction (result : ConditionalAxiomBuildResult)
@@ -1655,7 +1674,7 @@ inductive WorkflowTransition where
     Returns none if the transition is invalid for the current step. -/
 def applyTransition (s : WorkflowState) (t : WorkflowTransition) : Option WorkflowState :=
   match t with
-  | .completeInvestigation r =>
+  | .completeInvestigation r _ =>
     if s.currentStep == .investigate then some { s with investigation := some r }
     else none
   | .completeExtraction a _ =>
