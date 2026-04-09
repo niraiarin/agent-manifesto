@@ -397,6 +397,11 @@ opaque riskExposure (agent : Agent) (w : World) : Nat
     Concrete values will be domain-specific in Phase 2+. -/
 opaque globalResourceBound : Nat
 
+/-- Execution duration of a task or subtask.
+    Opaque: concrete measurement is domain-specific (wall-clock, tokens, API calls).
+    Used by T7b (sequential time additivity) to reason about parallel vs sequential. -/
+opaque executionDuration : Task → Nat
+
 -- ============================================================
 -- P1/P4/P5 Support — 信頼・劣化・解釈（Phase 3+ で使用）
 -- ============================================================
