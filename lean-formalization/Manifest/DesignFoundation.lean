@@ -1597,6 +1597,96 @@ theorem d17_full_chain :
   designStepDependsOn .feedback .investigate := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
 
+-- ============================================================
+-- D17 Extension: Step Output Types and Intermediate Verification
+-- ============================================================
+
+/-!
+## D17 Step Output Types (#262)
+
+Each step produces a typed output consumed by the next step.
+The type connection replaces the encoding theorem ordering with
+a structural dependency: step N's output type IS step N+1's input.
+-/
+
+/-- Output of Step 0 (investigate): collected platform design decisions. -/
+structure InvestigationReport where
+  platformName : String
+  decisionCount : Nat
+  sourceCount : Nat
+  deriving Repr
+
+/-- Output of Step 1 (extract): assumptions with epistemic source tracking. -/
+structure AssumptionSet where
+  humanDecisionCount : Nat
+  llmInferenceCount : Nat
+  allHaveTemporalValidity : Bool
+  deriving Repr
+
+/-- Output of Step 2 (construct): conditional axiom system build result. -/
+structure ConditionalAxiomBuildResult where
+  axiomCount : Nat
+  theoremCount : Nat
+  sorryCount : Nat
+  buildSuccess : Bool
+  deriving Repr
+
+/-- Output of Step 3 (derive): derived design decisions. -/
+structure DerivationOutput where
+  decisionCount : Nat
+  allAxiomsUsed : Bool
+  deriving Repr
+
+/-- Output of Step 4 (validate): accuracy measurement. -/
+structure ValidationMetrics where
+  totalPD : Nat
+  matchCount : Nat
+  partialCount : Nat
+  missCount : Nat
+  deriving Repr
+
+/-- Verification risk level for step transitions.
+    Maps to D2's VerificationRisk via the transition's impact on soundness. -/
+def stepTransitionRisk : DeductiveDesignStep → VerificationRisk
+  | .investigate => .moderate  -- 0→1: information completeness
+  | .extract     => .high      -- 1→2: assumption correctness
+  | .construct   => .high      -- 2→3: axiom system soundness
+  | .derive      => .moderate  -- 3→4: derivation traceability
+  | .validate    => .moderate  -- 4→5: measurement reproducibility
+  | .feedback    => .low       -- terminal step
+
+/-- [Derivation Card]
+    Derives from: D2 (VerificationRisk, requiredConditions), stepTransitionRisk
+    Proposition: D17 (intermediate verification)
+    Content: Steps with high-risk transitions (extract, construct) require
+      at least 3/4 independence conditions for verification.
+      This means hook-invoked subagent verification is needed, not manual. -/
+theorem d17_high_risk_transitions_need_hook_verify :
+  requiredConditions (stepTransitionRisk .extract) ≥ 3 ∧
+  requiredConditions (stepTransitionRisk .construct) ≥ 3 := by
+  simp [stepTransitionRisk, requiredConditions]
+
+/-- [Derivation Card]
+    Derives from: stepTransitionRisk, ConditionalAxiomBuildResult
+    Proposition: D17 (construct soundness)
+    Content: A valid construct step must produce sorryCount = 0 and buildSuccess = true.
+      These are necessary conditions for the conditional axiom system to be sound. -/
+def constructStepValid (r : ConditionalAxiomBuildResult) : Bool :=
+  r.sorryCount == 0 && r.buildSuccess
+
+/-- [Derivation Card]
+    Derives from: AssumptionSet, TemporalValidity (#225)
+    Proposition: D17 (extract completeness)
+    Content: A valid extract step must produce assumptions that all have TemporalValidity.
+      This is required by #225 (temporal validity is a fundamental property of
+      conditional axiom systems). -/
+def extractStepValid (a : AssumptionSet) : Bool :=
+  a.allHaveTemporalValidity && a.humanDecisionCount + a.llmInferenceCount > 0
+
+-- ============================================================
+-- D17 Workflow Ordering (existing theorems)
+-- ============================================================
+
 /-- [Derivation Card]
     Derives from: DeductiveDesignStep.ord (definitional)
     Proposition: D17 (acyclicity)
