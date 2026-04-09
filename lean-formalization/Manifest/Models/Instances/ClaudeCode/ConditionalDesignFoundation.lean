@@ -283,6 +283,7 @@ def hasCCMapping : DesignPrinciple → Bool
   | .d14_verificationOrderConstraint   => false -- methodological
   | .d15_harnessEngineering            => false -- methodological (platform-specific patterns)
   | .d16_informationRelevance          => false -- methodological (context composition strategy)
+  | .d17_deductiveDesignWorkflow       => false -- meta-level (design process itself)
 
 /-- All 16 design principles enumerated. -/
 def allDesignPrinciples : List DesignPrinciple :=
@@ -293,7 +294,8 @@ def allDesignPrinciples : List DesignPrinciple :=
    .d9_selfMaintenance, .d10_structuralPermanence,
    .d11_contextEconomy, .d12_constraintSatisfactionTaskDesign,
    .d13_premiseNegationPropagation, .d14_verificationOrderConstraint,
-   .d15_harnessEngineering, .d16_informationRelevance]
+   .d15_harnessEngineering, .d16_informationRelevance,
+   .d17_deductiveDesignWorkflow]
 
 /-- [Derivation Card]
     Derives from: hasCCMapping, allDesignPrinciples
