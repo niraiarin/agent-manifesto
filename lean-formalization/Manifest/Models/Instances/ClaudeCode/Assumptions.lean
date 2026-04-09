@@ -211,13 +211,32 @@ def cc_h7 : Assumption := {
   }
 }
 
+/-- CC-C8: D18 (マルチエージェント協調) の Claude Code 実現として、
+    Subagent (1:N in-session delegation) と Agent Teams (N:N cross-session coordination) の
+    2 つの異なる協調プリミティブを使用する。
+
+    Subagent の行動特性は CC5/CC5b/CC6 で既にカバー。
+    Agent Teams の行動特性（独立コンテキスト、共有タスクリスト、TeammateIdle hook）は
+    D18 + D2 (独立性条件) から導出可能であり、独立した仮定は不要。
+    本仮定は「2 つのプリミティブが存在し区別される」というプラットフォーム事実のみを仮定する。 -/
+def cc_c8 : Assumption := {
+  id := "CC-C8"
+  source := .humanDecision 1 "coordination-primitives" "2025-06-01"
+  content := "D18 の実現として Subagent (Agent tool, 1:N, session 内) と Agent Teams (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS, N:N, session 間) の 2 つの協調プリミティブを使用する。使い分けは D18 + D12 (CSP) に基づく: 単発委譲は Subagent、複数エージェント協調は Agent Teams。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/sub-agents"
+    lastVerified := "2026-04-09"
+    reviewInterval := some 60
+  }
+}
+
 -- ============================================================
 -- 仮定の一覧
 -- ============================================================
 
 /-- Claude Code インスタンスの全仮定。 -/
 def allAssumptions : List Assumption :=
-  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6,
+  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8,
    cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7]
 
 end Manifest.Models.Instances.ClaudeCode
