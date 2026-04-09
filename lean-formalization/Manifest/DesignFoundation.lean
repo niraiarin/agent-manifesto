@@ -8,7 +8,7 @@ import Manifest.ObservableDesign
 /-!
 # Epistemic Layer - DesignTheorem Strength 1 - Formalization of Design Development Foundation
 
-Type-checks that D1–D14 from design-development-foundation.md are
+Type-checks that D1–D17 from design-development-foundation.md are
 derivable (§2.4 derivability) from the manifesto's T/E/P
 (premise set Γ, terminology reference §2.5).
 
@@ -35,8 +35,8 @@ distinct from object-level (§5.6 object theory) non-logical axioms.
 
 | Lean Concept | Terminology Reference | §Ref |
 |------------|----------------|-------|
-| D1–D13 theorems | Theorems (propositions derived from axioms) | §4.2 |
-| D1–D13 def/structure | Definitional extensions (new symbols defined via existing symbols) | §5.5 |
+| D1–D17 theorems | Theorems (propositions derived from axioms) | §4.2 |
+| D1–D17 def/structure | Definitional extensions (new symbols defined via existing symbols) | §5.5 |
 | SelfGoverning | Type class (interface for types) | §9.4 |
 | DesignPrinciple | Component of the domain of discourse (§3.2) | §3.2 |
 | DesignPrincipleUpdate | Structuring of AGM revision operations | §9.2 |
@@ -703,8 +703,8 @@ To express this at the type level (§7.1 Curry-Howard correspondence):
 3. Structurally enforce via the SelfGoverning type class (§9.4)
 -/
 
-/-- Design principle identifiers. Enumerates D1–D16 as values.
-    This allows D1–D16 themselves to be treated at the type level as "targets of updates". -/
+/-- Design principle identifiers. Enumerates D1–D17 as values.
+    This allows D1–D17 themselves to be treated at the type level as "targets of updates". -/
 inductive DesignPrinciple where
   | d1_enforcementLayering
   | d2_workerVerifierSeparation
@@ -779,7 +779,7 @@ theorem d9_self_applicable :
     c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
   fun _p c => governed_update_classified _p c
 
-/-- D9 exhaustiveness: All principles D1–D13 are enumerated as update targets. -/
+/-- D9 exhaustiveness: All principles D1–D17 are enumerated as update targets. -/
 theorem d9_all_principles_enumerated :
   ∀ (p : DesignPrinciple),
     p = .d1_enforcementLayering ∨
@@ -1205,7 +1205,7 @@ theorem manifest_has_widest_impact :
   intro k; cases k <;> native_decide
 
 /-- Changes to designConvention have non-empty proposition-level impact.
-    Proves that dependents of D1-D13 exist. -/
+    Proves that dependents of D1-D17 exist. -/
 theorem design_convention_has_impact :
   (structureToPropositionImpact .designConvention).length > 0 := by native_decide
 
@@ -1405,10 +1405,12 @@ theorem d16a_zero_contribution_items_exist :
     then at least one item must have positive contribution — establishing
     that contributions are not all equal (i.e., composition matters).
 
-    Distinguished from D16a: D16a proves zero-contribution items exist (pure existence).
-    D16b proves that zero-contribution items exist AND precision is required (conjunction).
-    The conjunction establishes that context window capacity (T3) is consumed by items
-    that do not advance the precision goal (T8), making item selection non-trivial. -/
+    Limitation: This theorem is an encoding theorem. It conjoins D16a's conclusion
+    with the premise h_prec, which is a trivially-true pattern (premise restated in
+    conclusion). The non-trivial claim "composition matters" is justified by the
+    docstring reasoning but not formally captured — proving existence of a
+    positive-contribution item would require additional axioms or making
+    precisionContribution non-opaque. Filed as a known formalization gap. -/
 theorem d16b_context_composition_matters :
   ∀ (task : Task),
     task.precisionRequired.required > 0 →
@@ -1616,7 +1618,7 @@ theorem d17_acyclic :
 
 No sorry.
 
-D1–D14, D17 use no new non-logical axioms (§4.1).
+D1–D17 use no new non-logical axioms (§4.1) except D15–D16.
 D15–D16 use `context_contribution_nonuniform` (T₀ extension in Axioms.lean).
 D17 step-ordering theorems are encoding theorems: axiom connections justify
 the choice of ord values, but proofs are definitional (simp on Nat literals).
