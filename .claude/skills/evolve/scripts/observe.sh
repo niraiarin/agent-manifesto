@@ -109,6 +109,98 @@ echo "      \"null_entries_count\": ${PHASES_NULL_COUNT:-0}"
 echo "    }"
 echo "  },"
 
+# --- decision-log 統計 (#304: P4 可観測性拡張) ---
+DECISION_LOG="$METRICS_DIR/decision-log.jsonl"
+if [ -f "$DECISION_LOG" ]; then
+  DL_TOTAL=$(wc -l < "$DECISION_LOG" | tr -d ' ')
+  DL_ACTIVE=$(jq -r 'select(.status == "active") | .id' "$DECISION_LOG" 2>/dev/null | wc -l | tr -d ' ')
+  DL_ACTIVE=${DL_ACTIVE:-0}
+  DL_ALTERNATIVES=$(jq -r '[.alternatives[]? | select(.rejected_reason != null)] | length' "$DECISION_LOG" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  DL_ASSUMPTIONS=$(jq -r '[.assumptions[]?] | length' "$DECISION_LOG" 2>/dev/null | awk '{s+=$1} END{print s+0}')
+  DL_RECENT_30D=$(jq -r --arg cutoff "$(date -v-30d +%Y-%m-%d 2>/dev/null || date -d '30 days ago' +%Y-%m-%d 2>/dev/null || echo '2000-01-01')" 'select(.date >= $cutoff) | .id' "$DECISION_LOG" 2>/dev/null | wc -l | tr -d ' ')
+  DL_RECENT_30D=${DL_RECENT_30D:-0}
+else
+  DL_TOTAL=0
+  DL_ACTIVE=0
+  DL_ALTERNATIVES=0
+  DL_ASSUMPTIONS=0
+  DL_RECENT_30D=0
+fi
+echo "  \"decision_log\": {"
+echo "    \"total\": ${DL_TOTAL:-0},"
+echo "    \"active\": ${DL_ACTIVE:-0},"
+echo "    \"rejected_alternatives\": ${DL_ALTERNATIVES:-0},"
+echo "    \"assumptions_tracked\": ${DL_ASSUMPTIONS:-0},"
+echo "    \"recent_30d\": ${DL_RECENT_30D:-0}"
+echo "  },"
+
+# --- assumption-tracker 統計 (#304: P4 可観測性拡張) ---
+ASSUMPTION_LOG="$METRICS_DIR/assumptions.jsonl"
+if [ -f "$ASSUMPTION_LOG" ]; then
+  AT_TOTAL=$(wc -l < "$ASSUMPTION_LOG" | tr -d ' ')
+  AT_ACTIVE=$(jq -r 'select(.status == "active") | .id' "$ASSUMPTION_LOG" 2>/dev/null | wc -l | tr -d ' ')
+  AT_ACTIVE=${AT_ACTIVE:-0}
+  # review 期限超過チェック: reviewInterval が設定され lastVerified + interval < today
+  TODAY_EPOCH=$(date +%s)
+  AT_OVERDUE=0
+  while IFS='|' read -r aid alv ari; do
+    [ -z "$aid" ] && continue
+    # Convert lastVerified to epoch (macOS: -j -f, Linux: -d)
+    LV_EPOCH=$(date -j -f "%Y-%m-%d" "$alv" +%s 2>/dev/null || date -d "$alv" +%s 2>/dev/null || echo 0)
+    DAYS_SINCE=$(( (TODAY_EPOCH - LV_EPOCH) / 86400 ))
+    if [ "$DAYS_SINCE" -gt "$ari" ] 2>/dev/null; then
+      AT_OVERDUE=$((AT_OVERDUE + 1))
+    fi
+  done < <(jq -r 'select(.status == "active" and .reviewInterval != null and .lastVerified != null) | "\(.id)|\(.lastVerified)|\(.reviewInterval)"' "$ASSUMPTION_LOG" 2>/dev/null)
+  AT_OVERDUE=${AT_OVERDUE:-0}
+  AT_INVALIDATED=$(jq -r 'select(.status == "invalidated") | .id' "$ASSUMPTION_LOG" 2>/dev/null | wc -l | tr -d ' ')
+  AT_INVALIDATED=${AT_INVALIDATED:-0}
+else
+  AT_TOTAL=0
+  AT_ACTIVE=0
+  AT_OVERDUE=0
+  AT_INVALIDATED=0
+fi
+echo "  \"assumption_tracker\": {"
+echo "    \"total\": ${AT_TOTAL:-0},"
+echo "    \"active\": ${AT_ACTIVE:-0},"
+echo "    \"review_overdue\": ${AT_OVERDUE:-0},"
+echo "    \"invalidated\": ${AT_INVALIDATED:-0}"
+echo "  },"
+
+# --- judge-patterns 統計 (#304: P4 可観測性拡張) ---
+# evolve-history.jsonl の rejected[] から Judge 減点パターンを集計
+if [ -f "$HISTORY_FILE" ]; then
+  JP_TOTAL=$(jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  JP_TOTAL=${JP_TOTAL:-0}
+  JP_RESOLVED=$(jq -r '.rejected[]? | select((.resolved // false) == true) | .failure_type' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  JP_RESOLVED=${JP_RESOLVED:-0}
+  JP_UNRESOLVED=$((JP_TOTAL - JP_RESOLVED))
+  JP_HYPOTHESIS=$(jq -r '.rejected[]? | select(.failure_type == "hypothesis_error") | .failure_type' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  JP_ASSUMPTION=$(jq -r '.rejected[]? | select(.failure_type == "assumption_error") | .failure_type' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  JP_OBSERVATION=$(jq -r '.rejected[]? | select(.failure_type == "observation_error") | .failure_type' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+  JP_PRECONDITION=$(jq -r '.rejected[]? | select(.failure_type == "precondition_error") | .failure_type' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
+else
+  JP_TOTAL=0
+  JP_RESOLVED=0
+  JP_UNRESOLVED=0
+  JP_HYPOTHESIS=0
+  JP_ASSUMPTION=0
+  JP_OBSERVATION=0
+  JP_PRECONDITION=0
+fi
+echo "  \"judge_patterns\": {"
+echo "    \"total_rejections\": ${JP_TOTAL:-0},"
+echo "    \"resolved\": ${JP_RESOLVED:-0},"
+echo "    \"unresolved\": ${JP_UNRESOLVED:-0},"
+echo "    \"by_type\": {"
+echo "      \"hypothesis_error\": ${JP_HYPOTHESIS:-0},"
+echo "      \"assumption_error\": ${JP_ASSUMPTION:-0},"
+echo "      \"observation_error\": ${JP_OBSERVATION:-0},"
+echo "      \"precondition_error\": ${JP_PRECONDITION:-0}"
+echo "    }"
+echo "  },"
+
 # --- metrics ログ ---
 TOOL_LOG="$METRICS_DIR/tool-usage.jsonl"
 if [ -f "$TOOL_LOG" ]; then
