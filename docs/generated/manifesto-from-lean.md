@@ -10,9 +10,9 @@ This document is generated from the Lean 4 source files in
 `lean-formalization/Manifest/`. Every axiom, theorem, and definition
 presented here has been verified by the Lean type checker --
 <<<<<<< HEAD
-51 axioms, 408 theorems, 0 sorry.
+51 axioms, 410 theorems, 0 sorry.
 =======
-51 axioms, 408 theorems, 0 sorry.
+51 axioms, 410 theorems, 0 sorry.
 >>>>>>> origin/main
 
 The manifesto rests on a layered epistemic architecture:
