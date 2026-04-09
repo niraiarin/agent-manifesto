@@ -633,7 +633,7 @@ gh pr create --base main --title "Run <N>: <改善サマリ> [要レビュー]" 
 
 **evolve-history.jsonl 記録の不変条件:**
 - evolve-history.jsonl には 1 Run につき 1 エントリのみ追加する。暫定記録は行わない。
-  - **例外**: `evolve-metrics-recorder.sh` フックが `evolve_commit` イベントを記録する部分エントリ（`run` フィールドなし）は Run エントリとは別種であり、この不変条件の対象外。`observe.sh` の `total_runs` カウントは `run` フィールドでフィルタするため影響しない。
+  - **例外**: `run` フィールドを持たないエントリが 14 件存在する（旧スキーマ 6 件、observation 3 件、番号欠落 5 件）。これらは Run エントリとは別種であり、この不変条件の対象外。`observe.sh` の `latest_run_number` は `run` フィールドでフィルタするため影響しない。
 - 記録は全フェーズ完了後（Phase 4: git commit 後）に 1 回のみ実行する。
 - **backfill 例外**: 既存エントリの null フィールドを事後補完する操作（例: observe.sh による session_cost_usd の ccusage 照合補完）は、エントリの追加ではなくフィールド更新であり、ファイルの行数は変わらない。上記の不変条件に該当しない。backfill は以下の条件を全て満たす場合にのみ許可される:
   1. 対象フィールドの現在値が null であること（非 null フィールドの上書きは禁止）
