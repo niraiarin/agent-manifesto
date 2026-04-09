@@ -270,4 +270,10 @@ example : classifyDiff [.modifyNode .constraint, .removeDependency, .modifyNode 
 /-- Test: empty diff is conservative. -/
 example : classifyDiff ([] : ManifestDiff) = .conservativeExtension := by rfl
 
+/-- Issue #290 test: adding a partial-order axiom (new foundational axiom) is breaking.
+    The half-order axiom proposed in #290 would be a new axiom-level node,
+    requiring breakingChange classification per the decision procedure. -/
+example : classifyDiff [.addNode .axiom]  -- #290: 半順序公理の追加
+    = .breakingChange := by rfl
+
 end Manifest.Framework
