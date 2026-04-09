@@ -141,7 +141,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 71
+    designFoundationM      := 66
     procedureM             := 25
     evolutionM             := 16
     evolveSkillM           := 30
@@ -173,7 +173,7 @@ theorem current_total_axioms :
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 407 := by rfl
+  currentProfile.theoremCount = 402 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
