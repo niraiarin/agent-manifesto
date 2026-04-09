@@ -15,7 +15,7 @@ echo "{"
 # --- Lean 品質指標 ---
 if [ -d "$LEAN_DIR/Manifest" ]; then
   AXIOM_COUNT=$(grep "^axiom [a-z]" "$LEAN_DIR"/Manifest/*.lean 2>/dev/null | wc -l | tr -d ' ')
-  THEOREM_COUNT=$(grep "^theorem " "$LEAN_DIR"/Manifest/*.lean 2>/dev/null | wc -l | tr -d ' ')
+  THEOREM_COUNT=$(grep "^theorem " "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null | wc -l | tr -d ' ')
   FOUNDATION_THEOREMS=$(grep -r "^theorem " "$LEAN_DIR/Manifest/Foundation/" --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
   FOUNDATION_THEOREMS=${FOUNDATION_THEOREMS:-0}
   SORRY_COUNT=$(grep -rn "^\s*sorry\s*$\|:=\s*sorry" "$LEAN_DIR/Manifest/" --include="*.lean" --exclude-dir=Models 2>/dev/null | grep -v -- "--" | grep -v "/-" | wc -l | tr -d ' ')
