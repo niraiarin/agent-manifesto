@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 99,
+  "last_updated_run": 101,
   "items": {
     "h3-v4-semantic-update": {
       "status": "resolved",
@@ -252,6 +252,16 @@
       "opened_in_run": 99,
       "source": "#295 G5 F4",
       "note": "plugin 生成先を dist/ 以外に変更するか、.gitignore を plugin 名ベースで選択的に除外する設計変更が必要。/generate-plugin SKILL.md 完成時に配布戦略として定義する。"
+    },
+    "obs-4-q8-debruijn": {
+      "description": "Q8 De Bruijn index inflation の根本原因分析が未完了",
+      "status": "resolved",
+      "reason": "dependencyBlocked",
+      "blocked_by": "De Bruijn inflation の根本原因分析（root cause analysis）",
+      "opened_in_run": 100,
+      "resolved_in_run": 101,
+      "source": "Run 100 obs-4 rejected (H_wrong_premise)",
+      "note": "Run 100 で implementation-boundaries.md への追加として提案されたが Verifier FAIL. Run 101 obs-1 で Q8 スコープ不一致（Models/ 除外 + Foundation/Framework/ 統一）を修正し、閾値を 6.0→8.0x に更新。スコープ統一により根本的に解消。"
     }
   }
 }

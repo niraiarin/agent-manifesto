@@ -183,7 +183,7 @@ YYYY-MM-DD HH:MM
 A-D, F の決定論的チェックは `verify-proposal-preflight.sh` で自動実行できる:
 
 ```bash
-echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":["theorem_name"],"proposed_names":["new_name"],"grep_patterns":["duplicate_check_pattern"]}' | bash scripts/verify-proposal-preflight.sh
+echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":["theorem_name"],"proposed_names":["new_name"],"grep_patterns":["duplicate_check_pattern"],"numeric_claims":[{"label":"axiom count","command":"grep -r \"^axiom \" lean-formalization/Manifest/ | wc -l | tr -d \" \"","expected":52}],"jsonl_field_checks":[{"label":"has result field","file":".claude/metrics/evolve-history.jsonl","jq_filter":".result"}]}' | bash scripts/verify-proposal-preflight.sh
 ```
 
 出力の `verdict` が `FAIL` の場合、該当チェックを解消するまで改善案を提出しない。

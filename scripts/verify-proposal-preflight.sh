@@ -14,8 +14,13 @@
 #     "target_files": ["path/to/file1", "path/to/file2"],
 #     "lean_names": ["theorem_name", "def_name"],
 #     "proposed_names": ["new_theorem_name"],
-#     "grep_patterns": ["pattern to check duplicates"]
+#     "grep_patterns": ["pattern to check duplicates"],
+#     "numeric_claims": [{"label": "human-readable", "command": "bash command", "expected": 42}],
+#     "jsonl_field_checks": [{"label": "human-readable", "file": "path/to/file.jsonl", "jq_filter": ".field == \"value\""}]
 #   }
+#
+# numeric_claims: trusted caller only — executes bash commands from input JSON
+# jsonl_field_checks: verifies JSONL file field structure using jq
 #
 # Output: JSON verification result
 # Exit: 0 = all pass, 1 = some checks failed
@@ -194,6 +199,30 @@ else:
 if os.path.exists(history_path):
     results["D_failure_type_summary"] = failure_type_counts
 
+# D_subtype_warning: warn if same failure_subtype has 2+ matches for this proposal title
+if os.path.exists(history_path):
+    subtype_counts = {}
+    with open(history_path) as f:
+        for line in f:
+            try:
+                rec = json.loads(line.strip())
+            except Exception:
+                continue
+            for rej in (rec.get("rejected") or []):
+                if not isinstance(rej, dict):
+                    continue
+                rej_title = (rej.get("title") or "").lower()
+                rej_words = set(re.findall(r'\w+', rej_title))
+                title_words_d = set(re.findall(r'\w+', proposal.get("title", "").lower())) - {"the", "a", "an", "to", "of", "in", "for", "and", "or", "is"}
+                if title_words_d and len(title_words_d & rej_words) > len(title_words_d) * 0.5:
+                    subtype = rej.get("failure_subtype") or "null"
+                    if subtype != "null":
+                        subtype_counts[subtype] = subtype_counts.get(subtype, 0) + 1
+    for subtype, count in subtype_counts.items():
+        if count >= 2:
+            add_check("D_subtype_warning", subtype, False,
+                      f"failure_subtype '{subtype}' seen {count} times for similar proposals")
+
 # --- F. Lean name validation ---
 lean_names = proposal.get("lean_names", [])
 for name in lean_names:
@@ -218,6 +247,53 @@ for name in lean_names:
 
     add_check("F_lean_name", name, found,
               detail if found else f"NOT FOUND in Manifest/*.lean")
+
+# --- G. Numeric claims verification ---
+# trusted caller only — executes bash commands from input JSON
+numeric_claims = proposal.get("numeric_claims", [])
+for claim in numeric_claims:
+    label = claim.get("label", "unlabeled")
+    command = claim.get("command", "")
+    expected = claim.get("expected")
+    if not command or expected is None:
+        add_check("G_numeric_claims", label, False, "missing 'command' or 'expected' field")
+        continue
+    try:
+        result = subprocess.run(["bash", "-c", command], capture_output=True, text=True, timeout=10)
+        actual_str = result.stdout.strip()
+        actual = int(actual_str)
+        passed = actual == expected
+        detail = f"expected={expected}, actual={actual}" if not passed else f"actual={actual}"
+        add_check("G_numeric_claims", label, passed, detail)
+    except subprocess.TimeoutExpired:
+        add_check("G_numeric_claims", label, False, "command timed out (10s)")
+    except ValueError:
+        add_check("G_numeric_claims", label, False, f"could not parse output as int: '{actual_str}'")
+    except Exception as e:
+        add_check("G_numeric_claims", label, False, f"error: {e}")
+
+# --- H. JSONL field checks ---
+jsonl_field_checks = proposal.get("jsonl_field_checks", [])
+for check_entry in jsonl_field_checks:
+    label = check_entry.get("label", "unlabeled")
+    file_path = check_entry.get("file", "")
+    jq_filter = check_entry.get("jq_filter", "")
+    if not file_path or not jq_filter:
+        add_check("H_jsonl_fields", label, False, "missing 'file' or 'jq_filter' field")
+        continue
+    full_path = file_path if os.path.isabs(file_path) else os.path.join(base, file_path)
+    if not os.path.exists(full_path):
+        add_check("H_jsonl_fields", label, False, f"file NOT FOUND: {file_path}")
+        continue
+    try:
+        result = subprocess.run(["jq", "-e", jq_filter, full_path], capture_output=True, timeout=10)
+        passed = result.returncode == 0
+        detail = f"jq filter {'matched' if passed else 'did not match'}: {jq_filter[:80]}"
+        add_check("H_jsonl_fields", label, passed, detail)
+    except subprocess.TimeoutExpired:
+        add_check("H_jsonl_fields", label, False, "jq timed out (10s)")
+    except Exception as e:
+        add_check("H_jsonl_fields", label, False, f"error: {e}")
 
 # --- Output ---
 results["summary"]["total"] = results["summary"]["pass"] + results["summary"]["fail"]
