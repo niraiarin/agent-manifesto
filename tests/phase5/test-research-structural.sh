@@ -134,5 +134,26 @@ else
   fail "SKILL.md references judge.md"
 fi
 
+# 11.15: #289 — Judge deduction-addressability flow (score threshold abolished)
+if grep -q 'addressable' ".claude/skills/research/SKILL.md"; then
+  pass "research SKILL.md has addressable deduction classification"
+else
+  fail "research SKILL.md missing addressable deduction classification"
+fi
+
+# 11.16: Score threshold (>= 3.5 -> PASS) abolished
+if grep '≥ 3.5 → PASS' ".claude/skills/research/SKILL.md" | grep -qv '旧閾値\|廃止'; then
+  fail "Old score threshold (>= 3.5 -> PASS) still active in research SKILL.md"
+else
+  pass "Research score threshold abolished"
+fi
+
+# 11.17: Deduction loop defined in research SKILL.md
+if grep -q '最大 2 回' ".claude/skills/research/SKILL.md"; then
+  pass "research SKILL.md has deduction resolution loop"
+else
+  fail "research SKILL.md missing deduction resolution loop"
+fi
+
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="

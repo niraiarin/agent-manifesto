@@ -165,9 +165,31 @@ Judge は G1-G4 基準で評価:
 | G3 | 判断根拠 | PASS/FAIL の根拠が定量的か？ |
 | G4 | 次アクション | 次のステップが明確か？ |
 
-#### 6b. Gate 判定
+#### 6b. 減点解消ループ（#289 対応）
 
-Judge 評価を踏まえて Gate 判定を行う:
+Judge 評価の各減点を **addressable**（対処可能）/ **unaddressable**（構造的限界）に分類し、
+対処可能な減点を解消してから Gate 判定に進む。
+
+```
+Judge 評価 → 各減点を addressable / unaddressable に分類
+  ├─ addressable が 0 件
+  │   → Gate 判定へ（unaddressable の理由を記録）
+  ├─ addressable が残存
+  │   → Judge の対処案に従い修正
+  │   → Judge に再判定を依頼（最大 2 回）
+  │   → 2 回後も addressable が残存 → unaddressable に降格し理由を記録
+  └─ 全基準が 1 点以下
+      → Gate FAIL
+```
+
+**旧閾値（≥ 3.5 → PASS 推奨）の廃止理由:**
+スコア閾値は「対処可能な減点を放置する免罪符」として機能していた（#289）。
+G1-G3 のいずれかで減点があり、その減点が対処可能であるにもかかわらず、
+平均スコアが閾値を超えているだけで PASS 扱いされ、品質問題が蓄積していた。
+
+#### 6c. Gate 判定
+
+減点解消ループ後、Gate 判定を行う:
 
 ```markdown
 ### Judge 評価
@@ -179,24 +201,30 @@ Judge 評価を踏まえて Gate 判定を行う:
 | G3 判断根拠 | N/5 | ... |
 | G4 次アクション | N/5 | ... |
 
-**総合スコア**: X.X/5.0
+**総合スコア**: X.X/5.0（診断値。判定基準は減点分類）
+
+### 減点分類
+
+| 基準 | 減点内容 | 分類 | 対処案 |
+|------|---------|------|--------|
+| ... | ... | addressable / unaddressable | ... |
 
 ### Gate: [判定名]
 
 **日付**: YYYY-MM-DD
 **判定**: PASS / CONDITIONAL / FAIL
-**Judge スコア**: X.X/5.0
 **根拠**: [定量データまたは定性的評価]
+**残存減点**: [unaddressable のみ（addressable は解消済み）]
 **追加研究**: 必要 → #XX / 不要
 **次のアクション**: ...
 ```
 
-Judge 推奨: 平均 ≥ 3.5 → PASS 推奨、< 3.5 → 再検討推奨。
+スコアは診断ツール。判定基準は「対処可能な減点が残っているか」。
 最終判定は人間が行う（T6）。Judge 結果は参考材料。
 
 | 判定 | 意味 | アクション |
 |------|------|----------|
-| PASS | 基準充足 | Issue close。Parent 更新 |
+| PASS | addressable 減点なし | Issue close。Parent 更新 |
 | CONDITIONAL | 追加研究が必要 | 子 issue 起票（再帰） |
 | FAIL | 前提が崩れた | Parent にエスカレーション |
 

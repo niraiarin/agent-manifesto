@@ -364,6 +364,29 @@ grep -q "| judge" "$EVOLVE_SKILL_LEAN" && \
   pass "EvolvePhase includes judge phase" || \
   fail "EvolvePhase missing judge phase"
 
+# #289: Judge deduction-addressability flow (score threshold abolished)
+echo -n "  Judge uses addressable/unaddressable classification... "
+grep -q "addressable" "$SKILL" && \
+  pass "Judge addressable classification in SKILL.md" || \
+  fail "Judge addressable classification missing from SKILL.md"
+
+echo -n "  Score threshold (>= 3.0 -> PASS) abolished... "
+if grep "≥ 3.0 → PASS" "$SKILL" | grep -qv "旧閾値\|廃止"; then
+  fail "Old score threshold (>= 3.0 -> PASS) still active"
+else
+  pass "Score threshold abolished"
+fi
+
+echo -n "  Judge deduction loop (max 2) defined... "
+grep -q "最大 2 回の再判定ループ" "$SKILL" && \
+  pass "Judge deduction loop defined" || \
+  fail "Judge deduction loop missing from SKILL.md"
+
+echo -n "  judge.md has addressable classification... "
+grep -q "addressable" ".claude/agents/judge.md" && \
+  pass "judge.md has addressable classification" || \
+  fail "judge.md missing addressable classification"
+
 # Root cause classification completeness: all 4 types documented in SKILL.md
 for rc in observation_error hypothesis_error assumption_error precondition_error; do
   echo -n "  Root cause '$rc' documented in SKILL.md... "
