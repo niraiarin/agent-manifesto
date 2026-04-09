@@ -8,7 +8,7 @@ import Manifest.ObservableDesign
 /-!
 # Epistemic Layer - DesignTheorem Strength 1 - Formalization of Design Development Foundation
 
-Type-checks that D1–D14 from design-development-foundation.md are
+Type-checks that D1–D17 from design-development-foundation.md are
 derivable (§2.4 derivability) from the manifesto's T/E/P
 (premise set Γ, terminology reference §2.5).
 
@@ -35,8 +35,8 @@ distinct from object-level (§5.6 object theory) non-logical axioms.
 
 | Lean Concept | Terminology Reference | §Ref |
 |------------|----------------|-------|
-| D1–D13 theorems | Theorems (propositions derived from axioms) | §4.2 |
-| D1–D13 def/structure | Definitional extensions (new symbols defined via existing symbols) | §5.5 |
+| D1–D17 theorems | Theorems (propositions derived from axioms) | §4.2 |
+| D1–D17 def/structure | Definitional extensions (new symbols defined via existing symbols) | §5.5 |
 | SelfGoverning | Type class (interface for types) | §9.4 |
 | DesignPrinciple | Component of the domain of discourse (§3.2) | §3.2 |
 | DesignPrincipleUpdate | Structuring of AGM revision operations | §9.2 |
@@ -47,7 +47,7 @@ distinct from object-level (§5.6 object theory) non-logical axioms.
 
 ## Correspondence with design-development-foundation.md
 
-This file formalizes D1–D14.
+This file formalizes D1–D17.
 
 | D | Rationale | Formalization Depth |
 |---|------|------------|
@@ -63,8 +63,11 @@ This file formalizes D1–D14.
 | D10 | T1 + T2 | 2 theorems (structural permanence + epoch monotone increase) |
 | D11 | T3 + D1 | definition + 3 theorems (inverse correlation + minimization + finiteness) |
 | D12 | P6 + T3 + T7 + T8 | 2 theorems (CSP + probabilistic output) |
-| D13 | P3 + Section 8 + T5 | 2 theorems (coherence propagation + retirement premise) |
+| D13 | P3 + Section 8 + T5 | impact propagation + assumption-level extension (#225) |
 | D14 | P6 + T7 + T8 | 1 theorem (constraint satisfaction of verification order) |
+| D15 | T3+T4+T5+T6+T7+T8+P6 | 3 theorems (retry bounds, convergence, eviction) |
+| D16 | context_contribution_nonuniform | 3 theorems (zero-contribution, composition, resource) |
+| D17 | T5+D3+P3+T6+D5+D9+E1+D2+D13 | type + 8 theorems (deductive design workflow) |
 -/
 
 namespace Manifest
@@ -700,8 +703,8 @@ To express this at the type level (§7.1 Curry-Howard correspondence):
 3. Structurally enforce via the SelfGoverning type class (§9.4)
 -/
 
-/-- Design principle identifiers. Enumerates D1–D16 as values.
-    This allows D1–D16 themselves to be treated at the type level as "targets of updates". -/
+/-- Design principle identifiers. Enumerates D1–D17 as values.
+    This allows D1–D17 themselves to be treated at the type level as "targets of updates". -/
 inductive DesignPrinciple where
   | d1_enforcementLayering
   | d2_workerVerifierSeparation
@@ -719,6 +722,7 @@ inductive DesignPrinciple where
   | d14_verificationOrderConstraint
   | d15_harnessEngineering
   | d16_informationRelevance
+  | d17_deductiveDesignWorkflow
   deriving BEq, Repr
 
 /-- DesignPrinciple implements SelfGoverning.
@@ -775,7 +779,7 @@ theorem d9_self_applicable :
     c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
   fun _p c => governed_update_classified _p c
 
-/-- D9 exhaustiveness: All principles D1–D13 are enumerated as update targets. -/
+/-- D9 exhaustiveness: All principles D1–D17 are enumerated as update targets. -/
 theorem d9_all_principles_enumerated :
   ∀ (p : DesignPrinciple),
     p = .d1_enforcementLayering ∨
@@ -793,7 +797,8 @@ theorem d9_all_principles_enumerated :
     p = .d13_premiseNegationPropagation ∨
     p = .d14_verificationOrderConstraint ∨
     p = .d15_harnessEngineering ∨
-    p = .d16_informationRelevance := by
+    p = .d16_informationRelevance ∨
+    p = .d17_deductiveDesignWorkflow := by
   intro p; cases p <;> simp
 
 -- ============================================================
@@ -830,6 +835,7 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d14_verificationOrderConstraint   => .governance  -- P6 + T7 + T8 が前提
   | .d15_harnessEngineering            => .equilibrium -- 実装パターンは動的調整フェーズ
   | .d16_informationRelevance          => .observability -- コンテキスト寄与度の測定が前提
+  | .d17_deductiveDesignWorkflow       => .governance -- P3（学習統治）+ D5（三層）が前提
 
 /-- Self-application of D4: D4 and D9 are required from the safety phase.
     This means that "phase ordering" and "governed updates" must be
@@ -1052,7 +1058,7 @@ def allPropositions : List PropositionId :=
    .p1, .p2, .p3, .p4, .p5, .p6,
    .l1, .l2, .l3, .l4, .l5, .l6,
    .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14,
-   .d15, .d16]
+   .d15, .d16, .d17]
 
 /-- Set of propositions that directly depend on proposition s (reverse edges).
     dependencies = "what it depends on"; dependents = "what depends on it". -/
@@ -1172,14 +1178,14 @@ Corresponds to ATMS labeling from the research document.
 
 /-- Set of PropositionIds corresponding to each StructureKind.
     manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
-    designConvention encompasses design theorems D1-D14.
+    designConvention encompasses design theorems D1-D17.
     skill/test/document are empty sets due to individual definitions (room for future extension). -/
 def structurePropositions : StructureKind → List PropositionId
   | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
                            .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
   | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
                            .d9, .d10, .d11, .d12, .d13, .d14,
-                           .d15, .d16]
+                           .d15, .d16, .d17]
   | .skill            => []
   | .test             => []
   | .document         => []
@@ -1199,7 +1205,7 @@ theorem manifest_has_widest_impact :
   intro k; cases k <;> native_decide
 
 /-- Changes to designConvention have non-empty proposition-level impact.
-    Proves that dependents of D1-D13 exist. -/
+    Proves that dependents of D1-D17 exist. -/
 theorem design_convention_has_impact :
   (structureToPropositionImpact .designConvention).length > 0 := by native_decide
 
@@ -1399,9 +1405,12 @@ theorem d16a_zero_contribution_items_exist :
     then at least one item must have positive contribution — establishing
     that contributions are not all equal (i.e., composition matters).
 
-    Distinguished from D16a: D16a proves zero-contribution items exist.
-    D16b proves that zero AND positive contributions coexist,
-    meaning context selection is a non-trivial optimization problem. -/
+    Limitation: This theorem is an encoding theorem. It conjoins D16a's conclusion
+    with the premise h_prec, which is a trivially-true pattern (premise restated in
+    conclusion). The non-trivial claim "composition matters" is justified by the
+    docstring reasoning but not formally captured — proving existence of a
+    positive-contribution item would require additional axioms or making
+    precisionContribution non-opaque. Filed as a known formalization gap. -/
 theorem d16b_context_composition_matters :
   ∀ (task : Task),
     task.precisionRequired.required > 0 →
@@ -1428,10 +1437,12 @@ theorem d16b_context_composition_matters :
 
     Derivation: context_contribution_nonuniform + T7 (resource_finite).
 
-    Formalized as: the total resource amount is bounded (T7), and
-    zero-contribution items exist (D16a). Therefore, resources allocated
-    to zero-contribution items reduce the budget available for
-    positive-contribution items. -/
+    Formalized as: given finite resources (T7, w parameter) and positive
+    precision requirements (T8), zero-contribution items exist (D16a).
+    The resource bound is accepted as a premise but the conclusion
+    depends only on D16a — the formal content is that waste exists
+    regardless of specific budget levels. The w/h_bound parameters
+    establish the resource-finite context without being used in the proof. -/
 theorem d16c_resource_follows_contribution :
   ∀ (task : Task) (w : World),
     task.precisionRequired.required > 0 →
@@ -1442,6 +1453,163 @@ theorem d16c_resource_follows_contribution :
   exact context_contribution_nonuniform task h_prec
 
 -- ============================================================
+-- D17: 演繹的設計ワークフロー定理
+-- ============================================================
+
+/-!
+## D17 Deductive Design Workflow
+Definitional Extension + Theorem, 5.5/4.2.
+
+Rationale: T5 (feedback) + D3 (observability first) + P3 (governed learning)
+         + T6 (human authority) + D5 (spec/test/impl) + D9 (self-maintenance)
+         + E1 (verification independence) + D2 (worker/verifier separation)
+         + D13 (impact propagation)
+
+A valid design derivation for a platform must proceed through a conditional
+the axiom system — not directly from core axioms. The workflow is:
+
+1. **Investigate**: Observe the target environment (T5 + D3)
+2. **Extract**: Form assumptions C/H from observations (P3 + T6)
+3. **Construct**: Build conditional axiom system from core + assumptions (D5 + D9)
+4. **Derive**: Produce design decisions from conditional axioms (D1-D16)
+5. **Validate**: Independently verify derived design (E1 + D2)
+6. **Feedback**: Propagate invalidation through dependencies (T5 + D13)
+
+The ordering is a partial order derived from the axiom dependency structure,
+not an arbitrary convention. Steps cannot be reordered because each step's
+premises require the output of prior steps.
+-/
+
+/-- Steps of the deductive design workflow.
+    Each step produces output required by subsequent steps. -/
+inductive DeductiveDesignStep where
+  | investigate  -- 環境調査: T5 (feedback requires observation) + D3 (observability first)
+  | extract      -- 仮定抽出: P3 (governed learning: observation → hypothesis) + T6 (human judgment)
+  | construct    -- 公理系構築: D5 (spec/test/impl triple) + D9 (self-maintenance)
+  | derive       -- 設計導出: D1-D16 applied through conditional axiom system
+  | validate     -- 検証: E1 (verification independence) + D2 (worker/verifier)
+  | feedback     -- フィードバック: T5 (no improvement without feedback) + D13 (impact propagation)
+  deriving BEq, Repr
+
+/-- Ordering of workflow steps.
+    Later steps depend on outputs of earlier steps. -/
+def DeductiveDesignStep.ord : DeductiveDesignStep → Nat
+  | .investigate => 0
+  | .extract     => 1
+  | .construct   => 2
+  | .derive      => 3
+  | .validate    => 4
+  | .feedback    => 5
+
+/-- A step depends on another if its ord is strictly greater.
+    This captures the sequential dependency: you cannot extract without
+    investigating, cannot construct without extracting, etc. -/
+def designStepDependsOn (later earlier : DeductiveDesignStep) : Prop :=
+  later.ord > earlier.ord
+
+/-- [Derivation Card]
+    Derives from: T5 (no_improvement_without_feedback), D3 (observability first)
+    Proposition: D17
+    Content: Investigation must precede extraction — you cannot form assumptions (P3 hypothesis)
+      without first observing the environment (D3 observability). T5 requires feedback,
+      which requires observation. Therefore investigate.ord < extract.ord.
+    Note: Encoding theorem — the ordering is captured in the ord mapping (definitional).
+      The axiom connection (T5, D3) justifies the CHOICE of ord values, not the proof itself.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
+theorem d17_investigate_before_extract :
+  designStepDependsOn .extract .investigate := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: D5 (spec/test/impl triple), P3 (governed learning)
+    Proposition: D17
+    Content: Construction of conditional axiom system requires assumptions,
+      which come from extraction. D5 requires formal specification (the conditional
+      axiom system) to precede implementation; P3 requires hypothesis (extract)
+      before integration (construct).
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
+theorem d17_extract_before_construct :
+  designStepDependsOn .construct .extract := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: D1-D16 (design theorems require conditional axiom system as input)
+    Proposition: D17
+    Content: Design derivation operates on the conditional axiom system, not on
+      core axioms directly. Without construction, there is no conditional axiom
+      system to derive from. Core axioms alone lack platform-specific conditions.
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
+theorem d17_construct_before_derive :
+  designStepDependsOn .derive .construct := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: E1 (verification_requires_independence), D2 (worker/verifier separation)
+    Proposition: D17
+    Content: Validation requires a design to validate. E1 requires that verification
+      be independent of generation — the validator must not have generated the design.
+      D2's 4 conditions apply to the design derivation process itself.
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
+theorem d17_derive_before_validate :
+  designStepDependsOn .validate .derive := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: T5 (no_improvement_without_feedback), D13 (impact propagation)
+    Proposition: D17
+    Content: Feedback requires validation results as input. When validation reveals
+      mismatches (under-derivation), D13's impact propagation identifies which
+      assumptions or core axioms are affected. T5 guarantees that without this
+      feedback loop, the design cannot improve.
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
+theorem d17_validate_before_feedback :
+  designStepDependsOn .feedback .validate := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: d17_investigate_before_extract through d17_validate_before_feedback
+    Proposition: D17 (transitivity)
+    Content: The workflow ordering is transitive: if step A must precede B and B
+      must precede C, then A must precede C. This follows from Nat ordering.
+      In particular, investigate must precede feedback (the full chain).
+    Proof strategy: Nat.lt_trans on ord values -/
+theorem d17_workflow_transitive :
+  ∀ (a b c : DeductiveDesignStep),
+    designStepDependsOn b a →
+    designStepDependsOn c b →
+    designStepDependsOn c a := by
+  intro a b c hab hbc
+  simp [designStepDependsOn] at *
+  exact Nat.lt_trans hab hbc
+
+/-- [Derivation Card]
+    Derives from: d17_workflow_transitive
+    Proposition: D17 (full chain)
+    Content: The complete workflow chain holds: investigate precedes feedback.
+      This is the end-to-end ordering: you cannot provide design feedback
+      without having first investigated the environment.
+    Proof strategy: simp on ord values (0 < 5) -/
+theorem d17_full_chain :
+  designStepDependsOn .feedback .investigate := by
+  simp [designStepDependsOn, DeductiveDesignStep.ord]
+
+/-- [Derivation Card]
+    Derives from: DeductiveDesignStep.ord (definitional)
+    Proposition: D17 (acyclicity)
+    Content: The workflow ordering is acyclic — no step depends on itself.
+      This is a structural consequence of strict inequality (Nat.lt_irrefl).
+      Acyclicity guarantees the workflow terminates and has no circular dependencies.
+    Proof strategy: unfold designStepDependsOn + Nat.lt_irrefl -/
+theorem d17_acyclic :
+  ∀ (s : DeductiveDesignStep), ¬designStepDependsOn s s := by
+  intro s h
+  simp [designStepDependsOn] at h
+
+-- ============================================================
 -- Sorry Inventory
 -- ============================================================
 
@@ -1450,13 +1618,15 @@ theorem d16c_resource_follows_contribution :
 
 No sorry.
 
-D1–D14 use no new non-logical axioms (§4.1).
+D1–D17 use no new non-logical axioms (§4.1) except D15–D16.
 D15–D16 use `context_contribution_nonuniform` (T₀ extension in Axioms.lean).
+D17 step-ordering theorems are encoding theorems: axiom connections justify
+the choice of ord values, but proofs are definitional (simp on Nat literals).
 
 All theorems (§4.2) are proven by direct application of existing axioms (T/E/P/V)
 or by cases analysis on inductive types (§7.2).
 
-Each principle D1–D14 is guaranteed by type-checking to be
+Each principle D1–D17 is guaranteed by type-checking to be
 **derivable** (§2.4 derivability) from the manifesto's axiom system.
 D15–D16 are derivable from the extended axiom system (T₀ + context_contribution_nonuniform).
 This file consists solely of definitional extensions (§5.5),
@@ -1476,7 +1646,7 @@ Sorry Inventory.
 Self-Application.
 
 Via the `SelfGoverning` type class (§9.4, Ontology.lean),
-the `DesignPrinciple` type defining D1–D12 satisfies:
+the `DesignPrinciple` type defining D1–D17 satisfies:
 - Applicability of compatibility classification (`canClassifyUpdate`)
 - Exhaustiveness of classification (`classificationExhaustive`)
 
