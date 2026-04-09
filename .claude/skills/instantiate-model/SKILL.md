@@ -187,6 +187,44 @@ def c1 : Assumption := {
 
 git commit を提案する（人間の承認を待つ）。
 
+### Step 9: フィードバック受容（D17 Step 5 → Step 1 ループ）
+
+**D17 state machine の feedback → extract 遷移を実装。**
+
+/design-implementation-plan の Step 9b が FeedbackReport を生成した場合、
+本スキルがフィードバックを受け取り、仮定を追加して条件付き公理系を再構築する。
+
+#### 9a: FeedbackReport の受信
+
+/design-implementation-plan から以下を受け取る:
+- `addAssumption` アクションのリスト（不足��定）
+- scoped recall の現在値
+
+#### 9b: 仮定の追加
+
+各 `addAssumption` について:
+1. 仮定の内容を Assumptions.lean に追加
+2. `EpistemicSource` を設定（C: 人間判断なら humanDecision、H: LLM推論なら llmInference）
+3. `TemporalValidity` を付与（sourceRef, lastVerified, reviewInterval）
+4. instance-manifest.json の assumptions セクションを更新
+
+#### 9c: 条件付き公理系の再構築
+
+1. 追加された仮定に基づいて ConditionalDesignFoundation.lean を更新
+2. 新仮定に対応する CC axiom を追加（必要な場合）
+3. `lake build` で再検証
+4. `validate-instance-manifest.sh` で検証
+
+#### 9d: /design-implementation-plan に戻る
+
+再構築された条件付き公理系で /design-implementation-plan の Step 3 (derive) を再実行。
+
+#### 収束条件
+
+- scoped recall >= 90% → 停止
+- iteration >= 3 → 停止（D15a: 有限リソース下の retry bound）
+- 停止時に残存 miss は構造的限界として記録し、人間に判断を委ねる（T6）
+
 ## S=(A,C,H,D) の追跡
 
 | 概念 | ファイル | 管理 |
