@@ -1,0 +1,355 @@
+{
+  "version": "1.0.0",
+  "system": {
+    "name": "forgecode",
+    "leanModule": "Manifest.Models.Instances.ForgeCode",
+    "description": "ForgeCode (Antinomy) の条件付き設計基礎。D1-D18 を ForgeCode プリミティブにマッピング。"
+  },
+  "assumptions": [
+    {
+      "id": "FC-C1",
+      "type": "C",
+      "content": "L1 制約はポリシーエンジン (Deny) + AGENTS.md 規範で強制する",
+      "sourceRef": "crates/forge_domain/src/policies/engine.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": ["PD-1", "PD-2", "PD-3", "PD-74"]
+    },
+    {
+      "id": "FC-C2",
+      "type": "C",
+      "content": "P2 検証は sage エージェント (read-only) への Task 委譲で行う",
+      "sourceRef": "crates/forge_repo/src/agents/sage.md",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": ["PD-11", "PD-12", "PD-13"]
+    },
+    {
+      "id": "FC-C3",
+      "type": "C",
+      "content": "規範的指針は AGENTS.md に配置する",
+      "sourceRef": "https://forgecode.dev/docs/custom-rules/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 180,
+      "derivedFromPDs": ["PD-74", "PD-75"]
+    },
+    {
+      "id": "FC-C4",
+      "type": "C",
+      "content": "スキルは .forge/skills/<name>/SKILL.md に永続化する (Claude Code 互換)",
+      "sourceRef": "https://forgecode.dev/docs/skills/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 180,
+      "derivedFromPDs": ["PD-51", "PD-52", "PD-56"]
+    },
+    {
+      "id": "FC-C5",
+      "type": "C",
+      "content": "Plan-then-Act ワークフローで計画と実行を分離する (muse → review → forge)",
+      "sourceRef": "https://forgecode.dev/docs/plan-and-act-guide/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": ["PD-47", "PD-11"]
+    },
+    {
+      "id": "FC-C6",
+      "type": "C",
+      "content": "D18 の実現として Task tool によるエージェント間委譲を使用する",
+      "sourceRef": "crates/forge_domain/src/tools/catalog.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": ["PD-14", "PD-15"]
+    },
+    {
+      "id": "FC-C7",
+      "type": "C",
+      "content": "Git worktree sandbox で実験的変更を隔離する",
+      "sourceRef": "crates/forge_main/src/sandbox.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "derivedFromPDs": ["PD-59", "PD-60"]
+    },
+    {
+      "id": "FC-H1",
+      "type": "H",
+      "content": "ポリシーエンジンの Deny はエージェントがバイパスできない (ランタイム強制)",
+      "sourceRef": "crates/forge_domain/src/policies/engine.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "ForgeCode がポリシー評価をオプトアウト可能にした場合",
+      "derivedFromPDs": ["PD-1", "PD-3", "PD-4"]
+    },
+    {
+      "id": "FC-H2",
+      "type": "H",
+      "content": "sage エージェントは構造的に書き込み不可 (ツールホワイトリスト制限)",
+      "sourceRef": "crates/forge_repo/src/agents/sage.md",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "sage に write/shell/patch ツールが追加された場合",
+      "derivedFromPDs": ["PD-12", "PD-13", "PD-18"]
+    },
+    {
+      "id": "FC-H3",
+      "type": "H",
+      "content": "Doom loop 検出がランタイムレベルで非収束を検知し介入する",
+      "sourceRef": "crates/forge_app/src/hooks/doom_loop.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "doom loop 検出が削除された場合",
+      "derivedFromPDs": ["PD-42", "PD-43"]
+    },
+    {
+      "id": "FC-H4",
+      "type": "H",
+      "content": "Task tool calls のみ並列実行、他のツールは逐次",
+      "sourceRef": "crates/forge_app/src/orch.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "全ツールが並列実行されるようになった場合",
+      "derivedFromPDs": ["PD-15", "PD-14"]
+    },
+    {
+      "id": "FC-H5",
+      "type": "H",
+      "content": "コンテキスト圧縮は tool-call/result ペアの原子性を保証する",
+      "sourceRef": "crates/forge_domain/src/compact/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "圧縮がペア原子性を保証しなくなった場合",
+      "derivedFromPDs": ["PD-33", "PD-34", "PD-35"]
+    },
+    {
+      "id": "FC-H6",
+      "type": "H",
+      "content": "Mandatory todo_write がタスク完了率を大幅に改善する (38% → 66%)",
+      "sourceRef": "https://forgecode.dev/blog/benchmarks-dont-matter/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "todo_write が任意になった場合",
+      "derivedFromPDs": ["PD-44", "PD-45", "PD-46"]
+    },
+    {
+      "id": "FC-H7",
+      "type": "H",
+      "content": "Tiered thinking policy: high (1-10) → low (11+) → high (verification)",
+      "sourceRef": "https://forgecode.dev/blog/benchmarks-dont-matter/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "全ターンで均一な推論深度に変更された場合",
+      "derivedFromPDs": ["PD-48", "PD-19"]
+    },
+    {
+      "id": "FC-H8",
+      "type": "H",
+      "content": "ファイルスナップショットにより変更前状態が保存され Undo が可能",
+      "sourceRef": "crates/forge_domain/src/snapshot.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "refutation": "スナップショット機構が削除された場合",
+      "derivedFromPDs": ["PD-81", "PD-26"]
+    },
+    {
+      "id": "FC-H9",
+      "type": "H",
+      "content": "ツール名が LLM 訓練データパターンに意図的に合わせられ、ランタイム補正層が命名不一致を吸収",
+      "sourceRef": "https://forgecode.dev/blog/benchmarks-dont-matter/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 60,
+      "refutation": "訓練データ整合方針が放棄された場合",
+      "derivedFromPDs": ["PD-23", "PD-24"]
+    },
+    {
+      "id": "FC-H10",
+      "type": "H",
+      "content": "設計哲学 'Simple Over Easy' — アーキテクチャ制約で解法を一意に絞り品質確保",
+      "sourceRef": "https://forgecode.dev/blog/simple-is-not-easy/",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 180,
+      "refutation": "制約より柔軟性を優先する設計転換があった場合",
+      "derivedFromPDs": ["PD-12", "PD-18", "PD-23", "PD-42"]
+    },
+    {
+      "id": "FC-H11",
+      "type": "H",
+      "content": "エージェントごとに異なるプロバイダ/モデル設定が可能。sage を異なるモデルファミリで動かすと evaluatorIndependent=true",
+      "sourceRef": "crates/forge_domain/src/agent.rs",
+      "lastVerified": "2026-04-09",
+      "reviewInterval": 90,
+      "refutation": "エージェントごとのプロバイダ/モデル設定が廃止された場合",
+      "derivedFromPDs": ["PD-57", "PD-58"]
+    }
+  ],
+  "axiom_to_config": [
+    {
+      "axiomId": "FC1",
+      "designPrinciple": "D1",
+      "claim": "Policy engine (Deny) は構造的強制",
+      "implements": [".forge.toml", "permissions.yaml"],
+      "dependsOnAssumptions": ["FC-C1", "FC-H1"]
+    },
+    {
+      "axiomId": "FC2",
+      "designPrinciple": "D1",
+      "claim": "sage エージェントは構造的 read-only 強制",
+      "implements": [".forge/agents/sage.md"],
+      "dependsOnAssumptions": ["FC-C2", "FC-H2"]
+    },
+    {
+      "axiomId": "FC3",
+      "designPrinciple": "D1",
+      "claim": "AGENTS.md は規範的指針",
+      "implements": ["AGENTS.md"],
+      "dependsOnAssumptions": ["FC-C3"]
+    },
+    {
+      "axiomId": "FC4",
+      "designPrinciple": "D2",
+      "claim": "sage via Task 委譲は moderate リスクまで十分 (2/4 条件)",
+      "implements": [".forge/agents/sage.md"],
+      "dependsOnAssumptions": ["FC-C2", "FC-H2"]
+    },
+    {
+      "axiomId": "FC4a",
+      "designPrinciple": "D2",
+      "claim": "Cross-model sage は high リスクまで十分 (3/4 条件、FC-H11 要)",
+      "implements": [".forge/agents/sage.md"],
+      "dependsOnAssumptions": ["FC-C2", "FC-H2", "FC-H11"],
+      "note": "sage の provider/model を明示的に変更する設定が必要"
+    },
+    {
+      "axiomId": "FC5",
+      "designPrinciple": "D2",
+      "claim": "Critical リスクには人間レビュー必須 (FC プリミティブのみでは不十分)",
+      "implements": [],
+      "dependsOnAssumptions": ["FC-H2"],
+      "note": "evaluatorIndependent=false かつ executionAutomatic=false のため"
+    },
+    {
+      "axiomId": "FC6",
+      "designPrinciple": "D11",
+      "claim": "構造的強制のコンテキストコストは低く、規範的指針は高い（逆相関）",
+      "implements": [".forge.toml", "AGENTS.md"],
+      "dependsOnAssumptions": ["FC-C3"]
+    },
+    {
+      "axiomId": "FC7",
+      "designPrinciple": "D10",
+      "claim": "Policy, hooks, AGENTS.md, skills は T2。Agent, sandbox, todo は T1",
+      "implements": [".forge.toml", "AGENTS.md", ".forge/skills/", ".forge/agents/"],
+      "dependsOnAssumptions": ["FC-C4"]
+    },
+    {
+      "axiomId": "FC8",
+      "designPrinciple": "D15",
+      "claim": "Doom loop 検出 + mandatory todo + guardrails がハーネスエンジニアリングを実装",
+      "implements": [],
+      "dependsOnAssumptions": ["FC-H3", "FC-H6"],
+      "note": "ForgeCode ランタイムに組み込み済み"
+    },
+    {
+      "axiomId": "FC9",
+      "designPrinciple": "D18",
+      "claim": "3 組込みエージェント + Task 並列委譲でマルチエージェント協調",
+      "implements": [".forge/agents/"],
+      "dependsOnAssumptions": ["FC-C6", "FC-H4"]
+    },
+    {
+      "axiomId": "FC-D3",
+      "designPrinciple": "D3",
+      "claim": "6 種のライフサイクルイベント + tracing handler が可観測性を提供",
+      "implements": [],
+      "dependsOnAssumptions": [],
+      "note": "ForgeCode ランタイムに組み込み"
+    },
+    {
+      "axiomId": "FC-D16",
+      "designPrinciple": "D16",
+      "claim": "Tiered thinking + semantic search が情報関連性を最適化",
+      "implements": [],
+      "dependsOnAssumptions": ["FC-H7", "FC-H9"]
+    }
+  ],
+  "config_to_axiom": [
+    {
+      "config": ".forge.toml",
+      "axiomIds": ["FC1", "FC6", "FC7"],
+      "role": "Policy engine 設定 + guardrails (max_requests, max_tool_failure, restricted)"
+    },
+    {
+      "config": "permissions.yaml",
+      "axiomIds": ["FC1"],
+      "role": "Allow/Deny/Confirm ルール定義"
+    },
+    {
+      "config": "AGENTS.md",
+      "axiomIds": ["FC3", "FC6"],
+      "role": "プロジェクトルール (規範的指針)"
+    },
+    {
+      "config": ".forge/agents/sage.md",
+      "axiomIds": ["FC2", "FC4"],
+      "role": "Read-only 研究エージェント定義"
+    },
+    {
+      "config": ".forge/agents/forge.md",
+      "axiomIds": ["FC9"],
+      "role": "実装エージェント定義"
+    },
+    {
+      "config": ".forge/agents/muse.md",
+      "axiomIds": ["FC9"],
+      "role": "計画エージェント定義"
+    },
+    {
+      "config": ".forge/agents/ (custom)",
+      "axiomIds": ["FC9"],
+      "role": "カスタムエージェント定義"
+    },
+    {
+      "config": ".forge/skills/",
+      "axiomIds": ["FC7"],
+      "role": "再利用可能手順 (T2 永続)"
+    },
+    {
+      "config": "crates/forge_app/src/hooks/doom_loop.rs",
+      "axiomIds": ["FC8"],
+      "role": "Doom loop 検出 (D15b 構造的実装)"
+    },
+    {
+      "config": "crates/forge_app/src/hooks/pending_todos.rs",
+      "axiomIds": ["FC8"],
+      "role": "Pending todos 防止 (早期終了防止)"
+    },
+    {
+      "config": "crates/forge_app/src/hooks/tracing.rs",
+      "axiomIds": ["FC-D3"],
+      "role": "可観測性 (token usage, costs, failures)"
+    },
+    {
+      "config": "crates/forge_domain/src/policies/",
+      "axiomIds": ["FC1"],
+      "role": "Policy engine 実装 (Allow/Deny/Confirm ブール代数)"
+    },
+    {
+      "config": "crates/forge_domain/src/compact/",
+      "axiomIds": [],
+      "role": "コンテキスト圧縮 (tool-call/result 原子性)"
+    },
+    {
+      "config": "crates/forge_domain/src/snapshot.rs",
+      "axiomIds": [],
+      "role": "ファイルスナップショット (Undo 基盤)"
+    },
+    {
+      "config": "crates/forge_main/src/sandbox.rs",
+      "axiomIds": [],
+      "role": "Git worktree sandbox (ファイルシステム隔離)"
+    },
+    {
+      "config": "crates/forge_app/src/orch.rs",
+      "axiomIds": ["FC9"],
+      "role": "オーケストレータ (Task 並列 / 他逐次)"
+    }
+  ]
+}
