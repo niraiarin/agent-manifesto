@@ -1,0 +1,25 @@
+{
+  "pluginName": "safety-enforcement-plugin",
+  "platform": "Claude Code (plugin scope)",
+  "collectedAt": "2026-04-09",
+  "decisions": [
+    {"id": "SPD-1", "category": "hooks", "content": "PreToolUse:Bash can intercept and block destructive commands via exit 2"},
+    {"id": "SPD-2", "category": "hooks", "content": "PreToolUse:Edit/Write can intercept file modifications and block via exit 2"},
+    {"id": "SPD-3", "category": "hooks", "content": "PostToolUse hooks cannot block (exit 2 ignored), only observe"},
+    {"id": "SPD-4", "category": "hooks", "content": "Hook stdin is JSON with tool_input.command (Bash) or tool_input.file_path (Edit/Write)"},
+    {"id": "SPD-5", "category": "hooks", "content": "Multiple matching hooks run in parallel; deny > defer > ask > allow"},
+    {"id": "SPD-6", "category": "plugins", "content": "Plugin hooks use CLAUDE_PLUGIN_ROOT for portable paths"},
+    {"id": "SPD-7", "category": "plugins", "content": "Plugin scope is below project/user/managed in priority"},
+    {"id": "SPD-8", "category": "plugins", "content": "CLAUDE_PLUGIN_ROOT is replaced on update (managed by Claude Code)"},
+    {"id": "SPD-9", "category": "security", "content": "deny rules are bypassable via indirect execution (bash -c)"},
+    {"id": "SPD-10", "category": "security", "content": "Hooks are not bypassable by the agent (primary enforcement)"},
+    {"id": "SPD-11", "category": "security", "content": "Hook failure default is non-blocking (fail-open, PD-71)"},
+    {"id": "SPD-12", "category": "dependencies", "content": "jq is required for JSON parsing in hook scripts"},
+    {"id": "SPD-13", "category": "portability", "content": "macOS lacks grep -oP (Perl regex); POSIX alternatives required"},
+    {"id": "SPD-14", "category": "portability", "content": "Plugin must work on macOS (BSD) and Linux (GNU) without modification"},
+    {"id": "SPD-15", "category": "patterns", "content": "Destructive commands detectable by regex (rm -rf, git push --force, etc.)"},
+    {"id": "SPD-16", "category": "patterns", "content": "Secret files detectable by filename patterns (*.env, *.pem, *.key)"},
+    {"id": "SPD-17", "category": "patterns", "content": "Test tampering detectable by disable-keywords in test file paths"},
+    {"id": "SPD-18", "category": "observability", "content": "Blocked events must be logged from PreToolUse (PostToolUse never fires for blocked tools)"}
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "projectName": "safety-enforcement-plugin",
+  "description": "Claude Code safety enforcement plugin generalizing agent-manifesto L1 hooks",
+  "extractedAt": "2026-04-09",
+  "assumptions": [
+    {
+      "id": "SEP-H1",
+      "type": "H",
+      "content": "PreToolUse hooks are the only reliable mechanism for blocking unsafe tool execution. Deny rules bypassable (PoC 3), CLAUDE.md normative only.",
+      "validity": {
+        "sourceRef": "agent-manifesto PoC 3, CC-H1, .claude/hooks/l1-safety-check.sh",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 60
+      }
+    },
+    {
+      "id": "SEP-H2",
+      "type": "H",
+      "content": "Plugin hooks merge with host project hooks via parallel execution. Conflict resolution: deny > defer > ask > allow.",
+      "validity": {
+        "sourceRef": "Claude Code hooks docs, CC-H6, PD-14",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 60
+      }
+    },
+    {
+      "id": "SEP-H3",
+      "type": "H",
+      "content": "CLAUDE_PLUGIN_ROOT paths in hooks.json are resolved at runtime, making plugin portable.",
+      "validity": {
+        "sourceRef": "claude-code-technical-spec.md section I.4",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H4",
+      "type": "H",
+      "content": "jq is available on target systems. Without jq, all hooks fail silently (PD-71 fail-open), resulting in zero enforcement.",
+      "validity": {
+        "sourceRef": "l1-safety-check.sh jq usage, PD-71",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H5",
+      "type": "H",
+      "content": "Fixed regex patterns for destructive commands achieve less than 5 percent false positive rate across diverse projects.",
+      "validity": {
+        "sourceRef": "l1-safety-check.sh patterns, 98 evolve runs validation",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H6",
+      "type": "H",
+      "content": "Filename-based secret detection (env, pem, key, credentials patterns) is sufficient without content inspection.",
+      "validity": {
+        "sourceRef": "l1-safety-check.sh secret patterns",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H7",
+      "type": "H",
+      "content": "Test tampering detection via disable-keywords works cross-framework (Jest, Mocha, RSpec, pytest).",
+      "validity": {
+        "sourceRef": "l1-file-guard.sh test patterns",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H8",
+      "type": "H",
+      "content": "Plugin can protect own scripts via file guard blocking Edit/Write to CLAUDE_PLUGIN_ROOT.",
+      "validity": {
+        "sourceRef": "l1-file-guard.sh hook self-protection, section I.4",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H9",
+      "type": "H",
+      "content": "POSIX shell utilities (grep -qE, sed, basename) suffice for cross-platform portability (macOS + Linux).",
+      "validity": {
+        "sourceRef": "CLAUDE.md grep -oP gotcha",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 180
+      }
+    },
+    {
+      "id": "SEP-H10",
+      "type": "H",
+      "content": "Blocked events must be logged from PreToolUse hook itself (PostToolUse never fires for blocked tools).",
+      "validity": {
+        "sourceRef": "l1-safety-check.sh log_gate_blocked, CC-H5",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 60
+      }
+    },
+    {
+      "id": "SEP-H11",
+      "type": "H",
+      "content": "Zero-config installation is achievable with fixed universal safety patterns.",
+      "validity": {
+        "sourceRef": "Vision document, l1-safety-check.sh fixed patterns",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "SEP-H12",
+      "type": "H",
+      "content": "Hook stdin JSON schema (tool_input.command, tool_input.file_path) is stable across Claude Code versions.",
+      "validity": {
+        "sourceRef": "claude-code-technical-spec.md section A.2",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 60
+      }
+    }
+  ]
+}
