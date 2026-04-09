@@ -47,7 +47,7 @@ distinct from object-level (§5.6 object theory) non-logical axioms.
 
 ## Correspondence with design-development-foundation.md
 
-This file formalizes D1–D14.
+This file formalizes D1–D17.
 
 | D | Rationale | Formalization Depth |
 |---|------|------------|
@@ -63,8 +63,11 @@ This file formalizes D1–D14.
 | D10 | T1 + T2 | 2 theorems (structural permanence + epoch monotone increase) |
 | D11 | T3 + D1 | definition + 3 theorems (inverse correlation + minimization + finiteness) |
 | D12 | P6 + T3 + T7 + T8 | 2 theorems (CSP + probabilistic output) |
-| D13 | P3 + Section 8 + T5 | 2 theorems (coherence propagation + retirement premise) |
+| D13 | P3 + Section 8 + T5 | impact propagation + assumption-level extension (#225) |
 | D14 | P6 + T7 + T8 | 1 theorem (constraint satisfaction of verification order) |
+| D15 | T3+T4+T5+T6+T7+T8+P6 | 3 theorems (retry bounds, convergence, eviction) |
+| D16 | context_contribution_nonuniform | 3 theorems (zero-contribution, composition, resource) |
+| D17 | T5+D3+P3+T6+D5+D9+E1+D2+D13 | type + 8 theorems (deductive design workflow) |
 -/
 
 namespace Manifest
@@ -1175,7 +1178,7 @@ Corresponds to ATMS labeling from the research document.
 
 /-- Set of PropositionIds corresponding to each StructureKind.
     manifest.md encompasses all axioms/postulates/principles T1-T8, E1-E2, P1-P6.
-    designConvention encompasses design theorems D1-D14.
+    designConvention encompasses design theorems D1-D17.
     skill/test/document are empty sets due to individual definitions (room for future extension). -/
 def structurePropositions : StructureKind → List PropositionId
   | .manifest         => [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
@@ -1402,9 +1405,10 @@ theorem d16a_zero_contribution_items_exist :
     then at least one item must have positive contribution — establishing
     that contributions are not all equal (i.e., composition matters).
 
-    Distinguished from D16a: D16a proves zero-contribution items exist.
-    D16b proves that zero AND positive contributions coexist,
-    meaning context selection is a non-trivial optimization problem. -/
+    Distinguished from D16a: D16a proves zero-contribution items exist (pure existence).
+    D16b proves that zero-contribution items exist AND precision is required (conjunction).
+    The conjunction establishes that context window capacity (T3) is consumed by items
+    that do not advance the precision goal (T8), making item selection non-trivial. -/
 theorem d16b_context_composition_matters :
   ∀ (task : Task),
     task.precisionRequired.required > 0 →
@@ -1431,10 +1435,12 @@ theorem d16b_context_composition_matters :
 
     Derivation: context_contribution_nonuniform + T7 (resource_finite).
 
-    Formalized as: the total resource amount is bounded (T7), and
-    zero-contribution items exist (D16a). Therefore, resources allocated
-    to zero-contribution items reduce the budget available for
-    positive-contribution items. -/
+    Formalized as: given finite resources (T7, w parameter) and positive
+    precision requirements (T8), zero-contribution items exist (D16a).
+    The resource bound is accepted as a premise but the conclusion
+    depends only on D16a — the formal content is that waste exists
+    regardless of specific budget levels. The w/h_bound parameters
+    establish the resource-finite context without being used in the proof. -/
 theorem d16c_resource_follows_contribution :
   ∀ (task : Task) (w : World),
     task.precisionRequired.required > 0 →
@@ -1505,7 +1511,9 @@ def designStepDependsOn (later earlier : DeductiveDesignStep) : Prop :=
     Content: Investigation must precede extraction — you cannot form assumptions (P3 hypothesis)
       without first observing the environment (D3 observability). T5 requires feedback,
       which requires observation. Therefore investigate.ord < extract.ord.
-    Proof strategy: rfl on DeductiveDesignStep.ord -/
+    Note: Encoding theorem — the ordering is captured in the ord mapping (definitional).
+      The axiom connection (T5, D3) justifies the CHOICE of ord values, not the proof itself.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
 theorem d17_investigate_before_extract :
   designStepDependsOn .extract .investigate := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
@@ -1517,7 +1525,8 @@ theorem d17_investigate_before_extract :
       which come from extraction. D5 requires formal specification (the conditional
       axiom system) to precede implementation; P3 requires hypothesis (extract)
       before integration (construct).
-    Proof strategy: rfl on ord -/
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
 theorem d17_extract_before_construct :
   designStepDependsOn .construct .extract := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
@@ -1528,7 +1537,8 @@ theorem d17_extract_before_construct :
     Content: Design derivation operates on the conditional axiom system, not on
       core axioms directly. Without construction, there is no conditional axiom
       system to derive from. Core axioms alone lack platform-specific conditions.
-    Proof strategy: rfl on ord -/
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
 theorem d17_construct_before_derive :
   designStepDependsOn .derive .construct := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
@@ -1539,7 +1549,8 @@ theorem d17_construct_before_derive :
     Content: Validation requires a design to validate. E1 requires that verification
       be independent of generation — the validator must not have generated the design.
       D2's 4 conditions apply to the design derivation process itself.
-    Proof strategy: rfl on ord -/
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
 theorem d17_derive_before_validate :
   designStepDependsOn .validate .derive := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
@@ -1551,7 +1562,8 @@ theorem d17_derive_before_validate :
       mismatches (under-derivation), D13's impact propagation identifies which
       assumptions or core axioms are affected. T5 guarantees that without this
       feedback loop, the design cannot improve.
-    Proof strategy: rfl on ord -/
+    Note: Encoding theorem — axiom connection justifies the ord mapping choice, not the proof.
+    Proof strategy: simp on DeductiveDesignStep.ord -/
 theorem d17_validate_before_feedback :
   designStepDependsOn .feedback .validate := by
   simp [designStepDependsOn, DeductiveDesignStep.ord]
@@ -1584,17 +1596,16 @@ theorem d17_full_chain :
   simp [designStepDependsOn, DeductiveDesignStep.ord]
 
 /-- [Derivation Card]
-    Derives from: D17 steps, D4 (progressive self-application)
-    Proposition: D17 (self-application)
-    Content: The deductive design workflow is itself a design artifact subject to D9
-      (self-maintenance). The workflow must be derivable from the axiom system it uses.
-      This is structurally enforced: DeductiveDesignStep is an inductive type in
-      DesignFoundation.lean, making it subject to SelfGoverning via DesignPrinciple.
-    Proof strategy: The existence of this theorem in DesignFoundation.lean IS the proof.
-      If the workflow were not derivable, it could not be formalized here. -/
-theorem d17_self_applicable :
-  ∀ (s : DeductiveDesignStep), ∃ (n : Nat), s.ord = n := by
-  intro s; exact ⟨s.ord, rfl⟩
+    Derives from: DeductiveDesignStep.ord (definitional)
+    Proposition: D17 (acyclicity)
+    Content: The workflow ordering is acyclic — no step depends on itself.
+      This is a structural consequence of strict inequality (Nat.lt_irrefl).
+      Acyclicity guarantees the workflow terminates and has no circular dependencies.
+    Proof strategy: unfold designStepDependsOn + Nat.lt_irrefl -/
+theorem d17_acyclic :
+  ∀ (s : DeductiveDesignStep), ¬designStepDependsOn s s := by
+  intro s h
+  simp [designStepDependsOn] at h
 
 -- ============================================================
 -- Sorry Inventory
@@ -1605,13 +1616,15 @@ theorem d17_self_applicable :
 
 No sorry.
 
-D1–D14 use no new non-logical axioms (§4.1).
+D1–D14, D17 use no new non-logical axioms (§4.1).
 D15–D16 use `context_contribution_nonuniform` (T₀ extension in Axioms.lean).
+D17 step-ordering theorems are encoding theorems: axiom connections justify
+the choice of ord values, but proofs are definitional (simp on Nat literals).
 
 All theorems (§4.2) are proven by direct application of existing axioms (T/E/P/V)
 or by cases analysis on inductive types (§7.2).
 
-Each principle D1–D14 is guaranteed by type-checking to be
+Each principle D1–D17 is guaranteed by type-checking to be
 **derivable** (§2.4 derivability) from the manifesto's axiom system.
 D15–D16 are derivable from the extended axiom system (T₀ + context_contribution_nonuniform).
 This file consists solely of definitional extensions (§5.5),
@@ -1631,7 +1644,7 @@ Sorry Inventory.
 Self-Application.
 
 Via the `SelfGoverning` type class (§9.4, Ontology.lean),
-the `DesignPrinciple` type defining D1–D12 satisfies:
+the `DesignPrinciple` type defining D1–D17 satisfies:
 - Applicability of compatibility classification (`canClassifyUpdate`)
 - Exhaustiveness of classification (`classificationExhaustive`)
 
