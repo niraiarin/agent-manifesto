@@ -90,12 +90,14 @@ def sep_h6 : PluginAssumption := {
   reviewIntervalDays := 90
 }
 
-/-- SEP-H7: Test tampering detection via disable-keywords works cross-framework. -/
+/-- SEP-H7: Test tampering detection via disable-keywords works cross-framework.
+    D17 feedback (F1, iteration 1): Must only fire on test file paths
+    (test|spec pattern match required). Non-test files must not trigger. -/
 def sep_h7 : PluginAssumption := {
   id := "SEP-H7"
-  content := "Disable-keyword detection works across test frameworks (Jest, Mocha, RSpec, pytest)"
-  sourceRef := "l1-file-guard.sh test patterns"
-  reviewIntervalDays := 90
+  content := "Disable-keyword detection works cross-framework AND only fires on test file paths (test|spec match required)"
+  sourceRef := "l1-file-guard.sh test patterns, G5 F1 feedback"
+  reviewIntervalDays := 60
 }
 
 /-- SEP-H8: Plugin can protect own scripts via file guard on PLUGIN_ROOT. -/
