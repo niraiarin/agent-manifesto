@@ -162,12 +162,24 @@ Judge evaluates on G1-G4 criteria:
 | G3 | Judgment Basis | Is the PASS/FAIL rationale quantitative? |
 | G4 | Next Action | Is the next step clear? |
 
-Judge recommendation: average ≥ 3.5 → PASS recommended, < 3.5 → reconsider.
+Scores are diagnostic tools, not thresholds. The gate criterion is:
+"are there addressable deductions remaining?"
 Final judgment is made by human (T6). Judge results are reference material.
 
-#### 6b. Gate Judgment
+#### 6b. Deduction Resolution Loop (#289)
 
-The gate is the most important part. After each experiment, record a judgment as an issue comment:
+Judge classifies each deduction (score < 5) as **addressable** or **unaddressable**:
+- **addressable**: Can be fixed within current scope. Concrete fix steps exist.
+- **unaddressable**: Structural limitation (e.g., task inherently scores low on C1).
+
+Flow:
+1. If addressable deductions remain → fix them → request re-judgment (max 2 loops)
+2. If only unaddressable remain → record reasons and proceed to gate judgment
+3. If all criteria ≤ 1 → FAIL
+
+#### 6c. Gate Judgment
+
+After deduction resolution, record a judgment as an issue comment:
 
 ```markdown
 ### Judge 評価
@@ -179,14 +191,20 @@ The gate is the most important part. After each experiment, record a judgment as
 | G3 Judgment Basis | N/5 | ... |
 | G4 Next Action | N/5 | ... |
 
-**総合スコア**: X.X/5.0
+**総合スコア**: X.X/5.0（diagnostic — gate criterion is deduction addressability）
+
+### 減点分類
+
+| 基準 | 減点内容 | 分類 | 対処案 |
+|------|---------|------|--------|
+| ... | ... | addressable / unaddressable | ... |
 
 ### Gate: [判定名]
 
 **日付**: YYYY-MM-DD
 **判定**: PASS / CONDITIONAL / FAIL
-**Judge スコア**: X.X/5.0
 **根拠**: [quantitative data or qualitative assessment]
+**残存減点**: [unaddressable only — addressable deductions resolved]
 **追加研究**: 必要 → #XX / 不要
 **次のアクション**: ...
 ```
