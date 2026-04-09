@@ -9,7 +9,7 @@
 #   --update  (default) 実更新 + 差分表示
 #   --check   差分があれば exit 1（pre-commit 用）。ファイル変更なし
 #   --dry-run 差分表示のみ、ファイル変更なし
-# Scope: Manifest/*.lean (flat, top-level modules only).
+# Scope: Manifest/*.lean + Manifest/Framework/*.lean (core modules).
 # Does NOT count Manifest/Models/ or Manifest/Foundation/ subdirectories.
 set -euo pipefail
 
@@ -21,10 +21,10 @@ MODE="${1:---update}"
 # Step 1: カウント算出
 # ============================================================
 
-THEOREM_COUNT=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ') # flat scope only
-AXIOM_COUNT=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean | wc -l | tr -d ' ') # flat scope only
+THEOREM_COUNT=$(grep '^theorem ' "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null | wc -l | tr -d ' ')
+AXIOM_COUNT=$(grep '^axiom [a-z]' "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null | wc -l | tr -d ' ')
 # sorry タクティクの実使用を検出（コメント・識別子内の言及は除外）
-SORRY_COUNT=$({ grep -E '^\s*sorry\s*$|:=\s*sorry\s*$|\bby\s+sorry\b' "$LEAN_DIR"/Manifest/*.lean 2>/dev/null || true; } | wc -l | tr -d ' ')
+SORRY_COUNT=$({ grep -E '^\s*sorry\s*$|:=\s*sorry\s*$|\bby\s+sorry\b' "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null || true; } | wc -l | tr -d ' ')
 COMPRESSION=$((THEOREM_COUNT * 100 / AXIOM_COUNT))
 COMPRESSION_DECIMAL=$(echo "scale=2; $COMPRESSION / 100" | bc)
 
@@ -191,6 +191,7 @@ update_module_count "axiomQualityM" "AxiomQuality.lean"
 update_module_count "epistemicLayerM" "EpistemicLayer.lean"
 update_module_count "taskClassificationM" "TaskClassification.lean"
 update_module_count "traceabilityM" "Traceability.lean"
+update_module_count "frameworkM" "Framework/NodeKind.lean Framework/AcyclicGraph.lean Framework/DanglingDetection.lean Framework/LLMRejection.lean Framework/CompatibilityClassification.lean"
 
 # --- Pattern 7: Meta.lean axiom sub-counts (preserve whitespace + comments) ---
 update_axiom_count() {

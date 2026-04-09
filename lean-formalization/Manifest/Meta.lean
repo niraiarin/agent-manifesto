@@ -83,7 +83,7 @@ structure AxiomSystemProfile where
   applicationCount      : Nat
   /-- 構造的 axiom（Ontology.lean: dependency_respects_strength 等）の axiom 数 -/
   structuralCount       : Nat
-  /-- theorem 数（Manifest/*.lean フラットスコープ。Models/, Foundation/ は含まない）-/
+  /-- theorem 数（Manifest/*.lean + Manifest/Framework/*.lean。Models/, Foundation/ は含まない）-/
   theoremCount          : Nat
   /-- sorry の数 -/
   sorryCount            : Nat
@@ -97,8 +97,8 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 -- モジュール別定理分布（currentProfile.theoremCount の計算に先行して定義）
 -- ============================================================
 
-/-- 各 Lean モジュールの定理数（Manifest/*.lean フラットスコープのみ）。
-    追跡対象は Manifest/ 直下の 18 モジュール。
+/-- 各 Lean モジュールの定理数（Manifest/*.lean + Manifest/Framework/*.lean）。
+    追跡対象は Manifest/ 直下の 18 モジュール + Framework/ の 5 モジュール。
     Models/（PoC, Instances）および Foundation/ サブディレクトリの定理は含まない。
     scripts/sync-counts.sh が grep で算出した値を自動同期する。 -/
 structure TheoremDistribution where
@@ -120,6 +120,7 @@ structure TheoremDistribution where
   epistemicLayerM        : Nat  -- EpistemicLayer.lean
   taskClassificationM    : Nat  -- TaskClassification.lean
   traceabilityM          : Nat  -- Traceability.lean
+  frameworkM             : Nat  -- Framework/*.lean (NodeKind, AcyclicGraph, DanglingDetection, LLMRejection, CompatibilityClassification)
   deriving BEq, Repr
 
 /-- モジュール別定理数の合計。 -/
@@ -128,7 +129,8 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
   d.principlesM + d.metaM + d.terminologyM + d.formalDerivationSkillM +
   d.conformanceVerificationM + d.designFoundationM + d.procedureM +
   d.evolutionM + d.evolveSkillM + d.workflowM + d.axiomQualityM +
-  d.epistemicLayerM + d.taskClassificationM + d.traceabilityM
+  d.epistemicLayerM + d.taskClassificationM + d.traceabilityM +
+  d.frameworkM
 
 /-- 現在のモジュール別定理分布。
     scripts/sync-counts.sh が各モジュールの定理数を自動更新する。 -/
@@ -150,7 +152,8 @@ def currentTheoremDistribution : TheoremDistribution :=
     axiomQualityM          := 11
     epistemicLayerM        := 47
     taskClassificationM    := 16
-    traceabilityM          := 13 }
+    traceabilityM          := 13
+    frameworkM             := 50 }
 
 -- ============================================================
 -- 現在の公理系プロファイル
@@ -174,7 +177,7 @@ theorem current_total_axioms :
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 404 := by rfl
+  currentProfile.theoremCount = 454 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
