@@ -1602,7 +1602,7 @@ inductive PropositionId where
   | l1 | l2 | l3 | l4 | l5 | l6
   -- D: 設計定理
   | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
-  | d15 | d16
+  | d15 | d16 | d17
   deriving BEq, Repr
 ```
 
@@ -1618,7 +1618,7 @@ def PropositionId.category : PropositionId → PropositionCategory
   | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
   | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
   | .d9 | .d10 | .d11 | .d12 | .d13 | .d14
-  | .d15 | .d16 => .designTheorem
+  | .d15 | .d16 | .d17 => .designTheorem
 ```
 
 Returns the direct dependencies of a proposition. Encodes the derivation structure of the manifesto.
@@ -1668,6 +1668,8 @@ def PropositionId.dependencies : PropositionId → List PropositionId
   | .d15 => [.t3, .t4, .t5, .t6, .t7, .t8, .p6]
   -- D16: 情報関連性定理（context_contribution_nonuniform + T7 + T8）
   | .d16 => [.t3, .t7, .t8]
+  -- D17: 演繹的設計ワークフロー（T5+D3+P3+T6+D5+D9+E1+D2+D13）
+  | .d17 => [.t5, .t6, .e1, .p3, .d2, .d3, .d5, .d9, .d13]
 ```
 
 A proposition directly depends on another proposition. 

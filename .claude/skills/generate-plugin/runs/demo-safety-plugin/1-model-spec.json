@@ -1,0 +1,35 @@
+{
+  "projectName": "safety-enforcement-plugin",
+  "assumptions": [
+    {
+      "id": "H-1",
+      "type": "H",
+      "content": "Claude Code projects need L1 safety hooks to prevent destructive operations",
+      "validity": {
+        "sourceRef": "agent-manifesto l1-safety-check.sh (proven in 98 evolve runs)",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "H-2",
+      "type": "H",
+      "content": "PreToolUse:Bash hooks can intercept destructive commands before execution",
+      "validity": {
+        "sourceRef": "Claude Code hooks documentation + agent-manifesto PoC (18,449 Bash tool calls intercepted)",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    },
+    {
+      "id": "H-3",
+      "type": "H",
+      "content": "File guard hooks (PreToolUse:Edit/Write) prevent modification of protected files",
+      "validity": {
+        "sourceRef": "agent-manifesto l1-file-guard.sh (production use since Run 1)",
+        "lastVerified": "2026-04-09",
+        "reviewInterval": 90
+      }
+    }
+  ]
+}
