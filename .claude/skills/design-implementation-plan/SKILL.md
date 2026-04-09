@@ -46,6 +46,29 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 - **Provider 名**: 対象プラットフォーム（例: Claude Code, GitHub Actions, 任意のCI/CD）
 - **Provider のプリミティブ一覧**（任意）: Provider が持つ機能の一覧。省略された場合は Provider 名から推定するか、ユーザーに確認する。
 
+## D17 演繹的設計ワークフローとの対応
+
+このスキルは D17 (DesignFoundation.lean) の state machine の Step 3 (derive) に該当する。
+D17 の全ワークフロー内での位置:
+
+```
+Step 0 investigate → /research で Provider 調査（本スキルの Step 0）
+Step 1 extract     → /instantiate-model Phase 0-1 で仮定抽出
+Step 2 construct   → /instantiate-model Phase 2-3 で条件付き公理系構築
+Step 3 derive      → **本スキル**（条件付き公理系からの設計導出）
+Step 4 validate    → /verify + derivation accuracy 測定
+Step 5 feedback    → /research Gate 判定
+```
+
+**重要**: 本スキルは条件付き公理系（Step 2 の出力）を入力として使うべきであり、
+コア公理系 (T/E/P/D) から直接設計を導出してはならない（D17 ワークフロー違反）。
+
+### D17 出力型の適合
+
+本スキルの出力は D17 の `DerivationOutput` に適合すべき:
+- 導出された設計判断のリスト（各判断に CC axiom basis を明記）
+- 全 CC axiom が少なくとも 1 件の導出に寄与していること
+
 ## 実行手順
 
 ### Step 0: Provider 仕様調査 + PoC

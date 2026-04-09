@@ -18,6 +18,18 @@ description: >
 人間のプロジェクトのビジョンを聞き取り、要件・仮定・制約を引き出し、
 EpistemicLayerClass の公理体系に準拠した条件付き公理体系を Lean 文書として生成する。
 
+## D17 演繹的設計ワークフローとの対応
+
+本スキルは D17 の Step 1 (extract) と Step 2 (construct) を担当する。
+
+- **Step 1 extract**: Phase 0-1 の対話で仮定 (C/H) を抽出
+  - D17 の verify gate: `extractStepValid` = 全仮定に TemporalValidity + 仮定数 > 0
+- **Step 2 construct**: Phase 2-3 で条件付き公理系を構築
+  - D17 の verify gate: `constructStepValid` = sorryCount = 0 ∧ buildSuccess = true
+
+高リスク遷移（stepTransitionRisk = high）のため、extract/construct の出力は
+可能な限り独立検証すべき（D2: 3/4 条件）。
+
 ## 起動トリガー
 
 「モデル生成」「instantiate」「層モデル」「条件付き公理」「公理体系を生成」で起動。
