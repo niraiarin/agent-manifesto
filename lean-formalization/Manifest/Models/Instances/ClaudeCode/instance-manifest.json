@@ -70,6 +70,26 @@
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
       "lastVerified": "2026-04-08", "reviewInterval": 60,
       "refutation": "PostToolUse の async オプションが削除された場合"
+    },
+    {
+      "id": "CC-C6", "type": "C",
+      "content": "Auto memory は git リポジトリ単位でスコープされる",
+      "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/memory",
+      "lastVerified": "2026-04-09", "reviewInterval": 90
+    },
+    {
+      "id": "CC-H6", "type": "H",
+      "content": "同一イベントの全 matching hooks は並列実行。deny > defer > ask > allow で競合解決",
+      "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "lastVerified": "2026-04-09", "reviewInterval": 60,
+      "refutation": "hooks が逐次実行に変更された場合"
+    },
+    {
+      "id": "CC-H7", "type": "H",
+      "content": "Auto mode は AI classifier で自然言語 policy rules を動的に評価してツール許可を判定",
+      "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/permissions",
+      "lastVerified": "2026-04-09", "reviewInterval": 60,
+      "refutation": "Auto mode が廃止またはルールベースに変更された場合"
     }
   ],
   "axiom_to_config": [

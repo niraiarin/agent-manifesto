@@ -168,12 +168,56 @@ def cc_h5 : Assumption := {
   }
 }
 
+/-- CC-C6: Auto memory は git リポジトリ単位でスコープされる。
+    同一 repo 内の全 worktree とサブディレクトリが 1 つの memory を共有。 -/
+def cc_c6 : Assumption := {
+  id := "CC-C6"
+  source := .humanDecision 1 "memory-scope" "2025-06-01"
+  content := "Auto memory は git リポジトリ単位でスコープされる。~/.claude/projects/<project>/memory/ に保存。git 外ではプロジェクトルートを使用。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/memory"
+    lastVerified := "2026-04-09"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H6: 同一イベントの全 matching hooks は並列実行される。
+    競合する判定は deny > defer > ask > allow の優先順位で解決。 -/
+def cc_h6 : Assumption := {
+  id := "CC-H6"
+  source := .llmInference
+    ["CC-C1"]
+    "Claude Code が hooks を逐次実行に変更した場合に反証される"
+  content := "同一イベントに対してマッチする全 hooks は並列実行される。同一ハンドラは重複排除される。競合する判定（allow vs deny）は deny > defer > ask > allow の優先順位で解決。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/hooks"
+    lastVerified := "2026-04-09"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H7: Auto mode は LLM を classifier として使用し、自然言語ルールで動的にツール許可を判定する。
+    D1 の procedural 層に AI-assisted enforcement を追加。 -/
+def cc_h7 : Assumption := {
+  id := "CC-H7"
+  source := .llmInference
+    ["CC-C2"]
+    "Auto mode が廃止されるか、ルールベース（非 AI）に変更された場合に反証される"
+  content := "Auto mode は AI classifier で自然言語 policy rules（autoMode.allow, autoMode.soft_deny）を評価し、ツール許可を動的に判定する。allow/soft_deny を設定するとデフォルトリスト全体が置換される。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/permissions"
+    lastVerified := "2026-04-09"
+    reviewInterval := some 60
+  }
+}
+
 -- ============================================================
 -- 仮定の一覧
 -- ============================================================
 
 /-- Claude Code インスタンスの全仮定。 -/
 def allAssumptions : List Assumption :=
-  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_h1, cc_h2, cc_h3, cc_h4, cc_h5]
+  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6,
+   cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7]
 
 end Manifest.Models.Instances.ClaudeCode
