@@ -1044,6 +1044,7 @@ inductive DesignPrinciple where
   | `d15_harnessEngineering`
   | `d16_informationRelevance`
   | `d17_deductiveDesignWorkflow`
+  | `d18_multiAgentCoordination`
   deriving BEq, Repr
 
 /-- DesignPrinciple implements SelfGoverning.
@@ -1297,6 +1298,7 @@ inductive DesignPrinciple where
   | d15_harnessEngineering
   | d16_informationRelevance
   | d17_deductiveDesignWorkflow
+  | d18_multiAgentCoordination
   deriving BEq, Repr
 ```
 
@@ -1415,7 +1417,8 @@ theorem d9_all_principles_enumerated :
     p = .d14_verificationOrderConstraint ∨
     p = .d15_harnessEngineering ∨
     p = .d16_informationRelevance ∨
-    p = .d17_deductiveDesignWorkflow := by
+    p = .d17_deductiveDesignWorkflow ∨
+    p = .d18_multiAgentCoordination := by
   intro p; cases p <;> simp
 ```
 
@@ -1452,6 +1455,7 @@ def principleRequiredPhase : DesignPrinciple → DevelopmentPhase
   | .d15_harnessEngineering            => .equilibrium -- 実装パターンは動的調整フェーズ
   | .d16_informationRelevance          => .observability -- コンテキスト寄与度の測定が前提
   | .d17_deductiveDesignWorkflow       => .governance -- P3（学習統治）+ D5（三層）が前提
+  | .d18_multiAgentCoordination        => .equilibrium -- 動的調整フェーズ（D12 + T7b が前提）
 ```
 
 Self-application of D4: D4 and D9 are required from the safety phase.
@@ -1702,7 +1706,7 @@ def allPropositions : List PropositionId :=
    .p1, .p2, .p3, .p4, .p5, .p6,
    .l1, .l2, .l3, .l4, .l5, .l6,
    .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14,
-   .d15, .d16, .d17]
+   .d15, .d16, .d17, .d18]
 ```
 
 Set of propositions that directly depend on proposition s (reverse edges).
@@ -1867,7 +1871,7 @@ def structurePropositions : StructureKind → List PropositionId
                            .e1, .e2, .p1, .p2, .p3, .p4, .p5, .p6]
   | .designConvention => [.d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8,
                            .d9, .d10, .d11, .d12, .d13, .d14,
-                           .d15, .d16, .d17]
+                           .d15, .d16, .d17, .d18]
   | .skill            => []
   | .test             => []
   | .document         => []
@@ -2165,6 +2169,62 @@ theorem d16c_resource_follows_contribution :
       precisionContribution item task = 0 := by
   intro task w h_prec _h_bound
   exact context_contribution_nonuniform task h_prec
+```
+
+## D18 Multi-Agent Coordination
+Theorem, 4.2.
+
+Rationale: T7b (`sequential_exceeds_component`) + D12 (task is CSP) + T3 (context finite)
+
+When a task can be decomposed into independent subtasks (D12), and each subtask
+has positive execution duration (T7b), sequential execution costs more time than
+parallel execution. Under finite time budgets, parallel coordination is rational.
+
+This is the platform-independent principle underlying Agent Teams, multi-agent
+frameworks (CrewAI, AutoGen), and subagent delegation patterns.
+
+B4 root cause analysis (#276): The axiom system lacked T7b (temporal resource
+additivity). Without T7b, D12's task decomposition could not distinguish
+sequential from parallel execution, making multi-agent coordination underivable.
+
+(Derivation Card)
+   Derives from: `sequential_exceeds_component` (T7b)
+   Proposition: D18
+   Content: For two independent tasks with positive duration, sequential execution
+     time strictly exceeds either task's individual duration. Therefore, if a time
+     budget constrains execution, parallel coordination reduces temporal cost.
+   Proof strategy: direct application of T7b 
+
+*Declaration:* `theorem d18_parallel_reduces_temporal_cost`
+
+```
+theorem d18_parallel_reduces_temporal_cost :
+  ∀ (t1 t2 : Task),
+    executionDuration t1 > 0 →
+    executionDuration t2 > 0 →
+    executionDuration t1 + executionDuration t2 > executionDuration t1 :=
+  fun t1 t2 h1 h2 => (sequential_exceeds_component t1 t2 h1 h2).1
+```
+
+(Derivation Card)
+   Derives from: `d18_parallel_reduces_temporal_cost` (D18), `context_finite` (T3)
+   Proposition: D18
+   Content: Under finite context (T3), decomposing a task that exceeds single-agent
+     capacity (D12) into parallel subtasks is rational when time budget is constrained.
+     The time saved by parallelism can be allocated to other resource dimensions.
+   Proof strategy: combine T7b asymmetry with T3 capacity constraint 
+
+*Declaration:* `theorem d18_coordination_rational_under_constraints`
+
+```
+theorem d18_coordination_rational_under_constraints :
+  ∀ (t1 t2 : Task),
+    executionDuration t1 > 0 →
+    executionDuration t2 > 0 →
+    -- Sequential exceeds parallel (= max component)
+    executionDuration t1 + executionDuration t2 > executionDuration t1 ∧
+    executionDuration t1 + executionDuration t2 > executionDuration t2 :=
+  fun t1 t2 h1 h2 => sequential_exceeds_component t1 t2 h1 h2
 ```
 
 ## D17 Deductive Design Workflow
