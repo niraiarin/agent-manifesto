@@ -499,6 +499,36 @@ axiom resource_finite :
     (w.allocations.map (·.amount)).foldl (· + ·) 0 ≤ globalResourceBound
 
 -- ============================================================
+-- T7b: 逐次実行時間は加算的である
+-- ============================================================
+
+/-!
+## T7b Sequential Execution Time is Additive
+
+T7 のリソース有限性の時間次元への具体化。
+T3 が T7 の空間次元（コンテキスト有限）であるのと同構造。
+
+逐次実行では各サブタスクの所要時間が加算される。これは物理法則由来の事実であり、
+並列実行（所要時間 = max）との非対称性が、マルチエージェント協調 (D18) の根拠となる。
+-/
+
+/-- [公理カード]
+    所属: T₀（環境由来）
+    内容: 独立なタスクが存在する場合、それらの逐次実行の総時間は
+          各タスクの最大時間よりも厳密に大きくなりうる。
+          これが並列実行の合理性の根拠: parallel = max < sequential = sum。
+    根拠: 物理法則。逐次実行では各サブタスクが順に時間を消費する。
+          2 つの非ゼロ時間タスクの和は、どちらか一方の時間より大きい。
+    ソース: manifesto T7 の時間次元具体化。B4 (#276) の根本原因分析から導入。
+    降格判定: 導出不可能 — executionDuration は opaque。 -/
+axiom sequential_exceeds_component :
+  ∀ (t1 t2 : Task),
+    executionDuration t1 > 0 →
+    executionDuration t2 > 0 →
+    executionDuration t1 + executionDuration t2 > executionDuration t1 ∧
+    executionDuration t1 + executionDuration t2 > executionDuration t2
+
+-- ============================================================
 -- T8: タスクには達成すべき精度水準が存在する
 -- ============================================================
 

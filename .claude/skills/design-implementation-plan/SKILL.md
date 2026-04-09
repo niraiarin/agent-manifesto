@@ -3,7 +3,7 @@ name: design-implementation-plan
 user-invocable: true
 description: >
   マニフェスト準拠の設計実装計画書を任意のプラットフォーム向けに生成する。
-  D1-D14 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に
+  D1-D18 設計原則をプロバイダプリミティブ（Claude Code, GitHub Actions, CI/CD 等）に
   マッピングし、フェーズ別ロードマップ、テストケース、V1-V7 計測設計を含む計画書を出力する。
   「実装計画」「設計計画」「ロードマップ」「design plan」「implementation plan」
   「何から実装すべき」で起動。
@@ -28,8 +28,8 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 このスキルは以下のファイルを参照する:
 
-1. `${MANIFESTO_ROOT}/docs/design-development-foundation.md` — D1–D14 の設計開発基礎論（プラットフォーム非依存）
-2. `${MANIFESTO_ROOT}/lean-formalization/Manifest/DesignFoundation.lean` — D1–D14 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型, `assumptionImpact` 等を含む）
+1. `${MANIFESTO_ROOT}/docs/design-development-foundation.md` — D1–D18 の設計開発基礎論（プラットフォーム非依存）
+2. `${MANIFESTO_ROOT}/lean-formalization/Manifest/DesignFoundation.lean` — D1–D18 の Lean 形式検証（`SelfGoverning` typeclass, `DesignPrinciple` 型, `assumptionImpact` 等を含む）
 3. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — `SelfGoverning` typeclass の定義（Section 7 の構造的強制メカニズム）
 4. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Axioms.lean` — T1–T8 公理（T₀ base theory）
 5. `${MANIFESTO_ROOT}/lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
@@ -179,7 +179,7 @@ Step 0 の成果を以下の形式でまとめる:
 
 以下のファイルを読み込む:
 
-- `docs/design-development-foundation.md` の D1–D14 全文
+- `docs/design-development-foundation.md` の D1–D18 全文
 - `lean-formalization/Manifest/Ontology.lean` の L1–L6（境界条件セクションの doc comment）
 - `lean-formalization/Manifest/Observable.lean` の V1–V7（変数セクションの doc comment）
 - `lean-formalization/Manifest/Axioms.lean` の T1–T8, `EmpiricalPostulates.lean` の E1–E2, `Principles.lean` の P1–P6
@@ -467,7 +467,7 @@ miss に「仮定不足」が残存する場合:
 **このステップは出力の検証ではなく、生成プロセス自体の検証。**
 
 DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
-設計実装計画書を生成する行為自体が D1–D14 に従っているかを検証する。
+設計実装計画書を生成する行為自体が D1–D18 に従っているかを検証する。
 
 確認項目:
 
@@ -491,7 +491,7 @@ DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
 
 以下のいずれかが発生した場合、このスキルの更新を検討する:
 
-- `docs/design-development-foundation.md` の D1–D14 に変更があった
+- `docs/design-development-foundation.md` の D1–D18 に変更があった
 - `DesignFoundation.lean` に新しい型・定理が追加された
 - テスト実行で品質基準を満たさない出力が繰り返し生成された
 - 新しい Provider への適用で、Step 2–8 が不十分であることが判明した
@@ -521,7 +521,7 @@ DesignFoundation.lean の `SelfGoverning` typeclass が要求するように、
 - [ ] Provider の仕様が公式ドキュメントに基づいて調査されている（Step 0a）
 - [ ] リスクの高い構成について PoC が実施されている（Step 0c）
 - [ ] 想定と実態の乖離が記録されている（Step 0d）
-- [ ] D1–D14 の全原理が Provider プリミティブにマッピングされている
+- [ ] D1–D18 の全原理が Provider プリミティブにマッピングされている
 - [ ] L1 が構造的強制で実装されている（D1）
 - [ ] P2 が3条件を満たす形で実現されている（D2）
 - [ ] V1–V7 の各変数に測定方法が割り当てられている（D3）

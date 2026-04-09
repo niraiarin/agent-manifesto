@@ -141,7 +141,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 66
+    designFoundationM      := 68
     procedureM             := 25
     evolutionM             := 16
     evolveSkillM           := 30
@@ -159,7 +159,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     theoremCount は currentTheoremDistribution.total から自動計算される。
     axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
 def currentProfile : AxiomSystemProfile :=
-  { constraintCount  := 11
+  { constraintCount  := 12
     empiricalCount   := 3
     observableCount  := 16
     applicationCount := 20
@@ -167,13 +167,13 @@ def currentProfile : AxiomSystemProfile :=
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
-/-- 現在の公理系の総 axiom 数は 51。 -/
+/-- 現在の公理系の総 axiom 数は 52。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 51 := by rfl
+  currentProfile.totalAxioms = 52 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 402 := by rfl
+  currentProfile.theoremCount = 404 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :

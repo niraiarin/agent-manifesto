@@ -12,11 +12,11 @@
 
 ## このプロジェクトの構成
 
-- `lean-formalization/Manifest/` — 公理系の正典（T1–T8, E1–E2, P1–P6, L1–L6, V1–V7, D1–D14）。Verso で HTML 生成
+- `lean-formalization/Manifest/` — 公理系の正典（T1–T8, E1–E2, P1–P6, L1–L6, V1–V7, D1–D18）。Verso で HTML 生成
 - `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
-- `lean-formalization/` — Lean 4 形式検証（51 axioms, 402 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（52 axioms, 404 theorems, 0 sorry）
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
 ## Compact Instructions
@@ -60,7 +60,7 @@
 - `/verify` — P2 独立検証（サブエージェントでレビュー）
 - `/metrics` — P4 V1–V7 ダッシュボード
 - `/adjust-action-space` — D8 行動空間の拡張/縮小提案
-- `/design-implementation-plan` — D1–D14 のプロバイダマッピング
+- `/design-implementation-plan` — D1–D18 のプロバイダマッピング
 - `/research` — P3 Gate-Driven Research Workflow（実装前リサーチ）
 - `/evolve` — P3 構造の漸進的改善（Agent Teams で観察→仮説化→検証→統合）
 - `/trace` — P4+D13 全成果物の半順序導出・カバレッジ・逸脱検出
@@ -91,7 +91,7 @@
 - `import` must precede `/-!` doc comments (Lean 4 requirement)
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
-- Current stats: 51 axioms, 402 theorems, 0 sorry
+- Current stats: 52 axioms, 404 theorems, 0 sorry
 
 ## Hook Development Patterns
 
