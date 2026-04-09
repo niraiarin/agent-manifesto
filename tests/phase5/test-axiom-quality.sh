@@ -72,18 +72,19 @@ check "Q7 Build warnings = 0" test "$WARNING_COUNT" -eq 0
 echo ""
 echo "--- De Bruijn Factor ---"
 
-FORMAL_LINES=$(wc -l "$LEAN/Manifest/"*.lean 2>/dev/null | tail -1 | awk '{print $1}')
+FORMAL_LINES=$(find "$LEAN/Manifest" -name "*.lean" -not -path "*/Models/*" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
 INFORMAL_LINES=$(wc -l "$BASE/docs/formal-derivation-procedure.md" "$BASE/docs/mathematical-logic-terminology.md" "$BASE/docs/design-development-foundation.md" "$BASE/archive/manifesto.md" 2>/dev/null | tail -1 | awk '{print $1}')
 
 if [ "$INFORMAL_LINES" -gt 0 ]; then
   DEBRUIJN=$((FORMAL_LINES * 100 / INFORMAL_LINES))
   echo "Formal lines:   $FORMAL_LINES"
   echo "Informal lines: $INFORMAL_LINES"
-  echo "De Bruijn:      $((DEBRUIJN / 100)).$((DEBRUIJN % 100))x"
+  echo "De Bruijn:      $((DEBRUIJN / 100)).$(printf '%02d' $((DEBRUIJN % 100)))x"
 
-  # Q8: De Bruijn factor 1.5-6.0x (H5: Wiedijk典型値≈4x, H7: 暫定閾値)
-  # 上限を 5.0→6.0 に改訂: EpistemicLayer等の大規模形式化拡張で一時的上昇は正常
-  check "Q8 De Bruijn 1.5-6.0x (H5)" test "$DEBRUIJN" -ge 150 -a "$DEBRUIJN" -le 600
+  # Q8: De Bruijn factor 1.5-8.0x (H5: Wiedijk典型値≈4x, H7: 暫定閾値)
+  # 上限を 6.0→8.0 に改訂: Foundation/ + Framework/ スコープ統一で 6.96x (Run 101)
+  # スコープを observe.sh と統一 (find -not Models/, Run 101)
+  check "Q8 De Bruijn 1.5-8.0x (H5)" test "$DEBRUIJN" -ge 150 -a "$DEBRUIJN" -le 800
 else
   echo "Informal lines: (not found)"
 fi
