@@ -55,28 +55,84 @@
 安全（L1）→ 検証（P2）→ 可観測性（P4）→ 統治（P3）→ 動的調整
 先行フェーズを壊す変更は、後続フェーズの信頼性を損なう。
 
-## 利用可能なスキル
+## タスク分類とエントリーポイント
 
-- `/verify` — P2 独立検証（サブエージェントでレビュー）
-- `/metrics` — P4 V1–V7 ダッシュボード
-- `/adjust-action-space` — D8 行動空間の拡張/縮小提案
-- `/design-implementation-plan` — D1–D18 のプロバイダマッピング
-- `/research` — P3 Gate-Driven Research Workflow（実装前リサーチ）
-- `/evolve` — P3 構造の漸進的改善（Agent Teams で観察→仮説化→検証→統合）
-- `/trace` — P4+D13 全成果物の半順序導出・カバレッジ・逸脱検出
-- `/formal-derivation` — 形式的導出（Γ ⊢ φ）を Lean 4 で構成
-- `/instantiate-model` — 認識論的層モデルの条件付き公理体系を生成
-- `/spec-driven-workflow` — 仕様駆動・テスト駆動開発の完全ワークフロー（設計→テスト→実装→検証→保守）
+ユーザーの要求を以下のタスク種別に分類し、適切なエントリーポイントから開始する。
+どのスキルにも該当しない場合は直接対応する（スキル不要）。
 
-スキル間の依存関係は `.claude/skills/dependency-graph.yaml` に機械可読形式で定義されている。
-スキル変更時は `scripts/verify-skill-dependencies.sh` で整合性を検証すること。
+### 判定フロー
+
+```
+ユーザー入力
+  │
+  ├─ 「やるべきか？」「調査して」「〜は可能？」
+  │   → /research（実装前の判断が必要）
+  │
+  ├─ 「新機能を作って」「〜を実装して」（公理系ベース）
+  │   → /spec-driven-workflow（仕様→テスト→実装→検証）
+  │
+  ├─ 「改善して」「進化させて」「構造を良くして」
+  │   → /evolve（Agent Teams で漸進的改善）
+  │
+  ├─ 「バグ修正」「〜を変更して」「リファクタ」（単発の変更）
+  │   → 直接対応。変更後 /verify でレビュー
+  │
+  ├─ 「レビューして」「検証して」「チェックして」
+  │   → /verify（P2 独立検証）
+  │
+  ├─ 「メトリクス見せて」「健全性は？」「V1-V7」
+  │   → /metrics（P4 ダッシュボード）
+  │
+  ├─ 「カバレッジは？」「トレースして」「逸脱検出」
+  │   → /trace（半順序トレーサビリティ）
+  │
+  ├─ 「Lean で証明して」「形式化して」「定理追加」
+  │   → /formal-derivation（Γ ⊢ φ 構成）
+  │
+  ├─ 「公理の根拠を検証」「grounding」
+  │   → /ground-axiom（数学的根拠 + Lean 証明）
+  │
+  ├─ 「設計計画を作って」「実装ロードマップ」
+  │   → /design-implementation-plan（D1–D18 マッピング）
+  │
+  ├─ 「権限を変えたい」「行動空間の調整」
+  │   → /adjust-action-space（D8 均衡探索）
+  │
+  ├─ 「公理体系を生成して」「ドメインモデル」
+  │   → /instantiate-model（条件付き公理体系）
+  │
+  ├─ 「plugin を作って」
+  │   → /generate-plugin（D17 自動生成）
+  │
+  └─ 上記のいずれにも該当しない
+      → 直接対応（スキル不要）
+```
+
+### スキル一覧（12個、26 依存 edges）
+
+| スキル | 目的 | いつ使う |
+|--------|------|---------|
+| `/spec-driven-workflow` | 仕様駆動開発 | 公理系ベースの開発全体 |
+| `/evolve` | 漸進的改善 | 構造品質の向上 |
+| `/research` | Gate 付きリサーチ | 実装前の調査・判断 |
+| `/verify` | 独立検証 | コミット前・PR前 |
+| `/metrics` | V1–V7 ダッシュボード | 健全性確認 |
+| `/trace` | 半順序トレーサビリティ | カバレッジ・逸脱検出 |
+| `/formal-derivation` | Lean 4 形式導出 | 定理追加・公理系拡張 |
+| `/ground-axiom` | 公理の数学的根拠検証 | 公理の裏付け |
+| `/design-implementation-plan` | プロバイダマッピング | 新プラットフォーム設計 |
+| `/adjust-action-space` | 行動空間の調整 | 権限の拡張/縮小 |
+| `/instantiate-model` | 条件付き公理系生成 | ドメイン固有モデル |
+| `/generate-plugin` | Plugin 自動生成 | Claude Code plugin 構築 |
+
+依存関係: `.claude/skills/dependency-graph.yaml`（検証: `scripts/verify-skill-dependencies.sh`）
 
 ## Hook による構造的強制
 
 以下は Hook で自動強制される（P5 の確率的解釈に依存しない）:
 
 - **PreToolUse: Bash** → L1 安全チェック + P2 コミット検証警告 + P3 互換性分類
-- **PreToolUse: Edit/Write** → L1 テスト改竄・秘密ファイル・Hook 自己保護
+- **PreToolUse: Edit/Write** → L1 テスト改竄・秘密ファイル・Hook 自己保護 + P4 @traces↔refs 整合性
 - **PostToolUse** → P4 メトリクス収集（async、非ブロック）
 - **SessionStart** → P4 セッションサマリ
 
