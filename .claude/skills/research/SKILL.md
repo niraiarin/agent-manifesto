@@ -93,7 +93,7 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Gate CONDITIONAL | 仮説化（再帰） |
 | Gate FAIL | 退役 |
 
-## タスク自動化分類（TaskClassification.lean 準拠）
+## タスク自動化分類（TaskClassification.lean 準拠, #359/#377）
 
 各ステップの `TaskAutomationClass` をデザインタイムに定義する。
 実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
@@ -102,22 +102,22 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 |---|---|---|---|
 | Step 1a: 調査ログ | **judgmental** | LLM | 調査過程・却下理由の記録。自動化不可 |
 | Step 1b: Gap 列挙 | **judgmental** | LLM | 意味論的評価。自動化不可 |
-| Step 1.5: Gap 検証ループ | **mixed** | Verifier agent + カウント判定スクリプト | addressable 残存数判定は deterministic |
-| Step 2: Parent Issue 作成 | **mixed** | テンプレートスクリプト + LLM（内容記述） | テンプレート構造は deterministic |
-| Step 3: Sub-Issue 作成 | **mixed** | テンプレートスクリプト + LLM（内容記述） | 同上 |
-| Step 4: Worktree 作成 | **deterministic** | スクリプト | `git worktree add` のラッパー |
+| Step 1.5: Gap 検証ループ | **bounded + deterministic（分離済み）** | Verifier agent（検証） + カウント判定スクリプト（残存数） | `mixed_task_decomposition` 適用済み ✓: bounded = Verifier 委譲、deterministic = addressable 残存数判定 |
+| Step 2: Parent Issue 作成 | **deterministic + judgmental（未分離）** | テンプレートスクリプト + LLM（内容記述） | deterministic: テンプレート構造生成 / judgmental: 背景・Gap 一覧の記述 |
+| Step 3: Sub-Issue 作成 | **deterministic + judgmental（未分離）** | テンプレートスクリプト + LLM（内容記述） | deterministic: テンプレート構造生成 / judgmental: Gate 基準の設計 |
+| Step 4: Worktree 作成 | **deterministic** | スクリプト（worktree.sh） | スクリプト化済み ✓ |
 | Step 5: 実験実施 | **judgmental** | LLM | 研究の本質。自動化不可 |
-| Step 5.5: 仮定抽出 | **mixed** | LLM（識別・分類） + チェックスクリプト（5.5c） | 5.5c は bounded（意味論的判断含む） |
+| Step 5.5: 仮定抽出 | **judgmental + deterministic（未分離）** | LLM（識別・分類） + チェックスクリプト（5.5c） | judgmental: 外部事実の識別と C/H 分類 / deterministic: 5.5c チェックリスト |
 | Step 6a: Judge 評価 | **bounded** | Judge agent | 構造化評価。agent 委譲済み |
-| Step 6b: 減点解消 | **mixed** | LLM（修正） + カウント判定スクリプト | addressable 残存数判定は deterministic |
-| Step 6c: Gate 判定 + Handoff | **mixed** | 人間（T6） + Handoff 判定（deterministic） | 最終決定権は人間。Handoff 先判定は Yes/No |
-| Step 6d: 後続再評価 | **mixed** | 依存グラフ走査スクリプト + LLM（影響判定） | グラフ走査は deterministic |
-| Step 7: クロージング | **mixed** | クロージングスクリプト + LLM（サマリ） | issue close, worktree cleanup は deterministic |
-| Step 7.5: 下流連携 | **mixed** | チェックリストスクリプト + LLM（判断） | /trace, /verify 呼び出し判定は bounded |
+| Step 6b: 減点解消 | **judgmental + deterministic（未分離）** | LLM（修正） + カウント判定スクリプト | judgmental: 修正内容の判断 / deterministic: addressable 残存数判定 |
+| Step 6c: Gate 判定 + Handoff | **judgmental + deterministic（未分離）** | 人間（T6） + Handoff 判定（deterministic） | judgmental: 最終判定は人間（T6） / deterministic: Handoff 先判定は Yes/No |
+| Step 6d: 後続再評価 | **deterministic + judgmental（未分離）** | 依存グラフ走査スクリプト + LLM（影響判定） | deterministic: グラフ走査 / judgmental: 前提変化の影響判定 |
+| Step 7: クロージング | **deterministic + judgmental（未分離）** | クロージングスクリプト + LLM（サマリ） | deterministic: issue close, worktree cleanup / judgmental: 全体サマリ記述 |
+| Step 7.5: 下流連携 | **deterministic + judgmental（未分離）** | チェックリストスクリプト + LLM（判断） | deterministic: /trace, /verify 呼び出し / judgmental: 呼び出し要否の判断 |
 
 **設計原則**:
 - deterministic 成分は構造的強制で実行する（`deterministic_must_be_structural`）
-- mixed ステップは成分を分離する（`mixed_task_decomposition`）
+- 未分離ステップ（Step 2, 3, 5.5, 6b, 6c, 6d, 7, 7.5）は成分分離の対象（`mixed_task_decomposition`）
 - judgmental タスクを LLM に委ねるのは適切（normative 層の本来の用途）
 
 ## 実行手順
