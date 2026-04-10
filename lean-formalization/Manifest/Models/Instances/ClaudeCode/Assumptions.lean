@@ -231,14 +231,13 @@ def cc_c8 : Assumption := {
 }
 
 -- ============================================================
--- 仮定の一覧
+-- C/H: #311 Managed Agents ギャップ分析で追加
 -- ============================================================
 
 /-- CC-C9: MCP proxy + HashiCorp Vault を使用して credential を structural に隔離する。
     Agent は認証情報に直接アクセスせず、MCP server 経由でのみ認証済み API を呼出す。
     ccEnforcementLayer .mcpServer = .procedural を前提として、
-    Vault 統合により credential 次元のみ structural に昇格する。
-    (#311 Managed Agents ギャップ分析で追加) -/
+    Vault 統合により credential 次元のみ structural に昇格する。 -/
 def cc_c9 : Assumption := {
   id := "CC-C9"
   source := .humanDecision 1 "credential-isolation-method" "2026-04-10"
@@ -250,9 +249,149 @@ def cc_c9 : Assumption := {
   }
 }
 
+/-- CC-C10: CC の自律レベルを preApproved とする設計判断。
+    auto mode (CC-H7) を有効化し、事前承認範囲内で自律動作させる。
+    デフォルト (supervised) からの意図的な昇格。 -/
+def cc_c10 : Assumption := {
+  id := "CC-C10"
+  source := .humanDecision 1 "autonomy-level" "2026-04-10"
+  content := "CC の自律レベルを preApproved に設定する。auto mode (CC-H7) を有効化し、事前承認範囲内で自律動作させる。supervised（全ツール確認）からの意図的な昇格。"
+  validity := some {
+    sourceRef := ".claude/settings.json autoMode"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H8: Agent SDK のセッションは JSONL でローカル保存され、resume by ID で手動回復可能。
+    自動クラッシュ回復は提供されない。 -/
+def cc_h8 : Assumption := {
+  id := "CC-H8"
+  source := .llmInference
+    ["CC-C1"]
+    "Agent SDK が自動クラッシュ回復を実装した場合に反証される（journaled → durable に昇格）"
+  content := "Agent SDK は会話履歴を ~/.claude/projects/<cwd>/<id>.jsonl に自動保存する。resume(session_id) で手動再開可能。ただし自動クラッシュ回復はなく、ファイル変更は persist されない（会話コンテキストのみ）。"
+  validity := some {
+    sourceRef := "https://code.claude.com/docs/en/agent-sdk/sessions"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H9: Managed Agents のセッションは append-only イベントログとしてサーバサイドに永続化される。
+    自動クラッシュ回復 + 位置指定アクセス (getEvents) を提供。 -/
+def cc_h9 : Assumption := {
+  id := "CC-H9"
+  source := .llmInference
+    ["CC-C9"]
+    "MA がセッションログのクラッシュ回復保証を廃止、または getEvents API を削除した場合に反証される"
+  content := "MA のセッションは append-only イベントログとしてサーバサイドに永続。harness はステートレスで、クラッシュ後に wake(sessionId) + getEvents() で再開可能。Engineering blog 引用: 'Because the session log sits outside the harness, nothing in the harness needs to survive a crash.'"
+  validity := some {
+    sourceRef := "https://www.anthropic.com/engineering/managed-agents"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H10: CC sandbox 有効時、ファイルシステムは Seatbelt (macOS) / bubblewrap (Linux) で
+    カーネルレベル隔離。ネットワークは proxy + allowlist だが dangerouslyDisableSandbox
+    エスケープハッチが存在（user 承認必要、allowUnsandboxedCommands=false で無効化可能）。 -/
+def cc_h10 : Assumption := {
+  id := "CC-H10"
+  source := .llmInference
+    ["CC-C1"]
+    "CC sandbox が syscall フィルタリングを追加、または dangerouslyDisableSandbox が廃止された場合に反証される"
+  content := "CC sandbox: filesystem=structural (Seatbelt/bwrap, kernel-level)。network=procedural (proxy+allowlist だが dangerouslyDisableSandbox あり — agent が起動可能だが user 承認必要。domain fronting bypass も文書化済み)。process=normative (syscall フィルタリングなし)。credential=procedural (CC-H3 により deny rules はバイパス可能)。"
+  validity := some {
+    sourceRef := "https://code.claude.com/docs/en/sandboxing"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H11: Docker hardened 構成 (--cap-drop ALL, --seccomp, --read-only, --network none) で
+    filesystem/network/process が structural に到達。credential は env var 経由のため procedural。 -/
+def cc_h11 : Assumption := {
+  id := "CC-H11"
+  source := .llmInference
+    ["CC-C9"]
+    "Docker の seccomp デフォルトプロファイルが大幅に緩和された場合に反証される"
+  content := "Docker hardened: filesystem=structural (--read-only+tmpfs)、network=structural (--network none, kernel-level)、process=structural (--cap-drop ALL+seccomp)、credential=procedural (env var injection — プロセス内からアクセス可能)。"
+  validity := some {
+    sourceRef := "https://docs.docker.com/engine/security/"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-H12: MA limited networking 構成で filesystem/network/credential が structural。
+    process の隔離技術（gVisor, Firecracker 等）は公式に非公開のため procedural に分類。 -/
+def cc_h12 : Assumption := {
+  id := "CC-H12"
+  source := .llmInference
+    ["CC-C9"]
+    "MA が隔離技術を公開し gVisor/Firecracker と確認された場合（process が structural に昇格）、またはコンテナ隔離が廃止された場合に反証される"
+  content := "MA limited: filesystem=structural (per-session isolated container)、network=structural (limited+allowed_hosts)、process=procedural (isolation exists but technology undocumented)、credential=structural (Vault+MCP proxy, credentials never reach sandbox)。"
+  validity := some {
+    sourceRef := "https://platform.claude.com/docs/en/managed-agents/environments"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H13: MA default (unrestricted) networking では全 outbound トラフィックが許可される。
+    limited への明示的変更が必要。 -/
+def cc_h13 : Assumption := {
+  id := "CC-H13"
+  source := .llmInference
+    ["CC-H12"]
+    "MA のデフォルト networking が limited に変更された場合に反証される"
+  content := "MA default: networking.type='unrestricted' が初期値。全 outbound トラフィック許可（safety blocklist のみ）。production 利用には 'limited' + allowed_hosts の明示設定が推奨される。"
+  validity := some {
+    sourceRef := "https://platform.claude.com/docs/en/managed-agents/environments"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H14: CC は coupled アーキテクチャ（harness と実行が同一プロセス）。
+    MA は decoupled（ステートレス harness がセッションログ経由で実行を委譲）。 -/
+def cc_h14 : Assumption := {
+  id := "CC-H14"
+  source := .llmInference
+    ["CC-C1", "CC-H9"]
+    "CC が decoupled アーキテクチャを採用した場合、または MA が coupled に変更された場合に反証される"
+  content := "CC: coupled (harness=Claude Code process, 実行=同一プロセス内)。MA: decoupled (harness=ステートレスループ, セッション=外部ログ, sandbox=使い捨てコンテナ)。"
+  validity := some {
+    sourceRef := "https://www.anthropic.com/engineering/managed-agents"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H15: CC は PreToolUse hook で動的インターセプション（block/modify/inject）が可能。
+    MA は always_ask で runtime pause + external allow/deny のみ（入力修正・コンテキスト注入不可）。 -/
+def cc_h15 : Assumption := {
+  id := "CC-H15"
+  source := .llmInference
+    ["CC-H1", "CC-H7"]
+    "MA が hook 相当のインターセプション機能（入力修正、コンテキスト注入）を追加した場合に反証される"
+  content := "CC: dynamicHook (PreToolUse で deny/updatedInput/systemMessage)。MA: dynamicConfirmation (always_ask で session pause + user.tool_confirmation allow/deny。入力修正・コンテキスト注入は不可)。"
+  validity := some {
+    sourceRef := "https://platform.claude.com/docs/en/managed-agents/permission-policies"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+-- ============================================================
+-- 仮定の一覧
+-- ============================================================
+
 /-- Claude Code インスタンスの全仮定。 -/
 def allAssumptions : List Assumption :=
-  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8, cc_c9,
-   cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7]
+  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8, cc_c9, cc_c10,
+   cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7,
+   cc_h8, cc_h9, cc_h10, cc_h11, cc_h12, cc_h13, cc_h14, cc_h15]
 
 end Manifest.Models.Instances.ClaudeCode

@@ -3,10 +3,10 @@ import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# Managed Agents ギャップ分析 — 条件付き公理系拡張
+# 強制モデル拡張 — EnforcementExtension
 
-Claude Managed Agents (2026-04) の技術調査に基づく条件付き公理系の拡張。
 ConditionalDesignFoundation.lean の conservative extension。
+D1 EnforcementLayer を新しい次元（session, isolation, harness, autonomy, interception）に拡張する。
 
 ## 位置づけ
 
@@ -15,45 +15,25 @@ DesignFoundation.lean (EnforcementLayer, D1-D18)
   ↓
 ConditionalDesignFoundation.lean (CCPrimitive → EnforcementLayer)
   ↓ conservative extension
-ManagedAgentsGapAnalysis.lean (SessionDurability, IsolationDimension, InterceptionCapability)
+EnforcementExtension.lean (新次元 → EnforcementLayer)
 ```
 
-## 追加される概念
+## 仮定への依存
 
-- SessionDurability: セッション永続性レベル（ephemeral/journaled/durable）
-- IsolationDimension: sandbox の次元分解（filesystem/network/process/credential）
-  - credential は OS 隔離ではなく認証管理の概念。他の3次元（OS レベル隔離）とは
-    カテゴリが異なるが、L1 の脅威モデル上は同一プロファイルで管理する実用的理由がある
-- IsolationProfile: 各次元の EnforcementLayer 割当て
-- HarnessArchitecture: Harness/実行の結合度
-- AutonomyLevel: 自律実行レベル
-- InterceptionCapability: ランタイムインターセプション能力（CC > MA の次元）
-
-## conservative extension の保証
-
-既存の CCPrimitive, ccEnforcementLayer, cc1-cc8 定理に一切変更なし。
-新規 inductive + def + theorem の追加のみ。
+このファイルの定義は Assumptions.lean の CC-C/H 仮定に依存する。
+各定義の Derivation Card に依存する仮定 ID を明記する。
+外部ドキュメントへの直接参照は行わず、仮定を経由する（TemporalValidity で追跡可能）。
 
 ## 設計判断と論理的必然の区別
 
-このファイルの定義関数（harnessMinSession, autonomyMinSession）は
-**最小要件**（十分条件の下界）を定式化する。実際の運用ではこれ以下の
-SessionDurability でも特定条件下で動作しうる。これらは設計判断であり、
-数学的必然ではない。
-
-## 一次ソースの制約
-
-Managed Agents の具体的な隔離技術（gVisor, Firecracker 等）は公式に非公開。
-Engineering blog は "isolated containers" とのみ記述。本形式化では
-公式ドキュメントで確認可能な範囲のみを structural と分類し、
-非公開の実装詳細に依存する分類は避ける。
+harnessMinSession, autonomyMinSession は**最小要件**（十分条件の下界）を定式化する。
+実際の運用ではこれ以下の SessionDurability でも動作しうる。
+これらは設計判断であり数学的必然ではない。
 
 ## 参照 Issue
 
 #311: Claude Managed Agents ギャップ分析
-#312: G1 Session Durability
-#313: G2 Isolation Dimensions
-#314: G3 Harness Architecture + Autonomy
+#336: /research skill 構造的欠陥（仮定接続の改善）
 -/
 
 namespace Manifest.Models.Instances.ClaudeCode
@@ -61,17 +41,15 @@ namespace Manifest.Models.Instances.ClaudeCode
 open Manifest
 
 -- ============================================================
--- Session Durability: セッション永続性レベル (#312)
+-- Session Durability: セッション永続性レベル
 -- ============================================================
 
 /-- [Derivation Card]
     Derives from: T1 (temporary instance), T2 (persistent structure)
     Proposition: SD-type
-    Content: Session durability level classifies cross-session recovery guarantees.
-      ephemeral: no recovery. journaled: manual recovery via event log.
-      durable: automatic crash recovery + positional event access.
-      Note: in-session state is always maintained while the process runs;
-      this type classifies *cross-session recovery*, not in-session behavior.
+    Content: Cross-session recovery guarantee level.
+      ephemeral: no recovery. journaled: manual recovery. durable: automatic recovery.
+      Classifies *cross-session recovery*, not in-session behavior.
     Proof strategy: N/A (type definition) -/
 inductive SessionDurability where
   | ephemeral
@@ -79,7 +57,6 @@ inductive SessionDurability where
   | durable
   deriving BEq, Repr
 
-/-- SessionDurability の強度順序。durable > journaled > ephemeral。 -/
 def SessionDurability.strength : SessionDurability → Nat
   | .ephemeral => 0
   | .journaled => 1
@@ -88,12 +65,8 @@ def SessionDurability.strength : SessionDurability → Nat
 /-- [Derivation Card]
     Derives from: D1 (EnforcementLayer), SD-type
     Proposition: SD-enforcement
-    Content: Maps cross-session recovery guarantees to enforcement layers.
-      ephemeral → normative (no cross-session recovery is enforced).
-      journaled → procedural (log exists, recovery is manual — violation detectable).
-      durable → structural (automatic recovery — session loss physically impossible).
+    Content: Maps cross-session recovery to enforcement layers.
       Caveat: ephemeral=normative refers to cross-session recovery only.
-      In-session state is deterministic while the process runs.
     Proof strategy: pattern matching -/
 def sessionEnforcement : SessionDurability → EnforcementLayer
   | .ephemeral => .normative
@@ -103,8 +76,8 @@ def sessionEnforcement : SessionDurability → EnforcementLayer
 /-- [Derivation Card]
     Derives from: sessionEnforcement, SessionDurability.strength, EnforcementLayer.strength
     Proposition: SD-monotone
-    Content: sessionEnforcement preserves the strength ordering.
-    Proof strategy: case analysis on all SessionDurability values -/
+    Content: sessionEnforcement preserves strength ordering.
+    Proof strategy: case analysis on all values -/
 theorem session_enforcement_strength_monotone :
   ∀ (s t : SessionDurability),
     s.strength ≤ t.strength →
@@ -115,8 +88,8 @@ theorem session_enforcement_strength_monotone :
 /-- [Derivation Card]
     Derives from: sessionEnforcement, SessionDurability.strength, EnforcementLayer.strength
     Proposition: SD-journaled-procedural
-    Content: journaled or higher sessions have at least procedural enforcement.
-    Proof strategy: case analysis, eliminating ephemeral by strength constraint -/
+    Content: journaled or higher → at least procedural enforcement.
+    Proof strategy: case analysis -/
 theorem session_journaled_at_least_procedural :
   ∀ (s : SessionDurability),
     s.strength ≥ SessionDurability.journaled.strength →
@@ -127,67 +100,56 @@ theorem session_journaled_at_least_procedural :
   | journaled => simp [sessionEnforcement, EnforcementLayer.strength]
   | durable => simp [sessionEnforcement, EnforcementLayer.strength]
 
-/-- Claude Code のセッション永続性（現状）。
-    Agent SDK は JSONL 保存 + resume by ID をサポート → journaled。
-    自動クラッシュ回復はなし → durable ではない。
-    Source: https://code.claude.com/docs/en/agent-sdk/sessions -/
+/-- [Derivation Card]
+    Derives from: CC-H8 (Agent SDK session = JSONL + resume by ID, no auto recovery)
+    Proposition: SD-cc
+    Content: CC session durability = journaled. -/
 def ccSessionDurability : SessionDurability := .journaled
 
-/-- Managed Agents のセッション永続性。
-    Append-only イベントログ + 自動クラッシュ回復 + 位置指定アクセス → durable。
-    Source: https://www.anthropic.com/engineering/managed-agents
-    Quote: "Because the session log sits outside the harness, nothing in the
-    harness needs to survive a crash." -/
+/-- [Derivation Card]
+    Derives from: CC-H9 (MA session = append-only log + auto crash recovery + getEvents)
+    Proposition: SD-ma
+    Content: MA session durability = durable. -/
 def managedAgentsSessionDurability : SessionDurability := .durable
 
 /-- [Derivation Card]
-    Derives from: ccSessionDurability, managedAgentsSessionDurability, SessionDurability.strength
+    Derives from: SD-cc (CC-H8), SD-ma (CC-H9), SessionDurability.strength
     Proposition: SD-gap
-    Content: CC session durability is strictly lower than Managed Agents.
-    Proof strategy: simp on definitions -/
+    Content: CC < MA in session durability.
+    Proof strategy: simp -/
 theorem session_durability_gap :
   ccSessionDurability.strength < managedAgentsSessionDurability.strength := by
   simp [ccSessionDurability, managedAgentsSessionDurability, SessionDurability.strength]
 
 -- ============================================================
--- Isolation Dimensions: 隔離の次元分解 (#313)
+-- Isolation Dimensions: 隔離の次元分解
 -- ============================================================
 
 /-- [Derivation Card]
     Derives from: L1 threat model (l1-safety.md), CCPrimitive.sandbox
     Proposition: ID-type
-    Content: Independent dimensions of what a sandbox isolates.
-      filesystem/network/process are OS-level resource isolation (kernel namespaces, seccomp).
-      credential is access control policy (secret lifecycle management).
-      credential differs in category from the OS-level dimensions but is included
-      in the same type for practical L1 threat model coverage.
-      Note: process is itself a composite (seccomp, capabilities, namespaces, user remapping).
-      Memory/IPC isolation are omitted (relevant to L3 resource boundary, not L1 safety).
+    Content: Independent dimensions of sandbox isolation.
+      filesystem/network/process: OS-level (namespaces, seccomp).
+      credential: access control policy (differs in category but included for L1 coverage).
+      process is composite (seccomp + capabilities + namespaces).
+      Memory/IPC omitted (L3 resource boundary, not L1).
     Proof strategy: N/A (type definition) -/
 inductive IsolationDimension where
-  | filesystem   -- FS read/write アクセス制御
-  | network      -- outbound ネットワークアクセス制御
-  | process      -- syscall/capability 制御（seccomp + cap drop + namespace の複合）
-  | credential   -- 認証情報の注入・隔離（OS 隔離ではなくアクセス制御ポリシー）
+  | filesystem
+  | network
+  | process
+  | credential
   deriving BEq, Repr, DecidableEq
 
-/-- 各隔離次元に EnforcementLayer を割り当てるプロファイル。
-    プラットフォーム固有のマッピングで具体化される。 -/
 def IsolationProfile := IsolationDimension → EnforcementLayer
 
 /-- [Derivation Card]
-    Derives from: L1 threat model (l1-safety.md: test tampering, secret non-commitment,
-      secret non-exfiltration via unintended paths)
+    Derives from: L1 threat model (test tampering, secret non-exfiltration)
     Proposition: ID-l1-required
-    Content: Minimum isolation dimensions required for L1 structural guarantee.
-      filesystem: test tampering prevention, secret file protection.
-      network: prevents secret exfiltration via outbound connections.
-      credential: prevents credential leakage through agent context.
-    Proof strategy: N/A (definition derived from L1 threat analysis) -/
+    Content: L1 structural guarantee requires filesystem + network + credential. -/
 def l1RequiredDimensions : List IsolationDimension :=
   [.filesystem, .network, .credential]
 
-/-- 全隔離次元。 -/
 def allIsolationDimensions : List IsolationDimension :=
   [.filesystem, .network, .process, .credential]
 
@@ -196,110 +158,73 @@ def allIsolationDimensions : List IsolationDimension :=
 -- ============================================================
 
 /-- [Derivation Card]
-    Derives from: Claude Code sandbox documentation (https://code.claude.com/docs/en/sandboxing)
+    Derives from: CC-H10 (CC sandbox: FS=structural, network=procedural, process=normative, credential=procedural)
     Proposition: IP-cc-sandbox
-    Content: Claude Code sandbox enabled profile.
-      filesystem: structural (Seatbelt on macOS / bubblewrap on Linux — kernel-level).
-      network: procedural (proxy + allowlist, but dangerouslyDisableSandbox escape hatch
-        exists by default, and domain fronting bypasses are documented).
-      process: normative (no syscall filtering in sandbox alone).
-      credential: procedural (deny rules partially protect, bypassable per CC-H3).
-    Proof strategy: N/A (definition from platform documentation) -/
+    Content: CC sandbox enabled profile. See CC-H10 for detailed rationale. -/
 def ccSandboxProfile : IsolationProfile
-  | .filesystem  => .structural   -- Seatbelt/bwrap: kernel-level, no escape hatch for FS
-  | .network     => .procedural   -- proxy + allowlist, but dangerouslyDisableSandbox escape
-                                    -- hatch exists (triggers normal permissions flow — user
-                                    -- approval required, not a free bypass; disableable via
-                                    -- allowUnsandboxedCommands=false)
-  | .process     => .normative    -- no syscall filtering in sandbox alone
-  | .credential  => .procedural   -- deny rules, bypassable per CC-H3
+  | .filesystem  => .structural
+  | .network     => .procedural
+  | .process     => .normative
+  | .credential  => .procedural
 
-/-- Claude Code sandbox 無効時の隔離プロファイル。
-    全次元 normative（hook の grep パターンのみ）。 -/
+/-- CC sandbox 無効時。全次元 normative。 -/
 def ccNoSandboxProfile : IsolationProfile
   | _ => .normative
 
 /-- [Derivation Card]
-    Derives from: Docker security documentation (seccomp, capabilities, namespaces)
+    Derives from: CC-H11 (Docker hardened: FS/network/process=structural, credential=procedural)
     Proposition: IP-docker-hardened
-    Content: Agent SDK in Docker hardened configuration.
-      docker run --cap-drop ALL --security-opt no-new-privileges
-      --security-opt seccomp=profile --read-only --network none
-      Note: Docker seccomp is kernel-level syscall filtering. --network none
-      removes all network interfaces (no escape hatch unlike CC sandbox proxy).
-    Proof strategy: N/A (definition from Docker documentation) -/
+    Content: Agent SDK in Docker hardened. See CC-H11 for detailed rationale. -/
 def ccDockerHardenedProfile : IsolationProfile
-  | .filesystem  => .structural  -- --read-only + 明示的 tmpfs
-  | .network     => .structural  -- --network none (kernel-level, no escape hatch)
-  | .process     => .structural  -- --cap-drop ALL + seccomp profile
-  | .credential  => .procedural  -- env var injection（プロセス内アクセス可能）
+  | .filesystem  => .structural
+  | .network     => .structural
+  | .process     => .structural
+  | .credential  => .procedural
 
 /-- [Derivation Card]
-    Derives from: CC-C9 (MCP Vault credential isolation), IP-docker-hardened
+    Derives from: CC-C9 (MCP Vault), CC-H11 (Docker hardened)
     Proposition: IP-docker-vault
-    Content: Docker + MCP Vault configuration. All dimensions structural.
-      Caveat: structural classification means "violation requires circumventing
-      an infrastructure mechanism", but the quality/assurance level differs
-      between self-managed Docker+Vault and Anthropic-managed infrastructure.
-      This profile achieves dimension-count parity, not assurance-level parity.
-    Proof strategy: N/A (definition from CC-C9 + Docker docs) -/
+    Content: Docker + MCP Vault. All dimensions structural.
+      CAVEAT: dimension-count parity, not assurance-level parity.
+      Self-managed Docker+Vault differs in assurance from Anthropic-managed infra. -/
 def ccDockerVaultProfile : IsolationProfile
   | .filesystem  => .structural
   | .network     => .structural
   | .process     => .structural
-  | .credential  => .structural  -- MCP proxy + HashiCorp Vault
+  | .credential  => .structural
 
 /-- [Derivation Card]
-    Derives from: Managed Agents API documentation
-      (https://platform.claude.com/docs/en/managed-agents/environments)
+    Derives from: CC-H12 (MA limited: FS/network/credential=structural, process=procedural)
     Proposition: IP-ma-limited
-    Content: Managed Agents with `limited` networking configuration.
-      filesystem: structural (per-session isolated container).
-      network: structural (limited mode with explicit allowed_hosts).
-      process: procedural (containers are isolated but specific isolation technology
-        — gVisor, Firecracker, etc. — is not publicly documented. Classified as
-        procedural rather than structural due to lack of verifiable documentation).
-      credential: structural (Vault with MCP proxy, credentials never reach sandbox.
-        Source: engineering blog "OAuth tokens stored in external vault").
-    Proof strategy: N/A (definition from Managed Agents documentation) -/
+    Content: MA with limited networking. See CC-H12 for detailed rationale.
+      process=procedural because isolation technology is undocumented. -/
 def managedAgentsLimitedProfile : IsolationProfile
-  | .filesystem  => .structural   -- per-session isolated container
-  | .network     => .structural   -- limited + allowed_hosts
-  | .process     => .procedural   -- isolation exists but technology undocumented
-  | .credential  => .structural   -- Vault + MCP proxy
+  | .filesystem  => .structural
+  | .network     => .structural
+  | .process     => .procedural
+  | .credential  => .structural
 
 /-- [Derivation Card]
-    Derives from: Managed Agents API documentation
-      (https://platform.claude.com/docs/en/managed-agents/environments)
+    Derives from: CC-H13 (MA default: unrestricted networking), CC-H12
     Proposition: IP-ma-default
-    Content: Managed Agents with default (`unrestricted`) networking.
-      filesystem: structural (per-session isolated container).
-      network: normative (unrestricted mode allows all outbound traffic except safety blocklist).
-      process: procedural (same as limited — technology undocumented).
-      credential: structural (Vault with MCP proxy).
-      IMPORTANT: This is the default configuration. Users must explicitly set
-      `networking.type: "limited"` to achieve structural network isolation.
-    Proof strategy: N/A (definition from Managed Agents documentation) -/
+    Content: MA with default (unrestricted) networking. network=normative.
+      This is a classification gap vs L1, not a security vulnerability. -/
 def managedAgentsDefaultProfile : IsolationProfile
-  | .filesystem  => .structural   -- per-session isolated container
-  | .network     => .normative    -- unrestricted: all outbound allowed
-  | .process     => .procedural   -- isolation exists but technology undocumented
-  | .credential  => .structural   -- Vault + MCP proxy
+  | .filesystem  => .structural
+  | .network     => .normative
+  | .process     => .procedural
+  | .credential  => .structural
 
 -- ============================================================
 -- 隔離に関する定理
 -- ============================================================
 
 /-- [Derivation Card]
-    Derives from: ccSandboxProfile (IP-cc-sandbox), l1RequiredDimensions (ID-l1-required)
+    Derives from: IP-cc-sandbox (CC-H10), ID-l1-required, CC-H3
     Proposition: ID-sandbox-partial
-    Content: CC sandbox: filesystem=structural, network=procedural, credential=procedural.
-      network is procedural (not structural) because:
-      (1) dangerouslyDisableSandbox escape hatch exists (agent-triggered, but requires
-          user approval via normal permissions flow; disableable via allowUnsandboxedCommands=false)
-      (2) domain fronting bypasses are documented
-      credential is procedural because deny rules are bypassable (CC-H3).
-    Proof strategy: constructor with rfl and simp -/
+    Content: CC sandbox: FS=structural, network=procedural (CC-H10: escape hatch),
+      credential≠structural (CC-H3: deny rules bypassable).
+    Proof strategy: constructor + simp -/
 theorem cc_sandbox_partial_l1 :
   ccSandboxProfile .filesystem = .structural ∧
   ccSandboxProfile .network = .procedural ∧
@@ -308,11 +233,10 @@ theorem cc_sandbox_partial_l1 :
   simp [ccSandboxProfile]
 
 /-- [Derivation Card]
-    Derives from: ccDockerVaultProfile (IP-docker-vault), l1RequiredDimensions (ID-l1-required)
+    Derives from: IP-docker-vault (CC-C9, CC-H11), ID-l1-required
     Proposition: ID-docker-vault-l1
     Content: Docker + Vault satisfies all L1 required dimensions.
-      Note: proves dimension-level structural, not assurance-level equivalence.
-    Proof strategy: intro + simp on l1RequiredDimensions membership, then case split -/
+    Proof strategy: intro + case split -/
 theorem cc_docker_vault_satisfies_l1 :
   ∀ d ∈ l1RequiredDimensions,
     ccDockerVaultProfile d = .structural := by
@@ -321,10 +245,10 @@ theorem cc_docker_vault_satisfies_l1 :
   rcases hd with rfl | rfl | rfl <;> simp [ccDockerVaultProfile]
 
 /-- [Derivation Card]
-    Derives from: managedAgentsLimitedProfile (IP-ma-limited)
+    Derives from: IP-ma-limited (CC-H12), ID-l1-required
     Proposition: ID-ma-limited-l1
-    Content: Managed Agents (limited networking) satisfies all L1 required dimensions.
-    Proof strategy: intro + simp + case split -/
+    Content: MA limited satisfies all L1 required dimensions.
+    Proof strategy: intro + case split -/
 theorem managed_agents_limited_satisfies_l1 :
   ∀ d ∈ l1RequiredDimensions,
     managedAgentsLimitedProfile d = .structural := by
@@ -333,13 +257,10 @@ theorem managed_agents_limited_satisfies_l1 :
   rcases hd with rfl | rfl | rfl <;> simp [managedAgentsLimitedProfile]
 
 /-- [Derivation Card]
-    Derives from: managedAgentsDefaultProfile (IP-ma-default), l1RequiredDimensions
+    Derives from: IP-ma-default (CC-H13), ID-l1-required
     Proposition: ID-ma-default-below-l1
-    Content: Managed Agents with DEFAULT networking does not meet this project's
-      L1 structural requirement on the network dimension.
-      This is a classification gap relative to agent-manifesto's L1 standard,
-      not a security vulnerability in Managed Agents. MA's default (unrestricted)
-      is designed for development convenience; production use recommends `limited`.
+    Content: MA default does not meet this project's L1 structural requirement.
+      Classification gap, not security vulnerability. Production recommends limited.
     Proof strategy: intro + instantiate network + contradiction -/
 theorem managed_agents_default_below_l1_structural :
   ¬(∀ d ∈ l1RequiredDimensions,
@@ -349,7 +270,7 @@ theorem managed_agents_default_below_l1_structural :
   simp [managedAgentsDefaultProfile] at this
 
 /-- [Derivation Card]
-    Derives from: ccNoSandboxProfile, l1RequiredDimensions (ID-l1-required)
+    Derives from: ccNoSandboxProfile, ID-l1-required
     Proposition: ID-no-sandbox-fails
     Content: Without sandbox, L1 structural requirements cannot be met.
     Proof strategy: intro + instantiate filesystem + contradiction -/
@@ -361,20 +282,18 @@ theorem cc_no_sandbox_violates_l1 :
   simp [ccNoSandboxProfile] at this
 
 /-- [Derivation Card]
-    Derives from: ccDockerHardenedProfile (IP-docker-hardened), allIsolationDimensions
+    Derives from: IP-docker-hardened (CC-H11), allIsolationDimensions
     Proposition: ID-docker-3of4
-    Content: Docker hardened achieves structural on 3 of 4 dimensions.
+    Content: Docker hardened = 3/4 structural.
     Proof strategy: native_decide -/
 theorem cc_docker_hardened_structural_count :
   (allIsolationDimensions.filter (fun d => ccDockerHardenedProfile d == .structural)).length = 3 := by
   native_decide
 
 /-- [Derivation Card]
-    Derives from: ccSandboxProfile, managedAgentsLimitedProfile
+    Derives from: IP-cc-sandbox (CC-H10), IP-ma-limited (CC-H12)
     Proposition: ID-gap
-    Content: CC sandbox has fewer structural dimensions than MA limited.
-      CC sandbox: 1 structural (filesystem only — network downgraded to procedural).
-      MA limited: 3 structural (filesystem, network, credential).
+    Content: CC sandbox structural count < MA limited structural count.
     Proof strategy: native_decide -/
 theorem isolation_gap_cc_vs_managed :
   (allIsolationDimensions.filter (fun d => ccSandboxProfile d == .structural)).length <
@@ -382,17 +301,13 @@ theorem isolation_gap_cc_vs_managed :
   native_decide
 
 -- ============================================================
--- Harness Architecture: Harness/実行の結合度 (#314)
+-- Harness Architecture
 -- ============================================================
 
 /-- [Derivation Card]
-    Derives from: Managed Agents engineering blog
-      (https://www.anthropic.com/engineering/managed-agents)
+    Derives from: CC-H14 (CC=coupled, MA=decoupled)
     Proposition: HA-type
-    Content: Coupling level between orchestration loop and execution environment.
-      coupled: same process (Claude Code default).
-      decoupled: stateless harness delegates via session log (Managed Agents).
-    Proof strategy: N/A (type definition) -/
+    Content: Harness/execution coupling level. -/
 inductive HarnessArchitecture where
   | coupled
   | decoupled
@@ -401,30 +316,33 @@ inductive HarnessArchitecture where
 /-- [Derivation Card]
     Derives from: HA-type, SD-type
     Proposition: HA-min-session
-    Content: Minimum session durability for each harness architecture.
-      coupled: ephemeral suffices.
-      decoupled: journaled suffices (manual resume-by-ID).
-    Proof strategy: N/A (definition — design judgment) -/
+    Content: Minimum session durability per harness architecture. Design judgment. -/
 def harnessMinSession : HarnessArchitecture → SessionDurability
   | .coupled   => .ephemeral
   | .decoupled => .journaled
 
 /-- [Derivation Card]
-    Derives from: harnessMinSession (HA-min-session)
+    Derives from: HA-min-session
     Proposition: HA-decoupled-journaled
-    Content: Decoupled harness minimally requires journaled session durability.
     Proof strategy: rfl -/
 theorem decoupled_min_journaled :
   harnessMinSession .decoupled = .journaled := by rfl
 
+/-- [Derivation Card]
+    Derives from: CC-H14 (CC=coupled)
+    Proposition: HA-cc -/
 def ccHarnessArchitecture : HarnessArchitecture := .coupled
+
+/-- [Derivation Card]
+    Derives from: CC-H14 (MA=decoupled)
+    Proposition: HA-ma -/
 def managedAgentsHarnessArchitecture : HarnessArchitecture := .decoupled
 
 /-- [Derivation Card]
-    Derives from: ccHarnessArchitecture, managedAgentsHarnessArchitecture, harnessMinSession
+    Derives from: HA-cc (CC-H14), HA-ma (CC-H14), HA-min-session
     Proposition: HA-gap
     Content: Architectural gap in minimum session requirements.
-    Proof strategy: simp on definitions -/
+    Proof strategy: simp -/
 theorem harness_architecture_gap :
   (harnessMinSession ccHarnessArchitecture).strength <
   (harnessMinSession managedAgentsHarnessArchitecture).strength := by
@@ -432,14 +350,13 @@ theorem harness_architecture_gap :
         harnessMinSession, SessionDurability.strength]
 
 -- ============================================================
--- Autonomy Level: 自律実行レベル (#314)
+-- Autonomy Level
 -- ============================================================
 
 /-- [Derivation Card]
     Derives from: T6 (human final decision authority)
     Proposition: AL-type
-    Content: Agent autonomy level with T6 compatibility conditions.
-    Proof strategy: N/A (type definition) -/
+    Content: Agent autonomy level with T6 compatibility. -/
 inductive AutonomyLevel where
   | supervised
   | preApproved
@@ -449,18 +366,17 @@ inductive AutonomyLevel where
 /-- [Derivation Card]
     Derives from: AL-type, SD-type, T6
     Proposition: AL-min-session
-    Content: Minimum session durability for T6-compatible operation.
-      autonomous: journaled suffices (durable is reliability enhancement, not T6 minimum).
-    Proof strategy: N/A (definition — design judgment) -/
+    Content: Minimum session durability for T6-compatible operation. Design judgment.
+      autonomous = journaled (durable is reliability enhancement, not T6 minimum). -/
 def autonomyMinSession : AutonomyLevel → SessionDurability
   | .supervised  => .ephemeral
   | .preApproved => .journaled
   | .autonomous  => .journaled
 
 /-- [Derivation Card]
-    Derives from: autonomyMinSession (AL-min-session)
+    Derives from: AL-min-session
     Proposition: AL-all-need-journaled
-    Content: Both preApproved and autonomous require at least journaled sessions.
+    Content: Non-supervised levels require at least journaled.
     Proof strategy: case analysis -/
 theorem non_supervised_requires_journaled :
   ∀ (a : AutonomyLevel),
@@ -472,41 +388,34 @@ theorem non_supervised_requires_journaled :
   | preApproved => simp [autonomyMinSession, SessionDurability.strength]
   | autonomous => simp [autonomyMinSession, SessionDurability.strength]
 
-/-- Claude Code の自律レベル（現状）。
-    auto mode (CC-H7, Assumptions.lean) で preApproved に到達可能。
-    デフォルトは supervised（全ツール確認）。preApproved は設定後の状態。 -/
+/-- [Derivation Card]
+    Derives from: CC-C10 (human decision: use auto mode for preApproved), CC-H7
+    Proposition: AL-cc -/
 def ccAutonomyLevel : AutonomyLevel := .preApproved
 
+/-- [Derivation Card]
+    Derives from: CC-H9 (MA = durable session + post-audit)
+    Proposition: AL-ma -/
 def managedAgentsAutonomyLevel : AutonomyLevel := .autonomous
 
 -- ============================================================
--- Interception Capability: ランタイムインターセプション能力 (R3-H2)
+-- Interception Capability
 -- ============================================================
 
 /-- [Derivation Card]
-    Derives from: Agent SDK hooks documentation (https://code.claude.com/docs/en/agent-sdk/hooks),
-      Managed Agents permission policies (https://platform.claude.com/docs/en/managed-agents/permission-policies)
+    Derives from: CC-H15 (CC=dynamicHook, MA=dynamicConfirmation), CC-H1 (hooks are harness-enforced)
     Proposition: IC-type
-    Content: Runtime interception capability — ability to block/modify tool calls at runtime.
-      Four levels reflecting increasing control:
-      - none: read-only access (getEvents API). No runtime influence on tool execution.
-      - staticPolicy: always_allow policy decided at agent creation time. No runtime check.
-      - dynamicConfirmation: always_ask policy. Session pauses mid-execution
-        (stop_reason: requires_action), external application sends user.tool_confirmation
-        with allow/deny + deny_message. The application can make context-dependent runtime
-        decisions, but cannot modify tool inputs or inject context.
-      - dynamicHook: PreToolUse hooks. Arbitrary code execution before tool call.
-        Can block (deny), modify inputs (updatedInput), inject context (systemMessage).
-    Proof strategy: N/A (type definition) -/
+    Content: Runtime interception capability. CC > MA on this dimension.
+      none: read-only (getEvents). staticPolicy: always_allow (creation-time).
+      dynamicConfirmation: always_ask (runtime pause + allow/deny, no input modification).
+      dynamicHook: PreToolUse (block + modify inputs + inject context). -/
 inductive InterceptionCapability where
-  | none                  -- 読み取り専用（getEvents API）
-  | staticPolicy          -- 静的ポリシー（always_allow、作成時に固定）
-  | dynamicConfirmation   -- 動的確認（always_ask、ランタイム pause + 外部 allow/deny）
-  | dynamicHook           -- 動的 hook（PreToolUse でブロック・修正・コンテキスト注入）
+  | none
+  | staticPolicy
+  | dynamicConfirmation
+  | dynamicHook
   deriving BEq, Repr
 
-/-- InterceptionCapability の強度。dynamicHook が最強。
-    dynamicConfirmation は dynamicHook より弱い（入力修正・コンテキスト注入が不可能）。 -/
 def InterceptionCapability.strength : InterceptionCapability → Nat
   | .none                => 0
   | .staticPolicy        => 1
@@ -514,64 +423,45 @@ def InterceptionCapability.strength : InterceptionCapability → Nat
   | .dynamicHook         => 3
 
 /-- [Derivation Card]
-    Derives from: Agent SDK hooks docs (https://code.claude.com/docs/en/agent-sdk/hooks)
-    Proposition: IC-cc
-    Content: CC has dynamic hooks (PreToolUse can block/modify/inject).
-    Proof strategy: N/A (definition) -/
+    Derives from: CC-H15 (CC PreToolUse = block/modify/inject)
+    Proposition: IC-cc -/
 def ccInterceptionCapability : InterceptionCapability := .dynamicHook
 
 /-- [Derivation Card]
-    Derives from: Managed Agents permission policies docs
-      (https://platform.claude.com/docs/en/managed-agents/permission-policies)
-    Proposition: IC-ma
-    Content: MA has dynamicConfirmation via always_ask policy.
-      The session pauses (stop_reason: requires_action) and waits for
-      user.tool_confirmation from the controlling application.
-      The application can make dynamic, context-dependent allow/deny decisions.
-      However, it cannot modify tool inputs or inject context into the conversation
-      (unlike CC's PreToolUse hooks which support updatedInput and systemMessage).
-    Proof strategy: N/A (definition) -/
+    Derives from: CC-H15 (MA always_ask = runtime pause + allow/deny only)
+    Proposition: IC-ma -/
 def managedAgentsInterceptionCapability : InterceptionCapability := .dynamicConfirmation
 
 /-- [Derivation Card]
-    Derives from: IC-cc, IC-ma, InterceptionCapability.strength
+    Derives from: IC-cc (CC-H15), IC-ma (CC-H15), InterceptionCapability.strength
     Proposition: IC-cc-exceeds-ma
-    Content: CC's interception capability exceeds Managed Agents by one level.
-      CC: dynamicHook (block + modify inputs + inject context).
-      MA: dynamicConfirmation (block only, no input modification or context injection).
-      Both can block tool calls at runtime, but CC can additionally modify tool inputs
-      and inject system messages — capabilities essential for L1 enforcement hooks,
-      P4 observability (PostToolUse logging), and P2 verification (hook-invoked subagents).
-    Proof strategy: simp on definitions -/
+    Content: CC interception > MA. dynamicHook > dynamicConfirmation.
+      CC can modify inputs + inject context; MA can only allow/deny.
+    Proof strategy: simp -/
 theorem cc_interception_exceeds_ma :
   ccInterceptionCapability.strength > managedAgentsInterceptionCapability.strength := by
   simp [ccInterceptionCapability, managedAgentsInterceptionCapability,
         InterceptionCapability.strength]
 
--- CC-C9 は Assumptions.lean に定義済み（MCP Vault による credential 隔離）。allAssumptions に登録。
--- CC-H7 は Assumptions.lean に定義済み（auto mode による自律レベル昇格）。
+-- Assumptions: CC-C9, CC-C10, CC-H8〜H15 は Assumptions.lean に定義済み。
+-- allAssumptions に全て登録済み。
 
 -- ============================================================
--- ギャップサマリ定理
+-- ギャップサマリ
 -- ============================================================
 
 /-- [Derivation Card]
-    Derives from: SD-gap, ID-gap, HA-gap, IC-cc-exceeds-ma
-    Proposition: GAP-summary
-    Content: Bidirectional gaps between CC and Managed Agents.
-      MA exceeds CC: session durability, isolation dimensions, harness architecture.
-      CC exceeds MA: interception capability (dynamic hooks vs static policies).
-      This bidirectional analysis avoids the confirmation bias of only formalizing
-      MA advantages.
+    Derives from: SD-gap (CC-H8, CC-H9), ID-gap (CC-H10, CC-H12),
+      HA-gap (CC-H14), IC-cc-exceeds-ma (CC-H15)
+    Proposition: GAP-bidirectional
+    Content: Bidirectional gaps: MA > CC (session, isolation, harness) + CC > MA (interception).
     Proof strategy: conjunction of four sub-proofs -/
 theorem gaps_are_bidirectional :
-  -- MA exceeds CC
   (ccSessionDurability.strength < managedAgentsSessionDurability.strength) ∧
   ((allIsolationDimensions.filter (fun d => ccSandboxProfile d == .structural)).length <
     (allIsolationDimensions.filter (fun d => managedAgentsLimitedProfile d == .structural)).length) ∧
   ((harnessMinSession ccHarnessArchitecture).strength <
     (harnessMinSession managedAgentsHarnessArchitecture).strength) ∧
-  -- CC exceeds MA
   (ccInterceptionCapability.strength > managedAgentsInterceptionCapability.strength) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · simp [ccSessionDurability, managedAgentsSessionDurability, SessionDurability.strength]
@@ -582,13 +472,10 @@ theorem gaps_are_bidirectional :
           InterceptionCapability.strength]
 
 /-- [Derivation Card]
-    Derives from: ccDockerVaultProfile (IP-docker-vault), managedAgentsLimitedProfile (IP-ma-limited)
-    Proposition: GAP-dimension-count-parity
-    Content: Docker + Vault achieves the same NUMBER of structural L1 dimensions
-      as Managed Agents (limited). Both satisfy all 3 L1-required dimensions.
-      CAVEAT: Dimension-count parity only. Self-managed infra differs in assurance
-      from Anthropic-managed infra. Process isolation is structural (Docker) vs
-      procedural (MA — undocumented technology).
+    Derives from: IP-docker-vault (CC-C9, CC-H11), IP-ma-limited (CC-H12)
+    Proposition: GAP-l1-dimension-parity
+    Content: Docker+Vault = MA limited on L1 dimension count.
+      CAVEAT: count parity only, not assurance parity.
     Proof strategy: native_decide -/
 theorem docker_vault_l1_dimension_parity :
   (l1RequiredDimensions.filter (fun d => ccDockerVaultProfile d == .structural)).length =
