@@ -346,6 +346,17 @@ Judge agent に以下を渡す:
 - Sub-Issue で定義した Gate PASS/FAIL 基準
 - 成果物のファイルリスト
 
+**省略条件（パターン確立後の軽量 Gate）**:
+同一 Parent Issue 内で以下の条件を **全て** 満たす場合、Judge 評価を Verifier PASS のみに簡略化できる:
+1. 先行 Sub-Issue で同一スコープの Judge 評価が 2 件以上完了している（パターン確立）
+2. 先行 Judge で G1-G4 が全て 4/5 以上
+3. 現在の Sub-Issue の成果物が先行と同一形式（例: 全て SKILL.md へのテーブル追加）
+4. Verifier が addressable 指摘 0 件で PASS
+
+省略した場合、Issue コメントに「Verifier PASS + パターン確立済み（#NNN, #NNN で確認）」と
+先行 Judge の参照を明記すること。事後の Judge 追記は任意だが、全体評価で指摘された場合は追記する。
+（#377 Phase 3-4 で Judge スキップし全体評価で G3 減点 → 事後追記で解消した経験から導出）
+
 Judge は G1-G5 基準で評価:
 
 | # | 基準 | 問い |
