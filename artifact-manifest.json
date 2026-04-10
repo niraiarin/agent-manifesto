@@ -1524,6 +1524,190 @@
       "refs": ["P3","D4","D5","D6"],
       "enforces": "formal",
       "scope": "formalization"
+    },
+    {
+      "id": "lean:models-epistemic-layer",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Assumptions/EpistemicLayer.lean",
+      "refs": ["D17","P3"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:models-conditional-axiom-system",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/ConditionalAxiomSystem.lean",
+      "refs": ["D17"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:cc-assumptions",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/Assumptions.lean",
+      "refs": ["D1","D17","P3","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:cc-conditional-design-foundation",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/ConditionalDesignFoundation.lean",
+      "refs": ["D1","D2","D3","D10","D11","D18","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:cc-enforcement-extension",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/EnforcementExtension.lean",
+      "refs": ["D1","L1","L5","D11"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:forgecode-assumptions",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/Assumptions.lean",
+      "refs": ["D17","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:forgecode-conditional-design-foundation",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/ConditionalDesignFoundation.lean",
+      "refs": ["D17","D1","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:safetyplugin-assumptions",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/Assumptions.lean",
+      "refs": ["D17","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "lean:safetyplugin-conditional-design-foundation",
+      "type": "lean",
+      "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/ConditionalDesignFoundation.lean",
+      "refs": ["D17","D1","L5"],
+      "enforces": "formal",
+      "scope": "formalization"
+    },
+    {
+      "id": "skill:generate-plugin",
+      "type": "skill",
+      "path": ".claude/skills/generate-plugin/SKILL.md",
+      "refs": ["D17","P3","D1"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "skill:spec-driven-workflow",
+      "type": "skill",
+      "path": ".claude/skills/spec-driven-workflow/SKILL.md",
+      "refs": ["D1","D2","D3","D4","D5","P2","P3","P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "agent:judge",
+      "type": "agent",
+      "path": ".claude/agents/judge.md",
+      "refs": ["P3","V5","D3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:check-lean-imports",
+      "type": "script",
+      "path": "scripts/check-lean-imports.sh",
+      "refs": ["V7"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:generate-evolve-entry",
+      "type": "script",
+      "path": "scripts/generate-evolve-entry.sh",
+      "refs": ["P3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:sync-hypothesis-table",
+      "type": "script",
+      "path": "scripts/sync-hypothesis-table.sh",
+      "refs": ["P3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:trace-coverage",
+      "type": "script",
+      "path": "scripts/trace-coverage.sh",
+      "refs": ["V7","P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:validate-evolve-entry",
+      "type": "script",
+      "path": "scripts/validate-evolve-entry.sh",
+      "refs": ["P2","P3"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-proposal-preflight",
+      "type": "script",
+      "path": "scripts/verify-proposal-preflight.sh",
+      "refs": ["P4","L2"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:d17-state",
+      "type": "script",
+      "path": ".claude/skills/generate-plugin/scripts/d17-state.sh",
+      "refs": ["D17"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-construct-gate",
+      "type": "script",
+      "path": ".claude/skills/generate-plugin/scripts/verify-construct-gate.sh",
+      "refs": ["D17","P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-extract-gate",
+      "type": "script",
+      "path": ".claude/skills/generate-plugin/scripts/verify-extract-gate.sh",
+      "refs": ["D17","P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-investigate-gate",
+      "type": "script",
+      "path": ".claude/skills/generate-plugin/scripts/verify-investigate-gate.sh",
+      "refs": ["D17","P4"],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:resolve-manifesto-root",
+      "type": "script",
+      "path": ".claude/skills/shared/resolve-manifesto-root.sh",
+      "refs": [],
+      "enforces": "procedural",
+      "scope": "implementation"
     }
   ]
 }
