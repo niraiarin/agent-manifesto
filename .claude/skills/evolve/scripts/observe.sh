@@ -12,7 +12,9 @@ LEAN_DIR="$BASE/lean-formalization"
 
 echo "{"
 
-# --- Lean 品質指標 ---
+# === Section 1: Lean 品質指標 ===
+# TaskAutomationClass: deterministic
+# 根拠: grep/wc/find による定量計測。判断成分なし
 if [ -d "$LEAN_DIR/Manifest" ]; then
   AXIOM_COUNT=$(grep "^axiom [a-z]" "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null | wc -l | tr -d ' ')
   THEOREM_COUNT=$(grep "^theorem " "$LEAN_DIR"/Manifest/*.lean "$LEAN_DIR"/Manifest/Framework/*.lean 2>/dev/null | wc -l | tr -d ' ')
@@ -52,7 +54,9 @@ if [ -d "$LEAN_DIR/Manifest" ]; then
   echo "  },"
 fi
 
-# --- テスト結果 ---
+# === Section 2: テスト結果 ===
+# TaskAutomationClass: deterministic
+# 根拠: test-all.sh 実行結果のパース。grep による数値抽出のみ
 TEST_OUTPUT=$(bash "$BASE/tests/test-all.sh" 2>&1 || true)
 TEST_PASSED=$(echo "$TEST_OUTPUT" | grep -o 'TOTAL: [0-9]* passed' | grep -o '[0-9]*' || echo "0")
 TEST_FAILED=$(echo "$TEST_OUTPUT" | grep -o '[0-9]* failed' | tail -1 | grep -o '[0-9]*' || echo "0")
@@ -61,7 +65,9 @@ echo "    \"passed\": ${TEST_PASSED:-0},"
 echo "    \"failed\": ${TEST_FAILED:-0}"
 echo "  },"
 
-# --- git 停滞検出 ---
+# === Section 3: git 停滞検出 ===
+# TaskAutomationClass: deterministic
+# 根拠: git log + date 比較による日数計算。閾値 30 日はハードコード
 STALE_FILES=""
 for f in "$BASE"/.claude/skills/*/SKILL.md "$BASE"/.claude/agents/*.md "$BASE"/.claude/agents/*/AGENT.md; do
   [ -f "$f" ] || continue
@@ -77,7 +83,9 @@ for f in "$BASE"/.claude/skills/*/SKILL.md "$BASE"/.claude/agents/*.md "$BASE"/.
 done
 echo "  \"stale_files\": [$(echo "$STALE_FILES" | sed 's/, $//')],"
 
-# --- evolve 履歴 ---
+# === Section 4: evolve 履歴 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による JSONL 集計。フィールド走査と算術のみ
 HISTORY_FILE="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$HISTORY_FILE" ]; then
   # 最新 Run 番号の取得（run フィールドが整数のエントリの最大値）
@@ -109,7 +117,9 @@ echo "      \"null_entries_count\": ${PHASES_NULL_COUNT:-0}"
 echo "    }"
 echo "  },"
 
-# --- decision-log 統計 (#304: P4 可観測性拡張) ---
+# === Section 5: decision-log 統計 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による JSONL 集計。ステータス・日付フィルタのみ
 DECISION_LOG="$METRICS_DIR/decision-log.jsonl"
 if [ -f "$DECISION_LOG" ]; then
   DL_TOTAL=$(wc -l < "$DECISION_LOG" | tr -d ' ')
@@ -134,7 +144,9 @@ echo "    \"assumptions_tracked\": ${DL_ASSUMPTIONS:-0},"
 echo "    \"recent_30d\": ${DL_RECENT_30D:-0}"
 echo "  },"
 
-# --- assumption-tracker 統計 (#304: P4 可観測性拡張) ---
+# === Section 6: assumption-tracker 統計 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による JSONL 集計 + 日付算術による期限超過検出
 ASSUMPTION_LOG="$METRICS_DIR/assumptions.jsonl"
 if [ -f "$ASSUMPTION_LOG" ]; then
   AT_TOTAL=$(wc -l < "$ASSUMPTION_LOG" | tr -d ' ')
@@ -168,7 +180,9 @@ echo "    \"review_overdue\": ${AT_OVERDUE:-0},"
 echo "    \"invalidated\": ${AT_INVALIDATED:-0}"
 echo "  },"
 
-# --- judge-patterns 統計 (#304: P4 可観測性拡張) ---
+# === Section 7: judge-patterns 統計 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による failure_type 集計。パターン分類はスキーマ定義済み
 # evolve-history.jsonl の rejected[] から Judge 減点パターンを集計
 if [ -f "$HISTORY_FILE" ]; then
   JP_TOTAL=$(jq -r '.rejected[]?.failure_type // empty' "$HISTORY_FILE" 2>/dev/null | wc -l | tr -d ' ')
@@ -201,7 +215,9 @@ echo "      \"precondition_error\": ${JP_PRECONDITION:-0}"
 echo "    }"
 echo "  },"
 
-# --- metrics ログ ---
+# === Section 8: metrics ログ ===
+# TaskAutomationClass: deterministic
+# 根拠: wc -l による行数カウントのみ
 TOOL_LOG="$METRICS_DIR/tool-usage.jsonl"
 if [ -f "$TOOL_LOG" ]; then
   TOOL_CALLS=$(wc -l < "$TOOL_LOG" | tr -d ' ')
@@ -212,7 +228,9 @@ echo "  \"metrics\": {"
 echo "    \"tool_calls\": $TOOL_CALLS"
 echo "  },"
 
-# --- V1-V7 計測 ---
+# === Section 9: V1-V7 計測 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq + 算術による複合計算。閾値・重み係数は全てハードコード。判断成分なし
 V5_FILE="$METRICS_DIR/v5-approvals.jsonl"
 V7_FILE="$METRICS_DIR/v7-tasks.jsonl"
 SESSIONS_FILE="$METRICS_DIR/sessions.jsonl"
@@ -664,7 +682,9 @@ echo "    \"v6_knowledge_structure\": { \"memory_entries\": $V6_MEMORY_ENTRIES, 
 echo "    \"v7_task_design\": { \"completed\": $V7_COMPLETED, \"unique_subjects\": $V7_UNIQUE_SUBJECTS, \"teamwork_percent\": $V7_TEAMWORK_PERCENT, \"teamwork_status\": \"suppressed_single_agent\" }"
 echo "  },"
 
-# --- T7: コスト計測（ccusage） ---
+# === Section 10: T7 コスト計測（ccusage） ===
+# TaskAutomationClass: deterministic
+# 根拠: ccusage CLI 出力の JSON パース。外部ツール依存だが判断成分なし
 if command -v bunx >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
   CCUSAGE_CMD=""
   if command -v bunx >/dev/null 2>&1; then
@@ -749,7 +769,9 @@ print(json.dumps({'backfilled': updated, 'uuid_matches_available': len(uuid_cost
 fi
 echo "  \"backfill_result\": $BACKFILL_RESULT,"
 
-# --- evolve コスト効率サマリ（evolve-history.jsonl から集計） ---
+# === Section 11: evolve コスト効率サマリ ===
+# TaskAutomationClass: deterministic
+# 根拠: python3 による JSONL 集計・平均計算。算術のみ
 EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$EVOLVE_HISTORY" ]; then
   COST_STATS=$(python3 -c "
@@ -780,7 +802,9 @@ else
   echo "  \"evolve_cost_efficiency\": {\"error\": \"evolve-history.jsonl not found\"},"
 fi
 
-# --- Deferred 正規クエリ（deferred-status.json から open 項目を取得） ---
+# === Section 12: Deferred 正規クエリ ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による status フィルタのみ
 DEFERRED_FILE="$METRICS_DIR/deferred-status.json"
 if [ -f "$DEFERRED_FILE" ]; then
   DEFERRED_OPEN=$(jq -c '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .value]' "$DEFERRED_FILE" 2>/dev/null || echo "[]")
@@ -789,7 +813,9 @@ else
 fi
 echo "  \"deferred_open\": $DEFERRED_OPEN,"
 
-# --- 仮説テーブル自動集計（evolve-history.jsonl からの権威的カウント） ---
+# === Section 13: 仮説テーブル自動集計 ===
+# TaskAutomationClass: deterministic
+# 根拠: jq による JSONL 集計（H1/H4/H5 カウント）。パターンマッチは正規表現
 # H1: Verifier pass/fail 全期間合計（.phases.verifier フィールド対応エントリのみ）
 # H4: 互換性クラス別改善件数（.improvements[].compatibility）
 # H5: 有効 UUID session_id 件数（UUID v4 パターンに一致し "unknown" を除外）
@@ -848,7 +874,9 @@ echo "    \"h4_compatibility\": {\"conservative_extension\": $H4_CONSERVATIVE, \
 echo "    \"h5_valid_uuids\": $H5_VALID_UUIDS"
 echo "  },"
 
-# --- priority_bias_review: review_policy トリガー検出 ---
+# === Section 14: priority_bias_review ===
+# TaskAutomationClass: deterministic
+# 根拠: benchmark.json からの閾値比較。トリガー条件は全てハードコード
 BENCHMARK_FILE="$METRICS_DIR/benchmark.json"
 PBR_CURRENT_RUN=$MAX_RUN
 PBR_RUN_AT_DECISION=$(jq -r '.priority_bias.current_snapshot.run_at_decision // empty' "$BENCHMARK_FILE" 2>/dev/null)
@@ -905,7 +933,9 @@ echo "    \"review_needed\": $PBR_REVIEW_NEEDED,"
 echo "    \"authority\": \"T6 (human decision required)\""
 echo "  },"
 
-# --- manifest-trace 指標 ---
+# === Section 15: manifest-trace 指標 ===
+# TaskAutomationClass: deterministic
+# 根拠: manifest-trace CLI 出力のパース。外部ツール依存だが判断成分なし
 if [ -x "$BASE/manifest-trace" ]; then
   TRACE_JSON=$("$BASE/manifest-trace" json 2>/dev/null || echo "{}")
   TRACE_COVERED=$(echo "$TRACE_JSON" | jq '.summary.covered // 0' 2>/dev/null || echo "0")
@@ -963,9 +993,11 @@ fi
 # 以下のセクションは、従来 Observer Agent が手動で実行していた
 # 決定論的データ収集をスクリプト化したもの。
 # 根拠: mixed_task_decomposition (TaskClassification.lean)
+# 全セクション TaskAutomationClass: deterministic
 # ============================================================
 
-# --- GAP 1: Human Feedback History ---
+# === GAP 1: Human Feedback History ===
+# TaskAutomationClass: deterministic — jq による JSONL フィルタ
 EVOLVE_HISTORY="$METRICS_DIR/evolve-history.jsonl"
 if [ -f "$EVOLVE_HISTORY" ]; then
   HUMAN_FEEDBACK=$(jq -s -c '[.[] | select(.type=="human_feedback") | {run: .run, timestamp: .timestamp, notes: .notes}] | .[-5:]' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
@@ -974,7 +1006,8 @@ else
 fi
 echo "  \"human_feedback_recent\": $HUMAN_FEEDBACK,"
 
-# --- GAP 2: T6 Issues from GitHub ---
+# === GAP 2: T6 Issues from GitHub ===
+# TaskAutomationClass: deterministic — gh API クエリ + jq フィルタ
 if command -v gh >/dev/null 2>&1; then
   T6_ISSUES=$(gh issue list --label "T6:human-review" --state all --json number,title,state,comments --limit 20 2>/dev/null | \
     jq -c '[.[] | {number, title, state, has_comments: ((.comments // []) | length > 0), comment_count: ((.comments // []) | length)}]' 2>/dev/null || echo "[]")
@@ -991,7 +1024,8 @@ echo "    \"open_count\": $T6_OPEN,"
 echo "    \"open_with_response\": $T6_WITH_RESPONSE"
 echo "  },"
 
-# --- GAP 3: Failure Pattern Analysis (unresolved, by type and subtype) ---
+# === GAP 3: Failure Pattern Analysis ===
+# TaskAutomationClass: deterministic — jq による failure_type 集計
 if [ -f "$EVOLVE_HISTORY" ]; then
   FAILURE_BY_TYPE=$(jq -s '[.[].rejected[]? | select(.failure_type != null) | select((.resolved // false) != true) | .failure_type] | group_by(.) | map({type: .[0], count: length}) | sort_by(-.count)' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
   FAILURE_BY_SUBTYPE=$(jq -s '[.[].rejected[]? | select(.failure_subtype != null) | select((.resolved // false) != true) | {type: .failure_type, subtype: .failure_subtype}] | group_by(.subtype) | map({subtype: .[0].subtype, type: .[0].type, count: length}) | sort_by(-.count)' "$EVOLVE_HISTORY" 2>/dev/null || echo "[]")
@@ -1007,7 +1041,8 @@ echo "    \"by_type\": $FAILURE_BY_TYPE,"
 echo "    \"by_subtype\": $FAILURE_BY_SUBTYPE"
 echo "  },"
 
-# --- GAP 4: MEMORY Retirement Candidates (6+ months without update) ---
+# === GAP 4: MEMORY Retirement Candidates ===
+# TaskAutomationClass: deterministic — ファイル mtime と 180 日閾値の比較
 MEMORY_DIR_PATH=""
 for candidate in \
   "$HOME/.claude/projects/-Users-nirarin-work-agent-manifesto/memory" \
@@ -1038,7 +1073,8 @@ else
 fi
 echo "  \"memory_retirement_candidates\": $RETIREMENT_CANDIDATES,"
 
-# --- GAP 5: Structure File Currency (last update per key file) ---
+# === GAP 5: Structure File Currency ===
+# TaskAutomationClass: deterministic — git log による最終コミット日取得
 STRUCTURE_CURRENCY=$(python3 -c "
 import subprocess, json, os
 files = [
@@ -1061,7 +1097,8 @@ print(json.dumps(result))
 " 2>/dev/null || echo "[]")
 echo "  \"structure_file_currency\": $STRUCTURE_CURRENCY,"
 
-# --- GAP 6: Scope balance — meta vs substance in recent improvements (#318) ---
+# === GAP 6: Scope balance ===
+# TaskAutomationClass: deterministic — git diff-tree によるファイルパス分類 + カウント
 SCOPE_BALANCE=$(python3 -c "
 import json, subprocess, sys
 try:
@@ -1103,7 +1140,8 @@ except Exception as e:
 " 2>/dev/null || echo '{}')
 echo "  \"scope_balance\": $SCOPE_BALANCE,"
 
-# --- GAP 7: valuelessChange detection — improvements integrated but v_changes empty (#317) ---
+# === GAP 7: valuelessChange detection ===
+# TaskAutomationClass: deterministic — JSONL フィールド存在チェック + 連続ストリーク計算
 VALUELESS_CHANGE=$(python3 -c "
 import json, sys
 try:
@@ -1138,7 +1176,8 @@ except Exception as e:
 " 2>/dev/null || echo '{}')
 echo "  \"valueless_change\": $VALUELESS_CHANGE,"
 
-# --- GAP 8: Failed Test Details (cached from earlier test run) ---
+# === GAP 8: Failed Test Details ===
+# TaskAutomationClass: deterministic — キャッシュ済みテスト出力の grep フィルタ
 # TEST_FAILED is set earlier from the test run.
 # If tests failed, report the cached output. No re-run needed.
 if [ "${TEST_FAILED:-0}" -gt 0 ] 2>/dev/null; then

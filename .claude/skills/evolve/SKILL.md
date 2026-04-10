@@ -371,11 +371,35 @@ Observer の観察報告に含まれる**全ての改善候補**を evolve-histo
 
 ```json
 "observations": [
-  {"id": "obs-1", "title": "...", "priority": "high"},
-  {"id": "obs-2", "title": "...", "priority": "medium"},
+  {"id": "obs-1", "title": "...", "priority": "high", "rationale": "..."},
+  {"id": "obs-2", "title": "...", "priority": "medium", "rationale": "..."},
   ...
 ]
 ```
+
+`rationale` フィールド（任意）: Observer がこの候補を選出した根拠を記録する。
+「何のデータを見て、何と比較し、なぜ他の候補より優先したか」を含める。
+目的: 後続 Run で同一候補の再提案を防止し、却下理由を遡れるようにする
+（/research Step 1a の調査ログに相当）。
+
+### 再評価メカニズムについて（#375: Gap 4 検討結果）
+
+/research の Step 6d（後続 Sub-Issue の再評価）に相当するメカニズムは /evolve では**不要**と判定。
+
+**根拠:**
+1. /evolve の並列バッチ処理（Step 2-3）は各項目が**独立**に設計されている。
+   Hypothesizer は `PASS_LIST = []` で起動され、他の結果に依存しない
+2. ファイル衝突は Integrator（Step 4）が統合時に検出・解消する。
+   これは /research の依存グラフ走査とは異なり、コードレベルの衝突検出で十分
+3. /research は sub-issue 間に明示的な依存関係（「A の結果が B の前提を変える」）があるが、
+   /evolve の観察項目は「構造の異なる側面の独立した改善」として選定される
+
+**対比:**
+| 特性 | /research | /evolve |
+|---|---|---|
+| 項目間依存 | 明示的（依存グラフ） | 暗黙的（同一ファイルのみ） |
+| 衝突検出 | Step 6d（judgmental） | Integrator（deterministic + judgmental、分離済み） |
+| 再評価タイミング | 各 Gate 判定後 | 不要（Integrator が統合時に一括処理） |
 
 ### Step 2–3: 観察項目の並列バッチ処理（Phase 2 + Phase 3）
 
