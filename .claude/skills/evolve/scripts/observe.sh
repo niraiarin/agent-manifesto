@@ -988,6 +988,20 @@ else
   echo "  \"manifest_trace\": null,"
 fi
 
+# === Section 16: タスク分類テーブル整合性 (#364 G4) ===
+# TaskAutomationClass: deterministic
+# 根拠: 行数比較とgrep。判断成分なし
+TASK_CLASS_SCRIPT="$BASE/scripts/validate-task-classification.sh"
+if [ -x "$TASK_CLASS_SCRIPT" ]; then
+  TC_RESULT=$(bash "$TASK_CLASS_SCRIPT" 2>&1)
+  TC_EXIT=$?
+  TC_TABLE=$(echo "$TC_RESULT" | grep "分類テーブルの行数" | grep -oE '[0-9]+' || echo "0")
+  TC_CHECKLIST=$(echo "$TC_RESULT" | grep "チェックリストの行数" | grep -oE '[0-9]+' || echo "0")
+  echo "  \"task_classification\": {\"table_rows\": $TC_TABLE, \"checklist_rows\": $TC_CHECKLIST, \"valid\": $([ $TC_EXIT -eq 0 ] && echo 'true' || echo 'false')},"
+else
+  echo "  \"task_classification\": null,"
+fi
+
 # ============================================================
 # Observer 決定論的データ収集（G1 #232: judgmental→structural 移行）
 # 以下のセクションは、従来 Observer Agent が手動で実行していた

@@ -120,6 +120,31 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 - 未分離ステップ（Step 2, 3, 5.5, 6b, 6c, 6d, 7, 7.5）は成分分離の対象（`mixed_task_decomposition`）
 - judgmental タスクを LLM に委ねるのは適切（normative 層の本来の用途）
 
+### 照合チェックリスト（#364 G2: 分類の正当化マッピング）
+
+各ステップの分類を正当化する TaskClassification.lean の定理。
+独立再現: この表の各行について、定理の内容とステップの性質が整合するか検証可能。
+
+| ステップ | 分類 | 正当化する定理 | 正当化の根拠 |
+|---|---|---|---|
+| Step 1a | judgmental | `classification_is_judgmental` | 調査過程の記録は意味論的評価（Rice の定理）|
+| Step 1b | judgmental | `classification_is_judgmental` | Gap の意味論的評価は決定不能 |
+| Step 1.5 | bounded + deterministic（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | bounded: Verifier 委譲 / deterministic: 残存数は Observable |
+| Step 2 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | テンプレート構造は deterministic、内容記述は judgmental |
+| Step 3 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | テンプレート構造は deterministic、Gate 基準設計は judgmental |
+| Step 4 | deterministic | `deterministic_must_be_structural`, `observable_implies_automatable` | worktree 作成の成功条件は Observable（ディレクトリ存在） |
+| Step 5 | judgmental | `classification_is_judgmental` | 研究の本質。決定手続き不在 |
+| Step 5.5 | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 識別・分類は judgmental、チェックリストは deterministic |
+| Step 6a | bounded | `automation_enforcement_consistent` | 評価は有限時間で完了するが、正解の決定手続きはない |
+| Step 6b | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 修正内容は judgmental、残存数判定は deterministic |
+| Step 6c | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 最終判定は judgmental（T6）、Handoff 先判定は deterministic |
+| Step 6d | deterministic + judgmental（未分離） | `mixed_task_decomposition` | グラフ走査は deterministic、影響判定は judgmental |
+| Step 7 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | issue close は deterministic、サマリは judgmental |
+| Step 7.5 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | /trace 呼び出しは deterministic、要否判断は judgmental |
+
+**維持手順** (#364 G4): ステップ追加・変更時は上記テーブルも更新すること。
+整合性は `scripts/validate-task-classification.sh` で自動検証される。
+
 ## 実行手順
 
 ### Step 1: Gap Analysis
