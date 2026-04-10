@@ -6,8 +6,8 @@
 
 set -euo pipefail
 
-TOOL_INPUT="${CLAUDE_TOOL_INPUT:-}"
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // empty' 2>/dev/null || true)
+INPUT=$(cat)
+CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null || true)
 
 # git commit 以外はスキップ
 case "$CMD" in
