@@ -61,16 +61,19 @@ parse_global_opts() {
 
 # 使用する manifest ファイルのリストを返す（本体 + 外部）
 manifest_files() {
-  echo "$MANIFEST"
+  [[ -f "$MANIFEST" ]] && echo "$MANIFEST"
   [[ -n "$EXTERNAL_MANIFEST" ]] && echo "$EXTERNAL_MANIFEST"
+  true  # 少なくとも1つは check_deps で保証されている
 }
 
-# 全 manifest から成果物を統合して取得
+# 全 manifest から成果物を統合して取得（各 artifact に _manifest_dir を付与）
 merged_artifacts() {
   local result="[]"
   while IFS= read -r mfile; do
+    local mdir
+    mdir=$(cd "$(dirname "$mfile")" && pwd)
     local arts
-    arts=$(jq '[.artifacts[] | select(._comment == null)]' "$mfile" 2>/dev/null || echo "[]")
+    arts=$(jq --arg dir "$mdir" '[.artifacts[] | select(._comment == null) | . + {_manifest_dir: $dir}]' "$mfile" 2>/dev/null || echo "[]")
     result=$(echo "$result" "$arts" | jq -s '.[0] + .[1]')
   done < <(manifest_files)
   echo "$result"
@@ -113,7 +116,9 @@ die() { echo -e "${RED}ERROR: $*${NC}" >&2; exit 1; }
 
 check_deps() {
   command -v jq >/dev/null 2>&1 || die "jq が必要です: brew install jq"
-  [[ -f "$MANIFEST" ]] || die "artifact-manifest.json が見つかりません: $MANIFEST"
+  if [[ ! -f "$MANIFEST" ]] && [[ -z "$EXTERNAL_MANIFEST" ]]; then
+    die "artifact-manifest.json が見つかりません: $MANIFEST\n外部プロジェクトの場合は --manifest=<path> を指定してください"
+  fi
 }
 
 # --- パーサキャッシュ（推奨3: セッション内で1回だけ Lean をパース） ---
@@ -357,9 +362,15 @@ parse_lean_derivations() {
   echo "$result" || true
 }
 
-# 全 PropositionId のリスト
+# 全 PropositionId のリスト（全 manifest から統合、重複排除）
 all_propositions() {
-  jq -r '.propositions[]' "$MANIFEST"
+  local result=""
+  while IFS= read -r mfile; do
+    local props
+    props=$(jq -r '.propositions[]' "$mfile" 2>/dev/null || true)
+    [[ -n "$props" ]] && result+="$props"$'\n'
+  done < <(manifest_files)
+  echo "$result" | sort -u | grep -v '^$'
 }
 
 # 成果物から refs を取得（本体 + 外部 manifest）
@@ -447,7 +458,7 @@ cmd_coverage() {
   # 過剰 refs 警告（selfcheck 検査6 と同等の情報を coverage にも表示）
   local overspec_list=""
   local total_props
-  total_props=$(jq '.propositions | length' "$MANIFEST")
+  total_props=$(all_propositions | wc -l | tr -d ' ')
   local threshold=$((total_props * 80 / 100))
   while IFS='|' read -r aid ref_count; do
     if [[ "$ref_count" -ge "$threshold" ]]; then
@@ -679,7 +690,7 @@ cmd_health() {
   echo ""
 
   local total_props
-  total_props=$(jq '.propositions | length' "$MANIFEST")
+  total_props=$(all_propositions | wc -l | tr -d ' ')
   local filtered_artifacts
   filtered_artifacts=$(artifacts_jq "true")
   local total_artifacts
@@ -716,12 +727,13 @@ cmd_health() {
 
   echo -e "${CYAN}成果物ファイル存在チェック:${NC}"
   local missing=0
-  while IFS='|' read -r aid apath; do
-    if [[ ! -f "$SCRIPT_DIR/$apath" ]]; then
+  while IFS='|' read -r aid apath adir; do
+    local base_dir="${adir:-$SCRIPT_DIR}"
+    if [[ ! -f "$base_dir/$apath" ]]; then
       echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
       missing=$((missing + 1))
     fi
-  done < <(artifacts_lines '"\(.id)|\(.path)"')
+  done < <(artifacts_lines '"\(.id)|\(.path)|\(._manifest_dir // "")"')
 
   if [[ "$missing" -eq 0 ]]; then
     echo -e "  ${GREEN}全ファイル存在確認済み${NC}"
@@ -840,6 +852,20 @@ cmd_selfcheck() {
 
   local errors=0
 
+  if [[ ! -f "$MANIFEST" ]]; then
+    echo -e "${YELLOW}⚠ 本体 manifest が不在（外部 manifest のみモード）— 検査 1-8 をスキップ${NC}"
+    echo ""
+    # 検査 9（外部 manifest 検証）のみ実行
+    if [[ -n "$EXTERNAL_MANIFEST" ]]; then
+      # 検査 9 へジャンプ（下部で実行される）
+      :
+    else
+      echo -e "${GREEN}検査対象なし${NC}"
+      return 0
+    fi
+  fi
+
+  if [[ -f "$MANIFEST" ]]; then
   # --- 検査 1: 命題リスト同期 ---
   # Lean の inductive PropositionId から全バリアントを抽出し、manifest と突合
   echo -e "${CYAN}検査 1: 命題リスト同期（Lean PropositionId ↔ manifest propositions）${NC}"
@@ -1021,12 +1047,13 @@ cmd_selfcheck() {
 
   # ファイル存在（health と同じだが selfcheck に統合）
   local missing=0
-  while IFS='|' read -r aid apath; do
-    if [[ ! -f "$SCRIPT_DIR/$apath" ]]; then
+  while IFS='|' read -r aid apath adir; do
+    local base_dir="${adir:-$SCRIPT_DIR}"
+    if [[ ! -f "$base_dir/$apath" ]]; then
       echo -e "  ${RED}✗ ${aid}${NC}: $apath が存在しない"
       missing=$((missing + 1))
     fi
-  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.path)"' "$MANIFEST")
+  done < <(merged_artifacts | jq -r '.[] | "\(.id)|\(.path)|\(._manifest_dir // "")"')
 
   if [[ "$missing" -eq 0 ]]; then
     echo -e "  ${GREEN}✓ 全ファイル存在${NC}"
@@ -1222,15 +1249,32 @@ cmd_selfcheck() {
 
   echo ""
 
+  fi  # if [[ -f "$MANIFEST" ]]; 検査 1-8 の終了
+
   # --- 検査 9: 外部 manifest 検証（--manifest 指定時のみ） ---
   if [[ -n "$EXTERNAL_MANIFEST" ]]; then
     echo -e "${CYAN}検査 9: 外部 manifest 検証（${EXTERNAL_MANIFEST}）${NC}"
+
+    # lean_ids が未定義（検査 1-8 スキップ時）の場合、独立に計算
+    if [[ -z "${lean_ids:-}" ]]; then
+      if [[ -f "$ONTOLOGY" ]]; then
+        lean_ids=$(sed -n '/^inductive PropositionId/,/deriving/p' "$ONTOLOGY" | \
+          grep -o '\| [a-z][a-z0-9]*' | sed 's/| //' | tr 'a-z' 'A-Z' | sort)
+      else
+        echo -e "  ${YELLOW}⚠ Lean Ontology が不在 — 命題接地検査をスキップ${NC}"
+        lean_ids=""
+      fi
+    fi
 
     # 9a: propositions が本体の Lean と同期しているか
     local ext_props
     ext_props=$(jq -r '.propositions[]' "$EXTERNAL_MANIFEST" 2>/dev/null | sort)
     local bad_props
-    bad_props=$(comm -23 <(echo "$ext_props") <(echo "$lean_ids"))
+    if [[ -n "$lean_ids" ]]; then
+      bad_props=$(comm -23 <(echo "$ext_props") <(echo "$lean_ids"))
+    else
+      bad_props=""
+    fi
     if [[ -n "$bad_props" ]]; then
       echo -e "  ${RED}✗ 外部 manifest に Lean にない命題:${NC}"
       echo "$bad_props" | while read -r id; do echo "    - $id"; done
@@ -1243,7 +1287,11 @@ cmd_selfcheck() {
     local ext_refs
     ext_refs=$(jq -r '[.artifacts[].refs[]] | unique | .[]' "$EXTERNAL_MANIFEST" 2>/dev/null | sort)
     local bad_refs
-    bad_refs=$(comm -23 <(echo "$ext_refs") <(echo "$lean_ids"))
+    if [[ -n "$lean_ids" ]]; then
+      bad_refs=$(comm -23 <(echo "$ext_refs") <(echo "$lean_ids"))
+    else
+      bad_refs=""
+    fi
     if [[ -n "$bad_refs" ]]; then
       echo -e "  ${RED}✗ 外部 manifest の refs に Lean にない命題:${NC}"
       echo "$bad_refs" | while read -r id; do echo "    - $id"; done
@@ -1368,8 +1416,8 @@ $found"
 }
 
 # --- メイン ---
-check_deps
 parse_global_opts "$@"
+check_deps
 set -- "${REMAINING_ARGS[@]}"
 
 case "${1:-help}" in
