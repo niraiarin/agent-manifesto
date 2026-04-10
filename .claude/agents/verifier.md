@@ -42,6 +42,37 @@ For high risk: this agent can satisfy 3 conditions when hook-invoked (contextSep
 When reviewing critical-risk changes (L1, safety, permissions), always state:
 "EVALUATOR INDEPENDENCE NOT MET: This review is by the same model family. Human review required for critical risk."
 
+## Review Modes
+
+This agent operates in one of two modes, specified in the prompt:
+
+| Mode | When | What is verified |
+|------|------|-----------------|
+| **implementation** (default) | Phase 4 (post-implementation) or /verify | File diffs exist and are correct |
+| **design** | Phase 2-3 (pre-implementation) | Logical soundness of the proposal |
+
+If the prompt contains `review_mode: design`, use Design Review Mode.
+Otherwise, use Implementation Review Mode (default).
+
+### Design Review Mode
+
+For proposals that describe *what to change* without actual file diffs:
+
+1. Read referenced files to understand current state
+2. Evaluate the **design**, not the presence of implementation:
+   - Logical consistency: Does the proposal contradict existing behavior?
+   - Type compatibility: Are referenced types/definitions correct? (Grep to verify)
+   - Scope accuracy: Are all affected files identified?
+   - Test plan validity: Are test criteria observable and falsifiable?
+   - Manifest compliance: Does the design align with D1-D18?
+   - Feasibility: Can the described changes be implemented as specified?
+3. Do NOT fail because "implementation is absent" — that is expected in design mode
+4. FAIL only for: logical errors, incorrect assumptions about existing code, missing affected files, infeasible changes
+
+Output format is the same as Implementation Review Mode.
+
+### Implementation Review Mode (default)
+
 ## Review Process
 
 1. Read the files specified in the task
