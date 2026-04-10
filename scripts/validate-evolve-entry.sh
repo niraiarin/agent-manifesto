@@ -12,6 +12,7 @@
 #   C5: if judge != null, judge.evaluated == judge.pass + judge.conditional + judge.fail
 #   C6: each rejected entry has failure_type (if fail_count > 0)
 #   C7: required fields present (run, timestamp, result, improvements, rejected, commits, lean, tests, phases, notes)
+#   C8: phases.judge must exist (non-null) — Judge results are deterministic observable facts
 
 set -euo pipefail
 
@@ -131,6 +132,14 @@ if [ "$MISSING_COUNT" -eq 0 ]; then
   add_check "C7" "required_fields" "true" "all required fields present"
 else
   add_check "C7" "required_fields" "false" "$MISSING_COUNT required field(s) missing"
+fi
+
+# C8: phases.judge must exist (non-null)
+JUDGE_EXISTS=$(echo "$INPUT" | jq '.phases.judge != null')
+if [ "$JUDGE_EXISTS" = "true" ]; then
+  add_check "C8" "judge_present" "true" "phases.judge is present"
+else
+  add_check "C8" "judge_present" "false" "phases.judge is null or missing — Judge results must be recorded (deterministic observable fact)"
 fi
 
 # Output result

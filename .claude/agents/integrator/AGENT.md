@@ -134,6 +134,7 @@ judgmental フィールド（improvements, rejected, phases, v_changes, notes）
     "observer": {"findings_count": 0, "model": "sonnet"},
     "hypothesizer": {"proposals_count": 0, "model": "opus"},
     "verifier": {"pass_count": 0, "fail_count": 0, "model": "sonnet"},
+    "judge": {"evaluated": 0, "pass": 0, "conditional": 0, "fail": 0, "avg_score": 0.0},
     "integrator": {"commits_count": 0, "model": "sonnet"}
   },
   "v_changes": {},
@@ -149,7 +150,7 @@ judgmental フィールド（improvements, rejected, phases, v_changes, notes）
 # session_id 取得と記録を 1 つの Bash 呼び出しで実行（分離禁止: Run 56-59 で欠落が発生）
 SESSION_ID=$(tail -1 .claude/metrics/tool-usage.jsonl 2>/dev/null | jq -r '.session // "unknown"')
 cat >> .claude/metrics/evolve-history.jsonl << EOF
-{"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
+{"run": N, "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "session_id": "$SESSION_ID", "result": "...", "improvements": [...], "rejected": [...], "commits": [...], "lean": {...}, "tests": {...}, "phases": {"observer": {"findings_count": N}, "hypothesizer": {"proposals_count": N}, "verifier": {"pass_count": N, "fail_count": N}, "judge": {"evaluated": N, "pass": N, "conditional": 0, "fail": 0, "avg_score": X.X}, "integrator": {"commits_count": N}}, "v_changes": {...}, "notes": "..."}
 EOF
 ```
 
@@ -165,7 +166,8 @@ echo '<entry_json>' | bash scripts/validate-evolve-entry.sh
 - [ ] `len(improvements)` <= `phases.verifier.pass_count` であることを確認
 - [ ] `proposals_count` == `pass_count + fail_count` であることを確認
 - [ ] `rejected` の各エントリに `failure_type` が付与されていることを確認（SKILL.md 記録義務）
-- [ ] judge 使用時は `judge.evaluated == judge.pass + judge.conditional + judge.fail` を確認
+- [ ] **`phases.judge` は必須。** Judge の実行有無と結果は Observable な事実であり、省略不可（#321）
+- [ ] `judge.evaluated == judge.pass + judge.conditional + judge.fail` を確認
 
 **rejected.reason の記録ガイダンス:**
 - `reason` には Verifier の具体的な FAIL 理由を記録する（例: "Verifier FAIL: ファイルパス未確認（H_no_pre_verification）"）
