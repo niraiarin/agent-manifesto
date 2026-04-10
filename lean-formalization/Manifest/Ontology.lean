@@ -1068,7 +1068,7 @@ Since this formalization is an arithmetic system containing Nat, Goedel's first 
 theorem applies. That is, it is in principle impossible to enumerate all true propositions
 derivable from T1-T8 + E1-E2.
 
-PropositionId enumerates "36 propositions named by humans" and is not an enumeration of all
+PropositionId enumerates 47 propositions named by humans (T1-T8, E1-E2, P1-P6, L1-L6, D1-D18, V1-V7) and is not an enumeration of all
 propositions derivable from the system. Impact propagation via the affected function tracks
 dependencies only between named propositions and cannot detect impacts on unnamed derived
 consequences.
