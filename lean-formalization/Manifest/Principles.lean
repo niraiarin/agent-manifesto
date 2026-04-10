@@ -255,6 +255,22 @@ theorem improvement_requires_observability :
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
   no_improvement_without_feedback
 
+/-- [Derivation Card]
+    Derives from: no_process_improvement_without_feedback (T5, #316)
+    Proposition: P4 (process-level)
+    Content: Process improvement requires process-targeted observability.
+          If a process has improved, then feedback targeting that specific
+          process must have existed. This is the Level 1 (process) analog
+          of improvement_requires_observability (Level 0, structure).
+    Proof strategy: Direct application of no_process_improvement_without_feedback -/
+theorem process_improvement_requires_observability :
+  ∀ (pid : ProcessId) (w w' : World),
+    processImproved pid w w' →
+    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.target = .process pid ∧
+      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
+  no_process_improvement_without_feedback
+
 /-- P4b [theorem]: Degradation is a gradient, not a wall.
     The degradation level can take any natural number value (not binary).
     To be concretized as Observable in Phase 4. -/

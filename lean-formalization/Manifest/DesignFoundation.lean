@@ -272,6 +272,22 @@ theorem d3_observability_precedes_improvement :
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
   no_improvement_without_feedback
 
+/-- [Derivation Card]
+    Derives from: no_process_improvement_without_feedback (T5, #316)
+    Proposition: D3 (process-level)
+    Content: Process-targeted feedback must precede process improvement.
+          Observability of the process itself is a necessary precondition
+          for process improvement. This prevents "blind optimization" where
+          a process improves structures but never evaluates its own effectiveness.
+    Proof strategy: Direct application of no_process_improvement_without_feedback -/
+theorem d3_process_observability_precedes_improvement :
+  ∀ (pid : ProcessId) (w w' : World),
+    processImproved pid w w' →
+    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.target = .process pid ∧
+      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
+  no_process_improvement_without_feedback
+
 /-- Distinction of detection modes (introduced in Run 41).
     Refines the definition of "detectable": distinguishes between
     human-readable (humanReadable) and programmatically queryable (structurallyQueryable).
