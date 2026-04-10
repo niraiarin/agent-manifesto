@@ -175,6 +175,176 @@
         "PD-48",
         "PD-41"
       ]
+    },
+    {
+      "id": "CC-C11",
+      "type": "C",
+      "content": "branch 命名は skill に対応: evolve/run-N, research/NNN-topic",
+      "sourceRef": ".claude/skills/evolve/SKILL.md + .claude/skills/research/scripts/worktree.sh",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C12",
+      "type": "C",
+      "content": "PR は squash merge。1 issue = 1 commit on main",
+      "sourceRef": ".claude/skills/evolve/scripts/pr-workflow.sh",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C13",
+      "type": "C",
+      "content": "worktree は ../<repo>-research-<ISSUE> に隔離配置",
+      "sourceRef": ".claude/skills/research/scripts/worktree.sh",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C14",
+      "type": "C",
+      "content": "issue は Parent/Sub-Issue パターンで構造化",
+      "sourceRef": ".claude/skills/research/SKILL.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C15",
+      "type": "C",
+      "content": "SKILL.md 標準構造: frontmatter → @traces → body → Traceability",
+      "sourceRef": ".claude/skills/*/SKILL.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C16",
+      "type": "C",
+      "content": "Agent モデル選択: hypothesizer=opus, others=sonnet。verifier/hypothesizer=effort:high",
+      "sourceRef": ".claude/agents/hypothesizer.md + .claude/agents/verifier.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90
+    },
+    {
+      "id": "CC-C17",
+      "type": "C",
+      "content": "TaskClassification (deterministic/judgmental) を各スキルステップに付与",
+      "sourceRef": "lean-formalization/Manifest/TaskClassification.lean",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C18",
+      "type": "C",
+      "content": "hook 変更は /tmp スクリプト経由で人間に委譲",
+      "sourceRef": "~/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/feedback_hook_human_setup.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C19",
+      "type": "C",
+      "content": "critical リスクの変更は人間レビュー必須",
+      "sourceRef": ".claude/skills/verify/SKILL.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C20",
+      "type": "C",
+      "content": "セッション間永続化: MEMORY.md, evolve-history.jsonl, issue コメント",
+      "sourceRef": "~/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md + .claude/metrics/evolve-history.jsonl",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-H16",
+      "type": "H",
+      "content": "gh CLI は sandbox excludedCommands で例外扱い",
+      "sourceRef": ".claude/settings.json sandbox.excludedCommands",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 60,
+      "refutation": "sandbox が excludedCommands 機能を廃止した場合"
+    },
+    {
+      "id": "CC-H17",
+      "type": "H",
+      "content": "マージ済み evolve/* branch は PR マージ時に自動削除。research/* は T6 で人間判断",
+      "sourceRef": ".claude/skills/evolve/scripts/pr-workflow.sh + .claude/skills/research/scripts/worktree.sh",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90,
+      "refutation": "pr-workflow.sh が --delete-branch を使わなくなった場合"
+    },
+    {
+      "id": "CC-H18",
+      "type": "H",
+      "content": "gh auth status が全 gh コマンドの前提条件",
+      "sourceRef": ".claude/settings.local.json",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 60,
+      "refutation": "gh が認証なしで公開リポジトリ操作を許可する場合"
+    },
+    {
+      "id": "CC-H19",
+      "type": "H",
+      "content": "hook stdin: INPUT=$(cat), .tool_input.* でアクセス。jq 必須",
+      "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 60,
+      "refutation": "Claude Code が hook stdin フォーマットを変更した場合"
+    },
+    {
+      "id": "CC-H20",
+      "type": "H",
+      "content": "hook state file: /tmp/${hook}-warned-${SESSION} で段階的応答",
+      "sourceRef": ".claude/hooks/p2-verify-on-commit.sh + p3-compatibility-check.sh + p3-axiom-evidence-check.sh",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90,
+      "refutation": "hook が stateless 設計に変更、または SESSION 変数が廃止された場合"
+    },
+    {
+      "id": "CC-H21",
+      "type": "H",
+      "content": "PreToolUse Edit は変更後ファイルを読めない（構造的強制の境界）",
+      "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 60,
+      "refutation": "Claude Code が Edit 結果を hook に渡す変更があった場合"
+    },
+    {
+      "id": "CC-H22",
+      "type": "H",
+      "content": "UserPromptSubmit/TaskCompleted は利用可能な hook イベント（CLAUDE.md 未記載）",
+      "sourceRef": ".claude/settings.json hooks",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 60,
+      "refutation": "これらのイベント種別が廃止された場合"
+    },
+    {
+      "id": "CC-H23",
+      "type": "H",
+      "content": "Agent 間は結果のみ渡す（framingIndependent）。Worker の意図説明を含めない",
+      "sourceRef": ".claude/skills/verify/SKILL.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90,
+      "refutation": "verify/SKILL.md が意図共有を許可する変更があった場合"
+    },
+    {
+      "id": "CC-H24",
+      "type": "H",
+      "content": "skill 間 I/O 契約が dependency-graph.yaml で宣言されている",
+      "sourceRef": ".claude/skills/dependency-graph.yaml",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90,
+      "refutation": "dependency-graph.yaml が廃止、またはスキル間契約が非構造的に戻った場合"
+    },
+    {
+      "id": "CC-H25",
+      "type": "H",
+      "content": "Judge: addressable/unaddressable 分類 + 最大 2 回の減点解消ループ",
+      "sourceRef": ".claude/agents/judge.md",
+      "lastVerified": "2026-04-10",
+      "reviewInterval": 90,
+      "refutation": "judge.md のプロセスが変更された場合"
     }
   ],
   "axiom_to_config": [
@@ -348,6 +518,180 @@
         "lean-formalization/Manifest/DesignFoundation.lean"
       ],
       "dependsOnAssumptions": []
+    },
+    {
+      "axiomId": "VCS1",
+      "designPrinciple": "D10",
+      "claim": "branch 命名が skill 名前空間を符号化",
+      "implements": [
+        ".claude/skills/evolve/SKILL.md",
+        ".claude/skills/research/scripts/worktree.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C11"]
+    },
+    {
+      "axiomId": "VCS2",
+      "designPrinciple": "P3",
+      "claim": "squash merge で原子的変更を保証",
+      "implements": [
+        ".claude/skills/evolve/scripts/pr-workflow.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C12"]
+    },
+    {
+      "axiomId": "VCS3",
+      "designPrinciple": "P2",
+      "claim": "worktree による物理的隔離",
+      "implements": [
+        ".claude/skills/research/scripts/worktree.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C13"]
+    },
+    {
+      "axiomId": "VCS4",
+      "designPrinciple": "D9",
+      "claim": "branch 種別ごとの cleanup 方針",
+      "implements": [
+        ".claude/skills/evolve/scripts/pr-workflow.sh",
+        ".claude/skills/research/scripts/worktree.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H17"]
+    },
+    {
+      "axiomId": "VCS5",
+      "designPrinciple": null,
+      "claim": "VCS 操作は認証が前提条件（運用上の外部依存、特定 L-boundary に非対応）",
+      "implements": [],
+      "dependsOnAssumptions": ["CC-H18"],
+      "note": "ドキュメント未記載の暗黙の前提条件"
+    },
+    {
+      "axiomId": "ID1",
+      "designPrinciple": "D1",
+      "claim": "hook stdin は INPUT=$(cat) + jq",
+      "implements": [
+        ".claude/hooks/l1-safety-check.sh",
+        ".claude/hooks/l1-file-guard.sh",
+        ".claude/hooks/p2-verify-on-commit.sh",
+        ".claude/hooks/p3-compatibility-check.sh",
+        ".claude/hooks/p3-axiom-evidence-check.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H19"]
+    },
+    {
+      "axiomId": "ID2",
+      "designPrinciple": "D1",
+      "claim": "state file パターンによる段階的応答",
+      "implements": [
+        ".claude/hooks/p2-verify-on-commit.sh",
+        ".claude/hooks/p3-compatibility-check.sh",
+        ".claude/hooks/p3-axiom-evidence-check.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H20"]
+    },
+    {
+      "axiomId": "ID3",
+      "designPrinciple": "D1",
+      "claim": "PreToolUse Edit の構造的強制境界",
+      "implements": [
+        ".claude/hooks/l1-file-guard.sh",
+        ".claude/hooks/hallucination-check.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H21"]
+    },
+    {
+      "axiomId": "ID4",
+      "designPrinciple": "D10",
+      "claim": "SKILL.md の標準セクション構造",
+      "implements": [
+        ".claude/skills/*/SKILL.md"
+      ],
+      "dependsOnAssumptions": ["CC-C15"]
+    },
+    {
+      "axiomId": "ID5",
+      "designPrinciple": "D3",
+      "claim": "Agent モデル選択（creative=opus, structured=sonnet）",
+      "implements": [
+        ".claude/agents/hypothesizer.md",
+        ".claude/agents/verifier.md",
+        ".claude/agents/observer.md",
+        ".claude/agents/integrator.md"
+      ],
+      "dependsOnAssumptions": ["CC-C16"]
+    },
+    {
+      "axiomId": "ID6",
+      "designPrinciple": "D12",
+      "claim": "deterministic タスクはスクリプト化",
+      "implements": [
+        "lean-formalization/Manifest/TaskClassification.lean"
+      ],
+      "dependsOnAssumptions": ["CC-C17"]
+    },
+    {
+      "axiomId": "ID7",
+      "designPrinciple": "D15",
+      "claim": "全 5 hook イベント種別が利用可能",
+      "implements": [
+        ".claude/settings.json"
+      ],
+      "dependsOnAssumptions": ["CC-H22"]
+    },
+    {
+      "axiomId": "HAI1",
+      "designPrinciple": "T6",
+      "claim": "自己変更制限時の全解決方法が T6 を満たす",
+      "implements": [],
+      "dependsOnAssumptions": ["CC-C18"],
+      "note": "hook 変更は人間委譲パターンで実現"
+    },
+    {
+      "axiomId": "HAI2",
+      "designPrinciple": "D2",
+      "claim": "critical リスクは人間レビュー必須",
+      "implements": [
+        ".claude/skills/verify/SKILL.md"
+      ],
+      "dependsOnAssumptions": ["CC-C19"]
+    },
+    {
+      "axiomId": "HAI3",
+      "designPrinciple": "T1",
+      "claim": "永続化媒体の階層構造（memory < lean）",
+      "implements": [
+        "~/.claude/projects/*/memory/MEMORY.md",
+        ".claude/metrics/evolve-history.jsonl"
+      ],
+      "dependsOnAssumptions": ["CC-C20"]
+    },
+    {
+      "axiomId": "HAI4",
+      "designPrinciple": "P2",
+      "claim": "Agent 間は結果のみ共有（framingIndependent）",
+      "implements": [
+        ".claude/skills/verify/SKILL.md",
+        ".claude/agents/verifier.md"
+      ],
+      "dependsOnAssumptions": ["CC-H23"]
+    },
+    {
+      "axiomId": "HAI5",
+      "designPrinciple": "D5",
+      "claim": "skill 間 I/O 契約が dependency-graph.yaml で宣言",
+      "implements": [
+        ".claude/skills/dependency-graph.yaml"
+      ],
+      "dependsOnAssumptions": ["CC-H24"]
+    },
+    {
+      "axiomId": "HAI6",
+      "designPrinciple": "P3",
+      "claim": "Judge 減点解消は最大 2 回ループ",
+      "implements": [
+        ".claude/agents/judge.md"
+      ],
+      "dependsOnAssumptions": ["CC-H25"]
     }
   ],
   "config_to_axiom": [

@@ -387,13 +387,307 @@ def cc_h15 : Assumption := {
 }
 
 -- ============================================================
+-- C/H: #399 バージョン管理と協調開発
+-- ============================================================
+
+/-- CC-C11: branch 命名は skill 名に対応する慣習。
+    evolve/run-N, research/NNN-topic。D10（構造的永続性）の操作インスタンス。 -/
+def cc_c11 : Assumption := {
+  id := "CC-C11"
+  source := .humanDecision 1 "branch-naming" "2026-04-10"
+  content := "branch 命名は skill に対応: evolve/run-{N} は /evolve、research/{issue}-{topic} は /research。skill 名が VCS 名前空間に符号化される。"
+  validity := some {
+    sourceRef := ".claude/skills/evolve/SKILL.md + .claude/skills/research/scripts/worktree.sh"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C12: PR は squash merge。1 issue = 1 commit on main。
+    P3（学習の統治）の互換性分類と組み合わせて原子的な変更履歴を維持する。 -/
+def cc_c12 : Assumption := {
+  id := "CC-C12"
+  source := .humanDecision 1 "merge-strategy" "2026-04-10"
+  content := "PR は squash merge (gh pr merge --squash --delete-branch)。main 上で 1 issue = 1 commit。P3 互換性分類がコミットメッセージに含まれる。"
+  validity := some {
+    sourceRef := ".claude/skills/evolve/scripts/pr-workflow.sh"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C13: worktree は親ディレクトリに隔離配置。
+    P2（認知的関心の分離）の物理的実現。 -/
+def cc_c13 : Assumption := {
+  id := "CC-C13"
+  source := .humanDecision 1 "worktree-isolation" "2026-04-10"
+  content := "worktree は ../<repo>-research-<ISSUE> に配置。メインリポジトリと物理的に分離し、P2 の認知的関心の分離を VCS レベルで実現する。"
+  validity := some {
+    sourceRef := ".claude/skills/research/scripts/worktree.sh"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C14: issue は Parent/Sub-Issue パターンで構造化。
+    /research の Gate 付きリサーチで使用。 -/
+def cc_c14 : Assumption := {
+  id := "CC-C14"
+  source := .humanDecision 1 "issue-structure" "2026-04-10"
+  content := "issue は Parent/Sub-Issue パターン。Parent issue が研究テーマ、Sub-issue が個別 Gate を持つ。マークダウンテンプレートで構造化。"
+  validity := some {
+    sourceRef := ".claude/skills/research/SKILL.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+-- ============================================================
+-- C/H: #400 エージェント実行基盤と指示設計
+-- ============================================================
+
+/-- CC-C15: SKILL.md の標準構造。
+    frontmatter → @traces → 本文 → Traceability セクション。D10 のテンプレート。 -/
+def cc_c15 : Assumption := {
+  id := "CC-C15"
+  source := .humanDecision 1 "skill-template" "2026-04-10"
+  content := "SKILL.md は標準構造に従う: YAML frontmatter (name, description, dependencies, agents) → <!-- @traces --> アノテーション → 本文 → Traceability セクション。全 12 スキルがこの慣習に従う。"
+  validity := some {
+    sourceRef := ".claude/skills/*/SKILL.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C16: Agent モデル選択基準。
+    hypothesizer=opus（創造的推論）、observer/verifier/integrator=sonnet（効率重視）。 -/
+def cc_c16 : Assumption := {
+  id := "CC-C16"
+  source := .humanDecision 1 "agent-model-selection" "2026-04-10"
+  content := "Agent モデル選択: hypothesizer=opus (創造的推論が必要)、observer/verifier/integrator=sonnet (構造化タスク、効率重視)。verifier と hypothesizer は effort: high。"
+  validity := some {
+    sourceRef := ".claude/agents/hypothesizer.md + .claude/agents/verifier.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-C17: TaskClassification (deterministic/judgmental) を各スキルステップに付与。
+    D12（制約充足タスク設計）の操作インスタンス。 -/
+def cc_c17 : Assumption := {
+  id := "CC-C17"
+  source := .humanDecision 1 "task-classification-per-step" "2026-04-10"
+  content := "各スキルの各ステップに TaskClassification (deterministic/bounded/judgmental) を付与する。deterministic はスクリプト化、judgmental は LLM/人間が担当。mixed_task_decomposition で分離する。"
+  validity := some {
+    sourceRef := "lean-formalization/Manifest/TaskClassification.lean"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-H16: gh CLI は sandbox の excludedCommands で外部通信が許可される。
+    sandbox 有効時でも gh コマンドは実行可能。 -/
+def cc_h16 : Assumption := {
+  id := "CC-H16"
+  source := .llmInference
+    ["CC-C1"]
+    "sandbox が excludedCommands 機能を廃止した場合に反証される"
+  content := "gh CLI は sandbox の excludedCommands: [\"gh *\"] で例外扱い。sandbox 有効時でも GitHub API への通信が許可される。settings.json で設定。"
+  validity := some {
+    sourceRef := ".claude/settings.json sandbox.excludedCommands"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H17: マージ済み evolve/* branch は PR マージ時に自動削除。
+    research/* branch は T6 により人間判断で削除。 -/
+def cc_h17 : Assumption := {
+  id := "CC-H17"
+  source := .llmInference
+    ["CC-C12"]
+    "pr-workflow.sh が --delete-branch を使わなくなった場合に反証される"
+  content := "evolve/* branch は gh pr merge --delete-branch で自動削除。research/* branch は worktree.sh の cleanup で T6（人間判断）に委ねられる。cleanup ポリシーが branch 種別で異なる。"
+  validity := some {
+    sourceRef := ".claude/skills/evolve/scripts/pr-workflow.sh + .claude/skills/research/scripts/worktree.sh"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H18: gh auth status が全 gh コマンドの前提条件。
+    未認証時は全 GitHub 操作が失敗する。 -/
+def cc_h18 : Assumption := {
+  id := "CC-H18"
+  source := .llmInference
+    ["CC-H16"]
+    "gh が認証なしで公開リポジトリ操作を許可する変更があった場合に反証される"
+  content := "gh CLI は gh auth login/status で認証済みであることが前提。settings.local.json で Bash(gh auth:*) を allow 設定。新環境セットアップ時に必要だがドキュメント未記載。"
+  validity := some {
+    sourceRef := ".claude/settings.local.json"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H19: hook stdin 仕様: INPUT=$(cat) で JSON を受け取り、
+    .tool_input.* で内容にアクセス。全 hook で統一パターン。 -/
+def cc_h19 : Assumption := {
+  id := "CC-H19"
+  source := .llmInference
+    ["CC-H1"]
+    "Claude Code が hook stdin のフォーマットを変更した場合に反証される"
+  content := "hook は stdin から JSON を受け取る (INPUT=$(cat))。tool_input フィールドでツールの引数にアクセス。session_id でセッション識別。jq が必須の外部依存。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/hooks"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H20: hook state file パターン: /tmp/${hook}-warned-${SESSION} で段階的応答。
+    1 回目は警告（exit 0）、2 回目以降はブロック（exit 2）。 -/
+def cc_h20 : Assumption := {
+  id := "CC-H20"
+  source := .llmInference
+    ["CC-H1", "CC-H19"]
+    "hook が stateless な設計に変更された場合、または SESSION 変数が廃止された場合に反証される"
+  content := "p2-verify-on-commit, p3-compatibility-check, p3-axiom-evidence-check の 3 hook が /tmp/${name}-warned-${SESSION} パターンを使用。初回は touch + 警告、次回は -f チェック + ブロック。セッション終了で自動クリア。"
+  validity := some {
+    sourceRef := ".claude/hooks/p2-verify-on-commit.sh + p3-compatibility-check.sh + p3-axiom-evidence-check.sh"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H21: PreToolUse Edit は変更後のファイル内容を読めない。
+    hook が見られるのは tool_input.new_string（置換文字列）のみ。 -/
+def cc_h21 : Assumption := {
+  id := "CC-H21"
+  source := .llmInference
+    ["CC-H1"]
+    "Claude Code が PreToolUse Edit に変更後ファイル内容を含めるようになった場合に反証される"
+  content := "PreToolUse Edit hook は tool_input.file_path, old_string, new_string を受け取る。変更後のファイル全体は見えないため、「Edit の結果がファイルを壊すか」は判定不可。D1 の構造的強制の境界。"
+  validity := some {
+    sourceRef := "https://docs.anthropic.com/en/docs/claude-code/hooks"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+/-- CC-H22: UserPromptSubmit と TaskCompleted は利用可能な hook イベント。
+    CLAUDE.md の Hook セクションに記載漏れ。V5/V7 計測基盤。 -/
+def cc_h22 : Assumption := {
+  id := "CC-H22"
+  source := .llmInference
+    ["CC-H1"]
+    "これらのイベント種別が廃止された場合に反証される"
+  content := "UserPromptSubmit (p4-v5-approval-tracker.sh) と TaskCompleted (p4-v7-task-tracker.sh) は有効な hook イベント。settings.json で定義済みだが CLAUDE.md の Hook セクションに未記載。"
+  validity := some {
+    sourceRef := ".claude/settings.json hooks"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 60
+  }
+}
+
+-- ============================================================
+-- C/H: #405 エージェント・人間の相互作用
+-- ============================================================
+
+/-- CC-C18: hook 変更は /tmp スクリプト経由で人間に委譲する。
+    T6（人間の最終決定権）+ D1（自己保護）の操作インスタンス。 -/
+def cc_c18 : Assumption := {
+  id := "CC-C18"
+  source := .humanDecision 1 "hook-delegation-to-human" "2026-04-10"
+  content := "hook ファイルの変更は L1 自己保護でエージェントが直接編集不可。/tmp/setup-*.sh にスクリプトを生成し、人間に実行を依頼する。T6 と D1 の組み合わせ。"
+  validity := some {
+    sourceRef := "~/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/feedback_hook_human_setup.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C19: critical リスクの変更は人間レビュー必須。
+    CC6（4/4 独立性条件未達）から導かれる運用要件。 -/
+def cc_c19 : Assumption := {
+  id := "CC-C19"
+  source := .humanDecision 1 "critical-risk-human-review" "2026-04-10"
+  content := "critical リスクの変更は人間レビュー必須。CC subagent は 3/4 独立性条件のみ（evaluatorIndependent=false）のため、critical には不十分。verify/SKILL.md で明記。"
+  validity := some {
+    sourceRef := ".claude/skills/verify/SKILL.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-C20: セッション間の情報永続化は 3 媒体で行う。
+    T1（セッション有界性）→ T2（構造永続性）の橋渡し。 -/
+def cc_c20 : Assumption := {
+  id := "CC-C20"
+  source := .humanDecision 1 "session-persistence-media" "2026-04-10"
+  content := "セッション間の情報永続化: (1) MEMORY.md — ユーザー/フィードバック/プロジェクト知識、(2) evolve-history.jsonl — /evolve の実行履歴、(3) GitHub issue コメント — 研究の経緯と判断根拠。各媒体の使い分けは情報の種類と寿命に基づく。"
+  validity := some {
+    sourceRef := "~/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/MEMORY.md + .claude/metrics/evolve-history.jsonl"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 180
+  }
+}
+
+/-- CC-H23: Agent 間の情報受け渡しは結果のみ（意図説明なし）。
+    P2 の framingIndependent を実現。 -/
+def cc_h23 : Assumption := {
+  id := "CC-H23"
+  source := .llmInference
+    ["CC-H2"]
+    "verify/SKILL.md が Worker の意図共有を許可する変更があった場合に反証される"
+  content := "Verifier → Worker 間は結果のみ渡す。Worker が『何が正しいか』を Verifier に伝えない (framingIndependent)。verify/SKILL.md で明記: 「Worker の意図説明を含めない」。"
+  validity := some {
+    sourceRef := ".claude/skills/verify/SKILL.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H24: skill 間の入出力契約が dependency-graph.yaml で宣言されている。
+    例: /research の Gap Analysis → /spec-driven-workflow の Phase 1 入力。 -/
+def cc_h24 : Assumption := {
+  id := "CC-H24"
+  source := .llmInference
+    ["CC-C5"]
+    "dependency-graph.yaml が廃止、またはスキル間契約が非構造的に戻った場合に反証される"
+  content := "skill 間の入出力契約は dependency-graph.yaml の invoked_by/expected_output で宣言。/research → /spec-driven-workflow、/verify → /evolve 等。双方のスキルで相互参照。"
+  validity := some {
+    sourceRef := ".claude/skills/dependency-graph.yaml"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+/-- CC-H25: Judge の addressable/unaddressable 分類と最大 2 回の減点解消ループ。
+    P3（学習の統治）の評価プロセス実装。 -/
+def cc_h25 : Assumption := {
+  id := "CC-H25"
+  source := .llmInference
+    ["CC-C3"]
+    "judge.md のプロセスが変更された場合に反証される"
+  content := "Judge は減点を addressable（現スコープで対処可能）と unaddressable（構造的限界）に分類。addressable は修正→再判定を最大 2 回ループ。2 回で解消しない場合はプロセス問題として人間に報告。"
+  validity := some {
+    sourceRef := ".claude/agents/judge.md + ~/.claude/projects/-Users-nirarin-work-agent-manifesto/memory/feedback_judge_deductions.md"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
+-- ============================================================
 -- 仮定の一覧
 -- ============================================================
 
 /-- Claude Code インスタンスの全仮定。 -/
 def allAssumptions : List Assumption :=
   [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8, cc_c9, cc_c10,
+   cc_c11, cc_c12, cc_c13, cc_c14, cc_c15, cc_c16, cc_c17, cc_c18, cc_c19, cc_c20,
    cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7,
-   cc_h8, cc_h9, cc_h10, cc_h11, cc_h12, cc_h13, cc_h14, cc_h15]
+   cc_h8, cc_h9, cc_h10, cc_h11, cc_h12, cc_h13, cc_h14, cc_h15,
+   cc_h16, cc_h17, cc_h18, cc_h19, cc_h20, cc_h21, cc_h22, cc_h23, cc_h24, cc_h25]
 
 end Manifest.Models.Instances.ClaudeCode
