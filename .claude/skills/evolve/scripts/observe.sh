@@ -1103,7 +1103,42 @@ except Exception as e:
 " 2>/dev/null || echo '{}')
 echo "  \"scope_balance\": $SCOPE_BALANCE,"
 
-# --- GAP 7: Failed Test Details (cached from earlier test run) ---
+# --- GAP 7: valuelessChange detection — improvements integrated but v_changes empty (#317) ---
+VALUELESS_CHANGE=$(python3 -c "
+import json, sys
+try:
+    history = open('$HISTORY_FILE').readlines()
+    recent = [json.loads(l) for l in history[-10:] if l.strip()]
+    consecutive_empty = 0
+    max_consecutive = 0
+    for entry in reversed(recent):
+        v = entry.get('v_changes', {})
+        has_improvements = len(entry.get('improvements', [])) > 0
+        if has_improvements and (v == {} or v is None):
+            consecutive_empty += 1
+            max_consecutive = max(max_consecutive, consecutive_empty)
+        else:
+            consecutive_empty = 0
+    # Current streak from most recent
+    current_streak = 0
+    for entry in reversed(recent):
+        v = entry.get('v_changes', {})
+        has_improvements = len(entry.get('improvements', [])) > 0
+        if has_improvements and (v == {} or v is None):
+            current_streak += 1
+        else:
+            break
+    print(json.dumps({
+        'current_streak': current_streak,
+        'max_streak_in_last_10': max_consecutive,
+        'halt_recommended': current_streak >= 3
+    }))
+except Exception as e:
+    print(json.dumps({'error': str(e)}))
+" 2>/dev/null || echo '{}')
+echo "  \"valueless_change\": $VALUELESS_CHANGE,"
+
+# --- GAP 8: Failed Test Details (cached from earlier test run) ---
 # TEST_FAILED is set earlier from the test run.
 # If tests failed, report the cached output. No re-run needed.
 if [ "${TEST_FAILED:-0}" -gt 0 ] 2>/dev/null; then
