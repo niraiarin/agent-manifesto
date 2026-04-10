@@ -96,11 +96,11 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 ## 参照実装 — Claude Code 上の運用ワークフロー
 
-理論を Claude Code 上で実際に運用するための構成。12 スキル、17 フック、6 エージェント、391 テスト。
+理論を Claude Code 上で実際に運用するための構成。12 スキル、18 フック、6 エージェント、393 テスト。
 
 ### スキル依存グラフ
 
-12 スキル間の呼び出し関係。実線 = hard dependency、破線 = soft (条件付き)。
+12 スキル間の呼び出し関係（26 edges）。実線 = hard dependency、破線 = soft (条件付き)。
 `scripts/generate-skill-mermaid.sh` で `dependency-graph.yaml` から自動生成。
 
 ```mermaid
@@ -113,6 +113,7 @@ graph LR
   evolve["/evolve"] --> formal_derivation["/formal-derivation"]
   evolve["/evolve"] -.-> adjust_action_space["/adjust-action-space"]
   evolve["/evolve"] -.-> research["/research"]
+  evolve["/evolve"] -.-> trace["/trace"]
   formal_derivation["/formal-derivation"] --> verify["/verify"]
   generate_plugin["/generate-plugin"] --> research["/research"]
   generate_plugin["/generate-plugin"] --> instantiate_model["/instantiate-model"]
@@ -156,7 +157,9 @@ graph LR
   │  Observer ──→ Hypothesizer ──→ Verifier ──→ Judge ──→ Integrator│
   │    (P4)          (P3)           (P2)       (P3)      (P3)     │
   │  V1-V7計測    改善案設計      独立検証    目標整合性  統合+コミット│
-  │  候補列挙     互換性分類      PASS/FAIL   C1-C5評価  退役処理   │
+  │  候補列挙     互換性分類      PASS/FAIL   C1-C5評価  ↓退役処理  │
+  │                                                    Traceability│
+  │                                                    検証 (/trace)│
   └───────────────────────────────────────────────────────────────┘
 
   ┌───────────────────────────────────────────────────────────────┐
@@ -228,6 +231,7 @@ graph LR
 |--------|-----------|------|
 | `p4-metrics-collector.sh` | PostToolUse (async) | 全ツール使用を tool-usage.jsonl に記録 |
 | `p4-manifest-refs-check.sh` | PreToolUse: Bash (git commit) | artifact-manifest.json の参照整合性を検証 |
+| `p4-traces-integrity-check.sh` | PreToolUse: Edit/Write | @traces ↔ refs 不一致をブロック |
 | `p4-temporal-tracker.sh` | PreToolUse: Bash | タイムスタンプのドリフトを検出 |
 | `p4-sync-counts-check.sh` | PreToolUse: Bash (git commit) | Lean/ドキュメントのカウント同期を検証 |
 | `p4-gate-logger.sh` | SessionStart | セッション開始時の V1–V7 ベースラインを記録 |
@@ -267,8 +271,22 @@ graph LR
 | V3 | 出力品質 | テスト/コミット成功率 | L1, L4 |
 | V4 | ゲート通過率 | L1 フック通過率 | L6, L4 |
 | V5 | 提案精度 | 承認/却下率 | L4, L6 |
-| V6 | 知識構造品質 | MEMORY エントリ数 + 鮮度 | L2 |
+| V6 | 知識構造品質 | artifact-manifest カバレッジ + refs 本文言及率 + MEMORY 鮮度 | L2 |
 | V7 | タスク設計効率 | タスク完了率/リソース比 | L3, L6 |
+
+### トレーサビリティ 4+層モデル
+
+全成果物の命題への対応を 5 つの層で検証する。
+
+| 層 | 検証内容 | テスト / ツール | 基準値 |
+|----|---------|---------------|--------|
+| 1. 構造整合 | selfcheck (命題一致、ファイル存在) | `manifest-trace health` | PASS |
+| 2. カバレッジ | 全 47 命題に成果物が存在 | `manifest-trace coverage` | 47/47 |
+| 3. 根拠完全性 | Axiom Card + Derivation Card | `test-axiom-card-coverage.sh` | 47/47 |
+| 4. @traces 一致 | @traces ヘッダ ↔ refs 完全一致 | `test-refs-integrity.sh` + BLOCKING hook | 39/39 |
+| 4+. 本文言及 | refs の命題が本文で根拠説明 | `test-refs-body-coverage.sh` | 39/39 |
+
+命題リストは `scripts/list-propositions.sh` で Ontology.lean から動的取得（SSOT）。
 
 ### D1 強制の三層構造
 
@@ -302,7 +320,7 @@ graph LR
 │       ├── EpistemicLayer.lean           #   認識論的層
 │       ├── Workflow.lean                 #   P3 学習ライフサイクル
 │       └── Evolution.lean               #   互換性代数
-├── tests/                                # 受入テスト (391 scenarios, Phase 1-5)
+├── tests/                                # 受入テスト (393 scenarios, Phase 1-5)
 │   └── trace-map.json                    #   テスト→命題トレーサビリティマッピング
 ├── .claude/
 │   ├── skills/                           #   12 スキル (上記参照)
@@ -315,6 +333,8 @@ graph LR
 ├── archive/                              # 検証済み歴史的成果物
 ├── scripts/                              # 自動化スクリプト
 │   ├── trace-coverage.sh                 #   テスト→命題カバレッジレポート
+│   ├── list-propositions.sh              #   Ontology.lean から命題ID動的抽出 (SSOT)
+│   ├── detect-refs-body-violations.sh    #   refs 本文言及違反検出
 │   ├── check-lean-imports.sh             #   Lean import 整合性チェック
 │   ├── sync-counts.sh                    #   定理/公理カウント同期
 │   ├── generate-skill-depgraph.sh        #   スキル依存グラフ YAML 生成
@@ -335,7 +355,7 @@ graph LR
 ## テスト
 
 ```bash
-bash tests/test-all.sh    # 全 391 受入テスト (Phase 1-5)
+bash tests/test-all.sh    # 全 393 受入テスト (Phase 1-5)
 ```
 
 | Phase | 対象 | 内容 |
@@ -344,7 +364,7 @@ bash tests/test-all.sh    # 全 391 受入テスト (Phase 1-5)
 | 2 | P2 検証 | Verifier エージェント、検証スキル、コミットゲート |
 | 3 | P4 可観測 | メトリクス収集、V1–V7 計測インフラ、ドリフト検出 |
 | 4 | P3 統治 | 互換性分類、知識ライフサイクル、構造永続性 |
-| 5 | 構造品質 | 公理品質、依存グラフ、evolve 構造、スクリプト整合性 |
+| 5 | 構造品質 | 公理品質、依存グラフ、evolve 構造、トレーサビリティ 4+層、スクリプト整合性 |
 
 ## ライセンス
 
