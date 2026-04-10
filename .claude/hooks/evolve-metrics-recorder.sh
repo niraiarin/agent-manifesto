@@ -26,3 +26,6 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   fi
 fi
 exit 0
+
+# Traceability:
+# P4: 可観測性 — /evolve の各フェーズ結果を evolve-history.jsonl に自動記録 # D3: 可観測性先行 — 改善の成果を計測可能にする基盤 # D9: 自己適用 — /evolve 自身のメトリクスを記録し、スキル改善の入力にする

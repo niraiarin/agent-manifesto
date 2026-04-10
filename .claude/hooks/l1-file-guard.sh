@@ -51,3 +51,6 @@ if echo "$FILE_PATH" | grep -qE '\.claude/(hooks|settings)'; then
 fi
 
 exit 0
+
+# Traceability:
+# T1: セッション有界性 — テスト改竄・秘密ファイルの書き込みを阻止し、セッション間の構造整合性を保護

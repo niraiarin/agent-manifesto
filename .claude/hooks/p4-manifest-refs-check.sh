@@ -70,3 +70,6 @@ if [ -n "$ERRORS" ]; then
 fi
 
 exit 0
+
+# Traceability:
+# D1: 構造的強制 — artifact-manifest.json の refs が ontology の命題に存在するか自動検証

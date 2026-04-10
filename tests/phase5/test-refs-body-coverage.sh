@@ -26,7 +26,7 @@ while IFS= read -r entry; do
   full_path="$BASE/$path"
   [ -f "$full_path" ] || continue
 
-  BODY=$(grep -v '@traces' "$full_path" 2>/dev/null || true)
+  BODY=$(grep -v '^<!-- @traces\|^# @traces' "$full_path" 2>/dev/null || true)
 
   ALL_MENTIONED=true
   while IFS= read -r ref; do
@@ -52,8 +52,8 @@ echo "全 refs 言及あり:   $WITH_BODY"
 echo "未言及あり:         $WITHOUT_BODY (XFAIL)"
 
 # RB.1: 本文言及カバレッジ回帰検出
-# 基準値: 4 (2026-04-10 時点 — metrics, design-implementation-plan, p3-axiom-evidence-check, l1-safety)
-BASELINE=4
+# 基準値: 39 (2026-04-10 時点 — 全 traceable artifact に Traceability セクション追加済み)
+BASELINE=39
 echo ""
 echo -n "  RB.1: 本文言及カバレッジ回帰なし (>= $BASELINE)... "
 if [ "$WITH_BODY" -ge "$BASELINE" ]; then

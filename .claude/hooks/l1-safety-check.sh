@@ -90,3 +90,6 @@ if echo "$FULL_CHECK" | grep -qE 'git\s+add'; then
 fi
 
 exit 0
+
+# Traceability:
+# T6: 人間の資源権限 — 破壊的操作は人間の確認を要求する（exit 2 で T6 を構造的に強制） # T7: 資源有限性 — rm -rf 等の資源破壊コマンドを検出しブロック

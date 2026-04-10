@@ -256,3 +256,11 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 - **非破壊**: ファイルの変更・作成は行わない（Read/Grep/Glob のみ）
 - **コンテキスト経済（D11）**: 必要最小限のデータを収集し、圧縮して報告
 - **deferred の唯一のデータソースは deferred-status.json である。** evolve-history.jsonl の `.deferred[]` フィールドは累積スナップショット方式（run 1-17）であり、同一 ID が最大 15 回重複出現する。分析・集計に使用してはならない。
+
+## Traceability
+
+| 命題 | この成果物との関係 |
+|------|-------------------|
+| D3 | 可観測性先行を実装する — 改善提案（Hypothesizer）の前に計測基盤（V1-V7、Lean品質、テスト結果）でデータを収集する |
+| D9 | Observer 自身も observe.sh やクエリパターンの改善対象であり、自己適用の原則に従う |
+| V6 | artifact-manifest や MEMORY の充実度を観察対象として計測し、知識構造品質の可視化を担う |

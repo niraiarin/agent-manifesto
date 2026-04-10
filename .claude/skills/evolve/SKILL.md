@@ -1039,3 +1039,10 @@ compatible change または breaking change に該当しうる。
 | | /formal-derivation | 構造変更の形式的検証 |
 | | /adjust-action-space | 行動空間の調整提案 |
 | | /research | Hypothesizer が breaking change または新規機能を提案する際に、Step 0 リサーチを呼び出す |
+
+## Traceability
+
+| 命題 | このスキルとの関係 |
+|------|-------------------|
+| D10 | 改善提案を JSONL 履歴・コミット・テストとして永続化し、エージェント消滅後も改善の蓄積が構造に残る |
+| D13 | Hypothesizer の提案が影響する依存先を depgraph/manifest-trace で走査し、波及範囲を Verifier が検証 |

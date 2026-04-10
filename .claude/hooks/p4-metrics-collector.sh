@@ -18,3 +18,6 @@ LOG_FILE="${METRICS_LOG:-$METRICS_DIR/tool-usage.jsonl}"
 echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"event\":\"tool_use\",\"tool\":\"$TOOL\",\"tool_id\":\"$TOOL_ID\",\"session\":\"$SESSION\"}" >> "$LOG_FILE"
 
 exit 0
+
+# Traceability:
+# D3: 可観測性先行 — ツール使用ログを自動収集し、V2/V4 の計測基盤を提供

@@ -134,3 +134,6 @@ if [ -n "$WARNINGS" ]; then
 fi
 
 exit 0
+
+# Traceability:
+# L2: 情報整合境界 — 参照ファイルの実在性を検証し、幻覚（存在しないファイルへの参照）を検出

@@ -411,3 +411,11 @@ Issue にコメントとして結果を記録:
 | `lake build` 成功で波及検証を省略する | 型エラーは検出するが意味的整合性は検出しない | Step 4a の 9 項目を全て確認 |
 | Lean 変更後に `depgraph.sh generate` せず impact を実行 | 変更前のグラフで影響範囲を計算してしまう | Step 4a-1 で必ず再生成してから impact |
 | 検証済み要素を再検証する（visited-set なし） | 無限ループまたは無駄な再検証 | 4a-3 の visited set で管理 |
+
+## Traceability
+
+| 命題 | このスキルとの関係 |
+|------|-------------------|
+| D1 | depgraph.sh・depgraph-verify.sh・lake build による検証チェーンで、公理の整合性を LLM 判断に依存せず構造的に強制 |
+| D5 | Axiom Card（仕様）と Foundation 形式証明（検証）を先に確立してから降格判定（実装変更）に進む順序を規定 |
+| P3 | 公理の根拠検証を観察（classify）→仮説化（根拠特定）→検証（形式証明）→統合（Axiom Card 更新）→退役（降格）のライフサイクルで管理 |

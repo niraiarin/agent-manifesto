@@ -119,3 +119,11 @@ FACTUAL ACCURACY:
 - numeric_claims: verified|unverified|(list of issues)
 RECOMMENDATION: (brief recommendation)
 ```
+
+## Traceability
+
+| 命題 | この成果物との関係 |
+|------|-------------------|
+| E1 | 生成（Worker）と検証（Verifier）を独立したコンテキストで実行し、検証独立性を構造的に実現する |
+| D2 | 認知的関心の分離を体現する — Verifier はコード生成を行わず、評価のみを担当する |
+| D10 | エージェント（Verifier インスタンス）は一時的だが、検証チェックリスト・出力フォーマット・リスク分類表は構造として永続する |

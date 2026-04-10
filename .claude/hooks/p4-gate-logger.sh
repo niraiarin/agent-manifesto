@@ -19,3 +19,6 @@ if [ -f "$METRICS_DIR/tool-usage.jsonl" ]; then
 fi
 
 exit 0
+
+# Traceability:
+# L6: 退役境界 — Gate 通過/失敗を記録し、退役判定の定量的根拠を蓄積

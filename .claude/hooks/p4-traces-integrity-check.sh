@@ -69,3 +69,6 @@ if [ "$REFS_SORTED" != "$TRACES_SORTED" ]; then
 fi
 
 exit 0
+
+# Traceability:
+# D13: 影響波及 — @traces と refs の不一致を検出し、traceability の破壊がコミットされることを防止

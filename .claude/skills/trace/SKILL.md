@@ -206,3 +206,9 @@ json 分析結果から改善提案を生成する:
 - L5 (プラットフォーム境界) や T3 (有限コンテキスト) など、環境制約として暗黙的に実装されている命題もある
 - violations の結果は「潜在的」違反。全てが修正必須ではない
 - T8 (grounded constraint) は axiom から theorem に降格済み。Derivation Card で追跡され、Axiom Card (evidence) は不要。observe.sh の evidence_coverage からは除外し、derivation_completeness に含める
+
+## Traceability
+
+| 命題 | このスキルとの関係 |
+|------|-------------------|
+| V6 | artifact-manifest.json のカバレッジ率・根拠充実度・refs 本文言及率を計測し、知識構造品質を定量化 |

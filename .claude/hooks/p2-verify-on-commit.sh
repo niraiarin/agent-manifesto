@@ -88,3 +88,6 @@ echo "Staged high-risk files (unverified):" >&2
 echo "$HIGH_RISK_FILES" | while IFS= read -r f; do [ -n "$f" ] && echo "  - $f" >&2; done
 exit 0
 fi
+
+# Traceability:
+# E1: 検証独立性 — P2 検証トークンの有無で、独立検証を経たコミットかを判定 # D2: 認知的関心の分離 — 生成（Worker）と検証（Verifier）が分離されていることをコミット時に強制

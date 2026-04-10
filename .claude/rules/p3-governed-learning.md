@@ -23,3 +23,9 @@ paths: ["**"]
 - **conservative extension**: 既存が全てそのまま有効。追加のみ
 - **compatible change**: 既存ワークフローは継続可能。一部前提が変化
 - **breaking change**: 既存ワークフローの一部が無効。移行パスを明記
+
+## Traceability
+
+| 命題 | この成果物との関係 |
+|------|-------------------|
+| D13 | 影響波及を管理する — 互換性分類（conservative/compatible/breaking）により変更の影響範囲を明示し、依存グラフへの波及を統治する |

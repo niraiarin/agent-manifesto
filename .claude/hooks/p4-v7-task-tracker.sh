@@ -12,3 +12,6 @@ jq -nc --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg id "$TASK_ID" --arg subj 
   '{timestamp: $ts, event: "v7_task_completed", task_id: $id, subject: $subj, teammate: $tm}' >> "$METRICS_DIR/v7-tasks.jsonl"
 
 exit 0
+
+# Traceability:
+# P4: 可観測性 — タスク設計の自動化率を記録し V7 を計測可能にする # D3: 可観測性先行 — V7 の計測基盤として機能 # V7: タスク設計効率 — deterministic/mixed/judgmental の分類比率を計測

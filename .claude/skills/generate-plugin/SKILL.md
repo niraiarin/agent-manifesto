@@ -243,3 +243,10 @@ bash scripts/d17-state.sh transition <plugin> feedback '<FeedbackAction JSON>'
 | G3 公理系自動生成 | #287 | **5.0** | 12 assumptions, 3 theorems, 88% recall |
 | G4 パッケージング | #293 | 4.5 | 11/11 tests, 7 audit log |
 | G5 フィードバック閉環 | #295 | PASS | 4 frictions → 構造反映 |
+
+## Traceability
+
+| 命題 | このスキルとの関係 |
+|------|-------------------|
+| P3 | Phase 5 のフィードバックループで摩擦を FeedbackAction に分類し、観察→仮説化→検証→統合のライフサイクルで plugin を漸進的に改善 |
+| D1 | verify-*-gate.sh と d17-state.sh により、各 Phase の Gate 判定と状態遷移を LLM 判断に依存しないスクリプトで構造的に強制 |

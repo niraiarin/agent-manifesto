@@ -19,8 +19,8 @@ jq -r '.artifacts[] | select(._comment == null) | select(.type == "skill" or .ty
 
   TOTAL=$((TOTAL + 1))
 
-  # @traces 行を除外した本文
-  BODY=$(grep -v '@traces' "$full_path" 2>/dev/null || true)
+  # @traces ヘッダ行のみ除外（本文中の @traces 言及は残す）
+  BODY=$(grep -v '^<!-- @traces\|^# @traces' "$full_path" 2>/dev/null || true)
 
   MISSING=""
   IFS=',' read -ra REF_ARRAY <<< "$refs"

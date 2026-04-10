@@ -54,3 +54,6 @@ if echo "$COMMAND" | grep -qE 'git\s+commit.*--amend'; then
 fi
 
 exit 0
+
+# Traceability:
+# T1: セッション有界性 — セッション開始/終了時刻を記録し、T1 の実測データを提供

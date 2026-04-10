@@ -48,3 +48,6 @@ if [ $LINT_EXIT -ne 0 ]; then
 fi
 
 exit 0
+
+# Traceability:
+# D5: 仕様層の順序 — ドキュメントの書式整合性を検証し、仕様の品質を構造的に維持 # D1: 構造的強制 — lint ルールを hook で自動実行し、LLM の判断に依存しない品質保証

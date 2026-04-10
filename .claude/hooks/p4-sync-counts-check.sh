@@ -41,3 +41,6 @@ if [[ $RC -ne 0 ]]; then
 fi
 
 exit 0
+
+# Traceability:
+# D3: 可観測性先行 — axiom/theorem/sorry カウントの同期状態を検証し、計測値の正確性を保証

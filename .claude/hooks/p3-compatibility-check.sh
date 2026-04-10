@@ -50,3 +50,6 @@ if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then
 fi
 
 exit 0
+
+# Traceability:
+# D13: 影響波及 — 互換性分類（conservative/compatible/breaking）により変更の波及範囲を明示させる

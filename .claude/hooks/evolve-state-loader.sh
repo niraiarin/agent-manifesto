@@ -16,3 +16,6 @@ if [ -d "$BASE/lean-formalization/Manifest" ]; then
     echo "[evolve] WARNING: $SORRY_COUNT sorry found in Lean formalization"
   fi
 fi
+
+# Traceability:
+# P3: 学習の統治 — /evolve セッション開始時に前回の状態を復元し、学習の継続性を保証 # T2: 構造永続性 — evolve-history.jsonl から構造に蓄積された学習履歴を読み出す # D10: 構造永続性 — エージェント消滅後も構造（ログ）が残ることを前提に状態復元を実現
