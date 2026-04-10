@@ -127,8 +127,12 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 
 #### 1a. 調査ログの記録
 
-Gap Analysis に至るまでの調査過程を Parent Issue のコメントとして記録する。
+Gap Analysis に至るまでの調査過程を記録する。
 結果だけでなく「何を読み、何を比較し、何を捨てたか」を残す。
+
+**記録先**: Step 2 で Parent Issue を作成した直後に転記する。
+Step 1a の時点では手元（会話内テキスト）に記録し、Step 2 で Issue 作成後に
+最初のコメントとして投稿する。
 
 ```markdown
 ### [YYYY-MM-DD] 調査ログ
