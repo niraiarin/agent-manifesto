@@ -9,7 +9,8 @@ BASE="$(git rev-parse --show-toplevel 2>/dev/null || echo /Users/nirarin/work/ag
 JSON_MODE="${1:-}"
 
 # 全 PropositionId（Ontology.lean から）
-ALL_PROPS="T1 T2 T3 T4 T5 T6 T7 T8 E1 E2 P1 P2 P3 P4 P5 P6 L1 L2 L3 L4 L5 L6 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14"
+ALL_PROPS="T1 T2 T3 T4 T5 T6 T7 T8 E1 E2 P1 P2 P3 P4 P5 P6 L1 L2 L3 L4 L5 L6 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18 V1 V2 V3 V4 V5 V6 V7"
+TOTAL_PROPS=$(echo $ALL_PROPS | wc -w | tr -d ' ')
 
 declare -A PROP_TESTS  # proposition → test count
 
@@ -65,15 +66,15 @@ done
 # --- レポート出力 ---
 if [ "$JSON_MODE" = "--json" ]; then
   echo "{"
-  echo '  "total_propositions": 36,'
+  echo "  \"total_propositions\": $TOTAL_PROPS,"
   covered=0
   uncovered_list=""
   for prop in $ALL_PROPS; do
     [ "${PROP_TESTS[$prop]}" -gt 0 ] && covered=$((covered + 1)) || uncovered_list="$uncovered_list \"$prop\","
   done
   echo "  \"covered\": $covered,"
-  echo "  \"uncovered\": $((36 - covered)),"
-  echo "  \"coverage_pct\": $(echo "scale=1; $covered * 100 / 36" | bc),"
+  echo "  \"uncovered\": $(($TOTAL_PROPS - covered)),"
+  echo "  \"coverage_pct\": $(echo "scale=1; $covered * 100 / $TOTAL_PROPS" | bc),"
   echo "  \"uncovered_props\": [${uncovered_list%,}],"
   echo '  "details": {'
   first=true
@@ -104,7 +105,7 @@ else
     fi
   done
   echo ""
-  echo "Coverage: $covered / 36 ($(echo "scale=1; $covered * 100 / 36" | bc)%)"
+  echo "Coverage: $covered / $TOTAL_PROPS ($(echo "scale=1; $covered * 100 / $TOTAL_PROPS" | bc)%)"
   [ -n "$uncovered" ] && echo "Uncovered:$uncovered"
   echo ""
   echo "Source: @traces annotations + tests/trace-map.json"
