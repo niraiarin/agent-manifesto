@@ -1061,8 +1061,50 @@ print(json.dumps(result))
 " 2>/dev/null || echo "[]")
 echo "  \"structure_file_currency\": $STRUCTURE_CURRENCY,"
 
-# --- GAP 6: Failed Test Details (cached from earlier test run) ---
-# TEST_FAILED is set at line 58 from the test run earlier in this script.
+# --- GAP 6: Scope balance — meta vs substance in recent improvements (#318) ---
+SCOPE_BALANCE=$(python3 -c "
+import json, subprocess, sys
+try:
+    history = open('$HISTORY_FILE').readlines()
+    recent = [json.loads(l) for l in history[-10:] if l.strip()]
+    meta_runs = 0
+    substance_runs = 0
+    for entry in recent:
+        commits = entry.get('commits', [])
+        has_meta = False
+        has_substance = False
+        for c in commits:
+            try:
+                files = subprocess.check_output(
+                    ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', str(c)],
+                    stderr=subprocess.DEVNULL, text=True
+                ).strip().split('\n')
+                for f in files:
+                    if f.startswith('.claude/') or f.startswith('scripts/'):
+                        has_meta = True
+                    elif f.startswith('lean-formalization/') or f.startswith('tests/') or f.startswith('docs/'):
+                        has_substance = True
+            except:
+                pass
+        if has_meta:
+            meta_runs += 1
+        if has_substance:
+            substance_runs += 1
+    total = len(recent)
+    print(json.dumps({
+        'recent_runs_analyzed': total,
+        'meta_runs': meta_runs,
+        'substance_runs': substance_runs,
+        'meta_only_runs': meta_runs - substance_runs if meta_runs > substance_runs else 0,
+        'bias_warning': meta_runs >= 8 and substance_runs <= 2
+    }))
+except Exception as e:
+    print(json.dumps({'error': str(e)}))
+" 2>/dev/null || echo '{}')
+echo "  \"scope_balance\": $SCOPE_BALANCE,"
+
+# --- GAP 7: Failed Test Details (cached from earlier test run) ---
+# TEST_FAILED is set earlier from the test run.
 # If tests failed, report the cached output. No re-run needed.
 if [ "${TEST_FAILED:-0}" -gt 0 ] 2>/dev/null; then
   FAILED_TESTS=$(echo "$TEST_OUTPUT" | grep "FAIL" | grep -v "^TOTAL:" | head -20 | jq -R -s -c 'split("\n") | map(select(length > 0))' 2>/dev/null || echo "[]")
