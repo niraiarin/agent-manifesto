@@ -253,6 +253,24 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 前回の結果がある場合、Observer にコンテキストとして渡す。
 なければ初回実行として進む。
 
+```bash
+# Step 0c: valuelessChange 検出 — Level 0 接地（#317）
+# observe.sh の valueless_change.halt_recommended を確認
+OBSERVE_JSON=$(bash .claude/skills/evolve/scripts/observe.sh 2>/dev/null)
+HALT=$(echo "$OBSERVE_JSON" | jq -r '.valueless_change.halt_recommended // false' 2>/dev/null)
+if [ "$HALT" = "true" ]; then
+  STREAK=$(echo "$OBSERVE_JSON" | jq -r '.valueless_change.current_streak' 2>/dev/null)
+  echo "⚠️ valuelessChange 検出: 直近 ${STREAK} runs で improvements あり・v_changes 空"
+  echo "Level 0 メトリクス（V1-V7）が動いていません。/evolve を停止し人間レビューを要求します。"
+  # → 人間に報告して終了（T6: 人間の最終決定権）
+fi
+```
+
+**valuelessChange halt の判定基準（T6 パラメータ）:**
+- `current_streak >= 3`: improvements を統合したが V1-V7 delta がゼロの runs が 3 連続
+- 対処: 人間が bias(t) を見直すか、/evolve の対象範囲を調整する
+- 人間が「続行」と判断した場合は、そのまま Phase 1 に進む
+
 **未解決 deferred がある場合:**
 Observer へのプロンプトに「未解決 deferred 一覧」を明示的に含める。
 deferred 項目は改善候補の先頭に含め、通常の観察項目より優先する。
