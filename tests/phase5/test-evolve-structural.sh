@@ -272,6 +272,15 @@ grep -q "^axiom no_improvement_without_feedback" "$AXIOMS_FILE" && pass "T5: no_
 grep -q "^theorem task_has_precision" "$AXIOMS_FILE" && pass "T8: task_has_precision theorem exists in Axioms.lean" || fail "T8: task_has_precision theorem not found in Axioms.lean"
 grep -q "^axiom capability_risk_coscaling" "$EMPIRICAL_FILE" && pass "E2: capability_risk_coscaling axiom exists in EmpiricalPostulates.lean" || fail "E2: capability_risk_coscaling axiom not found in EmpiricalPostulates.lean"
 
+# #316: FeedbackTarget + no_process_improvement_without_feedback（Run 102）
+grep -q "^opaque ProcessId" "$ONTOLOGY" && pass "#316: ProcessId opaque exists in Ontology.lean" || fail "#316: ProcessId opaque not found in Ontology.lean"
+grep -q "^inductive FeedbackTarget" "$ONTOLOGY" && pass "#316: FeedbackTarget inductive exists in Ontology.lean" || fail "#316: FeedbackTarget inductive not found in Ontology.lean"
+grep -q "| structure.*StructureId" "$ONTOLOGY" && pass "#316: FeedbackTarget.structure constructor exists" || fail "#316: FeedbackTarget.structure constructor not found"
+grep -q "| process.*ProcessId" "$ONTOLOGY" && pass "#316: FeedbackTarget.process constructor exists" || fail "#316: FeedbackTarget.process constructor not found"
+grep -q "target.*:.*FeedbackTarget" "$ONTOLOGY" && pass "#316: Feedback.target uses FeedbackTarget type" || fail "#316: Feedback.target not using FeedbackTarget type"
+grep -q "^opaque processImproved" "$AXIOMS_FILE" && pass "#316: processImproved opaque exists in Axioms.lean" || fail "#316: processImproved opaque not found in Axioms.lean"
+grep -q "^axiom no_process_improvement_without_feedback" "$AXIOMS_FILE" && pass "#316: no_process_improvement_without_feedback axiom exists in Axioms.lean" || fail "#316: no_process_improvement_without_feedback axiom not found in Axioms.lean"
+
 echo ""
 
 # ============================================================
