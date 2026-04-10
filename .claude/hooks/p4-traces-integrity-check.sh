@@ -6,8 +6,8 @@
 
 set -euo pipefail
 
-TOOL_INPUT="${CLAUDE_TOOL_INPUT:-}"
-FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // empty' 2>/dev/null || true)
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null || true)
 
 # ファイルパスがなければスキップ
 [ -z "$FILE_PATH" ] && exit 0

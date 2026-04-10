@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 101,
+  "last_updated_run": 102,
   "items": {
     "h3-v4-semantic-update": {
       "status": "resolved",
@@ -262,6 +262,13 @@
       "resolved_in_run": 101,
       "source": "Run 100 obs-4 rejected (H_wrong_premise)",
       "note": "Run 100 で implementation-boundaries.md への追加として提案されたが Verifier FAIL. Run 101 obs-1 で Q8 スコープ不一致（Models/ 除外 + Foundation/Framework/ 統一）を修正し、閾値を 6.0→8.0x に更新。スコープ統一により根本的に解消。"
+    },
+    "obs-6-orphan-sandbox": {
+      "description": "feedback_sandbox_excluded_commands.md 削除が sandbox 制約で実行不可",
+      "status": "open",
+      "reason": "resourceExhaustion",
+      "opened_in_run": 102,
+      "note": "rm コマンドが sandbox の Operation not permitted で失敗。allowWrite 範囲外（~/.claude/projects/ は書き込み許可対象外）。sandbox 設定変更（allowWrite 拡張）後に再試行可能。"
     }
   }
 }
