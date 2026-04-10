@@ -80,7 +80,7 @@ fi
 
 # D8: 段階的厳格化
 SESSION=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
-STATE_FILE="/tmp/p3-axiom-evidence-warned-${SESSION}"
+STATE_FILE="${TMPDIR:-/tmp}/p3-axiom-evidence-warned-${SESSION}"
 
 if [ -f "$STATE_FILE" ]; then
   echo "P3/Evidence: 公理変更コミット BLOCKED — 根拠メタデータの更新が必要です。" >&2

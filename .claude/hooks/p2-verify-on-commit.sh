@@ -74,7 +74,7 @@ fi
 HIGH_RISK_FILES="$UNVERIFIED"
 fi
 SESSION=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
-STATE_FILE="/tmp/p2-warned-${SESSION}"
+STATE_FILE="${TMPDIR:-/tmp}/p2-warned-${SESSION}"
 if [ -f "$STATE_FILE" ]; then
 echo "P2: High-risk commit blocked. Run /verify first, then retry." >&2
 echo "Staged high-risk files (unverified):" >&2
