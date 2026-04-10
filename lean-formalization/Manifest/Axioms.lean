@@ -48,6 +48,7 @@ in Ontology.lean as definitional extensions (Terminology Reference §5.5).
 | `context_contribution_nonuniform` | T3 | Not all context items contribute equally to task precision | Natural-science-derived |
 | `output_nondeterministic` | T4 | Different outputs possible for the same input | Natural-science-derived |
 | `no_improvement_without_feedback` | T5 | No improvement without feedback loop | Natural-science-derived |
+| `no_process_improvement_without_feedback` | T5 | No process improvement without process-targeted feedback | Natural-science-derived |
 | `human_resource_authority` | T6 | Humans are the final decision-makers for resources | Contract-derived |
 | `resource_revocable` | T6 | Humans can revoke resources | Contract-derived |
 | `resource_finite` | T7 | Resources are finite | Environment-derived |
@@ -384,6 +385,12 @@ T5 declares that the existence of feedback is a necessary condition for improvem
 /-- Predicate for whether structure has improved (defined as Observable in Phase 4+). -/
 opaque structureImproved : World → World → Prop
 
+/-- Predicate for whether a process has improved (#316).
+    Processes (learning lifecycles, workflows) are also subject to T5:
+    convergence requires feedback. This is opaque for the same reason as
+    structureImproved — improvement cannot be derived from type definitions. -/
+opaque processImproved : ProcessId → World → World → Prop
+
 /-- [Axiom Card]
     Layer: T₀ (Natural-science-derived)
     Content: Feedback is required for structural improvement.
@@ -412,6 +419,27 @@ axiom no_improvement_without_feedback :
   ∀ (w w' : World),
     structureImproved w w' →
     ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time
+
+/-- [Axiom Card]
+    Layer: T₀ (Natural-science-derived)
+    Content: Feedback is required for process improvement.
+          The same control-theory principle as T5 applies to processes:
+          without measurement, comparison, and adjustment of the process
+          itself, convergence of the process toward its goals does not occur.
+    Basis: Same as T5 (Internal Model Principle + Data Processing Inequality).
+          Applied to Level 1 (process) rather than Level 0 (structure).
+
+    降格判定: 導出不可能 — processImproved が opaque。axiom として維持。
+
+    Source: #316 "T5 Feedback.target: StructureId がプロセスレベルのメタフィードバックを阻害する"
+    Refutation condition: If process improvement without feedback about the
+              process were demonstrated -/
+axiom no_process_improvement_without_feedback :
+  ∀ (pid : ProcessId) (w w' : World),
+    processImproved pid w w' →
+    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.target = .process pid ∧
       f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time
 
 -- ============================================================

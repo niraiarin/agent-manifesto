@@ -139,12 +139,12 @@ def currentTheoremDistribution : TheoremDistribution :=
     axiomsM                := 3
     empiricalPostulatesM   := 2
     observableM            := 45  -- Observable.lean + ObservableDesign.lean
-    principlesM            := 14
+    principlesM            := 15
     metaM                  := 12
     terminologyM           := 23
     formalDerivationSkillM := 35
     conformanceVerificationM := 17
-    designFoundationM      := 69
+    designFoundationM      := 70
     procedureM             := 25
     evolutionM             := 16
     evolveSkillM           := 30
@@ -163,7 +163,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     theoremCount は currentTheoremDistribution.total から自動計算される。
     axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
 def currentProfile : AxiomSystemProfile :=
-  { constraintCount  := 12
+  { constraintCount  := 13
     empiricalCount   := 3
     observableCount  := 16
     applicationCount := 20
@@ -171,13 +171,13 @@ def currentProfile : AxiomSystemProfile :=
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
-/-- 現在の公理系の総 axiom 数は 52。 -/
+/-- 現在の公理系の総 axiom 数は 53。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 52 := by rfl
+  currentProfile.totalAxioms = 53 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 457 := by rfl
+  currentProfile.theoremCount = 459 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -191,9 +191,9 @@ theorem theorem_distribution_consistent :
 ## スコープ注記
 
 currentProfile および currentTheoremDistribution が追跡する範囲:
-- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (404 theorems, 52 axioms)
+- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (459 theorems, 53 axioms)
 - **追跡対象外**: `Manifest/Models/` (1083 theorems), `Manifest/Foundation/` (17 theorems)
-- **全再帰スコープ**: `Manifest/` 全体で 1504 theorems, 52 axioms
+- **全再帰スコープ**: `Manifest/` 全体で 1562 theorems, 53 axioms
 
 この区別の理由:
 - 公理系の「コア理論」は Manifest/*.lean のモジュールで構成される
