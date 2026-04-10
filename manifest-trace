@@ -163,7 +163,7 @@ parse_lean_evidence() {
 
   local result=""
 
-  for lean_file in "$LEAN_DIR"/*.lean "$LEAN_DIR"/Foundation/*.lean; do
+  for lean_file in $(find "$LEAN_DIR" -name '*.lean' -type f 2>/dev/null); do
     [[ -f "$lean_file" ]] || continue
     local file_basename
     file_basename=$(basename "$lean_file")
@@ -267,7 +267,7 @@ parse_lean_derivations() {
 
   local result=""
 
-  for lean_file in "$LEAN_DIR"/*.lean "$LEAN_DIR"/Foundation/*.lean; do
+  for lean_file in $(find "$LEAN_DIR" -name '*.lean' -type f 2>/dev/null); do
     [[ -f "$lean_file" ]] || continue
     local file_basename
     file_basename=$(basename "$lean_file")

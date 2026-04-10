@@ -18,8 +18,12 @@ check() {
   fi
 }
 
-# 全 47 命題
-ALL_PROPS="T1 T2 T3 T4 T5 T6 T7 T8 E1 E2 P1 P2 P3 P4 P5 P6 L1 L2 L3 L4 L5 L6 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18 V1 V2 V3 V4 V5 V6 V7"
+# 全命題（Ontology.lean から動的取得 — SSOT）
+ALL_PROPS=$(bash "$BASE/scripts/list-propositions.sh" 2>/dev/null)
+if [ -z "$ALL_PROPS" ]; then
+  echo "ERROR: list-propositions.sh failed" >&2
+  exit 1
+fi
 TOTAL=$(echo $ALL_PROPS | wc -w | tr -d ' ')
 
 # manifest-trace evidence + derivations からカバーされている命題を抽出

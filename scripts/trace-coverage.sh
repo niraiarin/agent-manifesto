@@ -8,8 +8,12 @@ set -uo pipefail
 BASE="$(git rev-parse --show-toplevel 2>/dev/null || echo /Users/nirarin/work/agent-manifesto)"
 JSON_MODE="${1:-}"
 
-# 全 PropositionId（Ontology.lean から）
-ALL_PROPS="T1 T2 T3 T4 T5 T6 T7 T8 E1 E2 P1 P2 P3 P4 P5 P6 L1 L2 L3 L4 L5 L6 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18 V1 V2 V3 V4 V5 V6 V7"
+# 全 PropositionId（Ontology.lean から動的取得 — SSOT）
+ALL_PROPS=$(bash "$BASE/scripts/list-propositions.sh" 2>/dev/null)
+if [ -z "$ALL_PROPS" ]; then
+  echo "ERROR: list-propositions.sh failed" >&2
+  exit 1
+fi
 TOTAL_PROPS=$(echo $ALL_PROPS | wc -w | tr -d ' ')
 
 declare -A PROP_TESTS  # proposition → test count
