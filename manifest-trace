@@ -528,15 +528,19 @@ cmd_trace() {
 
   echo ""
 
-  # 4. 根拠（上方向トレーサビリティ）
-  echo -e "${CYAN}◆ 根拠（Axiom Card → Basis/Source）:${NC}"
+  # 4. 根拠（上方向トレーサビリティ — Axiom Card + Derivation Card）
+  echo -e "${CYAN}◆ 根拠（Axiom Card / Derivation Card）:${NC}"
   local evidence_lines
   evidence_lines=$(parse_lean_evidence | grep -v '^$' | jq -r --arg pid "$target" \
-    'select(.proposition == $pid) | "  [\(.file)] \(.axiom)\n    Basis: \(.basis)\n    Source: \(.source)"')
-  if [[ -z "$evidence_lines" ]]; then
-    echo -e "  ${YELLOW}(Axiom Card なし — 根拠未記載)${NC}"
+    'select(.proposition == $pid) | "  [Axiom] [\(.file)] \(.axiom)\n    Basis: \(.basis)\n    Source: \(.source)"')
+  local derivation_lines
+  derivation_lines=$(parse_lean_derivations | grep -v '^$' | jq -r --arg pid "$target" \
+    'select(.proposition == $pid) | "  [Deriv] [\(.file)] \(.theorem)\n    Derives from: \(.derives_from)\n    Proof strategy: \(.proof_strategy)"')
+  if [[ -z "$evidence_lines" ]] && [[ -z "$derivation_lines" ]]; then
+    echo -e "  ${YELLOW}(根拠未記載 — Axiom Card / Derivation Card なし)${NC}"
   else
-    echo "$evidence_lines"
+    [[ -n "$evidence_lines" ]] && echo "$evidence_lines"
+    [[ -n "$derivation_lines" ]] && echo "$derivation_lines"
   fi
 }
 
