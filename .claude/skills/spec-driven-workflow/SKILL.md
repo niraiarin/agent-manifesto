@@ -51,6 +51,43 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 解決できない場合はユーザーに案内する。以降の `lean-formalization/`、`docs/`、`scripts/`、`tests/` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#387）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Phase 0, Step 1: ビジョン聞き取り | **judgmental** | /instantiate-model | 人間対話。スキル内部は judgmental |
+| Phase 0, Step 2: Gap Analysis | **judgmental** | /research | 研究ワークフロー |
+| Phase 0, Step 3: 条件付き公理系生成 | **judgmental** | /instantiate-model | Lean 文書生成 |
+| Phase 0, Step 4: 保存拡大性の確認 | **deterministic** | lake build | コンパイル検証 |
+| Phase 0, Step 5: 質問テンプレート更新 | **judgmental** | LLM | 新ドメインの質問パターン蓄積 |
+| Phase 1, Step 1: 命題一覧の抽出 | **deterministic** | grep/listing | 機械的列挙 |
+| Phase 1, Step 2: テストケースの導出 | **judgmental** | LLM | テスト設計の創造的行為 |
+| Phase 1, Step 3: @traces アノテーション | **deterministic** | テンプレート挿入 | 命題 ID の機械的付与 |
+| Phase 1, Step 4: カバレッジ確認 | **deterministic** | trace-coverage.sh | スクリプト化済み ✓ |
+| Phase 2, Steps 1-3: Red/Green/Refactor | **judgmental** | LLM | TDD の本質的創造的行為 |
+| Phase 2, Step 4: 形式化 | **judgmental** | /formal-derivation | Lean 導出構成 |
+| Phase 2, Step 5: Traceability.lean 更新 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: リンク構造 / judgmental: リンク内容の正確性判断 |
+| Phase 3, Step 1: 閉環トレーサビリティ検証 | **deterministic** | trace-coverage.sh + manifest-trace | スクリプト化済み ✓ |
+| Phase 3, Step 2: 独立検証 | **bounded** | /verify（agent 委譲） | Verifier agent による構造化レビュー |
+| Phase 3, Step 3: Lean ビルド | **deterministic** | lake build | コンパイル検証 |
+| Phase 3, Step 4: 受入テスト | **deterministic** | test-all.sh | スクリプト化済み ✓ |
+| Phase 3, Step 5: 互換性分類 | **judgmental** | LLM | conservative/compatible/breaking の判断 |
+| Phase 4, Step 1: 変更影響分析 | **deterministic** | manifest-trace impact | スクリプト化済み ✓ |
+| Phase 4, Step 2: トリアージ | **judgmental** | LLM | 要修正/整合性確認/影響なしの分類 |
+| Phase 4, Step 3: メトリクス確認 | **deterministic** | /metrics | V1-V7 計測（内部は大部分 deterministic） |
+| Phase 4, Step 4: 公理健全性 | **judgmental** | /ground-axiom | 数学的根拠検証（内部は大部分 judgmental） |
+| Phase 4, Step 5: 漸進的改善 | **judgmental** | /evolve | 構造改善ライフサイクル |
+
+**設計原則**:
+- 司令塔として 8 スキルを呼び出す。各呼び出しの分類は被呼び出しスキルの主要分類を反映
+- Phase 0-2 は judgmental 中心（設計・テスト・実装の創造的行為）
+- Phase 3 は deterministic 中心（検証スクリプト群）+ bounded（/verify agent 委譲）
+- Phase 4 は mixed（deterministic な影響分析 + judgmental なトリアージ・改善）
+- trace-coverage.sh, manifest-trace, test-all.sh が deterministic 成分の主柱
+
 ## 思想
 
 ```

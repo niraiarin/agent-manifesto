@@ -38,6 +38,32 @@ dependencies:
 人間のプロジェクトのビジョンを聞き取り、要件・仮定・制約を引き出し、
 EpistemicLayerClass の公理体系に準拠した条件付き公理体系を Lean 文書として生成する。
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#384）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 1: 対話（Phase 0-1） | **judgmental** | model-questioner agent | 人間との対話による要件引き出し。自動化不可 |
+| Step 2: 構造推論（Phase 2） | **deterministic + judgmental（分離済み）** | extract-dependency-graph.sh（抽出） + model-questioner agent（推論） | `mixed_task_decomposition` 適用済み ✓ |
+| Step 3: 矛盾解消（Phase 3） | **judgmental** | model-questioner agent + 人間対話 | 矛盾の解消方法は人間の判断に依存（T6） |
+| Step 4: ModelSpec JSON 生成 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: JSON スキーマ構造 / judgmental: Phase 2 出力の構造化 |
+| Step 5: 事前検証 | **deterministic** | check-monotonicity.sh | スクリプト化済み ✓ |
+| Step 6: Lean コード生成 + 検証 | **deterministic** | generate-conditional-axiom-system.sh + lake build | スクリプト化済み ✓ |
+| Step 7: Assumptions の更新 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: Lean テンプレート構造 / judgmental: validity 内容の記述 |
+| Step 8: 完了 | **deterministic** | git commit 提案 | 承認は T6（人間判断）だがステップ自体は機械的 |
+| Step 9a: FeedbackReport 受信 | **deterministic** | データ解析 | /design-implementation-plan からの構造化入力 |
+| Step 9b: 仮定の追加 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: Assumptions.lean テンプレート / judgmental: EpistemicSource 分類 |
+| Step 9c: 条件付き公理系の再構築 | **deterministic** | スクリプト群 + lake build | Step 5-6 の再実行 |
+| Step 9d: /design-implementation-plan に戻る | **deterministic** | スキル呼び出し | 遷移条件は明確（miss=0 or iteration>=3） |
+
+**設計原則**:
+- Step 5, 6 は deterministic でスクリプト化済み — 構造的強制の好例
+- Step 1, 3 は judgmental — 人間との対話は normative 層の本来の用途
+- Step 4, 7, 9b の deterministic 成分（テンプレート構造）は分離候補（`mixed_task_decomposition`）
+- Step 9 全体は D17 feedback ループの実装であり、収束条件は deterministic（miss=0 or iteration>=3）
+
 ## D17 演繹的設計ワークフローとの対応
 
 本スキルは D17 の Step 1 (extract) と Step 2 (construct) を担当する。

@@ -29,6 +29,36 @@ dependencies:
 MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/null || echo "")
 ```
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#386）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+各 Phase は共通パターン「創造的作業 + Verify Gate + 状態遷移」を持つ。
+Gate と遷移は deterministic（スクリプト化済み）、創造的作業の分類は Phase ごとに異なる。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Phase 0: 課題発見（自律発見/指定） | **judgmental** | LLM | パターンマイニング・Gap 検出は意味論的。自動化不可 |
+| Phase 0: /research PD 収集 | **judgmental** | /research スキル | 研究ワークフロー全体が judgmental |
+| Phase 0: Verify Gate + 状態遷移 | **deterministic** | verify-investigate-gate.sh + d17-state.sh | スクリプト化済み ✓ |
+| Phase 1: 自己対話（仮定抽出） | **judgmental** | LLM（model-questioner 代替） | Vision Generator/Answerer の自己対話。自動化不可 |
+| Phase 1: Verify Gate + 状態遷移 | **deterministic** | verify-extract-gate.sh + d17-state.sh | スクリプト化済み ✓ |
+| Phase 2: Lean ファイル生成 | **judgmental** | LLM | Assumptions.lean, ConditionalDesignFoundation.lean の手書き |
+| Phase 2: lake build + Gate + 遷移 | **deterministic** | lake build + verify-construct-gate.sh + d17-state.sh | スクリプト化済み ✓ |
+| Phase 3: 設計導出 + 実装 | **judgmental** | LLM | hook, plugin.json, SKILL.md の生成。創造的行為 |
+| Phase 3: 状態遷移 | **deterministic** | d17-state.sh | スクリプト化済み ✓ |
+| Phase 4: テスト作成 | **judgmental** | LLM | テストシナリオの設計 |
+| Phase 4: テスト実行 + 状態遷移 | **deterministic** | test script + d17-state.sh | スクリプト化済み ✓ |
+| Phase 5: 摩擦列挙 + 分類 | **judgmental** | LLM | FeedbackAction への分類は意味論的 |
+| Phase 5: 収束判定 + 状態遷移 | **deterministic** | d17-state.sh + 条件判定 | addressable=0 or iteration>=3 は数値比較 |
+
+**設計原則**:
+- 全 Phase で「judgmental（作業）+ deterministic（Gate + 遷移）」の mixed パターンが一貫
+- D17 state machine のスクリプト群（d17-state.sh, verify-*-gate.sh）が deterministic 成分を担当
+- 各 Phase 内の分離は `mixed_task_decomposition` の自然な適用例
+- Phase 2 の Lean 手書きは既知の制約（generate-conditional-axiom-system.sh が自己対話 ModelSpec に非対応）
+
 ## D17 State Machine との対応
 
 | D17 Step | 本スキルの Phase | 既存スキル | Verify Gate |

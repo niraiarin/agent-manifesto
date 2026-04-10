@@ -33,6 +33,29 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 解決できない場合はユーザーに案内する。以降の `lean-formalization/` および `scripts/` への参照は `${MANIFESTO_ROOT}/` を前置して解決する。
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#383）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 0: 事前条件 | **deterministic** | スクリプト（depgraph.sh） | ファイル存在チェックと生成 |
+| Step 1: 対象選定 | **deterministic + judgmental（未分離）** | depgraph.sh classify（列挙） + LLM（選定判断） | deterministic: 分類表の生成 / judgmental: 優先順位付けと対象決定 |
+| Step 1a: Axiom Card ブートストラップ | **judgmental** | LLM | Layer 判定、Basis 特定、Refutation condition の記述は全て意味論的 |
+| Step 2: 根拠の特定 | **judgmental** | LLM（+ /research 呼び出し） | 数理理論の同定。自動化不可 |
+| Step 3: 形式証明の構築 | **judgmental** | LLM | Lean での証明構成。/formal-derivation と同質の創造的行為 |
+| Step 4: 降格可能性の判定 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: lake build + パターンマッチ / judgmental: 降格パターンの適用判断 |
+| Step 4a: 変更波及の再帰的検証 | **deterministic + judgmental（分離済み）** | depgraph.sh impact（走査） + LLM（検証） | `mixed_task_decomposition` 適用済み ✓: グラフ走査はスクリプト、意味的検証は LLM |
+| Step 5: Axiom Card の更新 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: テンプレート構造 / judgmental: 導出チェーンの記述 |
+| Step 6: 検証と記録 | **deterministic + bounded（分離済み）** | lake build + depgraph-verify.sh（検証） + /verify（独立レビュー） | `mixed_task_decomposition` 適用済み ✓ |
+
+**設計原則**:
+- Step 0, depgraph.sh 関連は deterministic — スクリプト化済み ✓
+- Step 1a-3 は judgmental — 数学的根拠検証の本質的な知的行為
+- Step 4a は mixed 分離済み — depgraph.sh impact が deterministic 成分を担当
+- Step 6 は deterministic + bounded 分離済み — ビルド検証と /verify が独立に動作
+
 ## 背景
 
 #157（公理系の数理的基盤整備）の中核プロセス。

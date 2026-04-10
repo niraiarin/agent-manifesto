@@ -30,6 +30,24 @@ Worker の成果物を独立した検証で評価する。
 | E1 が直接の根拠 | DesignFoundation.lean | `d2_from_e1` |
 | D10: 検証結果は構造に永続 | DesignFoundation.lean | `d10_agent_temporary_structure_permanent` |
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#378）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 1: リスク判定 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: リスクマッピングテーブルの照合 / judgmental: 複合変更（hooks + docs 等）のリスク分類 |
+| Step 2: 検証手段の選択 | **deterministic** | ルックアップテーブル | リスクレベル→検証手段は一意に決定される |
+| Step 3: 検証実行 | **deterministic + judgmental（分離済み）** | スクリプト/コマンド（起動） + Verifier agent（レビュー） | `mixed_task_decomposition` 適用済み ✓: Subagent 起動は deterministic、レビュー自体は judgmental |
+| Step 4: 結果報告 | **deterministic** | パススルー出力 | Verifier 出力をそのまま表示。Worker は解釈しない |
+| Step 5: P2 トークン書き込み | **deterministic** | JSONL append コマンド | PASS/FAIL に基づく機械的書き込み |
+
+**設計原則**:
+- deterministic 成分は構造的強制で実行する（`deterministic_must_be_structural`）
+- Step 2 のルックアップテーブルと Step 5 の JSONL 書き込みはスクリプト化候補
+- judgmental タスク（Verifier のレビュー）を agent に委ねるのは適切（normative 層の本来の用途）
+
 ## 評価検証の独立性 — 4条件 (DesignFoundation.lean)
 
 | 条件 | 意味 |

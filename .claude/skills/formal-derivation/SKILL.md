@@ -26,6 +26,35 @@ dependencies:
 
 タスクを受け取り、Lean 4 を用いて Γ ⊢ φ の導出を構成する。
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#382）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Phase 1, Step 1.1: 論議領域の定義 | **judgmental** | LLM | ドメインモデリング。型設計の創造的行為 |
+| Phase 1, Step 1.2: 目標命題 φ の定式化 | **judgmental** | LLM | 自然言語→形式言語の翻訳。自動化不可 |
+| Phase 1, Step 1.3: Γ/φ 境界の判定 | **judgmental** | LLM | 前提 vs 目標の分類は意味論的判断 |
+| Phase 1, Step 1.4: 前提集合 Γ の構築 | **judgmental** | LLM | T₀/拡大部分の設計。公理選択は創造的行為 |
+| Phase 1, Step 1.5: T₀ 無矛盾性簡易検査 | **deterministic + judgmental（分離済み）** | lake build（検査） + LLM（矛盾解釈） | `mixed_task_decomposition` 適用済み ✓ |
+| Phase 1, Step 1.6: 公理カードの記載 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: テンプレート構造 / judgmental: 根拠・反証条件の記述 |
+| Phase 1, Step 1.7: Lean コンパイル検証 | **deterministic** | lake build | コマンド実行のみ |
+| Phase 2, Step 2.1: φ の分解 | **judgmental** | LLM | 補題の同定。証明戦略の設計 |
+| Phase 2, Step 2.2-2.3: 導出の構成 | **judgmental** | LLM | 証明構成の本質。自動化不可 |
+| Phase 3a: エラー解釈と修正 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: エラー種別→修正テーブルの照合 / judgmental: 修正戦略の選択 |
+| Phase 3b-3c: 修正の規律・終了判定 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: 反復パターン検出（3回連続等） / judgmental: 戦略変更の選択 |
+| Phase 4a: 完全性確認 | **deterministic** | lake build + #print axioms | コマンド実行と出力記録 |
+| Phase 4b: 公理衛生チェック | **bounded** | Verifier agent | 構造化検証。5 検査項目は有限だが反例探索が必要 |
+| Phase 4c: 形式化ギャップ検証 | **bounded + judgmental（未分離）** | Verifier agent + LLM | bounded: 層 1-2（docstring・独立レビュー — agent 委譲） / judgmental: 層 3（反例探索 — 有限の検査リストではなく発散的探索のため bounded 非該当） |
+| Phase 4d: 逆方向トレーサビリティ | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: grep による対応検索 / judgmental: 不足の分析と報告 |
+
+**設計原則**:
+- Phase 1-2 は大部分が judgmental — 形式的導出の本質的な創造的行為
+- Phase 3 の deterministic 成分（エラーテーブル照合、パターン検出）は分離候補（`mixed_task_decomposition`）
+- Phase 4a の deterministic 成分はスクリプト化候補（lake build + #print axioms の自動実行）
+- Phase 4b-4c は bounded/judgmental — agent 委譲が適切
+
 ## 前提知識
 
 このスキルは以下のファイルを参照する:

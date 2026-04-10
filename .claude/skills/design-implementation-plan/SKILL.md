@@ -39,6 +39,37 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 解決できない場合はユーザーに案内する。以降のファイルパスは `${MANIFESTO_ROOT}/` を前置して解決する。
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#385）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 0a: 公式ドキュメント精読 | **judgmental** | LLM（WebFetch/WebSearch） | ドキュメントの意味論的分析。自動化不可 |
+| Step 0b: 先行事例の調査 | **judgmental** | LLM（WebSearch） | 類似事例の探索と評価 |
+| Step 0c: 網羅性検証 | **bounded** | 複数 subagent + カテゴリチェック | 構造化検証（PD 網羅性）。収束条件あり（新規 PD < 5%） |
+| Step 0d: PoC | **judgmental** | LLM | 実験的プロトタイピング。自動化不可 |
+| Step 0e: 調査結果のサマリ | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: テンプレート構造 / judgmental: 内容の記述 |
+| Step 1: 基礎資料の読み込み | **deterministic** | ファイル読み込み | 対象ファイルリストは固定 |
+| Step 2: Provider プリミティブの列挙 | **judgmental** | LLM | プリミティブの分類・整理は意味論的 |
+| Step 3: D1 マッピング | **judgmental** | LLM | 制約→プリミティブの設計判断 |
+| Step 4: D2 マッピング | **judgmental** | LLM | Worker/Verifier 分離の設計 |
+| Step 5: D3 マッピング | **judgmental** | LLM | V1-V7 測定方法の設計 |
+| Step 6: D4 フェーズ設計 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: 5 Phase テンプレート構造 / judgmental: 各 Phase の成果物設計 |
+| Step 7: D5 テストケース設計 | **judgmental** | LLM | テスト設計の創造的行為 |
+| Step 8: D6-D9 検証 | **bounded** | チェックリスト検証 | 有限の確認項目に対する構造化検証 |
+| Step 8b: D10-D14 検証 | **bounded** | チェックリスト検証 | 有限の確認項目（D10-D14 各 3-4 項目）に対する構造化検証 |
+| Step 9: 自己適用検証 | **bounded** | チェックリスト検証 | SelfGoverning 3 条件の構造化検証 |
+| Step 9b: Derivation Accuracy 測定 | **deterministic + judgmental（分離済み）** | PD 照合スクリプト + LLM（Miss 分類） | `mixed_task_decomposition` 適用済み ✓: Match/Partial/Miss のカウントは deterministic、原因分類は judgmental |
+
+**設計原則**:
+- Step 2-5, 7 は judgmental — 設計判断の本質的行為（Provider ごとに異なる）
+- Step 8, 8b, 9 は bounded — 有限のチェックリスト検証（agent 委譲相当）
+- Step 0c は bounded — subagent 並列調査の収束判定
+- Step 1 は唯一の純粋 deterministic（ファイル読み込み）
+- Step 9b は mixed 分離済み — PD 照合の deterministic 成分が明確に分離
+
 ## 前提知識
 
 このスキルは以下のファイルを参照する:

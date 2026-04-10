@@ -25,6 +25,23 @@ V1–V7 の現在値を .claude/metrics/ のログから計算して表示する
 | トレードオフ | Observable.lean | `tradeoff_v1_v2` 等 |
 | Goodhart 脆弱性 | Observable.lean | `v4_goodhart`, `v7_goodhart` |
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#379）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 1: ログ読み込み | **deterministic** | スクリプト（jq / ファイル読み込み） | .claude/metrics/ のファイル読み込み |
+| Step 2: メトリクス計算 | **deterministic** | スクリプト（算術演算） | JSONL データの集計・比率計算 |
+| Step 3: 結果表示 | **deterministic** | テンプレート出力 | V1-V7 ダッシュボードのフォーマット |
+| Step 4: D3 確認 + 推奨アクション | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: D3 条件テーブルの表示 / judgmental: WARNING/DEGRADED 時の推奨アクション生成 |
+
+**設計原則**:
+- Step 1-3 は全て deterministic — observe.sh 類似のスクリプト化が自然（`deterministic_must_be_structural`）
+- Step 4 の deterministic 成分（テーブル表示）と judgmental 成分（推奨生成）は分離候補（`mixed_task_decomposition`）
+- /metrics は大部分が deterministic であり、スクリプト化によるコンテキストコスト削減効果が最も大きいスキルの一つ
+
 ## 測定方法
 
 ### 即時測定可能
