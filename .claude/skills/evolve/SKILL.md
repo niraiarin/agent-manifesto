@@ -467,11 +467,16 @@ Loopback フェーズでは PASS_LIST が確定済みであるため、依存関
 
 **Verifier への入力（各提案）:**
 ```
+review_mode: [implementation|design]
 検証対象: [改善案のタイトルと内容]
 変更対象ファイル: [ファイルリスト]
 互換性分類: [分類]
 テスト計画: [テスト計画]
 ```
+
+**review_mode の選択基準:**
+- `design`: Hypothesizer の提案が設計（何を変えるか）のみで、実装（ファイル差分）を含まない場合
+- `implementation`: Integrator が実装した後の検証、または /verify での手動検証
 
 **重要（P2 準拠）:**
 - Hypothesizer の思考過程を Verifier に渡さない（コンテキスト分離）
