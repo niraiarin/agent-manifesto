@@ -45,6 +45,10 @@
     "D12",
     "D13",
     "D14",
+    "D15",
+    "D16",
+    "D17",
+    "D18",
     "V1",
     "V2",
     "V3",
@@ -1529,7 +1533,7 @@
       "id": "lean:models-epistemic-layer",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Assumptions/EpistemicLayer.lean",
-      "refs": ["D17","P3"],
+      "refs": ["P3"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1545,7 +1549,7 @@
       "id": "lean:cc-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/Assumptions.lean",
-      "refs": ["D1","D17","P3","L5"],
+      "refs": ["D1","P3"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1553,7 +1557,7 @@
       "id": "lean:cc-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/ConditionalDesignFoundation.lean",
-      "refs": ["D1","D2","D3","D10","D11","D18","L5"],
+      "refs": ["D1","D2","D3","D10","D11","D18"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1561,7 +1565,7 @@
       "id": "lean:cc-enforcement-extension",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/EnforcementExtension.lean",
-      "refs": ["D1","L1","L5","D11"],
+      "refs": ["D1","L1","T1","T2","T6"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1569,7 +1573,7 @@
       "id": "lean:forgecode-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/Assumptions.lean",
-      "refs": ["D17","L5"],
+      "refs": ["D17"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1577,7 +1581,7 @@
       "id": "lean:forgecode-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/ConditionalDesignFoundation.lean",
-      "refs": ["D17","D1","L5"],
+      "refs": ["D17","D1"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1585,7 +1589,7 @@
       "id": "lean:safetyplugin-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/Assumptions.lean",
-      "refs": ["D17","L5"],
+      "refs": ["D17"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1593,7 +1597,7 @@
       "id": "lean:safetyplugin-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/ConditionalDesignFoundation.lean",
-      "refs": ["D17","D1","L5"],
+      "refs": ["D17","D1"],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1705,7 +1709,7 @@
       "id": "script:resolve-manifesto-root",
       "type": "script",
       "path": ".claude/skills/shared/resolve-manifesto-root.sh",
-      "refs": [],
+      "refs": ["P4"],
       "enforces": "procedural",
       "scope": "implementation"
     }
