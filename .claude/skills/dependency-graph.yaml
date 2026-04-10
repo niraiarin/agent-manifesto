@@ -6,7 +6,7 @@
 #
 # Schema: .claude/skills/dependency-schema.yaml
 
-generated_at: "2026-04-10T04:30:03Z"
+generated_at: "2026-04-10T12:37:16Z"
 skill_count: 12
 
 skills:
@@ -47,6 +47,10 @@ skills:
         type: soft
         phase: "Step 2"
         condition: "breaking change を提案する場合"
+      - skill: trace
+        type: soft
+        phase: "Step 4 Integrator Step 2.5"
+        condition: "traceable artifact (skill/hook/agent/rule) を変更した場合"
     agents:
       - agent: observer
         role: "Phase 1: observe current state"
@@ -216,6 +220,10 @@ edges:
     to: research
     type: soft
     phase: "Step 2"
+  - from: evolve
+    to: trace
+    type: soft
+    phase: "Step 4 Integrator Step 2.5"
   - from: formal-derivation
     to: verify
     type: hard
@@ -288,8 +296,9 @@ edges:
 # Summary
 summary:
   total_skills: 12
-  total_edges: 25
+  total_edges: 26
   hard_edges: 16
-  soft_edges: 9
+  soft_edges: 10
   bidirectional:
     - "instantiate-model <-> design-implementation-plan"
+    - "trace <-> evolve"

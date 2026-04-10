@@ -26,6 +26,10 @@ dependencies:
       type: soft
       phase: "Step 2"
       condition: "breaking change を提案する場合"
+    - skill: trace
+      type: soft
+      phase: "Step 4 Integrator Step 2.5"
+      condition: "traceable artifact (skill/hook/agent/rule) を変更した場合"
   agents:
     - agent: observer
       role: "Phase 1: observe current state"
