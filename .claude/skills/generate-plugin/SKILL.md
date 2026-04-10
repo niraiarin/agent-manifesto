@@ -130,9 +130,12 @@ bash scripts/d17-state.sh transition <plugin> construct '<ConditionalAxiomBuildR
    - hooks/: PreToolUse/PostToolUse hook scripts
    - hooks.json: hook 登録
    - plugin.json: メタデータ + derivedFrom トレーサビリティ
+   - SKILL.md: dependencies frontmatter を含む（#346 スキーマ準拠）
 2. 各 hook script に SEP-H assumption への参照コメントを含める
 3. POSIX 互換性を確保 (SEP-H9)
 4. audit logging を PreToolUse 内に実装 (SEP-H10)
+5. SKILL.md の dependencies frontmatter に invokes/agents を宣言する
+   （スキーマ: `.claude/skills/dependency-schema.yaml`）
 
 **状態遷移**:
 ```bash

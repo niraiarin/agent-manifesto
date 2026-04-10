@@ -674,10 +674,12 @@ Judge FAIL の改善案は PASS_LIST から除外し FAIL_LIST に移動。
 Integrator は以下を実行:
 1. feature ブランチを作成（`evolve/run-<N>`）
 2. 改善を構造に適用
-3. `bash scripts/check-loop.sh` で全チェックをエラーゼロまでループ実行
+3. SKILL.md を変更した場合: dependencies frontmatter を更新し
+   `bash scripts/verify-skill-dependencies.sh` で整合性を検証
+4. `bash scripts/check-loop.sh` で全チェックをエラーゼロまでループ実行
    （sync-counts → lake build → test-all.sh を自動ループ。不整合は自動修正）
    （注: プロジェクトルートの `scripts/check-loop.sh` を指す。スキルディレクトリの `scripts/` ではない）
-4. git commit（互換性分類付き）
+5. git commit（互換性分類付き）
 5. `bash scripts/generate-evolve-entry.sh` でテンプレート生成（session_id, lean, tests, benchmark 自動取得）
 6. テンプレートに judgmental フィールド（improvements, rejected, phases, v_changes, notes）を埋める
 7. `echo '<entry>' | bash scripts/validate-evolve-entry.sh` で JSONL エントリを事前検証（C1-C7）
