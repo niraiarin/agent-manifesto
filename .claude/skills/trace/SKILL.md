@@ -14,6 +14,7 @@ dependencies:
       phase: "Step 3"
       condition: "ギャップが検出され改善が必要な場合"
 ---
+<!-- @traces P4, D3, D13, V6 -->
 
 # Artifact Trace (P4 + D13: 半順序トレーサビリティ)
 

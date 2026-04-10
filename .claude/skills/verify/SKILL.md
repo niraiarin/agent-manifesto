@@ -13,6 +13,7 @@ dependencies:
     - agent: verifier
       role: "Independent code/design review"
 ---
+<!-- @traces P2, E1, D2, D1 -->
 
 # Verifier (P2: 評価検証の独立性)
 

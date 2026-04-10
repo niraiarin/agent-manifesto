@@ -38,6 +38,7 @@ dependencies:
     - agent: integrator
       role: "Phase 4: integrate approved changes"
 ---
+<!-- @traces T1, T2, T6, P2, P3, P4, D1, D4, D9, D10, D13 -->
 
 # /evolve — 構造の漸進的改善スキル
 
