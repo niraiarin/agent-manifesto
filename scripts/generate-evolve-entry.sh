@@ -5,10 +5,23 @@
 # 生成されたテンプレートは validate-evolve-entry.sh で事前検証可能。
 #
 # Usage:
-#   bash scripts/generate-evolve-entry.sh [--run N]
+#   bash scripts/generate-evolve-entry.sh [--run N] [--observer-findings N]
+#     [--hyp-proposals N] [--verifier-pass N] [--verifier-fail N]
+#     [--integrator-commits N] [--judge-evaluated N] [--judge-pass N]
+#     [--judge-conditional N] [--judge-fail N] [--judge-avg F]
 #
 # Options:
-#   --run N   Run 番号を指定（省略時は前回 +1）
+#   --run N               Run 番号を指定（省略時は前回 +1）
+#   --observer-findings N Observer 検出件数
+#   --hyp-proposals N     Hypothesizer 提案件数
+#   --verifier-pass N     Verifier PASS 件数
+#   --verifier-fail N     Verifier FAIL 件数
+#   --integrator-commits N Integrator コミット件数
+#   --judge-evaluated N   Judge 評価件数
+#   --judge-pass N        Judge PASS 件数
+#   --judge-conditional N Judge CONDITIONAL 件数
+#   --judge-fail N        Judge FAIL 件数
+#   --judge-avg F         Judge 平均スコア
 #
 # Output: JSON テンプレート (stdout)
 # 依存: python3, jq, lean-formalization/Manifest/
@@ -24,9 +37,29 @@ LEAN_DIR="$BASE/lean-formalization"
 
 # --- Parse arguments ---
 RUN_NUM=""
+OBS_FINDINGS=""
+HYP_PROPOSALS=""
+VER_PASS=""
+VER_FAIL=""
+INT_COMMITS=""
+JUDGE_EVALUATED=""
+JUDGE_PASS=""
+JUDGE_CONDITIONAL=""
+JUDGE_FAIL=""
+JUDGE_AVG=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --run) RUN_NUM="$2"; shift 2 ;;
+    --observer-findings) OBS_FINDINGS="$2"; shift 2 ;;
+    --hyp-proposals) HYP_PROPOSALS="$2"; shift 2 ;;
+    --verifier-pass) VER_PASS="$2"; shift 2 ;;
+    --verifier-fail) VER_FAIL="$2"; shift 2 ;;
+    --integrator-commits) INT_COMMITS="$2"; shift 2 ;;
+    --judge-evaluated) JUDGE_EVALUATED="$2"; shift 2 ;;
+    --judge-pass) JUDGE_PASS="$2"; shift 2 ;;
+    --judge-conditional) JUDGE_CONDITIONAL="$2"; shift 2 ;;
+    --judge-fail) JUDGE_FAIL="$2"; shift 2 ;;
+    --judge-avg) JUDGE_AVG="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
 done
@@ -49,7 +82,7 @@ TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 # Session ID from tool-usage.jsonl (latest entry)
 SESSION_ID="unknown"
 if [[ -f "$TOOL_LOG" ]]; then
-  SESSION_ID=$(tail -1 "$TOOL_LOG" | jq -r '.session_id // "unknown"' 2>/dev/null || echo "unknown")
+  SESSION_ID=$(tail -1 "$TOOL_LOG" | jq -r '.session // .session_id // "unknown"' 2>/dev/null || echo "unknown")
 fi
 
 # Lean stats
@@ -86,6 +119,13 @@ if [[ -f "$BASE/.claude/skills/evolve/scripts/observe.sh" ]]; then
   SATURATION_STATUS=$(echo "$OBSERVE_JSON" | jq -r '.metrics.saturation_status // "ok"' 2>/dev/null || echo "ok")
 fi
 
+# --- Build judge JSON (null if no judge args provided) ---
+if [[ -n "$JUDGE_EVALUATED" ]]; then
+  JUDGE_JSON="{'evaluated': int('${JUDGE_EVALUATED}'), 'pass': int('${JUDGE_PASS:-0}'), 'conditional': int('${JUDGE_CONDITIONAL:-0}'), 'fail': int('${JUDGE_FAIL:-0}'), 'avg_score': float('${JUDGE_AVG:-0}')}"
+else
+  JUDGE_JSON="None"
+fi
+
 # --- Generate JSON template ---
 python3 -c "
 import json, sys
@@ -108,10 +148,11 @@ entry = {
         'failed': int('$TEST_FAILED')
     },
     'phases': {
-        'observer': {'findings_count': 0, 'model': 'sonnet'},
-        'hypothesizer': {'proposals_count': 0, 'model': 'opus'},
-        'verifier': {'pass_count': 0, 'fail_count': 0, 'model': 'sonnet'},
-        'integrator': {'commits_count': 0, 'model': 'sonnet'}
+        'observer': {'findings_count': int('${OBS_FINDINGS:-0}'), 'model': 'sonnet'},
+        'hypothesizer': {'proposals_count': int('${HYP_PROPOSALS:-0}'), 'model': 'opus'},
+        'verifier': {'pass_count': int('${VER_PASS:-0}'), 'fail_count': int('${VER_FAIL:-0}'), 'model': 'sonnet'},
+        'judge': ${JUDGE_JSON},
+        'integrator': {'commits_count': int('${INT_COMMITS:-0}'), 'model': 'sonnet'}
     },
     'v_changes': {},
     'benchmark': {
