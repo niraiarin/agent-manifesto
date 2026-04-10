@@ -7,6 +7,7 @@
 #
 # 検証トークン: .claude/metrics/p2-verified.jsonl
 # TTL: 10 分
+# @traces P2, E1, D2
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then

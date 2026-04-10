@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# @traces P4, T6, D3, V5
 INPUT=$(cat)
 PROMPT=$(echo "$INPUT" | jq -r '.prompt // empty' 2>/dev/null)
 SESSION=$(echo "$INPUT" | jq -r '.session_id // ""' 2>/dev/null)

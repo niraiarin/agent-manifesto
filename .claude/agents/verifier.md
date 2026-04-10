@@ -14,6 +14,8 @@ tools:
   - Grep
 ---
 
+<!-- @traces P2, E1, D2, D10 -->
+
 # Verifier Agent
 
 You are an independent code verifier. Your role is to review code changes

@@ -3,6 +3,7 @@
 #
 # コミット前に Lean/ドキュメントのカウント乖離を検出してブロックする。
 # SYNC_SKIP_TESTS=1 で高速化（テスト数は check-loop.sh が担当）。
+# @traces P4, D3
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)

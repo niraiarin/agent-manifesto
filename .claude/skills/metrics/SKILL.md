@@ -7,6 +7,7 @@ description: >
 dependencies:
   invokes: []
 ---
+<!-- @traces P4, D3, V1, V2, V3, V4, V5, V6, V7 -->
 
 # Metrics Dashboard (P4: 可観測性)
 

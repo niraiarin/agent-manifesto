@@ -2,6 +2,8 @@
 paths: ["**"]
 ---
 
+<!-- @traces L1, D1 -->
+
 # L1 補強: Sandbox の推奨
 
 Trail of Bits の知見（Step 0b）:

@@ -40,6 +40,7 @@ dependencies:
     - agent: judge
       role: "G1-G5 structured evaluation for Gate judgment"
 ---
+<!-- @traces P3, D3, D13 -->
 
 # Gate-Driven Research Workflow
 

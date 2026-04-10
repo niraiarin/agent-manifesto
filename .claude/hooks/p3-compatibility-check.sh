@@ -4,6 +4,7 @@
 # D8（均衡探索）: 段階的厳格化
 # - 1回目 → 警告
 # - 2回目以降で分類なし → ブロック
+# @traces P3, D13, D8
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)

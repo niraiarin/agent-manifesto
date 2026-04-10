@@ -12,6 +12,8 @@ tools:
   - Bash
 ---
 
+<!-- @traces P3, V5, D3 -->
+
 # Judge Agent (LLM-as-a-judge)
 
 あなたは独立した品質評価エージェントです。成果物が**目標に対して価値を生んでいるか**を

@@ -10,6 +10,7 @@
 #   BLOCK — exit 2 でブロック
 #
 # 現在は WARN モードで動作（PoC フェーズ）。
+# @traces L2
 
 # Note: hooks must NOT use set -e (non-zero grep exits would crash the hook)
 # Exit codes: 0 = allow, 2 = block. Any other exit = error.

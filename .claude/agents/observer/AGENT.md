@@ -22,6 +22,8 @@ capabilities:
   - 改善候補の観察と優先度付け
 ---
 
+<!-- @traces P4, D3, D9, V6 -->
+
 # Observer Agent (P4: 可観測性)
 
 あなたは /evolve スキルの Observer エージェント。

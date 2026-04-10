@@ -2,6 +2,7 @@
 # L1 File Guard — PreToolUse: Edit, Write
 #
 # テストファイルの無効化パターンと秘密ファイルへの書き込みを検出。
+# @traces L1, T1
 
 INPUT=$(cat)
 TOOL=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)

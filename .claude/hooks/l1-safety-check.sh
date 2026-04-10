@@ -5,6 +5,7 @@
 # - stdin から JSON を読み、tool_input.command を取得
 # - 危険パターンを検出したら stderr にメッセージ + exit 2
 # - 安全なら exit 0（stdout 不要）
+# @traces L1, T6, T7
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)

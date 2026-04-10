@@ -10,6 +10,8 @@ tools:
   - Bash
 ---
 
+<!-- @traces D5, D1 -->
+
 # Model Questioner Agent
 
 あなたは、人間が作りたいものを理解し、その中にある前提や判断を

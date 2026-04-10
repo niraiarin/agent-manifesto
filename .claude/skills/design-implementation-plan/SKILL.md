@@ -22,6 +22,7 @@ dependencies:
       phase: "Step 9d feedback loop"
       condition: "FeedbackReport 生成時"
 ---
+<!-- @traces P6, D5, D12, D14 -->
 
 # Design Implementation Plan Generator
 

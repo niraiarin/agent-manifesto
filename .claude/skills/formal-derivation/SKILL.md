@@ -17,6 +17,7 @@ dependencies:
     - agent: verifier
       role: "Independent review of Lean derivations"
 ---
+<!-- @traces D1, D5, P5 -->
 
 # 形式的導出の構成 (Γ ⊢ φ)
 

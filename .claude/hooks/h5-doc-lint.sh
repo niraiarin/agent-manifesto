@@ -4,6 +4,7 @@
 # Lean doc comment の品質を git commit 時に検証する。
 # Verso の制約から導出されたルール (H1-H5, P1-P2, A1-A3, C1) をチェック。
 # errors がある場合はコミットをブロック。warnings は表示のみ。
+# @traces D5, D1
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)

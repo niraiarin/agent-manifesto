@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# @traces P4, D3, V7
 INPUT=$(cat)
 TASK_ID=$(echo "$INPUT" | jq -r '.task_id // empty' 2>/dev/null)
 TASK_SUBJECT=$(echo "$INPUT" | jq -r '.task_subject // empty' 2>/dev/null)

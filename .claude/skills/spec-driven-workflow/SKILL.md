@@ -34,6 +34,7 @@ dependencies:
       type: hard
       phase: "Phase 4 Step 5"
 ---
+<!-- @traces D1, D2, D3, D4, D5, P2, P3, P4 -->
 
 # Spec-Driven Development Workflow
 

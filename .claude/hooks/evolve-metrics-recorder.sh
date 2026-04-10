@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# @traces P4, D3, D9
 set -uo pipefail
 TOOL_INPUT=$(cat 2>/dev/null || true)
 TOOL_NAME=$(echo "$TOOL_INPUT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 2>/dev/null || true)

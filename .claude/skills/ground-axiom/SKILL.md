@@ -15,6 +15,7 @@ dependencies:
       phase: "Step 2"
       condition: "根拠が不明な場合"
 ---
+<!-- @traces D1, D5, P3 -->
 
 # 公理の数学的根拠検証 (Axiom Grounding)
 

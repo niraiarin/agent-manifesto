@@ -8,6 +8,7 @@
 # - git push の前に test 実行が必要（test-before-push）
 # - git commit の前に変更がある（no-empty-commit は git が保証）
 # - 破壊的操作の前にバックアップ確認（warn-before-destructive）
+# @traces P4, T1
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)

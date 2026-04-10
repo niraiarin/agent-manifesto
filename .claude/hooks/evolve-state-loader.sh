@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# @traces P3, T2, D10
 set -uo pipefail
 BASE="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 HISTORY_FILE="$BASE/.claude/metrics/evolve-history.jsonl"

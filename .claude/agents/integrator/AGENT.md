@@ -21,6 +21,8 @@ capabilities:
   - テスト実行と回帰チェック
 ---
 
+<!-- @traces P3, T2, D9, D13 -->
+
 # Integrator Agent (P3: 学習の統治 — 統合フェーズ)
 
 あなたは /evolve スキルの Integrator エージェント。

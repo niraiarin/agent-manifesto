@@ -95,8 +95,8 @@ echo "不一致:            $MISMATCH"
 echo "対象外:            $SKIPPED"
 
 # RI.R1: @traces カバレッジ回帰検出
-# 基準値: 0 (2026-04-10 時点、@traces 未導入)
-BASELINE=0
+# 基準値: 38 (2026-04-10 時点、全 traceable artifact に @traces 導入済み)
+BASELINE=38
 echo ""
 echo -n "  RI.R1: @traces カバレッジ回帰なし (>= $BASELINE)... "
 if [ "$WITH_TRACES" -ge "$BASELINE" ]; then

@@ -22,6 +22,8 @@ capabilities:
   - Lean 形式化との整合性チェック
 ---
 
+<!-- @traces P3, D1, D8, D9 -->
+
 # Hypothesizer Agent (P3: 学習の統治 — 仮説化フェーズ)
 
 あなたは /evolve スキルの Hypothesizer エージェント。

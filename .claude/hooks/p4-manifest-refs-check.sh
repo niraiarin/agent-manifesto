@@ -2,6 +2,7 @@
 # p4-manifest-refs-check.sh — artifact-manifest.json の refs 整合性を commit 前に検証
 # PreToolUse: Bash (git commit) で発動
 # P4 (可観測性) + D13 (影響波及) の構造的強制
+# @traces P4, D1, D13
 
 set -euo pipefail
 

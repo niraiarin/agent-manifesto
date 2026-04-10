@@ -26,6 +26,7 @@ dependencies:
     - agent: model-questioner
       role: "Phase 0-1 dialogue for requirements extraction"
 ---
+<!-- @traces D5, D1 -->
 
 # /instantiate-model
 

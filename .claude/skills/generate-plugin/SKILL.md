@@ -16,6 +16,7 @@ dependencies:
       phase: "Phase 1-2 construct"
       condition: "条件付き公理系構築時"
 ---
+<!-- @traces D17, P3, D1 -->
 
 # /generate-plugin — D17 自動 Plugin 生成
 

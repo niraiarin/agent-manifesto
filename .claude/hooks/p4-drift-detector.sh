@@ -8,6 +8,7 @@
 # - L1 ブロック頻度の増加（安全行動の劣化）
 # - ツール使用パターンの変化（効率の劣化）
 # - 承認率の低下（提案精度の劣化）
+# @traces P4, T5, D3
 
 METRICS_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo .)/.claude/metrics"
 

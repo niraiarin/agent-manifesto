@@ -3,6 +3,7 @@
 #
 # PostToolUse はブロックできないが、全ツール実行のログを記録できる。
 # V2（コンテキスト効率）と V4（ゲート通過率）の測定基盤。
+# @traces P4, D3, V2, V4
 
 INPUT=$(cat)
 TOOL=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null)

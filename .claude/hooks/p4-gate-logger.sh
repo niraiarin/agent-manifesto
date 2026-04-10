@@ -3,6 +3,7 @@
 #
 # V4（ゲート通過率）: Phase 1 の hook が何回ブロックし何回通過したかを記録。
 # このスクリプト自体は何もブロックしない。
+# @traces P4, L6, V4
 
 METRICS_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo .)/.claude/metrics"
 mkdir -p "$METRICS_DIR"
