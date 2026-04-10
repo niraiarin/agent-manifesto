@@ -37,7 +37,7 @@
 
 公理系を Lean 4 で形式化し、内部整合性を機械的に保証する。
 
-- **51 axioms**, **386 theorems**, **0 sorry**
+- **53 axioms**, **459 theorems**, **0 sorry**
 - 境界条件 **L1–L6**: エージェントの行動空間の壁（Ontology.lean）
 - 可観測変数 **V1–V7**: 壁の中で構造が動かせるレバー（Observable.lean）
 
@@ -48,7 +48,7 @@
 | `Ontology.lean` | 境界条件 L1–L6、型定義、半順序公理 |
 | `Observable.lean` | 変数 V1–V7 の定義、proxy 成熟度（V1/V3 formal 昇格済み） |
 | `ObservableDesign.lean` | V1–V7 の設計特性、運用閾値、Goodhart 耐性 |
-| `DesignFoundation.lean` | 設計開発基礎論 D1–D14 の形式化 |
+| `DesignFoundation.lean` | 設計開発基礎論 D1–D18 の形式化 |
 | `EpistemicLayer.lean` | 認識論的層（GQM, Goodhart 5層防御, proxy 卒業条件） |
 | `EvolveSkill.lean` | /evolve スキルの準拠性証明（φ₁–φ₁₇） |
 | `FormalDerivationSkill.lean` | 形式的導出スキルの準拠性証明 |
@@ -57,13 +57,19 @@
 | `Workflow.lean` | 学習ライフサイクル、統合ゲート条件 |
 | `Procedure.lean` | T₀ 縮小禁止、修正の安全性順序 |
 | `AxiomQuality.lean` | De Bruijn factor、公理品質指標 |
+| `TaskClassification.lean` | タスク自動化分類（deterministic/bounded/judgmental） |
+| `ConformanceVerification.lean` | 適合検証の定理 |
+| `Terminology.lean` | 数理論理学用語の形式定義 |
 | `Meta.lean` | モジュール別定理分布（SSOT） |
+| `Framework/` | LLM 拒絶、互換性分類、DAG 検出等の汎用フレームワーク |
+| `Foundation/` | 確率論、情報理論、制御理論等の数学基盤 |
+| `Models/` | 条件付き公理系インスタンス（ClaudeCode, ForgeCode 等）、PoC シナリオ |
 
 ```bash
 export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ```
 
-### 設計開発基礎論 (D1–D14)
+### 設計開発基礎論 (D1–D18)
 
 公理系から導出される、プラットフォーム非依存の設計定理。
 
@@ -83,10 +89,53 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | D12 | タスク設計の CSP | P6 + T3 + T7 + T8 |
 | D13 | 前提否定の影響波及 | P3 + T5 |
 | D14 | 検証制約 | P6 + T7 + T8 |
+| D15 | ハーネスエンジニアリング | D1 + D5 |
+| D16 | 情報関連性 | T3 + D11 |
+| D17 | 演繹的設計ワークフロー | D5 + D9 |
+| D18 | マルチエージェント協調 | P2 + D2 |
 
 ## 参照実装 — Claude Code 上の運用ワークフロー
 
-理論を Claude Code 上で実際に運用するための構成。12 スキル、16 フック、6 エージェント、492 テスト。
+理論を Claude Code 上で実際に運用するための構成。12 スキル、17 フック、6 エージェント、391 テスト。
+
+### スキル依存グラフ
+
+12 スキル間の呼び出し関係。実線 = hard dependency、破線 = soft (条件付き)。
+`scripts/generate-skill-mermaid.sh` で `dependency-graph.yaml` から自動生成。
+
+```mermaid
+graph LR
+  design_implementation_plan["/design-implementation-plan"] -.-> research["/research"]
+  design_implementation_plan["/design-implementation-plan"] -.-> verify["/verify"]
+  design_implementation_plan["/design-implementation-plan"] --> instantiate_model["/instantiate-model"]
+  evolve["/evolve"] --> metrics["/metrics"]
+  evolve["/evolve"] --> verify["/verify"]
+  evolve["/evolve"] --> formal_derivation["/formal-derivation"]
+  evolve["/evolve"] -.-> adjust_action_space["/adjust-action-space"]
+  evolve["/evolve"] -.-> research["/research"]
+  formal_derivation["/formal-derivation"] --> verify["/verify"]
+  generate_plugin["/generate-plugin"] --> research["/research"]
+  generate_plugin["/generate-plugin"] --> instantiate_model["/instantiate-model"]
+  ground_axiom["/ground-axiom"] -.-> research["/research"]
+  instantiate_model["/instantiate-model"] --> design_implementation_plan["/design-implementation-plan"]
+  research["/research"] -.-> verify["/verify"]
+  research["/research"] -.-> trace["/trace"]
+  research["/research"] -.-> metrics["/metrics"]
+  spec_driven_workflow["/spec-driven-workflow"] --> instantiate_model["/instantiate-model"]
+  spec_driven_workflow["/spec-driven-workflow"] --> research["/research"]
+  spec_driven_workflow["/spec-driven-workflow"] --> formal_derivation["/formal-derivation"]
+  spec_driven_workflow["/spec-driven-workflow"] --> trace["/trace"]
+  spec_driven_workflow["/spec-driven-workflow"] --> verify["/verify"]
+  spec_driven_workflow["/spec-driven-workflow"] --> metrics["/metrics"]
+  spec_driven_workflow["/spec-driven-workflow"] --> ground_axiom["/ground-axiom"]
+  spec_driven_workflow["/spec-driven-workflow"] --> evolve["/evolve"]
+  trace["/trace"] -.-> evolve["/evolve"]
+
+  style metrics fill:#e8f5e9
+  style verify fill:#e8f5e9
+  style adjust_action_space fill:#e8f5e9
+  style spec_driven_workflow fill:#fff3e0
+```
 
 ### ワークフロー全体図
 
@@ -104,10 +153,10 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
   ┌───────────────────────────────────────────────────────────────┐
   │              漸進的改善サイクル (/evolve)                       │
   │                                                               │
-  │  Observer ──→ Hypothesizer ──→ Verifier ──→ Integrator        │
-  │    (P4)          (P3)           (P2)         (P3)             │
-  │  V1-V7計測    改善案設計      独立検証      統合+コミット       │
-  │  候補列挙     互換性分類      PASS/FAIL     退役処理           │
+  │  Observer ──→ Hypothesizer ──→ Verifier ──→ Judge ──→ Integrator│
+  │    (P4)          (P3)           (P2)       (P3)      (P3)     │
+  │  V1-V7計測    改善案設計      独立検証    目標整合性  統合+コミット│
+  │  候補列挙     互換性分類      PASS/FAIL   C1-C5評価  退役処理   │
   └───────────────────────────────────────────────────────────────┘
 
   ┌───────────────────────────────────────────────────────────────┐
@@ -151,8 +200,9 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | `/design-implementation-plan` | プロバイダマッピング | D1–D9 | 新プラットフォームへの適用設計時 |
 | `/adjust-action-space` | 行動空間の調整 | D8, L4 | 権限の拡張/縮小を提案する時 |
 | `/instantiate-model` | 条件付き公理系生成 | 形式モデル | ドメイン固有の公理系を生成する時 |
+| `/generate-plugin` | Claude Code plugin 自動生成 | D17 | 条件付き公理系から plugin を構築する時 |
 
-### フック一覧 (16個) — 自動的な構造強制
+### フック一覧 (17個) — 自動的な構造強制
 
 エージェントの裁量に依存せず、ツール実行時に自動強制される。
 
@@ -177,6 +227,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 | フック | タイミング | 内容 |
 |--------|-----------|------|
 | `p4-metrics-collector.sh` | PostToolUse (async) | 全ツール使用を tool-usage.jsonl に記録 |
+| `p4-manifest-refs-check.sh` | PreToolUse: Bash (git commit) | artifact-manifest.json の参照整合性を検証 |
 | `p4-temporal-tracker.sh` | PreToolUse: Bash | タイムスタンプのドリフトを検出 |
 | `p4-sync-counts-check.sh` | PreToolUse: Bash (git commit) | Lean/ドキュメントのカウント同期を検証 |
 | `p4-gate-logger.sh` | SessionStart | セッション開始時の V1–V7 ベースラインを記録 |
@@ -239,7 +290,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ```
 ├── archive/manifesto.md                  # 公理系の初期文書 (archived — Lean が正典)
 ├── docs/
-│   ├── design-development-foundation.md  # 設計開発基礎論 (D1-D9)
+│   ├── design-development-foundation.md  # 設計開発基礎論 (D1-D14)
 │   ├── implementation-boundaries.md      # 実装判断基準
 │   ├── formal-derivation-procedure.md    # 形式導出の手順書
 │   └── mathematical-logic-terminology.md # 数理論理学の用語リファレンス
@@ -247,15 +298,15 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 │   └── Manifest/
 │       ├── Ontology.lean                 #   L1-L6 境界条件
 │       ├── Observable.lean               #   V1-V7 可観測変数
-│       ├── DesignFoundation.lean         #   D1-D9 設計定理
+│       ├── DesignFoundation.lean         #   D1-D18 設計定理
 │       ├── EpistemicLayer.lean           #   認識論的層
 │       ├── Workflow.lean                 #   P3 学習ライフサイクル
 │       └── Evolution.lean               #   互換性代数
-├── tests/                                # 受入テスト (492 scenarios, Phase 1-5)
+├── tests/                                # 受入テスト (391 scenarios, Phase 1-5)
 │   └── trace-map.json                    #   テスト→命題トレーサビリティマッピング
 ├── .claude/
 │   ├── skills/                           #   12 スキル (上記参照)
-│   ├── hooks/                            #   16 フック (上記参照)
+│   ├── hooks/                            #   17 フック (上記参照)
 │   ├── agents/                           #   6 エージェント (上記参照)
 │   ├── rules/                            #   規範的指針 (L1, P3)
 │   └── metrics/                          #   運用データ (JSONL)
@@ -265,7 +316,9 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 ├── scripts/                              # 自動化スクリプト
 │   ├── trace-coverage.sh                 #   テスト→命題カバレッジレポート
 │   ├── check-lean-imports.sh             #   Lean import 整合性チェック
-│   └── sync-counts.sh                    #   定理/公理カウント同期
+│   ├── sync-counts.sh                    #   定理/公理カウント同期
+│   ├── generate-skill-depgraph.sh        #   スキル依存グラフ YAML 生成
+│   └── generate-skill-mermaid.sh         #   スキル依存グラフ Mermaid 生成
 ├── manifest-trace                        # CLI: 半順序トレーサビリティ + D13 影響分析
 └── artifact-manifest.json                # 成果物→命題マッピング (SSOT)
 ```
@@ -275,14 +328,14 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 1. **[lean-formalization/Manifest/](lean-formalization/Manifest/)** — 公理系の正典（Lean 4 形式検証済み）
 2. **[Ontology.lean](lean-formalization/Manifest/Ontology.lean)** — 境界条件 L1–L6
 3. **[Observable.lean](lean-formalization/Manifest/Observable.lean)** — 可観測変数 V1–V7
-4. **[design-development-foundation.md](docs/design-development-foundation.md)** — 設計定理 D1–D9
+4. **[design-development-foundation.md](docs/design-development-foundation.md)** — 設計定理 D1–D14（D15–D18 は Lean のみ）
 5. **[implementation-boundaries.md](docs/implementation-boundaries.md)** — 実装判断基準
 6. **[formal-derivation-procedure.md](docs/formal-derivation-procedure.md)** — 形式導出の手順書
 
 ## テスト
 
 ```bash
-bash tests/test-all.sh    # 全 492 受入テスト (Phase 1-5)
+bash tests/test-all.sh    # 全 391 受入テスト (Phase 1-5)
 ```
 
 | Phase | 対象 | 内容 |
