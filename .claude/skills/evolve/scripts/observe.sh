@@ -1002,6 +1002,17 @@ else
   echo "  \"task_classification\": null,"
 fi
 
+# === Section 17: sorry 分類メトリクス (#302 G6) ===
+# TaskAutomationClass: deterministic
+# 根拠: enumerate-sorry.sh の JSON 出力をそのまま埋め込み。判断成分なし
+SORRY_SCRIPT="$BASE/scripts/enumerate-sorry.sh"
+if [ -x "$SORRY_SCRIPT" ]; then
+  SORRY_JSON=$(bash "$SORRY_SCRIPT" --json 2>/dev/null || echo '{"total":0}')
+  echo "  \"sorry_classification\": $SORRY_JSON,"
+else
+  echo "  \"sorry_classification\": null,"
+fi
+
 # ============================================================
 # Observer 決定論的データ収集（G1 #232: judgmental→structural 移行）
 # 以下のセクションは、従来 Observer Agent が手動で実行していた
