@@ -132,7 +132,7 @@ judgmental フィールド（improvements, rejected, phases, v_changes, notes）
   "tests": {"passed": 0, "failed": 0},
   "phases": {
     "observer": {"findings_count": 0, "model": "sonnet"},
-    "hypothesizer": {"proposals_count": 0, "model": "opus"},
+    "hypothesizer": {"proposals_count": 0, "skipped_count": 0, "model": "opus"},
     "verifier": {"pass_count": 0, "fail_count": 0, "model": "sonnet"},
     "integrator": {"commits_count": 0, "model": "sonnet"}
   },
