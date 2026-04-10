@@ -105,32 +105,32 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 ```mermaid
 graph LR
-  design_implementation_plan["/design-implementation-plan"] -.-> research["/research"]
-  design_implementation_plan["/design-implementation-plan"] -.-> verify["/verify"]
-  design_implementation_plan["/design-implementation-plan"] --> instantiate_model["/instantiate-model"]
-  evolve["/evolve"] --> metrics["/metrics"]
-  evolve["/evolve"] --> verify["/verify"]
-  evolve["/evolve"] --> formal_derivation["/formal-derivation"]
-  evolve["/evolve"] -.-> adjust_action_space["/adjust-action-space"]
-  evolve["/evolve"] -.-> research["/research"]
-  evolve["/evolve"] -.-> trace["/trace"]
-  formal_derivation["/formal-derivation"] --> verify["/verify"]
-  generate_plugin["/generate-plugin"] --> research["/research"]
-  generate_plugin["/generate-plugin"] --> instantiate_model["/instantiate-model"]
-  ground_axiom["/ground-axiom"] -.-> research["/research"]
-  instantiate_model["/instantiate-model"] --> design_implementation_plan["/design-implementation-plan"]
-  research["/research"] -.-> verify["/verify"]
-  research["/research"] -.-> trace["/trace"]
-  research["/research"] -.-> metrics["/metrics"]
-  spec_driven_workflow["/spec-driven-workflow"] --> instantiate_model["/instantiate-model"]
-  spec_driven_workflow["/spec-driven-workflow"] --> research["/research"]
-  spec_driven_workflow["/spec-driven-workflow"] --> formal_derivation["/formal-derivation"]
-  spec_driven_workflow["/spec-driven-workflow"] --> trace["/trace"]
-  spec_driven_workflow["/spec-driven-workflow"] --> verify["/verify"]
-  spec_driven_workflow["/spec-driven-workflow"] --> metrics["/metrics"]
-  spec_driven_workflow["/spec-driven-workflow"] --> ground_axiom["/ground-axiom"]
-  spec_driven_workflow["/spec-driven-workflow"] --> evolve["/evolve"]
-  trace["/trace"] -.-> evolve["/evolve"]
+  design_implementation_plan["design-implementation-plan"] -.-> research["research"]
+  design_implementation_plan -.-> verify["verify"]
+  design_implementation_plan --> instantiate_model["instantiate-model"]
+  evolve["evolve"] --> metrics["metrics"]
+  evolve --> verify
+  evolve --> formal_derivation["formal-derivation"]
+  evolve -.-> adjust_action_space["adjust-action-space"]
+  evolve -.-> research
+  evolve -.-> trace["trace"]
+  formal_derivation --> verify
+  generate_plugin["generate-plugin"] --> research
+  generate_plugin --> instantiate_model
+  ground_axiom["ground-axiom"] -.-> research
+  instantiate_model --> design_implementation_plan
+  research -.-> verify
+  research -.-> trace
+  research -.-> metrics
+  spec_driven_workflow["spec-driven-workflow"] --> instantiate_model
+  spec_driven_workflow --> research
+  spec_driven_workflow --> formal_derivation
+  spec_driven_workflow --> trace
+  spec_driven_workflow --> verify
+  spec_driven_workflow --> metrics
+  spec_driven_workflow --> ground_axiom
+  spec_driven_workflow --> evolve
+  trace -.-> evolve
 
   style metrics fill:#e8f5e9
   style verify fill:#e8f5e9
