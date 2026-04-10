@@ -30,6 +30,7 @@ import Manifest.Traceability
 -- Tier D: 条件付き公理系インスタンス
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
+import Manifest.Models.Instances.ClaudeCode.ManagedAgentsGapAnalysis
 
 /-!
 # Agent Manifest — Formal Specification

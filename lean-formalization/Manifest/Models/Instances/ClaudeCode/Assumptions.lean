@@ -234,9 +234,25 @@ def cc_c8 : Assumption := {
 -- 仮定の一覧
 -- ============================================================
 
+/-- CC-C9: MCP proxy + HashiCorp Vault を使用して credential を structural に隔離する。
+    Agent は認証情報に直接アクセスせず、MCP server 経由でのみ認証済み API を呼出す。
+    ccEnforcementLayer .mcpServer = .procedural を前提として、
+    Vault 統合により credential 次元のみ structural に昇格する。
+    (#311 Managed Agents ギャップ分析で追加) -/
+def cc_c9 : Assumption := {
+  id := "CC-C9"
+  source := .humanDecision 1 "credential-isolation-method" "2026-04-10"
+  content := "MCP proxy + HashiCorp Vault で credential を structural に隔離する。Agent → MCP server (credential なし) → Vault から取得 → API 呼出 → sanitized response。mcpServer プリミティブ自体は procedural だが、Vault 統合により credential 次元の enforcement が structural に昇格する。"
+  validity := some {
+    sourceRef := "https://developer.hashicorp.com/validated-patterns/vault/ai-agent-identity-with-hashicorp-vault"
+    lastVerified := "2026-04-10"
+    reviewInterval := some 90
+  }
+}
+
 /-- Claude Code インスタンスの全仮定。 -/
 def allAssumptions : List Assumption :=
-  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8,
+  [cc_c1, cc_c2, cc_c3, cc_c4, cc_c5, cc_c6, cc_c8, cc_c9,
    cc_h1, cc_h2, cc_h3, cc_h4, cc_h5, cc_h6, cc_h7]
 
 end Manifest.Models.Instances.ClaudeCode
