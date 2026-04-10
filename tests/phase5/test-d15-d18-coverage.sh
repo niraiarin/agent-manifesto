@@ -63,5 +63,5 @@ check "D18.4 D18 dependencies defined in Ontology.lean" \
   "grep -q '| .d18 =>' lean-formalization/Manifest/Ontology.lean"
 
 echo ""
-echo "=== Results: $PASS/$((PASS + FAIL)) passed ==="
+echo "=== Results: $PASS passed, $FAIL failed ==="
 exit $FAIL
