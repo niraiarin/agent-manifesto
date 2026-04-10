@@ -691,7 +691,7 @@ inductive ConstraintId where
   | t2  -- 構造の永続性（structure_persists, structure_accumulates）
   | t3  -- コンテキストの有限性（context_finite, context_bounds_action）
   | t4  -- 出力の確率性（output_nondeterministic）
-  | t5  -- フィードバックなしに改善なし（no_improvement_without_feedback）
+  | t5  -- フィードバックなしに改善なし（no_improvement_without_feedback, no_process_improvement_without_feedback）
   | t6  -- 人間はリソースの最終決定者（human_resource_authority, resource_revocable）
   | t7  -- リソースは有限（resource_finite）
   | t8  -- タスクには精度水準がある（task_has_precision）

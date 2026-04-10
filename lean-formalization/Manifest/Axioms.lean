@@ -48,6 +48,7 @@ in Ontology.lean as definitional extensions (Terminology Reference §5.5).
 | `context_contribution_nonuniform` | T3 | Not all context items contribute equally to task precision | Natural-science-derived |
 | `output_nondeterministic` | T4 | Different outputs possible for the same input | Natural-science-derived |
 | `no_improvement_without_feedback` | T5 | No improvement without feedback loop | Natural-science-derived |
+| `no_process_improvement_without_feedback` | T5 | No process improvement without process-targeted feedback | Natural-science-derived |
 | `human_resource_authority` | T6 | Humans are the final decision-makers for resources | Contract-derived |
 | `resource_revocable` | T6 | Humans can revoke resources | Contract-derived |
 | `resource_finite` | T7 | Resources are finite | Environment-derived |

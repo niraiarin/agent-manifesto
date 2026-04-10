@@ -191,9 +191,9 @@ theorem theorem_distribution_consistent :
 ## スコープ注記
 
 currentProfile および currentTheoremDistribution が追跡する範囲:
-- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (404 theorems, 52 axioms)
+- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (457 theorems, 53 axioms)
 - **追跡対象外**: `Manifest/Models/` (1083 theorems), `Manifest/Foundation/` (17 theorems)
-- **全再帰スコープ**: `Manifest/` 全体で 1504 theorems, 52 axioms
+- **全再帰スコープ**: `Manifest/` 全体で 1560 theorems, 53 axioms
 
 この区別の理由:
 - 公理系の「コア理論」は Manifest/*.lean のモジュールで構成される
