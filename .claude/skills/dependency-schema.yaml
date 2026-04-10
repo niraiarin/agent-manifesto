@@ -1,0 +1,162 @@
+# Skill Dependency Schema Definition
+# Version: 1.0.0
+#
+# This file defines the schema for skill dependency declarations
+# in SKILL.md frontmatter.
+#
+# Usage: Each SKILL.md's YAML frontmatter includes a `dependencies` field
+# following this schema.
+#
+# ============================================================
+# Dependency Pattern Coverage (7/7 patterns)
+# ============================================================
+#
+# | # | Pattern              | Schema expression                          | Example                                   |
+# |---|----------------------|--------------------------------------------|--------------------------------------------|
+# | 1 | Unidirectional HARD  | invokes[].type: hard                       | formal-derivation → verify                 |
+# | 2 | Unidirectional SOFT  | invokes[].type: soft                       | ground-axiom → research                    |
+# | 3 | Conditional          | invokes[].condition: "<text>"              | research → verify (Lean 成果物がある場合)  |
+# | 4 | Bidirectional        | mutual invokes on both sides               | instantiate-model ↔ design-impl-plan       |
+# | 5 | Reverse declaration  | invoked_by[] (informational)               | research.invoked_by: 5 callers             |
+# | 6 | Agent dependency     | agents[].agent + role                      | evolve: 5 agents                           |
+# | 7 | Multi-target         | invokes[] with N entries                   | spec-driven-workflow: 8 invokes            |
+#
+# Quantitative coverage: 12/12 skills, 7/7 patterns
+#
+# ============================================================
+# Next steps after this schema is approved (G1 PASS):
+# ============================================================
+#
+# G2 (#348): Add dependencies frontmatter to all 12 SKILL.md files
+# G3 (#349): Create generation script for dependency-graph.yaml
+# G4 (#350): Create integrity verification script
+# G5 (#351): Add references from README/MEMORY
+
+# ============================================================
+# Schema Definition
+# ============================================================
+#
+# dependencies:
+#   invokes:                    # Skills this skill calls
+#     - skill: <skill-name>    # Required. Target skill name (without /)
+#       type: hard | soft      # Required. hard = workflow-essential, soft = optional/conditional
+#       phase: <string>        # Required. When in the workflow (e.g., "Phase 4c", "Step 2")
+#       condition: <string>    # Optional. When null/omitted, always invoked. Otherwise, natural language condition
+#       expected_output: <string> # Optional. What this skill expects from the target
+#
+#   invoked_by:                # Skills that call this skill (reverse declaration)
+#     - skill: <skill-name>   # Required. Calling skill name
+#       phase: <string>       # Required. When the caller invokes this skill
+#       expected_output: <string> # Optional. What the caller expects from this skill
+#
+#   agents:                    # Agent definitions used by this skill
+#     - agent: <agent-name>   # Required. Agent file name (without path/extension)
+#       role: <string>        # Required. What the agent does in this skill
+#
+# Notes:
+# - Bidirectional dependencies: declare invokes on BOTH sides.
+#   The generation script detects mutual invokes and marks them as bidirectional.
+# - invoked_by is OPTIONAL and informational. The canonical direction is invokes.
+#   The generation script cross-checks symmetry and warns on mismatches.
+# - `type: hard` means the skill cannot complete its workflow without this dependency.
+#   `type: soft` means the dependency is conditional or optional.
+
+# ============================================================
+# Example: formal-derivation
+# ============================================================
+#
+# ---
+# name: formal-derivation
+# user-invocable: true
+# description: 形式的導出の構成手順（Γ ⊢ φ）を Lean 4 で遂行する。
+# dependencies:
+#   invokes:
+#     - skill: verify
+#       type: hard
+#       phase: "Phase 4c"
+#       condition: null
+#   agents:
+#     - agent: verifier
+#       role: "Independent review of Lean derivations"
+# ---
+
+# ============================================================
+# Example: research (with invoked_by)
+# ============================================================
+#
+# ---
+# name: research
+# user-invocable: true
+# description: Gate-Driven Research Workflow を実行する。
+# dependencies:
+#   invokes:
+#     - skill: verify
+#       type: soft
+#       phase: "Step 7.5"
+#       condition: "Lean コード成果物がある場合"
+#     - skill: trace
+#       type: soft
+#       phase: "Step 7.5"
+#       condition: "新規成果物がある場合"
+#     - skill: metrics
+#       type: soft
+#       phase: "Step 7.5"
+#       condition: "コード成果物がある場合"
+#   invoked_by:
+#     - skill: spec-driven-workflow
+#       phase: "Phase 0 Step 2"
+#       expected_output: "Gap Analysis 結果"
+#     - skill: design-implementation-plan
+#       phase: "Step 0 investigate"
+#       expected_output: "platform-decisions.json 形式の調査結果"
+#     - skill: generate-plugin
+#       phase: "Phase 0"
+#       expected_output: "Platform Decisions (PD)"
+#     - skill: ground-axiom
+#       phase: "Step 1"
+#       expected_output: "先行研究の文献調査結果"
+#     - skill: evolve
+#       phase: "Research Gate"
+#       expected_output: "breaking change 提案の裏付け調査"
+#   agents:
+#     - agent: judge
+#       role: "G1-G5 structured evaluation for Gate judgment"
+# ---
+
+# ============================================================
+# Example: instantiate-model (bidirectional)
+# ============================================================
+#
+# ---
+# name: instantiate-model
+# user-invocable: true
+# description: 認識論的層モデルのインスタンシエーション・ワークフロー。
+# dependencies:
+#   invokes:
+#     - skill: design-implementation-plan
+#       type: hard
+#       phase: "Step 9d"
+#       condition: "FeedbackReport 受信時"
+#       expected_output: "derive の再実行結果"
+#   invoked_by:
+#     - skill: spec-driven-workflow
+#       phase: "Phase 0 Step 1"
+#       expected_output: "条件付き公理体系"
+#     - skill: design-implementation-plan
+#       phase: "Step 3"
+#       expected_output: "条件付き公理体系"
+#     - skill: generate-plugin
+#       phase: "Phase 1-2"
+#       expected_output: "条件付き公理体系"
+#   agents:
+#     - agent: model-questioner
+#       role: "Phase 0-1 dialogue for requirements extraction"
+# ---
+
+# ============================================================
+# Data location
+# ============================================================
+#
+# The actual dependency data for all 12 skills lives in each SKILL.md frontmatter.
+# The aggregated graph is auto-generated at: .claude/skills/dependency-graph.yaml
+# Do NOT duplicate data here — this file is schema-only.

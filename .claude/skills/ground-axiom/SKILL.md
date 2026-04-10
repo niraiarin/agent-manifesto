@@ -8,6 +8,12 @@ description: >
   #157 の反復ワークフロー。
   「公理の根拠」「ground axiom」「数学的裏付け」「axiom grounding」
   「公理検証」で起動。
+dependencies:
+  invokes:
+    - skill: research
+      type: soft
+      phase: "Step 2"
+      condition: "根拠が不明な場合"
 ---
 
 # 公理の数学的根拠検証 (Axiom Grounding)

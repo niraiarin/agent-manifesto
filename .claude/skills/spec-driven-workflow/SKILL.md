@@ -7,6 +7,32 @@ description: >
   一貫して実行する。既存スキル群を統合した開発ライフサイクルの司令塔。
   「仕様駆動」「spec-driven」「テスト駆動」「TDD」「ワークフロー」
   「開発ライフサイクル」「development workflow」で起動。
+dependencies:
+  invokes:
+    - skill: instantiate-model
+      type: hard
+      phase: "Phase 0 Step 1"
+    - skill: research
+      type: hard
+      phase: "Phase 0 Step 2"
+    - skill: formal-derivation
+      type: hard
+      phase: "Phase 2 Step 4"
+    - skill: trace
+      type: hard
+      phase: "Phase 3 Step 1"
+    - skill: verify
+      type: hard
+      phase: "Phase 3 Step 2"
+    - skill: metrics
+      type: hard
+      phase: "Phase 4 Step 3"
+    - skill: ground-axiom
+      type: hard
+      phase: "Phase 4 Step 4"
+    - skill: evolve
+      type: hard
+      phase: "Phase 4 Step 5"
 ---
 
 # Spec-Driven Development Workflow
