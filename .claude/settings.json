@@ -22,6 +22,21 @@
       "Grep(**)"
     ]
   },
+  "sandbox": {
+    "enabled": true,
+    "enableWeakerNetworkIsolation": true,
+    "excludedCommands": [
+      "git *",
+      "gh *"
+    ],
+    "filesystem": {
+      "allowWrite": [
+        "./.lake/build",
+        "/tmp",
+        "~/work/agent-manifesto*"
+      ]
+    }
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -54,6 +69,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/p4-sync-counts-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/p4-manifest-refs-check.sh"
           }
         ]
       },
