@@ -1068,7 +1068,7 @@ Since this formalization is an arithmetic system containing Nat, Goedel's first 
 theorem applies. That is, it is in principle impossible to enumerate all true propositions
 derivable from T1-T8 + E1-E2.
 
-PropositionId enumerates "36 propositions named by humans" and is not an enumeration of all
+PropositionId enumerates 47 propositions named by humans (T1-T8, E1-E2, P1-P6, L1-L6, D1-D18, V1-V7) and is not an enumeration of all
 propositions derivable from the system. Impact propagation via the affected function tracks
 dependencies only between named propositions and cannot detect impacts on unnamed derived
 consequences.
@@ -1102,6 +1102,8 @@ inductive PropositionId where
   -- D: 設計定理
   | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
   | d15 | d16 | d17 | d18
+  -- V: 観測変数（Observable.lean で定義。D6 三段設計の第3段階）
+  | v1 | v2 | v3 | v4 | v5 | v6 | v7
   deriving BEq, Repr
 
 /-- Returns the category of a proposition. -/
@@ -1113,6 +1115,7 @@ def PropositionId.category : PropositionId → PropositionCategory
   | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
   | .d9 | .d10 | .d11 | .d12 | .d13 | .d14
   | .d15 | .d16 | .d17 | .d18 => .designTheorem
+  | .v1 | .v2 | .v3 | .v4 | .v5 | .v6 | .v7 => .boundary  -- V は L 境界から導出される観測変数
 
 /-- Returns the direct dependencies of a proposition. Encodes the derivation structure of the manifesto.
 
@@ -1161,6 +1164,14 @@ def PropositionId.dependencies : PropositionId → List PropositionId
   | .d17 => [.t5, .t6, .e1, .p3, .d2, .d3, .d5, .d9, .d13]
   -- D18: マルチエージェント協調（T7b + D12 + T3）
   | .d18 => [.t3, .t7, .d12]
+  -- V: 観測変数（Observable.lean 対応表より）
+  | .v1 => [.l2, .l5]         -- skillQuality: L2 (ontological), L5 (platform)
+  | .v2 => [.l2, .l3]         -- contextEfficiency: L2 (ontological), L3 (resource)
+  | .v3 => [.l1, .l4]         -- outputQuality: L1 (safety), L4 (action space)
+  | .v4 => [.l6, .l4]         -- gatePassRate: L6 (convention), L4 (action space)
+  | .v5 => [.l4, .l6]         -- proposalAccuracy: L4 (action space), L6 (convention)
+  | .v6 => [.l2]              -- knowledgeStructureQuality: L2 (ontological)
+  | .v7 => [.l3, .l6]         -- taskDesignEfficiency: L3 (resource), L6 (convention)
 
 /-- A proposition directly depends on another proposition. -/
 def propositionDependsOn (a b : PropositionId) : Bool :=

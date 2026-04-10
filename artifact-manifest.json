@@ -1713,6 +1713,15 @@
       "refs": ["P4"],
       "enforces": "procedural",
       "scope": "implementation"
+    },
+    {
+      "id": "hook:p4-manifest-refs-check",
+      "type": "hook",
+      "path": ".claude/hooks/p4-manifest-refs-check.sh",
+      "refs": ["P4","D1","D13"],
+      "enforces": "structural",
+      "phase": 1,
+      "scope": "implementation"
     }
   ]
 }
