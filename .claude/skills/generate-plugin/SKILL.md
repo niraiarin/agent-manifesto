@@ -6,6 +6,15 @@ description: >
   Claude Code plugin を自動生成する。課題発見からパッケージングまでの
   end-to-end パイプライン。
   「plugin 生成」「generate plugin」「プラグイン」で起動。
+dependencies:
+  invokes:
+    - skill: research
+      type: hard
+      phase: "Phase 0 investigate"
+    - skill: instantiate-model
+      type: hard
+      phase: "Phase 1-2 construct"
+      condition: "条件付き公理系構築時"
 ---
 
 # /generate-plugin — D17 自動 Plugin 生成

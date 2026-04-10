@@ -7,6 +7,12 @@ description: >
   自動的・機械的に検出する。
   「トレース」「trace」「カバレッジ」「coverage」「逸脱」「deviation」
   「半順序」「partial order」で起動。
+dependencies:
+  invokes:
+    - skill: evolve
+      type: soft
+      phase: "Step 3"
+      condition: "ギャップが検出され改善が必要な場合"
 ---
 
 # Artifact Trace (P4 + D13: 半順序トレーサビリティ)

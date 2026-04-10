@@ -6,6 +6,25 @@ description: >
   ビジョンを聞き取り、要件・仮定・制約を引き出し、EpistemicLayerClass の
   公理体系に準拠した条件付き公理体系を Lean 文書として生成する。
   「モデル生成」「instantiate」「層モデル」「条件付き公理」「公理体系を生成」で起動。
+dependencies:
+  invokes:
+    - skill: design-implementation-plan
+      type: hard
+      phase: "Step 9d"
+      condition: "FeedbackReport 受信時"
+  invoked_by:
+    - skill: spec-driven-workflow
+      phase: "Phase 0 Step 1"
+      expected_output: "条件付き公理体系"
+    - skill: design-implementation-plan
+      phase: "Step 3"
+      expected_output: "条件付き公理体系"
+    - skill: generate-plugin
+      phase: "Phase 1-2"
+      expected_output: "条件付き公理体系"
+  agents:
+    - agent: model-questioner
+      role: "Phase 0-1 dialogue for requirements extraction"
 ---
 
 # /instantiate-model

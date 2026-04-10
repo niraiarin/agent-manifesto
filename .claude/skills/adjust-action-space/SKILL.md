@@ -6,6 +6,8 @@ description: >
   permissions の変更を人間に提案する。D8（均衡探索）に従い、
   拡張と縮小の両方向を扱う。「行動空間」「権限」「permissions」
   「拡張」「縮小」「auto-merge」で起動。
+dependencies:
+  invokes: []
 ---
 
 # Action Space Adjustment (D8: 均衡探索)

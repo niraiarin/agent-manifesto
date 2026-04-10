@@ -6,6 +6,39 @@ description: >
   実装前の技術的リサーチを構造化された手順で進める。
   Gap Analysis → Parent Issue → Sub-Issues (with Gates) → Worktree 隔離実験 → Gate 判定。
   「リサーチ」「research」「調査」「研究」「Gap Analysis」で起動。
+dependencies:
+  invokes:
+    - skill: verify
+      type: soft
+      phase: "Step 7.5"
+      condition: "Lean コード成果物がある場合"
+    - skill: trace
+      type: soft
+      phase: "Step 7.5"
+      condition: "新規成果物がある場合"
+    - skill: metrics
+      type: soft
+      phase: "Step 7.5"
+      condition: "コード成果物がある場合"
+  invoked_by:
+    - skill: spec-driven-workflow
+      phase: "Phase 0 Step 2"
+      expected_output: "Gap Analysis 結果"
+    - skill: design-implementation-plan
+      phase: "Step 0 investigate"
+      expected_output: "platform-decisions.json 形式の調査結果"
+    - skill: generate-plugin
+      phase: "Phase 0"
+      expected_output: "Platform Decisions (PD)"
+    - skill: ground-axiom
+      phase: "Step 1"
+      expected_output: "先行研究の文献調査結果"
+    - skill: evolve
+      phase: "Research Gate"
+      expected_output: "breaking change 提案の裏付け調査"
+  agents:
+    - agent: judge
+      role: "G1-G5 structured evaluation for Gate judgment"
 ---
 
 # Gate-Driven Research Workflow

@@ -7,6 +7,11 @@ description: >
   コミット前、PR 前、または品質に不安がある時に呼び出す。
   リスクレベルに応じて検証手段を選択する（Subagent / 人間レビュー / 別モデル）。
   「レビューして」「検証して」「verify」「チェックして」で起動。
+dependencies:
+  invokes: []
+  agents:
+    - agent: verifier
+      role: "Independent code/design review"
 ---
 
 # Verifier (P2: 評価検証の独立性)

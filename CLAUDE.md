@@ -68,6 +68,9 @@
 - `/instantiate-model` — 認識論的層モデルの条件付き公理体系を生成
 - `/spec-driven-workflow` — 仕様駆動・テスト駆動開発の完全ワークフロー（設計→テスト→実装→検証→保守）
 
+スキル間の依存関係は `.claude/skills/dependency-graph.yaml` に機械可読形式で定義されている。
+スキル変更時は `scripts/verify-skill-dependencies.sh` で整合性を検証すること。
+
 ## Hook による構造的強制
 
 以下は Hook で自動強制される（P5 の確率的解釈に依存しない）:

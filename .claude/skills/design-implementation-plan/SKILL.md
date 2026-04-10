@@ -7,6 +7,20 @@ description: >
   マッピングし、フェーズ別ロードマップ、テストケース、V1-V7 計測設計を含む計画書を出力する。
   「実装計画」「設計計画」「ロードマップ」「design plan」「implementation plan」
   「何から実装すべき」で起動。
+dependencies:
+  invokes:
+    - skill: research
+      type: soft
+      phase: "Step 0c"
+      condition: "設計分析が必要な場合"
+    - skill: verify
+      type: soft
+      phase: "Step 9"
+      condition: "self-application"
+    - skill: instantiate-model
+      type: hard
+      phase: "Step 9d feedback loop"
+      condition: "FeedbackReport 生成時"
 ---
 
 # Design Implementation Plan Generator

@@ -7,6 +7,36 @@ description: >
   P3 の学習ライフサイクル（観察→仮説化→検証→統合→退役）を
   Agent Teams で実行する。このスキル自体も漸進的改善の対象（D9 自己適用）。
   「改善」「evolve」「漸進」「自己改善」「構造改善」「進化」で起動。
+dependencies:
+  invokes:
+    - skill: metrics
+      type: hard
+      phase: "Step 1 Observer"
+    - skill: verify
+      type: hard
+      phase: "Step 3 Verifier"
+    - skill: formal-derivation
+      type: hard
+      phase: "Step 2 Hypothesizer"
+    - skill: adjust-action-space
+      type: soft
+      phase: "Step 4"
+      condition: "行動空間の調整が提案された場合"
+    - skill: research
+      type: soft
+      phase: "Step 2"
+      condition: "breaking change を提案する場合"
+  agents:
+    - agent: observer
+      role: "Phase 1: observe current state"
+    - agent: hypothesizer
+      role: "Phase 2: propose improvements"
+    - agent: verifier
+      role: "Phase 3: verify proposals"
+    - agent: judge
+      role: "Phase 3.5: evaluate verified proposals"
+    - agent: integrator
+      role: "Phase 4: integrate approved changes"
 ---
 
 # /evolve — 構造の漸進的改善スキル

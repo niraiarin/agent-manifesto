@@ -8,6 +8,14 @@ description: >
   完全な監査まで実施する。
   「形式化」「formal derivation」「Γ ⊢ φ」「導出」「形式検証」
   「公理化」「Lean で証明」で起動。
+dependencies:
+  invokes:
+    - skill: verify
+      type: hard
+      phase: "Phase 4c"
+  agents:
+    - agent: verifier
+      role: "Independent review of Lean derivations"
 ---
 
 # 形式的導出の構成 (Γ ⊢ φ)
