@@ -5,7 +5,23 @@
       "Bash(jq -r \"select\\(.run >= 7 and .run <= 12\\) | \"\"Run \\\\\\(.run\\): deferred=\\\\\\(.deferred | length\\), notes=\\\\\\(.notes[:80]\\)\"\"\")",
       "Bash(gh issue:*)",
       "Bash(gh auth:*)",
-      "Bash(git worktree:*)"
+      "Bash(git worktree:*)",
+      "Read(//Users/nirarin/work/agent-manifesto-research-254/lean-formalization/**)",
+      "Bash(export PATH=\"$HOME/.elan/bin:$PATH\")",
+      "Bash(lake build:*)",
+      "Bash(gh pr:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(bash tests/test-all.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(bash .claude/skills/evolve/scripts/observe.sh)",
+      "Bash(jq '.human_feedback_recent[] | select\\(.notes | contains\\(\"半順序\"\\)\\) | .notes' -r)",
+      "Bash(grep -r \"issue\\\\|issue-driven\\\\|issue resolver\" /Users/nirarin/work/agent-manifesto/.claude/skills/*/SKILL.md)",
+      "Bash(python3 -c \"import sys,json; [print\\(json.dumps\\(json.loads\\(l\\), indent=2\\)\\) for l in sys.stdin]\")",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:claude.com)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

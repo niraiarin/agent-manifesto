@@ -33,7 +33,7 @@
       "allowWrite": [
         "./.lake/build",
         "/tmp",
-        "~/work/agent-manifesto*"
+        "~/work"
       ]
     }
   },
@@ -81,6 +81,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash .claude/hooks/hallucination-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/p4-traces-integrity-check.sh"
+          },
+          {
+            "type": "command",
             "command": "bash .claude/hooks/l1-file-guard.sh"
           }
         ]
@@ -91,24 +99,14 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/l1-file-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "bash .claude/hooks/hallucination-check.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
+          },
           {
             "type": "command",
-            "command": "bash .claude/hooks/hallucination-check.sh"
+            "command": "bash .claude/hooks/p4-traces-integrity-check.sh"
           }
         ]
       }
