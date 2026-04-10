@@ -144,9 +144,12 @@ inductive IsolationDimension where
 def IsolationProfile := IsolationDimension → EnforcementLayer
 
 /-- [Derivation Card]
-    Derives from: L1 threat model (test tampering, secret non-exfiltration)
+    Derives from: L1 (Ontology.lean: ethics_safety_boundary), CC-C1 (L1 enforcement method)
     Proposition: ID-l1-required
-    Content: L1 structural guarantee requires filesystem + network + credential. -/
+    Content: L1 structural guarantee requires filesystem + network + credential.
+      filesystem: L1 test tampering prohibition + secret file protection.
+      network: L1 secret non-exfiltration via unintended paths.
+      credential: L1 secret non-commitment + credential leakage prevention. -/
 def l1RequiredDimensions : List IsolationDimension :=
   [.filesystem, .network, .credential]
 
@@ -167,7 +170,10 @@ def ccSandboxProfile : IsolationProfile
   | .process     => .normative
   | .credential  => .procedural
 
-/-- CC sandbox 無効時。全次元 normative。 -/
+/-- [Derivation Card]
+    Derives from: CC-H10 (sandbox disabled = no OS-level isolation)
+    Proposition: IP-cc-no-sandbox
+    Content: CC sandbox disabled. All dimensions normative (hook grep patterns only). -/
 def ccNoSandboxProfile : IsolationProfile
   | _ => .normative
 

@@ -211,6 +211,8 @@ def cc_h7 : Assumption := {
   }
 }
 
+-- CC-C7 は欠番（初期設計時に統合されたため）。番号の連続性より既存参照の安定性を優先。
+
 /-- CC-C8: D18 (マルチエージェント協調) の Claude Code 実現として、
     Subagent (1:N in-session delegation) と Agent Teams (N:N cross-session coordination) の
     2 つの異なる協調プリミティブを使用する。
@@ -315,7 +317,7 @@ def cc_h11 : Assumption := {
   id := "CC-H11"
   source := .llmInference
     ["CC-C9"]
-    "Docker の seccomp デフォルトプロファイルが大幅に緩和された場合に反証される"
+    "Docker の seccomp デフォルトプロファイルからブロック対象 syscall が削減された場合、または --cap-drop ALL の挙動が変更された場合に反証される"
   content := "Docker hardened: filesystem=structural (--read-only+tmpfs)、network=structural (--network none, kernel-level)、process=structural (--cap-drop ALL+seccomp)、credential=procedural (env var injection — プロセス内からアクセス可能)。"
   validity := some {
     sourceRef := "https://docs.docker.com/engine/security/"
