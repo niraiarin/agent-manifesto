@@ -52,7 +52,7 @@ fi
 # @traces がない場合（新規ファイルで Edit 初回など）
 if [ -z "$TRACES" ]; then
   echo "[p4-traces-integrity] WARNING: $ID に @traces がありません。refs: $(echo $REFS | tr '\n' ', ')" >&2
-  exit 0
+  exit 2
 fi
 
 # refs との一致チェック
@@ -65,7 +65,7 @@ if [ "$REFS_SORTED" != "$TRACES_SORTED" ]; then
   echo "[p4-traces-integrity] WARNING: $ID の @traces ↔ refs が不一致" >&2
   [ -n "$ONLY_REFS" ] && echo "  refs にあるが @traces にない: $ONLY_REFS" >&2
   [ -n "$ONLY_TRACES" ] && echo "  @traces にあるが refs にない: $ONLY_TRACES" >&2
-  exit 0
+  exit 2
 fi
 
 exit 0
