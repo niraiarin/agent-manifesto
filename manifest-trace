@@ -649,15 +649,19 @@ cmd_violations() {
   echo ""
 
   # 検査 2: enforces レベルの一貫性
-  echo -e "${CYAN}検査 2: 強制レベルの一貫性（L1 は structural であるべき）${NC}"
+  # hook/skill/config/script/agent は structural であるべき。
+  # document/lean/rule は normative/formal が正しい（#390: false positive 修正）。
+  echo -e "${CYAN}検査 2: 強制レベルの一貫性（L1 参照の実行系成果物は structural であるべき）${NC}"
   echo ""
 
-  while IFS='|' read -r aid aenforces; do
-    if [[ "$aenforces" != "structural" && "$aenforces" != "verification" ]]; then
-      echo -e "  ${YELLOW}⚠ ${aid}${NC}: L1 を参照するが enforces=${aenforces}（structural 推奨）"
-      violation_count=$((violation_count + 1))
+  while IFS='|' read -r aid atype aenforces; do
+    if [[ "$atype" == "hook" || "$atype" == "skill" || "$atype" == "config" || "$atype" == "script" || "$atype" == "agent" ]]; then
+      if [[ "$aenforces" != "structural" && "$aenforces" != "verification" ]]; then
+        echo -e "  ${YELLOW}⚠ ${aid}${NC}: L1 を参照するが enforces=${aenforces}（structural 推奨）"
+        violation_count=$((violation_count + 1))
+      fi
     fi
-  done < <(artifacts_lines 'select(.refs[] == "L1") | "\(.id)|\(.enforces)"')
+  done < <(artifacts_lines 'select(.refs[] == "L1") | "\(.id)|\(.type)|\(.enforces)"')
 
   echo ""
 
