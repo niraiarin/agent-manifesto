@@ -130,7 +130,8 @@ echo ""
 # ============================================================
 echo "--- Check 3: Body references vs frontmatter ---"
 
-KNOWN_SKILLS="adjust-action-space design-implementation-plan evolve formal-derivation generate-plugin ground-axiom instantiate-model metrics research spec-driven-workflow trace verify"
+# Build KNOWN_SKILLS dynamically from discovered skill directories
+KNOWN_SKILLS="${SKILL_NAMES[*]}"
 
 for skill in "${SKILL_NAMES[@]}"; do
   skill_md="$SKILLS_DIR/$skill/SKILL.md"

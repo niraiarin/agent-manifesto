@@ -94,11 +94,11 @@ for skill_md in $(printf '%s\n' "${SKILL_FILES[@]}" | sort); do
       phase=$(echo "$frontmatter" | yq ".dependencies.invokes[$i].phase" 2>/dev/null)
       condition=$(echo "$frontmatter" | yq ".dependencies.invokes[$i].condition // \"\"" 2>/dev/null)
 
-      echo "      - skill: $skill" >> "$GENERATED"
-      echo "        type: $type" >> "$GENERATED"
-      echo "        phase: \"$phase\"" >> "$GENERATED"
+      printf '      - skill: %s\n' "$skill" >> "$GENERATED"
+      printf '        type: %s\n' "$type" >> "$GENERATED"
+      printf '        phase: "%s"\n' "$phase" >> "$GENERATED"
       if [ -n "$condition" ] && [ "$condition" != '""' ] && [ "$condition" != "null" ]; then
-        echo "        condition: \"$condition\"" >> "$GENERATED"
+        printf '        condition: "%s"\n' "$condition" >> "$GENERATED"
       fi
     done
   fi
@@ -112,10 +112,10 @@ for skill_md in $(printf '%s\n' "${SKILL_FILES[@]}" | sort); do
       phase=$(echo "$frontmatter" | yq ".dependencies.invoked_by[$i].phase" 2>/dev/null)
       expected=$(echo "$frontmatter" | yq ".dependencies.invoked_by[$i].expected_output // \"\"" 2>/dev/null)
 
-      echo "      - skill: $skill" >> "$GENERATED"
-      echo "        phase: \"$phase\"" >> "$GENERATED"
+      printf '      - skill: %s\n' "$skill" >> "$GENERATED"
+      printf '        phase: "%s"\n' "$phase" >> "$GENERATED"
       if [ -n "$expected" ] && [ "$expected" != '""' ] && [ "$expected" != "null" ]; then
-        echo "        expected_output: \"$expected\"" >> "$GENERATED"
+        printf '        expected_output: "%s"\n' "$expected" >> "$GENERATED"
       fi
     done
   fi
@@ -128,8 +128,8 @@ for skill_md in $(printf '%s\n' "${SKILL_FILES[@]}" | sort); do
       agent=$(echo "$frontmatter" | yq ".dependencies.agents[$i].agent" 2>/dev/null)
       role=$(echo "$frontmatter" | yq ".dependencies.agents[$i].role" 2>/dev/null)
 
-      echo "      - agent: $agent" >> "$GENERATED"
-      echo "        role: \"$role\"" >> "$GENERATED"
+      printf '      - agent: %s\n' "$agent" >> "$GENERATED"
+      printf '        role: "%s"\n' "$role" >> "$GENERATED"
     done
   fi
 
@@ -154,10 +154,10 @@ for skill_md in $(printf '%s\n' "${SKILL_FILES[@]}" | sort); do
     type=$(echo "$frontmatter" | yq ".dependencies.invokes[$i].type" 2>/dev/null)
     phase=$(echo "$frontmatter" | yq ".dependencies.invokes[$i].phase" 2>/dev/null)
 
-    echo "  - from: $skill_name" >> "$GENERATED"
-    echo "    to: $target" >> "$GENERATED"
-    echo "    type: $type" >> "$GENERATED"
-    echo "    phase: \"$phase\"" >> "$GENERATED"
+    printf '  - from: %s\n' "$skill_name" >> "$GENERATED"
+    printf '    to: %s\n' "$target" >> "$GENERATED"
+    printf '    type: %s\n' "$type" >> "$GENERATED"
+    printf '    phase: "%s"\n' "$phase" >> "$GENERATED"
   done
 done
 
@@ -166,9 +166,8 @@ echo "" >> "$GENERATED"
 echo "# Summary" >> "$GENERATED"
 
 total_edges=$(grep -c "^  - from:" "$GENERATED" || true)
-hard_edges=$(grep -c "type: hard" "$GENERATED" || true)
-# Divide by 2 because each edge has type in both skills and edges sections
-hard_edges=$((hard_edges / 2))
+# Count hard edges only in the edges section (after "edges:" marker)
+hard_edges=$(awk '/^edges:$/,0' "$GENERATED" | grep -c "type: hard" || true)
 soft_edges=$((total_edges - hard_edges))
 
 echo "summary:" >> "$GENERATED"
