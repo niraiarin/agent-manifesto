@@ -163,7 +163,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     theoremCount は currentTheoremDistribution.total から自動計算される。
     axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
 def currentProfile : AxiomSystemProfile :=
-  { constraintCount  := 12
+  { constraintCount  := 13
     empiricalCount   := 3
     observableCount  := 16
     applicationCount := 20
@@ -171,9 +171,9 @@ def currentProfile : AxiomSystemProfile :=
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
-/-- 現在の公理系の総 axiom 数は 52。 -/
+/-- 現在の公理系の総 axiom 数は 53。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 52 := by rfl
+  currentProfile.totalAxioms = 53 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :

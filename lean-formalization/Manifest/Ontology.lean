@@ -46,11 +46,16 @@ opaque ResourceId : Type
 /-- Unique identifier for a structural element -/
 opaque StructureId : Type
 
+/-- Unique identifier for a process (learning lifecycle, workflow, etc.).
+    Introduced by #316 to enable process-level meta-feedback in T5. -/
+opaque ProcessId : Type
+
 -- opaque 型に対する Repr インスタンス（deriving Repr の前提）
 instance : Repr AgentId := ⟨fun _ _ => "«AgentId»"⟩
 instance : Repr SessionId := ⟨fun _ _ => "«SessionId»"⟩
 instance : Repr ResourceId := ⟨fun _ _ => "«ResourceId»"⟩
 instance : Repr StructureId := ⟨fun _ _ => "«StructureId»"⟩
+instance : Repr ProcessId := ⟨fun _ _ => "«ProcessId»"⟩
 
 -- ============================================================
 -- Time and Epoch
@@ -164,12 +169,21 @@ inductive FeedbackKind where
   | adjustment    -- 調整（次のアクションへの反映）
   deriving BEq, Repr
 
+/-- Target of feedback: either a structure or a process.
+    Introduced by #316 to enable process-level meta-feedback.
+    StructureId targets retain backward compatibility with T5.
+    ProcessId targets enable meta-feedback about improvement processes. -/
+inductive FeedbackTarget where
+  | structure (id : StructureId)
+  | process   (id : ProcessId)
+  deriving Repr
+
 /-- Feedback: a unit of the measurement -> comparison -> adjustment loop.
     By T5, convergence toward goals cannot occur without this loop. -/
 structure Feedback where
   kind      : FeedbackKind
   source    : AgentId
-  target    : StructureId
+  target    : FeedbackTarget
   timestamp : Time
   deriving Repr
 
