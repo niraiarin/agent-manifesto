@@ -45,9 +45,27 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 | 層割当単調性 | EpistemicLayer.lean | `LayerAssignment.monotone`, `canonicalAssignment` |
 | D3 可観測性 | DesignFoundation.lean | `ObservabilityConditions` |
 
+## タスク自動化分類（TaskClassification.lean 準拠, #377/#381）
+
+各ステップの `TaskAutomationClass` をデザインタイムに定義する。
+実行時に LLM が毎回判断するコストを排除する（`designtime_classification_amortizes`）。
+
+| ステップ | 分類 | 推奨実装手段 | 備考 |
+|---|---|---|---|
+| Step 1: manifest-trace CLI 実行 | **deterministic** | CLI コマンド | サブコマンド選択はユーザー指示に基づく機械的分岐 |
+| Step 2: 結果の解釈 | **judgmental** | LLM | カバレッジギャップ・違反の意味論的評価。自動化不可 |
+| Step 3: 改善提案 | **judgmental** | LLM | ギャップの原因分析と /evolve 連携判断。自動化不可 |
+| Step 4: JSON 構造的分析 | **deterministic** | jq クエリ群 | 4a-4e の全クエリが定型的。スクリプト化済み相当 |
+| Step 5: 改善提案テンプレート | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: 検出パターン→提案テンプレートの照合 / judgmental: 提案の優先順位付けと文脈化 |
+
+**設計原則**:
+- Step 1, 4 は deterministic — manifest-trace CLI 自体がスクリプト化の具現
+- Step 2, 3 は judgmental — 半順序の意味論的解釈は normative 層の本来の用途
+- Step 5 の deterministic 成分（テンプレート照合）は分離候補（`mixed_task_decomposition`）
+
 ## 実行手順
 
-### Step 1: `manifest-trace` CLI の実行
+### Step 1: `manifest-trace` CLI + 検証スクリプトの実行
 
 ユーザーの要求に応じて適切なサブコマンドを実行する:
 
@@ -66,6 +84,9 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 
 # DOT 形式の依存グラフ（可視化用）
 ./manifest-trace graph > trace-graph.dot
+
+# refs 本文言及違反レポート（層4 深い検証）
+bash scripts/detect-refs-body-violations.sh
 ```
 
 ### Step 2: 結果の解釈
@@ -77,6 +98,10 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 #### 半順序違反
 - **依存先未カバー**: 成果物が参照する命題の上流に実装がない。D13 の伝播パターン
 - **強制レベル不一致**: L1 (安全境界) を参照する成果物が structural enforcement でない
+
+#### refs 本文言及違反
+- **VIOLATION [artifact-id]: 命題リスト**: artifact-manifest.json の refs に宣言した命題が
+  ファイル本文（@traces ヘッダ除外）に出現しない。根拠説明の追加が必要
 
 ### Step 3: 改善提案
 

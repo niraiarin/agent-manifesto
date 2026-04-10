@@ -69,6 +69,26 @@ export PATH="$HOME/.elan/bin:$PATH" && cd lean-formalization && lake build Manif
 bash tests/test-all.sh
 ```
 
+### Step 2.5: Traceability 検証
+
+traceable artifact（skill/hook/agent/rule）を変更・追加した場合、コミット前に以下を実行:
+
+```bash
+# 1. @traces ヘッダが存在し refs と一致するか
+bash tests/phase5/test-refs-integrity.sh
+
+# 2. refs の命題が本文で言及されているか
+bash scripts/detect-refs-body-violations.sh
+```
+
+新規 artifact の場合は追加で:
+- `artifact-manifest.json` にエントリ追加（refs, type, path, enforces, phase, scope）
+- ファイル先頭に `<!-- @traces ... -->` または `# @traces ...` を追加
+- 本文で各 refs 命題を言及（Traceability セクションまたは説明文内）
+
+**この Step を省略した場合**: test-all.sh の RB.1 baseline 回帰テストで検出される。
+hook (p4-traces-integrity-check.sh) が Edit/Write 時に警告/ブロックする。
+
 ### 仮説テーブル更新時の照合手順
 
 SKILL.md の仮説テーブル（H1, H3, H4 等）に数値を転記する場合、
