@@ -1313,7 +1313,14 @@ requires external assessment (E1). This is the formal basis for satisficing and
 adaptive computation depth policies (Phase 3c triggers, progressive thinking).
 -/
 
-/-- D15a: Under finite resources, a retry count must be bounded.
+/-- [Derivation Card]
+    Proposition: D15
+    Theorem: d15a_unbounded_retry_infeasible
+    Derives from: T7 (resource_finite), T4 (output_nondeterministic)
+    Content: Under finite resources, a retry count must be bounded.
+    Proof strategy: Direct contradiction — n attempts exceeding globalResourceBound contradicts ≤ bound.
+
+    D15a: Under finite resources, a retry count must be bounded.
     If resourceUsage per attempt is positive and resources are globally bounded,
     then the number of feasible attempts is bounded.
 
@@ -1489,7 +1496,14 @@ Rationale: context_contribution_nonuniform + T7 (resource finite) + T3 (context 
 Applicable to B5 (progressive thinking policy).
 -/
 
-/-- D16a: For any task with positive precision requirements,
+/-- [Derivation Card]
+    Proposition: D16
+    Theorem: d16a_zero_contribution_items_exist
+    Derives from: T3 (context_contribution_nonuniform)
+    Content: For any task with positive precision, zero-contribution context items exist and can be evicted.
+    Proof strategy: Existential witness from context_contribution_nonuniform axiom.
+
+    D16a: For any task with positive precision requirements,
     there exist context items with zero precision contribution.
     These items can be evicted without affecting task precision.
 

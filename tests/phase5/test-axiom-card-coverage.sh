@@ -22,9 +22,14 @@ check() {
 ALL_PROPS="T1 T2 T3 T4 T5 T6 T7 T8 E1 E2 P1 P2 P3 P4 P5 P6 L1 L2 L3 L4 L5 L6 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18 V1 V2 V3 V4 V5 V6 V7"
 TOTAL=$(echo $ALL_PROPS | wc -w | tr -d ' ')
 
-# manifest-trace evidence からカバーされている命題を抽出
+# manifest-trace evidence + derivations からカバーされている命題を抽出
+# Axiom Card (axiom 宣言) と Derivation Card (theorem 宣言) の両方を根拠として認める
 EVIDENCE=$("$BASE/manifest-trace" evidence 2>/dev/null || true)
-COVERED_PROPS=$(echo "$EVIDENCE" | jq -r '.proposition' 2>/dev/null | sort -u | tr '\n' ' ')
+DERIVATIONS=$("$BASE/manifest-trace" derivations 2>/dev/null || true)
+COVERED_PROPS=$(printf '%s\n%s\n' \
+  "$(echo "$EVIDENCE" | jq -r '.proposition' 2>/dev/null)" \
+  "$(echo "$DERIVATIONS" | jq -r '.proposition' 2>/dev/null)" \
+  | sort -u | grep -v '^$' | tr '\n' ' ')
 COVERED_COUNT=$(echo "$COVERED_PROPS" | wc -w | tr -d ' ')
 
 echo ""
@@ -34,8 +39,8 @@ echo "カバー済み:   $COVERED_COUNT"
 echo "未カバー:     $((TOTAL - COVERED_COUNT))"
 echo ""
 
-# AC.1: manifest-trace evidence が実行可能
-check "AC.1" "manifest-trace evidence は実行可能" test -n "$EVIDENCE"
+# AC.1: manifest-trace evidence/derivations が実行可能
+check "AC.1" "manifest-trace evidence+derivations は実行可能" test -n "$EVIDENCE" -o -n "$DERIVATIONS"
 
 # AC.2: カバレッジが 0 より大きい
 check "AC.2" "Axiom Card カバレッジ > 0%" test "$COVERED_COUNT" -gt 0
@@ -86,8 +91,8 @@ else
 fi
 
 # AC.4: カバレッジが前回より後退していないか（回帰検出）
-# 基準値: 19 命題 (2026-04-10 時点)
-BASELINE=19
+# 基準値: 47 命題 (2026-04-10 時点、evidence + derivations で全命題カバー)
+BASELINE=47
 echo -n "  AC.4: カバレッジ回帰なし (>= $BASELINE)... "
 if [ "$COVERED_COUNT" -ge "$BASELINE" ]; then
   echo "PASS ($COVERED_COUNT >= $BASELINE)"
