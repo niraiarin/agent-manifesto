@@ -208,6 +208,11 @@ YYYY-MM-DD HH:MM
 ### 低優先度
 1. [観察内容] — [データの根拠]
 
+## スコープバランス（#318）
+- observe.sh の `scope_balance` を確認
+- `bias_warning: true` の場合、「直近 10 runs でインフラ変更のみ。substance（Lean, tests, docs）への改善候補を優先的に探索すべき」と報告
+- 「substance 改善候補が見つからない」場合も、その事実を報告する（無視しない）
+
 ## 停滞シグナル
 - [30日以上更新のないファイル]
 - [Evolution.lean stasisUnhealthy に該当する可能性]
