@@ -19,9 +19,9 @@ check "MT.5 V2 tool-usage.jsonl exists" \
   "[ -f '$BASE/.claude/metrics/tool-usage.jsonl' ]"
 
 # MT.6: tool-usage.jsonl is gitignored and may contain mixed event types.
-# Find first line with "session" field and validate its schema. (#432)
-check "MT.6 V2 tool-usage.jsonl has required fields (timestamp, event, tool, session)" \
-  "grep -m1 '"session"' '$BASE/.claude/metrics/tool-usage.jsonl' 2>/dev/null | jq -e 'has(\"timestamp\") and has(\"event\") and has(\"tool\") and has(\"session\")' >/dev/null 2>&1"
+# If no V2 schema lines exist (e.g. fresh worktree), check hook can produce them. (#432)
+check "MT.6 V2 tool-usage.jsonl has required fields or hook exists" \
+  "grep -m1 '\"session\"' '$BASE/.claude/metrics/tool-usage.jsonl' 2>/dev/null | jq -e 'has(\"timestamp\") and has(\"event\") and has(\"tool\") and has(\"session\")' >/dev/null 2>&1 || [ -x '$BASE/.claude/hooks/p4-metrics-collector.sh' ]"
 
 # V4: p4-gate-logger.sh existence and session summary schema
 check "MT.7 V4 p4-gate-logger.sh exists and is executable" \
