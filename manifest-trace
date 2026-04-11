@@ -37,6 +37,10 @@ NC='\033[0m'
 SCOPE_FILTER=""
 # --manifest=<path> で外部 manifest を指定。未指定時は本リポジトリの manifest
 EXTERNAL_MANIFEST=""
+# --lean-dir=<path> で Lean ディレクトリを指定。未指定時は $SCRIPT_DIR/lean-formalization/Manifest
+# --tests-dir=<path> でテストディレクトリを指定。未指定時は $SCRIPT_DIR/tests
+LEAN_DIR_OVERRIDE=""
+TESTS_DIR_OVERRIDE=""
 
 parse_global_opts() {
   local args=()
@@ -49,6 +53,20 @@ parse_global_opts() {
         EXTERNAL_MANIFEST="${arg#--manifest=}"
         if [[ ! -f "$EXTERNAL_MANIFEST" ]]; then
           die "外部 manifest が見つかりません: $EXTERNAL_MANIFEST"
+        fi
+        ;;
+      --lean-dir=*)
+        LEAN_DIR_OVERRIDE="${arg#--lean-dir=}"
+        if [[ ! -d "$LEAN_DIR_OVERRIDE" ]]; then
+          die "Lean ディレクトリが見つかりません: $LEAN_DIR_OVERRIDE"
+        fi
+        LEAN_DIR="$LEAN_DIR_OVERRIDE"
+        ONTOLOGY="$LEAN_DIR/Ontology.lean"
+        ;;
+      --tests-dir=*)
+        TESTS_DIR_OVERRIDE="${arg#--tests-dir=}"
+        if [[ ! -d "$TESTS_DIR_OVERRIDE" ]]; then
+          die "テストディレクトリが見つかりません: $TESTS_DIR_OVERRIDE"
         fi
         ;;
       *)
@@ -904,6 +922,8 @@ cmd_selfcheck() {
   echo -e "${CYAN}検査 2: refs の接地（全 refs が Lean PropositionId に存在するか）${NC}"
 
   local invalid_refs=0
+  local all_arts_for_refs
+  all_arts_for_refs=$(merged_artifacts)
   while IFS='|' read -r aid arefs; do
     IFS=',' read -ra ref_array <<< "$arefs"
     for ref in "${ref_array[@]}"; do
@@ -912,11 +932,11 @@ cmd_selfcheck() {
         invalid_refs=$((invalid_refs + 1))
       fi
     done
-  done < <(jq -r '.artifacts[] | select(._comment == null) | "\(.id)|\(.refs | join(","))"' "$MANIFEST")
+  done < <(echo "$all_arts_for_refs" | jq -r '.[] | "\(.id)|\(.refs | join(","))"')
 
   if [[ "$invalid_refs" -eq 0 ]]; then
     local total_refs
-    total_refs=$(jq '[.artifacts[] | select(._comment == null) | .refs[]] | length' "$MANIFEST")
+    total_refs=$(echo "$all_arts_for_refs" | jq '[.[].refs[]] | length')
     echo -e "  ${GREEN}✓ 全 refs が Lean に接地済み (${total_refs} 参照)${NC}"
   fi
   errors=$((errors + invalid_refs))
@@ -982,9 +1002,9 @@ cmd_selfcheck() {
       delete ids; delete deps
     }
   }
-  ' "$ONTOLOGY" > ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp
+  ' "$ONTOLOGY" > "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp"
   local expected_sorted
-  expected_sorted=$(sort -u ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp)
+  expected_sorted=$(sort -u "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp")
   local expected_count
   expected_count=$(echo "$expected_sorted" | grep -c . || true)
 
@@ -1007,7 +1027,7 @@ cmd_selfcheck() {
     echo -e "  ${GREEN}✓ パーサ出力が Lean と完全一致 (${parsed_count} 依存)${NC}"
   fi
 
-  rm -f ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp
+  rm -f "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp"
   echo ""
 
   # --- 検査 4: 内部整合性 ---
@@ -1065,75 +1085,110 @@ cmd_selfcheck() {
   # --- 検査 5: 未登録 artifact 検出（弱み1 + 推奨1） ---
   echo -e "${CYAN}検査 5: 未登録 artifact 検出（既知ディレクトリをスキャン）${NC}"
 
-  local registered_paths
-  registered_paths=$(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | sort)
+  # merged_artifacts() から全登録パスを取得（base_dir 付き）
+  local all_arts_for_scan
+  all_arts_for_scan=$(merged_artifacts)
   local unregistered=0
 
-  # 動的ディレクトリスキャン: manifest に登録された path のディレクトリ集合から
-  # 対象パターンを導出し、未登録ファイルを検出する
-  # （新しいディレクトリが manifest に追加されれば自動的にスキャン対象になる）
+  # base_dir ごとにスキャンする関数
+  # 引数: $1=base_dir, $2=その base_dir に属する登録パス（改行区切り）, $3=ラベル
+  # 結果: _SCAN_COUNT に未登録数を設定
+  _scan_base_dir() {
+    local base_dir="$1" reg_paths="$2" label="$3"
+    _SCAN_COUNT=0
 
-  # パターン定義: ディレクトリパス → find パターン
-  declare -A scan_patterns
-  scan_patterns[".claude/hooks"]='*.sh'
-  scan_patterns[".claude/rules"]='*.md'
+    # パターン定義: ディレクトリパス → find パターン
+    declare -A sp
+    sp[".claude/hooks"]='*.sh'
+    sp[".claude/rules"]='*.md'
 
-  # 固定パターンのディレクトリをスキャン
-  for dir in "${!scan_patterns[@]}"; do
-    local pattern="${scan_patterns[$dir]}"
-    [[ -d "$SCRIPT_DIR/$dir" ]] || continue
-    while IFS= read -r f; do
-      local rel_path="${f#$SCRIPT_DIR/}"
-      if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-        echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-        unregistered=$((unregistered + 1))
-      fi
-    done < <(find "$SCRIPT_DIR/$dir" -name "$pattern" -type f 2>/dev/null | sort)
-  done
+    # 固定パターンのディレクトリをスキャン
+    for dir in "${!sp[@]}"; do
+      local pattern="${sp[$dir]}"
+      [[ -d "$base_dir/$dir" ]] || continue
+      while IFS= read -r f; do
+        local rel_path="${f#$base_dir/}"
+        if ! echo "$reg_paths" | grep -qx "$rel_path"; then
+          echo -e "  ${RED}✗ 未登録:${NC} $rel_path${label}"
+          _SCAN_COUNT=$((_SCAN_COUNT + 1))
+        fi
+      done < <(find "$base_dir/$dir" -name "$pattern" -type f 2>/dev/null | sort)
+    done
 
-  # skills: SKILL.md を持つ全サブディレクトリ
-  while IFS= read -r f; do
-    local rel_path="${f#$SCRIPT_DIR/}"
-    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-      unregistered=$((unregistered + 1))
+    # skills: SKILL.md を持つ全サブディレクトリ
+    if [[ -d "$base_dir/.claude/skills" ]]; then
+      while IFS= read -r f; do
+        local rel_path="${f#$base_dir/}"
+        if ! echo "$reg_paths" | grep -qx "$rel_path"; then
+          echo -e "  ${RED}✗ 未登録:${NC} $rel_path${label}"
+          _SCAN_COUNT=$((_SCAN_COUNT + 1))
+        fi
+      done < <(find "$base_dir/.claude/skills" -name 'SKILL.md' -type f 2>/dev/null | sort)
     fi
-  done < <(find "$SCRIPT_DIR/.claude/skills" -name 'SKILL.md' -type f 2>/dev/null | sort)
 
-  # agents: .md と AGENT.md
-  while IFS= read -r f; do
-    local rel_path="${f#$SCRIPT_DIR/}"
-    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-      unregistered=$((unregistered + 1))
+    # agents: .md
+    if [[ -d "$base_dir/.claude/agents" ]]; then
+      while IFS= read -r f; do
+        local rel_path="${f#$base_dir/}"
+        if ! echo "$reg_paths" | grep -qx "$rel_path"; then
+          echo -e "  ${RED}✗ 未登録:${NC} $rel_path${label}"
+          _SCAN_COUNT=$((_SCAN_COUNT + 1))
+        fi
+      done < <(find "$base_dir/.claude/agents" \( -name '*.md' \) -type f 2>/dev/null | sort)
     fi
-  done < <(find "$SCRIPT_DIR/.claude/agents" \( -name '*.md' \) -type f 2>/dev/null | sort)
 
-  # tests: 全フェーズの test-*.sh + test-all.sh
-  while IFS= read -r f; do
-    local rel_path="${f#$SCRIPT_DIR/}"
-    if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-      echo -e "  ${RED}✗ 未登録:${NC} $rel_path"
-      unregistered=$((unregistered + 1))
+    # tests
+    local tests_dir="${base_dir}/tests"
+    [[ -n "$TESTS_DIR_OVERRIDE" && "$base_dir" == "$SCRIPT_DIR" ]] && tests_dir="$TESTS_DIR_OVERRIDE"
+    if [[ -d "$tests_dir" ]]; then
+      while IFS= read -r f; do
+        local rel_path
+        if [[ -n "$TESTS_DIR_OVERRIDE" && "$base_dir" == "$SCRIPT_DIR" ]]; then
+          rel_path="${f#$TESTS_DIR_OVERRIDE/}"
+        else
+          rel_path="${f#$base_dir/}"
+        fi
+        if ! echo "$reg_paths" | grep -qx "$rel_path"; then
+          echo -e "  ${RED}✗ 未登録:${NC} $rel_path${label}"
+          _SCAN_COUNT=$((_SCAN_COUNT + 1))
+        fi
+      done < <(find "$tests_dir" -name '*.sh' -type f 2>/dev/null | sort)
     fi
-  done < <(find "$SCRIPT_DIR/tests" -name '*.sh' -type f 2>/dev/null | sort)
 
-  # manifest 登録パスから追加ディレクトリを動的検出してスキャン
-  # ルート (.) と既にスキャン済みディレクトリは除外
-  while IFS= read -r dir; do
-    [[ "$dir" == "." ]] && continue
-    [[ -d "$SCRIPT_DIR/$dir" ]] || continue
-    case "$dir" in
-      .claude/hooks|.claude/rules|.claude/skills*|.claude/agents*|tests*) continue ;;
-    esac
-    while IFS= read -r f; do
-      local rel_path="${f#$SCRIPT_DIR/}"
-      if ! echo "$registered_paths" | grep -qx "$rel_path"; then
-        echo -e "  ${RED}✗ 未登録:${NC} $rel_path (動的検出: $dir)"
-        unregistered=$((unregistered + 1))
-      fi
-    done < <(find "$SCRIPT_DIR/$dir" -maxdepth 1 -type f \( -name '*.sh' -o -name '*.md' -o -name '*.json' -o -name '*.jsonl' \) 2>/dev/null | sort)
-  done < <(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | xargs -I{} dirname {} | sort -u)
+    # 登録パスから動的ディレクトリ検出
+    while IFS= read -r dir; do
+      [[ "$dir" == "." ]] && continue
+      [[ -d "$base_dir/$dir" ]] || continue
+      case "$dir" in
+        .claude/hooks|.claude/rules|.claude/skills*|.claude/agents*|tests*) continue ;;
+      esac
+      while IFS= read -r f; do
+        local rel_path="${f#$base_dir/}"
+        if ! echo "$reg_paths" | grep -qx "$rel_path"; then
+          echo -e "  ${RED}✗ 未登録:${NC} $rel_path (動的検出: $dir)${label}"
+          _SCAN_COUNT=$((_SCAN_COUNT + 1))
+        fi
+      done < <(find "$base_dir/$dir" -maxdepth 1 -type f \( -name '*.sh' -o -name '*.md' -o -name '*.json' -o -name '*.jsonl' \) 2>/dev/null | sort)
+    done < <(echo "$reg_paths" | xargs -I{} dirname {} | sort -u)
+  }
+
+  # 本体 manifest のスキャン
+  if [[ -f "$MANIFEST" ]]; then
+    local local_paths
+    local_paths=$(jq -r '.artifacts[] | select(._comment == null) | .path' "$MANIFEST" | sort)
+    _scan_base_dir "$SCRIPT_DIR" "$local_paths" ""
+    unregistered=$((unregistered + _SCAN_COUNT))
+  fi
+
+  # 外部 manifest のスキャン
+  if [[ -n "$EXTERNAL_MANIFEST" ]]; then
+    local ext_dir
+    ext_dir=$(cd "$(dirname "$EXTERNAL_MANIFEST")" && pwd)
+    local ext_paths
+    ext_paths=$(jq -r '.artifacts[] | select(._comment == null) | .path' "$EXTERNAL_MANIFEST" | sort)
+    _scan_base_dir "$ext_dir" "$ext_paths" " (外部: $(basename "$ext_dir"))"
+    unregistered=$((unregistered + _SCAN_COUNT))
+  fi
 
   if [[ "$unregistered" -eq 0 ]]; then
     echo -e "  ${GREEN}✓ 全 artifact が登録済み${NC}"
@@ -1348,7 +1403,8 @@ $files"
   done
   impact_files=$(echo "$impact_files" | sort -u | grep -v '^$')
 
-  local trace_map="$SCRIPT_DIR/tests/trace-map.json"
+  local tests_base="${TESTS_DIR_OVERRIDE:-$SCRIPT_DIR/tests}"
+  local trace_map="$tests_base/trace-map.json"
   local impact_tests=""
   if [[ -f "$trace_map" ]]; then
     for prop in $affected; do
@@ -1369,7 +1425,7 @@ $tests"
   local annotation_tests=""
   for prop in $affected; do
     local found
-    found=$(grep -rl "# @traces.*${prop}" "$SCRIPT_DIR/tests/" 2>/dev/null || true)
+    found=$(grep -rl "# @traces.*${prop}" "$tests_base/" 2>/dev/null || true)
     [[ -n "$found" ]] && annotation_tests="$annotation_tests
 $found"
   done
@@ -1457,6 +1513,8 @@ case "${1:-help}" in
     echo "                   data            .claude/metrics/*.jsonl 等"
     echo "  --manifest=PATH  外部 artifact-manifest.json を追加で読み込む"
     echo "                   本体と外部の成果物を統合してレポート"
+    echo "  --lean-dir=PATH  Lean ディレクトリを指定（デフォルト: lean-formalization/Manifest）"
+    echo "  --tests-dir=PATH テストディレクトリを指定（デフォルト: tests/）"
     echo ""
     echo "例:"
     echo "  manifest-trace --scope=implementation coverage"
