@@ -1,7 +1,7 @@
 import Manifest.EpistemicLayer
 
 /-!
-# PoC A: 3層モデルの手書き実装
+# PoC A - Three Layer Manual Implementation
 
 実装形態の比較のためのベースライン。
 生成ツールが出力すべき「正解」を確認する。
