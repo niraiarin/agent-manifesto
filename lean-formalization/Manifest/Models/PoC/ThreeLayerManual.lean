@@ -108,7 +108,7 @@ theorem classify_total :
 -- ============================================================
 
 /-- 3 層モデルに基づく LayerAssignment。 -/
-def threeLayerAssignment : LayerAssignment ConcreteLayer where
+def threeLayerAssignment : ManifestoLayerAssignment ConcreteLayer where
   assign := classify
   monotone := classify_monotone
   bounded := ⟨2, fun d => by cases d <;> simp [classify, ConcreteLayer.ord, EpistemicLayerClass.ord]⟩
