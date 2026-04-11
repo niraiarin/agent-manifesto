@@ -1,7 +1,7 @@
 import Manifest.EpistemicLayer
 
 /-!
-# PoC A: 3層モデルの手書き実装
+# PoC A - Three Layer Manual Implementation
 
 実装形態の比較のためのベースライン。
 生成ツールが出力すべき「正解」を確認する。
@@ -108,7 +108,7 @@ theorem classify_total :
 -- ============================================================
 
 /-- 3 層モデルに基づく LayerAssignment。 -/
-def threeLayerAssignment : LayerAssignment ConcreteLayer where
+def threeLayerAssignment : ManifestoLayerAssignment ConcreteLayer where
   assign := classify
   monotone := classify_monotone
   bounded := ⟨2, fun d => by cases d <;> simp [classify, ConcreteLayer.ord, EpistemicLayerClass.ord]⟩

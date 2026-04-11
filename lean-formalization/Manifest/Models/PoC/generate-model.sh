@@ -168,7 +168,7 @@ theorem classify_total :
 -- ============================================================
 
 /-- 生成されたモデルに基づく LayerAssignment。 -/
-def generatedAssignment : LayerAssignment ConcreteLayer where
+def generatedAssignment : ManifestoLayerAssignment ConcreteLayer where
   assign := classify
   monotone := classify_monotone
   bounded := ⟨${max_ord}, fun d => by cases d <;> simp [classify, ConcreteLayer.ord, EpistemicLayerClass.ord]⟩

@@ -4,6 +4,7 @@
 # Lean doc comment の品質を git commit 時に検証する。
 # Verso の制約から導出されたルール (H1-H5, P1-P2, A1-A3, C1) をチェック。
 # errors がある場合はコミットをブロック。warnings は表示のみ。
+# リント対象は staged された Lean ファイルのみ (#414)。
 # @traces D5, D1
 
 INPUT=$(cat)
@@ -26,28 +27,39 @@ fi
 
 # Check if any Lean files in Manifest/ are staged
 STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
-if ! echo "$STAGED" | grep -qE 'lean-formalization/Manifest/.*\.lean$'; then
+STAGED_LEAN=$(echo "$STAGED" | grep -E 'lean-formalization/Manifest/.*\.lean$' || true)
+if [ -z "$STAGED_LEAN" ]; then
   exit 0
 fi
 
-# Run the linter
+# Run the linter on staged Lean files only
 PROJECT_ROOT=$("${GIT_CMD[@]}" rev-parse --show-toplevel 2>/dev/null)
-LINT_OUTPUT=$(cd "$PROJECT_ROOT" && python3 scripts/lint-doc-comments.py 2>&1)
-LINT_EXIT=$?
+LINT_OUTPUT=""
+LINT_HAS_ERRORS=false
 
-if [ $LINT_EXIT -ne 0 ]; then
-  # Check if there are errors (not just warnings)
-  if echo "$LINT_OUTPUT" | grep -q 'errors'; then
-    ERROR_COUNT=$(echo "$LINT_OUTPUT" | grep -oE '[0-9]+ errors' | head -1)
-    echo "H5: Doc comment lint failed ($ERROR_COUNT). Fix before committing." >&2
-    echo "$LINT_OUTPUT" | grep '\[.*\] ' | head -10 >&2
-    exit 2
+while IFS= read -r lean_file; do
+  [ -z "$lean_file" ] && continue
+  FILE_OUTPUT=$(cd "$PROJECT_ROOT" && python3 scripts/lint-doc-comments.py "$lean_file" 2>&1) || true
+  if echo "$FILE_OUTPUT" | grep -qE '[1-9][0-9]* errors'; then
+    LINT_HAS_ERRORS=true
   fi
-  # Warnings only — allow but show
+  [ -n "$FILE_OUTPUT" ] && LINT_OUTPUT="${LINT_OUTPUT}${FILE_OUTPUT}"$'\n'
+done <<< "$STAGED_LEAN"
+
+if [ "$LINT_HAS_ERRORS" = true ]; then
+  ERROR_COUNT=$(echo "$LINT_OUTPUT" | grep -oE '[0-9]+ errors' | head -1)
+  echo "H5: Doc comment lint failed (${ERROR_COUNT:-errors}). Fix before committing." >&2
+  echo "$LINT_OUTPUT" | grep '\[.*\] ' | head -10 >&2
+  exit 2
+fi
+
+# Warnings only — allow but show
+if [ -n "$LINT_OUTPUT" ]; then
   echo "$LINT_OUTPUT" | head -5
 fi
 
 exit 0
 
 # Traceability:
-# D5: 仕様層の順序 — ドキュメントの書式整合性を検証し、仕様の品質を構造的に維持 # D1: 構造的強制 — lint ルールを hook で自動実行し、LLM の判断に依存しない品質保証
+# D5: 仕様層の順序 — ドキュメントの書式整合性を検証し、仕様の品質を構造的に維持
+# D1: 構造的強制 — lint ルールを hook で自動実行し、LLM の判断に依存しない品質保証
