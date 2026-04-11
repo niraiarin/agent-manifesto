@@ -43,6 +43,7 @@ import Manifest.Models.PoC.Consistency.Case1Composition
 import Manifest.Models.PoC.Consistency.Case2Assumption
 import Manifest.Models.PoC.Consistency.Case3Ordering
 import Manifest.Models.DeviationPolicy
+import Manifest.Models.DomainClassification
 
 /-!
 # Agent Manifest — Formal Specification
