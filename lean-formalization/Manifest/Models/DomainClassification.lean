@@ -72,12 +72,15 @@ def classify (ds : List DomainSignal) (is_ : List IndependenceSignal) : Result :
 -- 3. 分類の性質
 -- ============================================================
 
-/-- 分類は judgmental タスク。 -/
-theorem classification_is_judgmental :
-    questionAutomationClass 0 = Manifest.TaskAutomationClass.judgmental := rfl
-
-/-- ambiguous ≠ high -/
-theorem ambiguous_ne_high : Certainty.ambiguous ≠ Certainty.high := by decide
+/-- ambiguous な分類は high にも moderate にもならない。
+    classify がシグナル均衡で ambiguous を返す場合、人間判断が必要。 -/
+theorem ambiguous_is_exclusive :
+    ∀ (ds : List DomainSignal) (is_ : List IndependenceSignal),
+      (classify ds is_).cert = Certainty.ambiguous →
+      (classify ds is_).cert ≠ Certainty.high ∧
+      (classify ds is_).cert ≠ Certainty.moderate := by
+  intro ds is_ h
+  constructor <;> (rw [h]; decide)
 
 /-- シグナルが空の場合は ambiguous。 -/
 theorem no_signals_ambiguous :

@@ -1,0 +1,43 @@
+{
+  "namespace": "WebAPI",
+  "layers": [
+    {
+      "name": "SecurityInvariant",
+      "ordValue": 4,
+      "definition": "認証・認可の不変条件。全リクエストに適用",
+      "derivedFrom": ["C1", "C2"]
+    },
+    {
+      "name": "DataIntegrity",
+      "ordValue": 3,
+      "definition": "データの整合性制約。スキーマ・外部キー・一意性",
+      "derivedFrom": ["C3", "H1"]
+    },
+    {
+      "name": "RateLimiting",
+      "ordValue": 2,
+      "definition": "レート制限ポリシー。運用負荷に応じて調整可能",
+      "derivedFrom": ["C4", "H2"]
+    },
+    {
+      "name": "CachingStrategy",
+      "ordValue": 1,
+      "definition": "キャッシュ戦略。パフォーマンス最適化のため自動調整",
+      "derivedFrom": ["H3", "H4"]
+    }
+  ],
+  "propositions": [
+    {"id": "wa_p01", "layerName": "SecurityInvariant", "justification": ["C1"], "dependencies": []},
+    {"id": "wa_p02", "layerName": "SecurityInvariant", "justification": ["C2"], "dependencies": []},
+    {"id": "wa_p03", "layerName": "SecurityInvariant", "justification": ["C1", "C2"], "dependencies": []},
+    {"id": "wa_p04", "layerName": "DataIntegrity", "justification": ["C3"], "dependencies": ["wa_p01"]},
+    {"id": "wa_p05", "layerName": "DataIntegrity", "justification": ["H1"], "dependencies": ["wa_p02"]},
+    {"id": "wa_p06", "layerName": "DataIntegrity", "justification": ["C3", "H1"], "dependencies": ["wa_p01", "wa_p03"]},
+    {"id": "wa_p07", "layerName": "RateLimiting", "justification": ["C4"], "dependencies": ["wa_p04"]},
+    {"id": "wa_p08", "layerName": "RateLimiting", "justification": ["H2"], "dependencies": ["wa_p05"]},
+    {"id": "wa_p09", "layerName": "RateLimiting", "justification": ["C4", "H2"], "dependencies": ["wa_p04", "wa_p06"]},
+    {"id": "wa_p10", "layerName": "CachingStrategy", "justification": ["H3"], "dependencies": ["wa_p07"]},
+    {"id": "wa_p11", "layerName": "CachingStrategy", "justification": ["H4"], "dependencies": ["wa_p08"]},
+    {"id": "wa_p12", "layerName": "CachingStrategy", "justification": ["H3", "H4"], "dependencies": ["wa_p09", "wa_p10"]}
+  ]
+}
