@@ -249,6 +249,47 @@ jq '[.items | to_entries[] | select(.value.status == "open") | {id: .key} + .val
 
 **deferred_jsonl_quality は除去済み**: observe.sh の deferred_jsonl_quality フィールドは Run 63 で除去された（レガシーメトリクス）。deferred-status.json が正規ソース。open 件数は deferred_open フィールドを参照すること。
 
+### Section 8: サイクル閉環性
+
+Section 6（failure_subtype deterministic 集計）のデータを入力とした judgmental 解釈。
+「既存の V1-V7 改善では対処できない構造的課題が存在するか」を評価する。
+
+#### 8-1: failure_subtype 蓄積パターンの解釈
+
+- **データソース**: observe.sh の `failure_patterns` 出力（`by_type`, `by_subtype`）
+- **判定基準**: 同一 failure_subtype が 3 回以上 unresolved で蓄積 → 構造的限界候補。複数 subtype が同一根本原因を共有 → 公理系レベル課題候補
+- **出力タグ**: `[A]` 公理系拡張候補 / `[C]` 新規開発候補 / `[R]` V1-V7 改善で対処可能
+
+#### 8-2: human_feedback 未対処提案
+
+- **データソース**: observe.sh の `human_feedback_recent` + `deferred_open`
+- **判定基準**: human_feedback の notes に含まれる提案が deferred-status.json に対応する resolved を持たない場合 → 未対処。N runs 経過で未対処 → 漂流中の提案
+- **出力タグ**: 同上
+
+#### 8-3: T6 Issue 起動シグナル
+
+- **データソース**: observe.sh の `t6_issues` + `gh issue view` で個別コメント取得
+- **判定基準**: T6 Issue が closed + コメントに起動キーワード含む場合 → 起動条件監視対象
+  ```bash
+  gh issue list --label "T6:human-review" --state closed --json number,title,comments \
+    --jq '.[] | select(.comments | length > 0) |
+      select(.comments[].body | test("spec-driven|brownfield|research|新規開発|追加する|公理|axiom"; "i")) |
+      "\(.number) \(.title)"'
+  ```
+- **出力タグ**: 同上
+
+#### 8-4: brownfield Phase 5 還元候補
+
+- **データソース**: `deferred-status.json` + git log で brownfield 実行履歴
+- **判定基準**: 未還元のドメイン非依存知見が存在 → 還元候補
+- **出力タグ**: 同上
+
+#### T6 起票ルール
+
+- `[A]` 公理系拡張候補 → **必ず T6 Issue 起票**（公理変更は breaking change、T6 必須）
+- `[C]` 新規開発サイクル候補 → **必ず T6 Issue 起票**（スキル起動は人間判断が必要）
+- `[R]` V1-V7 改善で対処可能 → T6 不要、通常の Hypothesizer フローへ
+
 ## 制約
 
 - **観察のみ**: 仮説化・提案は行わない（P3 ライフサイクルの順序を守る）
