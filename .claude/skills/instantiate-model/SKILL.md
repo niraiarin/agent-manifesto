@@ -52,6 +52,7 @@ EpistemicLayerClass の公理体系に準拠した条件付き公理体系を Le
 | Step 5: 事前検証 | **deterministic** | check-monotonicity.sh | スクリプト化済み ✓ |
 | Step 6: Lean コード生成 + 検証 | **deterministic** | generate-conditional-axiom-system.sh + lake build | スクリプト化済み ✓ |
 | Step 7: Assumptions の更新 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: Lean テンプレート構造 / judgmental: validity 内容の記述 |
+| Step 7b: /verify P2 独立検証 | **deterministic** | /verify スキル | FAIL→修正→再検証ループ。Agent tool 直接呼出し不可 |
 | Step 8: 完了 | **deterministic** | git commit 提案 | 承認は T6（人間判断）だがステップ自体は機械的 |
 | Step 9a: FeedbackReport 受信 | **deterministic** | データ解析 | /design-implementation-plan からの構造化入力 |
 | Step 9b: 仮定の追加 | **deterministic + judgmental（未分離）** | LLM が直接実行 | deterministic: Assumptions.lean テンプレート / judgmental: EpistemicSource 分類 |
@@ -100,6 +101,9 @@ generate-conditional-axiom-system.sh（Lean 生成）
 lake build（最終検証）
   ↓ 失敗 → フィードバック → 修正 → 再生成
   ↓ 成功
+/verify（P2 独立検証、トークン書き込み）
+  ↓ FAIL → 修正 → /verify 再実行（エラーゼロまでループ）
+  ↓ PASS
 ✓ 完了（git commit 提案）
 ```
 
@@ -229,9 +233,23 @@ def c1 : Assumption := {
 `validity` が `none` の仮定は「恒久的」と見なされるが、
 条件付き公理系の仮定は外部ソースに由来するため `some` を推奨する。
 
+### Step 7b: /verify による P2 独立検証（必須）
+
+lake build 成功後、**必ず `/verify` を実行する**（Agent tool の verifier 直接呼出しではなく、
+`/verify` スキルを使用すること。`/verify` が P2 検証トークンを書き込み、
+`p2-verify-on-commit.sh` がコミット時にトークンを検証する）。
+
+- PASS → Step 8 へ
+- FAIL → 修正 → `/verify` 再実行（**エラーゼロまでループ。修正後の再検証を省略しない**）
+
+**重要**: Verifier が FAIL を返した場合、修正後に**再度 `/verify` を実行する**。
+修正後のコードが別の問題を含む可能性があるため、修正のみで PASS と見なさない。
+これは D2（検証独立性）の要件であり、省略は P2 違反となる。
+
 ### Step 8: 完了
 
 git commit を提案する（人間の承認を待つ）。
+P2 検証トークンが有効でない場合、`p2-verify-on-commit.sh` がブロックする。
 
 ### Step 9: フィードバック受容（D17 Step 5 → Step 1 ループ）
 

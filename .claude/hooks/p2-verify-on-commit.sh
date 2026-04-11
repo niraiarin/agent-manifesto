@@ -29,7 +29,7 @@ STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 if [ -z "$STAGED" ]; then
 exit 0
 fi
-HIGH_RISK_PATTERNS='\.claude/|tests/|\.test\.|_test\.|settings\.json'
+HIGH_RISK_PATTERNS='\.claude/|tests/|\.test\.|_test\.|settings\.json|lean-formalization/Manifest/'
 HIGH_RISK_FILES=$(echo "$STAGED" | grep -E "$HIGH_RISK_PATTERNS" || true)
 if [ -z "$HIGH_RISK_FILES" ]; then
 exit 0
@@ -74,7 +74,7 @@ fi
 HIGH_RISK_FILES="$UNVERIFIED"
 fi
 SESSION=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
-STATE_FILE="/tmp/p2-warned-${SESSION}"
+STATE_FILE="${TMPDIR:-/tmp}/p2-warned-${SESSION}"
 if [ -f "$STATE_FILE" ]; then
 echo "P2: High-risk commit blocked. Run /verify first, then retry." >&2
 echo "Staged high-risk files (unverified):" >&2

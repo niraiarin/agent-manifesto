@@ -64,7 +64,7 @@ done)
 
 if [ -n "$LEAN_NAMES" ]; then
   # Lean ファイルから全定義名を取得（キャッシュ考慮）
-  CACHE_FILE="/tmp/lean-definitions-cache.txt"
+  CACHE_FILE="${TMPDIR:-/tmp}/lean-definitions-cache.txt"
   CACHE_AGE=300  # 5分
 
   if [ -f "$CACHE_FILE" ] && [ "$(find "$CACHE_FILE" -mmin -5 2>/dev/null)" ]; then

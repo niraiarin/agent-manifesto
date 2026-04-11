@@ -18,7 +18,7 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
-STATE_DIR="/tmp/temporal-${SESSION}"
+STATE_DIR="${TMPDIR:-/tmp}/temporal-${SESSION}"
 mkdir -p "$STATE_DIR"
 
 # イベントの記録

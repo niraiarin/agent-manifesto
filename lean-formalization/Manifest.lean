@@ -31,6 +31,13 @@ import Manifest.Traceability
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 import Manifest.Models.Instances.ClaudeCode.EnforcementExtension
+import Manifest.Models.Instances.ClaudeCode.VersionControl
+import Manifest.Models.Instances.ClaudeCode.InstructionDesign
+import Manifest.Models.Instances.ClaudeCode.HumanAgentInteraction
+import Manifest.Models.Instances.ClaudeCode.FormalToolchain
+import Manifest.Models.Instances.ClaudeCode.RuntimeEnvironment
+import Manifest.Models.Instances.ClaudeCode.QualityPatterns
+import Manifest.Models.Instances.ClaudeCode.DataSchema
 
 /-!
 # Agent Manifest — Formal Specification

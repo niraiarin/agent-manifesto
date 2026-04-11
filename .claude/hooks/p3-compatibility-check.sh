@@ -34,7 +34,7 @@ if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then
   fi
 
   SESSION=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
-  STATE_FILE="/tmp/p3-warned-${SESSION}"
+  STATE_FILE="${TMPDIR:-/tmp}/p3-warned-${SESSION}"
 
   if [ -f "$STATE_FILE" ]; then
     echo "P3: Structural commit BLOCKED — compatibility classification required." >&2

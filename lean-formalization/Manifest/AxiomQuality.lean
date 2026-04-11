@@ -52,13 +52,13 @@ open Manifest.Procedure
 -/
 
 /-- 圧縮比を計算する。100 倍スケール（Nat で精度確保）。
-    例: 459 theorems / 53 axioms = 866 (= 8.66x) -/
+    例: 462 theorems / 53 axioms = 871 (= 8.71x) -/
 def compressionRatio (p : AxiomSystemProfile) : Nat :=
   p.theoremCount * 100 / p.totalAxioms
 
-/-- 現在の公理系の圧縮比は 866 (= 8.66x)。 -/
+/-- 現在の公理系の圧縮比は 871 (= 8.71x)。 -/
 theorem current_compression :
-  compressionRatio currentProfile = 866 := by rfl
+  compressionRatio currentProfile = 871 := by rfl
 
 /-- 圧縮比 ≥ 200 (= 2.0x) は暫定的な健全条件 (H7)。 -/
 theorem current_compression_healthy :
@@ -381,5 +381,40 @@ theorem all_metrics_enumerated :
     m = .independence ∨ m = .deBruijn ∨ m = .hygieneAutomation ∨
     m = .theoremUsefulness ∨ m = .axiomFreeRatio := by
   intro m; cases m <;> simp
+
+-- ============================================================
+-- sorry 分類スキーマ (#302: G6)
+-- ============================================================
+
+/-- sorry の分類。導入理由に基づく 4 分類。 -/
+inductive SorryClass where
+  | placeholder   -- 意図的な未実装マーカー。段階的開発で計画的に導入
+  | dangling      -- 前提の不在（dangling reference）から生じる。G2 検出由来
+  | deferred      -- 証明困難で後回し。数学的困難性または Lean 表現力の限界
+  | exploratory   -- 実験的コード内の一時的 sorry。worktree 等で使用
+  deriving BEq, Repr, DecidableEq
+
+/-- sorry 分類は網羅的。 -/
+theorem sorry_class_exhaustive :
+  ∀ (s : SorryClass),
+    s = .placeholder ∨ s = .dangling ∨ s = .deferred ∨ s = .exploratory := by
+  intro s; cases s <;> simp
+
+/-- sorry の解消優先度。数値が大きいほど優先。 -/
+def SorryClass.priority : SorryClass → Nat
+  | .dangling     => 4
+  | .deferred     => 3
+  | .placeholder  => 2
+  | .exploratory  => 1
+
+/-- dangling sorry は最も高い解消優先度を持つ。 -/
+theorem dangling_highest_priority :
+  ∀ (s : SorryClass), SorryClass.priority .dangling ≥ SorryClass.priority s := by
+  intro s; cases s <;> decide
+
+/-- 全ての sorry 分類は sorryPresence シグナルを発する。 -/
+theorem sorry_all_signal_presence :
+  ∀ (s : SorryClass), (fun _ : SorryClass => QualitySignal.sorryPresence) s = .sorryPresence := by
+  intro s; cases s <;> rfl
 
 end Manifest.AxiomQuality

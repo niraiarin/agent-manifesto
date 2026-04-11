@@ -44,35 +44,35 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/l1-safety-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/l1-safety-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p2-verify-on-commit.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p2-verify-on-commit.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p3-compatibility-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p3-compatibility-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-temporal-tracker.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-temporal-tracker.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/h5-doc-lint.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/h5-doc-lint.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p3-axiom-evidence-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p3-axiom-evidence-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-sync-counts-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-sync-counts-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-manifest-refs-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-manifest-refs-check.sh"
           }
         ]
       },
@@ -81,15 +81,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/hallucination-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/hallucination-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-traces-integrity-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-traces-integrity-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/l1-file-guard.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/l1-file-guard.sh"
           }
         ]
       },
@@ -98,15 +98,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/l1-file-guard.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/l1-file-guard.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/hallucination-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/hallucination-check.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-traces-integrity-check.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-traces-integrity-check.sh"
           }
         ]
       }
@@ -117,12 +117,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-metrics-collector.sh",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-metrics-collector.sh",
             "async": true
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/evolve-metrics-recorder.sh",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/evolve-metrics-recorder.sh",
             "async": true
           }
         ]
@@ -134,15 +134,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-gate-logger.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-gate-logger.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-drift-detector.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-drift-detector.sh"
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/evolve-state-loader.sh"
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/evolve-state-loader.sh"
           }
         ]
       }
@@ -152,7 +152,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-v5-approval-tracker.sh",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-v5-approval-tracker.sh",
             "async": true
           }
         ],
@@ -164,7 +164,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/p4-v7-task-tracker.sh",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/p4-v7-task-tracker.sh",
             "async": true
           }
         ],
