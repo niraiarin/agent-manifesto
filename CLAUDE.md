@@ -141,7 +141,7 @@
 > **Note**: `lake build` and `grep ... Manifest/` commands must be run from the `lean-formalization/` directory.
 
 - `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
-- `bash tests/test-all.sh` — run all 393 acceptance tests (Phase 1–5)
+- `bash tests/test-all.sh` — run all 617 acceptance tests (Phase 1–5)
 - `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l` — count axioms
 - `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
 
