@@ -6,12 +6,34 @@
 #
 # Schema: .claude/skills/dependency-schema.yaml
 
-generated_at: "2026-04-10T12:37:16Z"
-skill_count: 12
+generated_at: "2026-04-11T17:11:43Z"
+skill_count: 13
 
 skills:
   adjust-action-space:
     invokes: []
+
+  brownfield:
+    invokes:
+      - skill: instantiate-model
+        type: soft
+        phase: "Phase 2 Step 7-8"
+        condition: "JSON→Lean 生成・検証パイプライン共有"
+      - skill: verify
+        type: hard
+        phase: "Phase 2 Step 9"
+      - skill: trace
+        type: soft
+        phase: "Phase 4"
+        condition: "半順序確立時"
+      - skill: research
+        type: soft
+        phase: "Phase 0 Step 2"
+        condition: "未知の技術スタックの調査が必要な場合"
+    invoked_by:
+      - skill: spec-driven-workflow
+        phase: "Phase 0"
+        expected_output: "条件付き公理体系（外部プロジェクト）"
 
   design-implementation-plan:
     invokes:
@@ -188,6 +210,22 @@ skills:
 
 # Computed edges (flattened from skill invokes declarations)
 edges:
+  - from: brownfield
+    to: instantiate-model
+    type: soft
+    phase: "Phase 2 Step 7-8"
+  - from: brownfield
+    to: verify
+    type: hard
+    phase: "Phase 2 Step 9"
+  - from: brownfield
+    to: trace
+    type: soft
+    phase: "Phase 4"
+  - from: brownfield
+    to: research
+    type: soft
+    phase: "Phase 0 Step 2"
   - from: design-implementation-plan
     to: research
     type: soft
@@ -295,10 +333,10 @@ edges:
 
 # Summary
 summary:
-  total_skills: 12
-  total_edges: 26
-  hard_edges: 16
-  soft_edges: 10
+  total_skills: 13
+  total_edges: 30
+  hard_edges: 17
+  soft_edges: 13
   bidirectional:
     - "instantiate-model <-> design-implementation-plan"
     - "trace <-> evolve"
