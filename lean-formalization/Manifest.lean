@@ -50,7 +50,7 @@ import Manifest.Models.DeviationPolicy
 マニフェスト「永続する構造と一時的なエージェントの協約」の
 公理系を Lean 4 で形式化した仕様書。
 
-51 axioms, 386 theorems, 0 sorry. Compression 7.56x.
+53 axioms, 462 theorems, 0 sorry. Compression 8.71x.
 
 ## モジュール構成（認識論的層構造）
 
