@@ -4,11 +4,11 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Probability Theory for LLM Output
+# Mathematical Foundation - Probability Theory for LLM Output
 
 Grounds T4 (`output_nondeterministic`) in established probability theory.
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R1] Kolmogorov (1933): Probability axioms

@@ -1,12 +1,12 @@
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Statistical Testing for Verification Independence
+# Mathematical Foundation - Statistical Testing for Verification Independence
 
 Theoretical grounding for E1 (`verification_requires_independence`,
 `no_self_verification`, `shared_bias_reduces_detection`).
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R61] Neyman & Pearson (1933) "On the Problem of the Most Efficient Tests"

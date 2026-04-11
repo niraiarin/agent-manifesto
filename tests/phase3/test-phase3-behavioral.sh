@@ -8,7 +8,7 @@ echo "=== Phase 3: P4 Behavioral Tests ==="
 
 # B3.1: メトリクスコレクターがログを書き込む
 echo -n "B3.1 Metrics collector writes JSONL... "
-TMPLOG=$(mktemp)
+TMPLOG="${TMPDIR:-/tmp}/test-metrics-$$.log"
 trap 'rm -f "$TMPLOG"' EXIT
 BEFORE=0
 echo '{"tool_name":"Bash","tool_use_id":"test123","session_id":"s1"}' | METRICS_LOG="$TMPLOG" bash "$HOOKS/p4-metrics-collector.sh" 2>/dev/null

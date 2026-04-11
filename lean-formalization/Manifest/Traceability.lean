@@ -2,7 +2,7 @@ import Manifest.Ontology
 import Manifest.DesignFoundation
 
 /-!
-# 閉環トレーサビリティ: 条件付き公理系と成果物の完全対応
+# Closed-Loop Traceability - Full Correspondence of Conditional Axioms and Artifacts
 
 Research #191, Sub-Issue #193. 命題↔テスト↔実装の閉じた環を型レベルで定義する。
 Conservative extension: 新しい axiom は追加しない。

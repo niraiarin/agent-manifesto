@@ -1,11 +1,11 @@
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Control Theory for Feedback-Driven Improvement
+# Mathematical Foundation - Control Theory for Feedback-Driven Improvement
 
 Theoretical grounding for T5 (`no_improvement_without_feedback`).
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R41] Francis & Wonham (1976) "The Internal Model Principle of Control Theory"

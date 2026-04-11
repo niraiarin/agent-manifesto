@@ -1044,7 +1044,7 @@ defines impact set computation functions and basic properties.
 -/
 
 /-!
-### Note on coherenceRequirement (#243)
+## Note on coherenceRequirement - Issue 243
 
 The original `d13_coherence_implies_propagation` theorem was removed because it was
 trivially-true: its conclusion was a direct restatement of its premise.
@@ -1119,7 +1119,7 @@ theorem d13_l5_limited_impact :
 -- ============================================================
 
 /-!
-## D13 Extension: Temporal Expiration of Assumptions
+## D13 Extension - Temporal Expiration of Assumptions
 
 Extends D13 from PropositionId-level to assumption-level propagation.
 
@@ -1674,7 +1674,7 @@ inductive DeductiveDesignStep where
   deriving BEq, Repr
 
 /-!
-### Note on step ordering
+## Note on step ordering
 
 Step ordering was previously expressed via `DeductiveDesignStep.ord` and
 encoding theorems (d17_investigate_before_extract, etc.). These were removed
@@ -1696,7 +1696,7 @@ valid and is documented in the DeductiveDesignStep constructors' comments:
 -- ============================================================
 
 /-!
-## D17 Step Output Types (#262)
+## D17 Step Output Types - Issue 262
 
 Each step produces a typed output consumed by the next step.
 The type connection replaces the encoding theorem ordering with

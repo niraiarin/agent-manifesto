@@ -3,7 +3,7 @@ import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 
 /-!
-# Claude Code 条件付き公理系: エージェント実行基盤と指示設計 (#400)
+# Claude Code Conditional Axiom System - Agent Runtime and Instruction Design
 
 Claude Code の hook 設計パターン、SKILL.md / AGENT.md 構造、
 Agent モデル選択、TaskClassification の適用を条件付き公理として構造化する。
@@ -24,7 +24,7 @@ ConditionalDesignFoundation.lean と同時に再検証対象となる。
 ただし本ファイルは「運用パターン」のため、CC 仕様が不変でも
 プロジェクトの運用判断変更で独立に反証されうる。
 
-## 設計方針
+## Design Policy
 
 - 手書き（運用パターンの意味的推論が必要）
 - 各 ID axiom に Derivation Card を付与

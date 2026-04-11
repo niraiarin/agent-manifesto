@@ -1,7 +1,7 @@
 import Manifest.Models.Assumptions.EpistemicLayer
 
 /-!
-# ForgeCode 条件付き設計基礎 — 仮定 (C/H)
+# ForgeCode Conditional Design Foundation - Assumptions
 
 条件付き公理系 S=(A,C,H,D) の ForgeCode インスタンスにおける仮定を定義する。
 
@@ -12,7 +12,7 @@ import Manifest.Models.Assumptions.EpistemicLayer
 - **H (LLM Inference)**: ForgeCode のソースコード・ドキュメントから LLM が推論した
   プラットフォーム特性。各 H に反証条件を付与。
 
-## 時間的有効性 (#225)
+## Temporal Validity
 
 全ての仮定に TemporalValidity を付与する。ForgeCode はアクティブに開発中の
 オープンソースプラットフォームであり、仕様変更が頻繁に起こりうる。

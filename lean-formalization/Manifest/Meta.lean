@@ -5,7 +5,7 @@ import Manifest.Observable
 import Manifest.ObservableDesign
 
 /-!
-# Meta-theoretic: Meta — 公理系のメタ性質（メタ理論, 用語リファレンス §5.6）
+# Meta-theoretic Properties of the Axiom System - Metatheory, Terminology Reference S5.6
 
 公理系自体の構造的性質を検証する。
 本ファイルの定理はメタ定理（§5.6）であり、対象理論の性質を論じる。
@@ -20,7 +20,7 @@ import Manifest.ObservableDesign
 3. **導出の方向性**: P（定理, §4.2）は T/E（公理）から導出される（逆方向の依存はない）
 4. **反証可能性の保持**: Γ \ T₀ が反証（§9.1）された場合に影響を受ける P の追跡
 
-## メタ定理 vs 対象定理（用語リファレンス §5.6）
+## Metatheorem vs Object Theorem - Terminology Reference S5.6
 
 - **対象理論** (Object Theory): Axioms.lean, EmpiricalPostulates.lean, Principles.lean の公理系
 - **メタ理論** (Metatheory): 本ファイル。対象理論の性質を論じる理論
@@ -254,7 +254,7 @@ theorem structural_derived_immune :
 -- ============================================================
 
 /-!
-## P1–P6 の導出根拠
+## Derivation Basis for P1 through P6
 
 各 P がどの層に依拠しているかの分類。
 E が反証された場合の影響範囲を明確にする。
@@ -312,7 +312,7 @@ theorem majority_principles_robust :
 -- ============================================================
 
 /-!
-## 公理の妥当性レビュー基準
+## Axiom Validity Review Criteria
 
 空虚な axiom（常に True）はシステムに何も追加しない。
 各 axiom は以下の3基準で妥当性をレビューされる:
@@ -351,7 +351,7 @@ theorem vacuous_is_invalid :
 -- ============================================================
 
 /-!
-## Sorry Inventory (Meta)
+## Sorry Inventory - Meta
 
 sorry なし。新規 axiom なし。
 全 theorem は型の構造（cases, simp, rfl）で証明完了。

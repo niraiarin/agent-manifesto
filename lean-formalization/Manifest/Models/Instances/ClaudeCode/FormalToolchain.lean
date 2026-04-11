@@ -3,7 +3,7 @@ import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 
 /-!
-# Claude Code 条件付き公理系: 形式検証ツールチェーン (#401)
+# Claude Code Conditional Axiom System - Formal Verification Toolchain
 
 Lean 4 / Mathlib / Verso を形式検証ツールチェーンとして使用する際の
 制約と運用パターンを条件付き公理として構造化する。

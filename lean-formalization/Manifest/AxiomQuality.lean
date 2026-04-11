@@ -9,12 +9,12 @@ import Manifest.Terminology
 
 ## Γ の構成
 
-### T₀（外的権威に根拠）
+T0 basis from external authority -
 - T₀-4: Aspinall & Kaliszyk (FASE 2016) が fan-in/fan-out を形式証明に適用
 - T₀-5: De Bruijn factor は Wiedijk (2000) が定義した確立された指標
 - T₀-3: 公理衛生 5 検査は手順書 §2.6 で定義
 
-### Γ \ T₀（仮説）
+Non-T0 hypotheses -
 本ファイルは axiom 0 で構成する。全ての指標は型定義（定義的拡大, §5.5）と
 定理（§4.2）として表現される。閾値の妥当性は H7（暫定値、運用で較正）に基づく。
 
@@ -43,7 +43,7 @@ open Manifest.Procedure
 -- ============================================================
 
 /-!
-## 指標 1: Compression Ratio（圧縮比）
+## Metric 1 Compression Ratio
 
 **何を測るか:** theorems / axioms。少ない公理からどれだけ多くの定理を導出できるか。
 **根拠:** H4 — axiom が少なく theorem が多いほど、体系の「表現力」が高い。
@@ -71,7 +71,7 @@ theorem current_compression_healthy :
 -- ============================================================
 
 /-!
-## 指標 2: Coverage
+## Metric 2 Coverage
 
 **何を測るか:** 少なくとも 1 つの定理で使用されている axiom の割合。
 **根拠:** T₀-3 検査 4 (minimality) の計量化。H1 — fan-in > 0 は minimality の必要条件。
@@ -92,7 +92,7 @@ theorem full_coverage_example :
 -- ============================================================
 
 /-!
-## 指標 3: Fan-in (Leverage)
+## Metric 3 Fan-in Leverage
 
 **何を測るか:** 各 axiom が何個の theorem で使われているか。
 **根拠:** T₀-4 Aspinall & Kaliszyk。H1 (fan-in > 0 = minimality), H2 (均一分布が望ましい)。
@@ -127,7 +127,7 @@ theorem zero_fanin_is_unused :
 -- ============================================================
 
 /-!
-## 指標 4: Fan-out (Fragility)
+## Metric 4 Fan-out Fragility
 
 **何を測るか:** 各 theorem が何個の axiom に依存するか。
 **根拠:** T₀-4 Aspinall & Kaliszyk。H3 — fan-out が小さい theorem ほど堅牢。
@@ -167,7 +167,7 @@ theorem axiomfree_not_fragile :
 -- ============================================================
 
 /-!
-## 指標 5: Independence Ratio
+## Metric 5 Independence Ratio
 
 **何を測るか:** 他の axiom から導出不能な axiom の割合。
 **根拠:** T₀-3 検査 3 (independence)。Terminology.lean `IndependenceStatus`。
@@ -184,7 +184,7 @@ def independencePercent (totalAxioms independentCount : Nat) : Nat :=
 -- ============================================================
 
 /-!
-## 指標 6: De Bruijn Factor
+## Metric 6 De Bruijn Factor
 
 **何を測るか:** Lean コード行数 / 非形式文書行数。形式化の膨張度。
 **根拠:** T₀-5 Wiedijk (2000)。H5 — Lean/Coq で 2-5x が典型。
@@ -222,7 +222,7 @@ def gradeDeBruijn : Nat → DeBruijnGrade
 -- ============================================================
 
 /-!
-## 指標 7: Hygiene Automatability
+## Metric 7 Hygiene Automatability
 
 **何を測るか:** 5 検査のうちどれだけ自動化できるか。
 **根拠:** T₀-3 + H6。`#print axioms` (T₀-1) と `lake build` (T₀-2) で判定可能な検査。
@@ -267,7 +267,7 @@ theorem nonvacuity_requires_manual :
 **根拠:** T₀-4 の fan-in を theorem レベルに適用。
   「有用な定理は他の証明で再利用される」という命題。
 
-### axiom-free ratio
+axiom-free ratio -
 
 axiom に依存しない theorem の割合。
 これらの theorem は `propext` のみに依存するか、axiom 依存が皆無。
