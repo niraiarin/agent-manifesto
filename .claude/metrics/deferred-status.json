@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 102,
+  "last_updated_run": 103,
   "items": {
     "h3-v4-semantic-update": {
       "status": "resolved",
@@ -265,10 +265,11 @@
     },
     "obs-6-orphan-sandbox": {
       "description": "feedback_sandbox_excluded_commands.md 削除が sandbox 制約で実行不可",
-      "status": "open",
+      "status": "resolved",
       "reason": "resourceExhaustion",
       "opened_in_run": 102,
-      "note": "rm コマンドが sandbox の Operation not permitted で失敗。allowWrite 範囲外（~/.claude/projects/ は書き込み許可対象外）。sandbox 設定変更（allowWrite 拡張）後に再試行可能。"
+      "resolved_in_run": 103,
+      "note": "Run 103 で ls 確認により対象ファイル feedback_sandbox_excluded_commands.md が MEMORY ディレクトリに存在しないことを確認。元の sandbox 制約は対象ファイル不在により自動的に無意味となった。"
     }
   }
 }
