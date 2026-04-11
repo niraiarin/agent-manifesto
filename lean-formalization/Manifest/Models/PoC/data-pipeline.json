@@ -1,0 +1,50 @@
+{
+  "namespace": "DataPipeline",
+  "layers": [
+    {
+      "name": "DataPrivacy",
+      "ordValue": 5,
+      "definition": "個人情報保護の不変条件。GDPR/CCPA準拠",
+      "derivedFrom": ["C1", "C2"]
+    },
+    {
+      "name": "SchemaContract",
+      "ordValue": 4,
+      "definition": "上下流のスキーマ契約。互換性維持が必須",
+      "derivedFrom": ["C3", "H1"]
+    },
+    {
+      "name": "QualityGate",
+      "ordValue": 3,
+      "definition": "データ品質ゲート。null率・異常値の閾値",
+      "derivedFrom": ["C4", "H2"]
+    },
+    {
+      "name": "PartitionStrategy",
+      "ordValue": 2,
+      "definition": "パーティション戦略。コスト最適化のため調整可能",
+      "derivedFrom": ["H3", "H4"]
+    },
+    {
+      "name": "RetryPolicy",
+      "ordValue": 1,
+      "definition": "リトライポリシー。失敗パターンに基づき自動調整",
+      "derivedFrom": ["H5", "H6"]
+    }
+  ],
+  "propositions": [
+    {"id": "dp_p01", "layerName": "DataPrivacy", "justification": ["C1"], "dependencies": []},
+    {"id": "dp_p02", "layerName": "DataPrivacy", "justification": ["C2"], "dependencies": []},
+    {"id": "dp_p03", "layerName": "SchemaContract", "justification": ["C3"], "dependencies": ["dp_p01"]},
+    {"id": "dp_p04", "layerName": "SchemaContract", "justification": ["H1"], "dependencies": ["dp_p02"]},
+    {"id": "dp_p05", "layerName": "SchemaContract", "justification": ["C3", "H1"], "dependencies": ["dp_p01", "dp_p02"]},
+    {"id": "dp_p06", "layerName": "QualityGate", "justification": ["C4"], "dependencies": ["dp_p03"]},
+    {"id": "dp_p07", "layerName": "QualityGate", "justification": ["H2"], "dependencies": ["dp_p04"]},
+    {"id": "dp_p08", "layerName": "QualityGate", "justification": ["C4", "H2"], "dependencies": ["dp_p03", "dp_p05"]},
+    {"id": "dp_p09", "layerName": "PartitionStrategy", "justification": ["H3"], "dependencies": ["dp_p06"]},
+    {"id": "dp_p10", "layerName": "PartitionStrategy", "justification": ["H4"], "dependencies": ["dp_p07"]},
+    {"id": "dp_p11", "layerName": "RetryPolicy", "justification": ["H5"], "dependencies": ["dp_p09"]},
+    {"id": "dp_p12", "layerName": "RetryPolicy", "justification": ["H6"], "dependencies": ["dp_p10"]},
+    {"id": "dp_p13", "layerName": "RetryPolicy", "justification": ["H5", "H6"], "dependencies": ["dp_p09", "dp_p10"]}
+  ]
+}

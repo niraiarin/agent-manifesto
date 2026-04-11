@@ -1,0 +1,41 @@
+{
+  "namespace": "GameLogic",
+  "layers": [
+    {
+      "name": "AntiCheat",
+      "ordValue": 4,
+      "definition": "不正防止の不変条件。サーバー権威モデル",
+      "derivedFrom": ["C1"]
+    },
+    {
+      "name": "PhysicsRule",
+      "ordValue": 3,
+      "definition": "物理法則。ゲーム世界の基本制約",
+      "derivedFrom": ["C2", "H1"]
+    },
+    {
+      "name": "BalanceParam",
+      "ordValue": 2,
+      "definition": "バランスパラメータ。パッチで調整可能",
+      "derivedFrom": ["C3", "H2"]
+    },
+    {
+      "name": "AIBehavior",
+      "ordValue": 1,
+      "definition": "NPC AI の振る舞い。学習ベースで自動調整",
+      "derivedFrom": ["H3", "H4"]
+    }
+  ],
+  "propositions": [
+    {"id": "gl_p01", "layerName": "AntiCheat", "justification": ["C1"], "dependencies": []},
+    {"id": "gl_p02", "layerName": "AntiCheat", "justification": ["C1"], "dependencies": []},
+    {"id": "gl_p03", "layerName": "PhysicsRule", "justification": ["C2"], "dependencies": ["gl_p01"]},
+    {"id": "gl_p04", "layerName": "PhysicsRule", "justification": ["H1"], "dependencies": ["gl_p02"]},
+    {"id": "gl_p05", "layerName": "PhysicsRule", "justification": ["C2", "H1"], "dependencies": ["gl_p01", "gl_p02"]},
+    {"id": "gl_p06", "layerName": "BalanceParam", "justification": ["C3"], "dependencies": ["gl_p03"]},
+    {"id": "gl_p07", "layerName": "BalanceParam", "justification": ["H2"], "dependencies": ["gl_p04"]},
+    {"id": "gl_p08", "layerName": "BalanceParam", "justification": ["C3", "H2"], "dependencies": ["gl_p03", "gl_p05"]},
+    {"id": "gl_p09", "layerName": "AIBehavior", "justification": ["H3"], "dependencies": ["gl_p06"]},
+    {"id": "gl_p10", "layerName": "AIBehavior", "justification": ["H4"], "dependencies": ["gl_p07", "gl_p08"]}
+  ]
+}

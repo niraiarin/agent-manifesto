@@ -43,6 +43,10 @@ import Manifest.Models.PoC.Consistency.Case1Composition
 import Manifest.Models.PoC.Consistency.Case2Assumption
 import Manifest.Models.PoC.Consistency.Case3Ordering
 import Manifest.Models.DeviationPolicy
+import Manifest.Models.DomainClassification
+import Manifest.Models.PoC.WebAPI
+import Manifest.Models.PoC.DataPipeline
+import Manifest.Models.PoC.GameLogic
 
 /-!
 # Agent Manifest — Formal Specification
