@@ -65,7 +65,11 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 ```
 Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
   (loop until                                      ↓
-   addressable=0)                          Git Worktree (isolated)
+   addressable=0)                      Sub-Issue Verify (P2)
+                                        (loop until
+                                         addressable=0)
+                                                   ↓
+                                           Git Worktree (isolated)
                                                    ↓
                                            Experiment → Results (issue comment)
                                                    ↓
@@ -88,6 +92,7 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Gap Analysis | 観察 |
 | Gap Analysis 検証 (Step 1.5) | 検証（P2 独立性） |
 | Sub-Issue + Gate 定義 | 仮説化 |
+| Sub-Issue 検証 (Step 3.5) | 検証（P2 独立性） |
 | 実験 + 結果記録 | 検証 |
 | Gate PASS | 統合 |
 | Gate CONDITIONAL | 仮説化（再帰） |
@@ -105,6 +110,7 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 1.5: Gap 検証ループ | **bounded + deterministic（分離済み）** | Verifier agent（検証） + カウント判定スクリプト（残存数） | `mixed_task_decomposition` 適用済み ✓: bounded = Verifier 委譲、deterministic = addressable 残存数判定 |
 | Step 2: Parent Issue 作成 | **deterministic + judgmental（未分離）** | テンプレートスクリプト + LLM（内容記述） | deterministic: テンプレート構造生成 / judgmental: 背景・Gap 一覧の記述 |
 | Step 3: Sub-Issue 作成 | **deterministic + judgmental（未分離）** | テンプレートスクリプト + LLM（内容記述） | deterministic: テンプレート構造生成 / judgmental: Gate 基準の設計 |
+| Step 3.5: Sub-Issue 検証ループ | **bounded + deterministic（分離済み）** | Verifier agent（検証） + カウント判定スクリプト（残存数） | `mixed_task_decomposition` 適用済み ✓: bounded = Verifier 委譲、deterministic = addressable 残存数判定 |
 | Step 4: Worktree 作成 | **deterministic** | スクリプト（worktree.sh） | スクリプト化済み ✓ |
 | Step 5: 実験実施 | **judgmental** | LLM | 研究の本質。自動化不可 |
 | Step 5.5: 仮定抽出 | **judgmental + deterministic（未分離）** | LLM（識別・分類） + チェックスクリプト（5.5c） | judgmental: 外部事実の識別と C/H 分類 / deterministic: 5.5c チェックリスト |
@@ -132,6 +138,7 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 1.5 | bounded + deterministic（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | bounded: Verifier 委譲 / deterministic: 残存数は Observable |
 | Step 2 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | テンプレート構造は deterministic、内容記述は judgmental |
 | Step 3 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | テンプレート構造は deterministic、Gate 基準設計は judgmental |
+| Step 3.5 | bounded + deterministic（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | bounded: Verifier 委譲 / deterministic: 残存数は Observable |
 | Step 4 | deterministic | `deterministic_must_be_structural`, `observable_implies_automatable` | worktree 作成の成功条件は Observable（ディレクトリ存在） |
 | Step 5 | judgmental | `classification_is_judgmental` | 研究の本質。決定手続き不在 |
 | Step 5.5 | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 識別・分類は judgmental、チェックリストは deterministic |
@@ -217,6 +224,13 @@ Gap Analysis → Verifier 検証
 「addressable 指摘が残存するか」の判定は deterministic（カウント比較）。
 修正自体は judgmental（`mixed_task_decomposition` の適用対象）。
 
+**完了条件（deterministic）**: 以下の 2 条件を **両方** 満たすこと:
+1. Verifier の最終ラウンドで addressable = 0 件
+2. その最終ラウンド以降に成果物（Gap Analysis テキスト）への変更がないこと
+
+条件 2 が満たされない場合（= 修正した場合）、修正後の状態で Verifier を再実行する。
+**自分で「修正したから OK」と判断して次に進むことは P2 違反。**
+
 **省略条件**: Gap が 1 件のみで low risk の場合はスキップ可能。
 
 ### Step 2: Parent Issue 作成
@@ -283,6 +297,47 @@ Parent: #N
 ```
 
 作成後、Parent Issue の Sub-Issues テーブルを更新する。
+
+### Step 3.5: Sub-Issue の独立検証（ループ）
+
+Sub-Issue の Gate 基準は後続の全実験の方向を決定する。
+Gate 基準の不備は実験完了後まで検出されず、手戻りコストが大きい（D13）。
+P2（検証の独立性）に基づき、Verifier agent による独立検証を実施する。
+
+検証項目:
+- **Gap Analysis との整合性**: 各 Sub-Issue が対応する Gap を正しく反映しているか
+- **Gate 基準の計測可能性**: PASS/CONDITIONAL/FAIL の基準が客観的に判定可能か（曖昧な基準はないか）
+- **Gate 基準の反証可能性**: FAIL 条件が定義されているか（PASS しかない Gate は無意味）
+- **依存関係の正確性**: Sub-Issue 間の依存が正しく指定されているか
+- **方法の具体性**: 実験手順が次の実行者に再現可能な具体性を持っているか
+- **成果物の明確性**: 何が生まれるかが具体的に定義されているか
+
+#### 減点解消ループ（Step 1.5 と同パターン）
+
+```
+Sub-Issues → Verifier 検証
+  → 各指摘を addressable / unaddressable に分類
+  ├─ addressable が 0 件
+  │   → Step 4 へ進む（unaddressable の理由を記録）
+  ├─ addressable が残存
+  │   → Sub-Issue を修正（修正箇所を記録）
+  │   → Verifier に再検証を依頼（最大 2 回）
+  │   → 2 回後も addressable が残存 → unaddressable に降格し理由を記録
+  └─ Sub-Issue の根本的誤り（Gate 基準が全て無効等）
+      → Step 3 からやり直し
+```
+
+「addressable 指摘が残存するか」の判定は deterministic（カウント比較）。
+修正自体は judgmental（`mixed_task_decomposition` の適用対象）。
+
+**完了条件（deterministic）**: 以下の 2 条件を **両方** 満たすこと:
+1. Verifier の最終ラウンドで addressable = 0 件
+2. その最終ラウンド以降に成果物（Sub-Issue テキスト）への変更がないこと
+
+条件 2 が満たされない場合（= 修正した場合）、修正後の状態で Verifier を再実行する。
+**自分で「修正したから OK」と判断して次に進むことは P2 違反。**
+
+**省略条件**: Sub-Issue が 1 件のみで、かつ Gate 基準が定量的に定義されている場合はスキップ可能。
 
 ### Step 4: Git Worktree 作成
 
@@ -408,6 +463,13 @@ Judge 評価 → 各減点を addressable / unaddressable に分類
   └─ 全基準が 1 点以下
       → Gate FAIL
 ```
+
+**完了条件（deterministic）**: 以下の 2 条件を **両方** 満たすこと:
+1. Judge/Verifier の最終ラウンドで addressable = 0 件
+2. その最終ラウンド以降に成果物（実験結果・コード）への変更がないこと
+
+条件 2 が満たされない場合（= 修正した場合）、修正後の状態で Judge/Verifier を再実行する。
+**自分で「修正したから OK」と判断して Gate 判定に進むことは P2 違反。**
 
 **旧閾値（≥ 3.5 → PASS 推奨）の廃止理由:**
 スコア閾値は「対処可能な減点を放置する免罪符」として機能していた（#289）。

@@ -16,7 +16,8 @@
 #     "proposed_names": ["new_theorem_name"],
 #     "grep_patterns": ["pattern to check duplicates"],
 #     "numeric_claims": [{"label": "human-readable", "command": "bash command", "expected": 42}],
-#     "jsonl_field_checks": [{"label": "human-readable", "file": "path/to/file.jsonl", "jq_filter": ".field == \"value\""}]
+#     "jsonl_field_checks": [{"label": "human-readable", "file": "path/to/file.jsonl", "jq_filter": ".field == \"value\""}],
+#     "io_samples": [{"description": "sample use case", "args": "arg1 arg2", "expected_output": "expected"}]
 #   }
 #
 # numeric_claims: trusted caller only — executes bash commands from input JSON
@@ -294,6 +295,16 @@ for check_entry in jsonl_field_checks:
         add_check("H_jsonl_fields", label, False, "jq timed out (10s)")
     except Exception as e:
         add_check("H_jsonl_fields", label, False, f"error: {e}")
+
+# --- I. Script I/O specification check ---
+# When target_files contains .sh files, io_samples must be non-empty.
+sh_targets = [f for f in target_files if f.endswith(".sh")]
+io_samples = proposal.get("io_samples", [])
+if sh_targets:
+    has_samples = isinstance(io_samples, list) and len(io_samples) > 0
+    add_check("I_script_io_spec", "io_samples_present", has_samples,
+              f"io_samples has {len(io_samples)} sample(s) for {len(sh_targets)} .sh target(s)" if has_samples
+              else f"MISSING: target_files contains {len(sh_targets)} .sh file(s) but io_samples is empty or absent")
 
 # --- Output ---
 results["summary"]["total"] = results["summary"]["pass"] + results["summary"]["fail"]

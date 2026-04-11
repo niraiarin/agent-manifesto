@@ -459,11 +459,19 @@ if [ -f "$HISTORY_FILE" ]; then
         | [.[-10:][]] | if length > 0 then (add * 100 / length / 100.0) else 0 end
       else 0 end
   ' "$HISTORY_FILE" 2>/dev/null || echo 0)
+  V1_TEST_DELTA_OUTLIER=$(jq -s '
+    [.[] | select(.result != "observation" and .tests.passed != null)]
+    | if length > 1 then
+        [range(1; length) as $i | (.[($i)].tests.passed - .[($i) - 1].tests.passed)]
+        | [.[-10:][]] | [.[] | select(. > 50 or . < -50)] | length > 0
+      else false end
+  ' "$HISTORY_FILE" 2>/dev/null || echo false)
 fi
 V1_THEOREM_DELTA=${V1_THEOREM_DELTA:-0}
 V1_TEST_DELTA=${V1_TEST_DELTA:-0}
 V1_THEOREM_DELTA_AVG=${V1_THEOREM_DELTA_AVG:-0}
 V1_TEST_DELTA_AVG=${V1_TEST_DELTA_AVG:-0}
+V1_TEST_DELTA_OUTLIER=${V1_TEST_DELTA_OUTLIER:-false}
 
 # Q2 (verification quality): verifier pass rate and rejected count
 V1_VERIFIER_PASS=0
@@ -536,7 +544,7 @@ else SAT_STATUS="ok"
 fi
 
 echo "  \"v1_v7\": {"
-echo "    \"v1_skill_quality\": { \"gqm_version\": \"0.1.0\", \"q1_structural_contribution\": { \"theorem_delta_last_run\": $V1_THEOREM_DELTA, \"test_delta_last_run\": $V1_TEST_DELTA, \"theorem_delta_avg_10r\": $V1_THEOREM_DELTA_AVG, \"test_delta_avg_10r\": $V1_TEST_DELTA_AVG }, \"q2_verification_quality\": { \"verifier_pass_total\": $V1_VERIFIER_PASS, \"verifier_fail_total\": $V1_VERIFIER_FAIL, \"verifier_pass_rate\": $V1_VERIFIER_RATE, \"rejected_last_run\": $V1_REJECTED_COUNT, \"rejected_avg_10r\": $V1_REJECTED_AVG }, \"q3_operational_stability\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0} }, \"non_triviality\": { \"score\": $NTS_SCORE, \"label\": \"$NTS_LABEL\", \"c1_theorem_growth\": $NTS_C1, \"c2_test_growth\": $NTS_C2, \"c3_axiom_change\": $NTS_C3, \"c4_multi_verification\": $NTS_C4 }, \"saturation\": { \"test_consecutive_zero_delta\": $SAT_CONSECUTIVE, \"status\": \"$SAT_STATUS\" }, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\" },"
+echo "    \"v1_skill_quality\": { \"gqm_version\": \"0.1.0\", \"q1_structural_contribution\": { \"theorem_delta_last_run\": $V1_THEOREM_DELTA, \"test_delta_last_run\": $V1_TEST_DELTA, \"theorem_delta_avg_10r\": $V1_THEOREM_DELTA_AVG, \"test_delta_avg_10r\": $V1_TEST_DELTA_AVG, \"test_delta_outlier_in_window\": $V1_TEST_DELTA_OUTLIER }, \"q2_verification_quality\": { \"verifier_pass_total\": $V1_VERIFIER_PASS, \"verifier_fail_total\": $V1_VERIFIER_FAIL, \"verifier_pass_rate\": $V1_VERIFIER_RATE, \"rejected_last_run\": $V1_REJECTED_COUNT, \"rejected_avg_10r\": $V1_REJECTED_AVG }, \"q3_operational_stability\": { \"evolve_success_rate\": $EVOLVE_SUCCESS_RATE, \"lean_health\": $LEAN_HEALTH, \"skill_count\": ${SKILL_COUNT:-0} }, \"non_triviality\": { \"score\": $NTS_SCORE, \"label\": \"$NTS_LABEL\", \"c1_theorem_growth\": $NTS_C1, \"c2_test_growth\": $NTS_C2, \"c3_axiom_change\": $NTS_C3, \"c4_multi_verification\": $NTS_C4 }, \"saturation\": { \"test_consecutive_zero_delta\": $SAT_CONSECUTIVE, \"status\": \"$SAT_STATUS\" }, \"proxy_classification\": \"formal\", \"graduation_date\": \"2026-03-27\", \"graduation_source\": \"#77 G1-G4\" },"
 # V2 trend semantics: compare recent_avg (median of last 10 session deltas)
 # against cumulative_avg (filtered full-history mean) as baseline.
 # divergence_percent = (recent_avg - cumulative_avg) * 100 / cumulative_avg
