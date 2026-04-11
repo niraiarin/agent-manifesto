@@ -95,7 +95,7 @@ theorem assumption_contradiction
 theorem assumption_contradiction_via_interpreter
     (h_interp : exampleInterpreter.interpret childContent)
     (_h_parent : parent_t7_consequence) : False := by
-  simp [ContentInterpreter.interpret, childAssumption_independence] at h_interp
+  simp [ContentInterpreter.interpret] at h_interp
   exact h_interp True trivial
 
 -- ============================================================
