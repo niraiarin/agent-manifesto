@@ -13,7 +13,7 @@ SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
 log_gate_blocked() {
   local reason="$1"
   local metrics_dir
-  metrics_dir="$(cd "$(dirname "$0")/.." && pwd)/metrics"
+  metrics_dir="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")/.claude/metrics"
   local log_file="$metrics_dir/tool-usage.jsonl"
   if [ -d "$metrics_dir" ]; then
     printf '{"event":"gate_blocked","hook":"l1-file-guard","reason":"%s","tool":"%s","file":"%s","session_id":"%s","timestamp":"%s"}\n' \

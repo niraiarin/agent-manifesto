@@ -1,0 +1,227 @@
+{
+  "$schema": "export-manifest/v1",
+  "description": "Declares which artifacts to export as a Claude Code plugin. Machine-readable, no ambiguity.",
+  "classificationCriteria": {
+    "base": "No manifesto-specific paths/concepts. Works in any project as-is or with userConfig.",
+    "base-configurable": "Contains manifesto-specific patterns as defaults, but configurable via userConfig. Exported with defaults replaced by config.json lookup.",
+    "domain": "Hardcoded manifesto-specific logic. Not exported to base plugin."
+  },
+  "hooks": {
+    "l1-safety-check.sh": {
+      "target": "base",
+      "path": ".claude/hooks/l1-safety-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "config": [],
+      "rationale": "Generic dangerous-command detection, credential exfiltration prevention"
+    },
+    "l1-file-guard.sh": {
+      "target": "base",
+      "path": ".claude/hooks/l1-file-guard.sh",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write",
+      "config": [],
+      "rationale": "Generic secret-file write blocking, test tampering detection, hook self-protection"
+    },
+    "p2-verify-on-commit.sh": {
+      "target": "base-configurable",
+      "path": ".claude/hooks/p2-verify-on-commit.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "config": ["HIGH_RISK_PATTERNS"],
+      "defaults": {
+        "HIGH_RISK_PATTERNS": "\\.claude/|tests/|\\.test\\.|_test\\.|settings\\.json"
+      },
+      "rationale": "High-risk commit gating. Default patterns are generic; lean-formalization/ removed from defaults."
+    },
+    "p3-compatibility-check.sh": {
+      "target": "base-configurable",
+      "path": ".claude/hooks/p3-compatibility-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "config": ["STRUCTURAL_PATTERNS"],
+      "defaults": {
+        "STRUCTURAL_PATTERNS": "\\.claude/|tests/|docs/"
+      },
+      "rationale": "Structural-file commit classification enforcement. Default patterns are generic; manifesto-specific paths removed."
+    },
+    "p4-metrics-collector.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-metrics-collector.sh",
+      "event": "PostToolUse",
+      "matcher": null,
+      "config": [],
+      "rationale": "Generic tool-use logger. Already uses git rev-parse."
+    },
+    "p4-gate-logger.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-gate-logger.sh",
+      "event": "SessionStart",
+      "matcher": null,
+      "config": [],
+      "rationale": "Generic session summary writer"
+    },
+    "p4-drift-detector.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-drift-detector.sh",
+      "event": "SessionStart",
+      "matcher": null,
+      "config": [],
+      "rationale": "Generic behavioral drift detection (V4 block rate, V5 rejection rate)"
+    },
+    "p4-temporal-tracker.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-temporal-tracker.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "config": [],
+      "rationale": "Test-before-push, amend warnings. Supports npm/pytest/cargo/make/lake."
+    },
+    "p4-v5-approval-tracker.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-v5-approval-tracker.sh",
+      "event": "UserPromptSubmit",
+      "matcher": null,
+      "config": [],
+      "rationale": "Human approval/rejection pattern tracking"
+    },
+    "p4-v7-task-tracker.sh": {
+      "target": "base",
+      "path": ".claude/hooks/p4-v7-task-tracker.sh",
+      "event": "TaskCompleted",
+      "matcher": null,
+      "config": [],
+      "rationale": "Task completion logging"
+    },
+    "rules-injector.sh": {
+      "target": "base",
+      "path": ".claude/hooks/rules-injector.sh",
+      "event": "SessionStart",
+      "matcher": null,
+      "config": [],
+      "rationale": "Injects rule content and CLAUDE.md minimal routing as additionalContext on session start. Required because plugin spec does not auto-load .claude/rules/."
+    },
+    "evolve-metrics-recorder.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/evolve-metrics-recorder.sh",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "config": [],
+      "rationale": "Records evolve-specific commit events to evolve-history.jsonl"
+    },
+    "evolve-state-loader.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/evolve-state-loader.sh",
+      "event": "SessionStart",
+      "matcher": null,
+      "config": [],
+      "rationale": "Loads evolve history and checks Lean sorry count"
+    },
+    "h5-doc-lint.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/h5-doc-lint.sh",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write",
+      "config": [],
+      "rationale": "Lean/Verso doc comment linting. Hardcoded lean-formalization/Manifest/ paths."
+    },
+    "hallucination-check.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/hallucination-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash|Edit|Write",
+      "config": [],
+      "rationale": "Lean definition/axiom/theorem verification. 11 manifesto-specific refs."
+    },
+    "p3-axiom-evidence-check.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/p3-axiom-evidence-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write",
+      "config": [],
+      "rationale": "Axiom Card metadata checking. Hardcoded lean-formalization/ paths."
+    },
+    "p4-manifest-refs-check.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/p4-manifest-refs-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write",
+      "config": [],
+      "rationale": "artifact-manifest.json refs vs propositions list validation"
+    },
+    "p4-sync-counts-check.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/p4-sync-counts-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "config": [],
+      "rationale": "Lean axiom/theorem count sync. Calls scripts/sync-counts.sh."
+    },
+    "p4-traces-integrity-check.sh": {
+      "target": "domain",
+      "path": ".claude/hooks/p4-traces-integrity-check.sh",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write",
+      "config": [],
+      "rationale": "@traces annotation vs artifact-manifest.json refs consistency"
+    }
+  },
+  "agents": {
+    "verifier.md": {
+      "target": "base-configurable",
+      "path": ".claude/agents/verifier.md",
+      "config": ["DOMAIN_CHECKLIST"],
+      "rationale": "P2 independent verification core. Independence conditions (contextSeparated, framingIndependent, etc.) are generic. Domain-specific checklist items (Lean theorem quality, D1-D18 compliance) to be removed or made configurable."
+    },
+    "judge.md": {
+      "target": "domain",
+      "path": ".claude/agents/judge.md",
+      "config": [],
+      "rationale": "G1-G5 criteria reference manifesto concepts (V1-V7, T2)"
+    },
+    "observer": {
+      "target": "domain",
+      "path": ".claude/agents/observer/AGENT.md",
+      "config": [],
+      "rationale": "Tied to evolve-history.jsonl, deferred-status.json, Lean stats"
+    },
+    "hypothesizer": {
+      "target": "domain",
+      "path": ".claude/agents/hypothesizer/AGENT.md",
+      "config": [],
+      "rationale": "References Workflow.lean, Evolution.lean, TaskClassification.lean"
+    },
+    "integrator": {
+      "target": "domain",
+      "path": ".claude/agents/integrator/AGENT.md",
+      "config": [],
+      "rationale": "Tied to evolve run recording, evolve-history.jsonl schema"
+    },
+    "model-questioner.md": {
+      "target": "domain",
+      "path": ".claude/agents/model-questioner.md",
+      "config": [],
+      "rationale": "References EpistemicLayerClass, lean-formalization paths"
+    }
+  },
+  "rules": {
+    "l1-safety.md": {
+      "target": "base",
+      "path": ".claude/rules/l1-safety.md",
+      "config": [],
+      "rationale": "Generic safety boundaries. No manifesto-specific content."
+    },
+    "l1-sandbox-recommendation.md": {
+      "target": "base",
+      "path": ".claude/rules/l1-sandbox-recommendation.md",
+      "config": [],
+      "rationale": "Generic sandbox recommendation. No manifesto-specific content."
+    },
+    "p3-governed-learning.md": {
+      "target": "base",
+      "path": ".claude/rules/p3-governed-learning.md",
+      "config": [],
+      "rationale": "Generic learning governance lifecycle. Compatibility classification is universal."
+    }
+  }
+}
