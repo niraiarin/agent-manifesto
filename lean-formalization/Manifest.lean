@@ -42,6 +42,7 @@ import Manifest.Models.Instances.ClaudeCode.DataSchema
 import Manifest.Models.PoC.Consistency.Case1Composition
 import Manifest.Models.PoC.Consistency.Case2Assumption
 import Manifest.Models.PoC.Consistency.Case3Ordering
+import Manifest.Models.DeviationPolicy
 
 /-!
 # Agent Manifest — Formal Specification
