@@ -490,7 +490,7 @@ Agent tool を複数同時に使用（1 つの response 内で N 個起動）:
   各 Hypothesizer は改善案の設計前に `verify-proposal-preflight.sh` を実行し、
   過去の FAIL パターンとの衝突を検出する:
   ```bash
-  echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":[],"proposed_names":[],"grep_patterns":[],"numeric_claims":[],"jsonl_field_checks":[],"io_samples":[]}' | bash scripts/verify-proposal-preflight.sh
+  echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":[],"proposed_names":[],"grep_patterns":[],"numeric_claims":[],"jsonl_field_checks":[],"io_samples":[],"change_specs":[{"file":"path/to/file","section":"L100: 変更箇所","operation":"replace","detail":"変更の詳細"}]}' | bash scripts/verify-proposal-preflight.sh
   ```
   出力の `verdict` が `FAIL` の場合、該当チェック（特に `D_past_failure`）を
   解消するまで改善案を提出しない。

@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
-# 統合テスト: 全フェーズの受け入れテストを実行
+# 統合テスト: 全フェーズの受け入れテスト���実行
 set -uo pipefail
 BASE="$(git rev-parse --show-toplevel 2>/dev/null || echo /Users/nirarin/work/agent-manifesto)"
 TOTAL_PASS=0; TOTAL_FAIL=0
+
+# Preflight: staged-but-uncommitted ファイルがテスト結果を汚染していないか検証 (#432)
+STAGED_UNCOMMITTED=$(cd "$BASE" && git diff --cached --name-only 2>/dev/null)
+if [ -n "$STAGED_UNCOMMITTED" ]; then
+  COUNT=$(echo "$STAGED_UNCOMMITTED" | wc -l | tr -d ' ')
+  echo "========================================="
+  echo "WARNING: $COUNT file(s) staged but not committed."
+  echo "Tests may PASS due to disk state, not git state."
+  echo "Run 'git status' to review. (#432)"
+  echo "========================================="
+  echo ""
+fi
 
 CRITICAL_PHASES="1 2"  # L1 safety (phase 1) + P2 verification (phase 2) は fail-fast
 

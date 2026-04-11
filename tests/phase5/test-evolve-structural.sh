@@ -892,8 +892,8 @@ echo "--- Section 19: validate-evolve-entry.sh ---"
 VALIDATE_SCRIPT="$BASE/scripts/validate-evolve-entry.sh"
 if [ -f "$VALIDATE_SCRIPT" ]; then
   # 19.1: valid entry passes
-  VALID_ENTRY='{"run":1,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":1,"fail_count":0},"integrator":{"commits_count":1}},"notes":"test"}'
-  RESULT=$(echo "$VALID_ENTRY" | bash "$VALIDATE_SCRIPT" 2>/dev/null)
+  VALID_ENTRY='{"run":1,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":1},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":1,"fail_count":0},"judge":{"evaluated":1,"pass":1,"conditional":0,"fail":0},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$VALID_ENTRY" | bash "$VALIDATE_SCRIPT" 2>/dev/null) || true
   if echo "$RESULT" | jq -e '.pass == true' > /dev/null 2>&1; then
     pass "Section 19.1: valid entry passes validation"
   else

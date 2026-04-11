@@ -306,6 +306,47 @@ if sh_targets:
               f"io_samples has {len(io_samples)} sample(s) for {len(sh_targets)} .sh target(s)" if has_samples
               else f"MISSING: target_files contains {len(sh_targets)} .sh file(s) but io_samples is empty or absent")
 
+# --- J. Change spec completeness check ---
+# When change_specs is present, validate structure and coverage against target_files.
+# If change_specs is absent, skip (backward compatible).
+change_specs = proposal.get("change_specs", None)
+VALID_OPERATIONS = {"insert_after", "replace", "append", "delete", "create"}
+if change_specs is not None:
+    if not isinstance(change_specs, list) or len(change_specs) == 0:
+        add_check("J_spec_completeness", "change_specs_non_empty", False,
+                  "change_specs is present but empty — must contain at least one entry")
+    else:
+        # Validate each entry has required fields
+        all_valid = True
+        for i, spec in enumerate(change_specs):
+            label = f"spec[{i}]"
+            missing = [f for f in ("file", "section", "operation") if not spec.get(f)]
+            if missing:
+                add_check("J_spec_completeness", label, False,
+                          f"missing required fields: {', '.join(missing)}")
+                all_valid = False
+                continue
+            op = spec.get("operation", "")
+            if op not in VALID_OPERATIONS:
+                add_check("J_spec_completeness", label, False,
+                          f"invalid operation '{op}' — must be one of: {', '.join(sorted(VALID_OPERATIONS))}")
+                all_valid = False
+            else:
+                add_check("J_spec_completeness", label, True,
+                          f"file={spec['file']}, section={spec['section']}, operation={op}")
+        # Coverage check: change_specs must cover a subset of target_files
+        # (target_files may include read-only context files not requiring changes)
+        if all_valid:
+            spec_files = {spec["file"] for spec in change_specs}
+            target_set = set(target_files)
+            uncovered_by_target = spec_files - target_set
+            if uncovered_by_target:
+                add_check("J_spec_completeness", "coverage", False,
+                          f"change_specs references files not in target_files: {sorted(uncovered_by_target)}")
+            else:
+                add_check("J_spec_completeness", "coverage", True,
+                          f"change_specs covers {len(spec_files)} file(s), all within target_files ({len(target_set)} total)")
+
 # --- Output ---
 results["summary"]["total"] = results["summary"]["pass"] + results["summary"]["fail"]
 results["verdict"] = "PASS" if results["summary"]["fail"] == 0 else "FAIL"

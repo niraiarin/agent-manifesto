@@ -230,8 +230,8 @@ bash scripts/d17-state.sh transition <plugin> feedback '<FeedbackAction JSON>'
 ## 既知の制約
 
 1. **自己対話では C 型仮定を生成できない** (T6)。人間の判断が必要な箇所は NOTE-C として記録
-2. **generate-conditional-axiom-system.sh が自己対話 ModelSpec に非対応** (deferred: g5-f3)。現状は手書き Lean で代替
-3. **dist/ が .gitignore で管理不能** (deferred: g5-f4)。plugin 出力先の設計変更が必要
+2. **generate-assumptions-lean.sh で自己対話 ModelSpec から Lean Assumptions を自動生成可能** (resolved: g5-f3)。lean-formalization/Manifest/Models/generate-assumptions-lean.sh を使用する
+3. **dist/agent-manifesto-plugin/ が .gitignore 選択的除外により git 管理可能** (resolved: g5-f4)。dist/* + !dist/agent-manifesto-plugin/ で除外
 4. **Lean ファイル生成は手動**。Assumptions.lean と ConditionalDesignFoundation.lean は LLM が直接書く
 
 ## 研究基盤
