@@ -39,6 +39,10 @@ import Manifest.Models.Instances.ClaudeCode.RuntimeEnvironment
 import Manifest.Models.Instances.ClaudeCode.QualityPatterns
 import Manifest.Models.Instances.ClaudeCode.DataSchema
 
+import Manifest.Models.PoC.Consistency.Case1Composition
+import Manifest.Models.PoC.Consistency.Case2Assumption
+import Manifest.Models.PoC.Consistency.Case3Ordering
+
 /-!
 # Agent Manifest — Formal Specification
 
