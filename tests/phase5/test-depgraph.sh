@@ -169,7 +169,7 @@ echo ""
 # ============================================================
 echo "--- dot ---"
 
-DOT_TMP="$(mktemp)"
+DOT_TMP="${TMPDIR:-/tmp}/test-depgraph-dot-$$.tmp"
 "$DEPGRAPH" dot > "$DOT_TMP" 2>/dev/null
 
 check "DG.60: dot outputs valid digraph header" \
@@ -184,7 +184,7 @@ check "DG.62: dot includes axiom nodes (red)" \
 check "DG.63: dot includes theorem nodes (blue)" \
   "grep -q '#3498db' '$DOT_TMP'"
 
-DOT_AT_TMP="$(mktemp)"
+DOT_AT_TMP="${TMPDIR:-/tmp}/test-depgraph-dotat-$$.tmp"
 "$DEPGRAPH" dot --axiom-theorem > "$DOT_AT_TMP" 2>/dev/null
 
 check "DG.64: dot --axiom-theorem filters to axioms and theorems" \
@@ -387,7 +387,7 @@ echo ""
 echo "--- diff ---"
 
 # Create a modified graph for diff testing
-DIFF_TMP="$(mktemp)"
+DIFF_TMP="${TMPDIR:-/tmp}/test-depgraph-diff-$$.tmp"
 python3 -c "
 import json
 with open('$GRAPH_JSON') as f:

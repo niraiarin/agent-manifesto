@@ -2,7 +2,7 @@ import Manifest.DesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# Claude Code 条件付き公理系: 実行環境と依存管理 (#402)
+# Claude Code Conditional Axiom System - Runtime Environment and Dependencies
 
 macOS/POSIX 互換性、外部ツール前提条件を条件付き公理として構造化する。
 

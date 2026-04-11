@@ -3,7 +3,7 @@ import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 
 /-!
-# Claude Code 条件付き公理系: バージョン管理と協調開発 (#399)
+# Claude Code Conditional Axiom System - Version Control and Collaboration
 
 Git/GitHub をバージョン管理プラットフォームとして使用する際の
 運用パターンを条件付き公理として構造化する。
@@ -23,7 +23,7 @@ Git/GitHub の仕様変更、または VCS プラットフォーム移行時に
 ConditionalDesignFoundation.lean（CC プリミティブ固有）とは
 独立に反証されうる。
 
-## 設計方針
+## Design Policy
 
 - 手書き（VCS 運用パターンの意味的推論が必要）
 - 各 VCS axiom に Derivation Card を付与

@@ -84,7 +84,7 @@ sync_pattern() {
   fi
 
   local tmp
-  tmp=$(mktemp)
+  tmp="${TMPDIR:-/tmp}/sync-counts-$$-$RANDOM.tmp"
   sed "$pattern" "$file" > "$tmp"
 
   if ! diff -q "$file" "$tmp" > /dev/null 2>&1; then

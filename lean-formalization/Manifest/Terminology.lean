@@ -30,7 +30,7 @@ namespace Manifest.Terminology
 -- ============================================================
 
 /-!
-## §1: 形式体系の構成
+## S1 Formal System Components
 
 「形式体系は以下の 3 要素から構成される:
  形式言語、公理、推論規則」
@@ -69,17 +69,17 @@ inductive FormalSystemOutput where
 -- ============================================================
 
 /-!
-## §4: 公理と定理の分類
+## S4 Axiom and Theorem Classification
 
-### §4.1 公理の分類
+S4.1 Axiom classification
 - 論理的公理: 論理体系自体に属する。すべての理論で共有
 - 非論理的公理: 特定の理論に固有。その理論が扱う対象についての仮定
 
-### §4.2 定理の分類
+S4.2 Theorem classification
 - 定理・補題・系・命題の区別は純粋に慣習的であり、
   形式的にはすべて「公理から導出された命題」
 
-### §4.3 公理の独立性
+S4.3 Axiom independence
 - 独立: ある公理が残りの公理から導出できないこと
 -/
 
@@ -144,16 +144,16 @@ inductive IndependenceStatus where
 -- ============================================================
 
 /-!
-## §5: メタ性質と体系の拡張
+## S5 Meta-properties and System Extension
 
-### §5.1 基本的メタ性質
+S5.1 Basic meta-properties
 無矛盾性、健全性、完全性、決定可能性
 
-### §5.5 体系の拡張
+S5.5 System extension
 拡大の 4 種とその包含関係:
   定義的拡大 ⊂ 保存拡大 ⊂ 無矛盾な拡大 ⊂ 拡大
 
-### §5.6 対象理論とメタ理論
+S5.6 Object theory and metatheory
 -/
 
 /-- 形式体系のメタ性質。§5.1。 -/
@@ -259,7 +259,7 @@ inductive LanguageLevel where
 -- ============================================================
 
 /-!
-## §2.4/§2.5: 導出可能性と論理的帰結
+## S2.4 and S2.5 Derivability and Logical Consequence
 
 ⊨ と ⊢ の区別:
 - ⊨ は意味論的（真理値割り当て / 解釈に基づく）
@@ -325,7 +325,7 @@ theorem independence_matters :
 -- ============================================================
 
 /-!
-## §6.4: 空虚な推論
+## S6.4 Vacuous Reasoning
 
 - 空虚な真: P → Q において P が偽のとき、含意全体は真
 - 非空虚性: 公理が自明に真ではなく、前件が充足可能であること
@@ -347,7 +347,7 @@ inductive VacuityStatus where
 -- ============================================================
 
 /-!
-## §9.1: 科学哲学 — 反証可能性
+## S9.1 Philosophy of Science - Falsifiability
 
 反証可能性は形式体系内の公理には直接適用されないが、
 公理を現実世界の主張として解釈する場合に意味を持つ。
@@ -370,7 +370,7 @@ theorem epistemic_status_exhaustive :
   intro s; cases s <;> simp
 
 /-!
-## §9.2: 信念修正理論 (AGM)
+## S9.2 Belief Revision Theory AGM
 
 AGM の 3 操作: 拡張、縮小、修正。
 マニフェストの T₀/Γ\T₀ 構造と直結:
@@ -418,7 +418,7 @@ theorem revision_preserves_consistency :
   consistencyGuarantee .revision = .guaranteed := by rfl
 
 /-!
-## §9.3: プログラム検証
+## S9.3 Program Verification
 
 不変条件、事前条件、事後条件、遷移関係。
 Ontology.lean の canTransition は遷移関係の実装。
@@ -441,14 +441,14 @@ inductive VerificationConditionKind where
 -- ============================================================
 
 /-!
-## §7: 型理論
+## S7 Type Theory
 
-### カリー＝ハワード対応 (§7.1 / §10.4)
+Curry-Howard correspondence S7.1 and S10.4
 
 命題 ↔ 型、証明 ↔ 項。
 Lean 4 はこの対応を基盤とする CIC に基づく。
 
-### §7.3: CIC 固有の概念
+S7.3 CIC-specific concepts
 
 - 宇宙 (Universe): 型の型の階層
 - Prop: 命題の宇宙。証明無関係が定義的に成立
@@ -488,7 +488,7 @@ theorem curry_howard_has_seven_pairs :
 -- ============================================================
 
 /-!
-## 概念間の関係
+## Cross-cutting Relations Among Concepts
 
 用語リファレンスが述べる概念間の関係を定理として導出する。
 これらが φ（用語体系の内部整合性）を構成する。

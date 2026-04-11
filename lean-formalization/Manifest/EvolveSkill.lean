@@ -3,7 +3,7 @@ import Manifest.DesignFoundation
 import Manifest.Workflow
 
 /-!
-# /evolve スキルの形式的評価 (Γ ⊢ φ)
+# Formal Evaluation of the evolve Skill
 
 ## タスク記述
 
@@ -19,11 +19,11 @@ CompatibilityClass, VerificationIndependence 等）上で検証可能な
 
 ## Γ の構成
 
-### T₀（基底理論）
+## Base Theory T0
 型定義のみ。axiom なし。T₀ の権威（マニフェスト Workflow.lean,
 Evolution.lean, DesignFoundation.lean）は型の構成子の選択に反映される。
 
-### Γ \ T₀（拡大部分）
+## Extension Beyond T0
 なし（axiom 0）。
 -/
 

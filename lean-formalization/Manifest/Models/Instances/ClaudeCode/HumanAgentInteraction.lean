@@ -3,7 +3,7 @@ import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 
 /-!
-# Claude Code 条件付き公理系: エージェント・人間の相互作用 (#405)
+# Claude Code Conditional Axiom System - Human-Agent Interaction
 
 T6（人間の最終決定権）の運用インスタンス、Agent 間のコンテキスト遷移、
 Judge の評価プロセスを条件付き公理として構造化する。
@@ -25,7 +25,7 @@ HAI1-HAI6 (このファイル, 運用パターン固有)
 CC 仕様が不変でも運用方針の変更で独立に反証されうる。
 InstructionDesign.lean（CC 固有パターン）とは独立。
 
-## 設計方針
+## Design Policy
 
 - 手書き（人間・エージェント相互作用の意味的推論が必要）
 - 各 HAI axiom に Derivation Card を付与

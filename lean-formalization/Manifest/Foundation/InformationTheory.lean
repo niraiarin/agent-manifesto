@@ -1,11 +1,11 @@
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Information Theory for Non-uniform Context Contribution
+# Mathematical Foundation - Information Theory for Non-uniform Context Contribution
 
 Grounds T3 (`context_contribution_nonuniform`) in information theory.
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R51] Shannon (1948) "A Mathematical Theory of Communication"

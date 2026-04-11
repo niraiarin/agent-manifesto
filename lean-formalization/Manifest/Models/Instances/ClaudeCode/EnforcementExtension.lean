@@ -3,7 +3,7 @@ import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# 強制モデル拡張 — EnforcementExtension
+# Enforcement Model Extension - EnforcementExtension
 
 ConditionalDesignFoundation.lean の conservative extension。
 D1 EnforcementLayer を新しい次元（session, isolation, harness, autonomy, interception）に拡張する。

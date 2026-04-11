@@ -6,7 +6,7 @@ import Manifest.Terminology
 import Manifest.Procedure
 
 /-!
-# 準拠検証: Lean 文書群の手順書・用語リファレンスへの準拠
+# Conformance Verification of Lean Documents Against Procedure and Terminology
 
 既存の Lean 文書群が `Terminology.lean`（用語リファレンスの形式化）と
 `Procedure.lean`（手順書の形式化）に準拠していることを Γ ⊢ φ として導出する。
@@ -99,7 +99,7 @@ def metaProfile : FileExtensionProfile :=
 -- ============================================================
 
 /-!
-## 規則の自動適用
+## Automatic Application of Rules
 
 Procedure.lean が証明した規則を各ファイルの分類に適用すると、
 以下の帰結が**定理として**（axiom なしに）導出される。
@@ -238,7 +238,7 @@ theorem evolution_uses_extension_ordering :
 -- ============================================================
 
 /-!
-## Γ \ T₀: 型レベルで検証不能な準拠主張
+## Non-type-level Conformance Claims Beyond T0
 
 以下の主張は Lean ファイルの **docstring の内容** に関するものであり、
 型体系の外にある。opaque 述語 + axiom で表現する。

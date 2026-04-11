@@ -3,7 +3,7 @@ import Manifest.Axioms
 import Manifest.EmpiricalPostulates
 
 /-!
-# Meta-theoretic: Evolution — 体系の拡張（用語リファレンス §5.5）
+# Meta-theoretic Evolution - System Extension per Terminology Reference S5.5
 
 マニフェスト自身の進化を形式化する。manifesto.md Section 7
 「このマニフェストの自己適用」および Observable.lean
@@ -225,7 +225,7 @@ theorem two_conservative_compose :
 マニフェストは「永続する構造」（T2）の一部であり、
 それ自身が述べる原則に従わなければならない。
 
-### 自己適用の形式化
+## Formalization of Self-Application
 
 - マニフェストは Structure の一種（StructureKind.manifest）
 - マニフェストの更新はバージョン遷移（VersionTransition）
@@ -291,7 +291,7 @@ theorem ungoverned_manifest_change_irreversible :
 -- ============================================================
 
 /-!
-## 分類の自己硬直化の防止
+## Prevention of Classification Self-Rigidification
 
 Observable.lean Part IV:
 「この分類の最大のリスクは、分類自体が境界条件として機能してしまうこと」

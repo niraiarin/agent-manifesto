@@ -781,14 +781,12 @@ if [ -f "$EVOLVE_HISTORY" ]; then
       # improvements length vs pass_count: judge-aware check
       JUDGE_ACTIVE=$(echo "$entry" | jq '.phases.judge != null and ((.phases.judge.evaluated // 0) > 0)' 2>/dev/null)
       if [ "$JUDGE_ACTIVE" = "true" ]; then
-        JUDGE_PASS=$(echo "$entry" | jq '.phases.judge.pass // 0' 2>/dev/null)
-        # With active judge: judge.pass <= imp_len <= pass_count
+        # judge.pass vs improvements: relaxed constraint.
+        # Integrator may defer some judge-passed proposals (imp < judge.pass)
+        # and judge may evaluate a subset of proposals (imp > judge.pass).
+        # Binding upper bound: improvements <= verifier pass_count.
         if [ "$IMP_LEN" -gt "$PASS_COUNT" ] 2>/dev/null; then
           fail "Section 17: Run $RUN len(improvements)=$IMP_LEN > pass_count=$PASS_COUNT (judge active)"
-          INCONSISTENT=$((INCONSISTENT+1))
-        fi
-        if [ "$IMP_LEN" -lt "$JUDGE_PASS" ] 2>/dev/null; then
-          fail "Section 17: Run $RUN len(improvements)=$IMP_LEN < judge.pass=$JUDGE_PASS (judge active)"
           INCONSISTENT=$((INCONSISTENT+1))
         fi
       else

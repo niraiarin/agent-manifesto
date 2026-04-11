@@ -3,7 +3,7 @@ import Manifest.Observable
 import Manifest.DesignFoundation
 
 /-!
-# TaskClassification — 決定論的タスクの構造的強制
+# TaskClassification - Structural Enforcement of Deterministic Tasks
 
 決定可能性理論 (Church 1936, Rice 1953) と効果システム (Moggi 1991) の
 合流点として、タスクを自動化可能性で分類する。

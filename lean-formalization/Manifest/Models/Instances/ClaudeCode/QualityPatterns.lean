@@ -2,7 +2,7 @@ import Manifest.DesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# Claude Code 条件付き公理系: 品質検証の設計パターン (#403)
+# Claude Code Conditional Axiom System - Quality Verification Patterns
 
 テスト Phase 分類、check() 関数パターン、XFAIL、命名規則を
 条件付き公理として構造化する。

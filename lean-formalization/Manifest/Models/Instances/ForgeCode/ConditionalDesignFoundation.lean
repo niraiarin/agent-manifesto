@@ -2,7 +2,7 @@ import Manifest.DesignFoundation
 import Manifest.Models.Instances.ForgeCode.Assumptions
 
 /-!
-# ForgeCode 条件付き設計基礎 — ConditionalDesignFoundation
+# ForgeCode Conditional Design Foundation
 
 D1-D18（プラットフォーム非依存設計定理）を ForgeCode のプリミティブに
 マッピングする条件付き公理系。
@@ -15,7 +15,7 @@ D1-D18 (DesignFoundation.lean, プラットフォーム非依存)
 FC1-FCn (このファイル, ForgeCode 固有)
 ```
 
-## 設計方針
+## Design Policy
 
 - 手書き（D→FC のマッピングは意味的推論が必要）
 - 各 FC axiom に Derivation Card を付与

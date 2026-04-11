@@ -2,7 +2,7 @@ import Manifest.DesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# Claude Code 条件付き公理系: データスキーマ契約 (#404)
+# Claude Code Conditional Axiom System - Data Schema Contracts
 
 JSON/YAML/JSONL の使い分け、スキーマ間の依存関係、
 命名規則を条件付き公理として構造化する。

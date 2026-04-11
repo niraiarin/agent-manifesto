@@ -6,7 +6,7 @@ import Manifest.EpistemicLayer
 このファイルは、認識論的層モデルのインスタンシエーションにおいて
 人間の設計判断 (C) と LLM の推論 (H) から構成される仮定を蓄積する。
 
-## 認識論的出自 (Epistemic Source)
+## Epistemic Source
 
 全ての仮定に出自ラベルを付与する:
 - **C (Human Decision)**: Phase 1 の対話で人間が判断したもの。T6 の権威に基づく。
@@ -14,7 +14,7 @@ import Manifest.EpistemicLayer
 - **H (LLM Inference)**: LLM が C + 外部情報 + 推論から導出したもの。
   LLM が自律的に修正可能。反証条件を明記する。
 
-## 時間的有効性 (Temporal Validity)
+## Temporal Validity
 
 条件付き公理系の仮定 (C/H) は外部ソースに由来する。外部ソースは時間とともに
 変化するため、C/H には時間的有効性があり、それを管理する義務がある。
@@ -26,7 +26,7 @@ import Manifest.EpistemicLayer
 これは特定のインスタンスの問題ではなく、全ての条件付き公理系に適用される
 根源的性質である（#225）。
 
-## S=(A,C,H,D) との対応
+## Correspondence with S=ACHD
 
 - A: EpistemicLayerClass（import 先。Read-only）
 - C: このファイルの `[C]` ラベル付き仮定

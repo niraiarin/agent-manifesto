@@ -2,7 +2,7 @@ import Manifest.Framework.DanglingDetection
 import Manifest.Evolution
 
 /-!
-# Axiomatic DAG Framework — Compatibility Classification Decision Procedure
+# Axiomatic DAG Framework - Compatibility Classification Decision Procedure
 
 Issue #301 (G4 of #296): Decision procedure that automatically classifies
 manifest diffs into CompatibilityClass.

@@ -1,7 +1,7 @@
 import Manifest.Framework.NodeKind
 
 /-!
-# Axiomatic DAG Framework — Acyclic Graph
+# Axiomatic DAG Framework - Acyclic Graph
 
 Issue #298 (G1 of #296): Unified acyclic graph type that abstracts over
 the three existing dependency implementations:

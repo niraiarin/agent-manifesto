@@ -1,11 +1,11 @@
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Process Model for Persistence and Accumulation
+# Mathematical Foundation - Process Model for Persistence and Accumulation
 
 Provides compositional properties derived from the environment axioms (T2, T7).
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R34] Lamport (1978) "Time, Clocks, and the Ordering of Events in a Distributed System"
@@ -27,7 +27,7 @@ This file provides **compositional properties** that follow from assuming the ax
 For T1 (session isolation), bridge theorems are placed in Axioms.lean alongside
 the axioms themselves, following the E2 pattern (`e2_equal_risk_equal_capability`).
 
-## References for Axiom Cards (not formally proven here)
+## References for Axiom Cards - not formally proven here
 
 The following references provide the theoretical basis cited in Axiom Cards:
 ```
@@ -49,7 +49,7 @@ namespace Manifest.Foundation
 open Manifest
 
 /-!
-## Persistence Composition (T2)
+## Persistence Composition T2
 
 Structure persistence is a monotonicity property: the set of structures
 is non-decreasing across valid transitions. This section proves that
@@ -79,7 +79,7 @@ theorem persistence_composes
   h_persist w₂ w₃ s st hs2 (h_persist w₁ w₂ s st hs hst h_term h12) h_term h23
 
 /-!
-## Epoch Monotonicity Composition (T2 accumulation)
+## Epoch Monotonicity Composition - T2 accumulation
 
 The epoch counter is monotonically non-decreasing across valid transitions.
 This formalizes the "append-only" nature of version control.
@@ -98,7 +98,7 @@ theorem epoch_monotone_composes
   Nat.le_trans (h_mono w₁ w₂ h12) (h_mono w₂ w₃ h23)
 
 /-!
-## Resource Bound Composition (T7)
+## Resource Bound Composition T7
 
 Resources are bounded by a global constant. This is a direct consequence
 of physical finiteness — no computational system has infinite resources.

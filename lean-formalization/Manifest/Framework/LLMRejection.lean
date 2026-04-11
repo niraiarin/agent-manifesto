@@ -2,7 +2,7 @@ import Manifest.Framework.DanglingDetection
 import Manifest.Models.Assumptions.EpistemicLayer
 
 /-!
-# Worker/Verifier Separation Architecture — Soundness
+# Worker-Verifier Separation Architecture - Soundness
 
 Issue #300 (G3 of #296): Formalize the Worker/Verifier separation architecture.
 
@@ -15,7 +15,7 @@ Issue #300 (G3 of #296): Formalize the Worker/Verifier separation architecture.
 This models the core P2 (Cognitive Separation of Concerns) principle:
 the entity that generates a candidate must not be the one that verifies it (E1).
 
-## Connection to G2 (Dangling Detection)
+## Connection to G2 Dangling Detection
 
 Dangling dependencies (detected by G2) represent "known unknowns" — nodes
 whose dependencies reference non-existent graph entries. These are natural

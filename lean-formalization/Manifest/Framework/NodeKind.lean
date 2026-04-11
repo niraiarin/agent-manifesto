@@ -1,7 +1,7 @@
 import Manifest.Ontology
 
 /-!
-# Axiomatic DAG Framework — Node Kind Ontology
+# Axiomatic DAG Framework - Node Kind Ontology
 
 Issue #297 (G5 of #296): 4 classification of DAG nodes.
 
@@ -113,7 +113,7 @@ theorem derived_categories_most_dependent :
 -- ============================================================
 
 /-!
-## D4/D5/D6 as instances of the partial order (#290)
+## D4-D5-D6 as instances of the partial order
 
 D4, D5, D6 are design theorems (PropositionCategory.designTheorem) that each
 define a specific ordering relation. Under the NodeKind ontology, they are all

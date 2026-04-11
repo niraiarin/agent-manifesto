@@ -229,7 +229,10 @@
       "id": "hook:h5-doc-lint",
       "type": "hook",
       "path": ".claude/hooks/h5-doc-lint.sh",
-      "refs": ["D5", "D1"],
+      "refs": [
+        "D5",
+        "D1"
+      ],
       "enforces": "structural",
       "phase": 5,
       "scope": "implementation"
@@ -238,7 +241,11 @@
       "id": "hook:p3-axiom-evidence-check",
       "type": "hook",
       "path": ".claude/hooks/p3-axiom-evidence-check.sh",
-      "refs": ["P3", "D1", "D8"],
+      "refs": [
+        "P3",
+        "D1",
+        "D8"
+      ],
       "enforces": "structural",
       "phase": 4,
       "scope": "implementation"
@@ -247,7 +254,10 @@
       "id": "hook:p4-sync-counts-check",
       "type": "hook",
       "path": ".claude/hooks/p4-sync-counts-check.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "structural",
       "phase": 3,
       "scope": "implementation"
@@ -660,7 +670,14 @@
       "id": "test:all",
       "type": "test",
       "path": "tests/test-all.sh",
-      "refs": ["L1", "P2", "P4", "P3", "D1", "D4"],
+      "refs": [
+        "L1",
+        "P2",
+        "P4",
+        "P3",
+        "D1",
+        "D4"
+      ],
       "enforces": "verification",
       "phase": 0,
       "scope": "implementation"
@@ -1102,7 +1119,14 @@
       "id": "data:tool-usage",
       "type": "data",
       "path": ".claude/metrics/tool-usage.jsonl",
-      "refs": ["P4", "D3", "V1", "V2", "V3", "V4"],
+      "refs": [
+        "P4",
+        "D3",
+        "V1",
+        "V2",
+        "V3",
+        "V4"
+      ],
       "enforces": "procedural",
       "scope": "data"
     },
@@ -1117,13 +1141,20 @@
       "enforces": "procedural",
       "scope": "data"
     },
-
-    {"_comment": "--- scripts (type: script) ---"},
+    {
+      "_comment": "--- scripts (type: script) ---"
+    },
     {
       "id": "script:manifest-trace",
       "type": "script",
       "path": "manifest-trace",
-      "refs": ["P4", "D3", "D9", "D13", "V6"],
+      "refs": [
+        "P4",
+        "D3",
+        "D9",
+        "D13",
+        "V6"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1131,7 +1162,11 @@
       "id": "script:check-loop",
       "type": "script",
       "path": "scripts/check-loop.sh",
-      "refs": ["D1", "P2", "T8"],
+      "refs": [
+        "D1",
+        "P2",
+        "T8"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1139,7 +1174,11 @@
       "id": "script:sync-counts",
       "type": "script",
       "path": "scripts/sync-counts.sh",
-      "refs": ["P4", "D3", "V1"],
+      "refs": [
+        "P4",
+        "D3",
+        "V1"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1147,7 +1186,10 @@
       "id": "script:depgraph",
       "type": "script",
       "path": "scripts/depgraph.sh",
-      "refs": ["D13", "P4"],
+      "refs": [
+        "D13",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1155,7 +1197,10 @@
       "id": "script:depgraph-verify",
       "type": "script",
       "path": "scripts/depgraph-verify.sh",
-      "refs": ["D13", "P2"],
+      "refs": [
+        "D13",
+        "P2"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1163,7 +1208,11 @@
       "id": "script:implementation-check",
       "type": "script",
       "path": "scripts/implementation-check.sh",
-      "refs": ["D8", "L4", "T6"],
+      "refs": [
+        "D8",
+        "L4",
+        "T6"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1171,7 +1220,10 @@
       "id": "script:l5-query",
       "type": "script",
       "path": "scripts/l5-query.sh",
-      "refs": ["L5", "D3"],
+      "refs": [
+        "L5",
+        "D3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1179,7 +1231,10 @@
       "id": "script:verify-preflight",
       "type": "script",
       "path": "scripts/verify-preflight.sh",
-      "refs": ["P2", "D1"],
+      "refs": [
+        "P2",
+        "D1"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1187,7 +1242,10 @@
       "id": "script:generate-verso-source",
       "type": "script",
       "path": "scripts/generate-verso-source.py",
-      "refs": ["D5", "T2"],
+      "refs": [
+        "D5",
+        "T2"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1195,7 +1253,10 @@
       "id": "script:lean-to-markdown",
       "type": "script",
       "path": "scripts/lean-to-markdown.py",
-      "refs": ["D5", "T2"],
+      "refs": [
+        "D5",
+        "T2"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1203,7 +1264,10 @@
       "id": "script:lint-doc-comments",
       "type": "script",
       "path": "scripts/lint-doc-comments.py",
-      "refs": ["D5", "D1"],
+      "refs": [
+        "D5",
+        "D1"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1211,7 +1275,18 @@
       "id": "script:observe",
       "type": "script",
       "path": ".claude/skills/evolve/scripts/observe.sh",
-      "refs": ["P4", "D3", "D9", "V1", "V2", "V3", "V4", "V5", "V6", "V7"],
+      "refs": [
+        "P4",
+        "D3",
+        "D9",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1219,26 +1294,39 @@
       "id": "script:proxy-correlation",
       "type": "script",
       "path": ".claude/skills/evolve/scripts/proxy-correlation.sh",
-      "refs": ["P4", "D3"],
+      "refs": [
+        "P4",
+        "D3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
-    {"_comment": "--- additional skill ---"},
+    {
+      "_comment": "--- additional skill ---"
+    },
     {
       "id": "skill:ground-axiom",
       "type": "skill",
       "path": ".claude/skills/ground-axiom/SKILL.md",
-      "refs": ["D1", "D5", "P3"],
+      "refs": [
+        "D1",
+        "D5",
+        "P3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
-
-    {"_comment": "--- additional tests ---"},
+    {
+      "_comment": "--- additional tests ---"
+    },
     {
       "id": "test:depgraph",
       "type": "test",
       "path": "tests/phase5/test-depgraph.sh",
-      "refs": ["D13", "P4"],
+      "refs": [
+        "D13",
+        "P4"
+      ],
       "enforces": "verification",
       "phase": 5,
       "scope": "implementation"
@@ -1247,28 +1335,44 @@
       "id": "test:l5-ssot-structural",
       "type": "test",
       "path": "tests/phase5/test-l5-ssot-structural.sh",
-      "refs": ["L5", "D3"],
+      "refs": [
+        "L5",
+        "D3"
+      ],
       "enforces": "verification",
       "phase": 5,
       "scope": "implementation"
     },
-
     {
       "id": "test:weak-coverage-structural",
       "type": "test",
       "path": "tests/phase5/test-weak-coverage-structural.sh",
-      "refs": ["P5", "P6", "L2", "L3", "L6", "D7", "D10", "D12", "D14"],
+      "refs": [
+        "P5",
+        "P6",
+        "L2",
+        "L3",
+        "L6",
+        "D7",
+        "D10",
+        "D12",
+        "D14"
+      ],
       "enforces": "verification",
       "phase": 5,
       "scope": "implementation"
     },
-
-    {"_comment": "--- additional documents/data ---"},
+    {
+      "_comment": "--- additional documents/data ---"
+    },
     {
       "id": "data:l5-platform-capabilities",
       "type": "data",
       "path": "docs/l5-platform-capabilities.json",
-      "refs": ["L5", "D3"],
+      "refs": [
+        "L5",
+        "D3"
+      ],
       "enforces": "procedural",
       "scope": "data"
     },
@@ -1276,7 +1380,9 @@
       "id": "doc:lean-doc-style-guide",
       "type": "document",
       "path": "docs/lean-doc-style-guide.md",
-      "refs": ["D5"],
+      "refs": [
+        "D5"
+      ],
       "enforces": "normative",
       "scope": "document"
     },
@@ -1284,17 +1390,38 @@
       "id": "doc:research-workflow",
       "type": "document",
       "path": "docs/research/workflow/research-workflow.md",
-      "refs": ["P3", "D13"],
+      "refs": [
+        "P3",
+        "D13"
+      ],
       "enforces": "normative",
       "scope": "document"
     },
-
-    {"_comment": "--- formalization scope (Lean sources) ---"},
+    {
+      "_comment": "--- formalization scope (Lean sources) ---"
+    },
     {
       "id": "lean:ontology",
       "type": "lean",
       "path": "lean-formalization/Manifest/Ontology.lean",
-      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8","E1","E2","L1","L2","L3","L4","L5","L6"],
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "E1",
+        "E2",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1302,7 +1429,16 @@
       "id": "lean:axioms",
       "type": "lean",
       "path": "lean-formalization/Manifest/Axioms.lean",
-      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8"],
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1310,7 +1446,10 @@
       "id": "lean:empirical-postulates",
       "type": "lean",
       "path": "lean-formalization/Manifest/EmpiricalPostulates.lean",
-      "refs": ["E1","E2"],
+      "refs": [
+        "E1",
+        "E2"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1318,7 +1457,16 @@
       "id": "lean:observable",
       "type": "lean",
       "path": "lean-formalization/Manifest/Observable.lean",
-      "refs": ["V1","V2","V3","V4","V5","V6","V7","P4"],
+      "refs": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "P4"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1326,7 +1474,17 @@
       "id": "lean:observable-design",
       "type": "lean",
       "path": "lean-formalization/Manifest/ObservableDesign.lean",
-      "refs": ["V1","V2","V3","V4","V5","V6","V7","P4","D3"],
+      "refs": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "P4",
+        "D3"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1334,7 +1492,14 @@
       "id": "lean:principles",
       "type": "lean",
       "path": "lean-formalization/Manifest/Principles.lean",
-      "refs": ["P1","P2","P3","P4","P5","P6"],
+      "refs": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1342,7 +1507,24 @@
       "id": "lean:meta",
       "type": "lean",
       "path": "lean-formalization/Manifest/Meta.lean",
-      "refs": ["T1","T2","T3","T4","T5","T6","T7","T8","E1","E2","P1","P2","P3","P4","P5","P6"],
+      "refs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "E1",
+        "E2",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1350,7 +1532,9 @@
       "id": "lean:terminology",
       "type": "lean",
       "path": "lean-formalization/Manifest/Terminology.lean",
-      "refs": ["D5"],
+      "refs": [
+        "D5"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1358,7 +1542,11 @@
       "id": "lean:formal-derivation-skill",
       "type": "lean",
       "path": "lean-formalization/Manifest/FormalDerivationSkill.lean",
-      "refs": ["D1","D5","P5"],
+      "refs": [
+        "D1",
+        "D5",
+        "P5"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1366,7 +1554,12 @@
       "id": "lean:conformance-verification",
       "type": "lean",
       "path": "lean-formalization/Manifest/ConformanceVerification.lean",
-      "refs": ["P2","E1","D1","D2"],
+      "refs": [
+        "P2",
+        "E1",
+        "D1",
+        "D2"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1374,7 +1567,26 @@
       "id": "lean:design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/DesignFoundation.lean",
-      "refs": ["D1","D2","D3","D4","D5","D6","D7","D8","D9","D10","D11","D12","D13","D14","D15","D16","D17","D18"],
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "D18"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1382,7 +1594,11 @@
       "id": "lean:procedure",
       "type": "lean",
       "path": "lean-formalization/Manifest/Procedure.lean",
-      "refs": ["D5","T8","P4"],
+      "refs": [
+        "D5",
+        "T8",
+        "P4"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1390,7 +1606,14 @@
       "id": "lean:evolution",
       "type": "lean",
       "path": "lean-formalization/Manifest/Evolution.lean",
-      "refs": ["T1","T2","E2","P1","P3","D9"],
+      "refs": [
+        "T1",
+        "T2",
+        "E2",
+        "P1",
+        "P3",
+        "D9"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1398,7 +1621,19 @@
       "id": "lean:evolve-skill",
       "type": "lean",
       "path": "lean-formalization/Manifest/EvolveSkill.lean",
-      "refs": ["T1","T2","T6","P2","P3","P4","D1","D4","D9","D10","D13"],
+      "refs": [
+        "T1",
+        "T2",
+        "T6",
+        "P2",
+        "P3",
+        "P4",
+        "D1",
+        "D4",
+        "D9",
+        "D10",
+        "D13"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1406,7 +1641,12 @@
       "id": "lean:workflow",
       "type": "lean",
       "path": "lean-formalization/Manifest/Workflow.lean",
-      "refs": ["P3","T1","T2","D9"],
+      "refs": [
+        "P3",
+        "T1",
+        "T2",
+        "D9"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1414,7 +1654,12 @@
       "id": "lean:axiom-quality",
       "type": "lean",
       "path": "lean-formalization/Manifest/AxiomQuality.lean",
-      "refs": ["D5","D1","V1","V3"],
+      "refs": [
+        "D5",
+        "D1",
+        "V1",
+        "V3"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1422,7 +1667,11 @@
       "id": "lean:epistemic-layer",
       "type": "lean",
       "path": "lean-formalization/Manifest/EpistemicLayer.lean",
-      "refs": ["D5","D1","D4"],
+      "refs": [
+        "D5",
+        "D1",
+        "D4"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1430,7 +1679,12 @@
       "id": "lean:task-classification",
       "type": "lean",
       "path": "lean-formalization/Manifest/TaskClassification.lean",
-      "refs": ["P6","D12","D14","V7"],
+      "refs": [
+        "P6",
+        "D12",
+        "D14",
+        "V7"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1438,7 +1692,12 @@
       "id": "lean:traceability",
       "type": "lean",
       "path": "lean-formalization/Manifest/Traceability.lean",
-      "refs": ["P4","D3","D13","V6"],
+      "refs": [
+        "P4",
+        "D3",
+        "D13",
+        "V6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1446,7 +1705,10 @@
       "id": "lean:foundation-control-theory",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/ControlTheory.lean",
-      "refs": ["D1","T5"],
+      "refs": [
+        "D1",
+        "T5"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1454,7 +1716,10 @@
       "id": "lean:foundation-information-theory",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/InformationTheory.lean",
-      "refs": ["D1","T3"],
+      "refs": [
+        "D1",
+        "T3"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1462,7 +1727,11 @@
       "id": "lean:foundation-probability",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/Probability.lean",
-      "refs": ["D1","P5","T4"],
+      "refs": [
+        "D1",
+        "P5",
+        "T4"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1470,7 +1739,11 @@
       "id": "lean:foundation-process-model",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/ProcessModel.lean",
-      "refs": ["D1","T1","T2"],
+      "refs": [
+        "D1",
+        "T1",
+        "T2"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1478,7 +1751,11 @@
       "id": "lean:foundation-risk-theory",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/RiskTheory.lean",
-      "refs": ["D1","P1","E2"],
+      "refs": [
+        "D1",
+        "P1",
+        "E2"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1486,7 +1763,11 @@
       "id": "lean:foundation-statistical-testing",
       "type": "lean",
       "path": "lean-formalization/Manifest/Foundation/StatisticalTesting.lean",
-      "refs": ["D1","P2","E1"],
+      "refs": [
+        "D1",
+        "P2",
+        "E1"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1494,7 +1775,12 @@
       "id": "lean:framework-node-kind",
       "type": "lean",
       "path": "lean-formalization/Manifest/Framework/NodeKind.lean",
-      "refs": ["P3","D4","D5","D6"],
+      "refs": [
+        "P3",
+        "D4",
+        "D5",
+        "D6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1502,7 +1788,9 @@
       "id": "lean:framework-acyclic-graph",
       "type": "lean",
       "path": "lean-formalization/Manifest/Framework/AcyclicGraph.lean",
-      "refs": ["D13"],
+      "refs": [
+        "D13"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1510,7 +1798,9 @@
       "id": "lean:framework-dangling-detection",
       "type": "lean",
       "path": "lean-formalization/Manifest/Framework/DanglingDetection.lean",
-      "refs": ["D13"],
+      "refs": [
+        "D13"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1518,7 +1808,11 @@
       "id": "lean:framework-llm-rejection",
       "type": "lean",
       "path": "lean-formalization/Manifest/Framework/LLMRejection.lean",
-      "refs": ["P2","E1","T6"],
+      "refs": [
+        "P2",
+        "E1",
+        "T6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1526,7 +1820,12 @@
       "id": "lean:framework-compatibility-classification",
       "type": "lean",
       "path": "lean-formalization/Manifest/Framework/CompatibilityClassification.lean",
-      "refs": ["P3","D4","D5","D6"],
+      "refs": [
+        "P3",
+        "D4",
+        "D5",
+        "D6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1534,7 +1833,9 @@
       "id": "lean:models-epistemic-layer",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Assumptions/EpistemicLayer.lean",
-      "refs": ["P3"],
+      "refs": [
+        "P3"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1542,7 +1843,9 @@
       "id": "lean:models-conditional-axiom-system",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/ConditionalAxiomSystem.lean",
-      "refs": ["D17"],
+      "refs": [
+        "D17"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1550,7 +1853,10 @@
       "id": "lean:cc-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/Assumptions.lean",
-      "refs": ["D1","P3"],
+      "refs": [
+        "D1",
+        "P3"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1558,7 +1864,15 @@
       "id": "lean:cc-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/ConditionalDesignFoundation.lean",
-      "refs": ["D1","D2","D3","D10","D11","D13","D18"],
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D10",
+        "D11",
+        "D13",
+        "D18"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1566,7 +1880,13 @@
       "id": "lean:cc-enforcement-extension",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/EnforcementExtension.lean",
-      "refs": ["D1","L1","T1","T2","T6"],
+      "refs": [
+        "D1",
+        "L1",
+        "T1",
+        "T2",
+        "T6"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1574,7 +1894,9 @@
       "id": "lean:forgecode-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/Assumptions.lean",
-      "refs": ["D17"],
+      "refs": [
+        "D17"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1582,7 +1904,10 @@
       "id": "lean:forgecode-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/ConditionalDesignFoundation.lean",
-      "refs": ["D17","D1"],
+      "refs": [
+        "D17",
+        "D1"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1590,7 +1915,9 @@
       "id": "lean:safetyplugin-assumptions",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/Assumptions.lean",
-      "refs": ["D17"],
+      "refs": [
+        "D17"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1598,7 +1925,10 @@
       "id": "lean:safetyplugin-conditional-design-foundation",
       "type": "lean",
       "path": "lean-formalization/Manifest/Models/Instances/SafetyPlugin/ConditionalDesignFoundation.lean",
-      "refs": ["D17","D1"],
+      "refs": [
+        "D17",
+        "D1"
+      ],
       "enforces": "formal",
       "scope": "formalization"
     },
@@ -1606,7 +1936,11 @@
       "id": "skill:generate-plugin",
       "type": "skill",
       "path": ".claude/skills/generate-plugin/SKILL.md",
-      "refs": ["D17","P3","D1"],
+      "refs": [
+        "D17",
+        "P3",
+        "D1"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1614,7 +1948,16 @@
       "id": "skill:spec-driven-workflow",
       "type": "skill",
       "path": ".claude/skills/spec-driven-workflow/SKILL.md",
-      "refs": ["D1","D2","D3","D4","D5","P2","P3","P4"],
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "P2",
+        "P3",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1622,7 +1965,11 @@
       "id": "agent:judge",
       "type": "agent",
       "path": ".claude/agents/judge.md",
-      "refs": ["P3","V5","D3"],
+      "refs": [
+        "P3",
+        "V5",
+        "D3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1630,7 +1977,9 @@
       "id": "script:check-lean-imports",
       "type": "script",
       "path": "scripts/check-lean-imports.sh",
-      "refs": ["V7"],
+      "refs": [
+        "V7"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1638,7 +1987,9 @@
       "id": "script:generate-evolve-entry",
       "type": "script",
       "path": "scripts/generate-evolve-entry.sh",
-      "refs": ["P3"],
+      "refs": [
+        "P3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1646,7 +1997,9 @@
       "id": "script:sync-hypothesis-table",
       "type": "script",
       "path": "scripts/sync-hypothesis-table.sh",
-      "refs": ["P3"],
+      "refs": [
+        "P3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1654,7 +2007,10 @@
       "id": "script:trace-coverage",
       "type": "script",
       "path": "scripts/trace-coverage.sh",
-      "refs": ["V7","P4"],
+      "refs": [
+        "V7",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1662,7 +2018,10 @@
       "id": "script:validate-evolve-entry",
       "type": "script",
       "path": "scripts/validate-evolve-entry.sh",
-      "refs": ["P2","P3"],
+      "refs": [
+        "P2",
+        "P3"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1670,7 +2029,10 @@
       "id": "script:verify-proposal-preflight",
       "type": "script",
       "path": "scripts/verify-proposal-preflight.sh",
-      "refs": ["P4","L2"],
+      "refs": [
+        "P4",
+        "L2"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1678,7 +2040,9 @@
       "id": "script:d17-state",
       "type": "script",
       "path": ".claude/skills/generate-plugin/scripts/d17-state.sh",
-      "refs": ["D17"],
+      "refs": [
+        "D17"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1686,7 +2050,10 @@
       "id": "script:verify-construct-gate",
       "type": "script",
       "path": ".claude/skills/generate-plugin/scripts/verify-construct-gate.sh",
-      "refs": ["D17","P4"],
+      "refs": [
+        "D17",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1694,7 +2061,10 @@
       "id": "script:verify-extract-gate",
       "type": "script",
       "path": ".claude/skills/generate-plugin/scripts/verify-extract-gate.sh",
-      "refs": ["D17","P4"],
+      "refs": [
+        "D17",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1702,7 +2072,10 @@
       "id": "script:verify-investigate-gate",
       "type": "script",
       "path": ".claude/skills/generate-plugin/scripts/verify-investigate-gate.sh",
-      "refs": ["D17","P4"],
+      "refs": [
+        "D17",
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1710,7 +2083,9 @@
       "id": "script:resolve-manifesto-root",
       "type": "script",
       "path": ".claude/skills/shared/resolve-manifesto-root.sh",
-      "refs": ["P4"],
+      "refs": [
+        "P4"
+      ],
       "enforces": "procedural",
       "scope": "implementation"
     },
@@ -1718,7 +2093,11 @@
       "id": "hook:p4-manifest-refs-check",
       "type": "hook",
       "path": ".claude/hooks/p4-manifest-refs-check.sh",
-      "refs": ["P4","D1","D13"],
+      "refs": [
+        "P4",
+        "D1",
+        "D13"
+      ],
       "enforces": "structural",
       "phase": 1,
       "scope": "implementation"
@@ -1727,7 +2106,11 @@
       "id": "hook:p4-traces-integrity-check",
       "type": "hook",
       "path": ".claude/hooks/p4-traces-integrity-check.sh",
-      "refs": ["P4","D1","D13"],
+      "refs": [
+        "P4",
+        "D1",
+        "D13"
+      ],
       "enforces": "structural",
       "phase": 5,
       "scope": "implementation"
@@ -1736,9 +2119,419 @@
       "id": "test:d15-d18-coverage",
       "type": "test",
       "path": "tests/phase5/test-d15-d18-coverage.sh",
-      "refs": ["D15","D16","D17","D18"],
+      "refs": [
+        "D15",
+        "D16",
+        "D17",
+        "D18"
+      ],
       "enforces": "verification",
       "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:axiom-card-coverage",
+      "type": "test",
+      "path": "tests/phase5/test-axiom-card-coverage.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:refs-body-coverage",
+      "type": "test",
+      "path": "tests/phase5/test-refs-body-coverage.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:refs-integrity",
+      "type": "test",
+      "path": "tests/phase5/test-refs-integrity.sh",
+      "refs": [
+        "P4",
+        "D1",
+        "D13"
+      ],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "test:skill-depgraph",
+      "type": "test",
+      "path": "tests/phase5/test-skill-depgraph.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "verification",
+      "phase": 5,
+      "scope": "implementation"
+    },
+    {
+      "id": "data:assumptions",
+      "type": "data",
+      "path": ".claude/metrics/assumptions.jsonl",
+      "refs": [
+        "P3",
+        "P4"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:decision-log",
+      "type": "data",
+      "path": ".claude/metrics/decision-log.jsonl",
+      "refs": [
+        "P3",
+        "P4",
+        "T6"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "script:check-monotonicity",
+      "type": "script",
+      "path": "lean-formalization/Manifest/Models/check-monotonicity.sh",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:extract-dependency-graph",
+      "type": "script",
+      "path": "lean-formalization/Manifest/Models/extract-dependency-graph.sh",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:generate-conditional-axiom-system",
+      "type": "script",
+      "path": "lean-formalization/Manifest/Models/generate-conditional-axiom-system.sh",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "config:instance-manifest-schema",
+      "type": "config",
+      "path": "lean-formalization/Manifest/Models/instance-manifest-schema.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "structural",
+      "scope": "config"
+    },
+    {
+      "id": "data:model-spec-91-100",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-91-100.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-101-110",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-101-110.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-131-140",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-131-140.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-151-160",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-151-160.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-171-180",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-171-180.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-181-190",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-181-190.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-191-200",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-191-200.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-211-220",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-211-220.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-231-240",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-231-240.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-251-260",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-251-260.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-271-280",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-271-280.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:model-spec-281-290",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/model-spec-281-290.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "script:validate-instance-manifest",
+      "type": "script",
+      "path": "lean-formalization/Manifest/Models/validate-instance-manifest.sh",
+      "refs": [
+        "D17",
+        "P4"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "data:cc-instance-manifest",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/instance-manifest.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:cc-platform-decisions",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/Instances/ClaudeCode/platform-decisions.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:forgecode-instance-manifest",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/instance-manifest.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "data:forgecode-platform-decisions",
+      "type": "data",
+      "path": "lean-formalization/Manifest/Models/Instances/ForgeCode/platform-decisions.json",
+      "refs": [
+        "D17"
+      ],
+      "enforces": "procedural",
+      "scope": "data"
+    },
+    {
+      "id": "script:add-hook-traceability",
+      "type": "script",
+      "path": "scripts/add-hook-traceability.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:detect-refs-body-violations",
+      "type": "script",
+      "path": "scripts/detect-refs-body-violations.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:enumerate-sorry",
+      "type": "script",
+      "path": "scripts/enumerate-sorry.sh",
+      "refs": [
+        "P4",
+        "V6"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:fix-hook-input",
+      "type": "script",
+      "path": "scripts/fix-hook-input.sh",
+      "refs": [
+        "D1",
+        "P4"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:generate-skill-depgraph",
+      "type": "script",
+      "path": "scripts/generate-skill-depgraph.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:generate-skill-mermaid",
+      "type": "script",
+      "path": "scripts/generate-skill-mermaid.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:list-propositions",
+      "type": "script",
+      "path": "scripts/list-propositions.sh",
+      "refs": [
+        "P4"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:setup-traces-hook",
+      "type": "script",
+      "path": "scripts/setup-traces-hook.sh",
+      "refs": [
+        "P4",
+        "D1",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:upgrade-traces-hook-to-blocking",
+      "type": "script",
+      "path": "scripts/upgrade-traces-hook-to-blocking.sh",
+      "refs": [
+        "D1",
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:validate-task-classification",
+      "type": "script",
+      "path": "scripts/validate-task-classification.sh",
+      "refs": [
+        "P4",
+        "D15"
+      ],
+      "enforces": "procedural",
+      "scope": "implementation"
+    },
+    {
+      "id": "script:verify-skill-dependencies",
+      "type": "script",
+      "path": "scripts/verify-skill-dependencies.sh",
+      "refs": [
+        "P4",
+        "D13"
+      ],
+      "enforces": "procedural",
       "scope": "implementation"
     }
   ]

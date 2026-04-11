@@ -2,11 +2,11 @@ import Mathlib.Order.Monotone.Basic
 import Manifest.Ontology
 
 /-!
-# Mathematical Foundation: Risk Theory for Capability-Risk Co-scaling
+# Mathematical Foundation - Risk Theory for Capability-Risk Co-scaling
 
 Grounds E2 (`capability_risk_coscaling`) in established risk/security theory.
 
-## Derivation Chain (Traceability)
+## Derivation Chain - Traceability
 
 ```
 [R21] Manadhata & Wing (2011) "A Formal Model for a System's Attack Surface"
