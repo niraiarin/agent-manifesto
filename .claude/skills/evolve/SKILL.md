@@ -26,6 +26,10 @@ dependencies:
       type: soft
       phase: "Step 2"
       condition: "breaking change を提案する場合"
+    - skill: spec-driven-workflow
+      type: soft
+      phase: "Phase 1 Observer Section 8"
+      condition: "Observer が [C] 新規開発候補を検出し、人間が T6 承認した場合"
     - skill: trace
       type: soft
       phase: "Step 4 Integrator Step 2.5"
@@ -861,7 +865,7 @@ bash .claude/skills/evolve/scripts/retirement.sh remove <file-path>
 | 指標 | 計測方法 | 期待値 | ガバナンス理由 |
 |------|---------|--------|---------------|
 | test pass count (絶対数) | `bash tests/test-all.sh` | 393+ | 直接最適化すると自明なテスト追加を誘発 |
-| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 63 (安定) | 不要な公理追加は形式系を弱める |
+| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 53 (安定、増加時は根拠必須) | 無根拠な公理追加は compression ratio を低下させ形式系を弱める。ただし公理系ギャップの放置も形式系を弱める (#316 実績)。増加時は issue + /research + /ground-axiom の経路を経ること |
 | theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 462+ (増加) | delta は最適化、絶対数はガバナンス |
 | sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
 | warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
