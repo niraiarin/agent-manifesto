@@ -39,13 +39,18 @@ import Manifest.Models.Instances.ClaudeCode.RuntimeEnvironment
 import Manifest.Models.Instances.ClaudeCode.QualityPatterns
 import Manifest.Models.Instances.ClaudeCode.DataSchema
 
+import Manifest.Models.PoC.Consistency.Case1Composition
+import Manifest.Models.PoC.Consistency.Case2Assumption
+import Manifest.Models.PoC.Consistency.Case3Ordering
+import Manifest.Models.DeviationPolicy
+
 /-!
 # Agent Manifest — Formal Specification
 
 マニフェスト「永続する構造と一時的なエージェントの協約」の
 公理系を Lean 4 で形式化した仕様書。
 
-51 axioms, 386 theorems, 0 sorry. Compression 7.56x.
+53 axioms, 462 theorems, 0 sorry. Compression 8.71x.
 
 ## モジュール構成（認識論的層構造）
 
