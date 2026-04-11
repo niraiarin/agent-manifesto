@@ -5,7 +5,7 @@
 # Usage: bash scripts/trace-coverage.sh [--json]
 set -uo pipefail
 
-BASE="$(git rev-parse --show-toplevel 2>/dev/null || echo /Users/nirarin/work/agent-manifesto)"
+BASE="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 JSON_MODE="${1:-}"
 
 # 全 PropositionId（Ontology.lean から動的取得 — SSOT）

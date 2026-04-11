@@ -982,9 +982,9 @@ cmd_selfcheck() {
       delete ids; delete deps
     }
   }
-  ' "$ONTOLOGY" > ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp
+  ' "$ONTOLOGY" > "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp"
   local expected_sorted
-  expected_sorted=$(sort -u ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp)
+  expected_sorted=$(sort -u "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp")
   local expected_count
   expected_count=$(echo "$expected_sorted" | grep -c . || true)
 
@@ -1007,7 +1007,7 @@ cmd_selfcheck() {
     echo -e "  ${GREEN}✓ パーサ出力が Lean と完全一致 (${parsed_count} 依存)${NC}"
   fi
 
-  rm -f ${SCRIPT_DIR}/.manifest-trace-expected-deps.tmp
+  rm -f "${TMPDIR:-/tmp}/.manifest-trace-expected-deps.tmp"
   echo ""
 
   # --- 検査 4: 内部整合性 ---
