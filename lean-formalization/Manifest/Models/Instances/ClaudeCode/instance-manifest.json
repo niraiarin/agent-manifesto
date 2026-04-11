@@ -345,6 +345,187 @@
       "lastVerified": "2026-04-10",
       "reviewInterval": 90,
       "refutation": "judge.md のプロセスが変更された場合"
+    },
+    {
+      "id": "CC-C21",
+      "type": "C",
+      "content": "Axiom Card: Layer, Content, Basis, Source, Refutation condition の 5 フィールド",
+      "sourceRef": "lean-formalization/Manifest/Axioms.lean + .claude/hooks/p3-axiom-evidence-check.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C22",
+      "type": "C",
+      "content": "Derivation Card: Derives from, Proposition, Content, Proof strategy の 4 フィールド",
+      "sourceRef": "lean-formalization/Manifest/Procedure.lean + scripts/manifest-trace",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C23",
+      "type": "C",
+      "content": "sync-counts.sh スコープ: Manifest/*.lean + Framework/*.lean のみ",
+      "sourceRef": "scripts/sync-counts.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C24",
+      "type": "C",
+      "content": "elan/lake PATH export が全スクリプトで必要",
+      "sourceRef": "CLAUDE.md Build & Test Commands",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C25",
+      "type": "C",
+      "content": "テスト Phase 1-5: L1→P2→P4→P3→構造品質。D4 準拠",
+      "sourceRef": "tests/test-all.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C26",
+      "type": "C",
+      "content": "Phase 1-2 は critical。失敗時は後続 Phase をスキップ",
+      "sourceRef": "tests/test-all.sh CRITICAL_PHASES",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C27",
+      "type": "C",
+      "content": "deferred-status.json が deferred items の正規ソース",
+      "sourceRef": ".claude/metrics/deferred-status.json",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-C28",
+      "type": "C",
+      "content": "p2-verified.jsonl トークン TTL=600秒（10分）",
+      "sourceRef": ".claude/hooks/p2-verify-on-commit.sh TTL=600",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180
+    },
+    {
+      "id": "CC-H26",
+      "type": "H",
+      "content": "hook コマンドは $CLAUDE_PROJECT_DIR で絶対パス化する必要がある",
+      "sourceRef": ".claude/settings.json hooks",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 60,
+      "refutation": "Claude Code が hook runner の CWD を project root に固定した場合"
+    },
+    {
+      "id": "CC-H27",
+      "type": "H",
+      "content": "Lean 4 で import は doc comment より前に配置",
+      "sourceRef": "https://lean-lang.org/lean4/doc/",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180,
+      "refutation": "Lean 4 が import の位置制約を変更した場合"
+    },
+    {
+      "id": "CC-H28",
+      "type": "H",
+      "content": "opaque 型は deriving Repr が効かず手動 Repr 必要",
+      "sourceRef": "lean-formalization/Manifest/Ontology.lean",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180,
+      "refutation": "Lean 4 が opaque 型の deriving Repr をサポートした場合"
+    },
+    {
+      "id": "CC-H29",
+      "type": "H",
+      "content": "Verso slug: 非 ASCII → ___ 変換。h5-doc-lint.sh が python3 で lint",
+      "sourceRef": "scripts/lint-doc-comments.py",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "Verso が slug 生成を変更した場合"
+    },
+    {
+      "id": "CC-H30",
+      "type": "H",
+      "content": "macOS BSD sed -i ''、tac→tail -r、wc -l 前置スペース",
+      "sourceRef": "scripts/sync-counts.sh + .claude/hooks/p2-verify-on-commit.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180,
+      "refutation": "macOS が GNU sed を標準採用した場合"
+    },
+    {
+      "id": "CC-H31",
+      "type": "H",
+      "content": "jq は全 hook の暗黙前提。不在時は silent failure",
+      "sourceRef": ".claude/hooks/*.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "全 hook に jq 存在チェックが追加された場合"
+    },
+    {
+      "id": "CC-H32",
+      "type": "H",
+      "content": "python3 は h5-doc-lint.sh の暗黙前提。CLAUDE.md 未記載",
+      "sourceRef": ".claude/hooks/h5-doc-lint.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "h5-doc-lint.sh が python3 依存を除去した場合"
+    },
+    {
+      "id": "CC-H33",
+      "type": "H",
+      "content": "check() に 2 variant: 2引数(name,eval) と 3引数(id,name,cmd)",
+      "sourceRef": "tests/test-l1-structural.sh + tests/test-axiom-card-coverage.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "check() が統一された場合"
+    },
+    {
+      "id": "CC-H34",
+      "type": "H",
+      "content": "XFAIL + baseline は既知の進行中ギャップにのみ使用",
+      "sourceRef": "tests/test-refs-integrity.sh + tests/test-axiom-card-coverage.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "XFAIL パターンが廃止された場合"
+    },
+    {
+      "id": "CC-H35",
+      "type": "H",
+      "content": "テスト命名: S=structural, B=behavioral, AC=axiom-card, RI=refs, DG=depgraph, WC=workflow",
+      "sourceRef": "tests/trace-map.json",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180,
+      "refutation": "テスト命名規則が変更された場合"
+    },
+    {
+      "id": "CC-H36",
+      "type": "H",
+      "content": "evolve-history.jsonl 書き込みは evolve-metrics-recorder.sh。observe.sh は読み取り専用",
+      "sourceRef": ".claude/hooks/evolve-metrics-recorder.sh + scripts/observe.sh",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "evolve-metrics-recorder.sh が廃止された場合"
+    },
+    {
+      "id": "CC-H37",
+      "type": "H",
+      "content": "artifact-manifest.json の _comment はクエリ時除外必要",
+      "sourceRef": "artifact-manifest.json",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 90,
+      "refutation": "artifact-manifest.json が _comment を廃止した場合"
+    },
+    {
+      "id": "CC-H38",
+      "type": "H",
+      "content": "データ形式: JSON=mutable設定, YAML=宣言, JSONL=append-only ログ",
+      "sourceRef": ".claude/metrics/ + .claude/skills/dependency-graph.yaml",
+      "lastVerified": "2026-04-11",
+      "reviewInterval": 180,
+      "refutation": "データ形式方針が変更された場合"
     }
   ],
   "axiom_to_config": [
@@ -692,6 +873,110 @@
         ".claude/agents/judge.md"
       ],
       "dependsOnAssumptions": ["CC-H25"]
+    },
+    {
+      "axiomId": "FT1",
+      "designPrinciple": "D5",
+      "claim": "Axiom Card 5フィールド + Derivation Card 4フィールドの完全性",
+      "implements": [
+        "lean-formalization/Manifest/Axioms.lean",
+        ".claude/hooks/p3-axiom-evidence-check.sh",
+        "scripts/manifest-trace"
+      ],
+      "dependsOnAssumptions": ["CC-C21", "CC-C22"]
+    },
+    {
+      "axiomId": "FT2",
+      "designPrinciple": null,
+      "claim": "Lean 4 構文制約: import は doc comment より前",
+      "implements": [
+        "lean-formalization/Manifest/*.lean"
+      ],
+      "dependsOnAssumptions": ["CC-H27"]
+    },
+    {
+      "axiomId": "FT3",
+      "designPrinciple": null,
+      "claim": "sync-counts.sh のスコープ: Models/ と Foundation/ は除外",
+      "implements": [
+        "scripts/sync-counts.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C23"]
+    },
+    {
+      "axiomId": "RE1",
+      "designPrinciple": "D1",
+      "claim": "jq/python3 不在時の silent failure（構造的強制の穴）",
+      "implements": [
+        ".claude/hooks/*.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H31", "CC-H32"]
+    },
+    {
+      "axiomId": "RE2",
+      "designPrinciple": null,
+      "claim": "全 macOS workaround に POSIX 代替あり",
+      "implements": [
+        "scripts/sync-counts.sh",
+        ".claude/hooks/p2-verify-on-commit.sh"
+      ],
+      "dependsOnAssumptions": ["CC-H30"]
+    },
+    {
+      "axiomId": "QP1",
+      "designPrinciple": "D4",
+      "claim": "テスト Phase 順序: L1→P2→P4→P3→構造品質",
+      "implements": [
+        "tests/test-all.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C25"]
+    },
+    {
+      "axiomId": "QP2",
+      "designPrinciple": "D4",
+      "claim": "Phase 1-2 は critical（fail→後続スキップ）",
+      "implements": [
+        "tests/test-all.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C26"]
+    },
+    {
+      "axiomId": "QP3",
+      "designPrinciple": "D4",
+      "claim": "テスト命名プレフィックスが Phase を構造的に分離",
+      "implements": [
+        "tests/trace-map.json"
+      ],
+      "dependsOnAssumptions": ["CC-H35"]
+    },
+    {
+      "axiomId": "DS1",
+      "designPrinciple": null,
+      "claim": "JSONL は append-only パターン",
+      "implements": [
+        ".claude/metrics/evolve-history.jsonl",
+        ".claude/metrics/p2-verified.jsonl"
+      ],
+      "dependsOnAssumptions": ["CC-H38"]
+    },
+    {
+      "axiomId": "DS2",
+      "designPrinciple": null,
+      "claim": "メトリクスファイルの書き込み元の同定",
+      "implements": [
+        ".claude/hooks/evolve-metrics-recorder.sh",
+        ".claude/skills/verify/SKILL.md"
+      ],
+      "dependsOnAssumptions": ["CC-H36", "CC-C28"]
+    },
+    {
+      "axiomId": "DS3",
+      "designPrinciple": null,
+      "claim": "P2 トークン TTL 10分",
+      "implements": [
+        ".claude/hooks/p2-verify-on-commit.sh"
+      ],
+      "dependsOnAssumptions": ["CC-C28"]
     }
   ],
   "config_to_axiom": [
