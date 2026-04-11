@@ -2,12 +2,12 @@ import Manifest.DesignFoundation
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 
 /-!
-# Claude Code 条件付き設計基礎 — ConditionalDesignFoundation
+# Claude Code ConditionalDesignFoundation
 
 D1-D14（プラットフォーム非依存設計定理）を Claude Code のプリミティブに
 マッピングする条件付き公理系。
 
-## 位置づけ
+## Architecture
 
 ```
 D1-D14 (DesignFoundation.lean, プラットフォーム非依存)
@@ -15,7 +15,7 @@ D1-D14 (DesignFoundation.lean, プラットフォーム非依存)
 CC1-CCn (このファイル, Claude Code 固有)
 ```
 
-## 設計方針
+## Design Policy
 
 - 手書き（D→CC のマッピングは意味的推論が必要）
 - 各 CC axiom に Derivation Card を付与
@@ -105,6 +105,8 @@ def ccEnforcementLayer : CCPrimitive → EnforcementLayer
     Proposition: CC1
     Content: Claude Code has at least one structural enforcement primitive (PreToolUse hook).
       This satisfies D1's requirement that L1 constraints be placed in structural enforcement.
+    Note: CC-H1 の反証条件として cwd 移動による hook パス解決失敗が発見された（#414）。
+      hook 内 cwd 正規化により対処済み。新規 hook 追加時は同パターンに注意。
     Proof strategy: rfl on ccEnforcementLayer (.hook .preToolUse) -/
 theorem cc1_structural_exists :
   ccEnforcementLayer (.hook .preToolUse) = .structural := by rfl

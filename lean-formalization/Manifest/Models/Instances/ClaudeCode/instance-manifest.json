@@ -72,7 +72,7 @@
       "sourceRef": "https://docs.anthropic.com/en/docs/claude-code/hooks",
       "lastVerified": "2026-04-08",
       "reviewInterval": 60,
-      "refutation": "Claude Code が hook 実行をオプトアウト可能にした場合",
+      "refutation": "Claude Code が hook 実行をオプトアウト可能にした場合。また、hook スクリプトのパスが相対パスで cwd がプロジェクトルート外の場合、hook が見つからず non-blocking 失敗する（#414 で hook 内 cwd 正規化により対処済み。新規 hook 追加時にも同パターンが発生しうる）",
       "derivedFromPDs": [
         "PD-13",
         "PD-11"
@@ -708,7 +708,9 @@
         ".claude/skills/evolve/SKILL.md",
         ".claude/skills/research/scripts/worktree.sh"
       ],
-      "dependsOnAssumptions": ["CC-C11"]
+      "dependsOnAssumptions": [
+        "CC-C11"
+      ]
     },
     {
       "axiomId": "VCS2",
@@ -717,7 +719,9 @@
       "implements": [
         ".claude/skills/evolve/scripts/pr-workflow.sh"
       ],
-      "dependsOnAssumptions": ["CC-C12"]
+      "dependsOnAssumptions": [
+        "CC-C12"
+      ]
     },
     {
       "axiomId": "VCS3",
@@ -726,7 +730,9 @@
       "implements": [
         ".claude/skills/research/scripts/worktree.sh"
       ],
-      "dependsOnAssumptions": ["CC-C13"]
+      "dependsOnAssumptions": [
+        "CC-C13"
+      ]
     },
     {
       "axiomId": "VCS4",
@@ -736,14 +742,18 @@
         ".claude/skills/evolve/scripts/pr-workflow.sh",
         ".claude/skills/research/scripts/worktree.sh"
       ],
-      "dependsOnAssumptions": ["CC-H17"]
+      "dependsOnAssumptions": [
+        "CC-H17"
+      ]
     },
     {
       "axiomId": "VCS5",
       "designPrinciple": null,
       "claim": "VCS 操作は認証が前提条件（運用上の外部依存、特定 L-boundary に非対応）",
       "implements": [],
-      "dependsOnAssumptions": ["CC-H18"],
+      "dependsOnAssumptions": [
+        "CC-H18"
+      ],
       "note": "ドキュメント未記載の暗黙の前提条件"
     },
     {
@@ -757,7 +767,9 @@
         ".claude/hooks/p3-compatibility-check.sh",
         ".claude/hooks/p3-axiom-evidence-check.sh"
       ],
-      "dependsOnAssumptions": ["CC-H19"]
+      "dependsOnAssumptions": [
+        "CC-H19"
+      ]
     },
     {
       "axiomId": "ID2",
@@ -768,7 +780,9 @@
         ".claude/hooks/p3-compatibility-check.sh",
         ".claude/hooks/p3-axiom-evidence-check.sh"
       ],
-      "dependsOnAssumptions": ["CC-H20"]
+      "dependsOnAssumptions": [
+        "CC-H20"
+      ]
     },
     {
       "axiomId": "ID3",
@@ -778,7 +792,9 @@
         ".claude/hooks/l1-file-guard.sh",
         ".claude/hooks/hallucination-check.sh"
       ],
-      "dependsOnAssumptions": ["CC-H21"]
+      "dependsOnAssumptions": [
+        "CC-H21"
+      ]
     },
     {
       "axiomId": "ID4",
@@ -787,7 +803,9 @@
       "implements": [
         ".claude/skills/*/SKILL.md"
       ],
-      "dependsOnAssumptions": ["CC-C15"]
+      "dependsOnAssumptions": [
+        "CC-C15"
+      ]
     },
     {
       "axiomId": "ID5",
@@ -799,7 +817,9 @@
         ".claude/agents/observer.md",
         ".claude/agents/integrator.md"
       ],
-      "dependsOnAssumptions": ["CC-C16"]
+      "dependsOnAssumptions": [
+        "CC-C16"
+      ]
     },
     {
       "axiomId": "ID6",
@@ -808,7 +828,9 @@
       "implements": [
         "lean-formalization/Manifest/TaskClassification.lean"
       ],
-      "dependsOnAssumptions": ["CC-C17"]
+      "dependsOnAssumptions": [
+        "CC-C17"
+      ]
     },
     {
       "axiomId": "ID7",
@@ -817,14 +839,18 @@
       "implements": [
         ".claude/settings.json"
       ],
-      "dependsOnAssumptions": ["CC-H22"]
+      "dependsOnAssumptions": [
+        "CC-H22"
+      ]
     },
     {
       "axiomId": "HAI1",
       "designPrinciple": "T6",
       "claim": "自己変更制限時の全解決方法が T6 を満たす",
       "implements": [],
-      "dependsOnAssumptions": ["CC-C18"],
+      "dependsOnAssumptions": [
+        "CC-C18"
+      ],
       "note": "hook 変更は人間委譲パターンで実現"
     },
     {
@@ -834,7 +860,9 @@
       "implements": [
         ".claude/skills/verify/SKILL.md"
       ],
-      "dependsOnAssumptions": ["CC-C19"]
+      "dependsOnAssumptions": [
+        "CC-C19"
+      ]
     },
     {
       "axiomId": "HAI3",
@@ -844,7 +872,9 @@
         "~/.claude/projects/*/memory/MEMORY.md",
         ".claude/metrics/evolve-history.jsonl"
       ],
-      "dependsOnAssumptions": ["CC-C20"]
+      "dependsOnAssumptions": [
+        "CC-C20"
+      ]
     },
     {
       "axiomId": "HAI4",
@@ -854,7 +884,9 @@
         ".claude/skills/verify/SKILL.md",
         ".claude/agents/verifier.md"
       ],
-      "dependsOnAssumptions": ["CC-H23"]
+      "dependsOnAssumptions": [
+        "CC-H23"
+      ]
     },
     {
       "axiomId": "HAI5",
@@ -863,7 +895,9 @@
       "implements": [
         ".claude/skills/dependency-graph.yaml"
       ],
-      "dependsOnAssumptions": ["CC-H24"]
+      "dependsOnAssumptions": [
+        "CC-H24"
+      ]
     },
     {
       "axiomId": "HAI6",
@@ -872,7 +906,9 @@
       "implements": [
         ".claude/agents/judge.md"
       ],
-      "dependsOnAssumptions": ["CC-H25"]
+      "dependsOnAssumptions": [
+        "CC-H25"
+      ]
     },
     {
       "axiomId": "FT1",
@@ -883,7 +919,10 @@
         ".claude/hooks/p3-axiom-evidence-check.sh",
         "scripts/manifest-trace"
       ],
-      "dependsOnAssumptions": ["CC-C21", "CC-C22"]
+      "dependsOnAssumptions": [
+        "CC-C21",
+        "CC-C22"
+      ]
     },
     {
       "axiomId": "FT2",
@@ -892,7 +931,9 @@
       "implements": [
         "lean-formalization/Manifest/*.lean"
       ],
-      "dependsOnAssumptions": ["CC-H27"]
+      "dependsOnAssumptions": [
+        "CC-H27"
+      ]
     },
     {
       "axiomId": "FT3",
@@ -901,7 +942,9 @@
       "implements": [
         "scripts/sync-counts.sh"
       ],
-      "dependsOnAssumptions": ["CC-C23"]
+      "dependsOnAssumptions": [
+        "CC-C23"
+      ]
     },
     {
       "axiomId": "RE1",
@@ -910,7 +953,10 @@
       "implements": [
         ".claude/hooks/*.sh"
       ],
-      "dependsOnAssumptions": ["CC-H31", "CC-H32"]
+      "dependsOnAssumptions": [
+        "CC-H31",
+        "CC-H32"
+      ]
     },
     {
       "axiomId": "RE2",
@@ -920,7 +966,9 @@
         "scripts/sync-counts.sh",
         ".claude/hooks/p2-verify-on-commit.sh"
       ],
-      "dependsOnAssumptions": ["CC-H30"]
+      "dependsOnAssumptions": [
+        "CC-H30"
+      ]
     },
     {
       "axiomId": "QP1",
@@ -929,7 +977,9 @@
       "implements": [
         "tests/test-all.sh"
       ],
-      "dependsOnAssumptions": ["CC-C25"]
+      "dependsOnAssumptions": [
+        "CC-C25"
+      ]
     },
     {
       "axiomId": "QP2",
@@ -938,7 +988,9 @@
       "implements": [
         "tests/test-all.sh"
       ],
-      "dependsOnAssumptions": ["CC-C26"]
+      "dependsOnAssumptions": [
+        "CC-C26"
+      ]
     },
     {
       "axiomId": "QP3",
@@ -947,7 +999,9 @@
       "implements": [
         "tests/trace-map.json"
       ],
-      "dependsOnAssumptions": ["CC-H35"]
+      "dependsOnAssumptions": [
+        "CC-H35"
+      ]
     },
     {
       "axiomId": "DS1",
@@ -957,7 +1011,9 @@
         ".claude/metrics/evolve-history.jsonl",
         ".claude/metrics/p2-verified.jsonl"
       ],
-      "dependsOnAssumptions": ["CC-H38"]
+      "dependsOnAssumptions": [
+        "CC-H38"
+      ]
     },
     {
       "axiomId": "DS2",
@@ -967,7 +1023,10 @@
         ".claude/hooks/evolve-metrics-recorder.sh",
         ".claude/skills/verify/SKILL.md"
       ],
-      "dependsOnAssumptions": ["CC-H36", "CC-C28"]
+      "dependsOnAssumptions": [
+        "CC-H36",
+        "CC-C28"
+      ]
     },
     {
       "axiomId": "DS3",
@@ -976,7 +1035,9 @@
       "implements": [
         ".claude/hooks/p2-verify-on-commit.sh"
       ],
-      "dependsOnAssumptions": ["CC-C28"]
+      "dependsOnAssumptions": [
+        "CC-C28"
+      ]
     }
   ],
   "config_to_axiom": [

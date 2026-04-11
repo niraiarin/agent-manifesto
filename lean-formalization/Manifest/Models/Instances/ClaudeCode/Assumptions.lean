@@ -1,7 +1,7 @@
 import Manifest.Models.Assumptions.EpistemicLayer
 
 /-!
-# Claude Code 条件付き設計基礎 — 仮定 (C/H)
+# Claude Code Conditional Design Foundation - Assumptions
 
 条件付き公理系 S=(A,C,H,D) の Claude Code インスタンスにおける仮定を定義する。
 
@@ -12,7 +12,7 @@ import Manifest.Models.Assumptions.EpistemicLayer
 - **H (LLM Inference)**: Claude Code のドキュメント・実装から LLM が推論した
   プラットフォーム特性。各 H に反証条件を付与。
 
-## 時間的有効性 (#225)
+## TemporalValidity
 
 全ての仮定に TemporalValidity を付与する。Claude Code はアクティブに開発中の
 プラットフォームであり、仕様変更が頻繁に起こりうる。
@@ -94,12 +94,13 @@ def cc_c5 : Assumption := {
 -- ============================================================
 
 /-- CC-H1: PreToolUse hook はエージェントがバイパスできない。
-    hook 実行はハーネスレベルで強制される。 -/
+    hook 実行はハーネスレベルで強制される。
+    反証条件: (1) hook 実行のオプトアウト、(2) cwd 移動による hook パス解決失敗（#414 で対処済み）。 -/
 def cc_h1 : Assumption := {
   id := "CC-H1"
   source := .llmInference
     ["CC-C1"]
-    "Claude Code が hook 実行をオプトアウト可能にした場合に反証される"
+    "Claude Code が hook 実行をオプトアウト可能にした場合、または hook スクリプトのパスが相対パスで cwd がプロジェクトルート外にある場合（#414 で hook 内 cwd 正規化により対処済み。新規 hook 追加時にも同パターンが発生しうる）"
   content := "PreToolUse hook はエージェントの裁量でスキップできない。ハーネス（Claude Code ランタイム）がツール実行前に必ず hook を実行し、exit 2 でブロックする。これにより D2 の executionAutomatic 条件が満たされる。"
   validity := some {
     sourceRef := "https://docs.anthropic.com/en/docs/claude-code/hooks"
