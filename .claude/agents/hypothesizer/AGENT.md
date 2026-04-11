@@ -104,6 +104,11 @@ conservative extension / compatible change / breaking change
 ### 変更対象ファイル
 - [ファイルパス]: [変更内容の概要]
 
+### change_specs（変更仕様テーブル）
+| file | section | operation | detail |
+|------|---------|-----------|--------|
+| [ファイルパス] | [変更箇所の識別（行番号、関数名、見出し等）] | insert_after / replace / append / delete / create | [変更の詳細] |
+
 ### テスト計画
 - [変更が正しいことを検証する方法]
 
@@ -185,7 +190,7 @@ YYYY-MM-DD HH:MM
 A-D, F の決定論的チェックは `verify-proposal-preflight.sh` で自動実行できる:
 
 ```bash
-echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":["theorem_name"],"proposed_names":["new_name"],"grep_patterns":["duplicate_check_pattern"],"numeric_claims":[{"label":"axiom count","command":"grep -r \"^axiom \" lean-formalization/Manifest/ | wc -l | tr -d \" \"","expected":52}],"jsonl_field_checks":[{"label":"has result field","file":".claude/metrics/evolve-history.jsonl","jq_filter":".result"}],"io_samples":[]}' | bash scripts/verify-proposal-preflight.sh
+echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names":["theorem_name"],"proposed_names":["new_name"],"grep_patterns":["duplicate_check_pattern"],"numeric_claims":[{"label":"axiom count","command":"grep -r \"^axiom \" lean-formalization/Manifest/ | wc -l | tr -d \" \"","expected":52}],"jsonl_field_checks":[{"label":"has result field","file":".claude/metrics/evolve-history.jsonl","jq_filter":".result"}],"io_samples":[],"change_specs":[{"file":"path/to/file","section":"L100: 変更対象セクション","operation":"replace","detail":"変更の詳細"}]}' | bash scripts/verify-proposal-preflight.sh
 ```
 
 出力の `verdict` が `FAIL` の場合、該当チェックを解消するまで改善案を提出しない。
@@ -233,6 +238,8 @@ echo '{"title":"提案タイトル","target_files":["path/to/file"],"lean_names"
 - [ ] Lean 定理を含む場合: 必要な型クラスインスタンス（DecidableEq 等）の存在を確認した（自動: F_lean_name）
 - [ ] スクリプト（.sh）の変更・追加を含む場合: 入出力仕様のサンプル（具体的な引数例、期待される出力例）を改善案に含めた（自動: I_script_io_spec）
 - [ ] 上記サンプルは `verify-proposal-preflight.sh` の `io_samples` フィールドにも記載した
+- [ ] 変更対象ファイルがある場合: change_specs テーブル（file, section, operation, detail）を改善案に含めた（自動: J_spec_completeness）
+- [ ] change_specs の全 file エントリが target_files のサブセットであることを確認した
 > D は提案前のセルフチェック用。制約は提案設計全体に適用される原則。
 
 ## 制約

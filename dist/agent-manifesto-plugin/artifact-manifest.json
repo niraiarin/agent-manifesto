@@ -1,0 +1,251 @@
+{
+  "version": "0.2.0",
+  "parent": "agent-manifesto",
+  "scopes": [
+    "plugin"
+  ],
+  "propositions": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "E1",
+    "E2",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L6",
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6",
+    "D7",
+    "D8",
+    "D9",
+    "D10",
+    "D11",
+    "D12",
+    "D13",
+    "D14",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7"
+  ],
+  "artifacts": [
+    {
+      "id": "plugin-hook:h5-doc-lint",
+      "type": "hook",
+      "path": ".claude/hooks/h5-doc-lint.sh",
+      "refs": [
+        "P1",
+        "P2"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:hallucination-check",
+      "type": "hook",
+      "path": ".claude/hooks/hallucination-check.sh",
+      "refs": [],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:l1-file-guard",
+      "type": "hook",
+      "path": ".claude/hooks/l1-file-guard.sh",
+      "refs": [
+        "L1",
+        "V4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:l1-safety-check",
+      "type": "hook",
+      "path": ".claude/hooks/l1-safety-check.sh",
+      "refs": [
+        "L1",
+        "V4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p2-verify-on-commit",
+      "type": "hook",
+      "path": ".claude/hooks/p2-verify-on-commit.sh",
+      "refs": [
+        "P2"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p3-axiom-evidence-check",
+      "type": "hook",
+      "path": ".claude/hooks/p3-axiom-evidence-check.sh",
+      "refs": [
+        "D1",
+        "D8",
+        "P3"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p3-compatibility-check",
+      "type": "hook",
+      "path": ".claude/hooks/p3-compatibility-check.sh",
+      "refs": [
+        "D8",
+        "P3"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-drift-detector",
+      "type": "hook",
+      "path": ".claude/hooks/p4-drift-detector.sh",
+      "refs": [
+        "L1",
+        "P4",
+        "V4",
+        "V5"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-gate-logger",
+      "type": "hook",
+      "path": ".claude/hooks/p4-gate-logger.sh",
+      "refs": [
+        "L1",
+        "P4",
+        "V4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-metrics-collector",
+      "type": "hook",
+      "path": ".claude/hooks/p4-metrics-collector.sh",
+      "refs": [
+        "P4",
+        "V2",
+        "V4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-sync-counts-check",
+      "type": "hook",
+      "path": ".claude/hooks/p4-sync-counts-check.sh",
+      "refs": [
+        "P4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-temporal-tracker",
+      "type": "hook",
+      "path": ".claude/hooks/p4-temporal-tracker.sh",
+      "refs": [
+        "D8",
+        "P4"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-v5-approval-tracker",
+      "type": "hook",
+      "path": ".claude/hooks/p4-v5-approval-tracker.sh",
+      "refs": [],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-hook:p4-v7-task-tracker",
+      "type": "hook",
+      "path": ".claude/hooks/p4-v7-task-tracker.sh",
+      "refs": [],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-rule:l1-safety",
+      "type": "rule",
+      "path": ".claude/rules/l1-safety.md",
+      "refs": [
+        "D1",
+        "L1",
+        "T6"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-rule:l1-sandbox-recommendation",
+      "type": "rule",
+      "path": ".claude/rules/l1-sandbox-recommendation.md",
+      "refs": [
+        "L1",
+        "T6"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-rule:p3-governed-learning",
+      "type": "rule",
+      "path": ".claude/rules/p3-governed-learning.md",
+      "refs": [
+        "P3"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-agent:judge",
+      "type": "agent",
+      "path": ".claude/agents/judge",
+      "refs": [
+        "P2",
+        "P3",
+        "T2",
+        "V1",
+        "V7"
+      ],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-agent:model-questioner",
+      "type": "agent",
+      "path": ".claude/agents/model-questioner",
+      "refs": [],
+      "scope": "plugin"
+    },
+    {
+      "id": "plugin-agent:verifier",
+      "type": "agent",
+      "path": ".claude/agents/verifier",
+      "refs": [
+        "D1",
+        "D14",
+        "L1",
+        "P2",
+        "P3"
+      ],
+      "scope": "plugin"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated_run": 103,
+  "last_updated_run": 104,
   "items": {
     "h3-v4-semantic-update": {
       "status": "resolved",
@@ -239,19 +239,21 @@
     },
     "g5-f3-modelspec-compatibility": {
       "description": "generate-conditional-axiom-system.sh が自己対話の assumptions-only ModelSpec に非対応",
-      "status": "open",
+      "status": "resolved",
       "reason": "improveWorkflow",
       "opened_in_run": 99,
+      "resolved_in_run": 104,
       "source": "#295 G5 F3",
-      "note": "自己対話モードでは layers/propositions を省略した assumptions-only JSON を出力するが、既存スクリプトは layers+propositions/assignments を要求。手書き Lean で代替可能のため blocking ではないが、自動化パイプラインの完成にはスクリプト拡張が必要。"
+      "note": "Run 104 で generate-assumptions-lean.sh を新規作成。assumptions-only JSON から Lean Assumptions 定義を自動生成するスクリプト。D17 Phase 3 成果物（自己対話 ModelSpec）の自動 Lean 変換パイプラインが完成。"
     },
     "g5-f4-plugin-dist-gitignore": {
       "description": "dist/ が .gitignore に含まれ plugin 成果物を git 管理できない",
-      "status": "open",
+      "status": "resolved",
       "reason": "improveWorkflow",
       "opened_in_run": 99,
+      "resolved_in_run": 104,
       "source": "#295 G5 F4",
-      "note": "plugin 生成先を dist/ 以外に変更するか、.gitignore を plugin 名ベースで選択的に除外する設計変更が必要。/generate-plugin SKILL.md 完成時に配布戦略として定義する。"
+      "note": "Run 104 で .gitignore を dist/* + !dist/agent-manifesto-plugin/ に変更。D17 Phase 3 成果物（plugin）を git 管理可能にした。dist/agent-manifesto-plugin/ の 30 ファイルを git track 開始。"
     },
     "obs-4-q8-debruijn": {
       "description": "Q8 De Bruijn index inflation の根本原因分析が未完了",
