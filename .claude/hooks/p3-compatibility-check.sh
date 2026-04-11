@@ -22,7 +22,13 @@ GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
 GIT_CMD=(git -C "$GIT_DIR")
 fi
-STRUCTURAL_PATTERNS='\.claude/|tests/|manifesto\.md|docs/|research/|reports/|lean-formalization/'
+# Config lookup: userConfig -> config.json -> default
+_CONFIG_FILE="${CLAUDE_PLUGIN_DATA:-/dev/null}/config.json"
+if [ -f "$_CONFIG_FILE" ] && jq -e '.STRUCTURAL_PATTERNS' "$_CONFIG_FILE" >/dev/null 2>&1; then
+  STRUCTURAL_PATTERNS=$(jq -r '.STRUCTURAL_PATTERNS' "$_CONFIG_FILE")
+else
+  STRUCTURAL_PATTERNS='\.claude/|tests/|docs/'
+fi
 STAGED=$(git diff --cached --name-only 2>/dev/null)
 
 if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then
