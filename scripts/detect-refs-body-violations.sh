@@ -26,8 +26,8 @@ jq -r '.artifacts[] | select(._comment == null) | select(.type == "skill" or .ty
   IFS=',' read -ra REF_ARRAY <<< "$refs"
   for ref in "${REF_ARRAY[@]}"; do
     ref=$(echo "$ref" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
-    # 命題 ID が本文中に出現するか
-    if ! echo "$BODY" | grep -qw "$ref"; then
+    # 命題 ID が本文中に出現するか（@traces 行を除外してファイルを直接 grep）
+    if ! grep -v '^<!-- @traces\|^# @traces' "$full_path" | grep -qw "$ref"; then
       MISSING="$MISSING $ref"
     fi
   done
