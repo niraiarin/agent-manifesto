@@ -49,6 +49,10 @@
           },
           {
             "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/pr-conflict-blocker.sh"
+          },
+          {
+            "type": "command",
             "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/l1-safety-check.sh"
           },
           {
@@ -129,6 +133,10 @@
             "type": "command",
             "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/evolve-metrics-recorder.sh",
             "async": true
+          },
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/pr-conflict-checker.sh"
           }
         ]
       }
