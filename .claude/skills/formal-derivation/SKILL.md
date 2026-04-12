@@ -245,6 +245,8 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build <target>
 
 この段階でのエラーは主に型の不整合（定義的拡大で対処）。
 
+**Checkpoint**: Phase 1 完了時に `/handoff` Layer 1 checkpoint を `.claude/handoffs/checkpoints.jsonl` に記録する。
+
 ### Phase 2: Γ ⊢ φ の導出の構成
 
 **入力:** コンパイルが通る Lean ファイル（φ に sorry が残存）
@@ -283,6 +285,8 @@ theorem ineq : a.strength > b.strength := by
 
 各導出の構成後に `lake build` を実行する。
 コンパイルが通らない場合は Phase 3（修正ループ）に入る。
+
+**Checkpoint**: Phase 2 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ### Phase 3: 修正ループ
 
@@ -367,6 +371,8 @@ Procedure.lean が保持規則を形式的に定義済み:
 **Γ ⊬ φ の判定:**
 - Γ ⊢ ¬φ が導出可能（反例の構成的証拠）
 - Γ が無矛盾でない（Γ ⊢ ⊥ が導出可能）
+
+**Checkpoint**: Phase 3 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ### Phase 4: 監査
 

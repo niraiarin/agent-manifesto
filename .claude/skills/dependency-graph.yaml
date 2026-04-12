@@ -6,8 +6,8 @@
 #
 # Schema: .claude/skills/dependency-schema.yaml
 
-generated_at: "2026-04-12T05:55:58Z"
-skill_count: 13
+generated_at: "2026-04-12T08:05:41Z"
+skill_count: 14
 
 skills:
   adjust-action-space:
@@ -118,6 +118,22 @@ skills:
         type: soft
         phase: "Step 2"
         condition: "根拠が不明な場合"
+
+  handoff:
+    invokes: []
+    invoked_by:
+      - skill: evolve
+        phase: "Phase 1→2, 2→3, 3→4 boundary"
+        expected_output: "checkpoint JSONL entry"
+      - skill: spec-driven-workflow
+        phase: "Phase 0→1, 1→2, 2→3, 3→4 boundary"
+        expected_output: "checkpoint JSONL entry"
+      - skill: brownfield
+        phase: "Phase 0→1, 1→2 boundary"
+        expected_output: "checkpoint JSONL entry"
+      - skill: formal-derivation
+        phase: "Phase 1→2, 2→3, 3→4 boundary"
+        expected_output: "checkpoint JSONL entry"
 
   instantiate-model:
     invokes:
@@ -349,7 +365,7 @@ edges:
 
 # Summary
 summary:
-  total_skills: 13
+  total_skills: 14
   total_edges: 32
   hard_edges: 17
   soft_edges: 15

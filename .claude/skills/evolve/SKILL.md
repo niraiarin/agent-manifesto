@@ -572,6 +572,8 @@ for each observation in t6_items:
 
 end for
 
+**Checkpoint**: Phase 1 完了時に `/handoff` Layer 1 checkpoint を `.claude/handoffs/checkpoints.jsonl` に記録する。
+
 ## Phase 2: Hypothesizer 並列バッチ
 
 Agent tool を複数同時に使用（1 つの response 内で N 個起動）:
@@ -618,6 +620,8 @@ Agent tool を複数同時に使用（1 つの response 内で N 個起動）:
   - 新規外部ツール・ライブラリの導入
   - 既存の Lean 形式化に影響する構造変更
   呼び出しは推奨であり強制ではない。research スキルの独立性を保つ。
+
+**Checkpoint**: Phase 2 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ## Phase 3: Verifier 並列バッチ
 
@@ -830,6 +834,8 @@ unaddressable 減点 → 行き先判定
   ├─ Yes（同一 Run 内） → deferred に記録、理由を evolve-history.jsonl に追記
   └─ No（スコープ外） → gh issue create で起票、evolve-history.jsonl に issue # を記録
 ```
+
+**Checkpoint**: Phase 3 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ### Step 4: Integrator エージェントの起動
 
