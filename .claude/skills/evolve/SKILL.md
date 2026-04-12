@@ -1065,12 +1065,12 @@ compatible change または breaking change に該当しうる。
 
 以下は本スキルの設計における反証可能な仮説:
 
-| 仮説 | 反証条件 | 現状評価（106回実行データ、Run 106 で更新。observe.sh 自動集計） |
+| 仮説 | 反証条件 | 現状評価（107回実行データ、Run 107 で更新。observe.sh 自動集計） |
 |------|----------|----------------------|
-| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。107回 success / 2回 partial / 3回 observation。Verifier pass rate: 全期間 359/464 PASS（77%） |
+| H1: Agent Teams が学習ライフサイクルの自然なモデル化 | Teams の協調オーバーヘッドが改善効果を上回る | 未反証。108回 success / 2回 partial / 3回 observation。Verifier pass rate: 全期間 360/465 PASS（77%） |
 | H2: 4 エージェント分離が最適粒度 | より少ないエージェントで同等品質が達成される | 部分的に検証可能。agent-consolidation-4to2 は run 15 で P2 違反により abandoned。H2 の反証には至っていない |
 | H3: AxiomQuality.lean の指標で改善を計測可能 | Goodhart's Law により指標が改善を捉えない | 支持傾向。axioms=53、theorems=462（Run 102 時点）。compression 8.71x（871%）。V4 blocked=0（Run 65 semantic 変更: session_id=unknown 除外）。旧 blocked=9 は unknown セッション混入値。blocked_excluded は動的値（observe.sh で確認可能） |
-| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間408改善統合（229 conservative extension, 176 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
+| H4: conservative extension 優先が最適戦略 | conservative extension が蓄積し複雑度を増す | 支持傾向。全期間409改善統合（229 conservative extension, 177 compatible change, 1 breaking change, 2 other）。D4 フェーズ順序違反なし |
 | H5: 1 セッション 1 evolve 実行が適切な頻度 | より高頻度/低頻度が適切 | 未反証。38 データポイント（runs 39, 41, 42, 45, 46, 47, 49, 50, 58, 60, 61, 62, 63, 72, 73, 74, 75, 77, 78, 79, 80, 81, 84, 86, 87, 87b, 88, 89, 90, 91, 92, 93, 94）。session cost: mean 8.34 USD, median 7.26 USD, range 0.15-24.52 USD。コスト分布は bimodal 化（前半 16 runs mean 4.31 USD、後半 17 runs mean 12.31 USD）。セッション粒度は維持されているが、コスト増大傾向の要因分析が必要 |
 | ~~H6: /evolve のコスト効率は経時的に改善する~~ | ~~cost/improvement が 10 runs 以上で単調増加~~ | **退役（Run 95, #217）。** 34 データポイントで反証条件成立（後半 17 runs CPI 214% 増加）。因果メカニズムなき楽観的仮説であった。CPI はガバナンス指標に降格し observe.sh で監視継続。教訓: 因果モデルのない指標に改善目標を設定しない |
 
