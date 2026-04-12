@@ -398,8 +398,9 @@ def structureImproved (w w' : World) : Prop :=
 
 /-- Predicate for whether a process has improved (#316).
     Processes (learning lifecycles, workflows) are also subject to T5:
-    convergence requires feedback. This is opaque for the same reason as
-    structureImproved — improvement cannot be derived from type definitions. -/
+    convergence requires feedback. Remains opaque because ProcessId is opaque
+    and process-level quality cannot be expressed via typed structure fields
+    (unlike structural improvement which is observable via lastModifiedAt). -/
 opaque processImproved : ProcessId → World → World → Prop
 
 /-- [Axiom Card]
