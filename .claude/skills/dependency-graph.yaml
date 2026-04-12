@@ -6,7 +6,7 @@
 #
 # Schema: .claude/skills/dependency-schema.yaml
 
-generated_at: "2026-04-11T18:01:52Z"
+generated_at: "2026-04-12T05:55:58Z"
 skill_count: 13
 
 skills:
@@ -69,9 +69,13 @@ skills:
         type: soft
         phase: "Step 2"
         condition: "breaking change を提案する場合"
+      - skill: ground-axiom
+        type: soft
+        phase: "Step 2a 公理昇格フロー"
+        condition: "Observer が [A] 公理系拡張候補を検出し、人間が T6 承認した場合"
       - skill: spec-driven-workflow
         type: soft
-        phase: "Phase 1 Observer Section 8"
+        phase: "Step 2b 開発 handoff フロー"
         condition: "Observer が [C] 新規開発候補を検出し、人間が T6 承認した場合"
       - skill: trace
         type: soft
@@ -263,9 +267,13 @@ edges:
     type: soft
     phase: "Step 2"
   - from: evolve
+    to: ground-axiom
+    type: soft
+    phase: "Step 2a 公理昇格フロー"
+  - from: evolve
     to: spec-driven-workflow
     type: soft
-    phase: "Phase 1 Observer Section 8"
+    phase: "Step 2b 開発 handoff フロー"
   - from: evolve
     to: trace
     type: soft
@@ -342,9 +350,9 @@ edges:
 # Summary
 summary:
   total_skills: 13
-  total_edges: 31
+  total_edges: 32
   hard_edges: 17
-  soft_edges: 14
+  soft_edges: 15
   bidirectional:
     - "instantiate-model <-> design-implementation-plan"
     - "spec-driven-workflow <-> evolve"
