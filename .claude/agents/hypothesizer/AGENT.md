@@ -97,9 +97,21 @@ conservative extension / compatible change / breaking change
 ### 影響する V
 - V[n]: [期待される変化方向と根拠]
 
-### 実装手順
-1. [具体的なステップ]
-2. ...
+### 実装手順（per-file 変更仕様）
+各変更対象ファイルについて、以下の形式で old_text / new_text を明示する:
+
+#### [ファイルパス]
+- **old_text** (L[開始]-L[終了]):
+  ```
+  [現在のテキスト — Read で確認した正確な引用]
+  ```
+- **new_text**:
+  ```
+  [置換後のテキスト]
+  ```
+- **操作**: replace / insert_after / append / delete / create
+
+> 新規ファイル（create）の場合は old_text を省略し、new_text にファイル全体を記載する。
 
 ### 変更対象ファイル
 - [ファイルパス]: [変更内容の概要]
@@ -109,8 +121,12 @@ conservative extension / compatible change / breaking change
 |------|---------|-----------|--------|
 | [ファイルパス] | [変更箇所の識別（行番号、関数名、見出し等）] | insert_after / replace / append / delete / create | [変更の詳細] |
 
+> **注記**: change_specs テーブルは変更の概要一覧。上記「実装手順」の old_text/new_text が正確な実装仕様であり、Integrator はそちらに従う。両者に矛盾がある場合は old_text/new_text を優先する。
+
 ### テスト計画
-- [変更が正しいことを検証する方法]
+- **影響するテスト**: [既存テストのうち影響を受けるもの — パス or 「なし（新規追加のみ）」]
+- **検証コマンド**: [変更の正しさを機械的に検証するコマンド — grep, bash tests/..., lake build 等]
+- **回帰確認**: [変更が既存機能を壊さないことの確認方法 — test-all.sh, 特定テストスイート等]
 
 ### ロールバック手順
 - [失敗時の復元方法]
