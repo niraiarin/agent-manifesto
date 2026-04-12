@@ -5,220 +5,189 @@
   "platform_decisions": [
     {
       "id": "PD-300",
-      "area": "CI/CD Workflows",
-      "decision": "Issue triage automation triggers on issue.opened and issue_comment.created (human-only, not bot comments)",
-      "rationale": "Separation of human signal from bot noise. Triage should respond to human interactions but avoid cascading bot loops. Filters: github.event.comment.user.type != 'Bot'",
-      "source": ".github/workflows/claude-issue-triage.yml (lines 12-14)"
+      "content": "Issue triage automation triggers on issue.opened and issue_comment.created (human-only, not bot comments). Separation of human signal from bot noise. Triage should respond to human interactions but avoid cascading bot loops. Filters: github.event.comment.user.type != 'Bot'",
+      "source": ".github/workflows/claude-issue-triage.yml (lines 12-14)",
+      "confidence": "high"
     },
     {
       "id": "PD-301",
-      "area": "CI/CD Workflows",
-      "decision": "Concurrent triage jobs use issue-level locking with cancel-in-progress=true",
-      "rationale": "Prevent duplicate triage runs on same issue. Latest triage request wins. Concurrency group: issue-triage-${{ github.event.issue.number }}",
-      "source": ".github/workflows/claude-issue-triage.yml (lines 15-17)"
+      "content": "Concurrent triage jobs use issue-level locking with cancel-in-progress=true. Prevent duplicate triage runs on same issue. Latest triage request wins. Concurrency group: issue-triage-${{ github.event.issue.number }}",
+      "source": ".github/workflows/claude-issue-triage.yml (lines 15-17)",
+      "confidence": "high"
     },
     {
       "id": "PD-302",
-      "area": "CI/CD Workflows",
-      "decision": "Claude Code triage permits all non-write users via allowed_non_write_users: '*'",
-      "rationale": "Enable community issue triage without requiring write access. Read-only GitHub token acceptable for triage classification tasks.",
-      "source": ".github/workflows/claude-issue-triage.yml (line 35)"
+      "content": "Claude Code triage permits all non-write users via allowed_non_write_users: '*'. Enable community issue triage without requiring write access. Read-only GitHub token acceptable for triage classification tasks.",
+      "source": ".github/workflows/claude-issue-triage.yml (line 35)",
+      "confidence": "high"
     },
     {
       "id": "PD-303",
-      "area": "CI/CD Workflows",
-      "decision": "Issue lifecycle comments posted by scheduled label event, not by triage step itself",
-      "rationale": "Decouple triage labeling logic from lifecycle messaging. Label application triggers separate workflow (issue-lifecycle-comment.yml) which calls bun script to post context-aware messages.",
-      "source": ".github/workflows/issue-lifecycle-comment.yml (lines 4-5)"
+      "content": "Issue lifecycle comments posted by scheduled label event, not by triage step itself. Decouple triage labeling logic from lifecycle messaging. Label application triggers separate workflow (issue-lifecycle-comment.yml) which calls bun script to post context-aware messages.",
+      "source": ".github/workflows/issue-lifecycle-comment.yml (lines 4-5)",
+      "confidence": "high"
     },
     {
       "id": "PD-304",
-      "area": "CI/CD Workflows",
-      "decision": "Non-write-users-check prevents PR merges that modify allowed_non_write_users without human review",
-      "rationale": "Security gate for permission escalation. Detects changes to .github/*.yml that add allowed_non_write_users param, blocks with comment requesting AppSec review.",
-      "source": ".github/workflows/non-write-users-check.yml (lines 20-44)"
+      "content": "Non-write-users-check prevents PR merges that modify allowed_non_write_users without human review. Security gate for permission escalation. Detects changes to .github/*.yml that add allowed_non_write_users param, blocks with comment requesting AppSec review.",
+      "source": ".github/workflows/non-write-users-check.yml (lines 20-44)",
+      "confidence": "high"
     },
     {
       "id": "PD-305",
-      "area": "CI/CD Workflows",
-      "decision": "Duplicate detection idempotence via comment marker (<!-- non-write-users-check -->)",
-      "rationale": "Avoid re-commenting on same PR. Workflow checks existing comments for marker before posting. Prevents spam on iterative PRs.",
-      "source": ".github/workflows/non-write-users-check.yml (lines 30-35)"
+      "content": "Duplicate detection idempotence via comment marker (<!-- non-write-users-check -->). Avoid re-commenting on same PR. Workflow checks existing comments for marker before posting. Prevents spam on iterative PRs.",
+      "source": ".github/workflows/non-write-users-check.yml (lines 30-35)",
+      "confidence": "high"
     },
     {
       "id": "PD-306",
-      "area": "CI/CD Workflows",
-      "decision": "Issue deduplication workflow triggers on issue.opened OR workflow_dispatch (manual backfill)",
-      "rationale": "Auto-detect new duplicates immediately, allow manual backfill over issue history (90 days default). Permits both automated and scheduled catch-up runs.",
-      "source": ".github/workflows/claude-dedupe-issues.yml (lines 3-11)"
+      "content": "Issue deduplication workflow triggers on issue.opened OR workflow_dispatch (manual backfill). Auto-detect new duplicates immediately, allow manual backfill over issue history (90 days default). Permits both automated and scheduled catch-up runs.",
+      "source": ".github/workflows/claude-dedupe-issues.yml (lines 3-11)",
+      "confidence": "high"
     },
     {
       "id": "PD-307",
-      "area": "CI/CD Workflows",
-      "decision": "Statsig event logging in dedup workflow runs even if dedupe fails (if: always())",
-      "rationale": "Observability over success. Track all dedup attempts (success/failure) for analytics. Decoupled from business logic.",
-      "source": ".github/workflows/claude-dedupe-issues.yml (lines 37-38)"
+      "content": "Statsig event logging in dedup workflow runs even if dedupe fails (if: always()). Observability over success. Track all dedup attempts (success/failure) for analytics. Decoupled from business logic.",
+      "source": ".github/workflows/claude-dedupe-issues.yml (lines 37-38)",
+      "confidence": "high"
     },
     {
       "id": "PD-308",
-      "area": "CI/CD Workflows",
-      "decision": "Stale issue locking scheduled at 14:00 UTC daily (8am Pacific during DST)",
-      "rationale": "Time-based maintenance window outside peak US hours. 7-day inactivity threshold before lock. Batch locking reduces API load.",
-      "source": ".github/workflows/lock-closed-issues.yml (lines 4-6)"
+      "content": "Stale issue locking scheduled at 14:00 UTC daily (8am Pacific during DST). Time-based maintenance window outside peak US hours. 7-day inactivity threshold before lock. Batch locking reduces API load.",
+      "source": ".github/workflows/lock-closed-issues.yml (lines 4-6)",
+      "confidence": "high"
     },
     {
       "id": "PD-309",
-      "area": "CI/CD Workflows",
-      "decision": "Issue lock adds comment before locking, skips PRs, respects existing locks",
-      "rationale": "Give context to users why issue locked. Separate issues from PRs (different lifecycle). Don't re-lock already-locked issues.",
-      "source": ".github/workflows/lock-closed-issues.yml (lines 49-80)"
+      "content": "Issue lock adds comment before locking, skips PRs, respects existing locks. Give context to users why issue locked. Separate issues from PRs (different lifecycle). Don't re-lock already-locked issues.",
+      "source": ".github/workflows/lock-closed-issues.yml (lines 49-80)",
+      "confidence": "high"
     },
     {
       "id": "PD-310",
-      "area": "CI/CD Workflows",
-      "decision": "Auto-close duplicates runs on cron schedule (09:00 UTC daily) via bun script, not API directly",
-      "rationale": "Batch processing reduces API load. Bun script provides flexibility for complex duplicate detection logic (likely ML-based).",
-      "source": ".github/workflows/auto-close-duplicates.yml (lines 4-26)"
+      "content": "Auto-close duplicates runs on cron schedule (09:00 UTC daily) via bun script, not API directly. Batch processing reduces API load. Bun script provides flexibility for complex duplicate detection logic (likely ML-based).",
+      "source": ".github/workflows/auto-close-duplicates.yml (lines 4-26)",
+      "confidence": "high"
     },
     {
       "id": "PD-311",
-      "area": "CI/CD Workflows",
-      "decision": "Autoclose label removal triggered on issue_comment.created (human comments only, not bot)",
-      "rationale": "Human activity removes autoclose label, letting issues stay open if user responds. Filters out github-actions[bot] comments to avoid noise.",
-      "source": ".github/workflows/remove-autoclose-label.yml (lines 4-16)"
+      "content": "Autoclose label removal triggered on issue_comment.created (human comments only, not bot). Human activity removes autoclose label, letting issues stay open if user responds. Filters out github-actions[bot] comments to avoid noise.",
+      "source": ".github/workflows/remove-autoclose-label.yml (lines 4-16)",
+      "confidence": "high"
     },
     {
       "id": "PD-312",
-      "area": "CI/CD Workflows",
-      "decision": "Issue lifecycle timeouts enforced twice daily (10:00 and 22:00 UTC)",
-      "rationale": "Global schedules to ensure even coverage across timezones. 22:00 UTC catches APAC morning hours. Concurrency group: daily-issue-sweep prevents overlaps.",
-      "source": ".github/workflows/sweep.yml (lines 4-12)"
+      "content": "Issue lifecycle timeouts enforced twice daily (10:00 and 22:00 UTC). Global schedules to ensure even coverage across timezones. 22:00 UTC catches APAC morning hours. Concurrency group: daily-issue-sweep prevents overlaps.",
+      "source": ".github/workflows/sweep.yml (lines 4-12)",
+      "confidence": "high"
     },
     {
       "id": "PD-313",
-      "area": "CI/CD Workflows",
-      "decision": "Issue opened dispatch sends to external repo via repository dispatch event",
-      "rationale": "Decouple issue tracking from downstream systems. Target repo stored in secret (ISSUE_OPENED_DISPATCH_TARGET_REPO). Graceful exit on dispatch failure (|| exit 0).",
-      "source": ".github/workflows/issue-opened-dispatch.yml (lines 17-28)"
+      "content": "Issue opened dispatch sends to external repo via repository dispatch event. Decouple issue tracking from downstream systems. Target repo stored in secret (ISSUE_OPENED_DISPATCH_TARGET_REPO). Graceful exit on dispatch failure (|| exit 0).",
+      "source": ".github/workflows/issue-opened-dispatch.yml (lines 17-28)",
+      "confidence": "high"
     },
     {
       "id": "PD-314",
-      "area": "CI/CD Workflows",
-      "decision": "Event logging to Statsig escapes shell variables via environment vars, not template injection",
-      "rationale": "Injection attack prevention. All user-controlled values (title, author, etc.) passed via env vars. Sed escapes quotes in title before curl.",
-      "source": ".github/workflows/log-issue-events.yml (lines 14-40)"
+      "content": "Event logging to Statsig escapes shell variables via environment vars, not template injection. Injection attack prevention. All user-controlled values (title, author, etc.) passed via env vars. Sed escapes quotes in title before curl.",
+      "source": ".github/workflows/log-issue-events.yml (lines 14-40)",
+      "confidence": "high"
     },
     {
       "id": "PD-315",
-      "area": "CI/CD Workflows",
-      "decision": "@claude mention in issue/PR triggers Claude Code action (must contain @claude in body/title/comment/review)",
-      "rationale": "Opt-in activation. Prevents Claude from running on every issue. Covers issue body, title, comment, and PR review mentions.",
-      "source": ".github/workflows/claude.yml (lines 12-19)"
+      "content": "@claude mention in issue/PR triggers Claude Code action (must contain @claude in body/title/comment/review). Opt-in activation. Prevents Claude from running on every issue. Covers issue body, title, comment, and PR review mentions.",
+      "source": ".github/workflows/claude.yml (lines 12-19)",
+      "confidence": "high"
     },
     {
       "id": "PD-316",
-      "area": "CI/CD Workflows",
-      "decision": "Claude Code action permissions: contents:read, pull-requests:read, issues:read, id-token:write",
-      "rationale": "Minimal privileges. Read-only for repo content. id-token:write allows OIDC federation for API auth (no explicit secrets passed).",
-      "source": ".github/workflows/claude.yml (lines 21-25)"
+      "content": "Claude Code action permissions: contents:read, pull-requests:read, issues:read, id-token:write. Minimal privileges. Read-only for repo content. id-token:write allows OIDC federation for API auth (no explicit secrets passed).",
+      "source": ".github/workflows/claude.yml (lines 21-25)",
+      "confidence": "high"
     },
     {
       "id": "PD-317",
-      "area": "Issue Templates",
-      "decision": "Blank issues disabled (blank_issues_enabled: false) with contact_links to Discord/docs",
-      "rationale": "Force structured reporting. Direct lost users to support channels (Discord, docs, troubleshooting). Reduces low-signal issues.",
-      "source": ".github/ISSUE_TEMPLATE/config.yml (lines 1-14)"
+      "content": "Blank issues disabled (blank_issues_enabled: false) with contact_links to Discord/docs. Force structured reporting. Direct lost users to support channels (Discord, docs, troubleshooting). Reduces low-signal issues.",
+      "source": ".github/ISSUE_TEMPLATE/config.yml (lines 1-14)",
+      "confidence": "high"
     },
     {
       "id": "PD-318",
-      "area": "Issue Templates",
-      "decision": "Bug report preflight checklist enforces version check, existing issue search, and single-bug-per-issue rule",
-      "rationale": "Reduce duplicate reports and out-of-date reports. Force users to confirm latest version before reporting. Cognitive barrier to multi-bug reports.",
-      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 17-28)"
+      "content": "Bug report preflight checklist enforces version check, existing issue search, and single-bug-per-issue rule. Reduce duplicate reports and out-of-date reports. Force users to confirm latest version before reporting. Cognitive barrier to multi-bug reports.",
+      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 17-28)",
+      "confidence": "high"
     },
     {
       "id": "PD-319",
-      "area": "Issue Templates",
-      "decision": "Bug report captures regression detection (yes/no/unknown) and last-working-version",
-      "rationale": "Triage hint. Regressions often easy to fix if bisect is clear. Unknown/don't-know answers still valuable for triage prioritization.",
-      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 98-117)"
+      "content": "Bug report captures regression detection (yes/no/unknown) and last-working-version. Triage hint. Regressions often easy to fix if bisect is clear. Unknown/don't-know answers still valuable for triage prioritization.",
+      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 98-117)",
+      "confidence": "high"
     },
     {
       "id": "PD-320",
-      "area": "Issue Templates",
-      "decision": "Bug report requires platform, OS, terminal/shell, and Claude model selection",
-      "rationale": "Environment specificity. Bugs often tied to platform/OS/terminal combo. Model selection helps identify model-specific regression.",
-      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 128-174)"
+      "content": "Bug report requires platform, OS, terminal/shell, and Claude model selection. Environment specificity. Bugs often tied to platform/OS/terminal combo. Model selection helps identify model-specific regression.",
+      "source": ".github/ISSUE_TEMPLATE/bug_report.yml (lines 128-174)",
+      "confidence": "high"
     },
     {
       "id": "PD-321",
-      "area": "Issue Templates",
-      "decision": "Feature request preflight enforces single-feature-per-issue and duplicate search",
-      "rationale": "Avoid feature fragmentation. One feature per issue allows independent voting/prioritization. Duplicate search prevents bikeshedding.",
-      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 15-23)"
+      "content": "Feature request preflight enforces single-feature-per-issue and duplicate search. Avoid feature fragmentation. One feature per issue allows independent voting/prioritization. Duplicate search prevents bikeshedding.",
+      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 15-23)",
+      "confidence": "high"
     },
     {
       "id": "PD-322",
-      "area": "Issue Templates",
-      "decision": "Feature request separates problem statement from proposed solution (avoid leading the solution)",
-      "rationale": "Problem-first mindset. Capture user pain point before solution design. Allows triage team to suggest alternative solutions.",
-      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 25-55)"
+      "content": "Feature request separates problem statement from proposed solution (avoid leading the solution). Problem-first mindset. Capture user pain point before solution design. Allows triage team to suggest alternative solutions.",
+      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 25-55)",
+      "confidence": "high"
     },
     {
       "id": "PD-323",
-      "area": "Issue Templates",
-      "decision": "Feature request requires priority (critical/high/medium/low) and feature category selection",
-      "rationale": "Prioritization metadata. Priority + category allows bulk triage and roadmap planning. User-declared priority guides team focus.",
-      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 73-104)"
+      "content": "Feature request requires priority (critical/high/medium/low) and feature category selection. Prioritization metadata. Priority + category allows bulk triage and roadmap planning. User-declared priority guides team focus.",
+      "source": ".github/ISSUE_TEMPLATE/feature_request.yml (lines 73-104)",
+      "confidence": "high"
     },
     {
       "id": "PD-324",
-      "area": "Issue Templates",
-      "decision": "Model behavior template captures behavior type (file modification, permission, assumptions) to isolate safety issues",
-      "rationale": "Safety triage. Separate unexpected-but-harmless behavior from genuine safety violations (file access, permission bypass). Enables fast path for safety issues.",
-      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 28-44)"
+      "content": "Model behavior template captures behavior type (file modification, permission, assumptions) to isolate safety issues. Safety triage. Separate unexpected-but-harmless behavior from genuine safety violations (file access, permission bypass). Enables fast path for safety issues.",
+      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 28-44)",
+      "confidence": "high"
     },
     {
       "id": "PD-325",
-      "area": "Issue Templates",
-      "decision": "Model behavior template requires reproduction steps and capture of exact prompt + actual behavior + expected behavior",
-      "rationale": "Reproducibility for model behavior debugging. Exact prompt crucial for model tracing. Step-by-step allows triage team to reproduce in isolation.",
-      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 47-84)"
+      "content": "Model behavior template requires reproduction steps and capture of exact prompt + actual behavior + expected behavior. Reproducibility for model behavior debugging. Exact prompt crucial for model tracing. Step-by-step allows triage team to reproduce in isolation.",
+      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 47-84)",
+      "confidence": "high"
     },
     {
       "id": "PD-326",
-      "area": "Issue Templates",
-      "decision": "Model behavior template captures permission mode (Accept Edits on/off/unknown) and reproducibility (always/sometimes/once)",
-      "rationale": "Context for root cause. Permission mode determines if changes were auto-approved or human-approved. Reproducibility guides investigation strategy (regression vs edge case).",
-      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 105-128)"
+      "content": "Model behavior template captures permission mode (Accept Edits on/off/unknown) and reproducibility (always/sometimes/once). Context for root cause. Permission mode determines if changes were auto-approved or human-approved. Reproducibility guides investigation strategy (regression vs edge case).",
+      "source": ".github/ISSUE_TEMPLATE/model_behavior.yml (lines 105-128)",
+      "confidence": "high"
     },
     {
       "id": "PD-327",
-      "area": "Issue Templates",
-      "decision": "Documentation template categorizes issues (missing/unclear/incorrect/typo/broken links) to separate content gaps from quality issues",
-      "rationale": "Clear separation of concerns. Missing docs need authoring. Unclear/incorrect docs need editing. Typos/links need quick fixes. Enables parallel triage tracks.",
-      "source": ".github/ISSUE_TEMPLATE/documentation.yml (lines 14-28)"
+      "content": "Documentation template categorizes issues (missing/unclear/incorrect/typo/broken links) to separate content gaps from quality issues. Clear separation of concerns. Missing docs need authoring. Unclear/incorrect docs need editing. Typos/links need quick fixes. Enables parallel triage tracks.",
+      "source": ".github/ISSUE_TEMPLATE/documentation.yml (lines 14-28)",
+      "confidence": "high"
     },
     {
       "id": "PD-328",
-      "area": "Issue Templates",
-      "decision": "Documentation template requires impact assessment (high/medium/low) to prioritize high-impact gaps",
-      "rationale": "ROI-driven docs work. High-impact issues (blocks usage) prioritized over nice-to-have improvements. Allows triage to cut scope in documentation sprints.",
-      "source": ".github/ISSUE_TEMPLATE/documentation.yml (lines 95-105)"
+      "content": "Documentation template requires impact assessment (high/medium/low) to prioritize high-impact gaps. ROI-driven docs work. High-impact issues (blocks usage) prioritized over nice-to-have improvements. Allows triage to cut scope in documentation sprints.",
+      "source": ".github/ISSUE_TEMPLATE/documentation.yml (lines 95-105)",
+      "confidence": "high"
     },
     {
       "id": "PD-329",
-      "area": "CI/CD Workflows",
-      "decision": "Backfill duplicate comments supports dry-run mode via workflow_dispatch input",
-      "rationale": "Safe testing of bulk operations. Dry-run logs what would be done without side effects. Allows human verification before production run.",
-      "source": ".github/workflows/backfill-duplicate-comments.yml (lines 6-19)"
+      "content": "Backfill duplicate comments supports dry-run mode via workflow_dispatch input. Safe testing of bulk operations. Dry-run logs what would be done without side effects. Allows human verification before production run.",
+      "source": ".github/workflows/backfill-duplicate-comments.yml (lines 6-19)",
+      "confidence": "high"
     },
     {
       "id": "PD-330",
-      "area": "CI/CD Workflows",
-      "decision": "Backfill duplicate comments defaults to 90 days lookback, customizable via workflow_dispatch",
-      "rationale": "Balance coverage with scope. 90 days captures most active issues without overwhelming queue. Customization allows focused backfills (e.g., last 30 days).",
-      "source": ".github/workflows/backfill-duplicate-comments.yml (lines 8-11)"
+      "content": "Backfill duplicate comments defaults to 90 days lookback, customizable via workflow_dispatch. Balance coverage with scope. 90 days captures most active issues without overwhelming queue. Customization allows focused backfills (e.g., last 30 days).",
+      "source": ".github/workflows/backfill-duplicate-comments.yml (lines 8-11)",
+      "confidence": "high"
     }
   ],
   "decisions_found": 31,
