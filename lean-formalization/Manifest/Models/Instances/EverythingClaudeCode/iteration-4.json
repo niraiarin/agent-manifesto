@@ -1,0 +1,376 @@
+{
+  "iteration": 4,
+  "unit": "plugins/remaining/",
+  "timestamp": "2026-04-12T05:40:25Z",
+  "platform_decisions": [
+    {
+      "id": "PD-150",
+      "content": "PR review uses specialized agents per dimension (comments, tests, errors, types, quality, simplification) not a single reviewer",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-151",
+      "content": "Review agents conditionally applicable based on change type (test files, types, docs)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-152",
+      "content": "Code reviewer uses 0-100 confidence scoring, only reports issues >= 80 to minimize false positives",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-153",
+      "content": "Review output stratified: Critical (90-100), Important (80-89), Suggestions, plus mandatory Positive Observations",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-154",
+      "content": "Code simplifier runs after review passes, not before (correctness first, then readability)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-155",
+      "content": "Comment analyzer is advisory-only; never modifies code directly",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-156",
+      "content": "Test coverage focuses on behavioral coverage not line coverage; prioritizes regression-catching tests",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-157",
+      "content": "Test gap criticality rated 1-10: 9-10 data loss/security, 7-8 user-facing errors, 5-6 edge cases",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-158",
+      "content": "Silent failure detection: empty catch blocks never acceptable, all errors logged with severity/context",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-159",
+      "content": "Error handling severity: CRITICAL for silent failures, HIGH for poor messages, MEDIUM for missing context",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-160",
+      "content": "Type design quality: 4 independent dimensions (encapsulation, invariant expression, usefulness, enforcement) rated 1-10",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-161",
+      "content": "Type design: illegal states must be unrepresentable, constructor validation mandatory, compile-time > runtime",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-162",
+      "content": "PR review recommended proactively before PR creation, with re-run after fixes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-163",
+      "content": "Ralph loop uses Stop hook to intercept exit and feed same prompt back for in-session self-referential loop",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-164",
+      "content": "Loop termination: max_iterations (hard limit) or completion_promise (exact string match in XML tags)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-165",
+      "content": "Loop state stored in local md file with YAML frontmatter; cancellable via file removal",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-166",
+      "content": "Loop iteration enforces strict numeric validation with self-healing: corrupted state files deleted",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-167",
+      "content": "Ralph loop restricted to tasks with automatic verification; not for human judgment or production debugging",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-168",
+      "content": "Feature dev enforces mandatory clarifying questions phase before architecture; cannot be skipped",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-169",
+      "content": "Feature dev uses parallel multi-agent codebase exploration (2-3 agents with different focus areas)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-170",
+      "content": "Architecture design presents multiple approaches with trade-off comparison and recommendation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-171",
+      "content": "Implementation gated on explicit user approval after architecture design",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-172",
+      "content": "Quality review uses 3 parallel reviewers with different axes (simplicity, bugs, conventions)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-173",
+      "content": "Code architect agent uses sonnet model and delivers single decisive blueprint",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-174",
+      "content": "commit command restricts tools to only git add, git status, git commit",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-175",
+      "content": "commit-push-pr creates new branch if on main, preventing direct main commits",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-176",
+      "content": "commit-push-pr executes all steps in single message as atomic operation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-177",
+      "content": "Branch cleanup detects and removes worktrees before branch deletion",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-178",
+      "content": "Opus 4.5 migration updates model strings only; prompt changes only on explicit behavioral issues",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-179",
+      "content": "Migration excludes Haiku models and removes context-1m beta header with explanatory comment",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-180",
+      "content": "Opus 4.5 effort defaults to high with 3 tiers independent of thinking budget",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-181",
+      "content": "Prompt adjustments use XML tags matching existing structure; placed by logical proximity",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-182",
+      "content": "Tool overtriggering addressed by softening imperative language in tool-triggering instructions only",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-183",
+      "content": "Thinking sensitivity: replace think variants with alternatives only when extended thinking not enabled",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-184",
+      "content": "Agent SDK setup asks questions one at a time to reduce cognitive load",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-185",
+      "content": "SDK setup verifies latest package version via WebSearch or package registry before installation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-186",
+      "content": "TypeScript SDK requires tsc noEmit with zero errors before setup is complete",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-187",
+      "content": "SDK verification uses language-specific verifier agents consulting official docs via WebFetch",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-188",
+      "content": "SDK verifier focuses on SDK functionality only; excludes general code style preferences",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-189",
+      "content": "API key handling requires env-example file with placeholder, env file in gitignore, no hardcoded keys in source",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-190",
+      "content": "Learning mode requests user code only for meaningful trade-offs, never for boilerplate",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-191",
+      "content": "Learning contributions framed as valuable input with pre-prepared file context",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-192",
+      "content": "Explanatory output uses structured format with star symbol and rule delimiters, embedded in conversation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-193",
+      "content": "Output style modes injected via SessionStart hook additionalContext",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-194",
+      "content": "Security reminder blocks on first detection per file-per-session via PreToolUse exit 2",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-195",
+      "content": "Security warning deduplication session-scoped via state file keyed by session_id",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-196",
+      "content": "Security reminder disableable via env var escape hatch",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-197",
+      "content": "Security patterns categorized: path-based (GitHub Actions) and content-based (eval/exec/innerHTML/pickle)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-198",
+      "content": "GitHub Actions security: env vars for untrusted inputs, not direct expression interpolation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-199",
+      "content": "Security state files purged probabilistically (10 pct chance per invocation, 30-day threshold)",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-200",
+      "content": "Frontend design requires bold aesthetic direction selection before coding; intentionality over defaults",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-201",
+      "content": "Frontend explicitly prohibits generic AI aesthetics (standard fonts, purple gradients, predictable layouts)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-202",
+      "content": "Code review gates on haiku pre-check: skips closed/draft PRs and already-reviewed PRs",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-203",
+      "content": "Code review two-stage validation: parallel bug detection then parallel validation of each flagged issue",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-204",
+      "content": "Code review only flags high-signal: compilation failures, definite logic errors, exact CLAUDE.md violations",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-205",
+      "content": "Inline review comments include committable suggestions only for small self-contained fixes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-206",
+      "content": "Review comment posting conditioned on --comment flag; default is terminal-only output (dry-run)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-207",
+      "content": "Review agents told tools are functional; every tool call must have clear purpose (no exploratory calls)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-208",
+      "content": "CLAUDE.md compliance scoped by file path: only ancestor-directory CLAUDE.md files apply",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-209",
+      "content": "Review model assignment: haiku for gates, sonnet for comprehension, opus for bug detection",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-210",
+      "content": "Code simplifier enforces minimum complexity; no helpers for one-time operations, no speculative abstractions",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 61,
+  "cumulative_total": 167,
+  "incremental_rate": 0.3652
+}

@@ -1,0 +1,360 @@
+{
+  "iteration": 6,
+  "unit": "manifesto-crossref/",
+  "timestamp": "2026-04-12T05:45:01Z",
+  "platform_decisions": [
+    {
+      "id": "PD-250",
+      "content": "Sessions have no persistent identity across restarts; --resume reconstructs from transcript files, not in-memory state",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T1"
+    },
+    {
+      "id": "PD-251",
+      "content": "Transcript files are the structural persistence layer outliving sessions",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T2"
+    },
+    {
+      "id": "PD-252",
+      "content": "Context compaction is primary mechanism for finite context window management; auto-triggers when full",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3"
+    },
+    {
+      "id": "PD-253",
+      "content": "Context usage observable via header percentage and /context command showing free space and message breakdown",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3+D3"
+    },
+    {
+      "id": "PD-254",
+      "content": "Token usage tracked per-block in transcripts using final values not streaming placeholders",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3+P4"
+    },
+    {
+      "id": "PD-255",
+      "content": "deny rules in settings override any hook permissionDecision including ask, establishing hard permission floors",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+L1"
+    },
+    {
+      "id": "PD-256",
+      "content": "Human can revoke directory access mid-session with immediate effect",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6"
+    },
+    {
+      "id": "PD-257",
+      "content": "Permission bypass modes protected from silent downgrade",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+L1"
+    },
+    {
+      "id": "PD-258",
+      "content": "Sandbox failIfUnavailable enforces fail-closed: session exits rather than running unsandboxed",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1+D1"
+    },
+    {
+      "id": "PD-259",
+      "content": "Silent sandbox disable treated as security bug; visible startup warning shown",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1+D3"
+    },
+    {
+      "id": "PD-260",
+      "content": "Credential scrubbing from subprocess environments opt-in via env var",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1"
+    },
+    {
+      "id": "PD-261",
+      "content": "Bash command injection vulnerabilities (backslash-escaped flag bypass, compound command bypass) treated as critical bugs",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1"
+    },
+    {
+      "id": "PD-262",
+      "content": "Managed settings (MDM) override local settings; admin-removed rules take effect without restart",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    },
+    {
+      "id": "PD-263",
+      "content": "forceRemoteSettingsRefresh blocks startup until remote settings fetched; fails closed on fetch failure",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    },
+    {
+      "id": "PD-264",
+      "content": "Code review implemented as multi-agent parallel workflow with 4-5 independent agents and confidence scoring",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "E1+P2+D18"
+    },
+    {
+      "id": "PD-265",
+      "content": "Review confidence threshold (80/100) filters false positives before surfacing issues",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P2+E1"
+    },
+    {
+      "id": "PD-266",
+      "content": "PR review decomposed into 6 orthogonal specialist agents with exclusive focus per concern",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "E1+D18"
+    },
+    {
+      "id": "PD-267",
+      "content": "Feature dev follows 7-phase structured workflow enforcing discovery/exploration before implementation",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D4"
+    },
+    {
+      "id": "PD-268",
+      "content": "Security violations in file edits enforced via PreToolUse hook for 9 vulnerability patterns",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1+D1"
+    },
+    {
+      "id": "PD-269",
+      "content": "Hookify enables user-defined behavioral constraints via markdown config without coding",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D1+D8"
+    },
+    {
+      "id": "PD-270",
+      "content": "Stop hooks create self-referential feedback loops for iterative improvement without external orchestration",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T5+D18"
+    },
+    {
+      "id": "PD-271",
+      "content": "SDK verifier agents run independently from creator agent (separate verification context)",
+      "source": "plugin_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P2+E1"
+    },
+    {
+      "id": "PD-272",
+      "content": "OTEL tracing with W3C TRACEPARENT propagated to Bash subprocesses for distributed traces",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D3"
+    },
+    {
+      "id": "PD-273",
+      "content": "Sensitive OTEL attributes opt-in; tool params, prompts, content omitted unless explicitly enabled",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "L1+P4"
+    },
+    {
+      "id": "PD-274",
+      "content": "Session health via /stats with token usage and cost tracking including subagent usage",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+T7"
+    },
+    {
+      "id": "PD-275",
+      "content": "Rate limit state observable via status line with used_percentage and resets_at",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+T7"
+    },
+    {
+      "id": "PD-276",
+      "content": "Background agent failures report partial progress to parent",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D18"
+    },
+    {
+      "id": "PD-277",
+      "content": "Hook errors surfaced in transcript with first line of stderr for self-diagnosis",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D3"
+    },
+    {
+      "id": "PD-278",
+      "content": "Permission denials in auto mode shown as notification and in /permissions Recent tab",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+T6"
+    },
+    {
+      "id": "PD-279",
+      "content": "Plugin compatibility enforced via claude plugin validate checking frontmatter and hooks.json",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P3"
+    },
+    {
+      "id": "PD-280",
+      "content": "Memory files carry last-modified timestamps enabling staleness reasoning",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P3+T1"
+    },
+    {
+      "id": "PD-281",
+      "content": "MEMORY.md index size-limited to 25KB/200 lines preventing unbounded accumulation",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P3+T3"
+    },
+    {
+      "id": "PD-282",
+      "content": "Subagents run in isolated git worktrees by default preventing cross-agent file system interference",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T1+D18"
+    },
+    {
+      "id": "PD-283",
+      "content": "Agent teams inherit leader permission mode; no permission fragmentation",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D18+T6"
+    },
+    {
+      "id": "PD-284",
+      "content": "Subagents inherit MCP tools from dynamically-injected servers",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D18"
+    },
+    {
+      "id": "PD-285",
+      "content": "/agents UI exposes Running tab for live subagent state with action controls",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D18"
+    },
+    {
+      "id": "PD-286",
+      "content": "Stale worktree cleanup automated for interrupted parallel runs",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T7+D18"
+    },
+    {
+      "id": "PD-287",
+      "content": "PostCompact hook fires after compaction for structural reactions to context boundary events",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3+P4"
+    },
+    {
+      "id": "PD-288",
+      "content": "Session titles auto-generated from content (first prompt, plan heading); identity derived from work",
+      "source": "changelog_analysis",
+      "confidence": "medium",
+      "manifesto_mapping": "T8"
+    },
+    {
+      "id": "PD-289",
+      "content": "CwdChanged and FileChanged hook events enable reactive environment management",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D3"
+    },
+    {
+      "id": "PD-290",
+      "content": "TaskCreated hook fires when background task spawned for structural interception",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "P4+D18"
+    },
+    {
+      "id": "PD-291",
+      "content": "Elicitation hooks enable structural interception of MCP server input requests",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D1+T6"
+    },
+    {
+      "id": "PD-292",
+      "content": "Managed settings drop-in directory enables independent policy fragment composition",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    },
+    {
+      "id": "PD-293",
+      "content": "PermissionDenied hook fires after auto mode denials enabling structural recovery paths",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "D1+T5"
+    },
+    {
+      "id": "PD-294",
+      "content": "PreToolUse hooks can satisfy AskUserQuestion via updatedInput for headless human-in-the-loop",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    },
+    {
+      "id": "PD-295",
+      "content": "Plugin hooks restricted to managed sources when allowManagedHooksOnly set",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    },
+    {
+      "id": "PD-296",
+      "content": "Session quality measurable via feedbackSurveyRate enterprise setting",
+      "source": "changelog_analysis",
+      "confidence": "medium",
+      "manifesto_mapping": "P4+T5"
+    },
+    {
+      "id": "PD-297",
+      "content": "Auto-compaction circuit breaker stops after 3 failures; prevents infinite retry burning API calls",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3+T7"
+    },
+    {
+      "id": "PD-298",
+      "content": "Skill reminders and system context survive image-attached SDK messages",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T3"
+    },
+    {
+      "id": "PD-299",
+      "content": "defer permission decision in PreToolUse pauses headless sessions until --resume re-evaluates",
+      "source": "changelog_analysis",
+      "confidence": "high",
+      "manifesto_mapping": "T6+D1"
+    }
+  ],
+  "decisions_found": 50,
+  "cumulative_total": 243,
+  "incremental_rate": 0.2057
+}

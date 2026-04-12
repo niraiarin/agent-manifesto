@@ -1,0 +1,166 @@
+{
+  "iteration": 5,
+  "unit": "examples/",
+  "timestamp": "2026-04-12T05:40:25Z",
+  "platform_decisions": [
+    {
+      "id": "PD-220",
+      "content": "Python preferred for complex hook logic; bash for simple checks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-221",
+      "content": "Hook input exclusively via stdin JSON; no CLI arguments for event data",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-222",
+      "content": "Exit code tripartite: 0=allow silently, 1=surface stderr to user (non-blocking), 2=block + surface to Claude",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-223",
+      "content": "Blocking feedback written to stderr; stdout output ignored on exit 2",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-224",
+      "content": "Hooks guard against irrelevant tools with early-exit pattern (check tool_name, exit 0 if not target)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-225",
+      "content": "Validation rules encoded as (regex, message) tuples in named list, separate from dispatch logic",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-226",
+      "content": "Regex patterns use word boundaries and negative lookaheads to avoid false positives (e.g. grep in pipeline)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-227",
+      "content": "JSON parse errors exit 1 (non-blocking warning) not 2 (blocking); prevents hooks from breaking sessions",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-228",
+      "content": "Hook config embedded as JSON docstring in hook file itself for self-documentation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-229",
+      "content": "Bash tool matcher is exact tool name string, not glob or regex",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-230",
+      "content": "Strict settings: disableBypassPermissionsMode + ask for Bash + deny for WebSearch/WebFetch + allowManagedOnly",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-231",
+      "content": "disableBypassPermissionsMode value is string 'disable' not boolean false",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-232",
+      "content": "allowManagedPermissionRulesOnly restricts settings to MDM/managed channels only",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-233",
+      "content": "allowManagedHooksOnly paired with allowManagedPermissionRulesOnly closes dual injection surface",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-234",
+      "content": "sandbox.autoAllowBashIfSandboxed explicitly false; sandbox does not implicitly grant Bash rights",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-235",
+      "content": "Sandbox network block fully specified with explicit false/empty values for all fields",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-236",
+      "content": "Lax settings: minimum viable floor is disableBypassPermissionsMode only",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-237",
+      "content": "MDM deployment via 4 mechanisms: managed-settings.json, macOS plist, macOS mobileconfig, Windows Registry",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-238",
+      "content": "Windows managed settings use explicit UTF-8 encoding with ErrorActionPreference Stop",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-239",
+      "content": "Group Policy stores entire settings JSON as single REG_SZ string (flat, not nested registry keys)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-240",
+      "content": "macOS mobileconfig uses PayloadScope System for machine-wide non-overridable settings",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-241",
+      "content": "MDM templates use placeholder UUIDs requiring uuidgen replacement; verification via /status",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-242",
+      "content": "strictKnownMarketplaces always present as explicit empty array in security configs",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-243",
+      "content": "Tool-replacement hooks use PreToolUse exit 2 with instructional stderr message redirecting to preferred tool",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-244",
+      "content": "Hook rules cover both direct command use and argument pattern matching (tool-name + flag combinations)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-245",
+      "content": "Hook main() follows guard-clause structure: parse -> validate tool -> validate command -> run rules -> emit",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 26,
+  "cumulative_total": 193,
+  "incremental_rate": 0.1347
+}

@@ -1,0 +1,154 @@
+{
+  "iteration": 8,
+  "unit": "final-sweep/",
+  "timestamp": "2026-04-12T05:48:28Z",
+  "platform_decisions": [
+    {
+      "id": "PD-335",
+      "title": "Structured Output Schema Caching Strategy",
+      "area": "Model Behavior",
+      "decision": "Cache Structured Output JSON schemas with LRU eviction to prevent per-turn schema re-serialization overhead.",
+      "rationale": "Fixed critical bug where multiple schemas caused ~50% failure rate. Caching reduces per-turn JSON.stringify calls on MCP tool schemas, improving prompt cache hit rate on long sessions.",
+      "trades": "Additional memory per session (bounded by schema set size) vs. reduced token overhead and faster cache hits.",
+      "source": "CHANGELOG.md (Schema caching, StructuredOutput fix)"
+    },
+    {
+      "id": "PD-336",
+      "title": "Hook Output Spill-to-Disk Policy",
+      "area": "Hook System",
+      "decision": "When hook output exceeds 50KB, save to disk with file path + preview instead of injecting directly into context.",
+      "rationale": "Prevents context bloat from verbose hook outputs while maintaining visibility via file references. Balances context efficiency with hook transparency.",
+      "trades": "Adds filesystem write vs. simpler single-context injection model.",
+      "source": "CHANGELOG.md (Hook output management)"
+    },
+    {
+      "id": "PD-337",
+      "title": "Managed Settings Drop-in Directory Pattern",
+      "area": "Configuration & Governance",
+      "decision": "Support `managed-settings.d/` directory alongside `managed-settings.json` for fragment-based policy composition with alphabetical merge.",
+      "rationale": "Enables independent teams to deploy policy fragments without coordinating a single monolithic settings file. Reduces merge conflicts and deployment coupling.",
+      "trades": "Slightly more complex merge logic vs. centralized policy management.",
+      "source": "CHANGELOG.md (managed-settings.d/ support)"
+    },
+    {
+      "id": "PD-338",
+      "title": "Deferred Permission Decision Pattern",
+      "area": "Permission Model",
+      "decision": "Introduce `\"defer\"` permission decision in PreToolUse hooks: headless sessions can pause at a tool call and resume with `--resume` for re-evaluation.",
+      "rationale": "Enables asynchronous permission workflows without blocking the parent session. Critical for headless integrations and external approval systems.",
+      "trades": "Adds session state (deferred tool call) that persists across restarts vs. simpler synchronous prompt model.",
+      "source": "CHANGELOG.md (Deferred permission decision)"
+    },
+    {
+      "id": "PD-339",
+      "title": "Context Compaction Thrash Detection",
+      "area": "Context Management",
+      "decision": "Detect and halt autocompaction when context refills to the limit immediately after three consecutive compactions, surfacing an actionable error instead of burning API calls.",
+      "rationale": "Prevents infinite compaction loops on pathological conversation patterns. Provides clear signal to users that session cleanup is needed.",
+      "trades": "Requires detecting refill pattern (3-turn state machine) vs. simpler unbounded retry logic.",
+      "source": "CHANGELOG.md (Compaction thrash loop fix)"
+    },
+    {
+      "id": "PD-340",
+      "title": "MCP Elicitation Dialog Support",
+      "area": "MCP Protocol",
+      "decision": "Support MCP servers requesting structured input mid-task via interactive dialog (form fields or browser URL) without blocking the main agent.",
+      "rationale": "Enables rich, stateful MCP workflows (e.g., approval flows, multi-step interactions) without forcing tool-use ping-pong patterns.",
+      "trades": "Adds dialog state management and async input handling vs. simple sequential tool-use model.",
+      "source": "CHANGELOG.md (MCP elicitation support)"
+    },
+    {
+      "id": "PD-341",
+      "title": "Sparse Checkout for Large Monorepos",
+      "area": "Worktree Management",
+      "decision": "Support `worktree.sparsePaths` setting to enable git sparse-checkout in subagent worktrees, checking out only specified directories.",
+      "rationale": "Reduces setup time and disk usage for large monorepos. Critical for organizations with multi-hundred-directory codebases.",
+      "trades": "Adds sparse-checkout state management vs. full clone simplicity.",
+      "source": "CHANGELOG.md (sparse-checkout support)"
+    },
+    {
+      "id": "PD-342",
+      "title": "Hook Conditional Execution via Permission Syntax",
+      "area": "Hook System",
+      "decision": "Support conditional `if` field in hooks using permission rule syntax (e.g., `Bash(git *)`) to filter execution, reducing process spawning overhead.",
+      "rationale": "Avoids spawning hooks for tool calls that don't match the condition. Optimizes performance for high-frequency hooks.",
+      "trades": "Adds condition evaluation logic vs. hook-always-runs model.",
+      "source": "CHANGELOG.md (Conditional hook execution)"
+    },
+    {
+      "id": "PD-343",
+      "title": "PermissionDenied Hook Event",
+      "area": "Hook System",
+      "decision": "Fire PermissionDenied hook after auto mode classifier denials, allowing handlers to return `{retry: true}` to retry the tool call.",
+      "rationale": "Enables policies like 'auto-deny then escalate to human' without blocking the agent. Separates denial decision from retry policy.",
+      "trades": "Adds hook event that must be handled vs. simpler terminal-denial model.",
+      "source": "CHANGELOG.md (PermissionDenied hook)"
+    },
+    {
+      "id": "PD-344",
+      "title": "MCP OAuth RFC 9728 Metadata Discovery",
+      "area": "MCP Authentication",
+      "decision": "Follow RFC 9728 Protected Resource Metadata discovery for MCP OAuth servers, supporting CIMD (Client ID Metadata Document) for servers without Dynamic Client Registration.",
+      "rationale": "Enables broader MCP ecosystem compatibility without requiring proprietary OAuth configurations. Reduces setup friction for enterprise IdPs (ADFS, etc.).",
+      "trades": "Additional metadata fetch roundtrip vs. direct server configuration.",
+      "source": "CHANGELOG.md (RFC 9728 OAuth support)"
+    },
+    {
+      "id": "PD-345",
+      "title": "Plugin Marketplace Source Inlining",
+      "area": "Plugin Management",
+      "decision": "Support `source: 'settings'` to declare plugin marketplace entries inline in settings.json, eliminating need for separate marketplace clone.",
+      "rationale": "Simplifies offline deployments and air-gapped environments. Reduces external dependency on marketplace availability.",
+      "trades": "Larger settings.json + manual plugin manifest maintenance vs. external marketplace source.",
+      "source": "CHANGELOG.md (Plugin settings source)"
+    },
+    {
+      "id": "PD-346",
+      "title": "StopFailure Hook Event",
+      "area": "Hook System",
+      "decision": "Fire StopFailure hook when a turn ends due to API error (rate limit, auth failure, etc.) to enable custom error handling.",
+      "rationale": "Allows policies like 'on rate limit, pause and notify' without introspecting the assistant message. Decouples error signals from turn termination.",
+      "trades": "Adds new hook event type vs. relying on message content inspection.",
+      "source": "CHANGELOG.md (StopFailure hook event)"
+    },
+    {
+      "id": "PD-347",
+      "title": "Agent Initial Prompt Frontmatter",
+      "area": "Agent Lifecycle",
+      "decision": "Support `initialPrompt` field in agent frontmatter to auto-submit a first-turn prompt without user interaction.",
+      "rationale": "Enables stateless agent invocations (e.g., via `/team-onboarding` or workflow integrations) without requiring explicit user input.",
+      "trades": "Adds frontmatter field that must be validated vs. always requiring user submission.",
+      "source": "CHANGELOG.md (Agent initialPrompt)"
+    },
+    {
+      "id": "PD-348",
+      "title": "Echo Transcript Chain Recovery",
+      "area": "Session Persistence",
+      "decision": "Fix resume chain recovery to detect and avoid bridging into unrelated subagent conversations when a subagent message lands near a main-chain write gap.",
+      "rationale": "Prevents conversation mixing across logical boundaries in distributed agent execution. Critical for conversation integrity in multi-agent workflows.",
+      "trades": "Requires graph-aware chain traversal vs. simple linearization.",
+      "source": "CHANGELOG.md (Resume chain recovery fix)"
+    },
+    {
+      "id": "PD-349",
+      "title": "Exponential Backoff Floor for Rate Limit Retries",
+      "area": "Error Recovery",
+      "decision": "Apply exponential backoff as a minimum when server returns small `Retry-After` values, preventing retry storms on 429 responses.",
+      "rationale": "Prevents burning entire retry budget in ~13 seconds on backends returning aggressive backoff hints. Improves resilience to transient rate limits.",
+      "trades": "User experiences longer delay vs. faster exhaustion of available retries.",
+      "source": "CHANGELOG.md (429 retry exponential backoff)"
+    },
+    {
+      "id": "PD-350",
+      "title": "Edit Tool Anchor Shortening",
+      "area": "Tool Optimization",
+      "decision": "Use shorter `old_string` anchors in Edit tool to reduce output token overhead while maintaining match uniqueness.",
+      "rationale": "Reduces token waste on verbose edit context. Improves token efficiency for repeated edits to large files.",
+      "trades": "More sophisticated matching logic vs. simpler exact-string replacement.",
+      "source": "CHANGELOG.md (Edit tool optimization)"
+    }
+  ],
+  "decisions_found": 16,
+  "cumulative_total": 290,
+  "incremental_rate": 0.0551
+}

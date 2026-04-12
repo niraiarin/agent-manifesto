@@ -1,0 +1,538 @@
+{
+  "_description": "ECC propositions → manifesto propositions の半順序マッピング。Phase 4 成果物。DesignFoundation.lean の D-ID 定義を参照して作成。",
+  "_date": "2026-04-12",
+  "_mandatoryStep": "DesignFoundation.lean の D1-D18 定義を L724-857 で確認してからマッピング作成（#458）",
+  "mapping": [
+    {
+      "eccProposition": "hookEventTypes",
+      "manifestoPropositions": [
+        "D1",
+        "D3",
+        "P4"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C1",
+        "ECC-H1",
+        "ECC-H2"
+      ],
+      "relationship": "implements",
+      "justification": "Hook event system (7 types + exit code semantics) は D1（構造的強制の基盤）、D3（可観測性のインフラ）、P4（メトリクス収集の仕組み）を実現"
+    },
+    {
+      "eccProposition": "hookIoProtocol",
+      "manifestoPropositions": [
+        "D1",
+        "D15"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H2"
+      ],
+      "relationship": "implements",
+      "justification": "JSON stdin/stdout contract は D1（構造的強制の通信プロトコル）+ D15（ハーネスエンジニアリングの実装パターン）"
+    },
+    {
+      "eccProposition": "hookRuleMatching",
+      "manifestoPropositions": [
+        "D1",
+        "D8"
+      ],
+      "relationship": "implements",
+      "justification": "Tool-name matchers + regex evaluation は D1（構造的強制の粒度制御）+ D8（均衡探索 — matcher precision vs flexibility）"
+    },
+    {
+      "eccProposition": "hookCodingPatterns",
+      "manifestoPropositions": [
+        "D15",
+        "D10"
+      ],
+      "relationship": "implements",
+      "justification": "Hook 開発パターン（shebang, jq, macOS POSIX）は D15（ハーネスエンジニアリング）+ D10（構造的永続性 — パターンの文書化）"
+    },
+    {
+      "eccProposition": "sessionLifecycle",
+      "manifestoPropositions": [
+        "T1",
+        "D3"
+      ],
+      "relationship": "implements",
+      "justification": "Session start/end hooks, compaction は T1（一時的インスタンスのライフサイクル管理）+ D3（セッション状態の可観測性）"
+    },
+    {
+      "eccProposition": "contextManagement",
+      "manifestoPropositions": [
+        "D11",
+        "D16"
+      ],
+      "relationship": "implements",
+      "justification": "Context window management + token budget は D11（コンテキスト経済性）+ D16（情報関連性 — 必要な情報のみ保持）"
+    },
+    {
+      "eccProposition": "pluginEnvironment",
+      "manifestoPropositions": [
+        "D15"
+      ],
+      "relationship": "implements",
+      "justification": "CLAUDE_PLUGIN_ROOT, env var inheritance は D15（ハーネスエンジニアリング — plugin runtime 環境）"
+    },
+    {
+      "eccProposition": "permissionModel",
+      "manifestoPropositions": [
+        "L1",
+        "L4",
+        "D1"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C3"
+      ],
+      "relationship": "implements",
+      "justification": "多層 permission model は L1（安全境界）+ L4（行動空間の定義）+ D1（構造的強制 — allow/deny lists）"
+    },
+    {
+      "eccProposition": "sandboxEnforcement",
+      "manifestoPropositions": [
+        "D1",
+        "L1"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H3"
+      ],
+      "relationship": "implements",
+      "justification": "OS-level sandbox は D1（構造的強制 — filesystem/network を OS レベルで制約）+ L1（安全境界の物理的強制）"
+    },
+    {
+      "eccProposition": "credentialSecurity",
+      "manifestoPropositions": [
+        "L1"
+      ],
+      "relationship": "implements",
+      "justification": "Secret management + .env protection は L1（安全境界 — 秘密情報の漏洩防止）"
+    },
+    {
+      "eccProposition": "managedSettings",
+      "manifestoPropositions": [
+        "D7",
+        "D8"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H4"
+      ],
+      "relationship": "implements",
+      "justification": "Enterprise/org/project settings hierarchy は D7（信頼非対称性 — 組織レベルの制約）+ D8（均衡探索 — 制約と自由のバランス）"
+    },
+    {
+      "eccProposition": "strictSettings",
+      "manifestoPropositions": [
+        "L1",
+        "D8"
+      ],
+      "relationship": "implements",
+      "justification": "Strict mode は L1（安全境界の最大化）+ D8（均衡の strict 端）"
+    },
+    {
+      "eccProposition": "securityScanHooks",
+      "manifestoPropositions": [
+        "D1",
+        "L1",
+        "P2"
+      ],
+      "relationship": "implements",
+      "justification": "Pre-commit security hooks は D1（構造的強制 — OWASP チェック）+ L1（安全境界）+ P2（自動検証の独立性）"
+    },
+    {
+      "eccProposition": "toolPermissions",
+      "manifestoPropositions": [
+        "L4",
+        "D1"
+      ],
+      "relationship": "implements",
+      "justification": "Tool-level permission scoping は L4（行動空間のツール単位制御）+ D1（構造的強制 — frontmatter 宣言）"
+    },
+    {
+      "eccProposition": "cicdPermissions",
+      "manifestoPropositions": [
+        "L4",
+        "D7"
+      ],
+      "relationship": "implements",
+      "justification": "CI/CD token scoping は L4（行動空間の CI 環境制御）+ D7（信頼非対称性 — 自動化 vs 人間の権限差）"
+    },
+    {
+      "eccProposition": "multiAgentReview",
+      "manifestoPropositions": [
+        "P2",
+        "D2",
+        "D18"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C2",
+        "ECC-H5"
+      ],
+      "relationship": "implements",
+      "justification": "Multi-agent review は P2（認知的関心の分離）+ D2（Worker/Verifier 分離）+ D18（マルチエージェント協調）"
+    },
+    {
+      "eccProposition": "reviewConfidenceScoring",
+      "manifestoPropositions": [
+        "D3",
+        "P4"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H5"
+      ],
+      "relationship": "implements",
+      "justification": "Confidence 1-5 scoring は D3（レビュー品質の可観測化）+ P4（検証品質の計測可能性）"
+    },
+    {
+      "eccProposition": "reviewPhaseOrder",
+      "manifestoPropositions": [
+        "D4",
+        "D14"
+      ],
+      "relationship": "implements",
+      "justification": "Security→correctness→style の phase ordering は D4（漸進的自己適用）+ D14（検証順序の制約）"
+    },
+    {
+      "eccProposition": "reviewAgentScope",
+      "manifestoPropositions": [
+        "D12",
+        "D18"
+      ],
+      "relationship": "implements",
+      "justification": "File/function/architecture-level agent selection は D12（制約充足型タスク設計）+ D18（マルチエージェント協調 — 適切な粒度）"
+    },
+    {
+      "eccProposition": "testCoverageStrategy",
+      "manifestoPropositions": [
+        "D5",
+        "P2"
+      ],
+      "relationship": "implements",
+      "justification": "80% coverage + critical path prioritization は D5（spec→test→impl）+ P2（テストによる独立検証）"
+    },
+    {
+      "eccProposition": "sdkVerification",
+      "manifestoPropositions": [
+        "D13",
+        "P2"
+      ],
+      "relationship": "implements",
+      "justification": "Breaking change detection + backward compatibility は D13（前提否定の影響波及）+ P2（SDK 互換性の独立検証）"
+    },
+    {
+      "eccProposition": "pluginValidation",
+      "manifestoPropositions": [
+        "D1",
+        "P2"
+      ],
+      "relationship": "implements",
+      "justification": "Manifest schema check + hook registration audit は D1（構造的検証）+ P2（plugin の独立検証）"
+    },
+    {
+      "eccProposition": "typeDesignReview",
+      "manifestoPropositions": [
+        "D5",
+        "D17"
+      ],
+      "relationship": "implements",
+      "justification": "Error handling + interface contracts は D5（spec→test→impl の型設計）+ D17（演繹的設計ワークフロー）"
+    },
+    {
+      "eccProposition": "gitWorkflow",
+      "manifestoPropositions": [
+        "P3",
+        "T2"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C5"
+      ],
+      "relationship": "implements",
+      "justification": "Conventional commits + branch protection は P3（学習の統治 — コミット分類）+ T2（構造の蓄積 — git history）"
+    },
+    {
+      "eccProposition": "featureDevWorkflow",
+      "manifestoPropositions": [
+        "D4",
+        "D5"
+      ],
+      "relationship": "implements",
+      "justification": "Research-before-coding + plan-first は D4（漸進的自己適用）+ D5（spec→test→impl — research phase）"
+    },
+    {
+      "eccProposition": "loopPatterns",
+      "manifestoPropositions": [
+        "T5",
+        "D3"
+      ],
+      "relationship": "implements",
+      "justification": "Stall detection + convergence checking は T5（フィードバック必須）+ D3（ループ進捗の可観測性）"
+    },
+    {
+      "eccProposition": "sdkSetupWorkflow",
+      "manifestoPropositions": [
+        "D15",
+        "D13"
+      ],
+      "relationship": "implements",
+      "justification": "Version detection + dependency resolution は D15（ハーネスエンジニアリング）+ D13（breaking change の影響波及管理）"
+    },
+    {
+      "eccProposition": "issueLabelingWorkflow",
+      "manifestoPropositions": [
+        "D3",
+        "D12"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C6"
+      ],
+      "relationship": "implements",
+      "justification": "Runtime label fetching + bot-only application は D3（issue 状態の可観測化）+ D12（ラベリングの制約充足型タスク設計）"
+    },
+    {
+      "eccProposition": "issueLifecycleManagement",
+      "manifestoPropositions": [
+        "P3",
+        "T6"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C6"
+      ],
+      "relationship": "implements",
+      "justification": "Stale marking + human-comment revival は P3（学習の統治 — 退役）+ T6（人間コメントによる override）"
+    },
+    {
+      "eccProposition": "issueTemplates",
+      "manifestoPropositions": [
+        "D1",
+        "D17"
+      ],
+      "relationship": "implements",
+      "justification": "Structured templates + required fields は D1（構造的強制 — 必須フィールド）+ D17（演繹的ワークフロー — テンプレート駆動）"
+    },
+    {
+      "eccProposition": "cicdAutomation",
+      "manifestoPropositions": [
+        "D1",
+        "D15",
+        "P4"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C5",
+        "ECC-H8"
+      ],
+      "relationship": "implements",
+      "justification": "GitHub Actions + deployment gates は D1（構造的強制 — 自動化ゲート）+ D15（ハーネスエンジニアリング）+ P4（CI メトリクス収集）"
+    },
+    {
+      "eccProposition": "devEnvironment",
+      "manifestoPropositions": [
+        "D15"
+      ],
+      "relationship": "implements",
+      "justification": "Devcontainer + platform setup は D15（ハーネスエンジニアリング — 開発環境の構造化）"
+    },
+    {
+      "eccProposition": "agentDefinition",
+      "manifestoPropositions": [
+        "D18",
+        "D12"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C7"
+      ],
+      "relationship": "implements",
+      "justification": "Role-based agent specs + capability declarations は D18（マルチエージェント協調の定義）+ D12（制約充足型タスク設計 — agent ごとの責務分割）"
+    },
+    {
+      "eccProposition": "parallelAgentSearch",
+      "manifestoPropositions": [
+        "D18",
+        "D11"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H6"
+      ],
+      "relationship": "implements",
+      "justification": "Multi-agent keyword diversity + dedup は D18（並列エージェント検索パターン）+ D11（コンテキスト経済性 — 重複排除）"
+    },
+    {
+      "eccProposition": "subagentIsolation",
+      "manifestoPropositions": [
+        "E1",
+        "D2"
+      ],
+      "relationship": "implements",
+      "justification": "Context separation + worktree isolation は E1（認知的関心の分離）+ D2（Worker/Verifier の隔離）"
+    },
+    {
+      "eccProposition": "agentObservability",
+      "manifestoPropositions": [
+        "D3",
+        "P4"
+      ],
+      "relationship": "implements",
+      "justification": "Execution tracing + tool call logging は D3（可観測性優先）+ P4（エージェント行動の計測）"
+    },
+    {
+      "eccProposition": "mcpIntegration",
+      "manifestoPropositions": [
+        "D15",
+        "L4"
+      ],
+      "relationship": "implements",
+      "justification": "MCP server configuration + tool registration は D15（外部サービスブリッジのエンジニアリング）+ L4（行動空間の拡張）"
+    },
+    {
+      "eccProposition": "distributedTracing",
+      "manifestoPropositions": [
+        "D3",
+        "P4"
+      ],
+      "relationship": "implements",
+      "justification": "Cross-agent correlation + latency attribution は D3（分散可観測性）+ P4（エンドツーエンドの計測）"
+    },
+    {
+      "eccProposition": "commandSystem",
+      "manifestoPropositions": [
+        "D15",
+        "D12"
+      ],
+      "relationship": "implements",
+      "justification": "Slash commands + skill invocation + routing は D15（ハーネスエンジニアリング）+ D12（コマンド→タスクの制約充足）"
+    },
+    {
+      "eccProposition": "memoryManagement",
+      "manifestoPropositions": [
+        "P3",
+        "T2"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-H7"
+      ],
+      "relationship": "implements",
+      "justification": "Persistent file-based memory + staleness detection は P3（学習の統治 — 知識ライフサイクル）+ T2（構造の蓄積 — memory の永続化）"
+    },
+    {
+      "eccProposition": "skillArchitecture",
+      "manifestoPropositions": [
+        "D10",
+        "D17"
+      ],
+      "relationship": "implements",
+      "justification": "SKILL.md format + dependency declarations は D10（構造的永続性 — スキルは構造として永続）+ D17（演繹的ワークフロー — 仕様駆動の skill 定義）"
+    },
+    {
+      "eccProposition": "skillAuthoring",
+      "manifestoPropositions": [
+        "P3",
+        "T5"
+      ],
+      "relationship": "implements",
+      "justification": "Skill creation + evolution lifecycle は P3（学習の統治 — スキルの漸進的改善）+ T5（フィードバックによるスキル品質向上）"
+    },
+    {
+      "eccProposition": "pluginEcosystem",
+      "manifestoPropositions": [
+        "D8",
+        "L4"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C8"
+      ],
+      "relationship": "implements",
+      "justification": "Plugin marketplace + discovery は D8（均衡探索 — エコシステムの拡張性 vs 品質管理）+ L4（plugin による行動空間拡張）"
+    },
+    {
+      "eccProposition": "pluginStructure",
+      "manifestoPropositions": [
+        "D1",
+        "D10"
+      ],
+      "dependsOnAssumptions": [
+        "ECC-C8"
+      ],
+      "relationship": "implements",
+      "justification": "manifest.json schema + versioning は D1（構造的強制 — 形式的 manifest）+ D10（構造的永続性 — バージョン管理）"
+    },
+    {
+      "eccProposition": "pluginLocalConfig",
+      "manifestoPropositions": [
+        "D8"
+      ],
+      "relationship": "implements",
+      "justification": "Per-project settings + override は D8（均衡探索 — グローバル設定 vs ローカルオーバーライドの調整）"
+    },
+    {
+      "eccProposition": "pluginComposition",
+      "manifestoPropositions": [
+        "D13",
+        "D18"
+      ],
+      "relationship": "implements",
+      "justification": "Multi-plugin loading + conflict resolution は D13（影響波及 — plugin 間の干渉管理）+ D18（マルチエージェント協調 — plugin 間の協調）"
+    }
+  ],
+  "coverage": {
+    "total_manifesto_propositions": 39,
+    "covered": 26,
+    "not_covered": 13,
+    "coverage_rate": "66.7%",
+    "covered_ids": [
+      "D1",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D7",
+      "D8",
+      "E1",
+      "L1",
+      "L4",
+      "P2",
+      "P3",
+      "P4",
+      "T1",
+      "T2",
+      "T5",
+      "T6"
+    ],
+    "not_covered_ids": [
+      "T3",
+      "T4",
+      "T7",
+      "T8",
+      "E2",
+      "P1",
+      "P5",
+      "P6",
+      "L2",
+      "L5",
+      "L6",
+      "D6",
+      "D9"
+    ]
+  },
+  "notCoveredAnalysis": {
+    "T3": "T3（非因果的連続性 — 哲学的基盤）は実装レベルに直接対応しない",
+    "T4": "T4（構造的同一性 — 哲学的基盤）は実装レベルに直接対応しない",
+    "T7": "T7（拡張提案 — フレームワーク固有の提案メカニズム）は claude-code の具体的実装として未確認",
+    "T8": "T8（全命題の形式化 — メタ要件）は brownfield 適用の成果物（この mapping 自体）が対応",
+    "E2": "E2（構造的同一性 — 哲学的基盤）は直接的な実装対応がない",
+    "P1": "P1（安全の優先 — メタ原則）は L1 を通じて間接的に実装",
+    "P5": "P5（確率的解釈 — 統計的遵守モデル）は claude-code の具体的メカニズムとして未確認",
+    "P6": "P6（制約充足 — D12 経由で間接的に対応）は直接的な実装対応がない",
+    "L2": "L2（最小機能性 — hook failure resilience）は hookEventTypes の graceful degradation として間接対応",
+    "L5": "L5（外部制約 — 法的/契約的要件）は claude-code の具体的実装として未確認",
+    "L6": "L6（リソース制約）は contextManagement/D11 で間接対応",
+    "D6": "D6（境界緩和変数）は sandboxEnforcement + strictSettings の組合せで間接対応",
+    "D9": "D9（自己メンテナンス）は skillArchitecture/skillAuthoring の evolution lifecycle で間接対応"
+  }
+}

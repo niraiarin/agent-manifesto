@@ -1,0 +1,280 @@
+{
+  "iteration": 3,
+  "unit": "plugins/plugin-dev/",
+  "timestamp": "2026-04-12T05:33:49Z",
+  "platform_decisions": [
+    {
+      "id": "PD-100",
+      "content": "Plugins follow mandatory two-level directory layout: component dirs (commands/agents/skills/hooks/) at root, manifest in .claude-plugin/",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-101",
+      "content": "Plugin identity defined by kebab-case name in plugin.json, unique across installed plugins",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-102",
+      "content": "Component discovery is automatic (no registration): scans commands/, agents/, skills/ subdirs, hooks/hooks.json, .mcp.json at session start",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-103",
+      "content": "CLAUDE_PLUGIN_ROOT is canonical way to reference files within plugin; hardcoded absolute paths prohibited",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-104",
+      "content": "Two hooks.json formats: plugin format (wrapped in description+hooks) vs user settings format (events at top level); wrong format causes silent failure",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-105",
+      "content": "Hook execution is parallel by default; hooks cannot see each other's output; must be independent units",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-106",
+      "content": "Hooks loaded at session start only; changes require Claude Code restart (no hot-reload for hooks.json)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-107",
+      "content": "Two hook types: command (deterministic, 60s default) and prompt (LLM-driven, 30s default); prompt hooks only fully supported on Stop/SubagentStop/UserPromptSubmit/PreToolUse",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-108",
+      "content": "Exit code semantics: 0=success, 2=blocking error (stderr fed to Claude), other non-zero=non-blocking error",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-109",
+      "content": "Hook stdin JSON has common fields (session_id, transcript_path, cwd, permission_mode, hook_event_name) plus event-specific fields",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-110",
+      "content": "SessionStart hooks can persist env vars via $CLAUDE_ENV_FILE; only hook event with this capability",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-111",
+      "content": "Hook matchers are tool name patterns only (not content); support exact, pipe-separated, wildcard, regex",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-112",
+      "content": "Skills use three-level progressive disclosure: YAML frontmatter (~100 words always in context), SKILL.md body (loaded on trigger), bundled resources (loaded as needed)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-113",
+      "content": "Skill description uses third-person with specific quoted trigger phrases for activation matching",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-114",
+      "content": "Skill body uses imperative form; descriptions use third-person — different requirements per section",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-115",
+      "content": "Skills have three resource categories: scripts/ (executable), references/ (docs), assets/ (output templates/images)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-116",
+      "content": "Slash commands are Markdown directives TO Claude, auto-namespaced as (plugin:name) in /help",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-117",
+      "content": "Command frontmatter: description, allowed-tools, model, argument-hint, disable-model-invocation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-118",
+      "content": "Commands support $ARGUMENTS, $1/$2/$3, @filepath inclusion, and !`bash` inline execution",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-119",
+      "content": "Agent files require name/description/model/color frontmatter; description needs <example> blocks for triggering",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-120",
+      "content": "Agent triggering relies on description <example> blocks; 2-4 examples recommended for reliability",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-121",
+      "content": "Agent tools default to all if omitted; explicit listing applies least-privilege principle",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-122",
+      "content": "MCP config in .mcp.json (recommended) or inline mcpServers in plugin.json",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-123",
+      "content": "Four MCP server types: stdio (local), SSE (OAuth cloud), HTTP (token auth), WebSocket (bidirectional)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-124",
+      "content": "MCP tool names follow mcp__plugin_<plugin>_<server>__<tool> convention; explicit pre-allow preferred over wildcard",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-125",
+      "content": "SSE MCP has auto OAuth; HTTP/WS use env var token references; hardcoded tokens prohibited",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-126",
+      "content": "Per-project config via .claude/plugin-name.local.md (YAML frontmatter + markdown body); user-local, gitignored",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-127",
+      "content": "YAML frontmatter in .local.md parsed with sed in bash hooks; enabled:true/false is canonical toggle pattern",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-128",
+      "content": "Plugin dev follows 8-phase workflow: Discovery→Planning→Design→Structure→Implementation→Validation→Testing→Documentation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-129",
+      "content": "Plugin validation tooling: validate-hook-schema.sh, test-hook.sh, hook-linter.sh, validate-agent.sh",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-130",
+      "content": "Plugins use semver with pre-release suffixes; default 0.1.0; custom paths supplement (not replace) defaults",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-131",
+      "content": "Three deployment modes: marketplace install, --plugin-dir local dev, .claude-plugin/ project-local",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-132",
+      "content": "Marketplace distribution via claude-code-marketplace repo; fork/PR workflow for contribution",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-133",
+      "content": "Temporarily-active hooks use flag-file pattern to avoid hooks.json restart requirement",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-134",
+      "content": "Multi-component workflows compose agents/skills/commands/hooks; commands document coordination",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-135",
+      "content": "Security-first: HTTPS required for MCP, credentials via env vars only, input validation mandatory, least-privilege tools",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-136",
+      "content": "State sharing between sequential events via temp files with PID isolation; parallel hooks are independent",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-137",
+      "content": "Agent prompts use second person ('You are...') with Core Responsibilities/Analysis/Quality/Output sections; under 10k chars",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-138",
+      "content": "Plugin skills distributed as part of plugin package; skill versioning tied to plugin versioning",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-139",
+      "content": "Plugin paths must be relative with ./ prefix; no ../ traversal, no absolute paths, no backslashes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-140",
+      "content": "Plugin validator checks 10 categories: manifest, structure, commands, agents, skills, hooks, MCP, files, security, naming",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-141",
+      "content": "Hook max timeout 600s; defaults 60s command / 30s prompt; warnings below 5s or above 600s",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-142",
+      "content": "AI-assisted agent generation returns JSON (identifier/whenToUse/systemPrompt) converted to agent file format",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-143",
+      "content": "Marketplace plugins require cross-platform compatibility, dependency docs, graceful degradation, namespaced names",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-144",
+      "content": "Hook timeout validation: numeric only, max 600s, min 5s with warnings; prompt hooks warn on unsupported events",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 45,
+  "cumulative_total": 106,
+  "incremental_rate": 0.4245
+}
