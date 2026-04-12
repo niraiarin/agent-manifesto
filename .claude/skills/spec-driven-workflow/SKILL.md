@@ -208,6 +208,8 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 - [ ] 全 axiom に Axiom Card（Layer / Basis / Refutation condition）がある
 - [ ] 保存拡大性: 新規 axiom が T₀ と矛盾しないことを確認
 
+**Checkpoint**: Phase 0 完了時に `/handoff` Layer 1 checkpoint を `.claude/handoffs/checkpoints.jsonl` に記録する。
+
 ---
 
 ### Phase 1: テスト計画 — 命題からのテスト導出
@@ -249,6 +251,8 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 - [ ] 高強度命題（T/E、strength ≥ 4）は複数テストでカバー
 - [ ] テスト命名が Phase.Axis.Seq 規則に従う
 
+**Checkpoint**: Phase 1 完了時に `/handoff` Layer 1 checkpoint を記録する。
+
 ---
 
 ### Phase 2: 実装 — テスト駆動で成果物を構築
@@ -287,6 +291,8 @@ MANIFESTO_ROOT=$(bash .claude/skills/shared/resolve-manifesto-root.sh 2>/dev/nul
 - [ ] 全テストが PASS
 - [ ] `artifact-manifest.json` の refs が正確
 - [ ] `manifest-trace coverage` でカバレッジギャップなし
+
+**Checkpoint**: Phase 2 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ---
 
