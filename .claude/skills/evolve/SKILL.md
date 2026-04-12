@@ -26,9 +26,13 @@ dependencies:
       type: soft
       phase: "Step 2"
       condition: "breaking change を提案する場合"
+    - skill: ground-axiom
+      type: soft
+      phase: "Step 2a 公理昇格フロー"
+      condition: "Observer が [A] 公理系拡張候補を検出し、人間が T6 承認した場合"
     - skill: spec-driven-workflow
       type: soft
-      phase: "Phase 1 Observer Section 8"
+      phase: "Step 2b 開発 handoff フロー"
       condition: "Observer が [C] 新規開発候補を検出し、人間が T6 承認した場合"
     - skill: trace
       type: soft
@@ -419,21 +423,88 @@ orchestrator が件数の上限を設けてはならない（Issue #6）。
 PASS_LIST = []
 FAIL_LIST = []
 
-## Pre-screening: T6 振り分け（直列、高速）
+## Pre-screening: [A]/[C]/[R] ルーティング（直列、高速）
 
-t6_items = []
+Observer Section 8 が各観察項目に付与する分類タグ:
+- **[A] 公理系拡張候補**: failure_subtype が 3+ 回蓄積し共通の構造的根本原因がある、
+  または複数の subtype が同一の根本原因を共有する場合。公理系の変更が必要。
+- **[C] 新規開発候補**: 既存スキルの改善では対処不能で、新規スキル・新規ワークフロー・
+  新規条件付き公理系の構築が必要な場合。
+- **[R] V1-V7 改善で対処可能**: 既存の Hypothesizer→Verifier フローで改善可能。
+
+a_items = []      // 公理昇格フロー（Step 2a）
+c_items = []      // 開発 handoff フロー（Step 2b）
+t6_items = []     // generic T6（上記に該当しない人間判断項目）
 parallel_items = []
 
 for each observation in observer_report.findings (優先度順):
 
-  ## T6 判定（人間の最終決定権）
-  観察項目が T6（人間の判断を要する）に該当するか判定する。
-  - T6 該当 → t6_items に追加
-  - T6 非該当 → parallel_items に追加
+  tag = observation.tag  // Observer Section 8 が付与
+
+  if tag == "[A]":
+    → a_items に追加（公理昇格フロー: Step 2a へ）
+  elif tag == "[C]":
+    → c_items に追加（開発 handoff フロー: Step 2b へ）
+  elif tag == "[R]":
+    → parallel_items に追加（通常の Hypothesizer フロー）
+  else:
+    → T6 判定: 人間の判断を要するか？
+      - T6 該当 → t6_items に追加
+      - T6 非該当 → parallel_items に追加
 
 end for
 
-## T6 項目の処理（直列）
+## Step 2a: 公理昇格フロー（[A] タグ、直列）
+
+[A] 項目は公理系の構造的変更を伴うため、T6 Issue 起票→人間承認→cross-skill 実行の経路を辿る。
+
+for each observation in a_items:
+
+  1. T6 Issue 起票（重複チェック後）:
+     ```bash
+     gh issue create \
+       --title "[T6][A] <公理系拡張の概要>" \
+       --label "T6:human-review" \
+       --body "## 公理系拡張候補\n\n<Observer の検出根拠>\n\n## 提案経路\n\n1. /research で Gap Analysis\n2. /formal-derivation で Lean 形式化\n3. /ground-axiom で数学的根拠検証\n4. T6 PR で公理追加\n\n## 背景\n\n検出: /evolve Run <N>, Section 8-1"
+     ```
+
+  2. 人間の T6 承認を待つ（現 Run はこの項目をスキップし、次項目へ進む）
+
+  3. 承認後の実行経路（次 Run または人間が手動起動）:
+     /research（Gap Analysis）→ /formal-derivation（Lean 形式化）→ /ground-axiom（根拠検証）
+     → T6 PR → Axioms.lean への統合
+
+  4. 結果は次 Run の Observer が検出（Observer Section 8-1 で蓄積パターンの解消を確認）
+
+end for
+
+## Step 2b: 開発 handoff フロー（[C] タグ、直列）
+
+[C] 項目は新規開発（新スキル・新ワークフロー・新条件付き公理系）を伴うため、
+T6 Issue 起票→人間承認→cross-skill handoff の経路を辿る。
+
+for each observation in c_items:
+
+  1. T6 Issue 起票（重複チェック後）:
+     ```bash
+     gh issue create \
+       --title "[T6][C] <新規開発の概要>" \
+       --label "T6:human-review" \
+       --body "## 新規開発候補\n\n<Observer の検出根拠>\n\n## 提案 handoff 先\n\n- /spec-driven-workflow（仕様駆動開発が適切な場合）\n- /generate-plugin（plugin 生成が適切な場合）\n- /brownfield（既存プロジェクトへの適用の場合）\n\n## 背景\n\n検出: /evolve Run <N>, Section 8"
+     ```
+
+  2. 人間の T6 承認を待つ（現 Run はこの項目をスキップし、次項目へ進む）
+
+  3. 承認後の handoff 先（人間が T6 Issue で選択）:
+     - /spec-driven-workflow: 仕様→テスト→実装の全サイクル
+     - /generate-plugin: D17 state machine による plugin 自動生成
+     - /brownfield: 既存プロジェクトへの公理系適用
+
+  4. 結果は次 Run の Observer が検出
+
+end for
+
+## T6 項目の処理（直列）— generic T6（[A]/[C] 以外）
 
 for each observation in t6_items:
 
@@ -865,7 +936,7 @@ bash .claude/skills/evolve/scripts/retirement.sh remove <file-path>
 | 指標 | 計測方法 | 期待値 | ガバナンス理由 |
 |------|---------|--------|---------------|
 | test pass count (絶対数) | `bash tests/test-all.sh` | 618+ | 直接最適化すると自明なテスト追加を誘発 |
-| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 53 (安定、増加時は根拠必須) | 無根拠な公理追加は compression ratio を低下させ形式系を弱める。ただし公理系ギャップの放置も形式系を弱める (#316 実績)。増加時は issue + /research + /ground-axiom の経路を経ること |
+| axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 53 (安定、増加時は根拠必須) | 無根拠な公理追加は compression ratio を低下させ形式系を弱める。ただし公理系ギャップの放置も形式系を弱める (#316 実績)。増加時は Step 2a 公理昇格フロー（[A] タグ → T6 Issue → /research → /ground-axiom）の経路を経ること |
 | theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 462+ (増加) | delta は最適化、絶対数はガバナンス |
 | sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
 | warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
@@ -1052,5 +1123,6 @@ compatible change または breaking change に該当しうる。
 
 | 命題 | このスキルとの関係 |
 |------|-------------------|
+| T6 | [A]/[C] タグの公理昇格・開発 handoff は T6 Issue を経て人間が最終決定する（Step 2a/2b）|
 | D10 | 改善提案を JSONL 履歴・コミット・テストとして永続化し、エージェント消滅後も改善の蓄積が構造に残る |
 | D13 | Hypothesizer の提案が影響する依存先を depgraph/manifest-trace で走査し、波及範囲を Verifier が検証 |

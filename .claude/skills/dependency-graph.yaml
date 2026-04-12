@@ -263,9 +263,13 @@ edges:
     type: soft
     phase: "Step 2"
   - from: evolve
+    to: ground-axiom
+    type: soft
+    phase: "Step 2a 公理昇格フロー"
+  - from: evolve
     to: spec-driven-workflow
     type: soft
-    phase: "Phase 1 Observer Section 8"
+    phase: "Step 2b 開発 handoff フロー"
   - from: evolve
     to: trace
     type: soft
