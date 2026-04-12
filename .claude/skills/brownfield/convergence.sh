@@ -1,11 +1,16 @@
 #!/bin/bash
 # brownfield-convergence.sh — Phase 1 収束判定スクリプト
 # 使い方:
-#   bash convergence.sh check <observations-dir>
 #   bash convergence.sh add <observations-dir> <iteration> <unit> <decisions_found>
+#   bash convergence.sh add-detailed <observations-dir> <iteration> <unit> <pd-details.json>
+#   bash convergence.sh check <observations-dir>
+#   bash convergence.sh status <observations-dir>
 #
 # observations-dir に JSON ファイルを蓄積し、収束を判定する。
 # 収束条件: 増分率 (decisions_found / cumulative_total) < 0.05
+#
+# add-detailed: PD 詳細 JSON ファイルを受け取り、iteration ファイルに埋め込む (#457)
+#   pd-details.json 形式: [{"id":"PD-001","content":"...","source":"code_analysis","confidence":"high"}]
 
 set -euo pipefail
 
@@ -15,6 +20,7 @@ OBS_DIR="${2:-}"
 usage() {
   echo "Usage:"
   echo "  $0 add <observations-dir> <iteration> <unit> <decisions_found>"
+  echo "  $0 add-detailed <observations-dir> <iteration> <unit> <pd-details.json>"
   echo "  $0 check <observations-dir>"
   echo "  $0 status <observations-dir>"
   exit 1
@@ -55,6 +61,64 @@ ENDJSON
 
   echo "$cumulative" > "$dir/cumulative.txt"
   echo "Iteration ${iteration}: found=${found}, cumulative=${cumulative}, rate=${rate}"
+}
+
+add_detailed_observation() {
+  local dir="$1" iteration="$2" unit="$3" pd_file="$4"
+
+  if [ ! -f "$pd_file" ]; then
+    echo "ERROR: PD details file not found: $pd_file"
+    exit 1
+  fi
+
+  # PD 詳細 JSON を検証 (配列であること)
+  if ! jq -e 'type == "array"' "$pd_file" > /dev/null 2>&1; then
+    echo "ERROR: PD details file must be a JSON array: $pd_file"
+    exit 1
+  fi
+
+  local found
+  found=$(jq 'length' "$pd_file")
+
+  mkdir -p "$dir"
+
+  # 累計を計算
+  local cumulative=0
+  if [ -f "$dir/cumulative.txt" ]; then
+    cumulative=$(cat "$dir/cumulative.txt")
+  fi
+  cumulative=$((cumulative + found))
+
+  # 増分率を計算
+  local rate="1.00"
+  if [ "$cumulative" -gt 0 ]; then
+    rate=$(echo "scale=4; $found / $cumulative" | bc)
+  fi
+
+  # 記録 (PD 詳細を含む)
+  local timestamp
+  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+  jq -n \
+    --argjson iteration "$iteration" \
+    --arg unit "$unit" \
+    --arg timestamp "$timestamp" \
+    --argjson pds "$(cat "$pd_file")" \
+    --argjson found "$found" \
+    --argjson cumulative "$cumulative" \
+    --arg rate "$rate" \
+    '{
+      iteration: $iteration,
+      unit: $unit,
+      timestamp: $timestamp,
+      platform_decisions: $pds,
+      decisions_found: $found,
+      cumulative_total: $cumulative,
+      incremental_rate: ($rate | tonumber)
+    }' > "$dir/iteration-${iteration}.json"
+
+  echo "$cumulative" > "$dir/cumulative.txt"
+  echo "Iteration ${iteration}: found=${found}, cumulative=${cumulative}, rate=${rate} (detailed)"
 }
 
 check_convergence() {
@@ -116,6 +180,10 @@ case "$COMMAND" in
   add)
     [ $# -lt 5 ] && usage
     add_observation "$2" "$3" "$4" "$5"
+    ;;
+  add-detailed)
+    [ $# -lt 5 ] && usage
+    add_detailed_observation "$2" "$3" "$4" "$5"
     ;;
   check)
     [ -z "$OBS_DIR" ] && usage

@@ -220,7 +220,36 @@ cat /tmp/file-tree.json | jq -r '.[]' | \
 
 #### 観察結果の記録
 
-各反復の結果を JSON で記録:
+各反復の PD を JSON 配列として記録し、`convergence.sh add-detailed` で登録する（#457）:
+
+```bash
+# PD 詳細を JSON 配列で記録
+cat > /tmp/pds-iteration-1.json <<'EOF'
+[
+  {
+    "id": "PD-001",
+    "content": "Skills are Markdown files with clear sections",
+    "source": "code_analysis",
+    "manifesto_mapping": "D5",
+    "confidence": "high"
+  }
+]
+EOF
+
+# convergence.sh に登録（PD 詳細が iteration ファイルに埋め込まれる）
+bash .claude/skills/brownfield/convergence.sh add-detailed <observations-dir> 1 "skills/" /tmp/pds-iteration-1.json
+```
+
+**PD 詳細の必須フィールド**:
+- `id`: `PD-NNN` 形式（グローバル一意）
+- `content`: PD の内容
+- `source`: `code_analysis` / `web_search` / `human_interview` / `manifesto_mapping`
+- `confidence`: `high` / `medium` / `low`
+
+**禁止**: `convergence.sh add`（count のみ）を使って PD 詳細を省略すること。
+`add` は後方互換性のために残存するが、新規実行では `add-detailed` を使用する。
+
+生成される `iteration-{N}.json` の形式:
 
 ```json
 {
@@ -236,8 +265,9 @@ cat /tmp/file-tree.json | jq -r '.[]' | \
       "confidence": "high"
     }
   ],
-  "decisions_found": 5,
-  "cumulative_total": 5
+  "decisions_found": 1,
+  "cumulative_total": 1,
+  "incremental_rate": 1.0000
 }
 ```
 
@@ -301,12 +331,38 @@ FAIL → 修正 → /verify 再実行（エラーゼロまでループ）。
 
 ## Phase 4: 半順序確立
 
+### Step 1: マッピング前の定義確認（mandatory, #458）
+
+partial-order-mapping.json を作成する**前に**、マッピング対象の定義を読むこと。
+
+**手順**:
+1. 各 proposition の `manifestoPropositions` に D-ID を含める場合、
+   `DesignFoundation.lean` の該当セクション（`-- D{N}: {title}` で始まるブロック）を読む
+2. justification が定義の内容と整合することを確認してから記述する
+
+**禁止**: 定義を読まずに D-ID の番号と名前だけからマッピングすること。
+（#444 で D7「信頼の非対称性」を「最小変更単位」と誤解してマッピングした事例あり）
+
+### Step 2: マッピング品質検証（deterministic）
+
+マッピング作成後、検証スクリプトで定義と justification を並べて表示し、人間が目視確認する:
+
+```bash
+bash .claude/skills/brownfield/check-mapping-accuracy.sh \
+  lean-formalization/Manifest/Models/Instances/<project-name>/partial-order-mapping.json
+```
+
+出力の各エントリについて `[  ] Justification matches definition(s)?` を確認する。
+不整合があれば修正してから次へ進む。
+
+### Step 3: 半順序検証
+
 /trace を使用して manifesto 公理系との半順序関係を確立:
 
 ```bash
 # instance-manifest.json の検証
 bash scripts/manifest-trace validate \
-  --instance lean-formalization/Manifest/Models/instances/<project-name>/instance-manifest.json
+  --instance lean-formalization/Manifest/Models/Instances/<project-name>/instance-manifest.json
 ```
 
 ## Phase 5: 還元
