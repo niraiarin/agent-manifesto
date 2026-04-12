@@ -382,8 +382,19 @@ axiom output_nondeterministic :
 T5 declares that the existence of feedback is a necessary condition for improvement.
 -/
 
-/-- Predicate for whether structure has improved (defined as Observable in Phase 4+). -/
-opaque structureImproved : World → World → Prop
+/-- Predicate for whether structure has improved.
+    Concretized from opaque (#163/#506): at least one structure in w' has a
+    lastModifiedAt epoch strictly greater than in w (i.e., a structure was updated),
+    or a new structure was added.
+
+    This captures the minimal observable signal of structural improvement:
+    some persistent artifact was modified. Content-level quality assessment
+    is delegated to V1–V7 metrics. -/
+def structureImproved (w w' : World) : Prop :=
+  ∃ (s' : Structure),
+    s' ∈ w'.structures ∧
+    ((∀ (s : Structure), s ∈ w.structures → s.id = s'.id → s.lastModifiedAt < s'.lastModifiedAt)
+    ∨ (¬∃ (s : Structure), s ∈ w.structures ∧ s.id = s'.id))
 
 /-- Predicate for whether a process has improved (#316).
     Processes (learning lifecycles, workflows) are also subject to T5:
@@ -407,9 +418,10 @@ opaque processImproved : ProcessId → World → World → Prop
             — Without new information (feedback), no improvement is possible
       Compositional property proven: feedback_interval_widen (0 sorry)
       Note: T₀ natural-science constraint. Feedback necessity cannot be derived
-            from type definitions (structureImproved is opaque).
+            from type definitions alone.
 
-    降格判定: 導出不可能 — structureImproved が opaque。axiom として維持。
+    降格判定: 導出不可能 — structureImproved は def だが、「改善→フィードバック」の
+          含意は制御理論の主張であり型定義から導出不可能。axiom として維持。
 
     Source: manifesto.md T5 "A fundamental of control theory"
     Refutation condition: If structural improvement without any feedback
@@ -593,7 +605,7 @@ List of `sorry` occurrences in Phase 1:
 |------|-------------|
 | `Ontology.lean: canTransition` | opaque — transition conditions to be defined in Phase 3+ |
 | `Ontology.lean: globalResourceBound` | opaque — to be concretized per domain in Phase 2+ |
-| `Axioms.lean: structureImproved` | opaque — to be defined as Observable in Phase 4+ |
+| `Axioms.lean: structureImproved` | **concretized** (#163/#506) — lastModifiedAt comparison + new structure detection |
 
 Axioms are propositions assumed without proof, so they contain no sorry.
 When P1–P6 are derived as theorems in Phase 3, sorry occurrences will arise.
