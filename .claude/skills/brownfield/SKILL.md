@@ -318,7 +318,8 @@ bash .claude/skills/brownfield/convergence.sh check <observations-dir> --mode ph
 収束条件: 増分率 < 0.05（5% 未満）
 ```
 
-- 収束した → Phase 1.5 へ（philosophy モード実行済みの場合）、または Phase 2 へ
+- 収束した + philosophy iteration 2+ → Phase 1.5 へ
+- 収束した + philosophy なし → Phase 2 へ
 - 未収束 → 次の分解単位で Step 2 を反復
 - 10 反復超過 → 強制終了。未観察の分解単位を記録して Phase 2 へ
 
@@ -366,6 +367,8 @@ philosophy PD を意味的にグループ化する:
 - WP 間に矛盾がないことを確認（judgmental）
 
 **Gate 基準**: 5+ WPs、各 3+ PDs から導出
+
+**Checkpoint**: Phase 1 完了時に `/handoff` Layer 1 checkpoint を記録する。
 
 ## Phase 2: 条件付き公理系の構築
 

@@ -54,8 +54,8 @@
         "T1",
         "D3"
       ],
-      "relationship": "implements",
-      "justification": "Session start/end hooks, compaction は T1（一時的インスタンスのライフサイクル管理）+ D3（セッション状態の可観測性）"
+      "relationship": "approximates",
+      "justification": "Session start/end hooks, compaction は D3（セッション状態の可観測性）を実装し、T1（一時性）の概念に対応するが、T1 の全哲学的含意をカバーしない"
     },
     {
       "eccProposition": "contextManagement",
@@ -245,8 +245,8 @@
       "dependsOnAssumptions": [
         "ECC-C5"
       ],
-      "relationship": "implements",
-      "justification": "Conventional commits + branch protection は P3（学習の統治 — コミット分類）+ T2（構造の蓄積 — git history）"
+      "relationship": "approximates",
+      "justification": "Conventional commits + branch protection は P3（学習の統治 — コミット分類）を実装し、T2（構造的永続性）に対応するが、T2 の全概念（文書・テスト・スキル等）の一機構"
     },
     {
       "eccProposition": "featureDevWorkflow",
@@ -263,8 +263,8 @@
         "T5",
         "D3"
       ],
-      "relationship": "implements",
-      "justification": "Stall detection + convergence checking は T5（フィードバック必須）+ D3（ループ進捗の可観測性）"
+      "relationship": "partially_covers",
+      "justification": "Stall detection + convergence checking は D3（ループ進捗の可観測性）を実装し、T5（フィードバック必須）の一形態だが、T5 は人間フィードバック等より広い概念"
     },
     {
       "eccProposition": "sdkSetupWorkflow",
@@ -296,8 +296,8 @@
       "dependsOnAssumptions": [
         "ECC-C6"
       ],
-      "relationship": "implements",
-      "justification": "Stale marking + human-comment revival は P3（学習の統治 — 退役）+ T6（人間コメントによる override）"
+      "relationship": "approximates",
+      "justification": "Stale marking + human-comment revival は P3（学習の統治 — 退役）を実装し、T6（人間の最終決定権）に概念的に対応するが、T6 の全範囲をカバーしない"
     },
     {
       "eccProposition": "issueTemplates",
@@ -360,8 +360,8 @@
         "E1",
         "D2"
       ],
-      "relationship": "implements",
-      "justification": "Context separation + worktree isolation は E1（認知的関心の分離）+ D2（Worker/Verifier の隔離）"
+      "relationship": "partially_covers",
+      "justification": "Context separation + worktree isolation は D2（Worker/Verifier の隔離）を実装し、E1（認知的関心の分離）の技術的側面をカバーするが、E1 の認識論的含意は部分的"
     },
     {
       "eccProposition": "agentObservability",
@@ -408,8 +408,8 @@
       "dependsOnAssumptions": [
         "ECC-H7"
       ],
-      "relationship": "implements",
-      "justification": "Persistent file-based memory + staleness detection は P3（学習の統治 — 知識ライフサイクル）+ T2（構造の蓄積 — memory の永続化）"
+      "relationship": "partially_covers",
+      "justification": "Persistent file-based memory + staleness detection は P3（学習の統治 — 知識ライフサイクル）を実装し、T2（構造的永続性）の memory 側面のみをカバー"
     },
     {
       "eccProposition": "skillArchitecture",
@@ -426,8 +426,8 @@
         "P3",
         "T5"
       ],
-      "relationship": "implements",
-      "justification": "Skill creation + evolution lifecycle は P3（学習の統治 — スキルの漸進的改善）+ T5（フィードバックによるスキル品質向上）"
+      "relationship": "approximates",
+      "justification": "Skill creation + evolution lifecycle は P3（学習の統治 — スキルの漸進的改善）を実装し、T5（フィードバック必須）に概念的に対応するが、T5 の直接実装ではない"
     },
     {
       "eccProposition": "pluginEcosystem",
