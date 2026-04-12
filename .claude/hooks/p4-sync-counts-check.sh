@@ -16,7 +16,7 @@ fi
 # Resolve git working directory for worktree support
 GIT_DIR=""
 if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*//p')
+GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
 fi
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then

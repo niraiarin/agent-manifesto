@@ -10,6 +10,7 @@
 #   BLOCK — exit 2 でブロック
 #
 # 現在は WARN モードで動作（PoC フェーズ）。
+# @traces L2
 
 # Note: hooks must NOT use set -e (non-zero grep exits would crash the hook)
 # Exit codes: 0 = allow, 2 = block. Any other exit = error.
@@ -21,7 +22,7 @@ MODE="${HALLUCINATION_HOOK_MODE:-WARN}"
 if [ -n "${HALLUCINATION_HOOK_PROJECT_ROOT:-}" ]; then
   PROJECT_ROOT="$HALLUCINATION_HOOK_PROJECT_ROOT"
 else
-  PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+  PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
 fi
 LEAN_DIR="$PROJECT_ROOT/lean-formalization"
 
@@ -63,7 +64,7 @@ done)
 
 if [ -n "$LEAN_NAMES" ]; then
   # Lean ファイルから全定義名を取得（キャッシュ考慮）
-  CACHE_FILE="/tmp/lean-definitions-cache.txt"
+  CACHE_FILE="${TMPDIR:-/tmp}/lean-definitions-cache.txt"
   CACHE_AGE=300  # 5分
 
   if [ -f "$CACHE_FILE" ] && [ "$(find "$CACHE_FILE" -mmin -5 2>/dev/null)" ]; then
@@ -133,3 +134,6 @@ if [ -n "$WARNINGS" ]; then
 fi
 
 exit 0
+
+# Traceability:
+# L2: 情報整合境界 — 参照ファイルの実在性を検証し、幻覚（存在しないファイルへの参照）を検出

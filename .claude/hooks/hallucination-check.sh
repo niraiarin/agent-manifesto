@@ -22,7 +22,7 @@ MODE="${HALLUCINATION_HOOK_MODE:-WARN}"
 if [ -n "${HALLUCINATION_HOOK_PROJECT_ROOT:-}" ]; then
   PROJECT_ROOT="$HALLUCINATION_HOOK_PROJECT_ROOT"
 else
-  PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+  PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
 fi
 LEAN_DIR="$PROJECT_ROOT/lean-formalization"
 

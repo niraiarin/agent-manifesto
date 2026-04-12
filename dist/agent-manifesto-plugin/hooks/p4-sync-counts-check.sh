@@ -3,6 +3,7 @@
 #
 # コミット前に Lean/ドキュメントのカウント乖離を検出してブロックする。
 # SYNC_SKIP_TESTS=1 で高速化（テスト数は check-loop.sh が担当）。
+# @traces P4, D3
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
@@ -15,7 +16,7 @@ fi
 # Resolve git working directory for worktree support
 GIT_DIR=""
 if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*//p')
+GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
 fi
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
@@ -40,3 +41,6 @@ if [[ $RC -ne 0 ]]; then
 fi
 
 exit 0
+
+# Traceability:
+# D3: 可観測性先行 — axiom/theorem/sorry カウントの同期状態を検証し、計測値の正確性を保証
