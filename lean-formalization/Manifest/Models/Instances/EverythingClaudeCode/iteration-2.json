@@ -1,0 +1,196 @@
+{
+  "iteration": 2,
+  "unit": "plugins/hookify/",
+  "timestamp": "2026-04-12T05:32:34Z",
+  "platform_decisions": [
+    {
+      "id": "PD-050",
+      "content": "Hook system supports four event types: PreToolUse, PostToolUse, Stop, UserPromptSubmit with distinct semantics",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-051",
+      "content": "Hook commands registered with timeout field (integer seconds); hookify uses 10s default",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-052",
+      "content": "Hook input received exclusively via JSON on stdin with common fields plus event-specific fields",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-053",
+      "content": "Hook output is JSON to stdout; shape determines effect (empty={} allow, systemMessage=warn, permissionDecision=deny for block)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-054",
+      "content": "Blocking PreToolUse requires nested structure: hookSpecificOutput.permissionDecision='deny' with matching hookEventName",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-055",
+      "content": "Stop event uses different blocking schema (decision:'block') than tool events (permissionDecision:'deny')",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-056",
+      "content": "PostToolUse hooks cannot block operations; exit 2 is ignored; observation-only event",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-057",
+      "content": "Exit code 0 is universal allow; block decision communicated through stdout JSON, not exit code",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-058",
+      "content": "Hook failures surface as informational systemMessage, not blocking; graceful degradation principle",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-059",
+      "content": "Hookify registers catch-all hooks per event type (no matcher) and filters tool_name in Python code",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-060",
+      "content": "CLAUDE_PLUGIN_ROOT env var injected by Claude Code for portable plugin file references",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-061",
+      "content": "Hook type in hooks.json is 'command' (external process); type field suggests other types may exist",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-062",
+      "content": "tool_input stdin fields: Bash has command key; Edit has file_path/old_string/new_string; Write has file_path/content; MultiEdit has file_path/edits array",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-063",
+      "content": "Stop event stdin includes transcript_path for full session inspection without inlining in JSON",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-064",
+      "content": "UserPromptSubmit stdin includes user_prompt field for input-level guardrails",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-065",
+      "content": "Multiple matching rules accumulate messages; blocking rules take full precedence over warnings",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-066",
+      "content": "systemMessage surfaces text to model (not user terminal) for hook-injected context",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-067",
+      "content": "Rule files use .claude/hookify.{name}.local.md pattern with hot-reload on next tool use",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-068",
+      "content": ".local.md suffix convention indicates user-local gitignored config, separating from committed project config",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-069",
+      "content": "Hook rule conditions use AND semantics; OR encoded via regex alternation in patterns",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-070",
+      "content": "Regex matching is case-insensitive (re.IGNORECASE) and substring-based (re.search)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-071",
+      "content": "Compiled regex patterns cached with LRU size 128 per hook invocation",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-072",
+      "content": "Simple 'pattern' frontmatter is sugar converted to single Condition with event-type-inferred field",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-073",
+      "content": "Rules without conditions are non-matching (safety guard against catch-all misconfiguration)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-074",
+      "content": "Hook rule config uses custom YAML parser (stdlib only, no PyYAML dependency) for portability",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-075",
+      "content": "tool_matcher supports exact match, pipe-separated OR, and wildcard '*' for per-tool filtering",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-076",
+      "content": "stderr for diagnostics, stdout exclusively for JSON response; strict separation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-077",
+      "content": "hooks.json has top-level description field alongside hooks for plugin metadata",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-078",
+      "content": "hook_event_name in stdin JSON used to select correct blocking response schema",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-079",
+      "content": "No native SubagentStart or SessionStart hook events in hookify; four events are the public API",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-080",
+      "content": "Rule files loaded from CWD .claude/ folder, making rule sets project-scoped",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 31,
+  "cumulative_total": 61,
+  "incremental_rate": 0.5081
+}

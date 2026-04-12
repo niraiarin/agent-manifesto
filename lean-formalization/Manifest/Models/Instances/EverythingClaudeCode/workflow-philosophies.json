@@ -1,0 +1,79 @@
+[
+  {
+    "id": "WP-001",
+    "name": "Context Window as Scarce Resource",
+    "description": "The plugin ecosystem consistently treats context window capacity as a finite, precious resource that must be actively managed. This manifests as progressive disclosure (load knowledge only when relevant), token-efficient scripts over regeneration, explicit word budgets for skill files, and acknowledgment that behavioral plugins carry real token costs. Information is organized into tiers where each tier is loaded only when the previous tier establishes relevance.",
+    "derivedFromPDs": ["PP-001", "PP-034", "PP-035", "PP-085"],
+    "pattern": "principle"
+  },
+  {
+    "id": "WP-002",
+    "name": "Structural Enforcement Over Behavioral Trust",
+    "description": "When a guarantee matters, the ecosystem encodes it in infrastructure rather than relying on agent compliance. Hooks enforce policies regardless of agent reasoning, iteration limits prevent infinite loops independent of agent self-awareness, stop-hooks intercept exit attempts structurally, and safety policies from different sources compound additively. The consistent resolution is: trust the mechanism, not the judgment.",
+    "derivedFromPDs": ["PP-010", "PP-012", "PP-027", "PP-042", "PP-079", "PP-081"],
+    "pattern": "tradeoff_resolution"
+  },
+  {
+    "id": "WP-003",
+    "name": "Cognitive Separation Through Agent Decomposition",
+    "description": "Complex judgment tasks are decomposed into multiple specialized agents rather than assigned to a single omniscient one. Each agent embodies one concern, one perspective, or one skill level. Comprehensive coverage emerges from composition of specialists, not from monolithic generalists. Critically, the finder and the validator must be different agents -- discovery and verification are cognitively incompatible when performed by the same entity.",
+    "derivedFromPDs": ["PP-014", "PP-039", "PP-047", "PP-049", "PP-052", "PP-054", "PP-055"],
+    "pattern": "principle"
+  },
+  {
+    "id": "WP-004",
+    "name": "Precision Over Recall in Automated Judgment",
+    "description": "Wherever automated agents make qualitative judgments (code review, issue detection, rule generation), the ecosystem systematically favors precision over recall. False positives erode trust faster than false negatives harm quality. This manifests as confidence thresholds (>=80), scope limitation to introduced changes only, exclusion of linter-detectable issues, and proportional rule creation based on pattern recurrence rather than single incidents.",
+    "derivedFromPDs": ["PP-015", "PP-037", "PP-053", "PP-056", "PP-057", "PP-058"],
+    "pattern": "tradeoff_resolution"
+  },
+  {
+    "id": "WP-005",
+    "name": "Human Authority at Phase Transitions",
+    "description": "Autonomous agent work proceeds freely within phases, but transitions between phases require explicit human authorization. The human is not a passive approver but an active co-designer whose judgment is structurally required at every phase boundary. Even when humans delegate a choice, the agent must present its recommendation and obtain conscious acceptance -- delegation of choice is never delegation of responsibility.",
+    "derivedFromPDs": ["PP-048", "PP-050", "PP-070", "PP-071", "PP-083", "PP-084"],
+    "pattern": "workflow"
+  },
+  {
+    "id": "WP-006",
+    "name": "Environment as Memory, Not Conversation",
+    "description": "Progress and learning persist through environmental artifacts (files, git history, configuration) rather than through conversational state or agent memory. Agents derive their understanding from reading the changed environment, not from escalating instructions. The same prompt can drive iterative improvement because the environment itself encodes prior progress. This enables agent ephemerality -- any agent instance can pick up where another left off by reading the environment.",
+    "derivedFromPDs": ["PP-076", "PP-077", "PP-059", "PP-073", "PP-074"],
+    "pattern": "design_meta"
+  },
+  {
+    "id": "WP-007",
+    "name": "Convention Discovery Over Convention Imposition",
+    "description": "The ecosystem prefers discovering and adapting to existing conventions rather than imposing universal standards. Commit message style is learned from repository history, CLAUDE.md project guidelines are elevated to the same binding force as language conventions, and design direction derives from project context rather than templates. Local conventions are as authoritative as global best practices because they encode accumulated project-specific wisdom.",
+    "derivedFromPDs": ["PP-044", "PP-059", "PP-088", "PP-091"],
+    "pattern": "principle"
+  },
+  {
+    "id": "WP-008",
+    "name": "Additive Composition Without Override",
+    "description": "Safety and behavioral policies from different sources (plugins, users, project settings) compound additively rather than overriding each other. Plugin hooks merge with user hooks and run in parallel; neither layer can disable the other. Configuration is simultaneously structured data and natural language context. This reflects a security philosophy where safety guarantees are monotonically increasing -- adding a new source of policy can only tighten constraints, never loosen existing ones.",
+    "derivedFromPDs": ["PP-006", "PP-028", "PP-042", "PP-094"],
+    "pattern": "design_meta"
+  },
+  {
+    "id": "WP-009",
+    "name": "Capability Matching: Right Tool at Right Level",
+    "description": "The ecosystem consistently matches capability to task complexity rather than uniformly maximizing power. Model tiers are assigned by reasoning depth needed (sonnet for rule-matching, opus for deep reasoning). Tool access follows least privilege. Review agents activate based on what actually changed, not running all agents on every PR. Prompt intensity is model-relative. The principle is resource proportionality -- overapplying capability is as wasteful as underapplying it.",
+    "derivedFromPDs": ["PP-009", "PP-041", "PP-064", "PP-069", "PP-092"],
+    "pattern": "tradeoff_resolution"
+  },
+  {
+    "id": "WP-010",
+    "name": "Verification as Integrated Workflow, Not Afterthought",
+    "description": "Verification is woven into creation workflows as a non-optional phase, not bolted on as a separate post-hoc step. Plugin creation automatically launches validation, scaffold commands include verifier agents, and review has a prescribed temporal ordering where different checks apply at different lifecycle stages. The pattern is create-then-verify as a single atomic workflow, where creation without verification is considered incomplete.",
+    "derivedFromPDs": ["PP-020", "PP-022", "PP-024", "PP-029", "PP-080"],
+    "pattern": "workflow"
+  },
+  {
+    "id": "WP-011",
+    "name": "Natural Language as Both Interface and Implementation",
+    "description": "In the plugin ecosystem, natural language serves double duty: it is both the human-readable description AND the machine-executable instruction. Commands are directives for agent consumption, configuration files are simultaneously documentation and prompts, and hook rules are declarative markdown rather than imperative scripts. This duality creates a design tension where word choice has both semantic meaning (for humans) and operational meaning (for models), and these can conflict -- as when the word 'think' accidentally triggers extended thinking mode.",
+    "derivedFromPDs": ["PP-002", "PP-010", "PP-028", "PP-033", "PP-072"],
+    "pattern": "design_meta"
+  }
+]

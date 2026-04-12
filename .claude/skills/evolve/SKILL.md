@@ -419,6 +419,24 @@ Observer の観察項目を**全件処理**する。
 orchestrator が件数の上限を設けてはならない（Issue #6）。
 終了条件は「全件処理済み」のみ。
 
+**全件処理の構造的強制（#475）:**
+Observer の findings は全て以下の 4 分類のいずれかに分類されなければならない。
+サイレントドロップ（分類なしの除外）は禁止。
+
+| 分類 | 意味 | 記録先 |
+|------|------|--------|
+| **processed** | Hypothesizer→Verifier フローで処理済み | `improvements` / `rejected` |
+| **skipped** | 処理対象外と判断（理由必須） | `phases.hypothesizer.skipped_items` |
+| **deferred** | 引き継ぎ条件に該当（resourceExhaustion / dependencyBlocked / actionSpaceExceeded） | `deferred` |
+| **t6_routed** | T6 Issue として人間にルーティング（[A]/[C] タグ含む） | `phases.hypothesizer.t6_items` |
+
+**会計等式（C9）**: `proposals_count + len(skipped_items) + len(t6_items) + len(deferred) >= findings_count`
+validate-evolve-entry.sh が構造的に強制する（配列長で計算）。
+
+**T3 コンテキスト圧力のマッピング**: コンテキストウィンドウの圧力により
+全件処理が困難な場合、残存項目は `resourceExhaustion` として deferral に分類する。
+「処理しきれなかった」はサイレントドロップの正当化にならない。
+
 ```
 PASS_LIST = []
 FAIL_LIST = []

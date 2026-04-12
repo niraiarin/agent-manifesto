@@ -2,15 +2,19 @@
 # brownfield-convergence.sh — Phase 1 収束判定スクリプト
 # 使い方:
 #   bash convergence.sh add <observations-dir> <iteration> <unit> <decisions_found>
-#   bash convergence.sh add-detailed <observations-dir> <iteration> <unit> <pd-details.json>
-#   bash convergence.sh check <observations-dir>
-#   bash convergence.sh status <observations-dir>
+#   bash convergence.sh add-detailed <observations-dir> <iteration> <unit> <pd-details.json> [--mode philosophy]
+#   bash convergence.sh check <observations-dir> [--mode philosophy]
+#   bash convergence.sh status <observations-dir> [--mode philosophy]
 #
 # observations-dir に JSON ファイルを蓄積し、収束を判定する。
 # 収束条件: 増分率 (decisions_found / cumulative_total) < 0.05
 #
 # add-detailed: PD 詳細 JSON ファイルを受け取り、iteration ファイルに埋め込む (#457)
 #   pd-details.json 形式: [{"id":"PD-001","content":"...","source":"code_analysis","confidence":"high"}]
+#
+# --mode philosophy: 設計思想・原則・トレードオフ・活用パターンを抽出する観察モード (#477)
+#   philosophy モードは独立した累計カウンタと iteration ファイルを使用する。
+#   同じファイルに異なる「問い」を向けることで、異なる層の情報を抽出する。
 
 set -euo pipefail
 
@@ -20,10 +24,54 @@ OBS_DIR="${2:-}"
 usage() {
   echo "Usage:"
   echo "  $0 add <observations-dir> <iteration> <unit> <decisions_found>"
-  echo "  $0 add-detailed <observations-dir> <iteration> <unit> <pd-details.json>"
-  echo "  $0 check <observations-dir>"
-  echo "  $0 status <observations-dir>"
+  echo "  $0 add-detailed <observations-dir> <iteration> <unit> <pd-details.json> [--mode philosophy]"
+  echo "  $0 check <observations-dir> [--mode philosophy]"
+  echo "  $0 status <observations-dir> [--mode philosophy]"
   exit 1
+}
+
+# モード判定: 引数から --mode を探す
+# 有効なモード: normal, philosophy
+parse_mode() {
+  local mode="normal"
+  local next_is_mode=false
+  for arg in "$@"; do
+    if [ "$arg" = "--mode" ]; then
+      next_is_mode=true
+    elif [ "$next_is_mode" = true ]; then
+      mode="$arg"
+      next_is_mode=false
+    fi
+  done
+  if [ "$next_is_mode" = true ]; then
+    echo "ERROR: --mode requires a value (normal or philosophy)" >&2
+    exit 1
+  fi
+  if [ "$mode" != "normal" ] && [ "$mode" != "philosophy" ]; then
+    echo "ERROR: unknown mode '$mode'. Valid modes: normal, philosophy" >&2
+    exit 1
+  fi
+  echo "$mode"
+}
+
+# モード別のファイルプレフィックス
+mode_prefix() {
+  local mode="$1"
+  if [ "$mode" = "philosophy" ]; then
+    echo "philosophy-"
+  else
+    echo ""
+  fi
+}
+
+# モード別の累計カウンタファイル
+cumulative_file() {
+  local dir="$1" mode="$2"
+  if [ "$mode" = "philosophy" ]; then
+    echo "$dir/cumulative-philosophy.txt"
+  else
+    echo "$dir/cumulative.txt"
+  fi
 }
 
 add_observation() {
@@ -65,6 +113,8 @@ ENDJSON
 
 add_detailed_observation() {
   local dir="$1" iteration="$2" unit="$3" pd_file="$4"
+  local mode
+  mode=$(parse_mode "$@")
 
   if [ ! -f "$pd_file" ]; then
     echo "ERROR: PD details file not found: $pd_file"
@@ -82,10 +132,16 @@ add_detailed_observation() {
 
   mkdir -p "$dir"
 
+  # モード別の累計カウンタ
+  local cum_file
+  cum_file=$(cumulative_file "$dir" "$mode")
+  local prefix
+  prefix=$(mode_prefix "$mode")
+
   # 累計を計算
   local cumulative=0
-  if [ -f "$dir/cumulative.txt" ]; then
-    cumulative=$(cat "$dir/cumulative.txt")
+  if [ -f "$cum_file" ]; then
+    cumulative=$(cat "$cum_file")
   fi
   cumulative=$((cumulative + found))
 
@@ -99,30 +155,58 @@ add_detailed_observation() {
   local timestamp
   timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-  jq -n \
-    --argjson iteration "$iteration" \
-    --arg unit "$unit" \
-    --arg timestamp "$timestamp" \
-    --argjson pds "$(cat "$pd_file")" \
-    --argjson found "$found" \
-    --argjson cumulative "$cumulative" \
-    --arg rate "$rate" \
-    '{
-      iteration: $iteration,
-      unit: $unit,
-      timestamp: $timestamp,
-      platform_decisions: $pds,
-      decisions_found: $found,
-      cumulative_total: $cumulative,
-      incremental_rate: ($rate | tonumber)
-    }' > "$dir/iteration-${iteration}.json"
+  local iter_file="$dir/${prefix}iteration-${iteration}.json"
 
-  echo "$cumulative" > "$dir/cumulative.txt"
-  echo "Iteration ${iteration}: found=${found}, cumulative=${cumulative}, rate=${rate} (detailed)"
+  if [ "$mode" = "normal" ]; then
+    jq -n \
+      --argjson iteration "$iteration" \
+      --arg unit "$unit" \
+      --arg timestamp "$timestamp" \
+      --argjson pds "$(cat "$pd_file")" \
+      --argjson found "$found" \
+      --argjson cumulative "$cumulative" \
+      --arg rate "$rate" \
+      '{
+        iteration: $iteration,
+        unit: $unit,
+        timestamp: $timestamp,
+        platform_decisions: $pds,
+        decisions_found: $found,
+        cumulative_total: $cumulative,
+        incremental_rate: ($rate | tonumber)
+      }' > "$iter_file"
+  else
+    jq -n \
+      --argjson iteration "$iteration" \
+      --arg unit "$unit" \
+      --arg timestamp "$timestamp" \
+      --arg mode "$mode" \
+      --argjson pds "$(cat "$pd_file")" \
+      --argjson found "$found" \
+      --argjson cumulative "$cumulative" \
+      --arg rate "$rate" \
+      '{
+        iteration: $iteration,
+        unit: $unit,
+        timestamp: $timestamp,
+        mode: $mode,
+        platform_decisions: $pds,
+        decisions_found: $found,
+        cumulative_total: $cumulative,
+        incremental_rate: ($rate | tonumber)
+      }' > "$iter_file"
+  fi
+
+  echo "$cumulative" > "$cum_file"
+  echo "Iteration ${iteration} [${mode}]: found=${found}, cumulative=${cumulative}, rate=${rate} (detailed)"
 }
 
 check_convergence() {
   local dir="$1"
+  local mode
+  mode=$(parse_mode "$@")
+  local prefix
+  prefix=$(mode_prefix "$mode")
 
   if [ ! -d "$dir" ]; then
     echo "No observations directory: $dir"
@@ -131,10 +215,10 @@ check_convergence() {
 
   # 最新の iteration を取得
   local latest
-  latest=$(ls "$dir"/iteration-*.json 2>/dev/null | sort -t- -k2 -n | tail -1)
+  latest=$(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sed 's/.*iteration-\([0-9]*\)\.json/\1 &/' | sort -n -k1 | sed 's/^[0-9]* //' | tail -1)
 
   if [ -z "$latest" ]; then
-    echo "UNCONVERGED: No observations recorded"
+    echo "UNCONVERGED [${mode}]: No observations recorded"
     exit 1
   fi
 
@@ -147,24 +231,28 @@ check_convergence() {
   local converged
   converged=$(echo "$rate < 0.05" | bc -l)
   if [ "$converged" = "1" ]; then
-    echo "CONVERGED: iteration=${iteration}, rate=${rate} (threshold: 0.05)"
+    echo "CONVERGED [${mode}]: iteration=${iteration}, rate=${rate} (threshold: 0.05)"
     exit 0
   else
-    echo "UNCONVERGED: iteration=${iteration}, rate=${rate} (threshold: 0.05)"
+    echo "UNCONVERGED [${mode}]: iteration=${iteration}, rate=${rate} (threshold: 0.05)"
     exit 1
   fi
 }
 
 show_status() {
   local dir="$1"
+  local mode
+  mode=$(parse_mode "$@")
+  local prefix
+  prefix=$(mode_prefix "$mode")
 
   if [ ! -d "$dir" ]; then
     echo "No observations directory: $dir"
     exit 1
   fi
 
-  echo "=== Convergence Status ==="
-  for f in $(ls "$dir"/iteration-*.json 2>/dev/null | sort -t- -k2 -n); do
+  echo "=== Convergence Status [${mode}] ==="
+  for f in $(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sed 's/.*iteration-\([0-9]*\)\.json/\1 &/' | sort -n -k1 | sed 's/^[0-9]* //'); do
     local iter found cum rate
     iter=$(jq -r '.iteration' "$f")
     found=$(jq -r '.decisions_found' "$f")
@@ -173,7 +261,7 @@ show_status() {
     printf "  Iteration %2d: +%3d (total: %4d) rate: %s\n" "$iter" "$found" "$cum" "$rate"
   done
 
-  check_convergence "$dir" 2>/dev/null || true
+  check_convergence "$dir" "$@" 2>/dev/null || true
 }
 
 case "$COMMAND" in
@@ -183,15 +271,15 @@ case "$COMMAND" in
     ;;
   add-detailed)
     [ $# -lt 5 ] && usage
-    add_detailed_observation "$2" "$3" "$4" "$5"
+    add_detailed_observation "$2" "$3" "$4" "$5" "${@:6}"
     ;;
   check)
     [ -z "$OBS_DIR" ] && usage
-    check_convergence "$OBS_DIR"
+    check_convergence "$OBS_DIR" "${@:3}"
     ;;
   status)
     [ -z "$OBS_DIR" ] && usage
-    show_status "$OBS_DIR"
+    show_status "$OBS_DIR" "${@:3}"
     ;;
   *)
     usage

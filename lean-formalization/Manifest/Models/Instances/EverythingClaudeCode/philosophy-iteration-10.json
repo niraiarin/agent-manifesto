@@ -1,0 +1,326 @@
+{
+  "iteration": 10,
+  "unit": "plugins/{plugin-dev,hookify,pr-review-toolkit,agent-sdk-dev}/",
+  "timestamp": "2026-04-12T07:00:49Z",
+  "mode": "philosophy",
+  "platform_decisions": [
+    {
+      "id": "PP-001",
+      "content": "Progressive disclosure is the core information architecture principle: skills use a three-level loading system (metadata always in context ~100 words, SKILL.md body when triggered <5k words, bundled resources as needed unlimited). This manages context window as a scarce resource, loading detailed knowledge only when relevance is established.",
+      "source": "plugin-dev/skills/skill-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-002",
+      "content": "Commands are instructions FOR agent consumption, not messages TO humans. When a user invokes a slash command, the content becomes Claude's instructions. This is a fundamental ontological distinction: commands are directives about what to do, not descriptions of what will happen.",
+      "source": "plugin-dev/skills/command-development/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-003",
+      "content": "Agents are FOR autonomous work, commands are FOR user-initiated actions. This separation reflects two different interaction patterns: agents operate independently on complex multi-step tasks triggered by context, while commands are explicit user-invoked prompts for specific workflows.",
+      "source": "plugin-dev/skills/agent-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-004",
+      "content": "Prompt-based hooks are recommended over command hooks for most validation use cases. The tradeoff: prompt hooks provide context-aware LLM reasoning with better edge case handling and easier maintenance, while command hooks offer deterministic speed for performance-critical checks. Default to flexible reasoning, reserve determinism for hot paths.",
+      "source": "plugin-dev/skills/hook-development/SKILL.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-005",
+      "content": "Skills are 'onboarding guides' that transform a general-purpose agent into a specialized agent equipped with procedural knowledge that no model can fully possess. Skills provide what pre-training cannot: domain-specific workflows, company knowledge, tool integrations, and bundled computational resources.",
+      "source": "plugin-dev/skills/skill-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-006",
+      "content": "The plugin architecture uses convention-over-configuration with auto-discovery: place .md files in commands/, agents/, or skills/ directories and they are automatically registered. Custom paths supplement but never replace defaults. This minimizes manifest configuration while preserving extensibility.",
+      "source": "plugin-dev/skills/plugin-structure/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-007",
+      "content": "Portability is enforced through ${CLAUDE_PLUGIN_ROOT} as the single mechanism for intra-plugin path references. Never use hardcoded absolute paths, relative paths from working directory, or home directory shortcuts. This reflects the principle that plugins install in different locations depending on method, OS, and user preferences.",
+      "source": "plugin-dev/skills/plugin-structure/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-008",
+      "content": "Agent triggering relies on description quality with concrete <example> blocks as the primary mechanism. The description field is 'the most critical field' because it determines when Claude autonomously activates an agent. Weak descriptions mean agents never fire; strong descriptions with 2-4 examples covering different phrasings ensure reliable activation.",
+      "source": "plugin-dev/skills/agent-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-009",
+      "content": "Tool access follows principle of least privilege: agents should specify the minimal set of tools needed in the tools field. Common patterns range from read-only analysis (Read, Grep, Glob) to code generation (Read, Write, Grep) to full access (omit field). Restrict rather than grant by default.",
+      "source": "plugin-dev/skills/agent-development/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-010",
+      "content": "Hookify inverts the hook authoring model: instead of editing complex hooks.json files, users describe unwanted behaviors in natural language or let conversation analysis detect frustration patterns automatically. Hooks become declarative markdown rules rather than imperative scripts. This is a 'no coding required' philosophy for policy enforcement.",
+      "source": "hookify/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-011",
+      "content": "Hookify's conversation analyzer treats user frustration signals as first-class data for policy generation. It systematically searches for explicit corrections ('Don't use X'), frustrated reactions ('Why did you do X?'), user reversions, and repeated issues. Past mistakes are the primary input for future prevention rules.",
+      "source": "hookify/agents/conversation-analyzer.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-012",
+      "content": "Hookify distinguishes block vs warn as fundamentally different severity responses: 'block' prevents the operation entirely (structural enforcement), while 'warn' shows a message but allows continuation (advisory). The default is warn, reflecting a philosophy that most guardrails should inform rather than prevent.",
+      "source": "hookify/README.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-013",
+      "content": "Hookify rules are dynamically read on each tool use (no restart needed), while hooks.json changes require Claude Code restart. This creates a two-tier configuration model: structural hooks are static/session-scoped, but hookify's .local.md rules are live/mutable within a session. The tradeoff enables rapid iteration on rules without the safety cost of hot-swapping core hooks.",
+      "source": "hookify/commands/help.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-014",
+      "content": "PR review is decomposed into 6 orthogonal specialist agents (comments, tests, errors, types, code quality, simplification), each with a distinct concern. This is compositional review: each agent focuses on one dimension of quality, and comprehensive review is achieved by combining them. No single agent tries to do everything.",
+      "source": "pr-review-toolkit/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-015",
+      "content": "Code review should filter aggressively with confidence scoring: only report issues with confidence >= 80 on a 0-100 scale. Quality of findings over quantity. False positives erode trust, so it is better to miss minor issues than to report false alarms. Issues are categorized as critical (90-100) or important (80-89) with no lower tier shown.",
+      "source": "pr-review-toolkit/agents/code-reviewer.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-016",
+      "content": "Silent failures are categorically unacceptable. Every error must be properly surfaced, logged, and actionable. Catch blocks that swallow errors, return defaults without logging, or fall back silently are critical defects. The silent-failure-hunter operates with 'zero tolerance' because silent failures create debugging nightmares that compound over time.",
+      "source": "pr-review-toolkit/agents/silent-failure-hunter.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-017",
+      "content": "Test coverage analysis should focus on behavioral coverage rather than line coverage. Tests should verify contracts and behavior, be resilient to refactoring, and follow DAMP principles (Descriptive and Meaningful Phrases). Tests tightly coupled to implementation details are anti-patterns because they fail on reasonable refactoring rather than on behavior changes.",
+      "source": "pr-review-toolkit/agents/pr-test-analyzer.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-018",
+      "content": "Type design should make illegal states unrepresentable. Well-designed types are the foundation of bug-resistant software. The type-design-analyzer rates four dimensions (encapsulation, invariant expression, usefulness, enforcement) on 1-10 scales, reflecting a belief that type quality is measurable and multi-dimensional, not binary.",
+      "source": "pr-review-toolkit/agents/type-design-analyzer.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-019",
+      "content": "Code simplification explicitly preserves functionality while improving clarity. The code-simplifier avoids nested ternaries and dense one-liners, choosing clarity over brevity. 'Perfect is the enemy of good' applies: over-simplification that creates clever but unreadable code is worse than moderate complexity. Readability trumps conciseness.",
+      "source": "pr-review-toolkit/agents/code-simplifier.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-020",
+      "content": "The PR review workflow prescribes a temporal ordering: code-reviewer and silent-failure-hunter before committing, pr-test-analyzer and comment-analyzer before creating PR, code-simplifier after passing review. Review aspects have a natural lifecycle phase, not all run at once. Simplification comes last because it should polish already-correct code.",
+      "source": "pr-review-toolkit/README.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-021",
+      "content": "Comment quality is evaluated through the lens of a developer encountering the code months or years later without original context. Comments explaining 'why' are more valuable than 'what'. Comments that merely restate obvious code should be removed. Inaccurate comments create technical debt that compounds over time, making them worse than no comments.",
+      "source": "pr-review-toolkit/agents/comment-analyzer.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-022",
+      "content": "Agent SDK development follows a scaffold-then-verify pattern: /new-sdk-app creates the project interactively (asking questions one at a time to reduce cognitive load), then automatically launches a language-specific verifier agent. Verification is not optional - 'DO NOT consider the setup complete until the code verifies successfully'. Creation and verification are a unified workflow.",
+      "source": "agent-sdk-dev/commands/new-sdk-app.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-023",
+      "content": "The agent-sdk-dev verifiers explicitly scope what NOT to focus on: general code style preferences, naming conventions, import ordering. Verification should prioritize SDK functionality and best practices over general code quality. This prevents scope creep in automated verification and keeps feedback actionable and relevant.",
+      "source": "agent-sdk-dev/agents/agent-sdk-verifier-ts.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-024",
+      "content": "Plugin-dev's create-plugin command follows an 8-phase structured workflow (Discovery, Component Planning, Detailed Design, Structure Creation, Implementation, Validation, Testing, Documentation) with clarifying questions at each phase. This reflects a philosophy that plugin creation is a design process requiring iterative refinement, not a single-shot generation task.",
+      "source": "plugin-dev/commands/create-plugin.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-025",
+      "content": "Agent creation uses AI-assisted generation: the agent-creator agent translates natural language descriptions into agent configurations using an established prompt pattern extracted from Claude Code's internal implementation. This is meta-agent design - using an agent to create other agents, with the creator encoding proven patterns that would otherwise require deep platform knowledge.",
+      "source": "plugin-dev/agents/agent-creator.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-026",
+      "content": "Skill descriptions must use third person ('This skill should be used when...') rather than second person ('Use this skill when...'). This is not mere stylistic preference but a triggering reliability concern: the description is matched against user context by the system, so it should describe conditions objectively rather than issue directives.",
+      "source": "plugin-dev/skills/skill-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-027",
+      "content": "Hooks run in parallel with non-deterministic ordering. This has a fundamental design implication: hooks must be designed for independence - they cannot see each other's output and cannot rely on execution order. Each hook is an isolated validator, not a step in a pipeline.",
+      "source": "plugin-dev/skills/hook-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-028",
+      "content": "Plugin settings use .local.md files (YAML frontmatter + markdown body) stored in .claude/ with gitignore. The markdown body serves double duty: it is both human-readable documentation AND a prompt that can be fed back to Claude. Configuration is simultaneously structured data and natural language context.",
+      "source": "plugin-dev/skills/plugin-settings/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-029",
+      "content": "Plugin validation is proactive, not just reactive. The plugin-validator agent triggers not only on explicit 'validate my plugin' requests but also automatically after plugin creation or modification. Validation is woven into the creation workflow rather than being a separate post-hoc step.",
+      "source": "plugin-dev/agents/plugin-validator.md",
+      "confidence": "medium",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-030",
+      "content": "MCP tool pre-allowance follows specific-over-wildcard: commands should pre-allow individual named MCP tools rather than using wildcards. This is security-by-default for external service integration - each tool grant is an explicit permission, not a blanket authorization.",
+      "source": "plugin-dev/skills/mcp-integration/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-031",
+      "content": "Hookify rules should have names starting with action verbs (warn, block, prevent, require, check), making the rule's intent immediately clear from its identifier. Naming encodes intent: the name itself communicates whether a rule advises or enforces.",
+      "source": "hookify/commands/hookify.md",
+      "confidence": "medium",
+      "type": "usage_pattern"
+    },
+    {
+      "id": "PP-032",
+      "content": "The pr-review-toolkit supports both sequential and parallel review modes. Sequential review is for interactive sessions where each report informs the next; parallel is for speed when all dimensions are independent. The user chooses the composition strategy, reflecting that review depth and review speed are genuinely in tension.",
+      "source": "pr-review-toolkit/commands/review-pr.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-033",
+      "content": "Agent system prompts should be written in second person ('You are...', 'You will...') addressing the agent directly, while skill descriptions use third person and skill body content uses imperative form. The three writing modes reflect three different audiences: agent prompts address the agent itself, skill descriptions address the routing system, and skill bodies address whatever agent loads them.",
+      "source": "plugin-dev/skills/agent-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-034",
+      "content": "SKILL.md content should be kept under 3,000 words (ideally 1,500-2,000) with detailed content moved to references/. This is an explicit context budget: every word in SKILL.md is loaded when the skill triggers, consuming context window. References are loaded only on demand, creating an information hierarchy that respects computational constraints.",
+      "source": "plugin-dev/skills/skill-development/SKILL.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-035",
+      "content": "Scripts in skills serve a dual purpose: they are token-efficient (executed without loading into context window) AND deterministically reliable (same code runs every time vs. agent regenerating it). This is the fundamental justification for bundling scripts: avoid both the context cost and the non-determinism of regeneration.",
+      "source": "plugin-dev/skills/skill-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-036",
+      "content": "Agent color coding follows a semantic system: blue/cyan for analysis and review, green for creation and success, yellow for validation and caution, red for security and critical, magenta for creative and transformation. Colors are not decorative but carry meaning about the agent's domain and risk level.",
+      "source": "plugin-dev/skills/agent-development/SKILL.md",
+      "confidence": "high",
+      "type": "usage_pattern"
+    },
+    {
+      "id": "PP-037",
+      "content": "Hookify distinguishes one-time accidents from systematic patterns: single occurrences should be mentioned but marked low priority, while repeated issues across the conversation indicate structural problems worth encoding as rules. Rule creation should be proportional to pattern recurrence.",
+      "source": "hookify/agents/conversation-analyzer.md",
+      "confidence": "medium",
+      "type": "principle"
+    },
+    {
+      "id": "PP-038",
+      "content": "The agent-sdk-dev plugin always checks for and installs the latest SDK version, verifying the installed version after installation. 'ALWAYS USE LATEST VERSIONS' is emphasized as non-negotiable. This reflects a philosophy that SDK scaffolding tools must never create projects with stale dependencies, as version drift creates immediate technical debt.",
+      "source": "agent-sdk-dev/commands/new-sdk-app.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-039",
+      "content": "Complex agent requirements should be broken into multiple specialized agents rather than creating one monolithic agent. This decomposition principle parallels the pr-review-toolkit's approach: specialization over generalization, with each agent having clear scope boundaries.",
+      "source": "plugin-dev/agents/agent-creator.md",
+      "confidence": "medium",
+      "type": "principle"
+    },
+    {
+      "id": "PP-040",
+      "content": "Interactive commands should ask questions one at a time, waiting for each response before proceeding. This reduces cognitive load on the user and enables adaptive follow-up. Batch questioning ('ASK QUESTIONS ONE AT A TIME - Do not ask multiple questions in a single response') is explicitly prohibited.",
+      "source": "agent-sdk-dev/commands/new-sdk-app.md",
+      "confidence": "high",
+      "type": "usage_pattern"
+    },
+    {
+      "id": "PP-041",
+      "content": "The review-pr command determines applicable review agents based on what actually changed (test files changed triggers pr-test-analyzer, types added triggers type-design-analyzer), not running all agents blindly. Review scope should be proportional and targeted to the nature of the change.",
+      "source": "pr-review-toolkit/commands/review-pr.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-042",
+      "content": "Plugin hooks merge with user hooks and run in parallel. This is an additive composition model: plugins cannot override or disable user-level hooks, and user hooks cannot disable plugin hooks. Both layers coexist, reflecting a philosophy that safety policies from different sources should compound rather than conflict.",
+      "source": "plugin-dev/skills/hook-development/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-043",
+      "content": "Temporarily active hooks use flag-file or configuration-based activation patterns rather than modifying hooks.json. This separation of activation state from hook definition means the enforcement mechanism is stable while its activation is dynamic, avoiding the restart requirement for tactical behavior changes.",
+      "source": "plugin-dev/skills/hook-development/SKILL.md",
+      "confidence": "medium",
+      "type": "usage_pattern"
+    },
+    {
+      "id": "PP-044",
+      "content": "The code-reviewer agent checks CLAUDE.md compliance as a first-class concern alongside bug detection and code quality. Project-specific guidelines in CLAUDE.md are elevated to the same importance as general best practices, reflecting a belief that project conventions are as binding as language conventions.",
+      "source": "pr-review-toolkit/agents/code-reviewer.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-045",
+      "content": "Error messages must be written for the least experienced future maintainer: clear, non-technical language when appropriate, actionable next steps, specific enough to distinguish from similar errors. Error handling quality is judged by 'Would this log help someone debug the issue 6 months from now?'",
+      "source": "pr-review-toolkit/agents/silent-failure-hunter.md",
+      "confidence": "high",
+      "type": "principle"
+    }
+  ],
+  "decisions_found": 45,
+  "cumulative_total": 45,
+  "incremental_rate": 1.0000
+}

@@ -1,0 +1,106 @@
+{
+  "iteration": 8,
+  "unit": "final-sweep/",
+  "timestamp": "2026-04-12T05:48:28Z",
+  "platform_decisions": [
+    {
+      "id": "PD-335",
+      "content": "Cache Structured Output JSON schemas with LRU eviction to prevent per-turn schema re-serialization overhead.. Fixed critical bug where multiple schemas caused ~50% failure rate. Caching reduces per-turn JSON.stringify calls on MCP tool schemas, improving prompt cache hit rate on long sessions.",
+      "source": "CHANGELOG.md (Schema caching, StructuredOutput fix)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-336",
+      "content": "When hook output exceeds 50KB, save to disk with file path + preview instead of injecting directly into context.. Prevents context bloat from verbose hook outputs while maintaining visibility via file references. Balances context efficiency with hook transparency.",
+      "source": "CHANGELOG.md (Hook output management)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-337",
+      "content": "Support `managed-settings.d/` directory alongside `managed-settings.json` for fragment-based policy composition with alphabetical merge.. Enables independent teams to deploy policy fragments without coordinating a single monolithic settings file. Reduces merge conflicts and deployment coupling.",
+      "source": "CHANGELOG.md (managed-settings.d/ support)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-338",
+      "content": "Introduce `\"defer\"` permission decision in PreToolUse hooks: headless sessions can pause at a tool call and resume with `--resume` for re-evaluation.. Enables asynchronous permission workflows without blocking the parent session. Critical for headless integrations and external approval systems.",
+      "source": "CHANGELOG.md (Deferred permission decision)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-339",
+      "content": "Detect and halt autocompaction when context refills to the limit immediately after three consecutive compactions, surfacing an actionable error instead of burning API calls.. Prevents infinite compaction loops on pathological conversation patterns. Provides clear signal to users that session cleanup is needed.",
+      "source": "CHANGELOG.md (Compaction thrash loop fix)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-340",
+      "content": "Support MCP servers requesting structured input mid-task via interactive dialog (form fields or browser URL) without blocking the main agent.. Enables rich, stateful MCP workflows (e.g., approval flows, multi-step interactions) without forcing tool-use ping-pong patterns.",
+      "source": "CHANGELOG.md (MCP elicitation support)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-341",
+      "content": "Support `worktree.sparsePaths` setting to enable git sparse-checkout in subagent worktrees, checking out only specified directories.. Reduces setup time and disk usage for large monorepos. Critical for organizations with multi-hundred-directory codebases.",
+      "source": "CHANGELOG.md (sparse-checkout support)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-342",
+      "content": "Support conditional `if` field in hooks using permission rule syntax (e.g., `Bash(git *)`) to filter execution, reducing process spawning overhead.. Avoids spawning hooks for tool calls that don't match the condition. Optimizes performance for high-frequency hooks.",
+      "source": "CHANGELOG.md (Conditional hook execution)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-343",
+      "content": "Fire PermissionDenied hook after auto mode classifier denials, allowing handlers to return `{retry: true}` to retry the tool call.. Enables policies like 'auto-deny then escalate to human' without blocking the agent. Separates denial decision from retry policy.",
+      "source": "CHANGELOG.md (PermissionDenied hook)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-344",
+      "content": "Follow RFC 9728 Protected Resource Metadata discovery for MCP OAuth servers, supporting CIMD (Client ID Metadata Document) for servers without Dynamic Client Registration.. Enables broader MCP ecosystem compatibility without requiring proprietary OAuth configurations. Reduces setup friction for enterprise IdPs (ADFS, etc.).",
+      "source": "CHANGELOG.md (RFC 9728 OAuth support)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-345",
+      "content": "Support `source: 'settings'` to declare plugin marketplace entries inline in settings.json, eliminating need for separate marketplace clone.. Simplifies offline deployments and air-gapped environments. Reduces external dependency on marketplace availability.",
+      "source": "CHANGELOG.md (Plugin settings source)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-346",
+      "content": "Fire StopFailure hook when a turn ends due to API error (rate limit, auth failure, etc.) to enable custom error handling.. Allows policies like 'on rate limit, pause and notify' without introspecting the assistant message. Decouples error signals from turn termination.",
+      "source": "CHANGELOG.md (StopFailure hook event)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-347",
+      "content": "Support `initialPrompt` field in agent frontmatter to auto-submit a first-turn prompt without user interaction.. Enables stateless agent invocations (e.g., via `/team-onboarding` or workflow integrations) without requiring explicit user input.",
+      "source": "CHANGELOG.md (Agent initialPrompt)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-348",
+      "content": "Fix resume chain recovery to detect and avoid bridging into unrelated subagent conversations when a subagent message lands near a main-chain write gap.. Prevents conversation mixing across logical boundaries in distributed agent execution. Critical for conversation integrity in multi-agent workflows.",
+      "source": "CHANGELOG.md (Resume chain recovery fix)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-349",
+      "content": "Apply exponential backoff as a minimum when server returns small `Retry-After` values, preventing retry storms on 429 responses.. Prevents burning entire retry budget in ~13 seconds on backends returning aggressive backoff hints. Improves resilience to transient rate limits.",
+      "source": "CHANGELOG.md (429 retry exponential backoff)",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-350",
+      "content": "Use shorter `old_string` anchors in Edit tool to reduce output token overhead while maintaining match uniqueness.. Reduces token waste on verbose edit context. Improves token efficiency for repeated edits to large files.",
+      "source": "CHANGELOG.md (Edit tool optimization)",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 16,
+  "cumulative_total": 290,
+  "incremental_rate": 0.0551
+}

@@ -1,0 +1,165 @@
+{
+  "iteration": 12,
+  "unit": "plugins/{ralph-wiggum,learning-output-style,explanatory-output-style,frontend-design}/",
+  "timestamp": "2026-04-12T07:00:49Z",
+  "mode": "philosophy",
+  "platform_decisions": [
+    {
+      "id": "PP-073",
+      "content": "Iteration over perfection: do not aim for a perfect result on the first attempt; instead, use repeated passes where each iteration refines the work incrementally, treating the loop itself as the quality mechanism",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-074",
+      "content": "Failures are data, not obstacles: predictable failures ('deterministically bad') are informative signals that enable systematic improvement through prompt tuning, rather than problems to be avoided",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-075",
+      "content": "Operator skill as the primary lever: success in AI-assisted development depends more on writing effective prompts (operator craft) than on the underlying model's raw capability",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-076",
+      "content": "Self-reference through artifacts, not memory: the feedback loop works because the agent sees its own prior work in files and git history, not because output is fed back as input — persistence is in the environment, not the conversation",
+      "source": "ralph-wiggum/commands/help.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-077",
+      "content": "Prompt invariance as a design constraint: the same prompt is repeated verbatim across iterations, forcing the agent to derive progress signals from the changed environment rather than from escalating instructions",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-078",
+      "content": "Completion promises must be truthful — the agent may only emit a completion signal when the stated condition is genuinely satisfied, not to escape the loop; this treats promise integrity as a hard constraint even under pressure to exit",
+      "source": "ralph-wiggum/commands/ralph-loop.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-079",
+      "content": "Safety through iteration limits, not trust: max-iterations serves as a structural escape hatch against infinite loops on impossible tasks, acknowledging that neither the agent nor the prompt can reliably detect impossibility",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-080",
+      "content": "Clear completion criteria as a prerequisite for autonomous iteration: Ralph is suited only for tasks with verifiable success conditions (tests, linters) and actively unsuited for tasks requiring human judgment or unclear criteria",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-081",
+      "content": "Stop-hook as structural enforcement: the loop is implemented by intercepting exit attempts rather than relying on the agent's willingness to continue, making persistence a property of the infrastructure rather than agent behavior",
+      "source": "ralph-wiggum/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-082",
+      "content": "Learning by doing over passive observation: the most effective way to develop skills with AI assistance is to actively write meaningful code at decision points rather than watching the AI implement everything",
+      "source": "learning-output-style/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-083",
+      "content": "Selective delegation: the AI should implement boilerplate and obvious code automatically, but pause at business logic, error handling strategies, algorithm choices, and architecture decisions — precisely where human judgment adds irreplaceable value",
+      "source": "learning-output-style/README.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-084",
+      "content": "Trade-off presentation as a teaching mechanism: rather than choosing for the user, present the trade-off space (e.g., security vs UX for session timeouts) and let the user make the decision, turning each choice into a learning opportunity",
+      "source": "learning-output-style/README.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-085",
+      "content": "Token cost as an explicit design consideration: output-style plugins carry a real resource cost from additional instructions and verbose output, which must be acknowledged upfront rather than hidden as a free enhancement",
+      "source": "learning-output-style/README.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-086",
+      "content": "SessionStart hooks as a distribution-friendly alternative to CLAUDE.md: injecting behavioral instructions via hooks provides the same effect as project-level instructions but enables packaging and sharing as reusable plugins",
+      "source": "explanatory-output-style/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-087",
+      "content": "Behavioral modification vs role change: SessionStart hooks that add instructions to the default system prompt suit behavioral tweaks (output style), while subagents that replace the system prompt suit tasks outside the primary domain — the distinction is additive vs substitutive customization",
+      "source": "explanatory-output-style/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-088",
+      "content": "Codebase-specific over generic: educational insights should focus on patterns, conventions, and trade-offs in the user's actual codebase rather than general programming concepts, making learning contextual and immediately applicable",
+      "source": "explanatory-output-style/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-089",
+      "content": "Intentionality over intensity in design: both bold maximalism and refined minimalism produce distinctive results; the differentiator is deliberate aesthetic commitment, not the volume of visual effects",
+      "source": "frontend-design/skills/frontend-design/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-090",
+      "content": "Anti-convergence as a design principle: actively resist gravitating toward common defaults (generic fonts, purple gradients, predictable layouts) across generations — each output should be contextually unique rather than statistically average",
+      "source": "frontend-design/skills/frontend-design/SKILL.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-091",
+      "content": "Context-driven aesthetic selection: design direction should be derived from purpose, audience, and constraints rather than applied as a universal template — the interface should feel 'designed for this specific context'",
+      "source": "frontend-design/skills/frontend-design/SKILL.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-092",
+      "content": "Implementation complexity must match aesthetic vision: maximalist designs require elaborate code with extensive animations; minimalist designs require restraint and precision — mismatching ambition and execution undermines both",
+      "source": "frontend-design/skills/frontend-design/SKILL.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-093",
+      "content": "Memorability as the design success metric: the guiding question is 'what's the one thing someone will remember?' — optimizing for a single unforgettable element rather than uniform competence across all aspects",
+      "source": "frontend-design/skills/frontend-design/SKILL.md",
+      "confidence": "medium",
+      "type": "principle"
+    },
+    {
+      "id": "PP-094",
+      "content": "Three-tier plugin management model: disable (keep code, stop behavior), uninstall (remove code), or fork-and-customize (local copy for personalization) — providing graduated control over plugin lifecycle without all-or-nothing choices",
+      "source": "explanatory-output-style/README.md",
+      "confidence": "medium",
+      "type": "design_rationale"
+    }
+  ],
+  "decisions_found": 22,
+  "cumulative_total": 94,
+  "incremental_rate": 0.2340
+}

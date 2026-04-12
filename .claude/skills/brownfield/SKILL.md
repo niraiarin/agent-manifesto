@@ -100,6 +100,10 @@ Phase 0: スコーピング
 Phase 1: 観察（反復）
   │ 分解 → 4 種観察エンジン → Platform Decision 収集
   │ ← 収束判定（発見率 < 5%）まで反復
+  │ ← philosophy モード: 設計思想を別層で抽出
+  ↓
+Phase 1.5: ワークフロー思想の統合（philosophy モード実行時のみ）
+  │ Philosophy PD → Workflow Philosophy に統合
   ↓
 Phase 2: 条件付き公理系の構築
   │ ModelSpec JSON → check-monotonicity → generate → lake build → /verify
@@ -241,10 +245,16 @@ bash .claude/skills/brownfield/convergence.sh add-detailed <observations-dir> 1 
 ```
 
 **PD 詳細の必須フィールド**:
-- `id`: `PD-NNN` 形式（グローバル一意）
+- `id`: `PD-NNN` 形式（グローバル一意。philosophy モードでは `PP-NNN`）
 - `content`: PD の内容
 - `source`: `code_analysis` / `web_search` / `human_interview` / `manifesto_mapping`
 - `confidence`: `high` / `medium` / `low`
+
+**PD 詳細のオプションフィールド**:
+- `type`: PD の種別。philosophy モードでは必須:
+  `design_rationale` / `principle` / `tradeoff` / `workflow` / `usage_pattern`
+- `trades`: トレードオフの記述。Phase 2 で `Assumption.refutation` に変換される (#478)
+- `manifesto_mapping`: manifesto 公理系の対応 ID（例: `D5`）
 
 **禁止**: `convergence.sh add`（count のみ）を使って PD 詳細を省略すること。
 `add` は後方互換性のために残存するが、新規実行では `add-detailed` を使用する。
@@ -271,6 +281,34 @@ bash .claude/skills/brownfield/convergence.sh add-detailed <observations-dir> 1 
 }
 ```
 
+#### 観察モード (#477)
+
+同じファイルに異なる「問い」を向けることで、異なる層の情報を抽出できる。
+`convergence.sh` は `--mode` オプションでモード別に独立した収束追跡を行う。
+
+| モード | 問い | 抽出対象 | PD ID 接頭辞 |
+|--------|------|---------|-------------|
+| normal（デフォルト） | 「何が実装されているか？」 | 実装事実、設定、依存関係 | `PD-` |
+| philosophy | 「なぜこう設計されたか？」 | 設計思想、原則、トレードオフ、活用パターン | `PP-` |
+
+```bash
+# philosophy モードでの PD 登録
+bash .claude/skills/brownfield/convergence.sh add-detailed <observations-dir> 10 "plugins/" /tmp/pds-philosophy.json --mode philosophy
+
+# philosophy モードの収束チェック
+bash .claude/skills/brownfield/convergence.sh check <observations-dir> --mode philosophy
+```
+
+**philosophy モードの PD 抽出ガイドライン**:
+- 実装事実（「jq を使用」「フェーズ 3 は必須」）ではなく、設計意図を抽出する
+- 「なぜ？」「どのようなトレードオフ？」「何を優先した？」に答える PD を書く
+- 各 PD に `type` フィールドを必ず付与する（`design_rationale` / `principle` / `tradeoff` / `workflow` / `usage_pattern`）
+- 深さ優先: 3 件の深い洞察は 10 件の表面的な PD に勝る
+
+**核心的発見**: 同じファイルを読んでもプロンプトを変えるだけで抽出される層が完全に異なる:
+- Normal: "Phase 3 is CRITICAL and must not be skipped"（実装事実）
+- Philosophy: "Ambiguity is the primary risk. Phase 3 is positioned between exploration and design intentionally"（設計思想）
+
 ### Step 3: 収束判定（deterministic）
 
 各反復後に収束を判定:
@@ -280,9 +318,54 @@ bash .claude/skills/brownfield/convergence.sh add-detailed <observations-dir> 1 
 収束条件: 増分率 < 0.05（5% 未満）
 ```
 
-- 収束した → Phase 2 へ
+- 収束した → Phase 1.5 へ（philosophy モード実行済みの場合）、または Phase 2 へ
 - 未収束 → 次の分解単位で Step 2 を反復
 - 10 反復超過 → 強制終了。未観察の分解単位を記録して Phase 2 へ
+
+## Phase 1.5: ワークフロー思想の統合（#479）
+
+Phase 1 の philosophy モードで抽出した個別の PP（Philosophy PD）を統合し、
+プロジェクト全体に通底するワークフロー思想（WP: Workflow Philosophy）を導出する。
+
+**前提条件**: Phase 1 で philosophy モードの iteration が 2 回以上実行されていること。
+収束（rate < 0.05）は必須ではない — 十分な PD 量（20+）があれば WP 導出は可能。
+philosophy モードを実行していない場合、Phase 1.5 はスキップして Phase 2 へ進む。
+
+### Step 1: PP のクラスタリング（judgmental）
+
+philosophy PD を意味的にグループ化する:
+1. 全 PP を読み、共通するテーマを識別
+2. 各テーマに 3+ PP が集まるクラスタを形成
+3. クラスタ間の関係（補完・対立・階層）を識別
+
+### Step 2: WP の導出（judgmental）
+
+各クラスタから統合的なワークフロー思想（WP）を導出する:
+
+```json
+{
+  "id": "WP-001",
+  "name": "制御の分散と集中の使い分け",
+  "description": "エージェントは内部で decisive な判断を行い、人間には選択肢を提示する。制御の所在はコンテキストに依存する。",
+  "derivedFromPDs": ["PP-012", "PP-045", "PP-103"],
+  "pattern": "workflow"
+}
+```
+
+**WP フォーマット**:
+- `id`: `WP-NNN` 形式
+- `name`: 短い名前（1 行）
+- `description`: 思想の説明（2-3 文）
+- `derivedFromPDs`: 導出元の PP ID リスト（最低 3 件）
+- `pattern`: `workflow` / `principle` / `tradeoff_resolution` / `design_meta`
+
+### Step 3: WP の検証（deterministic + judgmental）
+
+- 各 WP が 3+ PP から導出されていることを確認（deterministic: カウント）
+- 各 WP の description が導出元 PP と整合していることを確認（judgmental）
+- WP 間に矛盾がないことを確認（judgmental）
+
+**Gate 基準**: 5+ WPs、各 3+ PDs から導出
 
 ## Phase 2: 条件付き公理系の構築
 
@@ -312,6 +395,22 @@ bash lean-formalization/Manifest/Models/generate-conditional-axiom-system.sh \
 
 Phase 1 で収集した C/H を Assumptions に書き出す。
 /instantiate-model Step 7-8 と同一手順。
+
+#### trades → Assumption.refutation 変換ルール (#478)
+
+Phase 1 の PD に `trades` フィールドがある場合、対応する Assumption の
+`refutation` フィールドに変換する。トレードオフの反対側が成立する状況が反証条件:
+
+```
+PD.trades: "追加メモリ per session vs. トークンオーバーヘッド削減"
+→ Assumption.refutation: "セッション当たりのメモリ増がトークン削減効果を上回る場合"
+```
+
+変換チェックリスト:
+- [ ] `trades` がある PD を列挙
+- [ ] 各 trades の「vs.」の反対側を反証条件として抽出
+- [ ] 対応する Assumption に refutation を設定
+- [ ] 反証条件が TemporalValidity.reviewInterval の判断材料になっているか確認
 
 ### Step 9: /verify P2 独立検証（必須）
 

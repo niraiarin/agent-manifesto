@@ -1,0 +1,190 @@
+{
+  "iteration": 1,
+  "unit": ".claude/+scripts/",
+  "timestamp": "2026-04-12T05:32:00Z",
+  "platform_decisions": [
+    {
+      "id": "PD-001",
+      "content": "Claude Code commands use a scoped allowed-tools frontmatter to restrict which Bash subcommands are permitted per command",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-002",
+      "content": "The commit-push-pr workflow enforces a single-message multi-tool call pattern for all steps",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-003",
+      "content": "Duplicate detection uses a parallel multi-agent approach: 5 agents search with diverse keywords simultaneously",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-004",
+      "content": "GitHub interaction in automated workflows is mediated through a restricted wrapper script (gh.sh) that whitelists specific subcommands",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-005",
+      "content": "gh.sh enforces repository scoping via GH_REPO/GITHUB_REPOSITORY and rejects cross-repo qualifiers",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-006",
+      "content": "Issue labeling decisions must only use labels fetched from the repo at runtime, not invented",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-007",
+      "content": "Issue triage is a label-only operation; posting comments is explicitly forbidden during triage",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-008",
+      "content": "Issue lifecycle governed by single source of truth module (issue-lifecycle.ts) with shared label/timeout/message definitions",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-009",
+      "content": "Lifecycle labels apply only to bug reports, never questions or enhancements; false positives worse than missing labels",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-010",
+      "content": "Issues with 10+ thumbs-up reactions are exempt from stale marking and auto-closure",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-011",
+      "content": "Stale/autoclose labels auto-removed when human (non-bot) comment detected on issue",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-012",
+      "content": "Automatic duplicate closure has 3-day grace period with opt-out via thumbs-down reaction",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-013",
+      "content": "Issue number for label edits bound exclusively to GitHub Actions event payload, not CLI args",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-014",
+      "content": "Duplicate comment enforces maximum 3 potential duplicates per comment",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-015",
+      "content": "All duplicate/stale closures use structured state_reason via GitHub API",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-016",
+      "content": "All automation scripts support --dry-run flag; dry run is default for backfill, requiring explicit opt-in",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-017",
+      "content": "bun is the TypeScript script execution runtime (not Node.js)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-018",
+      "content": "Issue validity classification checks Claude Code signals in body text; body is authoritative over form dropdowns",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-019",
+      "content": "Lifecycle label removal enforced by two independent layers: triage workflow (primary) and sweep script (safety net)",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-020",
+      "content": "Backfill operations support configurable issue ranges with 200-page safety pagination limit",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-021",
+      "content": "Plugin marketplace defined in .claude-plugin/marketplace.json organized by category with schema validation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-022",
+      "content": "Plugins versioned independently with per-plugin author attribution",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-023",
+      "content": "Plugin categories: development, productivity, learning, security",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-024",
+      "content": "Dedupe uses two-phase agent architecture: parallel discovery then separate filtering agent",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-025",
+      "content": "Issues with prior bot duplicate comment are skipped to prevent redundant comments",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-026",
+      "content": "Locked issues and issues with assignees exempt from stale marking",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-027",
+      "content": "All bot comments include Claude Code attribution footer",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-028",
+      "content": "Issue sweep paginated with 10-page max per label, FIFO order (oldest first)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-029",
+      "content": "Commands inject live git context via backtick dynamic interpolation in frontmatter",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-030",
+      "content": "Exactly one primary category label must always be applied to new issues; imperfect label preferred over none",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 30,
+  "cumulative_total": 30,
+  "incremental_rate": 1.0000
+}
