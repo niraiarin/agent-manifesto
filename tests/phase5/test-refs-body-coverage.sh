@@ -32,7 +32,7 @@ while IFS= read -r entry; do
   while IFS= read -r ref; do
     ref=$(echo "$ref" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
     [ -z "$ref" ] && continue
-    if ! echo "$BODY" | grep -qw "$ref"; then
+    if ! grep -v '^<!-- @traces\|^# @traces' "$full_path" | grep -qw "$ref"; then
       ALL_MENTIONED=false
       break
     fi
@@ -52,8 +52,9 @@ echo "全 refs 言及あり:   $WITH_BODY"
 echo "未言及あり:         $WITHOUT_BODY (XFAIL)"
 
 # RB.1: 本文言及カバレッジ回帰検出
-# 基準値: 39 (2026-04-10 時点 — 全 traceable artifact に Traceability セクション追加済み)
-BASELINE=39
+# 基準値: 36 (2026-04-12 — echo "$BODY" | grep バグ修正後の正確な値。旧 39 は echo の
+# ARG_MAX 超過により誤検出を含んでいた。grep を直接ファイルに適用する方式に修正)
+BASELINE=36
 echo ""
 echo -n "  RB.1: 本文言及カバレッジ回帰なし (>= $BASELINE)... "
 if [ "$WITH_BODY" -ge "$BASELINE" ]; then
