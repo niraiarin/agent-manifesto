@@ -947,6 +947,24 @@ if [ -f "$VALIDATE_SCRIPT" ]; then
   else
     fail "Section 19.6: missing failure_type not detected"
   fi
+  # 19.7: C9 full_processing check — silent drop detected (#475)
+  C9_SILENT_DROP='{"run":7,"timestamp":"2026-01-01T00:00:00Z","result":"partial","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":5},"hypothesizer":{"proposals_count":1},"verifier":{"pass_count":1,"fail_count":0},"judge":{"evaluated":1,"pass":1,"conditional":0,"fail":0},"integrator":{"commits_count":1}},"notes":"test"}'
+  RESULT=$(echo "$C9_SILENT_DROP" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.pass == false' > /dev/null 2>&1 && \
+     echo "$RESULT" | jq -e '.checks[] | select(.id == "C9" and .pass == false)' > /dev/null 2>&1; then
+    pass "Section 19.7: C9 silent drop detected (findings=5, accounted=1)"
+  else
+    fail "Section 19.7: C9 silent drop not detected"
+  fi
+
+  # 19.8: C9 passes when all items accounted for (#475)
+  C9_ACCOUNTED='{"run":8,"timestamp":"2026-01-01T00:00:00Z","result":"success","improvements":[{"title":"A","compatibility":"conservative extension"}],"rejected":[{"title":"B","reason":"bad","failure_type":"hypothesis_error"}],"commits":["abc"],"lean":{"axioms":51,"theorems":392,"sorry":0},"tests":{"passed":10,"failed":0},"phases":{"observer":{"findings_count":5},"hypothesizer":{"proposals_count":2,"skipped_items":[{"title":"C","reason":"out of scope"}],"t6_items":[{"title":"D","issue":"#100"}]},"verifier":{"pass_count":1,"fail_count":1},"judge":{"evaluated":1,"pass":1,"conditional":0,"fail":0},"integrator":{"commits_count":1}},"deferred":[{"id":"e","description":"E","reason":"resourceExhaustion","status":"open","opened_in_run":8}],"notes":"test"}'
+  RESULT=$(echo "$C9_ACCOUNTED" | bash "$VALIDATE_SCRIPT" 2>/dev/null || true)
+  if echo "$RESULT" | jq -e '.checks[] | select(.id == "C9" and .pass == true)' > /dev/null 2>&1; then
+    pass "Section 19.8: C9 passes when all items accounted (proposals=2+skipped=1+t6=1+deferred=1 >= findings=5)"
+  else
+    fail "Section 19.8: C9 should pass when all items accounted for"
+  fi
 else
   pass "Section 19: validate-evolve-entry.sh not found (not applicable)"
 fi
@@ -980,6 +998,48 @@ if [ -f "$EVOLVE_HISTORY_S20" ]; then
   fi
 fi
 pass "Section 20: failure_subtype diagnostic completed (warnings above are informational)"
+
+echo ""
+
+# ============================================================
+# Section 21: [A]/[C]/[R] フロー構造テスト（#470）
+# ============================================================
+echo "--- Section 21: [A]/[C]/[R] Flow Structural Tests ---"
+
+OBSERVER_AGENT="$BASE/.claude/agents/observer/AGENT.md"
+
+# 21.1: Observer AGENT.md に「サイクル閉環性」が存在する
+echo -n "  Observer AGENT.md has サイクル閉環性... "
+grep -q "サイクル閉環性" "$OBSERVER_AGENT" && \
+  pass "#470: Observer AGENT.md contains サイクル閉環性" || \
+  fail "#470: Observer AGENT.md missing サイクル閉環性"
+
+# 21.2: Observer AGENT.md に [A], [C], [R] タグが存在する
+for tag in '\[A\]' '\[C\]' '\[R\]'; do
+  display_tag=$(echo "$tag" | sed 's/\\//g')
+  echo -n "  Observer AGENT.md has $display_tag tag... "
+  grep -q "$tag" "$OBSERVER_AGENT" && \
+    pass "#470: Observer AGENT.md contains $display_tag" || \
+    fail "#470: Observer AGENT.md missing $display_tag"
+done
+
+# 21.3: SKILL.md に Step 2a が存在する
+echo -n "  SKILL.md has Step 2a... "
+grep -q "Step 2a" "$SKILL" && \
+  pass "#470: SKILL.md contains Step 2a" || \
+  fail "#470: SKILL.md missing Step 2a"
+
+# 21.4: SKILL.md に Step 2b が存在する
+echo -n "  SKILL.md has Step 2b... "
+grep -q "Step 2b" "$SKILL" && \
+  pass "#470: SKILL.md contains Step 2b" || \
+  fail "#470: SKILL.md missing Step 2b"
+
+# 21.5: SKILL.md frontmatter に ground-axiom が含まれる
+echo -n "  SKILL.md frontmatter has ground-axiom... "
+head -50 "$SKILL" | grep -q "ground-axiom" && \
+  pass "#470: SKILL.md frontmatter references ground-axiom" || \
+  fail "#470: SKILL.md frontmatter missing ground-axiom"
 
 echo ""
 

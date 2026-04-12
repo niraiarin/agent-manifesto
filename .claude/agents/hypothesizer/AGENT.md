@@ -189,8 +189,23 @@ YYYY-MM-DD HH:MM
 
 ...
 
-## 今回見送る観察項目
-- [項目]: [見送り理由]
+## 今回見送る観察項目（skipped_items — C9 全件処理義務, #475）
+
+Observer の全 findings は以下の 4 分類のいずれかに分類すること。サイレントドロップ禁止。
+- **processed**: 改善案として提出（improvements/rejected に記録）
+- **skipped**: 処理対象外（reason 必須。以下の `skipped_items` に記録）
+- **deferred**: 引き継ぎ条件該当（resourceExhaustion/dependencyBlocked/actionSpaceExceeded）
+- **t6_routed**: T6 Issue として人間にルーティング（[A]/[C] タグ含む。以下の `t6_items` に記録）
+
+**会計等式**: proposals_count + len(skipped_items) + len(t6_items) + len(deferred) >= findings_count
+
+```
+skipped_items:
+- [項目]: [見送り理由（reason 必須）]
+
+t6_items:
+- [項目]: [T6 Issue 番号]
+```
 
 ## 仮説の依存関係
 - 改善案 1 → 改善案 3（1 が前提）

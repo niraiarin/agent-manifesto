@@ -154,7 +154,7 @@ judgmental フィールド（improvements, rejected, phases, v_changes, notes）
   "tests": {"passed": 0, "failed": 0},
   "phases": {
     "observer": {"findings_count": 0, "model": "sonnet"},
-    "hypothesizer": {"proposals_count": 0, "skipped_count": 0, "model": "opus"},
+    "hypothesizer": {"proposals_count": 0, "skipped_count": 0, "skipped_items": [{"title": "...", "reason": "..."}], "t6_items": [{"title": "...", "issue": "#NNN"}], "model": "opus"},
     "verifier": {"pass_count": 0, "fail_count": 0, "model": "sonnet"},
     "judge": {"evaluated": 0, "pass": 0, "conditional": 0, "fail": 0, "avg_score": 0.0},
     "integrator": {"commits_count": 0, "model": "sonnet"}
@@ -190,6 +190,7 @@ echo '<entry_json>' | bash scripts/validate-evolve-entry.sh
 - [ ] `rejected` の各エントリに `failure_type` が付与されていることを確認（SKILL.md 記録義務）
 - [ ] **`phases.judge` は必須。** Judge の実行有無と結果は Observable な事実であり、省略不可（#321）
 - [ ] `judge.evaluated == judge.pass + judge.conditional + judge.fail` を確認
+- [ ] **全件処理の会計等式（C9, #475）**: `proposals_count + len(skipped_items) + len(t6_items) + len(deferred) >= findings_count`。Observer の全 findings が processed/skipped/deferred/t6_routed のいずれかに分類されていること。`skipped_items` の各項目に `reason` 必須
 
 **rejected.reason の記録ガイダンス:**
 - `reason` には Verifier の具体的な FAIL 理由を記録する（例: "Verifier FAIL: ファイルパス未確認（H_no_pre_verification）"）

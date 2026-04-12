@@ -13,6 +13,7 @@
 #   C6: each rejected entry has failure_type (if fail_count > 0)
 #   C7: required fields present (run, timestamp, result, improvements, rejected, commits, lean, tests, phases, notes)
 #   C8: phases.judge must exist (non-null) — Judge results are deterministic observable facts
+#   C9: proposals_count + skipped_count + t6_count + deferred_count >= findings_count (#475)
 
 set -euo pipefail
 
@@ -140,6 +141,22 @@ if [ "$JUDGE_EXISTS" = "true" ]; then
   add_check "C8" "judge_present" "true" "phases.judge is present"
 else
   add_check "C8" "judge_present" "false" "phases.judge is null or missing — Judge results must be recorded (deterministic observable fact)"
+fi
+
+# C9: proposals_count + skipped_count + t6_count + deferred_count >= findings_count (#475)
+FINDINGS=$(echo "$INPUT" | jq '.phases.observer.findings_count // 0')
+SKIPPED_COUNT=$(echo "$INPUT" | jq '.phases.hypothesizer.skipped_items // [] | length')
+T6_COUNT=$(echo "$INPUT" | jq '.phases.hypothesizer.t6_items // [] | length')
+DEFERRED_COUNT=$(echo "$INPUT" | jq '.deferred // [] | length')
+ACCOUNTED=$((PROPOSALS + SKIPPED_COUNT + T6_COUNT + DEFERRED_COUNT))
+if [ "$FINDINGS" -gt 0 ]; then
+  if [ "$ACCOUNTED" -ge "$FINDINGS" ]; then
+    add_check "C9" "full_processing" "true" "accounted=$ACCOUNTED (proposals=$PROPOSALS+skipped=$SKIPPED_COUNT+t6=$T6_COUNT+deferred=$DEFERRED_COUNT) >= findings=$FINDINGS"
+  else
+    add_check "C9" "full_processing" "false" "accounted=$ACCOUNTED (proposals=$PROPOSALS+skipped=$SKIPPED_COUNT+t6=$T6_COUNT+deferred=$DEFERRED_COUNT) < findings=$FINDINGS — silent drop detected"
+  fi
+else
+  add_check "C9" "full_processing" "true" "findings_count=0 or missing (not applicable)"
 fi
 
 # Output result
