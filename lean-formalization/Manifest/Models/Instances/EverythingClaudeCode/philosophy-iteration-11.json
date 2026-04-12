@@ -1,0 +1,200 @@
+{
+  "iteration": 11,
+  "unit": "plugins/{feature-dev,code-review,commit-commands,claude-opus-4-5-migration}/",
+  "timestamp": "2026-04-12T07:00:49Z",
+  "mode": "philosophy",
+  "platform_decisions": [
+    {
+      "id": "PP-046",
+      "content": "Feature development requires understanding before acting: reading and comprehending existing code patterns must precede any implementation. Jumping straight into code produces features that integrate poorly with existing architecture.",
+      "source": "feature-dev/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-047",
+      "content": "Parallel agent exploration serves epistemological breadth, not speed: launching 2-3 code-explorer agents with different focuses (similar features, architecture, UI patterns) ensures multiple perspectives on the codebase are gathered independently, preventing tunnel vision from a single exploration path.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "medium",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-048",
+      "content": "Ambiguity resolution must be a blocking gate before design: Phase 3 (Clarifying Questions) is marked CRITICAL and must complete before architecture design begins. Unresolved ambiguity propagates exponentially through design and implementation, so the cost of asking early is always less than the cost of reworking later.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-049",
+      "content": "Architecture design should present competing philosophies, not just options: the three architect agents embody distinct design values (minimal changes = risk aversion, clean architecture = long-term maintainability, pragmatic balance = velocity + quality). The choice between them is a values decision, not a technical one, which is why human selection is required.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "medium",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-050",
+      "content": "Implementation requires explicit human approval as a gate: Phase 5 states 'DO NOT START WITHOUT USER APPROVAL'. The agent must not conflate understanding and designing with permission to change. Comprehension does not imply authorization.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-051",
+      "content": "Agents should make confident, decisive architectural choices rather than presenting multiple options. The code-architect agent is instructed to 'pick one approach and commit' — indecisiveness in architecture wastes human attention and shifts decision burden inappropriately.",
+      "source": "feature-dev/agents/code-architect.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-052",
+      "content": "Tension between PP-104 and PP-106: the orchestrator presents multiple approaches (from multiple architect agents) for human choice, but each individual architect agent must commit to a single approach. Diversity of options comes from multiple independent agents, not from a single agent hedging.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "medium",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-053",
+      "content": "Confidence-based filtering is an epistemic hygiene measure: code review issues are scored 0-100 and only issues >= 80 are reported. This trades recall for precision because false positives erode reviewer trust more than missed issues harm code quality. The threshold explicitly values signal-to-noise ratio over completeness.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-054",
+      "content": "Redundant independent agents for the same task (2x CLAUDE.md compliance agents) is a deliberate reliability strategy, not waste. Independent reviewers reduce the probability of missing a real issue, analogous to dual-modular redundancy in safety-critical systems.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "medium",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-055",
+      "content": "Validation of findings must be a separate step from discovery: after review agents find issues (step 4), separate validation agents re-examine each issue (step 5). The finder and the validator must be different agents, implementing cognitive separation of concerns at the agent level.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-056",
+      "content": "Review scope should be limited to introduced changes only, not pre-existing code. Agents are explicitly told to focus only on the diff and not flag pre-existing issues. This reflects a philosophy that review is about change accountability, not codebase auditing.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-057",
+      "content": "Do not flag what linters catch: automated review should occupy a different epistemic niche than static analysis tools. Duplicating linter checks wastes attention and creates a false sense of coverage while adding noise.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-058",
+      "content": "Tool calls should be purposeful, never exploratory: 'All tools are functional and will work without error. Do not test tools or make exploratory calls.' Every tool invocation must have a clear purpose. This treats tool usage as a resource to be conserved, not an exploration mechanism.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-059",
+      "content": "Commit messages should be learned from repository history, not imposed from external conventions. The /commit workflow examines recent commit messages to match the repository's existing style, treating commit message format as a local convention to be discovered rather than a universal standard to enforce.",
+      "source": "commit-commands/commands/commit.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-060",
+      "content": "Git workflow commands should be maximally compressed into single-message tool batches: /commit and /commit-push-pr explicitly require all operations in a single message with no additional text. This treats workflow automation as a transaction — atomic, fast, with no conversational overhead.",
+      "source": "commit-commands/commands/commit-push-pr.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-061",
+      "content": "PR descriptions must analyze the full branch history, not just the latest commit. The /commit-push-pr workflow examines all commits since divergence from the base branch, reflecting the principle that a PR represents an integrated unit of change, not a sequence of individual edits.",
+      "source": "commit-commands/README.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-062",
+      "content": "Migration should be conservative by default: model string updates only. Prompt adjustments for behavioral differences (overtriggering, over-engineering, thinking sensitivity) should only be applied when the user explicitly reports a specific issue. This separates mechanical migration (safe, automatable) from behavioral tuning (requires human judgment about actual problems).",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/SKILL.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-063",
+      "content": "Model behavioral differences are prompt-addressable: overtriggering from aggressive language, over-engineering tendencies, and insufficient code exploration are treated as prompt engineering problems, not model defects. The model's behavior is a function of the prompt environment, and migration means adapting the environment to the new model's response characteristics.",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/SKILL.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-064",
+      "content": "Prompt emphasis that was calibrated for one model can become harmful for another: language like 'CRITICAL', 'MUST', 'ALWAYS', 'NEVER' that prevented undertriggering on previous models may cause overtriggering on more responsive models. Prompt intensity is model-relative, not absolute.",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/prompt-snippets.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-065",
+      "content": "Prompt snippets must be integrated into existing structure, not appended. The migration guide repeatedly emphasizes thoughtful integration: matching existing style, using XML tags, placing content logically, preserving existing content. A prompt is a coherent document, not a bag of instructions.",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/prompt-snippets.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-066",
+      "content": "Effort and thinking budget are orthogonal controls: effort affects all token types (thinking, text, function calls) while thinking budget only caps thinking tokens. This two-axis control reflects a design philosophy that token eagerness and reasoning depth are independent dimensions of model behavior.",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/effort.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-067",
+      "content": "The codebase exploration phase serves a dual purpose: it informs the agent AND teaches the human about their own codebase. The README explicitly states 'Use for learning: The exploration phase teaches you about your own codebase.' The workflow is not just task execution but knowledge transfer.",
+      "source": "feature-dev/README.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    },
+    {
+      "id": "PP-068",
+      "content": "Worktree cleanup (clean_gone) treats branch hygiene as a first-class maintenance operation. Stale local branches are not harmless clutter — they pollute the developer's mental model of active work. Regular cleanup is recommended as a weekly practice.",
+      "source": "commit-commands/README.md",
+      "confidence": "medium",
+      "type": "usage_pattern"
+    },
+    {
+      "id": "PP-069",
+      "content": "Code review should use model-appropriate tiers: CLAUDE.md compliance checks use sonnet (sufficient for rule-matching), while bug detection uses opus (requires deeper reasoning). This reflects a principle that agent capability should be matched to task complexity, not uniformly maximized.",
+      "source": "code-review/commands/code-review.md",
+      "confidence": "high",
+      "type": "tradeoff"
+    },
+    {
+      "id": "PP-070",
+      "content": "The feature-dev workflow embeds human decision points as structural gates (Phase 3: answer questions, Phase 4: choose architecture, Phase 5: approve implementation, Phase 6: decide on fixes). The human is not a passive recipient but an active co-designer whose judgment is required at every transition between phases.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "high",
+      "type": "workflow"
+    },
+    {
+      "id": "PP-071",
+      "content": "When the human delegates a decision ('whatever you think is best'), the agent should provide its recommendation AND get explicit confirmation. Delegation of choice is not delegation of responsibility — the human must still consciously accept the recommendation.",
+      "source": "feature-dev/commands/feature-dev.md",
+      "confidence": "high",
+      "type": "principle"
+    },
+    {
+      "id": "PP-072",
+      "content": "The word 'think' is not semantically neutral in LLM prompts — it can trigger extended thinking mode when not intended. This reveals that natural language in prompts has both semantic meaning (for the human reader) and operational meaning (for the model's execution path), and these can conflict.",
+      "source": "claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/prompt-snippets.md",
+      "confidence": "high",
+      "type": "design_rationale"
+    }
+  ],
+  "decisions_found": 27,
+  "cumulative_total": 72,
+  "incremental_rate": 0.3750
+}
