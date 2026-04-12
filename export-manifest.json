@@ -93,6 +93,14 @@
       "config": [],
       "rationale": "Task completion logging"
     },
+    "prerequisites-check.sh": {
+      "target": "base",
+      "path": ".claude/hooks/prerequisites-check.sh",
+      "event": "SessionStart",
+      "matcher": null,
+      "config": [],
+      "rationale": "Checks plugin prerequisites (jq, git, metrics dir, domain tools) on session start. Auto-fixes metrics directory. Injects CRITICAL/WARNING/INFO guidance via additionalContext."
+    },
     "rules-injector.sh": {
       "target": "base",
       "path": ".claude/hooks/rules-injector.sh",
