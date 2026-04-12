@@ -31,6 +31,7 @@ usage() {
 }
 
 # モード判定: 引数から --mode を探す
+# 有効なモード: normal, philosophy
 parse_mode() {
   local mode="normal"
   local next_is_mode=false
@@ -42,6 +43,14 @@ parse_mode() {
       next_is_mode=false
     fi
   done
+  if [ "$next_is_mode" = true ]; then
+    echo "ERROR: --mode requires a value (normal or philosophy)" >&2
+    exit 1
+  fi
+  if [ "$mode" != "normal" ] && [ "$mode" != "philosophy" ]; then
+    echo "ERROR: unknown mode '$mode'. Valid modes: normal, philosophy" >&2
+    exit 1
+  fi
   echo "$mode"
 }
 
@@ -206,7 +215,7 @@ check_convergence() {
 
   # 最新の iteration を取得
   local latest
-  latest=$(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sort -t- -k2 -n | tail -1)
+  latest=$(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sed 's/.*iteration-\([0-9]*\)\.json/\1 &/' | sort -n -k1 | sed 's/^[0-9]* //' | tail -1)
 
   if [ -z "$latest" ]; then
     echo "UNCONVERGED [${mode}]: No observations recorded"
@@ -243,7 +252,7 @@ show_status() {
   fi
 
   echo "=== Convergence Status [${mode}] ==="
-  for f in $(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sort -t- -k2 -n); do
+  for f in $(ls "$dir"/${prefix}iteration-*.json 2>/dev/null | sed 's/.*iteration-\([0-9]*\)\.json/\1 &/' | sort -n -k1 | sed 's/^[0-9]* //'); do
     local iter found cum rate
     iter=$(jq -r '.iteration' "$f")
     found=$(jq -r '.decisions_found' "$f")

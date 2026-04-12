@@ -100,6 +100,10 @@ Phase 0: スコーピング
 Phase 1: 観察（反復）
   │ 分解 → 4 種観察エンジン → Platform Decision 収集
   │ ← 収束判定（発見率 < 5%）まで反復
+  │ ← philosophy モード: 設計思想を別層で抽出
+  ↓
+Phase 1.5: ワークフロー思想の統合（philosophy モード実行時のみ）
+  │ Philosophy PD → Workflow Philosophy に統合
   ↓
 Phase 2: 条件付き公理系の構築
   │ ModelSpec JSON → check-monotonicity → generate → lake build → /verify
@@ -323,7 +327,8 @@ bash .claude/skills/brownfield/convergence.sh check <observations-dir> --mode ph
 Phase 1 の philosophy モードで抽出した個別の PP（Philosophy PD）を統合し、
 プロジェクト全体に通底するワークフロー思想（WP: Workflow Philosophy）を導出する。
 
-**前提条件**: Phase 1 で philosophy モードが収束していること。
+**前提条件**: Phase 1 で philosophy モードの iteration が 2 回以上実行されていること。
+収束（rate < 0.05）は必須ではない — 十分な PD 量（20+）があれば WP 導出は可能。
 philosophy モードを実行していない場合、Phase 1.5 はスキップして Phase 2 へ進む。
 
 ### Step 1: PP のクラスタリング（judgmental）
