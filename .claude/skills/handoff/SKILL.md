@@ -81,11 +81,15 @@ dependencies:
   "skill": "evolve",
   "phase": "Phase 2",
   "git_sha": "abc1234",
+  "branch": "research/514-handoff-scoping",
   "completed": ["Phase 1: Observer"],
   "remaining": ["Phase 3: Verifier", "Phase 4: Integrator"],
   "blocked": null
 }
 ```
+
+**`branch` フィールド** (#514 G3): `git branch --show-current` の出力。
+detached HEAD の場合は `null`。未設定の既存エントリは `null` と同等に扱う（後方互換）。
 
 **対象スキルとチェックポイント境界**:
 
@@ -104,7 +108,9 @@ context 逼迫時に、checkpoint と現在の会話状態を統合して resump
 **入力**: checkpoints.jsonl + 現在の会話状態
 **出力先**:
 - `.claude/handoffs/handoff-<timestamp>.jsonl` — 永続ログ
-- `.claude/handoffs/handoff-resume.md` — 次セッション注入用
+- `.claude/handoffs/handoff-resume-<scope>.md` — 次セッション注入用 (#514 G2)
+  - `<scope>` = ブランチ名（slash→hyphen 変換。例: `research/514-x` → `handoff-resume-research-514-x.md`）
+  - detached HEAD の場合は `handoff-resume.md`（スコープなし、後方互換）
 
 **JSONL スキーマ**:
 ```json
@@ -113,6 +119,7 @@ context 逼迫時に、checkpoint と現在の会話状態を統合して resump
   "skill": "spec-driven-workflow",
   "phase": "Phase 2",
   "git_sha": "def5678",
+  "branch": "feature/handoff-impl",
   "intent": "handoff skill の実装。spec-driven-workflow Phase 2 (TDD) 実行中",
   "progress": {
     "done": ["Phase 0: 設計 v4 確定", "Phase 1: テスト計画 24 tests"],
@@ -136,6 +143,7 @@ context 逼迫時に、checkpoint と現在の会話状態を統合して resump
 ```markdown
 # Handoff Resume
 git_sha: <current HEAD>
+branch: <current branch or null>
 skill: <running skill>
 phase: <current phase>
 intent: <what the user originally asked for>
@@ -162,19 +170,29 @@ intent: <what the user originally asked for>
 
 SessionStart hook が以下を実行:
 
-1. `.claude/handoffs/handoff-resume.md` の存在を確認（なければ noop）
-2. `git_sha` と `git rev-parse HEAD` を比較
-3. 一致 → `additionalContext` で注入
-4. 不一致 → warn 付きで注入（intent/progress は有効、ファイル状態は要確認）
-5. 注入後 → `.injected` にリネーム（D1: 二重注入の構造的防止）
-6. sorry-count チェック（evolve-state-loader.sh から統合）
+1. `.claude/handoffs/handoff-resume*.md` からスコープに合致するファイルを選択 (#514 G2):
+   a. `handoff-resume-<current-branch>.md` が存在すれば選択（完全一致）
+   b. なければ `handoff-resume.md`（旧形式フォールバック）
+   c. どちらもなければ noop
+2. `branch` フィールドと `git branch --show-current` を比較 (#514 G1):
+   a. `branch` 未設定（旧形式） → 後方互換: SHA 照合のみで注入
+   b. `branch` が `null`（detached HEAD で書き込み） → 任意のブランチにマッチ
+   c. ブランチ一致 → `git_sha` 照合へ進む
+   d. ブランチ不一致 → 注入をスキップ。stderr に `[HANDOFF] skipped: for branch <X>, current is <Y>` を出力
+3. `git_sha` と `git rev-parse HEAD` を比較
+4. 一致 → `additionalContext` で注入
+5. 不一致 → warn 付きで注入（intent/progress は有効、ファイル状態は要確認）
+6. 注入後 → `.injected` にリネーム（D1: 二重注入の構造的防止）。
+   リネーム失敗時は stderr に警告を出力（`|| true` ではなく明示的エラーログ）
+7. sorry-count チェック（evolve-state-loader.sh から統合）
 
-**既知の制限**: 複数 Claude Code ウィンドウの同時起動で race condition が理論上発生する。
-通常使用（1 ウィンドウ）では問題なし。
+**既知の制限**:
+- 複数 Claude Code ウィンドウの同時起動で race condition が理論上発生する。通常使用（1 ウィンドウ）では問題なし。
+- ブランチ名の slash→hyphen 変換で理論上の衝突あり（`a/b-c` と `a-b/c`）。メタデータ照合（Step 2c）が defense in depth として機能。
 
 ### 退役
 
-- LLM が再開完了後に `handoff-resume.md` を削除（ベストエフォート）
+- LLM が再開完了後に `handoff-resume-<scope>.md`（または `handoff-resume.md`）を削除（ベストエフォート）
 - 構造的には `.injected` リネームで二重注入を防止済み
 - `.claude/handoffs/handoff-<timestamp>.jsonl` は永続ログとして残る
 
@@ -188,7 +206,11 @@ SessionStart hook が以下を実行:
    - files_modified: 変更したファイル
    - decisions: 重要な設計判断（オプション）
 3. **JSONL 書き込み** — `handoff-<timestamp>.jsonl` に永続記録
-4. **resume.md 生成** — 上記フォーマットで `handoff-resume.md` を書き込み
+4. **resume.md 生成** — 上記フォーマットで書き込み。
+   - ファイル名: `BRANCH=$(git branch --show-current)` を取得し、
+     ブランチがあれば `handoff-resume-$(echo "$BRANCH" | sed 's|/|-|g').md`、
+     なければ `handoff-resume.md`（detached HEAD フォールバック）
+   - `branch` フィールド: `${BRANCH:-null}` の出力を使用
 5. **確認** — 生成した resume.md の内容をユーザーに表示
 
 ## Lean 形式化との対応
