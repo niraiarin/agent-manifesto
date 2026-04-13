@@ -2,30 +2,64 @@
 # @traces T1, T2, D1, D10, P4
 # SessionStart hook: inject handoff resume into LLM context via additionalContext
 # Pattern: same as p4-drift-detector.sh (proven mechanism)
+# #514: branch-aware scoped file selection + branch matching
 set -uo pipefail
 
 BASE="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 HANDOFF_DIR="${HANDOFF_DIR:-$BASE/.claude/handoffs}"
-RESUME_FILE="$HANDOFF_DIR/handoff-resume.md"
+
+# --- Scoped file selection (#514 G2) ---
+# 1. Try branch-scoped file: handoff-resume-<branch>.md (slash→hyphen)
+# 2. Fallback to handoff-resume.md (backward compat)
+CURRENT_BRANCH=$(cd "$BASE" && git branch --show-current 2>/dev/null || echo "")
+SCOPED_NAME=""
+if [ -n "$CURRENT_BRANCH" ]; then
+  SCOPED_NAME=$(echo "$CURRENT_BRANCH" | sed 's|/|-|g')
+fi
+
+RESUME_FILE=""
+if [ -n "$SCOPED_NAME" ] && [ -f "$HANDOFF_DIR/handoff-resume-${SCOPED_NAME}.md" ]; then
+  RESUME_FILE="$HANDOFF_DIR/handoff-resume-${SCOPED_NAME}.md"
+elif [ -f "$HANDOFF_DIR/handoff-resume.md" ]; then
+  RESUME_FILE="$HANDOFF_DIR/handoff-resume.md"
+fi
 
 CONTEXT=""
 
 # --- Handoff resume injection ---
-if [ -f "$RESUME_FILE" ]; then
-  # Extract git_sha from resume file
-  RESUME_SHA=$(grep -m1 '^git_sha:' "$RESUME_FILE" | sed 's/^git_sha:[[:space:]]*//')
-  CURRENT_SHA=$(cd "$BASE" && git rev-parse HEAD 2>/dev/null || echo "unknown")
+if [ -n "$RESUME_FILE" ]; then
+  # Extract branch from resume file (#514 G1: branch matching)
+  RESUME_BRANCH=$(grep -m1 '^branch:' "$RESUME_FILE" | sed 's/^branch:[[:space:]]*//')
 
-  RESUME_CONTENT=$(cat "$RESUME_FILE")
-
-  if [ "$RESUME_SHA" = "$CURRENT_SHA" ]; then
-    CONTEXT="[HANDOFF RESUME] Previous session state restored.\n$RESUME_CONTENT"
-  else
-    CONTEXT="[HANDOFF RESUME - SHA MISMATCH WARNING] git_sha changed since handoff (was: $RESUME_SHA, now: $CURRENT_SHA). Commits occurred after handoff — intent/progress are likely valid but file state may have changed. Verify before proceeding.\n$RESUME_CONTENT"
+  # Branch matching: skip injection if branch mismatch
+  SKIP_INJECTION=false
+  if [ -n "$RESUME_BRANCH" ] && [ "$RESUME_BRANCH" != "null" ]; then
+    if [ -n "$CURRENT_BRANCH" ] && [ "$RESUME_BRANCH" != "$CURRENT_BRANCH" ]; then
+      echo "[HANDOFF] skipped: for branch $RESUME_BRANCH, current is $CURRENT_BRANCH" >&2
+      SKIP_INJECTION=true
+    fi
+    # If current is detached HEAD (empty), allow injection (conservative)
   fi
+  # If RESUME_BRANCH is empty or "null", allow injection (backward compat / detached HEAD)
 
-  # Rename to .injected to prevent double injection (D1: structural enforcement)
-  mv "$RESUME_FILE" "${RESUME_FILE}.injected" 2>/dev/null || true
+  if [ "$SKIP_INJECTION" = false ]; then
+    # Extract git_sha from resume file
+    RESUME_SHA=$(grep -m1 '^git_sha:' "$RESUME_FILE" | sed 's/^git_sha:[[:space:]]*//')
+    CURRENT_SHA=$(cd "$BASE" && git rev-parse HEAD 2>/dev/null || echo "unknown")
+
+    RESUME_CONTENT=$(cat "$RESUME_FILE")
+
+    if [ "$RESUME_SHA" = "$CURRENT_SHA" ]; then
+      CONTEXT="[HANDOFF RESUME] Previous session state restored.\n$RESUME_CONTENT"
+    else
+      CONTEXT="[HANDOFF RESUME - SHA MISMATCH WARNING] git_sha changed since handoff (was: $RESUME_SHA, now: $CURRENT_SHA). Commits occurred after handoff — intent/progress are likely valid but file state may have changed. Verify before proceeding.\n$RESUME_CONTENT"
+    fi
+
+    # Rename to .injected to prevent double injection (D1: structural enforcement)
+    if ! mv "$RESUME_FILE" "${RESUME_FILE}.injected" 2>/dev/null; then
+      echo "[HANDOFF] WARNING: failed to rename $RESUME_FILE to .injected" >&2
+    fi
+  fi
 fi
 
 # --- Sorry count check (integrated from evolve-state-loader.sh) ---

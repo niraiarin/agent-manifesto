@@ -89,6 +89,99 @@ check "B-HO.6 Hook output is valid JSON" \
 check "B-HO.7 Sorry count logic present in hook" \
   "grep -q 'sorry' '$HOOK'"
 
+# --- B-HO.8: Branch match → injection allowed (#514 G1) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+CURRENT_BRANCH=$(cd "$BASE" && git branch --show-current 2>/dev/null || echo "main")
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: $CURRENT_BRANCH
+skill: test
+phase: Phase 1
+intent: Test branch match
+EOF
+
+check "B-HO.8 Branch match allows injection" \
+  "HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null | grep -q 'HANDOFF RESUME'"
+
+# --- B-HO.9: Branch mismatch → injection skipped (#514 G1) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: nonexistent-branch-xyz
+skill: test
+phase: Phase 1
+intent: Test branch mismatch
+EOF
+
+check "B-HO.9 Branch mismatch skips injection" \
+  "OUTPUT=\$(HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null); ! echo \"\$OUTPUT\" | grep -q 'HANDOFF RESUME'"
+
+# --- B-HO.10: Absent branch field → backward compat injection (#514 G1) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+skill: test
+phase: Phase 1
+intent: Test no branch field (old format)
+EOF
+
+check "B-HO.10 Absent branch field allows injection (backward compat)" \
+  "HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null | grep -q 'HANDOFF RESUME'"
+
+# --- B-HO.11: branch: null → injection allowed (#514 G1) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: null
+skill: test
+phase: Phase 1
+intent: Test null branch (detached HEAD)
+EOF
+
+check "B-HO.11 branch: null allows injection" \
+  "HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null | grep -q 'HANDOFF RESUME'"
+
+# --- B-HO.12: Scoped file selected over fallback (#514 G2) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+SCOPED_FILE="handoff-resume-$(echo "$CURRENT_BRANCH" | sed 's|/|-|g').md"
+cat > "$TEST_HANDOFFS/$SCOPED_FILE" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: $CURRENT_BRANCH
+skill: scoped-test
+phase: Phase 1
+intent: SCOPED file
+EOF
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: other-branch
+skill: fallback-test
+phase: Phase 1
+intent: FALLBACK file
+EOF
+
+check "B-HO.12 Scoped file selected over fallback" \
+  "HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null | grep -q 'SCOPED file'"
+
+# --- B-HO.13: Fallback used when no scoped file (#514 G2) ---
+rm -f "$TEST_HANDOFFS"/handoff-resume*.md "$TEST_HANDOFFS"/handoff-resume*.injected
+cat > "$TEST_HANDOFFS/handoff-resume.md" << EOF
+# Handoff Resume
+git_sha: $CURRENT_SHA
+branch: $CURRENT_BRANCH
+skill: fallback-test
+phase: Phase 1
+intent: FALLBACK used
+EOF
+
+check "B-HO.13 Fallback file used when no scoped file exists" \
+  "HANDOFF_DIR='$TEST_HANDOFFS' bash '$HOOK' 2>/dev/null | grep -q 'FALLBACK used'"
+
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 [ "$FAIL" -eq 0 ]
