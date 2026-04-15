@@ -24,7 +24,7 @@ GIT_CMD=(git -C "$GIT_DIR")
 fi
 
 # sync-counts.sh の存在確認
-SCRIPT_DIR="$(git rev-parse --show-toplevel 2>/dev/null)/scripts"
+SCRIPT_DIR="$("${GIT_CMD[@]}" rev-parse --show-toplevel 2>/dev/null)/scripts"
 if [[ ! -f "$SCRIPT_DIR/sync-counts.sh" ]]; then
   exit 0
 fi
