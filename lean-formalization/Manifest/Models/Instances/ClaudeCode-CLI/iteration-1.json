@@ -1,0 +1,727 @@
+{
+  "iteration": 1,
+  "unit": "tools/+permissions/",
+  "timestamp": "2026-04-15T13:05:13Z",
+  "platform_decisions": [
+    {
+      "id": "PD-001",
+      "content": "Tool interface is task-oriented ToolDef with call(), checkPermissions(), validateInput(), inputSchema, outputSchema",
+      "source": "code_analysis",
+      "manifesto_mapping": "D5",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-002",
+      "content": "Default tool behaviors are fail-closed via buildTool() — missing implementations default to deny-safe",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-003",
+      "content": "All core tools use lazy schema evaluation (lazySchema()) to defer Zod compilation until first use",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-004",
+      "content": "Permission system is three-layer: validateInput() then checkPermissions() then global deny-rules pre-filter",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-005",
+      "content": "Permission rules are source-scoped with 8 sources: policy > flag > project > local > user > cli > command > session",
+      "source": "code_analysis",
+      "manifesto_mapping": "P3",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-006",
+      "content": "Deny rules short-circuit at tool-registry assembly — blanket denials prevent tool from reaching model entirely",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-007",
+      "content": "File-modifying tools require pre-read validation with mtime+content TOCTOU check",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-008",
+      "content": "Bash tool permission matching is compound-command-aware via AST parsing",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-009",
+      "content": "Two-stage path normalization: backfillObservableInput() for hooks, then validateInput() re-expansion",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-010",
+      "content": "Windows UNC paths blocked to prevent NTLM credential leaks",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-011",
+      "content": "Case-insensitive path comparison prevents bypass on macOS/Windows",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-012",
+      "content": "Bash tool parses compound commands via AST so chained commands trigger correct rules",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-013",
+      "content": "Read-only bash checking requires ALL pipeline parts to be search/read commands",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-014",
+      "content": "Sandbox is opt-out (default enabled) — respects user exclusion rules and dangerouslyDisableSandbox",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-015",
+      "content": "Blocked device paths (/dev/zero, /dev/random, /dev/stdin) prevent hangs on read",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-016",
+      "content": "Validation is deterministic and side-effect-free, returning ValidationResult",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-017",
+      "content": "File existence validation is bidirectional with readFileState TOCTOU checks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-018",
+      "content": "Similar-file suggestions on ENOENT use fuzzy heuristic for UX guidance",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-019",
+      "content": "Read-only tools declare isReadOnly()=true, isConcurrencySafe()=true, enabling parallel execution",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-020",
+      "content": "Concurrency safety is derived from read-only status for Bash tool",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-021",
+      "content": "Tool result sizes bounded by maxResultSizeChars — FileRead sets Infinity to avoid circular persist-read loop",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-022",
+      "content": "Result serialization is two-stage: API-consumable ToolResultBlockParam + React UI rendering",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-023",
+      "content": "Error messages are model-facing, preserving failure context as ToolResultBlockParam strings",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-024",
+      "content": "Bash auto-backgrounds after 15 seconds if no progress; background spawns independent task",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-025",
+      "content": "File edit/write tools are not concurrency-safe to prevent simultaneous edits",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-026",
+      "content": "All six core tools use strict:true schema — Zod strictObject rejects unknown fields",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-027",
+      "content": "Input schema is single source of truth — no duplicate validation logic",
+      "source": "code_analysis",
+      "manifesto_mapping": "D5",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-028",
+      "content": "Filesystem abstracted via getFsImplementation() for testing mocks and platform-specific impls",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-029",
+      "content": "Line-ending handling explicit: Write normalizes to LF, Read normalizes CRLF to LF",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-030",
+      "content": "Tool availability feature-gated via Statsig — Glob/Grep disabled if ripgrep embedded in bun",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-031",
+      "content": "Conditional tools use lazy requires to avoid circular dependencies",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-032",
+      "content": "Tool execution traces structured metadata: command type, file extensions, permission decisions",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-033",
+      "content": "File history tracking hooks into write operations for rollback capability",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-034",
+      "content": "FileRead supports multiple types (text, image, PDF, notebook) with type-discriminated output",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-035",
+      "content": "FileEdit uses quote-normalization and rejects non-unique matches (replace_all=false)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-036",
+      "content": "FileWrite is full-content replacement respecting explicit line endings as author intent",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-037",
+      "content": "GlobTool results hardcap at 100 files with truncated flag",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-038",
+      "content": "GrepTool wraps ripgrep with default 250-line limit, auto VCS exclusion, opt-in multiline",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-039",
+      "content": "Bash results persist at 30KB threshold; stdout/stderr captured separately",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-040",
+      "content": "ENOENT errors caught, normalized, augmented with suggestions; other errors pass through",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-041",
+      "content": "Validation errors include errorCode integers for SDK programmatic parsing",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-042",
+      "content": "No shell injection risk: command parsing is stateless AST, paths never interpolated into commands",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-043",
+      "content": "No TOCTOU on edits: mtime+content check with no yields between check and write",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-044",
+      "content": "Permissions applied at three levels: pre-validation semantic + checkPermissions policy + registry pre-filter",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-050",
+      "content": "Agents spawned via AgentTool with explicit subagent_type parameter selecting from registry",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-051",
+      "content": "Fork subagent inherits parent full context (system prompt, tool pool) for cache-efficient spawning",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-052",
+      "content": "Multi-agent teams are hierarchical: single team lead + N teammates, flat roster, no nesting",
+      "source": "code_analysis",
+      "manifesto_mapping": "E1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-053",
+      "content": "Teammates spawned via explicit name parameter, making them addressable via SendMessage",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-054",
+      "content": "Three teammate execution backends: in-process (AsyncLocalStorage), tmux, iTerm2",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-055",
+      "content": "In-process teammates use AsyncLocalStorage for context isolation without subprocesses",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-056",
+      "content": "Agent messages use file-based mailbox with proper-lockfile for concurrent writes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-057",
+      "content": "Task lifecycle: pending to in_progress to completed with blocks/blockedBy dependency tracking",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-058",
+      "content": "Task ownership auto-assigned to current agent name when status set to in_progress",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-059",
+      "content": "Plan mode requires explicit approval before implementation; team lead controls gate",
+      "source": "code_analysis",
+      "manifesto_mapping": "T6",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-060",
+      "content": "Plan approval uses request-response messaging with typed message protocol",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-061",
+      "content": "Worktrees provide git-native branch isolation; stores original HEAD for restoration",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-062",
+      "content": "Worktree slug validation prevents path traversal (rejects .., absolute paths, non-alnum)",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-063",
+      "content": "Large directories (node_modules) symlinked from main repo to worktree to avoid duplication",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-064",
+      "content": "Session state fully restored after worktree exit (CWD, projectRoot, caches)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-065",
+      "content": "Agent shutdown uses request-approval protocol via SendMessage typed messages",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-066",
+      "content": "Background tasks stoppable via TaskStopTool with abort controller",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-067",
+      "content": "One team per leader session; second team creation fails with error",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-068",
+      "content": "TeamDelete requires all active teammates to shut down first",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-069",
+      "content": "Task list ID resolution: env var then in-process then tmux then leader then session",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-070",
+      "content": "High water mark prevents task ID reuse after team reset",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-071",
+      "content": "Concurrent swarm operations use proper-lockfile with retry backoff (30 retries, about 2.6s)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-072",
+      "content": "MCP server requirements block agent spawn if unmet (30s wait timeout)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-073",
+      "content": "Agent model supports inherit alias to adopt parent/leader model",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-074",
+      "content": "Permission modes propagate down teammate hierarchy",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-075",
+      "content": "Agents color-coded for UI grouping via assignTeammateColor()",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-100",
+      "content": "Five external permission modes: default, acceptEdits, bypassPermissions, dontAsk, plan",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-101",
+      "content": "Internal auto mode gated by TRANSCRIPT_CLASSIFIER feature flag, stripped from external modes",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-102",
+      "content": "Three-tier permission behavior: allow, deny, ask",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-103",
+      "content": "Permission rules composed as toolName + ruleContent with wildcard matching",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-104",
+      "content": "Seven rule sources with priority: policy > flag > project > local > user > cli > command > session",
+      "source": "code_analysis",
+      "manifesto_mapping": "P3",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-105",
+      "content": "Rule cascade: deny wins, ask escalates allow, first-match for path rules",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-106",
+      "content": "Managed permission rules only mode disables all user editing when enterprise policy active",
+      "source": "code_analysis",
+      "manifesto_mapping": "T6",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-107",
+      "content": "Permission rule sources map to specific file locations with persistence semantics",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-108",
+      "content": "Dangerous files always require ask: .gitconfig, .bashrc, .zshrc, .mcp.json, .claude.json",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-109",
+      "content": "Dangerous directories always require ask: .git/, .vscode/, .idea/, .claude/",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-110",
+      "content": "Claude config scope (settings.json, commands/, agents/, skills/) always requires ask",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-111",
+      "content": "Skill-scoped permission suggestions prevent broad .claude/ grants",
+      "source": "code_analysis",
+      "manifesto_mapping": "D17",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-112",
+      "content": "Case-insensitive path normalization for cross-platform bypass prevention",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-113",
+      "content": "Path traversal detection rejects .. sequences with macOS symlink normalization",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-114",
+      "content": "Working directory scope enforced — all file operations must resolve within allowed paths",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-115",
+      "content": "Cross-platform code execution patterns stripped in auto mode (interpreters, package runners, shells, remote)",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-116",
+      "content": "Dangerous bash permission rules stripped in auto mode (tool-level allow, interpreter prefixes)",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-117",
+      "content": "Dangerous PowerShell patterns stripped: Invoke-Expression, Start-Process, Invoke-Command",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-118",
+      "content": "Auto mode entry strips dangerous allow rules to stash; exit restores them",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-119",
+      "content": "Safe tools allowlist skips classifier: FileRead, Grep, Glob, LSP, Task, Plan tools",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-120",
+      "content": "Auto mode classifier two-stage: fast shallow check then extended reasoning if inconclusive",
+      "source": "code_analysis",
+      "manifesto_mapping": "D8",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-121",
+      "content": "Pending classifier check is non-blocking — user sees allow immediately, classifier may feedback later",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-122",
+      "content": "Sandbox wraps anthropic sandbox-runtime enforcing OS-level filesystem/network boundaries",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-123",
+      "content": "Sandbox config converted from settings: FileRead to read allowlist, WebFetch to domain allowlist",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-124",
+      "content": "Excluded commands skip sandbox — convenience feature, not security boundary",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-125",
+      "content": "Sandbox disabled check: isSandboxingEnabled then dangerouslyDisable then excludedCommand then active",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-126",
+      "content": "Permission decision reason types provide full audit trail: rule, mode, classifier, hook, safetyCheck",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-127",
+      "content": "Five permission update operations: addRules, replaceRules, removeRules, setMode, add/removeDirectories",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-128",
+      "content": "Permission updates persisted to settings files or kept session-only based on destination",
+      "source": "code_analysis",
+      "manifesto_mapping": "T2",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-129",
+      "content": "Read permission checking validates all paths from input against readable internal paths",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-130",
+      "content": "Write permission checking: traversal detection + case normalization + dangerous file/dir check + working dir",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-131",
+      "content": "Sensitive paths auto-protected: .claude/settings.json, commands/, agents/, skills/, plans/",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-132",
+      "content": "Permission request hooks run before prompting — can modify, block, or suggest auto-adds",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-133",
+      "content": "Tools can implement permissionPromptTool for custom approval UI (e.g. FileEdit shows diffs)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-134",
+      "content": "Bypass permissions mode has enterprise killswitch via GrowthBook gate",
+      "source": "code_analysis",
+      "manifesto_mapping": "T6",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-135",
+      "content": "Bypass disabled context modification removes mode from UI options entirely",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-136",
+      "content": "Multi-layer security: permission rules then mode system then auto classifier then sandbox then path validation then hooks then denial tracking",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-137",
+      "content": "Injection protection: path traversal, case-sensitivity bypass, symlink normalization, UNC paths, shell injection classifier",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-138",
+      "content": "Denial tracking with rate limiting prevents user frustration from repeated identical prompts",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-139",
+      "content": "Tool permission context built at startup, stored in AppState, updated reactively on settings change",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-140",
+      "content": "Mode transitions centralized via transitionPermissionMode() — CLI, SDK, UI all behave identically",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 111,
+  "cumulative_total": 111,
+  "incremental_rate": 1.0000
+}

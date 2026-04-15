@@ -1,0 +1,95 @@
+{
+  "iteration": 11,
+  "unit": "open-ended-full-codebase/",
+  "timestamp": "2026-04-15T14:01:10Z",
+  "platform_decisions": [
+    {
+      "id": "PD-500",
+      "content": "Stale-while-revalidate TTL cache with concurrent refresh dedup via shared in-flight promise (memoizeWithTTLAsync)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-502",
+      "content": "JSON.parse LRU cache (50 entries, 8KB threshold) with ok/error discriminated union wrapper for null/error handling",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-503",
+      "content": "Command queue with priority-based dequeuing (now/next/later) and frozen snapshot for useSyncExternalStore",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-504",
+      "content": "Sequential async executor preserving call order and this binding via QueueItem context field",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-505",
+      "content": "PID-based process locking with signal-0 liveness check and 2-hour stale timeout for NFS",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-506",
+      "content": "Marketplace reconciliation: additive-only diffing with lazy git canonicalization, idempotent install",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-507",
+      "content": "Async iterator Stream with deferred callback and readResolve/readReject promise slots for cancellation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-508",
+      "content": "Buffered writer detaches overflow via setImmediate to keep event loop tick short",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-513",
+      "content": "ActivityManager singleton: user/CLI time dedup with 5s timeout window, overlapping operations tracking",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-519",
+      "content": "Tool pool dedup with partition-sort (MCP prefix then built-in) for prompt cache stability",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-522",
+      "content": "Proxy config cascade: lowercase-first env var preference, NO_PROXY bypass with wildcard/domain/port/IP",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-523",
+      "content": "Preconnect API HEAD request at init; skipped for proxy/mTLS/unix-socket custom dispatchers",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-530",
+      "content": "Virtual scroll with lazy search-text lowering cache and warmSearchIndex pre-computation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-534",
+      "content": "Health check 404-first fast-path with fallback extended diagnostics gathering",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 14,
+  "cumulative_total": 368,
+  "incremental_rate": 0.0380,
+  "validation": false
+}

@@ -1,0 +1,46 @@
+{
+  "iteration": 9,
+  "unit": "messages/+tokens/+onboarding/+cost/",
+  "timestamp": "2026-04-15T13:46:16Z",
+  "platform_decisions": [
+    {
+      "id": "PD-430",
+      "content": "Onboarding state uses lodash memoization with early exit conditions (completed, seen 4x, demo mode)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-431",
+      "content": "Message mappers handle SDK-internal type translation with asymmetric field naming and 3-anchor segment tracking for compaction",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-432",
+      "content": "System init conditionally injects UDS messaging socket path for ant-only remote control (not in public SDK types)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-433",
+      "content": "Token counting handles parallel tool calls via message ancestry walk-back using message.id sibling detection",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-434",
+      "content": "Cost session persistence gated by session ID match to prevent cost spillover across sessions",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-435",
+      "content": "Cost accumulation recursively includes advisor model usage; advisor costs logged separately then added to total",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 6,
+  "cumulative_total": 332,
+  "incremental_rate": 0.0180
+}

@@ -1,0 +1,136 @@
+{
+  "iteration": 6,
+  "unit": "api-resilience/+prompt-cache/+tool-search/+rate-limit/+mcp-edge/",
+  "timestamp": "2026-04-15T13:41:21Z",
+  "platform_decisions": [
+    {
+      "id": "PD-361",
+      "content": "Non-streaming fallback on 529 capacity errors with dynamic timeout and funnel telemetry",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-362",
+      "content": "Stale connection detection via ECONNRESET/EPIPE cause chain; feature-gated keep-alive pool disable on retry",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-363",
+      "content": "SSL/TLS error extraction from 5-level cause chain with OpenSSL code to user-hint mapping",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-364",
+      "content": "Rate limit reset timestamps parsed as Unix epoch; persistent retry respects window reset (6hr cap)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-365",
+      "content": "Volatile system prompt sections with selective per-section cache breaking",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-366",
+      "content": "Tool description memoization with deferred tool set tracking; untracked speculation agents excluded",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-367",
+      "content": "Three-layer tool search: exact match then MCP prefix then keyword scoring (name 10-12pts, hint 4pts, desc 2pts)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-368",
+      "content": "Tool search detects pending MCP servers and returns them so model knows to retry",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-369",
+      "content": "Post-compaction tool selection falls back from deferred to loaded set to avoid retry churn",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-370",
+      "content": "Multi-scenario mock rate limiting framework with 20+ predefined scenarios (ant-only testing)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-371",
+      "content": "Exceeded rate limit tracking with time-relative reset aggregation; representative claim = furthest reset",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-372",
+      "content": "Voice mode feature-gated at build and runtime; platform-specific microphone permission paths",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-373",
+      "content": "Config fallback to platform defaults with bridge sync; session-scoped REPL bridge toggle",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-374",
+      "content": "Context overflow: parse error message, compute availableContext with 1000-token safety buffer, retry with adjusted max_tokens",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-375",
+      "content": "OAuth token refresh with multi-provider credential clearing (AWS/GCP/Vertex/Bedrock specific patterns)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-376",
+      "content": "MCP resource fetching with per-server failure isolation; one server crash doesnt block others",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-377",
+      "content": "MCP tool name normalization: double-underscore split for MCP, CamelCase split for regular tools",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-378",
+      "content": "Scenario-based mock header injection with state preservation for overage scenarios",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-379",
+      "content": "Mock fast-mode rate limit expiry with dynamic retry-after computation and duration thresholds",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-380",
+      "content": "Strict tool result pairing validation: 1:1 tool_use_id to tool_result mapping when enabled",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-381",
+      "content": "Advisor block stripping and caller field removal on message transit (selective per message role)",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 21,
+  "cumulative_total": 297,
+  "incremental_rate": 0.0707
+}

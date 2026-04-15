@@ -1,0 +1,505 @@
+{
+  "iteration": 2,
+  "unit": "hooks/+commands/+services/+settings/+state/+query/",
+  "timestamp": "2026-04-15T13:09:31Z",
+  "platform_decisions": [
+    {
+      "id": "PD-150",
+      "content": "Hook system event-driven architecture with discriminator-based event model (PreToolUse, PostToolUse, SessionStart, etc.)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-151",
+      "content": "Async hook registry with configurable timeouts (default 15s) and progress callbacks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-152",
+      "content": "Hook matcher-based tool filtering — empty matcher means all tools, named matchers filter per tool call",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-153",
+      "content": "PreToolUse hooks can emit permissionDecision and permissionDecisionReason to override tool invocation",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-154",
+      "content": "Sync vs async hook response types via discriminator pattern",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-155",
+      "content": "Command lazy loading and feature-gating via dynamic requires deferred until first build",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-156",
+      "content": "Multi-source command aggregation: built-in + skills + plugins + bundled + workflows",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-157",
+      "content": "Command availability filter (auth type) applied before enablement (feature flags) — separate concerns",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-158",
+      "content": "Command type hierarchy: prompt (expansion), local (sync TSX), local-jsx (async React)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-159",
+      "content": "MCP transport type abstraction: stdio, sse, http, ws, sdk, claudeai-proxy",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-160",
+      "content": "MCP server state machine: connected, failed, needs-auth, pending, disabled with backoff reconnection",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-161",
+      "content": "MCP config scope cascade from 7 scopes with later overriding earlier",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-162",
+      "content": "MCP server dedup by signature (command array or URL) to prevent duplicate tool registrations",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-163",
+      "content": "Atomic MCP config writes via temp file + datasync + rename pattern",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-164",
+      "content": "API client multi-provider: direct, Bedrock, Foundry, Vertex selected at runtime via env vars",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-165",
+      "content": "Credential refresh at request time with cache-and-retry on failure",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-166",
+      "content": "Client-side request ID injection via x-client-request-id for debugging (1P API only)",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-167",
+      "content": "Retry strategy: 529 foreground-only retry (max 3), exponential backoff for others",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-168",
+      "content": "Error classification and triage with specific recovery strategies per error category",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-169",
+      "content": "Settings loaded from 7 sources with later overriding earlier; arrays deduped, objects recursed",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-170",
+      "content": "Managed settings drop-in architecture: base + alphabetical drop-ins for independent policy fragments",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-171",
+      "content": "Settings change detection via chokidar (1s stability, 30s grace) + MDM polling (30min)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-172",
+      "content": "Settings cache with lifecycle state — cleared on /clear, /compact, or schema update",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-173",
+      "content": "Permission rule validation with custom errors; invalid rules filtered not blocking",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-174",
+      "content": "Settings backward compat via z.passthrough() — unknown fields preserved across schema updates",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-175",
+      "content": "System prompt sections computed once and cached; DANGEROUS_uncachedSection for volatile content",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-176",
+      "content": "Hooks defined in settings by event type with matcher array and type (bash-command, http, prompt, agent)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-177",
+      "content": "Config change hooks notify plugins/hooks on settings file changes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-178",
+      "content": "Feature flag conditional imports for dead-code elimination at build time",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-179",
+      "content": "Custom API headers via ANTHROPIC_CUSTOM_HEADERS env var, merged with defaults",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-180",
+      "content": "Model provider selection deferred to request time so env var changes propagate",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-181",
+      "content": "Bootstrap state isolation: minimal global singleton with resetStateForTests()",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-182",
+      "content": "Hook response aggregation: most-restrictive permission wins, all blocking errors reported",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-183",
+      "content": "Tool-specific hook context with toolUseID and hook index for unique env paths",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-184",
+      "content": "Command context dependency injection via ToolUseContext with runtime config callbacks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-185",
+      "content": "Skill root env var CLAUDE_PLUGIN_ROOT for portable asset paths",
+      "source": "code_analysis",
+      "manifesto_mapping": "D17",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-186",
+      "content": "Fork vs inline skill execution: fork runs as sub-agent, inline inherits conversation state",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-187",
+      "content": "Command disableability via isEnabled() separate from availability (auth type)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-188",
+      "content": "MCP OAuth config cascade with XAA shared IdP support",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-189",
+      "content": "Elicitation handler for async consent with timeout-to-decline default",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-200",
+      "content": "Immutable AppState with reducer pattern (createStore) — all changes via setState updater functions",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-201",
+      "content": "One QueryEngine per conversation; state persists across turns (messages, fileReadCache, usage)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-202",
+      "content": "AsyncGenerator-based query loop for real-time streaming of events to UI",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-203",
+      "content": "Stateful query loop with continue sites for recovery from max_output_tokens and prompt_too_long",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-204",
+      "content": "Multi-layer compaction: snip (history truncation) + microcompact (tool result compression) + autocompact (full summarization)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-205",
+      "content": "Forked agents inherit cache-safe params from parent for API response cache hits",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-206",
+      "content": "CacheSafeParams saved at turn end for post-turn forks to reuse prompt cache",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-207",
+      "content": "File cache cloning for subagent isolation — subagent reads dont evict parent cache",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-208",
+      "content": "Permission denial tracking for SDK reporting via SDKPermissionDenial entries",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-209",
+      "content": "Auto-memory directory with 4-type taxonomy (user, feedback, project, reference) and MEMORY.md index (200 lines, 25KB max)",
+      "source": "code_analysis",
+      "manifesto_mapping": "P3",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-210",
+      "content": "Dual-gate auto-consolidation (dream): time gate (24h) + session gate (5 sessions) + lock coordination",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-211",
+      "content": "Auto-extraction at turn end via stop hooks with restricted permissions (read-only + memory dir write)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-212",
+      "content": "Session memory as separate periodic transcript summarization to session.md",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-213",
+      "content": "ToolPermissionContext frozen at conversation start — immutable mode + rules",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-214",
+      "content": "ToolUseContext carries mutable execution state, cloned/isolated for subagents",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-215",
+      "content": "AppState carries UI state decoupled from API state (statusLine, expandedView, footer)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-216",
+      "content": "Session bootstrap state machine: single global singleton for session lifecycle",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-217",
+      "content": "Feature gate latching for prompt cache stability — once latched, dynamic changes dont flip header",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-218",
+      "content": "Three-tier model selection: CLI flag > userSettings.model > getDefaultMainLoopModelSetting()",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-219",
+      "content": "Conversation history as JSONL append-only log with per-project session filtering",
+      "source": "code_analysis",
+      "manifesto_mapping": "T2",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-220",
+      "content": "Pasted content deduplication: large pastes to external store, small inline, lazy resolution",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-221",
+      "content": "Memory path resolution with entrypoint truncation (200 lines, 25KB max)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-222",
+      "content": "Team memory sync via watchers with secret scanning guards across team boundaries",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-223",
+      "content": "Nested memory attachments deduped via loadedNestedMemoryPaths Set",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-224",
+      "content": "Turn-scoped skill discovery tracking via discoveredSkillNames Set",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-225",
+      "content": "Migrations as versioned schema adapters running idempotently at startup",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-226",
+      "content": "Strict tool result pairing in SDK mode — fail fast instead of synthetic placeholders",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-227",
+      "content": "Lazy module loading for feature-gated code via bun:bundle + lazy require",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-228",
+      "content": "Query tracking with chainId+depth for multi-agent call correlation",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-229",
+      "content": "Tokenization estimation cache (3 chars approx 1 token) for real-time context window checks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-230",
+      "content": "Task budget tracking across compaction — cumulative so server doesnt under-count",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-231",
+      "content": "Content replacement state for tool result storage budget management",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-232",
+      "content": "Abort controller hierarchy: parent abort cascels child, shareAbortController opt-in",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-233",
+      "content": "System prompt injection for ant-only cache breaking (debug feature)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-234",
+      "content": "Git status snapshot memoized once per conversation at start",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-235",
+      "content": "Coordinator mode context injection via feature-gated getCoordinatorUserContext()",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-236",
+      "content": "Thinking config: adaptive (model chooses) or disabled (budget_tokens=0)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-237",
+      "content": "Organization managed settings async loading with timeout to prevent deadlock",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-238",
+      "content": "Message normalization at API boundary strips UI-only elements",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-239",
+      "content": "Tool use summaries compress tool calls for context preservation during compaction",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-240",
+      "content": "Snip compaction for long sessions — SDK snips early, REPL keeps full history with projection",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 81,
+  "cumulative_total": 192,
+  "incremental_rate": 0.4218
+}

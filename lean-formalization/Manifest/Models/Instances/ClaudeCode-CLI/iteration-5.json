@@ -1,0 +1,80 @@
+{
+  "iteration": 5,
+  "unit": "shutdown/+analytics/+telemetry/+migrations/+secrets/",
+  "timestamp": "2026-04-15T13:16:33Z",
+  "platform_decisions": [
+    {
+      "id": "PD-340",
+      "content": "Graceful shutdown with tiered priority: terminal cleanup (sync) then resume hint then async cleanup then SessionEnd hooks then analytics flush (500ms cap)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-341",
+      "content": "Analytics dual-sink with per-sink killswitch; early events use cached GrowthBook from previous session",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-342",
+      "content": "Telemetry span lifecycle uses WeakRef + 30min TTL cleanup interval; strong refs for LLM requests only",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-343",
+      "content": "Lazy schema construction via lazySchema() factory defers Zod compilation to first access",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-344",
+      "content": "Startup profiling dual-mode: sampled analytics (100% ant, 0.5% external) + detailed env-gated profiling",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-345",
+      "content": "Cleanup registry with unregister functions: global Set-based, decoupled from shutdown module",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-346",
+      "content": "Buffered JSONL writer: 1000ms flush, 50-entry buffer, per-path writer instances with lazy dir creation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-347",
+      "content": "Secret scanning with 24+ curated gitleaks regex rules; API key prefix assembled at runtime to avoid literal in bundle",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-348",
+      "content": "Connection error details extracted from up to 5 levels of cause chain with SSL code matching and HTML sanitization",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-349",
+      "content": "Migration framework: source-scoped idempotent updates without completion markers (11 migration files)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-350",
+      "content": "Self-registering swarm backend pattern: backends register with central registry on import to avoid circular deps",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 11,
+  "cumulative_total": 276,
+  "incremental_rate": 0.0398
+}

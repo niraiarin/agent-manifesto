@@ -1,0 +1,23 @@
+{
+  "description": "Cross-layer dependency removals during Phase 2 monotonicity check",
+  "timestamp": "2026-04-15",
+  "total_violations": 14,
+  "fix_strategy": "Remove cross-layer dependencies (implicit from layer ordering)",
+  "removed_dependencies": [
+    {"from": "permissionModes", "fromLayer": "permission", "to": "multiLayerSecurity", "toLayer": "safety"},
+    {"from": "ruleCascade", "fromLayer": "permission", "to": "denyShortCircuit", "toLayer": "safety"},
+    {"from": "toolInterface", "fromLayer": "tool", "to": "permissionModes", "toLayer": "permission"},
+    {"from": "hierarchicalTeams", "fromLayer": "orchestration", "to": "toolInterface", "toLayer": "tool"},
+    {"from": "planApprovalGate", "fromLayer": "orchestration", "to": "permissionModes", "toLayer": "permission"},
+    {"from": "immutableAppState", "fromLayer": "conversation", "to": "permissionModes", "toLayer": "permission"},
+    {"from": "queryLoopRecovery", "fromLayer": "conversation", "to": "toolInterface", "toLayer": "tool"},
+    {"from": "pluginArchitecture", "fromLayer": "extension", "to": "settingsCascade", "toLayer": "conversation"},
+    {"from": "hookSystem", "fromLayer": "extension", "to": "settingsCascade", "toLayer": "conversation"},
+    {"from": "hookSystem", "fromLayer": "extension", "to": "toolInterface", "toLayer": "tool"},
+    {"from": "mcpTransportAbstraction", "fromLayer": "extension", "to": "settingsCascade", "toLayer": "conversation"},
+    {"from": "commandAggregation", "fromLayer": "extension", "to": "settingsCascade", "toLayer": "conversation"},
+    {"from": "autoMemoryTaxonomy", "fromLayer": "observability", "to": "settingsCascade", "toLayer": "conversation"},
+    {"from": "queryCorrelation", "fromLayer": "observability", "to": "hierarchicalTeams", "toLayer": "orchestration"}
+  ],
+  "rationale": "All 14 violations were higher-layer propositions depending on lower-layer ones. In the epistemic layer model, such dependencies are valid at implementation level but violate the monotonicity constraint for the formal axiom system. Cross-layer dependencies are implicit from the layer ordering (higher layers can use lower layers), so explicit dependency edges are redundant and were removed."
+}

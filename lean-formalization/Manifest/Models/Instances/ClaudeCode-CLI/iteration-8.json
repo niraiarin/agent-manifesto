@@ -1,0 +1,59 @@
+{
+  "iteration": 8,
+  "unit": "diff/+git/+project/",
+  "timestamp": "2026-04-15T13:45:28Z",
+  "platform_decisions": [
+    {
+      "id": "PD-420",
+      "content": "Lazy split of git diff stats (shortstat/numstat) from detailed hunks to avoid expensive operations during polling",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-421",
+      "content": "Transient git state detection via filesystem marker files (MERGE_HEAD etc.) not git commands",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-422",
+      "content": "Worktree-aware canonical repository identity: findGitRoot (worktree) vs findCanonicalGitRoot (main repo)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-423",
+      "content": "In-memory dirty-flag cache invalidation: fs.watchFile marks dirty, async recompute on next access",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-424",
+      "content": "Filesystem-based ref resolution from .git files with cycle detection via isSafeRefName",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-425",
+      "content": "Two-column diff render caching via WeakMap keyed by patch identity for O(1) remount",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-426",
+      "content": "Bounded diff processing: shortstat gating at 500 files, 1MB per-file cap, MAX_LINES_PER_FILE cap",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-427",
+      "content": "V8 string slicing prevention in diff parsing: force flat string allocation to enable parent GC",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 8,
+  "cumulative_total": 326,
+  "incremental_rate": 0.0245
+}
