@@ -18,11 +18,25 @@ if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
   exit 0
 fi
 
-# Resolve git working directory for worktree support
+# Resolve git working directory for worktree support (#548)
+# Strategy: check multiple patterns in priority order
+#   1. git -C <dir> — explicit git directory flag
+#   2. cd <dir> anywhere in command chain — last cd before git commit
+#   3. fallback to hook process CWD (no -C flag)
 GIT_DIR=""
-if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-  GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
+
+# 1. Extract git -C <dir> (highest priority — explicit)
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
+  GIT_DIR=$(echo "$COMMAND" | grep -oE 'git[[:space:]]+-C[[:space:]]+("[^"]*"|[^[:space:]]+)' | head -1 | sed 's/git[[:space:]]*-C[[:space:]]*//' | tr -d '"')
 fi
+
+# 2. Extract last cd <dir> from the pipeline segment containing git commit
+#    Split by | first to exclude pipe-separated cd (cd in pipe doesn't affect git)
+if [ -z "$GIT_DIR" ]; then
+  SEGMENT=$(echo "$COMMAND" | tr '|' '\n' | grep 'git.*commit' | head -1)
+  GIT_DIR=$(echo "$SEGMENT" | grep -oE '(^|[;&]+[[:space:]]*)cd[[:space:]]+("[^"]*"|[^ "&;]+)' | tail -1 | sed 's/.*cd[[:space:]]*//' | tr -d '"')
+fi
+
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
   GIT_CMD=(git -C "$GIT_DIR")
