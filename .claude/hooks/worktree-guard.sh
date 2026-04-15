@@ -5,8 +5,8 @@
 # worktree で作業すべき状態なのに main repo を直接編集する誤操作を防止。
 #
 # 例外:
+# - worktree 内のファイル編集（worktree 自身の編集は許可）
 # - .claude/ 配下（hooks, skills, settings 等の構成ファイル）
-# - MEMORY.md, memory/ 配下
 # - scripts/ 配下（sync-counts.sh 等のインフラ）
 # - tests/ 配下
 #
@@ -28,9 +28,28 @@ if [[ "$WORKTREE_COUNT" -le 1 ]]; then
   exit 0
 fi
 
-# ファイルが main repo 内かチェック
-if [[ ! "$FILE_PATH" = "$PROJECT_ROOT"* ]]; then
-  # main repo 外のファイル（worktree 内等）→ OK
+# main worktree のパスを取得 (#561)
+MAIN_WORKTREE=$(git worktree list 2>/dev/null | head -1 | awk '{print $1}')
+
+# worktree 内にいる場合: main repo へのクロス編集でなければ許可
+if [[ "$PROJECT_ROOT" != "$MAIN_WORKTREE" ]]; then
+  # worktree 内にいるが、FILE_PATH が main repo を指していたらブロック
+  if [[ "$FILE_PATH" = "$MAIN_WORKTREE/"* ]]; then
+    echo "BLOCKED: worktree 内から main repo のファイルを直接編集できません。" >&2
+    echo "" >&2
+    echo "  編集対象: $FILE_PATH" >&2
+    echo "  main repo: $MAIN_WORKTREE" >&2
+    exit 2
+  fi
+  # worktree 自身 or 外部ファイル → 許可
+  exit 0
+fi
+
+# ここ以降は main repo にいる場合のみ
+
+# ファイルが main repo 内かチェック (#561: trailing slash で prefix 誤マッチ防止)
+if [[ ! "$FILE_PATH" = "$PROJECT_ROOT/"* ]] && [[ "$FILE_PATH" != "$PROJECT_ROOT" ]]; then
+  # main repo 外のファイル（外部 worktree 内等）→ OK
   exit 0
 fi
 
