@@ -27,6 +27,16 @@ import Manifest.AxiomQuality
 import Manifest.EvolveSkill
 import Manifest.TaskClassification
 import Manifest.Traceability
+-- Framework モジュール
+import Manifest.Framework.NodeKind
+import Manifest.Framework.AcyclicGraph
+import Manifest.Framework.DanglingDetection
+import Manifest.Framework.LLMRejection
+import Manifest.Framework.CompatibilityClassification
+import Manifest.Framework.EpistemicTagging
+import Manifest.Framework.PromotionProtocol
+import Manifest.Framework.EpistemicBridge
+import Manifest.Framework.CoTFaithfulness
 -- Tier D: 条件付き公理系インスタンス
 import Manifest.Models.Instances.ClaudeCode.Assumptions
 import Manifest.Models.Instances.ClaudeCode.ConditionalDesignFoundation
@@ -54,7 +64,7 @@ import Manifest.Models.PoC.GameLogic
 マニフェスト「永続する構造と一時的なエージェントの協約」の
 公理系を Lean 4 で形式化した仕様書。
 
-53 axioms, 462 theorems, 0 sorry. Compression 8.71x.
+55 axioms, 488 theorems, 0 sorry. Compression 8.87x.
 
 ## モジュール構成（認識論的層構造）
 
