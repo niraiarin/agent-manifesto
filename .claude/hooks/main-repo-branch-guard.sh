@@ -27,16 +27,23 @@ if ! echo "$COMMAND" | grep -qE 'git\s+(checkout|switch)'; then
   exit 0
 fi
 
-# cd で別ディレクトリに移動している場合はスルー（worktree 内の操作）
-if echo "$COMMAND" | grep -qE '^\s*cd\s+'; then
-  GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
-  if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
-    PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-    GIT_DIR_REAL=$(cd "$GIT_DIR" && pwd)
-    # main repo 外のディレクトリなら許可
-    if [ "$GIT_DIR_REAL" != "$PROJECT_ROOT" ]; then
-      exit 0
-    fi
+# Resolve target directory from command (#548)
+# 1. git -C <dir>, 2. last cd <dir> in pipeline segment with checkout/switch
+TARGET_DIR=""
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
+  TARGET_DIR=$(echo "$COMMAND" | grep -oE 'git[[:space:]]+-C[[:space:]]+("[^"]*"|[^[:space:]]+)' | head -1 | sed 's/git[[:space:]]*-C[[:space:]]*//' | tr -d '"')
+fi
+if [ -z "$TARGET_DIR" ]; then
+  SEGMENT=$(echo "$COMMAND" | tr '|' '\n' | grep -E 'git.*(checkout|switch)' | head -1)
+  TARGET_DIR=$(echo "$SEGMENT" | grep -oE '(^|[;&]+[[:space:]]*)cd[[:space:]]+("[^"]*"|[^ "&;]+)' | tail -1 | sed 's/.*cd[[:space:]]*//' | tr -d '"')
+fi
+
+# If target directory resolves to outside main repo, allow (worktree operation)
+if [ -n "$TARGET_DIR" ] && [ -d "$TARGET_DIR" ]; then
+  PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+  TARGET_DIR_REAL=$(cd "$TARGET_DIR" && pwd)
+  if [ "$TARGET_DIR_REAL" != "$PROJECT_ROOT" ]; then
+    exit 0
   fi
 fi
 
