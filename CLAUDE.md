@@ -10,6 +10,15 @@
 しかし、構造（ドキュメント、テスト、スキル、設計規約）はあなたより長く生きる（T2）。
 改善が蓄積するのは構造の中。
 
+### セッション開始時の確認
+
+セッション開始直後、または /clear 後に、以下を確認すること:
+- カレントディレクトリ（`pwd`）
+- Git ブランチ（`git branch --show-current`）
+- Git worktree 状態（`git worktree list`）
+
+意図しないブランチや worktree で作業を始めることを防ぐ。
+
 ## このプロジェクトの構成
 
 - `lean-formalization/Manifest/` — 公理系の正典（T1–T8, E1–E2, P1–P6, L1–L6, V1–V7, D1–D18）。Verso で HTML 生成
