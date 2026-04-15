@@ -107,18 +107,52 @@ OUT=$(bash "$CONV" status "$D4" 2>&1)
 LINES=$(echo "$OUT" | grep "Iteration" | wc -l | tr -d ' ')
 if [ "$LINES" = "1" ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($LINES iterations shown)"; FAIL=$((FAIL+1)); fi
 
-# --- Convergence detection ---
+# --- Convergence detection (2 consecutive < 0.03 + validation) ---
 
-# C.15: convergence detected when rate < 0.05
-echo -n "C.15 convergence detected when rate < 0.05... "
+# C.15: single iteration below threshold → UNCONVERGED (need 2 consecutive)
+echo -n "C.15 single iteration < 0.03 reports UNCONVERGED (need 2 consecutive)... "
 D5="$TMPDIR_TEST/c15"
 mkdir -p "$D5"
-# Create 100 total, then add 1 more → rate = 1/101 ≈ 0.0099
 echo "100" > "$D5/cumulative.txt"
 echo '[{"id":"PD-BIG","content":"x"}]' > "$TMPDIR_TEST/pd_one.json"
 bash "$CONV" add-detailed "$D5" 5 "u" "$TMPDIR_TEST/pd_one.json" >/dev/null 2>&1
 OUT=$(bash "$CONV" check "$D5" 2>&1 || true)
-if echo "$OUT" | grep -q "CONVERGED"; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL"; FAIL=$((FAIL+1)); fi
+if echo "$OUT" | grep -q "^UNCONVERGED.*need 2"; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($OUT)"; FAIL=$((FAIL+1)); fi
+
+# C.16: 2 consecutive < 0.03 → CONVERGED_PENDING_VALIDATION
+echo -n "C.16 2 consecutive < 0.03 reports CONVERGED_PENDING_VALIDATION... "
+D6="$TMPDIR_TEST/c16"
+mkdir -p "$D6"
+echo "100" > "$D6/cumulative.txt"
+echo '[{"id":"PD-A","content":"x"}]' > "$TMPDIR_TEST/pd_a.json"
+echo '[{"id":"PD-B","content":"y"}]' > "$TMPDIR_TEST/pd_b.json"
+bash "$CONV" add-detailed "$D6" 4 "u" "$TMPDIR_TEST/pd_a.json" >/dev/null 2>&1
+bash "$CONV" add-detailed "$D6" 5 "u" "$TMPDIR_TEST/pd_b.json" >/dev/null 2>&1
+OUT=$(bash "$CONV" check "$D6" 2>&1 || true)
+if echo "$OUT" | grep -q "CONVERGED_PENDING_VALIDATION"; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($OUT)"; FAIL=$((FAIL+1)); fi
+
+# C.17: validation iteration → CONVERGED
+echo -n "C.17 validation iteration < 0.03 reports CONVERGED... "
+D7="$TMPDIR_TEST/c17"
+mkdir -p "$D7"
+echo "100" > "$D7/cumulative.txt"
+echo '[{"id":"PD-C","content":"x"}]' > "$TMPDIR_TEST/pd_c.json"
+echo '[]' > "$TMPDIR_TEST/pd_empty.json"
+bash "$CONV" add-detailed "$D7" 4 "u" "$TMPDIR_TEST/pd_c.json" >/dev/null 2>&1
+bash "$CONV" add-detailed "$D7" 5 "u" "$TMPDIR_TEST/pd_c.json" >/dev/null 2>&1
+bash "$CONV" add-detailed "$D7" 6 "u" "$TMPDIR_TEST/pd_empty.json" --validation >/dev/null 2>&1
+OUT=$(bash "$CONV" check "$D7" 2>&1 || true)
+if echo "$OUT" | grep -q "^CONVERGED \[normal\]: validation PASS"; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL ($OUT)"; FAIL=$((FAIL+1)); fi
+
+# C.18: exit code 2 for CONVERGED_PENDING_VALIDATION
+echo -n "C.18 CONVERGED_PENDING_VALIDATION exits with code 2... "
+bash "$CONV" check "$D6" >/dev/null 2>&1; RC=$?
+if [ "$RC" = "2" ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (exit=$RC)"; FAIL=$((FAIL+1)); fi
+
+# C.19: validation flag stored in iteration JSON
+echo -n "C.19 --validation flag stored in iteration JSON... "
+VAL=$(jq -r '.validation' "$D7/iteration-6.json" 2>/dev/null)
+if [ "$VAL" = "true" ]; then echo "PASS"; PASS=$((PASS+1)); else echo "FAIL (got: $VAL)"; FAIL=$((FAIL+1)); fi
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
