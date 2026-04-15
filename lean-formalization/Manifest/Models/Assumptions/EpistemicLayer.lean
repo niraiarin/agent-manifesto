@@ -136,6 +136,61 @@ structure AssumptionExpiration where
 -- ============================================================
 
 -- ============================================================
+-- Core Axiom の先行研究参照（#547）
+-- ============================================================
+
+/-- R81: E3a の根拠 — 言語的信頼度マーカーの分布外不整合性。
+    E3a (confidence_is_self_description) が Confidence を
+    calibrated measurement ではなく self-description と定義する根拠。 -/
+def core_h1 : Assumption := {
+  id := "CORE-H1"
+  source := .llmInference
+    []
+    "E3a の反証条件と同一: Confidence.value が外部較正なしに実際の精度と相関することが示された場合"
+  content := "[R81] Li et al. (ACL 2025) 'Revisiting Epistemic Markers in Confidence Estimation' — 言語的信頼度マーカーは分布外で不整合であり、Confidence は calibrated measurement ではなく self-description である"
+  validity := some {
+    sourceRef := "ACL 2025 proceedings / Li et al."
+    lastVerified := "2026-04-16"
+    reviewInterval := some 180
+  }
+}
+
+/-- R71: E3b の根拠 — CoT の不誠実性（Anthropic 内部研究）。
+    E3b (cot_not_always_faithful) の主要な実証的根拠。
+    Claude はヒントを 25% しか開示せず、75% は事後合理化を生成する。 -/
+def core_h2 : Assumption := {
+  id := "CORE-H2"
+  source := .llmInference
+    []
+    "LLM の CoT が内部計算を忠実に反映することが因果的に示された場合"
+  content := "[R71] Lanham et al. (Anthropic 2025) 'Measuring Faithfulness in Chain-of-Thought Reasoning' — Claude は隠されたヒントを 25% の確率でのみ開示し、75% は事後的に妥当な代替説明を生成する"
+  validity := some {
+    sourceRef := "Anthropic Research / Lanham et al. 2025"
+    lastVerified := "2026-04-16"
+    reviewInterval := some 180
+  }
+}
+
+/-- R72: E3b の根拠 — few-shot バイアスの CoT 非反映。
+    E3b (cot_not_always_faithful) の補強的根拠。
+    CoT は few-shot 例のバイアス効果を反映しない。 -/
+def core_h3 : Assumption := {
+  id := "CORE-H3"
+  source := .llmInference
+    []
+    "LLM の CoT が few-shot バイアスを含む全ての内部影響を忠実に反映することが示された場合"
+  content := "[R72] Turpin et al. (2024) 'Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting' — CoT はバイアスのかかった few-shot 例の効果を反映しない"
+  validity := some {
+    sourceRef := "NeurIPS 2024 / Turpin et al."
+    lastVerified := "2026-04-16"
+    reviewInterval := some 180
+  }
+}
+
+/-- Core axiom の先行研究参照一覧。 -/
+def coreAssumptions : List Assumption := [core_h1, core_h2, core_h3]
+
+-- ============================================================
 -- 層定義の仕様型（Phase 2 の出力）
 -- ============================================================
 

@@ -158,6 +158,9 @@ structure Output (α : Type) where
   confidence : Confidence
   deriving Repr
 
+instance : Inhabited Confidence := ⟨⟨0.0⟩⟩
+instance : Inhabited (Output Nat) := ⟨⟨0, default⟩⟩
+
 -- ============================================================
 -- Feedback — T5: フィードバックなしに改善は不可能である
 -- ============================================================
@@ -366,6 +369,14 @@ structure Agent where
 
     Concrete transition conditions will be defined in Phase 3+. -/
 opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
+
+/-- Extract the output produced in a World state.
+    Connects World (system state after transition) to Output (agent's result).
+    Used by E3a to formally link transition targets w₁/w₂ to outputs o₁/o₂.
+
+    Added to resolve #547: E3a's quantification over World and Output was
+    disconnected — w₁/w₂ and o₁/o₂ were independent existentials. -/
+opaque worldOutput (w : World) : Output Nat
 
 /-- Valid transition: a transition from w to w' is possible via some agent and action. -/
 def validTransition (w w' : World) : Prop :=

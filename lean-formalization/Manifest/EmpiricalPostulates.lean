@@ -242,7 +242,8 @@ probabilistic nature, not an externally calibrated measurement.
 - T4 → E3a: Not derivable. World differences may manifest only in
   non-Confidence fields.
 - E3a → T4: Not derivable. Confidence differences do not directly
-  imply World differences (no World→Output accessor exists).
+  imply World differences. worldOutput connects them formally,
+  but the axiom only asserts existence, not a bijection.
 
 This orthogonality justifies E3a as an independent empirical postulate.
 -/
@@ -261,6 +262,7 @@ This orthogonality justifies E3a as an independent empirical postulate.
     根拠:
     [R81] Li et al. (ACL 2025) "Revisiting Epistemic Markers in Confidence Estimation"
           — Linguistic confidence markers are inconsistent out-of-distribution
+          → Registered as CORE-H1 in Models/Assumptions/EpistemicLayer.lean (#547)
     [R82] Ontology.lean:155 comment "self-description" — elevated to formal axiom
 
     反証条件: If Confidence.value is demonstrated to correlate with actual
@@ -269,16 +271,19 @@ This orthogonality justifies E3a as an independent empirical postulate.
     降格判定: 導出不可能 — T4 は World レベルの差異を述べるが、Confidence フィールド
     への特化は T4 から導出できない。axiom として維持。 -/
 axiom confidence_is_self_description :
-  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World)
-    (o₁ : Output Nat) (o₂ : Output Nat),
+  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
     canTransition agent action w w₁ ∧
     canTransition agent action w w₂ ∧
-    o₁.result = o₂.result ∧
-    o₁.confidence ≠ o₂.confidence
+    (worldOutput w₁).result = (worldOutput w₂).result ∧
+    (worldOutput w₁).confidence ≠ (worldOutput w₂).confidence
 
 /-- E3a practical implication: if Confidence varies for the same result,
     then relying on Confidence.value alone for decision-making is unreliable.
-    Derives from E3a by contradiction with the universality assumption. -/
+    Derives from E3a by contradiction with the universality assumption.
+
+    Note: The theorem statement uses free Output variables (not worldOutput)
+    because the practical claim is about Output values regardless of their
+    World origin. E3a (via worldOutput) provides the witness. -/
 theorem confidence_unreliable_for_decision :
     (∃ (o₁ o₂ : Output Nat),
       o₁.result = o₂.result ∧
