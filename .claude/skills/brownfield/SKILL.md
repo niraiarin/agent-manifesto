@@ -23,6 +23,10 @@ dependencies:
       type: soft
       phase: "Phase 0 Step 2"
       condition: "未知の技術スタックの調査が必要な場合"
+    - skill: handoff
+      type: soft
+      phase: "Phase 0→1, 1→2 boundary"
+      condition: "context 逼迫時のセッション引き継ぎ"
   invoked_by:
     - skill: spec-driven-workflow
       phase: "Phase 0"

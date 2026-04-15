@@ -33,6 +33,14 @@ dependencies:
     - skill: evolve
       type: hard
       phase: "Phase 4 Step 5"
+    - skill: brownfield
+      type: soft
+      phase: "Phase 0"
+      condition: "既存プロジェクトへの公理系適用時"
+    - skill: handoff
+      type: soft
+      phase: "Phase 0→1, 1→2, 2→3, 3→4 boundary"
+      condition: "context 逼迫時のセッション引き継ぎ"
 ---
 <!-- @traces D1, D2, D3, D4, D5, P2, P3, P4 -->
 
