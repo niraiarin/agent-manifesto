@@ -16,7 +16,7 @@
 - `lean-formalization/Manifest/Ontology.lean` — 境界条件（L1–L6）の定義と詳細
 - `lean-formalization/Manifest/Observable.lean` — 変数（V1–V7）の定義と詳細
 - `docs/design-development-foundation.md` — 設計開発基礎論（D1–D9）
-- `lean-formalization/` — Lean 4 形式検証（53 axioms, 462 theorems, 0 sorry）
+- `lean-formalization/` — Lean 4 形式検証（53 axioms, 462 core theorems, 0 sorry。Models/ に 1,161、Foundation/ に 17 の追加 theorems）
 - `.claude/` — マニフェスト準拠の Claude Code 構成
 
 ## Compact Instructions
@@ -141,7 +141,7 @@
 > **Note**: `lake build` and `grep ... Manifest/` commands must be run from the `lean-formalization/` directory.
 
 - `export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest` — Lean 4 full build
-- `bash tests/test-all.sh` — run all 618 acceptance tests (Phase 1–5)
+- `bash tests/test-all.sh` — run all 673 acceptance tests (Phase 1–5)
 - `grep -r "^axiom [a-z]" Manifest/ --include="*.lean" | wc -l` — count axioms
 - `grep -r "^theorem " Manifest/ --include="*.lean" | wc -l` — count theorems
 
@@ -150,7 +150,7 @@
 - `import` must precede `/-!` doc comments (Lean 4 requirement)
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
-- Current stats: 53 axioms, 462 theorems, 0 sorry
+- Current stats: 53 axioms, 462 core theorems (+ 1,178 in Models/Foundation), 0 sorry
 
 ## Hook Development Patterns
 
