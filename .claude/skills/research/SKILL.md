@@ -669,9 +669,28 @@ PR body に「後続 Issue: なし（理由: ...）」と明記すること。
 
 Step 7a-7c の完了を確認してから PR を作成する。
 
-```bash
-bash .claude/skills/research/scripts/worktree.sh cleanup <issue-number> <topic-name>
-```
+**Worktree → PR の手順** (#544):
+
+1. worktree の変更を main repo の feature branch にコピー:
+   ```bash
+   bash .claude/skills/research/scripts/worktree.sh pr <issue-number> <topic-name> <pr-branch-name>
+   ```
+2. カウント同期（hook がブロックするため必須）:
+   ```bash
+   SYNC_SKIP_TESTS=1 bash scripts/sync-counts.sh --update
+   ```
+3. ビルド確認:
+   ```bash
+   cd lean-formalization && lake build Manifest
+   ```
+4. コミット + push + PR 作成
+5. PR マージ後に Worktree クリーンアップ:
+   ```bash
+   bash .claude/skills/research/scripts/worktree.sh cleanup <issue-number> <topic-name>
+   ```
+
+**注意**: Worktree 内で直接コミット・push すると、hooks が main repo のブランチを参照して
+誤検知する（#543）。必ず `worktree.sh pr` で main repo にコピーしてからコミットすること。
 
 PR body テンプレート:
 ```markdown
