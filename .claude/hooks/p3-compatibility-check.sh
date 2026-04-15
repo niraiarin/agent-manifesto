@@ -29,7 +29,7 @@ if [ -f "$_CONFIG_FILE" ] && jq -e '.STRUCTURAL_PATTERNS' "$_CONFIG_FILE" >/dev/
 else
   STRUCTURAL_PATTERNS='\.claude/|tests/|docs/'
 fi
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 
 if echo "$STAGED" | grep -qE "$STRUCTURAL_PATTERNS"; then
   # コミットメッセージから互換性分類を検出（POSIX 互換）
