@@ -1,0 +1,42 @@
+{
+  "description": "Pre-defined test cases for K-dimension variance measurement (#550)",
+  "locked": true,
+  "cases": [
+    {
+      "id": "TC1-clear-high",
+      "category": "clear",
+      "expected": "high scores",
+      "content": "## Improvement: Hook enforcement acceptance test\n\n### refs: P2, D1, V1\n\nAdd tests/phase1/test-hook-enforcement.sh with 3 test cases for L1 violation detection and P4 metrics recording.\n\n### Measurement\n- Before: V1 hook coverage = 0/3\n- After: V1 hook coverage = 3/3\n\n### Verifier: PASS (0 addressable)\n### Compatibility: conservative extension"
+    },
+    {
+      "id": "TC2-clear-low",
+      "category": "clear",
+      "expected": "low scores",
+      "content": "## Improvement: Make things better\n\nRefactor some code to be cleaner. No specific files identified. Should improve readability."
+    },
+    {
+      "id": "TC3-boundary-1",
+      "category": "boundary",
+      "expected": "G1 high, G3 contested",
+      "content": "## Experiment: API rate limit impact\n\n### Question (G1)\nDoes rate limiting affect variance?\n\n### Result\nYes, 3/20 runs affected.\n\n### Reproduction (G2)\nScript and data saved.\n\n### Quantitative Basis (G3)\nDifferences observed but no statistical significance computed. 2.3 vs 4.1 avg. Sample may be insufficient.\n\n### Next Action (G4)\nConditional: need larger sample.\n\n### Unresolved: Script hardcodes API key path"
+    },
+    {
+      "id": "TC4-boundary-2",
+      "category": "boundary",
+      "expected": "C1 contested (trivial?)",
+      "content": "## Improvement: Type annotation for VerificationRisk\n\n### refs: D3\n\nAdd : Nat return type annotation to requiredConditions.\n\n### Measurement\n- Before: 0 annotations\n- After: 1 annotation\n- Lean build: PASS\n\n### Verifier: PASS\n### Compatibility: conservative extension"
+    },
+    {
+      "id": "TC5-tradeoff-1",
+      "category": "tradeoff",
+      "expected": "G1 high, G2 low",
+      "content": "## Experiment: Temperature effect on scores\n\n### Question (G1)\nHow does temperature affect Judge scores?\n\n### Result\nSignificant effect. temp=0.0 clusters, temp=1.0 spreads.\n\n### Reproduction (G2)\nRun interactively. Prompts not saved. Data not persisted.\n\n### Quantitative Basis (G3)\ntemp=0.0: mean=3.8 sd=0.1; temp=1.0: mean=3.5 sd=0.7. n=30.\n\n### Next Action (G4)\nPASS: Proceed."
+    },
+    {
+      "id": "TC6-tradeoff-2",
+      "category": "tradeoff",
+      "expected": "C2 high, C4 low",
+      "content": "## Improvement: Bounded verification timeout\n\n### refs: T1, T3, E2, D1, D3, V3\n\nVerifier has no timeout. T1 requires bounded lifetime. E2 requires bounded resources.\n\n### Solution\nAdd timeout parameter.\n\n### Implementation Status\nDesign only. No code. Values TBD.\n\n### Compatibility: compatible change"
+    }
+  ]
+}
