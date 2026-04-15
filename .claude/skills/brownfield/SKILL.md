@@ -319,13 +319,47 @@ bash .claude/skills/brownfield/convergence.sh check <observations-dir> --mode ph
 
 ```
 増分率 = decisions_found / cumulative_total
-収束条件: 増分率 < 0.05（5% 未満）
+収束条件: 2 回連続で増分率 < 0.03（3% 未満）
 ```
 
-- 収束した + philosophy iteration 2+ → Phase 1.5 へ
-- 収束した + philosophy なし → Phase 2 へ
+**根拠** (#525): capture-recapture (Lincoln-Petersen) 推定により、この条件は
+推定総 PD 数の 95%+ をカバーした状態に対応する。
+2 回連続を要求することで、偶然の低 rate による早期停止（false convergence）を防ぐ。
+ECC (N_est=323, 302 observed) と Claude Code CLI (N_est=299, 276 observed) の
+2 プロジェクトで検証済み。
+
+- 2 回連続 < 0.03 達成 → **validation iteration** を実行（Step 3.5）
+- validation も < 0.03 → 収束確定。Phase 1.5 or Phase 2 へ
+- validation が >= 0.03 → 偽収束。Step 2 に戻る
 - 未収束 → 次の分解単位で Step 2 を反復
 - 10 反復超過 → 強制終了。未観察の分解単位を記録して Phase 2 へ
+
+### Step 3.5: Validation Iteration（探索バイアス除去）
+
+2 回連続 rate < 0.03 を達成した後、探索プロンプトのバイアスが rate を
+人工的に下げていないことを確認する。
+
+**問題**: 探索プロンプトでスコープ制限やカウント上限を指定すると、
+`found` が探索戦略の関数になり、残存情報量を反映しなくなる (#525)。
+
+**Validation iteration のルール**:
+1. スコープ制限なし（「全コードベースを探索しろ」）
+2. カウント上限なし（「見つかるだけ報告しろ」）
+3. 既存 PD の全リストを提供してデデュプ
+4. `convergence.sh add-detailed ... --validation` で登録
+
+```bash
+# Validation iteration の実行
+bash convergence.sh add-detailed <dir> <N> "validation" /tmp/pds-validation.json --validation
+
+# 確認
+bash convergence.sh check <dir>
+# → CONVERGED (validation PASS) or UNCONVERGED
+```
+
+**判定**:
+- validation rate < 0.03 → `CONVERGED` — 真の収束
+- validation rate >= 0.03 → `UNCONVERGED` — 偽収束。directed iteration を継続
 
 ## Phase 1.5: ワークフロー思想の統合（#479）
 
