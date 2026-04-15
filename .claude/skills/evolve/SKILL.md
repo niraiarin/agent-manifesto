@@ -973,7 +973,7 @@ bash .claude/skills/evolve/scripts/retirement.sh remove <file-path>
 |------|---------|--------|---------------|
 | test pass count (絶対数) | `bash tests/test-all.sh` | 673+ | 直接最適化すると自明なテスト追加を誘発 |
 | axiom count (絶対数) | `grep -r "^axiom " --include="*.lean"` | 53 (安定、増加時は根拠必須) | 無根拠な公理追加は compression ratio を低下させ形式系を弱める。ただし公理系ギャップの放置も形式系を弱める (#316 実績)。増加時は Step 2a 公理昇格フロー（[A] タグ → T6 Issue → /research → /ground-axiom）の経路を経ること |
-| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 462+ (増加) | delta は最適化、絶対数はガバナンス |
+| theorem count (絶対数) | `grep -r "^theorem " --include="*.lean"` | 488+ (増加) | delta は最適化、絶対数はガバナンス |
 | sorry count | `grep -r "sorry" --include="*.lean"` | 0 (制約) | 最適化対象でなく制約（導入自体を禁止） |
 | warning count | `lake build 2>&1 \| grep warning` | 0 (制約) | 同上 |
 | De Bruijn factor | AxiomQuality.lean より | ≈4.0 | 直接最適化すると冗長な証明を誘発 |

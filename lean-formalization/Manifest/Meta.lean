@@ -75,11 +75,11 @@ def DerivationBasis.robustness : DerivationBasis → Nat
 structure AxiomSystemProfile where
   /-- T₀: 拘束条件（T1–T8）の axiom 数 -/
   constraintCount       : Nat
-  /-- Γ \ T₀: 経験的公準（E1–E2）の axiom 数 -/
+  /-- Γ \ T₀: 経験的公準（E1–E3a）の axiom 数 -/
   empiricalCount        : Nat
   /-- Γ \ T₀: Observable 層の axiom 数 -/
   observableCount       : Nat
-  /-- Γ \ T₀: 応用層（FormalDerivationSkill, ConformanceVerification）の axiom 数 -/
+  /-- Γ \ T₀: 応用層（FormalDerivationSkill, ConformanceVerification, Framework）の axiom 数 -/
   applicationCount      : Nat
   /-- 構造的 axiom（Ontology.lean: dependency_respects_strength 等）の axiom 数 -/
   structuralCount       : Nat
@@ -98,7 +98,7 @@ def AxiomSystemProfile.totalAxioms (p : AxiomSystemProfile) : Nat :=
 -- ============================================================
 
 /-- 各 Lean モジュールの定理数（Manifest/*.lean + Manifest/Framework/*.lean）。
-    追跡対象は Manifest/ 直下の 18 モジュール + Framework/ の 5 モジュール。
+    追跡対象は Manifest/ 直下の 18 モジュール + Framework/ の 9 モジュール。
     Models/（PoC, Instances）および Foundation/ サブディレクトリの定理は含まない。
     scripts/sync-counts.sh が grep で算出した値を自動同期する。 -/
 structure TheoremDistribution where
@@ -120,7 +120,7 @@ structure TheoremDistribution where
   epistemicLayerM        : Nat  -- EpistemicLayer.lean
   taskClassificationM    : Nat  -- TaskClassification.lean
   traceabilityM          : Nat  -- Traceability.lean
-  frameworkM             : Nat  -- Framework/*.lean (NodeKind, AcyclicGraph, DanglingDetection, LLMRejection, CompatibilityClassification)
+  frameworkM             : Nat  -- Framework/*.lean (NodeKind, AcyclicGraph, DanglingDetection, LLMRejection, CompatibilityClassification, EpistemicTagging, PromotionProtocol, EpistemicBridge, CoTFaithfulness)
   deriving BEq, Repr
 
 /-- モジュール別定理数の合計。 -/
@@ -137,7 +137,7 @@ def TheoremDistribution.total (d : TheoremDistribution) : Nat :=
 def currentTheoremDistribution : TheoremDistribution :=
   { ontologyM              := 21
     axiomsM                := 3
-    empiricalPostulatesM   := 2
+    empiricalPostulatesM   := 3
     observableM            := 45  -- Observable.lean + ObservableDesign.lean
     principlesM            := 15
     metaM                  := 12
@@ -153,7 +153,7 @@ def currentTheoremDistribution : TheoremDistribution :=
     epistemicLayerM        := 47
     taskClassificationM    := 16
     traceabilityM          := 13
-    frameworkM             := 50 }
+    frameworkM             := 75 }
 
 -- ============================================================
 -- 現在の公理系プロファイル
@@ -164,20 +164,20 @@ def currentTheoremDistribution : TheoremDistribution :=
     axiom の各サブカウントは scripts/sync-counts.sh が自動同期する。 -/
 def currentProfile : AxiomSystemProfile :=
   { constraintCount  := 13
-    empiricalCount   := 3
+    empiricalCount   := 4
     observableCount  := 16
-    applicationCount := 20
+    applicationCount := 21
     structuralCount  := 1
     theoremCount     := currentTheoremDistribution.total  -- 自動計算
     sorryCount       := 0 }
 
-/-- 現在の公理系の総 axiom 数は 53。 -/
+/-- 現在の公理系の総 axiom 数は 55。 -/
 theorem current_total_axioms :
-  currentProfile.totalAxioms = 53 := by rfl
+  currentProfile.totalAxioms = 55 := by rfl
 
 /-- 現在の公理系の定理数は分布の合計と一致する。 -/
 theorem current_theorem_count :
-  currentProfile.theoremCount = 462 := by rfl
+  currentProfile.theoremCount = 488 := by rfl
 
 /-- sorry が 0 であることの証明。 -/
 theorem current_sorry_free :
@@ -191,9 +191,9 @@ theorem theorem_distribution_consistent :
 ## スコープ注記
 
 currentProfile および currentTheoremDistribution が追跡する範囲:
-- **追跡対象**: `Manifest/*.lean` — トップレベルモジュール (459 theorems, 53 axioms)
+- **追跡対象**: `Manifest/*.lean` + `Framework/*.lean` — コアモジュール (488 theorems, 55 axioms)
 - **追跡対象外**: `Manifest/Models/` (1083 theorems), `Manifest/Foundation/` (17 theorems)
-- **全再帰スコープ**: `Manifest/` 全体で 1562 theorems, 53 axioms
+- **全再帰スコープ**: `Manifest/` 全体で 1588 theorems, 55 axioms
 
 この区別の理由:
 - 公理系の「コア理論」は Manifest/*.lean のモジュールで構成される
