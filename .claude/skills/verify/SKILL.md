@@ -184,17 +184,34 @@ FAIL の場合は問題箇所をユーザーに提示し、判断を委ねる。
 Verifier が **PASS** を返した場合、検証対象ファイルのリストを P2 トークンとして記録する。
 これにより `p2-verify-on-commit.sh` が検証済みファイルのコミットを許可する。
 
+**evaluator_type の判定:**
+
+| 検証手段 | evaluator 値 | evaluator_independent |
+|---------|-------------|----------------------|
+| Subagent (Claude) | `"subagent/claude"` | `false` |
+| Local LLM (Ollama 等) | `"ollama/<model>"` | `true` |
+| 別 API | `"api/<provider>"` | `true` |
+| 人間 | `"human"` | `true` |
+
 ```bash
 # PASS の場合のみ実行
-echo '{"epoch":'$(date +%s)',"files":["file1","file2",...],"verdict":"PASS"}' \
+# evaluator と evaluator_independent は検証手段に応じて設定する
+echo '{"epoch":'$(date +%s)',"files":["file1","file2",...],"verdict":"PASS","evaluator":"subagent/claude","evaluator_independent":false}' \
   >> .claude/metrics/p2-verified.jsonl
 ```
+
+**Critical files** (`.claude/hooks/`, `.claude/settings.json`, `.claude/settings.local.json`) の
+コミットには `evaluator_independent: true` のトークンが必要。
+`p2-verify-on-commit.sh` が CRITICAL_PATTERNS で構造的に強制する。
 
 **トークンの仕様:**
 - 形式: JSONL（1 行 1 エントリ）
 - TTL: 10 分（`p2-verify-on-commit.sh` が epoch ベースで検査）
 - 場所: `.claude/metrics/p2-verified.jsonl`
 - files: 検証対象の全ファイルパス（git diff --cached --name-only の出力に一致させる）
+- evaluator: 検証手段の識別子（上記テーブル参照）
+- evaluator_independent: 評価者が Worker と異なるモデルファミリか（VerificationIndependence）
+- 後方互換: `evaluator_independent` フィールドがないトークンは `false` として扱われる
 
 **FAIL の場合:** トークンを書き込まない。修正後に再度 /verify を実行する。
 
