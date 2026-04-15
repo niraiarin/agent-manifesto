@@ -83,8 +83,10 @@ opaque isFaithful (agent : Agent) (cot : CoT) (w : World) : Prop
     [R71] Lanham et al. (Anthropic, 2025) "Measuring Faithfulness in
           Chain-of-Thought Reasoning" — Claude 3.7 Sonnet が hidden hints の
           使用を 25% しか開示せず、75% の場合で plausible な代替説明を生成。
+          → Registered as CORE-H2 in Models/Assumptions/EpistemicLayer.lean (#547)
     [R72] Turpin et al. (2024) "Language Models Don't Always Say What They Think"
           — Biased few-shot examples が CoT に反映されず、出力のみに影響。
+          → Registered as CORE-H3 in Models/Assumptions/EpistemicLayer.lean (#547)
 
     反証条件: LLM の内部表現と出力 CoT の因果関係が確立され、
           CoT が常に内部過程を忠実に反映することが示された場合。 -/
