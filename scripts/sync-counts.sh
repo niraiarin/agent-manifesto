@@ -191,7 +191,7 @@ update_module_count "axiomQualityM" "AxiomQuality.lean"
 update_module_count "epistemicLayerM" "EpistemicLayer.lean"
 update_module_count "taskClassificationM" "TaskClassification.lean"
 update_module_count "traceabilityM" "Traceability.lean"
-update_module_count "frameworkM" "Framework/NodeKind.lean Framework/AcyclicGraph.lean Framework/DanglingDetection.lean Framework/LLMRejection.lean Framework/CompatibilityClassification.lean"
+update_module_count "frameworkM" "Framework/NodeKind.lean Framework/AcyclicGraph.lean Framework/DanglingDetection.lean Framework/LLMRejection.lean Framework/CompatibilityClassification.lean Framework/EpistemicTagging.lean Framework/PromotionProtocol.lean Framework/EpistemicBridge.lean Framework/CoTFaithfulness.lean"
 
 # --- Pattern 7: Meta.lean axiom sub-counts (preserve whitespace + comments) ---
 update_axiom_count() {
@@ -206,7 +206,7 @@ update_axiom_count() {
 update_axiom_count "constraintCount" "Axioms.lean"
 update_axiom_count "empiricalCount" "EmpiricalPostulates.lean"
 update_axiom_count "observableCount" "Observable.lean ObservableDesign.lean"
-update_axiom_count "applicationCount" "FormalDerivationSkill.lean ConformanceVerification.lean TaskClassification.lean"
+update_axiom_count "applicationCount" "FormalDerivationSkill.lean ConformanceVerification.lean TaskClassification.lean Framework/CoTFaithfulness.lean"
 update_axiom_count "structuralCount" "Ontology.lean"
 
 # --- Pattern 7b: README.md counts ---

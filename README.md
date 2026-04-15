@@ -333,7 +333,7 @@ graph LR
 │   ├── implementation-boundaries.md      # 実装判断基準
 │   ├── formal-derivation-procedure.md    # 形式導出の手順書
 │   └── mathematical-logic-terminology.md # 数理論理学の用語リファレンス
-├── lean-formalization/                   # Lean 4 形式検証 (53 axioms, 462 theorems)
+├── lean-formalization/                   # Lean 4 形式検証 (55 axioms, 488 theorems)
 │   └── Manifest/
 │       ├── Ontology.lean                 #   L1-L6 境界条件
 │       ├── Observable.lean               #   V1-V7 可観測変数

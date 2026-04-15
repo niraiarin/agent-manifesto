@@ -33,6 +33,7 @@ This follows from the monotonicity of extensions (§2.5 / §5.3).
 | `no_self_verification` | E1 | Prohibition of self-verification | Hypothesis-derived |
 | `shared_bias_reduces_detection` | E1 | Shared bias degrades detection power | Hypothesis-derived |
 | `capability_risk_coscaling` | E2 | Capability growth is inseparable from risk growth | Hypothesis-derived |
+| `confidence_is_self_description` | E3a | Confidence is self-description, not measurement | Hypothesis-derived |
 -/
 
 namespace Manifest
@@ -220,6 +221,72 @@ theorem e2_equal_risk_equal_capability (agent : Agent) (w w' : World)
   | Or.inl h_lt, _ => absurd h_eq (Nat.ne_of_lt (capability_risk_coscaling agent w w' h_lt))
   | _, Or.inl h_gt => absurd (h_eq.symm) (Nat.ne_of_lt (capability_risk_coscaling agent w' w h_gt))
   | Or.inr h_ge, Or.inr h_ge' => Nat.le_antisymm h_ge' h_ge
+
+-- ============================================================
+-- E3a: Confidence の自己報告性
+-- ============================================================
+
+/-!
+## E3a Confidence Is Self-Description
+
+T4 (`output_nondeterministic`) asserts World-level nondeterminism:
+different outputs may be produced for the same input.
+
+E3a asserts a stronger, orthogonal claim at the Confidence level:
+even when the result is the same, the Confidence value may differ.
+This means Confidence is a **self-description** of the output's
+probabilistic nature, not an externally calibrated measurement.
+
+## Orthogonality with T4
+
+- T4 → E3a: Not derivable. World differences may manifest only in
+  non-Confidence fields.
+- E3a → T4: Not derivable. Confidence differences do not directly
+  imply World differences (no World→Output accessor exists).
+
+This orthogonality justifies E3a as an independent empirical postulate.
+-/
+
+/-- [Axiom Card]
+    Layer: Γ \ T₀ (Hypothesis-derived)
+    Content: Confidence is self-description, not measurement.
+          For the same result, different Confidence values may be generated.
+          Confidence.value should not be trusted for decision-making
+          without external verification (P2).
+
+    T4 との差異:
+    - T4: World-level nondeterminism (Output as a whole may differ)
+    - E3a: Confidence-level nondeterminism (result same, confidence differs)
+
+    根拠:
+    [R81] Li et al. (ACL 2025) "Revisiting Epistemic Markers in Confidence Estimation"
+          — Linguistic confidence markers are inconsistent out-of-distribution
+    [R82] Ontology.lean:155 comment "self-description" — elevated to formal axiom
+
+    反証条件: If Confidence.value is demonstrated to correlate with actual
+              accuracy without external calibration (i.e., well-calibrated by default).
+
+    降格判定: 導出不可能 — T4 は World レベルの差異を述べるが、Confidence フィールド
+    への特化は T4 から導出できない。axiom として維持。 -/
+axiom confidence_is_self_description :
+  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World)
+    (o₁ : Output Nat) (o₂ : Output Nat),
+    canTransition agent action w w₁ ∧
+    canTransition agent action w w₂ ∧
+    o₁.result = o₂.result ∧
+    o₁.confidence ≠ o₂.confidence
+
+/-- E3a practical implication: if Confidence varies for the same result,
+    then relying on Confidence.value alone for decision-making is unreliable.
+    Derives from E3a by contradiction with the universality assumption. -/
+theorem confidence_unreliable_for_decision :
+    (∃ (o₁ o₂ : Output Nat),
+      o₁.result = o₂.result ∧
+      o₁.confidence ≠ o₂.confidence) →
+    ¬(∀ (o₁ o₂ : Output Nat),
+      o₁.result = o₂.result → o₁.confidence = o₂.confidence) := by
+  intro ⟨o₁, o₂, heq, hneq⟩ h
+  exact hneq (h o₁ o₂ heq)
 
 -- ============================================================
 -- Sorry Inventory (Phase 2)
