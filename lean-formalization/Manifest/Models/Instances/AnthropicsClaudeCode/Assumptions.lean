@@ -1,9 +1,9 @@
 import Manifest.Models.Assumptions.EpistemicLayer
 
 /-!
-# EverythingClaudeCode Conditional Axiom System - Assumptions
+# AnthropicsClaudeCode Conditional Axiom System - Assumptions
 
-条件付き公理系 S=(A,C,H,D) の EverythingClaudeCode インスタンスにおける仮定を定義する。
+条件付き公理系 S=(A,C,H,D) の AnthropicsClaudeCode インスタンスにおける仮定を定義する。
 
 ## 認識論的出自
 
@@ -22,7 +22,7 @@ import Manifest.Models.Assumptions.EpistemicLayer
 各仮定は brownfield Phase 1 で収集した 302 platform decisions を根拠として参照する。
 -/
 
-namespace Manifest.Models.Instances.EverythingClaudeCode
+namespace Manifest.Models.Instances.AnthropicsClaudeCode
 
 open Manifest
 open Manifest.Models.Assumptions
@@ -268,4 +268,4 @@ def allAssumptions : List Assumption :=
   [ecc_c1, ecc_c2, ecc_c3, ecc_c4, ecc_c5, ecc_c6, ecc_c7, ecc_c8,
    ecc_h1, ecc_h2, ecc_h3, ecc_h4, ecc_h5, ecc_h6, ecc_h7, ecc_h8]
 
-end Manifest.Models.Instances.EverythingClaudeCode
+end Manifest.Models.Instances.AnthropicsClaudeCode
