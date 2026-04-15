@@ -15,6 +15,14 @@ dependencies:
       type: hard
       phase: "Phase 1-2 construct"
       condition: "条件付き公理系構築時"
+    - skill: design-implementation-plan
+      type: soft
+      phase: "Phase 3"
+      condition: "設計導出で参照される場合"
+    - skill: evolve
+      type: soft
+      phase: "Phase 3"
+      condition: "構造改善提案時"
 ---
 <!-- @traces D17, P3, D1 -->
 

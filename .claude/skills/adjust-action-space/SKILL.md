@@ -7,7 +7,11 @@ description: >
   拡張と縮小の両方向を扱う。「行動空間」「権限」「permissions」
   「拡張」「縮小」「auto-merge」で起動。
 dependencies:
-  invokes: []
+  invokes:
+    - skill: metrics
+      type: soft
+      phase: "Step 1-2"
+      condition: "V4/V5 実績データ取得時"
 ---
 <!-- @traces P1, D8, D7, L4, E2 -->
 

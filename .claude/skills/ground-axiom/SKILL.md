@@ -14,6 +14,14 @@ dependencies:
       type: soft
       phase: "Step 2"
       condition: "根拠が不明な場合"
+    - skill: formal-derivation
+      type: soft
+      phase: "Step 3"
+      condition: "形式証明の構築時"
+    - skill: verify
+      type: soft
+      phase: "Step 5"
+      condition: "Axiom Card 更新の検証時"
 ---
 <!-- @traces D1, D5, P3 -->
 

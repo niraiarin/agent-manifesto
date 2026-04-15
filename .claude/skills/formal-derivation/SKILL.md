@@ -13,6 +13,18 @@ dependencies:
     - skill: verify
       type: hard
       phase: "Phase 4c"
+    - skill: handoff
+      type: soft
+      phase: "Phase 1→2, 2→3, 3→4 boundary"
+      condition: "context 逼迫時のセッション引き継ぎ"
+    - skill: design-implementation-plan
+      type: soft
+      phase: "Phase 4d"
+      condition: "逆方向トレーサビリティで参照される場合"
+    - skill: evolve
+      type: soft
+      phase: "Phase 4"
+      condition: "形式化結果の構造改善提案時"
   agents:
     - agent: verifier
       role: "Independent review of Lean derivations"

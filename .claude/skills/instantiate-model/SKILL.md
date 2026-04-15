@@ -12,6 +12,10 @@ dependencies:
       type: hard
       phase: "Step 9d"
       condition: "FeedbackReport 受信時"
+    - skill: verify
+      type: soft
+      phase: "Step 8"
+      condition: "生成された公理体系の検証時"
   invoked_by:
     - skill: spec-driven-workflow
       phase: "Phase 0 Step 1"

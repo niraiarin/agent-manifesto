@@ -38,6 +38,18 @@ dependencies:
       type: soft
       phase: "Step 4 Integrator Step 2.5"
       condition: "traceable artifact (skill/hook/agent/rule) を変更した場合"
+    - skill: handoff
+      type: soft
+      phase: "Phase 1→2, 2→3, 3→4 boundary"
+      condition: "context 逼迫時のセッション引き継ぎ"
+    - skill: brownfield
+      type: soft
+      phase: "Step 2b"
+      condition: "既存プロジェクトへの公理系適用が必要な場合"
+    - skill: generate-plugin
+      type: soft
+      phase: "Step 2b"
+      condition: "Plugin 生成が提案された場合"
   agents:
     - agent: observer
       role: "Phase 1: observe current state"

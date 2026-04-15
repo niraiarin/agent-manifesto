@@ -20,6 +20,10 @@ dependencies:
       type: soft
       phase: "Step 7.5"
       condition: "コード成果物がある場合"
+    - skill: formal-derivation
+      type: soft
+      phase: "Step 6"
+      condition: "Lean 形式化が必要な場合"
   invoked_by:
     - skill: spec-driven-workflow
       phase: "Phase 0 Step 2"
