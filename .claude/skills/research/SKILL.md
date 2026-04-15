@@ -683,8 +683,13 @@ Step 7a-7c の完了を確認してから PR を作成する。
    ```bash
    cd lean-formalization && lake build Manifest
    ```
-4. コミット + push + PR 作成
-5. PR マージ後に Worktree クリーンアップ:
+4. 全テスト実行（**PR 前必須。未実行の Test Plan 項目を含む PR は禁止**）:
+   ```bash
+   bash tests/test-all.sh
+   ```
+   全 PASS を確認してからコミットする。failure がある場合は原因を特定し修正する。
+5. コミット + push + PR 作成
+6. PR マージ後に Worktree クリーンアップ:
    ```bash
    bash .claude/skills/research/scripts/worktree.sh cleanup <issue-number> <topic-name>
    ```
