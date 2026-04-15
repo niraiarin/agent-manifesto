@@ -122,7 +122,11 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 6b: 減点解消 | **judgmental + deterministic（未分離）** | LLM（修正） + カウント判定スクリプト | judgmental: 修正内容の判断 / deterministic: addressable 残存数判定 |
 | Step 6c: Gate 判定 + Handoff | **judgmental + deterministic（未分離）** | 人間（T6） + Handoff 判定（deterministic） | judgmental: 最終判定は人間（T6） / deterministic: Handoff 先判定は Yes/No |
 | Step 6d: 後続再評価 | **deterministic + judgmental（未分離）** | 依存グラフ走査スクリプト + LLM（影響判定） | deterministic: グラフ走査 / judgmental: 前提変化の影響判定 |
-| Step 7: クロージング | **deterministic + judgmental（未分離）** | クロージングスクリプト + LLM（サマリ） | deterministic: issue close, worktree cleanup / judgmental: 全体サマリ記述 |
+| Step 7: クロージング | **deterministic + judgmental（未分離）** | クロージングスクリプト + LLM（サマリ） | deterministic: issue close / judgmental: 全体サマリ記述 |
+| Step 7a: ドキュメント更新 | **deterministic + judgmental（未分離）** | チェックリスト + LLM（更新内容） | deterministic: チェックリスト / judgmental: 更新箇所の判断 |
+| Step 7b: 研究レポート | **judgmental** | LLM（6 項目レポート） | 研究の構造化伝達。項目 5,6 が 7c の入力 |
+| Step 7c: 後続 Issue 起票 | **deterministic + judgmental（未分離）** | LLM（課題識別）+ gh issue create | deterministic: issue 作成 / judgmental: 起票要否の判断 |
+| Step 7d: PR 作成 | **deterministic** | gh pr create | 7a-7c 完了が前提条件 |
 | Step 7.5: 下流連携 | **deterministic + judgmental（未分離）** | チェックリストスクリプト + LLM（判断） | deterministic: /trace, /verify 呼び出し / judgmental: 呼び出し要否の判断 |
 
 **設計原則**:
@@ -151,6 +155,10 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 6c | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 最終判定は judgmental（T6）、Handoff 先判定は deterministic |
 | Step 6d | deterministic + judgmental（未分離） | `mixed_task_decomposition` | グラフ走査は deterministic、影響判定は judgmental |
 | Step 7 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | issue close は deterministic、サマリは judgmental |
+| Step 7a | deterministic + judgmental（未分離） | `mixed_task_decomposition` | チェックリストは deterministic、更新箇所判断は judgmental |
+| Step 7b | judgmental | `classification_is_judgmental` | 研究の構造化伝達。6 項目レポート |
+| Step 7c | deterministic + judgmental（未分離） | `mixed_task_decomposition` | gh issue create は deterministic、起票要否は judgmental |
+| Step 7d | deterministic | `deterministic_must_be_structural` | 7a-7c 完了が前提。gh pr create |
 | Step 7.5 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | /trace 呼び出しは deterministic、要否判断は judgmental |
 
 **維持手順** (#364 G4): ステップ追加・変更時は上記テーブルも更新すること。
@@ -591,11 +599,97 @@ bash .claude/skills/research/scripts/closing.sh status <parent-issue-number>
 
 1. Parent Issue に全体サマリをコメント（judgmental: LLM）
 2. 全体 Gate 判定（GO / NO-GO / CONDITIONAL）（judgmental: 人間）
-3. GO → PR 作成、マージ後に Worktree クリーンアップ:
-   ```bash
-   bash .claude/skills/research/scripts/worktree.sh cleanup <issue-number> <topic-name>
-   ```
+3. GO → Step 7a → 7b → 7c → 7d → PR 作成 → マージ → Worktree クリーンアップ
 4. NO-GO → 代替案を文書化して close
+
+#### Step 7a: ドキュメント更新（PR 前必須）
+
+PR 作成前に、研究成果が影響する既存ドキュメントを更新する。
+**PR にドキュメント更新が含まれていない場合、PR 作成をブロックする。**
+
+チェックリスト:
+- [ ] SKILL.md: 研究で改善されたスキルの記載を更新
+- [ ] MEMORY: 次セッションに必要な知識を永続化（MEMORY.md + 個別ファイル）
+- [ ] convergence/config: 閾値・パラメータの変更があれば関連スクリプトとドキュメントを同期
+- [ ] テスト: 変更された振る舞いに対するテストの追加・更新（既存テストの PASS 確認）
+- [ ] instance-manifest.json: 新規成果物のメタデータ作成（該当する場合）
+
+「ドキュメント更新なし」が正当な場合（純粋な調査研究でコード変更なし）は、
+PR body に理由を明記すること。
+
+#### Step 7b: 研究レポート作成（PR 前必須）
+
+以下の 6 項目フォーマットで研究レポートを作成し、PR body に含める。
+各項目 500 文字以内、階層箇条書き。
+
+```markdown
+## 研究レポート
+
+### 1. どんなもの？
+[研究の概要と成果物]
+
+### 2. 先行研究と比べてどこがすごい？
+[既存手法・既存成果物との差分]
+
+### 3. 技術や手法の肝はどこ？
+[核心的な技術的貢献]
+
+### 4. どうやって有効だと検証した？
+[検証方法と結果の定量データ]
+
+### 5. 議論はある？
+[限界、未解決問題、前提条件]
+
+### 6. 次に読むべき論文は？
+[関連研究、発展的な調査対象]
+```
+
+**理由**: 研究成果が PR レビュアーと次のインスタンスに構造化された形で伝達される。
+項目 5（議論）と項目 6（次の研究）が Step 7d の入力になる。
+
+#### Step 7c: 後続 Issue 起票（PR 前必須）
+
+研究レポートの項目 5（議論）と項目 6（次の研究）から、
+解決すべき課題や発展性のある調査研究を Issue として起票する。
+
+判定基準:
+- **議論で挙げた未解決問題** → 対処可能なら Issue 起票
+- **検証中に発見した欠陥・改善候補** → 既知の改善候補セクションに追記 + Issue 起票
+- **次の研究で挙げた発展的テーマ** → 実行可能かつ価値があるなら Issue 起票
+
+各 Issue に含めること:
+- 発見元の研究（Parent Issue #N）への参照
+- 発見の経緯（どの Step で、何がきっかけで）
+- 予想される影響範囲
+
+**起票が不要な場合**（全ての未解決問題が既存 Issue でカバー済み）は、
+PR body に「後続 Issue: なし（理由: ...）」と明記すること。
+
+#### Step 7d: PR 作成
+
+Step 7a-7c の完了を確認してから PR を作成する。
+
+```bash
+bash .claude/skills/research/scripts/worktree.sh cleanup <issue-number> <topic-name>
+```
+
+PR body テンプレート:
+```markdown
+## Summary
+[1-3 bullet points]
+
+## 研究レポート
+[Step 7b のレポート全文]
+
+## ドキュメント更新
+[Step 7a のチェックリスト結果]
+
+## 後続 Issue
+[Step 7c で起票した Issue のリスト、または「なし（理由）」]
+
+## Test plan
+[実行結果を記載（未実行禁止）]
+```
 
 ### Step 7.5: Downstream Skill 連携 (#336)
 
@@ -633,6 +727,9 @@ bash .claude/skills/research/scripts/closing.sh status <parent-issue-number>
 | 最終コメント1つにまとめる | 途中の失敗が不可視 | 実験ごとにコメント |
 | Gate 前に Worktree マージ | 未検証コードが main に入る | PASS がマージの前提 |
 | CONDITIONAL で子 issue なし | 「追加研究が必要」で放置 | 必ず子 issue を起票 |
+| レポートなしで PR 作成 | 研究成果が構造化されず伝達不能 | Step 7b の 6 項目レポートを PR body に含める |
+| ドキュメント更新なしで PR 作成 | 次のインスタンスが陳腐化した情報で作業する | Step 7a のチェックリストを完了してから PR |
+| 未解決問題を PR に埋没させる | issue 化されない課題は消失する | Step 7c で後続 Issue を起票 |
 
 ## D13 との関係
 
