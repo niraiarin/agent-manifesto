@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "system": {
+    "name": "claude-code-cli",
+    "leanModule": "Manifest.Models.Instances.ClaudeCodeCLI",
+    "description": "Claude Code CLI — AI Agent Harness. TypeScript/React terminal application for AI-assisted software engineering.",
+    "source": "gitverse.ru/anarchic/claude-code",
+    "mode": "read-only",
+    "platformDecisions": 379,
+    "iterations": 14,
+    "convergence": "2 consecutive < 0.03 + validation PASS"
+  },
+  "layers": [
+    {"name": "safety", "ordValue": 0, "propositions": 11},
+    {"name": "permission", "ordValue": 1, "propositions": 8},
+    {"name": "tool", "ordValue": 2, "propositions": 10},
+    {"name": "orchestration", "ordValue": 3, "propositions": 9},
+    {"name": "conversation", "ordValue": 4, "propositions": 11},
+    {"name": "extension", "ordValue": 5, "propositions": 11},
+    {"name": "observability", "ordValue": 6, "propositions": 10}
+  ],
+  "artifacts": {
+    "modelSpec": "model-spec.json",
+    "conditionalAxiomSystem": "ConditionalAxiomSystem.lean",
+    "iterations": "iteration-1.json through iteration-14.json",
+    "monotonicityFixes": "monotonicity-fixes.json"
+  },
+  "verification": {
+    "lakeBuild": "PASS (6.2s)",
+    "monotonicity": "PASS (0 violations after cross-layer dep removal)",
+    "convergence": "CONVERGED — validation PASS (iter 14, rate=0, 0 new PDs)"
+  }
+}

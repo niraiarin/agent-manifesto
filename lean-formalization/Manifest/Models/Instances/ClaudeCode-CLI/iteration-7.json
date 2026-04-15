@@ -1,0 +1,137 @@
+{
+  "iteration": 7,
+  "unit": "export/+resume/+startup/+platform/+cron/+worktree-persist/",
+  "timestamp": "2026-04-15T13:43:44Z",
+  "platform_decisions": [
+    {
+      "id": "PD-390",
+      "content": "Export renders via chunked streaming (40 msgs/chunk) for memory footprint control; filename from first prompt truncated to 50 chars",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-391",
+      "content": "Session resume in 3 phases: worktree chdir, session ID reuse (or fork), agent definition refresh",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-392",
+      "content": "Startup hook execution strict order: bare mode check then plugin hooks then SessionStart then watch paths then return",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-393",
+      "content": "Cross-platform path expansion: POSIX to Windows conversion, null-byte rejection, NFC normalization",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-394",
+      "content": "Platform-specific permission guidance: Windows/macOS/Linux microphone paths",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-395",
+      "content": "Voice mode sequential gating: build-time feature then runtime enabled then available then stream then deps then mic permission",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-396",
+      "content": "Config source unification: global (process-level) + settings (project/user) with path-based nested object updates",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-397",
+      "content": "Session activity heartbeat: refcount-based 30s interval timer gated by env var",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-398",
+      "content": "Cleanup registration pattern: global registry with unregister functions, concurrent Promise.all on shutdown",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-399",
+      "content": "Async hook timeout (default 15s) with 1s progress intervals and stdout/stderr collection",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-400",
+      "content": "Deep link URI validation: q (5000 chars), cwd (4096 chars), repo (owner/name slug), control char rejection",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-401",
+      "content": "Cron task auto-expiration: maxAgeMs-based aging for non-permanent recurring tasks",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-402",
+      "content": "Cron scheduler lock with 5s re-probe and missed task detection on startup gap",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-403",
+      "content": "Worktree session persistence: state saved to metadata, chdir as TOCTOU check on resume",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-404",
+      "content": "File rendering normalization upper bound: chunk ceiling computed from normalized message count bounds",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-405",
+      "content": "Context window token tracking from API responses; cache tokens excluded per specific contexts",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-406",
+      "content": "Content replacement record seeding on fork-session to preserve tool_use_id cache hits",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-407",
+      "content": "Coordinator mode metadata persistence with mismatch warning on resume",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-408",
+      "content": "Model override on agent restore: agent model applied if user didnt specify --model",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-409",
+      "content": "Standalone agent context derivation: name/color from session computed at initial state",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-410",
+      "content": "Slow operation threshold adaptive: 20ms dev, 300ms ant, Infinity external; re-entrancy guarded",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 21,
+  "cumulative_total": 318,
+  "incremental_rate": 0.0660
+}

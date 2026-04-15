@@ -1,0 +1,326 @@
+{
+  "iteration": 3,
+  "unit": "plugins/+skills/+coordinator/+bridge/+ink/+components/+utils/",
+  "timestamp": "2026-04-15T13:12:45Z",
+  "platform_decisions": [
+    {
+      "id": "PD-250",
+      "content": "Plugin system separates installation (global) from enablement (per-project) via installed_plugins.json vs settings.json",
+      "source": "code_analysis",
+      "manifesto_mapping": "D17",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-251",
+      "content": "Bundled skills compiled into binary without plugin UI toggle; built-in plugins have UI control",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-252",
+      "content": "MCP skill builder registry breaks circular dependency via function references at init time",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-253",
+      "content": "Coordinator mode gated by Bun feature flag + runtime env var, with custom system prompt",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-254",
+      "content": "Coordinator defines internal worker tools (orchestration only) vs worker tools (execution only)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-255",
+      "content": "Coordinator scratchpad as durable cross-worker filesystem (feature-gated)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-256",
+      "content": "Ink/React rendering with custom Yoga layout engine (native TS, not WASM)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-257",
+      "content": "Ink optimizer compares frames and emits only diffs to terminal",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-258",
+      "content": "Terminal capabilities detected once at startup (extended keys, kitty/iterm protocol, mouse)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-259",
+      "content": "Component library: 146 files of specialized widgets composing Ink primitives, no external UI framework",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-260",
+      "content": "Keybinding system parses chord sequences with normalized modifier aliases",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-261",
+      "content": "Model selection priority: session override > CLI flag > env var > settings > default",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-262",
+      "content": "Model capabilities cached to disk, loaded synchronously; 3P providers use hardcoded defaults",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-263",
+      "content": "Four API providers: FirstParty, Bedrock, Vertex, Foundry via environment variables",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-264",
+      "content": "Cost tracking in memory during session, persisted to settings only at session boundaries",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-265",
+      "content": "Pure-TS bash parser with 50ms timeout and 50k-node budget to prevent DoS",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-266",
+      "content": "Bash spec registry with Fig autocomplete for command validation and completion",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-267",
+      "content": "Computer use tooling gated by GrowthBook + subscription tier",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-268",
+      "content": "Bridge API provides OAuth-authenticated HTTP access to claude.ai for remote sessions",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-269",
+      "content": "Bridge session state machine: Create then Poll then Execute then Report then Await",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-270",
+      "content": "Trusted device token injection for elevated security tier",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-271",
+      "content": "Output styles as Markdown prompt templates with keep-coding-instructions flag",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-272",
+      "content": "Hooks config in settings.json under hooks.* (sync) and hooksAsync.* (async) keys",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-273",
+      "content": "Async hook registry with timeout management and progress intervals",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-274",
+      "content": "Post-sampling hooks as internal extensibility (not user-visible, failures dont block)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-275",
+      "content": "Permission layering: mode then rules then hooks then tool validation then denial tracking",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-276",
+      "content": "Sandbox escape prevention: O_NOFOLLOW + O_EXCL flags, nonce paths, 0o600 permissions",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-277",
+      "content": "Cost accounting as observability: per-model token counts, duration, USD with unknown model flagging",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-278",
+      "content": "Context window negotiation: model downgrade on overflow, budget shortfall reporting",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-279",
+      "content": "Fast mode disables prompt caching and uses faster model for low-latency queries",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-280",
+      "content": "Feature flags via Bun bundle for compile-time dead code elimination",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-281",
+      "content": "System prompt composition as layered sources: hardcoded + git + coordinator + user + system context",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-282",
+      "content": "User context (static per session) vs system context (mutable, memoized) split",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-283",
+      "content": "QueryEngine as multi-turn orchestrator: context then prompt then API then tools then loop",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-284",
+      "content": "ToolUseContext passed to every tool as immutable snapshot; mutations via return values only",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-285",
+      "content": "Plugin dependency resolution via topological sort with cycle detection",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-286",
+      "content": "Plugin version pinning via marketplace SHA field; unpinned tracks branch head",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-287",
+      "content": "Orphaned plugin filter detects stale directories and removes them lazily at startup",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-288",
+      "content": "Plugin policy engine enforces marketplace restrictions, forbidden plugins, force-enable rules",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-289",
+      "content": "MCP server lifecycle: separate process with auto-reconnect on crash, non-blocking failure",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-290",
+      "content": "Hook event dispatch: sync hooks block sequentially (any can stop chain), async hooks fire in parallel",
+      "source": "code_analysis",
+      "manifesto_mapping": "D1",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-291",
+      "content": "Prompt elicitation protocol: PromptRequest/PromptResponse JSON with ID-based correlation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-292",
+      "content": "Memory system as lazily injected context loaded into system prompt on demand",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-293",
+      "content": "Agent system: spawnable workers with own models/tools, max recursion depth, task notification reporting",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-294",
+      "content": "Managed plugins (org policy, read-only) vs user plugins (toggleable) distinguished by source field",
+      "source": "code_analysis",
+      "manifesto_mapping": "T6",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-295",
+      "content": "LSP integration for plugin development with language features for .claude files",
+      "source": "code_analysis",
+      "confidence": "medium"
+    },
+    {
+      "id": "PD-296",
+      "content": "Plugin marketplace polling at startup with cache throttling and offline fallback",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-297",
+      "content": "Marketplace entry structure: name, version, deps, repo, SHA, compat tags with schema validation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-298",
+      "content": "Plugin telemetry: invocation events with plugin/skill name, tokens, duration (opt-in)",
+      "source": "code_analysis",
+      "manifesto_mapping": "P4",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-299",
+      "content": "React component rendering lifecycle: reconciler diffs tree, Renderer diffs screen cells",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-300",
+      "content": "Yoga layout as single-pass CSS Flexbox engine with cached measurements per frame",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 51,
+  "cumulative_total": 243,
+  "incremental_rate": 0.2098
+}

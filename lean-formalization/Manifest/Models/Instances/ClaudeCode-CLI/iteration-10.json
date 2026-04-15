@@ -1,0 +1,144 @@
+{
+  "iteration": 10,
+  "unit": "validation-dedup/",
+  "timestamp": "2026-04-15T13:58:25Z",
+  "platform_decisions": [
+    {
+      "id": "PD-439",
+      "content": "Ink reconciler node cache uses WeakMap keyed by DOMElement for layout metrics with auto-GC",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-440",
+      "content": "Platform detection memoized once per process; WSL version parsed from /proc/version with fallback",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-444",
+      "content": "AbortController hierarchy uses WeakRef to prevent parent retaining abandoned children",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-446",
+      "content": "Tool grouping cache uses WeakMap keyed by tools array identity; evicts on array replacement",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-448",
+      "content": "Ink event dispatcher two-phase capture/bubbling mirrors DOM semantics",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-449",
+      "content": "EventEmitter disables maxListeners (0) for React component trees",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-450",
+      "content": "Memory file mtime tracking via WeakMap prevents sync fs reads with cross-session persistence",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-452",
+      "content": "Grouped tool summaries compress parallel tool calls during compaction preserving tool_use_id",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-454",
+      "content": "Bridge API client SAFE_ID_PATTERN restricts server-provided IDs to prevent URL path injection",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-455",
+      "content": "QueryConfig snapshotted once per query entry with immutable runtime gates",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-456",
+      "content": "Settings deletion grace period outlasts write stability to handle delete-and-recreate pattern",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-460",
+      "content": "Model-specific region env vars override global CLOUD_ML_REGION for Vertex multi-region",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-461",
+      "content": "AbortController timeout via weak handlers prevents memory leak on long-lived parents",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-463",
+      "content": "WeakSet circular reference detection in tree serialization prevents stack overflow",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-464",
+      "content": "Synthetic output tool result cached via WeakMap keyed by input object with auto-GC",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-468",
+      "content": "Tool grouping cache invalidates per tools array identity to catch MCP server connect refreshes",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-471",
+      "content": "Paste content truncation with Truncated text placeholder when inline storage limit exceeded",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-472",
+      "content": "Tool input equivalence check optional per tool for custom dedup equality logic",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-473",
+      "content": "Yoga node measure function unset before freeing to prevent accessing freed WASM memory",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-474",
+      "content": "React reconciliation diff pre-filters unchanged props by identity to skip deep comparison",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-476",
+      "content": "Keyboard modifier alias normalization (Cmd/Ctrl/Alt variants) for consistent config parsing",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-479",
+      "content": "History paste content ID auto-incrementing per prompt session for user-friendly references",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 22,
+  "cumulative_total": 354,
+  "incremental_rate": 0.0621,
+  "validation": false
+}

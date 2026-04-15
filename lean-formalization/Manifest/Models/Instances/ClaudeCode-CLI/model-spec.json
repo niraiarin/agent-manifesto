@@ -1,0 +1,1050 @@
+{
+  "namespace": "Manifest.Models.Instances.ClaudeCodeCLI",
+  "layers": [
+    {
+      "name": "safety",
+      "ordValue": 0,
+      "definition": "Non-negotiable safety constraints: path validation, injection prevention, TOCTOU protection, sandbox enforcement, secret scanning",
+      "derivedFrom": [
+        "PD-006",
+        "PD-007",
+        "PD-008",
+        "PD-010",
+        "PD-011",
+        "PD-012",
+        "PD-014",
+        "PD-042",
+        "PD-043",
+        "PD-044",
+        "PD-108",
+        "PD-109",
+        "PD-110",
+        "PD-112",
+        "PD-113",
+        "PD-122",
+        "PD-131",
+        "PD-136",
+        "PD-137",
+        "PD-265",
+        "PD-275",
+        "PD-276",
+        "PD-310",
+        "PD-317",
+        "PD-321",
+        "PD-347",
+        "PD-400",
+        "PD-424",
+        "PD-454",
+        "PD-558"
+      ]
+    },
+    {
+      "name": "permission",
+      "ordValue": 1,
+      "definition": "Configurable permission system: modes, rule cascade, classifier, enterprise policy, audit trail",
+      "derivedFrom": [
+        "PD-005",
+        "PD-100",
+        "PD-101",
+        "PD-104",
+        "PD-105",
+        "PD-106",
+        "PD-115",
+        "PD-116",
+        "PD-118",
+        "PD-120",
+        "PD-126",
+        "PD-134",
+        "PD-138",
+        "PD-153",
+        "PD-170",
+        "PD-182",
+        "PD-208",
+        "PD-237",
+        "PD-290",
+        "PD-550"
+      ]
+    },
+    {
+      "name": "tool",
+      "ordValue": 2,
+      "definition": "Core tool interface, validation, execution model, result handling, concurrency safety",
+      "derivedFrom": [
+        "PD-001",
+        "PD-002",
+        "PD-003",
+        "PD-016",
+        "PD-019",
+        "PD-020",
+        "PD-021",
+        "PD-024",
+        "PD-026",
+        "PD-027",
+        "PD-028",
+        "PD-030",
+        "PD-034",
+        "PD-035",
+        "PD-036",
+        "PD-038",
+        "PD-039",
+        "PD-178",
+        "PD-280",
+        "PD-343",
+        "PD-361",
+        "PD-367",
+        "PD-368",
+        "PD-369",
+        "PD-380",
+        "PD-381",
+        "PD-472",
+        "PD-519",
+        "PD-556"
+      ]
+    },
+    {
+      "name": "orchestration",
+      "ordValue": 3,
+      "definition": "Multi-agent teams, worktree isolation, task lifecycle, plan mode governance",
+      "derivedFrom": [
+        "PD-050",
+        "PD-052",
+        "PD-054",
+        "PD-055",
+        "PD-056",
+        "PD-057",
+        "PD-059",
+        "PD-061",
+        "PD-062",
+        "PD-065",
+        "PD-067",
+        "PD-069",
+        "PD-070",
+        "PD-071",
+        "PD-350",
+        "PD-391",
+        "PD-402",
+        "PD-403",
+        "PD-407",
+        "PD-408",
+        "PD-505"
+      ]
+    },
+    {
+      "name": "conversation",
+      "ordValue": 4,
+      "definition": "Query loop, state management, compaction, context composition, settings cascade",
+      "derivedFrom": [
+        "PD-169",
+        "PD-174",
+        "PD-175",
+        "PD-200",
+        "PD-202",
+        "PD-203",
+        "PD-204",
+        "PD-205",
+        "PD-213",
+        "PD-229",
+        "PD-234",
+        "PD-240",
+        "PD-261",
+        "PD-281",
+        "PD-340",
+        "PD-345",
+        "PD-349",
+        "PD-362",
+        "PD-363",
+        "PD-365",
+        "PD-366",
+        "PD-374",
+        "PD-375",
+        "PD-392",
+        "PD-393",
+        "PD-396",
+        "PD-397",
+        "PD-405",
+        "PD-406",
+        "PD-455",
+        "PD-500",
+        "PD-502",
+        "PD-503",
+        "PD-504",
+        "PD-507",
+        "PD-530",
+        "PD-543",
+        "PD-546",
+        "PD-552",
+        "PD-590"
+      ]
+    },
+    {
+      "name": "extension",
+      "ordValue": 5,
+      "definition": "Plugin system, hooks, MCP integration, skills, commands, output styles",
+      "derivedFrom": [
+        "PD-150",
+        "PD-155",
+        "PD-159",
+        "PD-160",
+        "PD-161",
+        "PD-163",
+        "PD-185",
+        "PD-186",
+        "PD-250",
+        "PD-251",
+        "PD-271",
+        "PD-272",
+        "PD-285",
+        "PD-288",
+        "PD-289",
+        "PD-294",
+        "PD-370",
+        "PD-371",
+        "PD-372",
+        "PD-373",
+        "PD-376",
+        "PD-377",
+        "PD-390",
+        "PD-394",
+        "PD-395",
+        "PD-401",
+        "PD-506",
+        "PD-549",
+        "PD-557"
+      ]
+    },
+    {
+      "name": "observability",
+      "ordValue": 6,
+      "definition": "Memory consolidation, telemetry, cost tracking, analytics, diagnostics",
+      "derivedFrom": [
+        "PD-032",
+        "PD-166",
+        "PD-209",
+        "PD-210",
+        "PD-211",
+        "PD-228",
+        "PD-264",
+        "PD-277",
+        "PD-341",
+        "PD-342",
+        "PD-344",
+        "PD-346",
+        "PD-364",
+        "PD-410",
+        "PD-434",
+        "PD-435",
+        "PD-508",
+        "PD-513",
+        "PD-522",
+        "PD-523",
+        "PD-534",
+        "PD-542"
+      ]
+    }
+  ],
+  "propositions": [
+    {
+      "id": "denyShortCircuit",
+      "layerName": "safety",
+      "description": "Deny rules short-circuit at tool-registry assembly preventing tool from reaching model",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-006",
+        "PD-044"
+      ]
+    },
+    {
+      "id": "multiLayerSecurity",
+      "layerName": "safety",
+      "description": "Multi-layer security: permission rules then mode then classifier then sandbox then path validation then hooks then denial tracking",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-136",
+        "PD-275"
+      ]
+    },
+    {
+      "id": "pathTraversalDetection",
+      "layerName": "safety",
+      "description": "Path traversal detection with case-insensitive normalization and symlink resolution",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-011",
+        "PD-112",
+        "PD-113",
+        "PD-137"
+      ]
+    },
+    {
+      "id": "uncPathBlocking",
+      "layerName": "safety",
+      "description": "Windows UNC paths blocked to prevent NTLM credential leaks",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-010"
+      ]
+    },
+    {
+      "id": "dangerousPathProtection",
+      "layerName": "safety",
+      "description": "Dangerous files and directories always require explicit user approval",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-108",
+        "PD-109",
+        "PD-110",
+        "PD-131"
+      ]
+    },
+    {
+      "id": "toctouPrevention",
+      "layerName": "safety",
+      "description": "No TOCTOU on file edits: mtime+content check with no yields between check and write",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-007",
+        "PD-043"
+      ]
+    },
+    {
+      "id": "sandboxEnforcement",
+      "layerName": "safety",
+      "description": "Sandbox enforces OS-level filesystem and network boundaries as secondary control",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-014",
+        "PD-122",
+        "PD-276"
+      ]
+    },
+    {
+      "id": "secretScanning",
+      "layerName": "safety",
+      "description": "Secret scanning with curated regex rules; API key prefix assembled at runtime",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-347"
+      ]
+    },
+    {
+      "id": "bashAstParsing",
+      "layerName": "safety",
+      "description": "Bash command parsing via stateless AST prevents shell injection",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-008",
+        "PD-012",
+        "PD-042",
+        "PD-265"
+      ]
+    },
+    {
+      "id": "permissionModes",
+      "layerName": "permission",
+      "description": "Five external permission modes: default, acceptEdits, bypassPermissions, dontAsk, plan",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-100"
+      ]
+    },
+    {
+      "id": "ruleCascade",
+      "layerName": "permission",
+      "description": "Eight rule sources with priority cascade: policy > flag > project > local > user > cli > command > session",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-005",
+        "PD-104"
+      ]
+    },
+    {
+      "id": "denyWins",
+      "layerName": "permission",
+      "description": "Deny wins in rule cascade; ask escalates allow",
+      "dependencies": [
+        "ruleCascade"
+      ],
+      "derivedFromPDs": [
+        "PD-105"
+      ]
+    },
+    {
+      "id": "autoModeClassifier",
+      "layerName": "permission",
+      "description": "Auto mode strips dangerous allow rules and uses two-stage classifier evaluation",
+      "dependencies": [
+        "permissionModes"
+      ],
+      "derivedFromPDs": [
+        "PD-115",
+        "PD-116",
+        "PD-118",
+        "PD-120"
+      ]
+    },
+    {
+      "id": "enterprisePolicy",
+      "layerName": "permission",
+      "description": "Enterprise managed settings override all user permissions via policy source",
+      "dependencies": [
+        "ruleCascade"
+      ],
+      "derivedFromPDs": [
+        "PD-106",
+        "PD-134",
+        "PD-170",
+        "PD-237"
+      ]
+    },
+    {
+      "id": "permissionAuditTrail",
+      "layerName": "permission",
+      "description": "Permission decision audit trail with typed reasons: rule, mode, classifier, hook, safetyCheck",
+      "dependencies": [
+        "denyWins"
+      ],
+      "derivedFromPDs": [
+        "PD-126",
+        "PD-208"
+      ]
+    },
+    {
+      "id": "hookPermissionOverride",
+      "layerName": "permission",
+      "description": "PreToolUse hooks can emit permission decisions to override tool invocation",
+      "dependencies": [
+        "denyWins"
+      ],
+      "derivedFromPDs": [
+        "PD-153",
+        "PD-182",
+        "PD-290"
+      ]
+    },
+    {
+      "id": "toolInterface",
+      "layerName": "tool",
+      "description": "Tool interface: ToolDef with call(), checkPermissions(), validateInput(), inputSchema, outputSchema",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-001"
+      ]
+    },
+    {
+      "id": "failClosedDefaults",
+      "layerName": "tool",
+      "description": "Default behaviors fail-closed; read-only tools declare concurrency safety",
+      "dependencies": [
+        "toolInterface"
+      ],
+      "derivedFromPDs": [
+        "PD-002",
+        "PD-019",
+        "PD-020"
+      ]
+    },
+    {
+      "id": "deterministicValidation",
+      "layerName": "tool",
+      "description": "Validation is deterministic and side-effect-free; schema is single source of truth",
+      "dependencies": [
+        "toolInterface"
+      ],
+      "derivedFromPDs": [
+        "PD-016",
+        "PD-026",
+        "PD-027"
+      ]
+    },
+    {
+      "id": "resultBounding",
+      "layerName": "tool",
+      "description": "Tool results bounded by maxResultSizeChars; overflow persisted to disk",
+      "dependencies": [
+        "toolInterface"
+      ],
+      "derivedFromPDs": [
+        "PD-021",
+        "PD-039"
+      ]
+    },
+    {
+      "id": "bashBackgrounding",
+      "layerName": "tool",
+      "description": "Bash auto-backgrounds after 15 seconds; background tasks independently trackable",
+      "dependencies": [
+        "toolInterface"
+      ],
+      "derivedFromPDs": [
+        "PD-024",
+        "PD-066"
+      ]
+    },
+    {
+      "id": "featureGatedTools",
+      "layerName": "tool",
+      "description": "Tool availability feature-gated at compile time via dead code elimination",
+      "dependencies": [
+        "toolInterface"
+      ],
+      "derivedFromPDs": [
+        "PD-030",
+        "PD-178",
+        "PD-280"
+      ]
+    },
+    {
+      "id": "hierarchicalTeams",
+      "layerName": "orchestration",
+      "description": "Hierarchical team structure: single lead + N teammates, flat roster, no nesting",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-052",
+        "PD-067"
+      ]
+    },
+    {
+      "id": "executionBackends",
+      "layerName": "orchestration",
+      "description": "Three execution backends: in-process (AsyncLocalStorage), tmux, iTerm2",
+      "dependencies": [
+        "hierarchicalTeams"
+      ],
+      "derivedFromPDs": [
+        "PD-054",
+        "PD-055",
+        "PD-350"
+      ]
+    },
+    {
+      "id": "fileMailbox",
+      "layerName": "orchestration",
+      "description": "File-based mailbox with proper-lockfile for concurrent agent messages",
+      "dependencies": [
+        "hierarchicalTeams"
+      ],
+      "derivedFromPDs": [
+        "PD-056",
+        "PD-071"
+      ]
+    },
+    {
+      "id": "planApprovalGate",
+      "layerName": "orchestration",
+      "description": "Plan mode requires explicit approval before implementation; team lead controls gate",
+      "dependencies": [
+        "hierarchicalTeams"
+      ],
+      "derivedFromPDs": [
+        "PD-059",
+        "PD-060"
+      ]
+    },
+    {
+      "id": "worktreeIsolation",
+      "layerName": "orchestration",
+      "description": "Worktrees provide git-native branch isolation with full session state restoration",
+      "dependencies": [
+        "hierarchicalTeams"
+      ],
+      "derivedFromPDs": [
+        "PD-061",
+        "PD-062",
+        "PD-063",
+        "PD-064"
+      ]
+    },
+    {
+      "id": "shutdownProtocol",
+      "layerName": "orchestration",
+      "description": "Agent shutdown uses request-approval protocol with typed messages",
+      "dependencies": [
+        "fileMailbox"
+      ],
+      "derivedFromPDs": [
+        "PD-065",
+        "PD-068"
+      ]
+    },
+    {
+      "id": "taskDependencyTracking",
+      "layerName": "orchestration",
+      "description": "Task lifecycle with dependency tracking and high water mark ID reuse prevention",
+      "dependencies": [
+        "hierarchicalTeams"
+      ],
+      "derivedFromPDs": [
+        "PD-057",
+        "PD-058",
+        "PD-069",
+        "PD-070"
+      ]
+    },
+    {
+      "id": "immutableAppState",
+      "layerName": "conversation",
+      "description": "Immutable AppState with reducer pattern; ToolPermissionContext frozen at conversation start",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-200",
+        "PD-213"
+      ]
+    },
+    {
+      "id": "queryLoopRecovery",
+      "layerName": "conversation",
+      "description": "AsyncGenerator query loop with continue sites for error recovery",
+      "dependencies": [
+        "immutableAppState"
+      ],
+      "derivedFromPDs": [
+        "PD-202",
+        "PD-203"
+      ]
+    },
+    {
+      "id": "multiLayerCompaction",
+      "layerName": "conversation",
+      "description": "Multi-layer compaction: snip + microcompact + autocompact for context management",
+      "dependencies": [
+        "queryLoopRecovery"
+      ],
+      "derivedFromPDs": [
+        "PD-204",
+        "PD-229",
+        "PD-240"
+      ]
+    },
+    {
+      "id": "cacheSafeForking",
+      "layerName": "conversation",
+      "description": "Forked agents inherit cache-safe params for API response cache hits",
+      "dependencies": [
+        "queryLoopRecovery"
+      ],
+      "derivedFromPDs": [
+        "PD-205",
+        "PD-206",
+        "PD-207"
+      ]
+    },
+    {
+      "id": "layeredSystemPrompt",
+      "layerName": "conversation",
+      "description": "System prompt composed from layered sources with cache-break markers for volatile content",
+      "dependencies": [
+        "immutableAppState"
+      ],
+      "derivedFromPDs": [
+        "PD-175",
+        "PD-281",
+        "PD-282"
+      ]
+    },
+    {
+      "id": "settingsCascade",
+      "layerName": "conversation",
+      "description": "Settings from 7 sources with backward-compatible schema evolution via passthrough",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-169",
+        "PD-174",
+        "PD-349"
+      ]
+    },
+    {
+      "id": "gracefulShutdown",
+      "layerName": "conversation",
+      "description": "Graceful shutdown with tiered priority and failsafe timeout",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-340",
+        "PD-345"
+      ]
+    },
+    {
+      "id": "pluginArchitecture",
+      "layerName": "extension",
+      "description": "Plugin installation global, enablement per-project; managed plugins read-only",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-250",
+        "PD-294"
+      ]
+    },
+    {
+      "id": "hookSystem",
+      "layerName": "extension",
+      "description": "Hook system: event-driven with matcher filtering, sync blocking, async parallel",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-150",
+        "PD-152",
+        "PD-154",
+        "PD-272",
+        "PD-290"
+      ]
+    },
+    {
+      "id": "mcpTransportAbstraction",
+      "layerName": "extension",
+      "description": "MCP transport abstraction (stdio/sse/http/ws/sdk) with state machine lifecycle",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-159",
+        "PD-160",
+        "PD-289"
+      ]
+    },
+    {
+      "id": "mcpConfigCascade",
+      "layerName": "extension",
+      "description": "MCP config from 7 scopes with dedup by signature and atomic writes",
+      "dependencies": [
+        "mcpTransportAbstraction"
+      ],
+      "derivedFromPDs": [
+        "PD-161",
+        "PD-162",
+        "PD-163"
+      ]
+    },
+    {
+      "id": "commandAggregation",
+      "layerName": "extension",
+      "description": "Command aggregation from 5 sources with availability/enablement separation",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-155",
+        "PD-156",
+        "PD-157",
+        "PD-158"
+      ]
+    },
+    {
+      "id": "skillExecution",
+      "layerName": "extension",
+      "description": "Skills as fork or inline execution with CLAUDE_PLUGIN_ROOT env var",
+      "dependencies": [
+        "pluginArchitecture"
+      ],
+      "derivedFromPDs": [
+        "PD-185",
+        "PD-186"
+      ]
+    },
+    {
+      "id": "pluginDependencyResolution",
+      "layerName": "extension",
+      "description": "Plugin dependency resolution via topological sort; version pinning via SHA",
+      "dependencies": [
+        "pluginArchitecture"
+      ],
+      "derivedFromPDs": [
+        "PD-285",
+        "PD-286",
+        "PD-288"
+      ]
+    },
+    {
+      "id": "autoMemoryTaxonomy",
+      "layerName": "observability",
+      "description": "Auto-memory with 4-type taxonomy (user/feedback/project/reference) and MEMORY.md index",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-209",
+        "PD-221"
+      ]
+    },
+    {
+      "id": "dreamConsolidation",
+      "layerName": "observability",
+      "description": "Dual-gate auto-consolidation: time (24h) + session count (5) with lock coordination",
+      "dependencies": [
+        "autoMemoryTaxonomy"
+      ],
+      "derivedFromPDs": [
+        "PD-210",
+        "PD-211"
+      ]
+    },
+    {
+      "id": "costTracking",
+      "layerName": "observability",
+      "description": "Cost tracking per-model with unknown model flagging; persisted at session boundaries",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-264",
+        "PD-277"
+      ]
+    },
+    {
+      "id": "telemetrySpans",
+      "layerName": "observability",
+      "description": "Telemetry span lifecycle with WeakRef + TTL cleanup; startup profiling dual-mode",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-342",
+        "PD-344"
+      ]
+    },
+    {
+      "id": "queryCorrelation",
+      "layerName": "observability",
+      "description": "Query tracking with chainId+depth for multi-agent call correlation",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-228"
+      ]
+    },
+    {
+      "id": "analyticsSinks",
+      "layerName": "observability",
+      "description": "Analytics dual-sink with per-sink killswitch and cached fallback",
+      "dependencies": [
+        "telemetrySpans"
+      ],
+      "derivedFromPDs": [
+        "PD-341",
+        "PD-346"
+      ]
+    },
+    {
+      "id": "deepLinkValidation",
+      "layerName": "safety",
+      "description": "Deep link URI validation with control char rejection and safe ID patterns",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-400",
+        "PD-454"
+      ]
+    },
+    {
+      "id": "unicodeSanitization",
+      "layerName": "safety",
+      "description": "Iterative NFKC Unicode sanitization with dual-method fallback for path safety",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-558"
+      ]
+    },
+    {
+      "id": "ruleShadowingDetection",
+      "layerName": "permission",
+      "description": "Permission rule shadowing detection with shared vs personal source-scoped exception",
+      "dependencies": [
+        "denyWins"
+      ],
+      "derivedFromPDs": [
+        "PD-550"
+      ]
+    },
+    {
+      "id": "toolSearchStrategy",
+      "layerName": "tool",
+      "description": "Three-layer tool search: exact then MCP prefix then keyword scoring with pending server detection",
+      "dependencies": [
+        "failClosedDefaults"
+      ],
+      "derivedFromPDs": [
+        "PD-367",
+        "PD-368",
+        "PD-369"
+      ]
+    },
+    {
+      "id": "toolResultPairing",
+      "layerName": "tool",
+      "description": "Strict tool result pairing validation and advisor block stripping on message transit",
+      "dependencies": [
+        "deterministicValidation"
+      ],
+      "derivedFromPDs": [
+        "PD-380",
+        "PD-381"
+      ]
+    },
+    {
+      "id": "perToolPersistence",
+      "layerName": "tool",
+      "description": "Per-tool result persistence threshold override via feature flags with declared-max fallback",
+      "dependencies": [
+        "resultBounding"
+      ],
+      "derivedFromPDs": [
+        "PD-556"
+      ]
+    },
+    {
+      "id": "toolPoolDedup",
+      "layerName": "tool",
+      "description": "Tool pool dedup with partition-sort for prompt cache stability",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-519"
+      ]
+    },
+    {
+      "id": "sessionResume",
+      "layerName": "orchestration",
+      "description": "Session resume in 3 phases: worktree chdir, session ID reuse/fork, agent definition refresh",
+      "dependencies": [
+        "worktreeIsolation"
+      ],
+      "derivedFromPDs": [
+        "PD-391",
+        "PD-403",
+        "PD-407",
+        "PD-408"
+      ]
+    },
+    {
+      "id": "cronSchedulerLock",
+      "layerName": "orchestration",
+      "description": "Cron scheduler lock with PID liveness check, 5s re-probe, and missed task detection",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-402",
+        "PD-505"
+      ]
+    },
+    {
+      "id": "apiResilience",
+      "layerName": "conversation",
+      "description": "API resilience: non-streaming fallback on 529, stale connection detection, SSL error chain extraction",
+      "dependencies": [
+        "queryLoopRecovery"
+      ],
+      "derivedFromPDs": [
+        "PD-361",
+        "PD-362",
+        "PD-363"
+      ]
+    },
+    {
+      "id": "contextOverflowRecovery",
+      "layerName": "conversation",
+      "description": "Context overflow recovery: parse error, compute available tokens with safety buffer, retry with adjusted max",
+      "dependencies": [
+        "queryLoopRecovery"
+      ],
+      "derivedFromPDs": [
+        "PD-374",
+        "PD-405",
+        "PD-406"
+      ]
+    },
+    {
+      "id": "asyncConcurrencyPrimitives",
+      "layerName": "conversation",
+      "description": "Async concurrency primitives: TTL cache with refresh dedup, sequential executor, command queue with priority",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-500",
+        "PD-502",
+        "PD-503",
+        "PD-504",
+        "PD-507"
+      ]
+    },
+    {
+      "id": "startupSequence",
+      "layerName": "conversation",
+      "description": "Startup hook execution strict order and cross-platform path expansion with NFC normalization",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-392",
+        "PD-393"
+      ]
+    },
+    {
+      "id": "rateLimitManagement",
+      "layerName": "extension",
+      "description": "Multi-scenario rate limit management: exceeded limit tracking, window-based reset, mock framework",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-370",
+        "PD-371"
+      ]
+    },
+    {
+      "id": "voiceModeGating",
+      "layerName": "extension",
+      "description": "Voice mode sequential gating: build-time then runtime then stream then deps then mic permission",
+      "dependencies": [
+        "pluginArchitecture"
+      ],
+      "derivedFromPDs": [
+        "PD-372",
+        "PD-394",
+        "PD-395"
+      ]
+    },
+    {
+      "id": "cronTaskLifecycle",
+      "layerName": "extension",
+      "description": "Cron task lifecycle: auto-expiration, jitter live-tuning via GrowthBook, session-only default",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-401",
+        "PD-549"
+      ]
+    },
+    {
+      "id": "marketplaceReconciliation",
+      "layerName": "extension",
+      "description": "Marketplace reconciliation: additive-only diffing with lazy git canonicalization and version hashing",
+      "dependencies": [
+        "pluginDependencyResolution"
+      ],
+      "derivedFromPDs": [
+        "PD-506",
+        "PD-557"
+      ]
+    },
+    {
+      "id": "proxyAndPreconnect",
+      "layerName": "observability",
+      "description": "Proxy config cascade with NO_PROXY bypass detection and preconnect API HEAD request at init",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-522",
+        "PD-523"
+      ]
+    },
+    {
+      "id": "activityTracking",
+      "layerName": "observability",
+      "description": "Activity manager singleton with user/CLI time dedup, slow operation adaptive threshold, health checks",
+      "dependencies": [],
+      "derivedFromPDs": [
+        "PD-410",
+        "PD-513",
+        "PD-534"
+      ]
+    },
+    {
+      "id": "advisorCostTracking",
+      "layerName": "observability",
+      "description": "Cost accumulation recursively includes advisor model usage; session persistence gated by session ID",
+      "dependencies": [
+        "costTracking"
+      ],
+      "derivedFromPDs": [
+        "PD-434",
+        "PD-435"
+      ]
+    },
+    {
+      "id": "eventUploading",
+      "layerName": "observability",
+      "description": "Serial batch event uploader with backpressure, exponential jitter, and server retry hints",
+      "dependencies": [
+        "analyticsSinks"
+      ],
+      "derivedFromPDs": [
+        "PD-542"
+      ]
+    }
+  ]
+}

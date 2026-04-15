@@ -1,0 +1,65 @@
+{
+  "iteration": 12,
+  "unit": "open-ended-full-codebase-2/",
+  "timestamp": "2026-04-15T14:04:19Z",
+  "platform_decisions": [
+    {
+      "id": "PD-542",
+      "content": "Serial batch event uploader with backpressure, exponential jitter, and server-supplied retry hints",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-543",
+      "content": "Queue processor stratifies commands by type: slash/bash individual, non-slash batch-by-mode",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-546",
+      "content": "Runtime stdout JSON guard diverts non-JSON lines to preserve NDJSON parser integrity",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-549",
+      "content": "Cron jitter live-tuned via GrowthBook (60s refresh) with zod full-object validation",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-550",
+      "content": "Permission rule shadowing detection with shared vs personal source-scoped sandbox exception",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-552",
+      "content": "SDK-to-REPL message adapter with discriminated union for type-safe conversion",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-556",
+      "content": "Per-tool result persistence threshold override via GrowthBook with declared-max fallback",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-557",
+      "content": "Plugin version calculation with source-ordered priority and subdir path hashing",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-558",
+      "content": "Iterative NFKC Unicode sanitization with property-class and explicit-range dual-method fallback",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 9,
+  "cumulative_total": 377,
+  "incremental_rate": 0.0238,
+  "validation": false
+}

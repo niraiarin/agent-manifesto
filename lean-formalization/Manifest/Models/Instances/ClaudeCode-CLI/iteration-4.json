@@ -1,0 +1,145 @@
+{
+  "iteration": 4,
+  "unit": "remaining-tools/+computerUse/+vim/+cron/+output/",
+  "timestamp": "2026-04-15T13:14:59Z",
+  "platform_decisions": [
+    {
+      "id": "PD-310",
+      "content": "WebFetch preapproved hosts split into hostname-only set + path-prefix map for O(1) lookups; preapproval does not inherit to sandbox",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-311",
+      "content": "RemoteTriggerTool wraps claude.ai trigger API with 5 actions, org UUID required, feature-gated",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-312",
+      "content": "Cron deterministic jitter: recurring up to 10% late (max 15min), off-minute to reduce thundering herd",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-313",
+      "content": "Cron dual kill-switches: isKairosCronEnabled for scheduler, isDurableCronEnabled for persistence",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-314",
+      "content": "Cron jobs default session-only (in-memory); persistence requires explicit user intent",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-315",
+      "content": "Brief tool requires BOTH explicit opt-in AND entitlement check; assistant mode bypasses opt-in",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-316",
+      "content": "Todo verification nudge: after closing 3+ tasks with no verification, append reminder",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-317",
+      "content": "NotebookEdit enforces read-before-write invariant; blocks if file modified externally since read",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-318",
+      "content": "Notebook cell ID auto-generated for nbformat >= 4.5; post-write breaks FileRead dedup cache",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-319",
+      "content": "Companion deterministic from hash(userId); only soul persisted, bones regenerated — immune to config tampering",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-320",
+      "content": "Vim state machine encoded as exhaustive TypeScript union types — types ARE the spec",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-321",
+      "content": "Vim count saturation at MAX_VIM_COUNT (10000) during parsing to prevent unbounded multipliers",
+      "source": "code_analysis",
+      "manifesto_mapping": "D11",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-322",
+      "content": "Computer use global lock with stale-PID recovery and race-safe atomic create",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-323",
+      "content": "Computer use lock deferred acquisition: check without acquire, separate try-acquire step",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-324",
+      "content": "Computer use subscription tier gating: Max/Pro required, coordinate mode frozen at first read",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-325",
+      "content": "Terminal surrogate host pattern exempts terminal from hide/screenshot in computer use",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-326",
+      "content": "Computer use clipboard verify-after-write: read-back check detects silent write failure",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-327",
+      "content": "Computer use animated mouse: ease-out-cubic at 60fps, distance-proportional duration, 0.5s cap",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-328",
+      "content": "Computer use CFRunLoop draining for Swift calls so window-manager events flush (max 1.1s)",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-329",
+      "content": "Vim text object types as explicit named set for exhaustive pattern matching",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-330",
+      "content": "Output style Markdown frontmatter templating with keep-coding-instructions merge flag",
+      "source": "code_analysis",
+      "confidence": "high"
+    },
+    {
+      "id": "PD-331",
+      "content": "API provider environment cascading: Bedrock then Vertex then Foundry then firstParty",
+      "source": "code_analysis",
+      "confidence": "high"
+    }
+  ],
+  "decisions_found": 22,
+  "cumulative_total": 265,
+  "incremental_rate": 0.0830
+}
