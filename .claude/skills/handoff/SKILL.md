@@ -205,13 +205,25 @@ SessionStart hook が以下を実行:
    - next_steps: 具体的な次のアクション
    - files_modified: 変更したファイル
    - decisions: 重要な設計判断（オプション）
-3. **JSONL 書き込み** — `handoff-<timestamp>.jsonl` に永続記録
+3. **JSONL 書き込み** — `.claude/handoffs/handoff-<timestamp>.jsonl` に永続記録
 4. **resume.md 生成** — 上記フォーマットで書き込み。
    - ファイル名: `BRANCH=$(git branch --show-current)` を取得し、
      ブランチがあれば `handoff-resume-$(echo "$BRANCH" | sed 's|/|-|g').md`、
      なければ `handoff-resume.md`（detached HEAD フォールバック）
    - `branch` フィールド: `${BRANCH:-null}` の出力を使用
 5. **確認** — 生成した resume.md の内容をユーザーに表示
+6. **resumption prompt 出力** — 次セッションでユーザーがそのまま貼り付けられる prompt を出力する。
+   フォーマット:
+   ```
+   --- ✂ 次のセッションに貼り付けてください ---
+
+   前セッションの引き継ぎです。`.claude/handoffs/handoff-resume-<scope>.md` を読んで作業を再開してください。
+
+   --- ✂ ここまで ---
+   ```
+   - `<scope>` は実際に生成したファイル名に置換する
+   - resume.md にすべての状態が記録されているため、prompt 自体は短く保つ
+   - ユーザーがコピーしやすいようコードブロックで囲む
 
 ## Lean 形式化との対応
 
