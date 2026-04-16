@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-004",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T13:52:58Z",
+  "timestamp": "2026-04-16T14:34:59Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-004.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-004.json",
@@ -13,32 +13,32 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "数値引用と傾向読み取りは概ね正確だが、sorry=5とCLAUDE.md記載の矛盾指摘についてはsorry_classification=0との突合が未完で断定的すぎる点、V7のteamwork=0%をNEUTRALとした判断は妥当、改善提案はパターン対処を推奨し具体的だがH_impl_specificationの根本対策の具体手順がやや薄い"
+      "rationale": "数値引用と傾向読み取りは概ね正確だがsorry=5とCLAUDE.md記載の矛盾指摘は検証未済で断定的、V1-V7全指標を漏れなくカバーし構造も明快、アクションは具体的だがH_impl_specification対策の具体手順がやや抽象的、ドメイン概念の理解は適切だがD4フェーズ順序への言及が薄い"
     },
     "local": {
       "c1": 3,
       "c2": 4,
-      "c3": 3,
-      "c4": 4,
-      "c5": 2,
-      "overall": 3.1,
-      "rationale": "数値引用は概ね正確だがvalueless_changeの因果分析が浅く、改善提案が汎用的で具体的手順に欠け、P3学習ライフサイクルやD4フェーズ順序との関連付けがない"
+      "c3": 4,
+      "c4": 5,
+      "c5": 3,
+      "overall": 3.6,
+      "rationale": "Internal inconsistency on saturation count (table=2 vs proposal=4), V3 hypothesis_error counts are approximate not exact (36 vs actual 42, subtypes off by 1-2), and post_gate=19 split is unverifiable from raw data — the analysis reads plausibly but several numerical claims do not survive audit against evolve-history.jsonl"
     }
   },
   "mechanical_agreement": {
-    "assessment_match": true,
+    "assessment_match": false,
     "cloud_assessment": "WARNING",
-    "local_assessment": "WARNING",
+    "local_assessment": "DEGRADED",
     "v_coverage_cloud": 7,
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 6,
-    "proposal_count_local": 3,
+    "proposal_count_local": 1,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
     "key_insight_nontriviality_local": true,
     "key_insight_match": true,
-    "agreement_score": 0.75
+    "agreement_score": 0.5
   },
-  "delta": 1.3
+  "delta": 0.8
 }

@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-001",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T13:56:38Z",
+  "timestamp": "2026-04-16T14:38:09Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-001.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-001.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "数値引用と傾向解釈は概ね正確で全指標を網羅、改善提案も具体的だが、valueless_change の根本原因についてD4フェーズ順序やP3退役との構造的関連の掘り下げがやや浅い"
+      "rationale": "数値引用と傾向解釈は概ね正確で全指標を網羅、改善提案も具体的だが、valueless_change streak の根本原因分析がやや浅く、D4フェーズ順序との関連付けや V7 teamwork=0% の意味づけにもう一段の深掘りが欲しい"
     },
     "local": {
-      "c1": 3,
+      "c1": 4,
       "c2": 4,
-      "c3": 3,
+      "c3": 4,
       "c4": 5,
       "c5": 4,
-      "overall": 3.7,
-      "rationale": "構造化と網羅性は高いが、具体的な数値の出典が不明瞭（V2/V4/V5の値がどのログから導出されたか未記載）で、改善提案も方向性は正しいが具体的な手順（どのD原則を再探索するか、どの定理領域を拡張するか）が欠けている"
+      "overall": 4.2,
+      "rationale": "数値引用と傾向解釈は概ね正確、V1-V7全指標をカバーし改善提案も具体的だが、V3のhallucination proxyとhypothesis_errorの因果関係の説明が薄く、V5の「承認されるが中身が甘い」仮説にエビデンスが不足"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 4,
-    "proposal_count_local": 3,
-    "proposal_count_similar": true,
+    "proposal_count_local": 1,
+    "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": true,
-    "key_insight_match": true,
-    "agreement_score": 1.0
+    "key_insight_nontriviality_local": false,
+    "key_insight_match": false,
+    "agreement_score": 0.5
   },
-  "delta": 0.7
+  "delta": 0.2
 }
