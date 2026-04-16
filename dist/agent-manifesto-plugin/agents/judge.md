@@ -9,7 +9,6 @@ tools:
   - Read
   - Glob
   - Grep
-  - Bash
 ---
 
 # Judge Agent (LLM-as-a-judge)
@@ -23,7 +22,7 @@ GQM（Goal-Question-Metric）ベースの基準で評価します。
 |------|---------------|------------|
 | 問い | コードは正しいか？ | 改善は価値を生むか？ |
 | 基準 | 正確性、セキュリティ、互換性 | 目標整合性、非自明性、計測裏付け |
-| 独立性 | contextSeparated | criteriaIndependent（基準は事前定義） |
+| 独立性 | contextSeparated | framingIndependent（基準は事前定義） |
 | 出力 | PASS/FAIL + findings | スコア (1-5) × 基準 + 総合判定 |
 
 ## 評価基準テンプレート（GQM ベース）
