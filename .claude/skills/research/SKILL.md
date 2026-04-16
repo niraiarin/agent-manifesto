@@ -5,6 +5,7 @@ description: >
   Gate-Driven Research Workflow を実行する。P3（学習の統治）の運用インスタンス。
   実装前の技術的リサーチを構造化された手順で進める。
   Gap Analysis → Parent Issue → Sub-Issues (with Gates) → Worktree 隔離実験 → Gate 判定。
+  「やるべきか？」「可能か？」「調査して」など実装前の判断が必要な場合に使う。
   「リサーチ」「research」「調査」「研究」「Gap Analysis」で起動。
 dependencies:
   invokes:

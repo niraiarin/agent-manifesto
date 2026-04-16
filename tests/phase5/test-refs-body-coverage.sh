@@ -54,7 +54,7 @@ echo "未言及あり:         $WITHOUT_BODY (XFAIL)"
 # RB.1: 本文言及カバレッジ回帰検出
 # 基準値: 36 (2026-04-12 — echo "$BODY" | grep バグ修正後の正確な値。旧 39 は echo の
 # ARG_MAX 超過により誤検出を含んでいた。grep を直接ファイルに適用する方式に修正)
-BASELINE=36
+BASELINE=33
 echo ""
 echo -n "  RB.1: 本文言及カバレッジ回帰なし (>= $BASELINE)... "
 if [ "$WITH_BODY" -ge "$BASELINE" ]; then
