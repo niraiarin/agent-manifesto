@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-004",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T13:13:51Z",
+  "timestamp": "2026-04-16T13:52:58Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-004.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-004.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "数値引用と傾向解釈は概ね正確だが sorry=5 と CLAUDE.md の矛盾指摘は自己検証未実施で確度不明。V1-V7 全指標を網羅し構造も明快。アクションは具体的だが H_impl_specification のパターン対処は方向性のみで手順が粗い。ドメイン概念の使用は適切だが D4 フェーズ順序への言及が薄い。"
+      "rationale": "数値引用と傾向読み取りは概ね正確だが、sorry=5とCLAUDE.md記載の矛盾指摘についてはsorry_classification=0との突合が未完で断定的すぎる点、V7のteamwork=0%をNEUTRALとした判断は妥当、改善提案はパターン対処を推奨し具体的だがH_impl_specificationの根本対策の具体手順がやや薄い"
     },
     "local": {
-      "c1": 4,
+      "c1": 3,
       "c2": 4,
-      "c3": 4,
-      "c4": 5,
-      "c5": 4,
-      "overall": 4.2,
-      "rationale": "数値引用と傾向解釈は概ね正確だが、V3のtest_pass_rate=100%とfailed_tests=12の矛盾が未説明、V7のteamwork=0%の根本原因分析が浅い。構造化は優秀で提案も具体的だが、sorry残存の深刻度評価とhypothesis_errorの優先度判断にドメイン固有の文脈がもう少し欲しい。"
+      "c3": 3,
+      "c4": 4,
+      "c5": 2,
+      "overall": 3.1,
+      "rationale": "数値引用は概ね正確だがvalueless_changeの因果分析が浅く、改善提案が汎用的で具体的手順に欠け、P3学習ライフサイクルやD4フェーズ順序との関連付けがない"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 6,
-    "proposal_count_local": 1,
+    "proposal_count_local": 3,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
     "key_insight_nontriviality_local": true,
     "key_insight_match": true,
     "agreement_score": 0.75
   },
-  "delta": 0.2
+  "delta": 1.3
 }
