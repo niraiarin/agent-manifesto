@@ -1408,3 +1408,4 @@ docs/research/golden-dataset/
 | 2026-04-16 | 議論内容の反映: 出発点(plugins/termbase前例)、アプローチA-D選定根拠、サーバー選定(llama-server/LM Studio)、MCP ベンチマーク結果、モデル除外根拠、deterministic/judgmental 分離の発見 |
 | 2026-04-16 | Sub-3 実験設計修正: run-comparison.sh を `claude -p` + ccr 切り替え方式に全面改修。evaluate.sh 更新。run-all.sh バッチ実行スクリプト追加。E2E テスト成功: Cloud(Opus) judge=4.4 vs Local(gemma4:e4b-128k) judge=3.2, delta=1.2。gemma4:e4b-128k (4.5B) では domain knowledge 不足で閾値超過 — 24B-32B モデルでの本番実験が必要 |
 | 2026-04-16 | gpt-oss-120b (LM Studio 192.168.10.90:1234) での比較実験。ccr に lm-studio プロバイダ追加。結果: judge=3.8, delta=0.6 (閾値0.5を0.1超過), agreement=75%。2入力で安定。C5(ドメイン知識)=3 が主因 — P3/D4/non_triviality の深い意味理解が不足。モデル能力ではなくドメイン固有概念の注入方法が課題 |
+| 2026-04-16 | Qwen3.5-27b での比較実験。結果: judge=3.9, delta=0.5 (閾値 PASS)。2入力(004/001)で delta=0.5 が安定再現。C5=4 で gpt-oss-120b (C5=3) を上回る。D4フェーズ順序、T6、P2 の言及あり。27B で 120B と同等以上のドメイン理解。latency=220-292s |

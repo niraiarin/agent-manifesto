@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-004",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T12:44:20Z",
+  "timestamp": "2026-04-16T12:56:19Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-004.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-004.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "数値引用と傾向解釈は概ね正確だが sorry=5 と CLAUDE.md の矛盾指摘は自己検証未済、V1-V7 全指標を網羅し構造も明快、アクションは具体的だが H_impl_specification の根本対策は抽象度がやや高い"
+      "rationale": "数値引用と傾向解釈は概ね正確だが sorry=5 と CLAUDE.md の矛盾指摘は検証未済で断定的; V1-V7 全指標を漏れなくカバーし構造も明快; アクションは具体的だが H_impl_specification の根本対策は抽象度がやや高い; ドメイン概念の使用は適切だが D4 フェーズ順序への言及が薄い"
     },
     "local": {
-      "c1": 4,
+      "c1": 3,
       "c2": 4,
-      "c3": 3,
+      "c3": 4,
       "c4": 5,
-      "c5": 3,
-      "overall": 3.8,
-      "rationale": "数値引用と構造化は良好だが、V3の仮説エラー解釈が曖昧、提案がgrep実行レベルに留まり根本対策が弱い、P3学習ライフサイクルやD4フェーズ順序との関連付けが不足している"
+      "c5": 4,
+      "overall": 3.9,
+      "rationale": "数値引用は概ね正確だが、sorry=5/warnings=8/failed=12の値が実際のビルド結果と照合されておらず正確性に不確実性がある。V1-V7全指標をカバーし構造も明瞭。改善提案はT6参照やhypothesis_error分類など具体的だが、valueless_changeストリーク解消の具体手順がやや抽象的。"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 6,
-    "proposal_count_local": 1,
+    "proposal_count_local": 12,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": true,
-    "key_insight_match": true,
-    "agreement_score": 0.75
+    "key_insight_nontriviality_local": false,
+    "key_insight_match": false,
+    "agreement_score": 0.5
   },
-  "delta": 0.6
+  "delta": 0.5
 }
