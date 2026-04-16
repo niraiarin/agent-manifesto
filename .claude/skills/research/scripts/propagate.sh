@@ -18,9 +18,14 @@ Usage:
   propagate.sh successor-list  <parent-issue> <completed-issue>
   propagate.sh update-parent   <parent-issue> <child-issue> <gate-result>
   propagate.sh check-premises  <parent-issue> <completed-issue>
+  propagate.sh validate        <parent-issue>
   propagate.sh cascade-next    <parent-issue> <completed-issue>
 
 Subcommands:
+  validate       全 Sub-Issue の依存セクションが machine-readable か検証する。
+                 各 Issue の「## 依存」セクションが「なし」または「#N」形式のみで
+                 構成されているか確認。フリーテキスト混入をブロックする。
+                 cascade-next の冒頭で自動実行される。
   successor-list   半順序関係で <completed-issue> の後続にあたる全 Issue をトポロジカル順に列挙する。
                    Parent Issue の Sub-Issues テーブルと各 Sub-Issue の依存セクションから
                    依存グラフを構築し、Kahn's algorithm でソートして出力する。
@@ -41,7 +46,8 @@ Examples:
   propagate.sh successor-list 577 578
   propagate.sh update-parent 577 578 PASS
   propagate.sh check-premises 577 578
-  propagate.sh cascade-next 577 578    # 1件目を表示
+  propagate.sh validate 577             # 依存セクションのフォーマット検証
+  propagate.sh cascade-next 577 578    # 1件目を表示（validate 自動実行）
   propagate.sh cascade-next 577 578    # 2件目を表示（同じコマンド）
   propagate.sh cascade-next 577 578    # 全件完了 → DONE
 USAGE
@@ -53,6 +59,93 @@ USAGE
 ACTION="$1"
 
 # --- Helper functions ---
+
+# 依存セクションのフォーマットを検証する。
+# 許容形式: 「なし」「none」「N/A」または「#N」のカンマ区切り（+ HTML コメント）
+# 返り値: 0 = valid, 1 = invalid（エラーメッセージを stderr に出力）
+validate_dependency_format() {
+  local issue="$1"
+  local body
+  body=$(gh issue view "$issue" --json body --jq '.body' 2>/dev/null) || return 0
+
+  # 「## 依存」セクションを抽出
+  local dep_section
+  dep_section=$(echo "$body" | sed -n '/^## 依存/,/^## /{ /^## 依存/d; /^## /d; p; }')
+
+  # HTML コメントと空行を除去
+  local content
+  content=$(echo "$dep_section" | sed 's/<!--.*-->//g' | sed '/^\s*$/d')
+
+  if [[ -z "$content" ]]; then
+    echo "  #${issue}: ERROR — 依存セクションが空（「なし」も「#N」もない）" >&2
+    return 1
+  fi
+
+  # 「なし」「none」「N/A」のみの場合は OK
+  if echo "$content" | grep -qiE '^\s*(なし|none|N/A)\s*$'; then
+    return 0
+  fi
+
+  # 各非空行が「#N」パターン（カンマ/スペース区切り）のみで構成されているか検証
+  # 許容: "#123", "#123, #456", "- #123", "- #123, #456"
+  local line
+  local has_error=false
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    # 行頭のリストマーカー「- 」を除去
+    local cleaned
+    cleaned=$(echo "$line" | sed 's/^\s*-\s*//')
+    # #N パターンと区切り文字（カンマ、スペース）以外の文字が含まれていないか
+    local stripped
+    stripped=$(echo "$cleaned" | sed 's/#[0-9]\+//g' | sed 's/[,[:space:]]//g')
+    if [[ -n "$stripped" ]]; then
+      echo "  #${issue}: ERROR — 依存セクションにフリーテキスト混入: \"${line}\"" >&2
+      echo "           許容形式: 「なし」または「#N」のカンマ区切り" >&2
+      echo "           理由の記述は「依存の理由」セクションに移動すること" >&2
+      has_error=true
+    fi
+  done <<< "$content"
+
+  if $has_error; then
+    return 1
+  fi
+  return 0
+}
+
+# 全 Sub-Issue の依存セクションを検証する。
+# 返り値: 0 = 全件 valid, 1 = 1件以上 invalid
+validate_all_dependencies() {
+  local parent="$1"
+  local all_subs
+  all_subs=$(extract_sub_issues "$parent")
+
+  if [[ -z "$all_subs" ]]; then
+    echo "WARNING: Sub-Issue なし（Parent #${parent}）"
+    return 0
+  fi
+
+  local errors=0
+  local total=0
+  echo "=== 依存セクション検証: Parent #${parent} ==="
+  while IFS= read -r sub; do
+    total=$((total + 1))
+    if ! validate_dependency_format "$sub"; then
+      errors=$((errors + 1))
+    else
+      echo "  #${sub}: OK"
+    fi
+  done <<< "$all_subs"
+
+  echo ""
+  if [[ $errors -gt 0 ]]; then
+    echo "FAIL: ${errors}/${total} 件の Sub-Issue で依存セクションのフォーマットエラー"
+    echo "修正後に再実行: propagate.sh validate ${parent}"
+    return 1
+  else
+    echo "PASS: 全 ${total} 件の依存セクションが machine-readable"
+    return 0
+  fi
+}
 
 # Parent Issue body から Sub-Issues テーブルを抽出し、issue 番号リストを返す
 extract_sub_issues() {
@@ -232,6 +325,11 @@ compute_successors() {
 # --- Subcommands ---
 
 case "$ACTION" in
+  validate)
+    PARENT="${2:?parent-issue required}"
+    validate_all_dependencies "$PARENT"
+    ;;
+
   successor-list)
     PARENT="${2:?parent-issue required}"
     COMPLETED="${3:?completed-issue required}"
@@ -368,6 +466,17 @@ case "$ACTION" in
   cascade-next)
     PARENT="${2:?parent-issue required}"
     COMPLETED="${3:?completed-issue required}"
+
+    # 初回のみ validate を実行（状態ファイルが存在しない = 初回）
+    REPO_ROOT_CHECK="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+    if [[ ! -f "${REPO_ROOT_CHECK}/.cascade-state/${PARENT}-${COMPLETED}.done" ]]; then
+      if ! validate_all_dependencies "$PARENT"; then
+        echo ""
+        echo "BLOCKED: 依存セクションのフォーマットエラーを修正してから再実行してください。"
+        exit 1
+      fi
+      echo ""
+    fi
 
     # 状態ファイル: どの Issue まで処理済みかを追跡
     # プロジェクトルートの .cascade-state/ に保持（.gitignore 推奨）
