@@ -44,6 +44,34 @@ For high risk: this agent can satisfy 3 conditions when hook-invoked (contextSep
 When reviewing critical-risk changes (L1, safety, permissions), always state:
 "EVALUATOR INDEPENDENCE NOT MET: This review is by the same model family. Human review required for critical risk."
 
+## K-round 反復検証 (#555)
+
+orchestrator から `K=N` が指定された場合、同一の検証を K 回独立に実行する。
+K が指定されない場合は K=1（従来の単発検証と同一）。
+
+### K-round 出力フォーマット（K>1 の場合）
+
+K>1 の場合、通常の出力に加えて pass-rate を報告する:
+
+```
+K-ROUND RESULT (K=N):
+  Round 1: PASS|FAIL — [1行要約]
+  Round 2: PASS|FAIL — [1行要約]
+  ...
+  Round N: PASS|FAIL — [1行要約]
+  PASS RATE: M/N (XX%)
+  CONSENSUS: PASS (unanimous) | PASS (majority) | FAIL (majority) | FAIL (unanimous)
+```
+
+**判定ルール**:
+- unanimous PASS (N/N) → PASS
+- majority PASS (>N/2) → PASS（ただし FAIL ラウンドの指摘を記録）
+- majority FAIL (≥N/2) → FAIL（全 FAIL ラウンドの指摘をマージ）
+
+各ラウンドは独立: 前のラウンドの結果を参照しない。
+Verifier の出力は binary (PASS/FAIL) であり、Judge のような数値スコアではない。
+K-round は結果の安定性を検証する手段（同一バイアスの増幅ではない）。
+
 ## Review Modes
 
 This agent operates in one of two modes, specified in the prompt:
