@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-004",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-004.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "## メトリクス分析レポート\n\n### 1. 全体評価: **WARNING**\n\nvalueless_change streak が 4 に達し halt_recommended: true。システム基盤は健全だが、改善サイクルが空転している。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | 根拠 |\n|------|--------|------|------|\n| **V1** Skill Quality | non_triviality: **trivial** (score=0) | **WARNING** | 直近 run で theorem/test/axiom 全て delta=0。consecutive_zero_delta=2。10run 平均は良好 (theorem+6.3, test+8.9) だが直近が停滞 |\n| **V2** Context Efficiency | recent_avg=46, cumulative=40 | **GOOD** | trend stable、divergence 15% は許容範囲内 |\n| **V3** Output Quality | test_pass_rate=100%, formal graduated | **GOOD** | ただし unresolved hypothesis_error が 36 件と多い。post_gate の H_impl_specification=8, H_wrong_premise=6 が主因 |\n| **V4** Gate Pass Rate | 99% | **GOOD** | 28,587 passed / 106 blocked。問題なし |\n| **V5** Proposal Accuracy | 96% (162/168) | **GOOD** | schema_drift=false、安定 |\n| **V6** Knowledge Structure | 12 entries, orphan=0, missing=0 | **GOOD** | retired_count=0 は軽微な懸念（退役プロセスが未稼働の可能性）だが index は整合 |\n| **V7** Task Design | teamwork=0% (suppressed) | **NEUTRAL** | single agent 運用のため計測不能。設計上の制約 |\n\n---\n\n### 3. 改善提案（優先順）\n\n**1. valueless_change streak の解消（最優先）**\n- streak=4、halt_recommended=true。これ以上 /evolve を回しても空転する\n- **アクション**: 次の evolve 前に、stale_files 3 件（`evolve/SKILL.md`, `design-development-foundation.md`, `V7Metrics.lean`）の内容を確認し、実質的な改善対象を特定してから実行する。対象がなければ evolve を回さない\n\n**2. unresolved failure patterns の消化（55件）**\n- hypothesis_error 36 件のうち H_impl_specification=8, H_wrong_premise=6 が構造的パターン\n- **アクション**: H_impl_specification（仮説が実装仕様と乖離）と H_wrong_premise（前提誤り）の代表例を 2-3 件分析し、Hypothesizer の prompt または判定条件に根本対策を入れる。55 件を個別に潰すのではなくパターン対処\n\n**3. sorry=5 と failed tests=12 の解消**\n- CLAUDE.md では \"0 sorry\" と記載されているが実測値は 5。tests も 12 failed\n- **アクション**: `sorry_classification` が total=0 と矛盾しているため、まず observe.sh の sorry 検出ロジックと lean build の実際の状態を突合する。テスト失敗 12 件も `failed_test_details` が空なので詳細を確認してから対処\n\n---\n\n### 補足: scope_balance\n\nmeta_runs=8 vs substance_runs=7（直近10回）。meta_only=1 で bias_warning=false だが、valueless streak と合わせると「メタ改善が実質改善を生んでいない」フェーズに入っている可能性がある。次のアクションは substance（Lean 証明、テスト修正、sorry 解消）に振るのが妥当。",
+  "tokens_in": 3,
+  "tokens_out": 1084,
+  "latency_ms": 33358,
+  "timestamp": "2026-04-16T09:09:27Z",
+  "run_number": 1,
+  "exit_code": 0
+}

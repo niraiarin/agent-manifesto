@@ -1,0 +1,44 @@
+{
+  "run_id": "M-interp-004",
+  "task_type": "M-interp",
+  "timestamp": "2026-04-16T09:25:39Z",
+  "judge_model": "claude",
+  "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-004.json",
+  "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-004.json",
+  "judge_scoring": {
+    "cloud": {
+      "c1": 4,
+      "c2": 5,
+      "c3": 4,
+      "c4": 5,
+      "c5": 4,
+      "overall": 4.4,
+      "rationale": "数値引用と傾向解釈は概ね正確だが sorry=5 と CLAUDE.md の矛盾指摘は検証未済で断定的；V1-V7 全指標を漏れなくカバーし構造も明瞭；アクションは具体的だが H_impl_specification の根本対策が prompt 修正止まりで深さにやや欠ける"
+    },
+    "local": {
+      "c1": 3,
+      "c2": 4,
+      "c3": 3,
+      "c4": 5,
+      "c5": 2,
+      "overall": 3.2,
+      "rationale": "構造化と網羅性は良好だが、実データの具体的数値引用が不足し、P3学習統治・D4フェーズ順序・non_trivialityなどマニフェスト固有概念への言及がほぼなく、アクション提案も抽象的で即実行可能なレベルに達していない"
+    }
+  },
+  "mechanical_agreement": {
+    "assessment_match": true,
+    "cloud_assessment": "WARNING",
+    "local_assessment": "WARNING",
+    "v_coverage_cloud": 7,
+    "v_coverage_local": 7,
+    "v_coverage_match": true,
+    "proposal_count_cloud": 6,
+    "proposal_count_local": 1,
+    "proposal_count_similar": false,
+    "key_insight_nontriviality_cloud": true,
+    "key_insight_nontriviality_local": false,
+    "key_insight_match": false,
+    "agreement_score": 0.5
+  },
+  "delta": 1.2
+}
