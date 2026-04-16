@@ -1409,3 +1409,4 @@ docs/research/golden-dataset/
 | 2026-04-16 | Sub-3 実験設計修正: run-comparison.sh を `claude -p` + ccr 切り替え方式に全面改修。evaluate.sh 更新。run-all.sh バッチ実行スクリプト追加。E2E テスト成功: Cloud(Opus) judge=4.4 vs Local(gemma4:e4b-128k) judge=3.2, delta=1.2。gemma4:e4b-128k (4.5B) では domain knowledge 不足で閾値超過 — 24B-32B モデルでの本番実験が必要 |
 | 2026-04-16 | gpt-oss-120b (LM Studio 192.168.10.90:1234) での比較実験。ccr に lm-studio プロバイダ追加。結果: judge=3.8, delta=0.6 (閾値0.5を0.1超過), agreement=75%。2入力で安定。C5(ドメイン知識)=3 が主因 — P3/D4/non_triviality の深い意味理解が不足。モデル能力ではなくドメイン固有概念の注入方法が課題 |
 | 2026-04-16 | Qwen3.5-27b での比較実験。結果: judge=3.9, delta=0.5 (閾値 PASS)。2入力(004/001)で delta=0.5 が安定再現。C5=4 で gpt-oss-120b (C5=3) を上回る。D4フェーズ順序、T6、P2 の言及あり。27B で 120B と同等以上のドメイン理解。latency=220-292s |
+| 2026-04-16 | qwen3.5-27b-claude-4.6-opus-reasoning-distilled-v2 での比較実験。**delta=0.2/0.0 — Cloud 同等**。input-004: judge=4.2 (delta=0.2), input-001: judge=4.4 (delta=0.0)。全 C1-C5 で 4 以上。蒸留効果が明確に出ている。M-interp タスクでの Local 化は Go 判定可能 |

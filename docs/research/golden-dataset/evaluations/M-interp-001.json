@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-001",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T13:00:24Z",
+  "timestamp": "2026-04-16T13:19:47Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-001.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-001.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "数値引用と傾向解釈は概ね正確で全指標を網羅、改善提案も具体的だが、valueless_change streak の根本原因仮説が浅く、D4フェーズ順序との関連付けが欠けている"
+      "rationale": "数値引用と傾向読み取りは正確で全V1-V7をカバー、提案も具体的だが、valueless_change streakの根本原因分析がやや表層的で、D4フェーズ順序との関連付けが欠けている"
     },
     "local": {
       "c1": 4,
-      "c2": 4,
-      "c3": 3,
+      "c2": 5,
+      "c3": 4,
       "c4": 5,
       "c5": 4,
-      "overall": 3.9,
-      "rationale": "数値引用と構造化は優秀だが、改善提案(2)(3)の具体的手順が不足し、V7の抑制理由やV1のsaturation閾値についての深掘りが欠けている"
+      "overall": 4.4,
+      "rationale": "数値引用と構造化は優秀。hypothesis_errorのサブタイプ分析や退役提案は実行可能だが、V1のsaturation判定基準やfoundation_theorems=17の意味づけにやや曖昧さが残る"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 4,
-    "proposal_count_local": 6,
+    "proposal_count_local": 1,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": false,
-    "key_insight_match": false,
-    "agreement_score": 0.5
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 0.75
   },
-  "delta": 0.5
+  "delta": 0.0
 }
