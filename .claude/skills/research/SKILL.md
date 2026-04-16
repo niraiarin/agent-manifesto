@@ -132,9 +132,9 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 6a: Judge 評価 | **bounded** | Judge agent | 構造化評価。agent 委譲済み |
 | Step 6b: 減点解消 | **judgmental + deterministic（未分離）** | LLM（修正） + カウント判定スクリプト | judgmental: 修正内容の判断 / deterministic: addressable 残存数判定 |
 | Step 6c: Gate 判定 + Handoff | **judgmental + deterministic（未分離）** | 人間（T6） + Handoff 判定（deterministic） | judgmental: 最終判定は人間（T6） / deterministic: Handoff 先判定は Yes/No |
-| Step 6c.1: 上方集約 | **deterministic + judgmental（未分離）** | Issue 更新スクリプト + LLM（全子完了判定） | deterministic: テーブル更新 / judgmental: 全子最終状態の確認と親 Gate 判定要否 |
-| Step 6d: 後続再評価 | **deterministic + judgmental（未分離）** | 依存グラフ走査スクリプト + LLM（影響判定） | deterministic: グラフ走査 / judgmental: 前提変化の影響判定 |
-| Step 6d.1: Cross-level 再評価 | **deterministic + judgmental（未分離）** | 親 Issue 参照 + LLM（前提変化判定） | deterministic: 親 Issue の特定 / judgmental: 前提が変化したかの判定 |
+| Step 6c.1: 上方集約 | **deterministic + judgmental（分離済み）** | `propagate.sh update-parent`（テーブル更新・全子状態確認） + LLM（親 Gate 判定要否） | `mixed_task_decomposition` 適用済み ✓ (#596): deterministic = propagate.sh、judgmental = 親 Gate 判定 |
+| Step 6d: 後続再評価 | **deterministic + judgmental（分離済み）** | `propagate.sh successor-list` + `check-premises`（走査・突合） + LLM（影響判定） | `mixed_task_decomposition` 適用済み ✓ (#596): deterministic = propagate.sh、judgmental = 前提変化判定 |
+| Step 6d.1: Cross-level 再評価 | **deterministic + judgmental（分離済み）** | `propagate.sh successor-list`（親 Issue 特定） + LLM（前提変化判定） | `mixed_task_decomposition` 適用済み ✓ (#596): deterministic = propagate.sh、judgmental = 前提変化判定 |
 | Step 7: クロージング | **deterministic + judgmental（未分離）** | クロージングスクリプト + LLM（サマリ） | deterministic: issue close / judgmental: 全体サマリ記述 |
 | Step 7a: ドキュメント更新 | **deterministic + judgmental（未分離）** | チェックリスト + LLM（更新内容） | deterministic: チェックリスト / judgmental: 更新箇所の判断 |
 | Step 7b: 研究レポート | **judgmental** | LLM（6 項目レポート） | 研究の構造化伝達。項目 5,6 が 7c の入力 |
@@ -170,9 +170,9 @@ Gap Analysis ⇄ Verify (P2)  → Parent Issue → Sub-Issues (with gates)
 | Step 6a | bounded | `automation_enforcement_consistent` | 評価は有限時間で完了するが、正解の決定手続きはない |
 | Step 6b | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 修正内容は judgmental、残存数判定は deterministic |
 | Step 6c | judgmental + deterministic（未分離） | `mixed_task_decomposition` | 最終判定は judgmental（T6）、Handoff 先判定は deterministic |
-| Step 6c.1 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | テーブル更新は deterministic、全子完了判定は judgmental |
-| Step 6d | deterministic + judgmental（未分離） | `mixed_task_decomposition` | グラフ走査は deterministic、影響判定は judgmental |
-| Step 6d.1 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | 親 Issue 特定は deterministic、前提変化判定は judgmental |
+| Step 6c.1 | deterministic + judgmental（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | deterministic: `propagate.sh update-parent` (#596) / judgmental: 親 Gate 判定 |
+| Step 6d | deterministic + judgmental（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | deterministic: `propagate.sh successor-list` + `check-premises` (#596) / judgmental: 前提変化判定 |
+| Step 6d.1 | deterministic + judgmental（分離済み） | `mixed_task_decomposition`, `observable_implies_automatable` | deterministic: `propagate.sh successor-list` (#596) / judgmental: 前提変化判定 |
 | Step 7 | deterministic + judgmental（未分離） | `mixed_task_decomposition` | issue close は deterministic、サマリは judgmental |
 | Step 7a | deterministic + judgmental（未分離） | `mixed_task_decomposition` | チェックリストは deterministic、更新箇所判断は judgmental |
 | Step 7b | judgmental | `classification_is_judgmental` | 研究の構造化伝達。6 項目レポート |
@@ -689,13 +689,18 @@ CONDITIONAL の子 issue は tree の次の depth に追加される。
 各子 issue も同じ /research ワークフロー（Step 1-7）を再帰的に実行する。
 深度は Step 3.2 の depth guard で制御される。
 
-#### 6c.1. 上方集約（#577 対応）
+#### 6c.1. 上方集約（#577 対応, #596 スクリプト化）
 
-Gate 判定後、親ノードへの結果伝播を実行する:
+Gate 判定後、親ノードへの結果伝播を実行する（`deterministic` → スクリプトで実行）:
 
-1. 自ノードの Gate 結果を**親 Issue にコメント**として記録
-2. 親 Issue の **Sub-Issues テーブルを更新**（状態列を PASS/CONDITIONAL/FAIL に）
-3. 同一親の全子ノードが最終状態に達したか確認:
+```bash
+# 親 Issue の Sub-Issues テーブルを自動更新
+bash .claude/skills/research/scripts/propagate.sh update-parent <parent-issue> <child-issue> <PASS|CONDITIONAL|FAIL>
+```
+
+1. 自ノードの Gate 結果を**親 Issue にコメント**として記録（judgmental: LLM）
+2. 親 Issue の **Sub-Issues テーブルを更新**（deterministic: `propagate.sh update-parent`）
+3. 同一親の全子ノードが最終状態に達したか確認（deterministic: `propagate.sh update-parent` が自動表示）:
    - **全最終** → 親の Gate 判定を実行
    - **未最終** → 親は保留（残りの子ノードを待つ）
 
@@ -708,27 +713,40 @@ Gate 判定後、親ノードへの結果伝播を実行する:
 **重要**: 上方伝播は **1 段ずつ**（子→親のみ）。孫→祖父は直接伝播しない。
 各親ノードが自分の Gate 判定で統合することで全体の一貫性を保つ。
 
-#### 6d. 後続 Sub-Issue の再評価（#362 検証済み, #577 拡張）
+#### 6d. 後続 Sub-Issue の再評価（#362 検証済み, #577 拡張, #596 スクリプト化）
 
 Gate 判定の結果（PASS/CONDITIONAL/FAIL いずれも）は、後続 sub-issue の前提を
 変える可能性がある。D13（影響波及）を FAIL 以外にも適用する。
 
-```
-Gate 判定完了 → 後続 sub-issue リストを走査
-  1. 依存グラフから影響を受ける後続 issue を列挙（deterministic: グラフ走査）
-  2. 各 issue について前提が変化したか判定（judgmental）
-  ├─ 影響なし → 次の sub-issue に進む
-  ├─ アプローチ変更が必要 → issue を更新（方法・Gate 基準を修正）
-  ├─ 不要になった → close with reason
-  └─ 新規 Gap 発見 → 新しい sub-issue を起票、Parent を更新
+**実行手順**（deterministic 成分はスクリプトで実行）:
+
+```bash
+# 推奨: cascade-next を繰り返し呼ぶ。1回1件、状態ファイルで進捗追跡
+bash .claude/skills/research/scripts/propagate.sh cascade-next <parent-issue> <completed-issue>
+# → 1件目を表示。LLM が判定後、同じコマンドを再実行
+bash .claude/skills/research/scripts/propagate.sh cascade-next <parent-issue> <completed-issue>
+# → 2件目を表示（前件の修正が反映済み）。STATUS: DONE まで繰り返す
 ```
 
-**省略条件**: Sub-Issue が 1 件のみ、または残存 sub-issue に依存関係がない場合。
+`cascade-next` の設計:
+- **ステートフル**: `.cascade-state/<parent>-<completed>.done` で処理済み Issue を追跡
+- **1回1件**: 呼び出すたびに次の未処理 Issue をトポロジカル順に1件だけ表示
+- **カスケード保証**: 各 Issue の前提は都度 `gh issue view` で最新を取得するため、
+  前ステップで `gh issue edit` した修正が自動反映される
+- **LLM は判定のみ**: 順序制御・進捗追跡は構造的に強制（`deterministic_must_be_structural`）
+
+LLM が判定（judgmental）:
+- 影響なし → 同じコマンドを再実行
+- アプローチ変更が必要 → `gh issue edit` で修正後、同じコマンドを再実行
+- 不要になった → `gh issue close` 後、同じコマンドを再実行
+- 新規 Gap 発見 → 新しい sub-issue を起票後、同じコマンドを再実行
+
+**省略条件**: `cascade-next` の結果が「後続 Issue: なし」の場合。
 
 **検証済み (#577)**: 以下の 3 項目が検証された:
 - **頻度**: 毎回実行が適切。再評価コストは低い（各 Issue の前提と Gate 結果の比較のみ）
 - **依存グラフ形式**: Parent Issue テーブル + 各 Issue body の Tree Context セクション（(a)+(d) hybrid）
-- **mixed タスク分解**: deterministic（Issue リスト走査）+ judgmental（前提変化判定）。スクリプトは支援ツールに留まる
+- **mixed タスク分解**: deterministic（`propagate.sh` で走査・突合）+ judgmental（前提変化判定は LLM）。#596 で分離完了
 
 #### 6d.1. Cross-level 再評価（#577 対応）
 
