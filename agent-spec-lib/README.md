@@ -63,6 +63,40 @@ GA-I5 (CSLib バージョン互換性未確認、low risk) に従い **Cslib 依
 Week 1 の完了基準を「ビルド環境の確立 + TyDD/TDD 基盤（Mathlib + lean-toolchain pin + SemVer + behavior test + artifact-manifest）」と定義する。
 この判断根拠は `../docs/research/new-foundation-survey/10-gap-analysis.md` GA-I5 を参照。
 
+## 現状: Phase 0 Week 2 Day 1 完了（2026-04-17 追加）
+
+Week 1 の基盤に Spine 層・Proofs 層の最小実装を追加。
+
+- [x] `AgentSpec/Spine/FolgeID.lean` (**GA-S2 FolgeID structure + prefix partial order**、
+  `listIsPrefixOf` Bool helper + `instance instLE` 明示命名 + `Decidable (≤)` via `inferInstanceAs`)
+- [x] `AgentSpec/Proofs/RoundTrip.lean` (**GA-C2 round-trip signature**、
+  `def roundTripUniversal` hole-driven signature + 3 proved theorems + 補題リスト docstring 集約)
+- [x] `AgentSpec/Test/Spine/FolgeIDTest.lean` (**11 件の behavior assertion**)
+- [x] `AgentSpec/Core.lean` explicit import (Init.Data.* 5 件、/verify Round 1 指摘 7 対処)
+- [x] `lake build AgentSpec` ✓ 確認済 (exit 0, **8 jobs**、Week 1 から 5→8)
+- [x] /verify Round 2 PASS (logprob + Subagent、evaluator_independent: true)
+
+### Week 2 Day 1 時点の累計指標
+
+| 指標 | Week 1 | Day 1 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 0 | 3 (RoundTrip) | **3** |
+| example 数 | 24 | 11 (FolgeIDTest) | **35** |
+| finite bounded universal cases | 125 (5³) | 343 (7³) | **343** (最大) |
+| sorry | 0 | 0 | **0** |
+| axiom | 0 | 0 | **0** |
+| namespace | `AgentSpec` | `.Spine`, `.Proofs`, `.Test.Spine` | 4 namespaces |
+
+### Day 1 で確立した実装パターン（Week 2-3 Spine 層全体に適用）
+
+1. **segment abbrev + structure** (TyDD-S1): `FolgePathSegment := Nat ⊕ Char` を先行
+2. **Bool helper による `decide` 対応**: `listIsPrefixOf` のように List レベルで実装
+   して structure pattern の reduction stuck を回避
+3. **明示的 instance 命名**: `instance instLE : LE T` のように名前付け
+4. **`Decidable` via `inferInstanceAs`**: `by unfold` の fragility を回避
+5. **hole-driven signature**: `def roundTripUniversal` のように `abbrev` を避け
+   opaque identity を保持
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

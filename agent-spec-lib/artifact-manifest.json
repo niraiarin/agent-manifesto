@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.1.0-week1",
+  "version": "0.2.0-week2-day1",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -9,6 +9,7 @@
     "config"
   ],
   "propositions_referenced": [
+    "GA-S2",
     "GA-S15",
     "GA-S18",
     "GA-T8",
@@ -102,6 +103,87 @@
       }
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Spine.FolgeID",
+      "path": "AgentSpec/Spine/FolgeID.lean",
+      "scope": "formalization",
+      "refs": ["GA-S2", "GA-W4", "GA-W7", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "lean-init",
+          "module": "Init.Data.List.Basic, Init.Data.Sum.Basic",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.FolgePathSegment",
+        "AgentSpec.Spine.FolgeID"
+      ],
+      "provides_functions": [
+        "AgentSpec.Spine.FolgeID.listIsPrefixOf",
+        "AgentSpec.Spine.FolgeID.isPrefixOf",
+        "AgentSpec.Spine.FolgeID.root",
+        "AgentSpec.Spine.FolgeID.child"
+      ],
+      "provides_instances": [
+        "LE FolgeID (prefix partial order)",
+        "DecidableEq FolgeID",
+        "Inhabited FolgeID",
+        "Repr FolgeID",
+        "Decidable (a ≤ b) via inferInstanceAs"
+      ],
+      "ordering": "prefix partial order (not total); a ≤ b ⇔ a.path is prefix of b.path",
+      "week2_status": "Day 1 hole-driven signature. PartialOrder / Ord instance は Day 3-5 追加予定"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Proofs.RoundTrip",
+      "path": "AgentSpec/Proofs/RoundTrip.lean",
+      "scope": "formalization",
+      "refs": ["GA-C2", "GA-W4", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Core",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_definitions": [
+        "AgentSpec.Proofs.RoundTrip.roundTripOk (Bool helper)",
+        "AgentSpec.Proofs.RoundTrip.roundTripUniversal (Prop signature, def-opaque)"
+      ],
+      "provides_theorems": [
+        "roundTrip_zero_stable (base case)",
+        "roundTrip_version (version constant case)",
+        "roundTrip_bounded_stable_7 (7³ = 343 cases via decide)"
+      ],
+      "week2_status": "Day 1 signature + bounded proof. universal theorem `roundTripUniversal_proved` は Day 4-5 実装予定",
+      "finite_bounded_universal_cases": 343
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest",
+      "path": "AgentSpec/Test/Spine/FolgeIDTest.lean",
+      "scope": "test",
+      "refs": ["GA-S2", "GA-I9"],
+      "test_targets": [
+        "FolgeID.root prefix property",
+        "FolgeID prefix order reflexivity / antisymmetry",
+        "FolgeID.child construction",
+        "FolgeID DecidableEq / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.FolgeID",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "example_count": 11,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
       "id": "agent-spec-lib:lakefile",
       "path": "lakefile.lean",
       "scope": "config",
@@ -129,16 +211,24 @@
   ],
   "build_status": {
     "last_verified": "2026-04-17",
+    "last_verified_phase": "Week 2 Day 1",
     "lake_build_result": "exit 0",
-    "job_count": 5,
+    "job_count": 8,
     "sorry_count": 0,
     "axiom_count": 0,
-    "theorem_count": 0,
-    "example_count": 24,
+    "theorem_count": 3,
+    "example_count": 35,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
-    "finite_bounded_universal_cases": 125
+    "finite_bounded_universal_cases": 343,
+    "breakdown": {
+      "Core.lean": {"theorems": 0, "examples": 0},
+      "Test/CoreTest.lean": {"theorems": 0, "examples": 24},
+      "Spine/FolgeID.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 11},
+      "Proofs/RoundTrip.lean": {"theorems": 3, "examples": 0}
+    }
   },
   "verifier_history": [
     {
