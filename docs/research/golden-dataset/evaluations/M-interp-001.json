@@ -1,28 +1,28 @@
 {
   "run_id": "M-interp-001",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T14:38:09Z",
+  "timestamp": "2026-04-17T01:28:28Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-001.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-001.json",
   "judge_scoring": {
     "cloud": {
-      "c1": 4,
+      "c1": 5,
       "c2": 5,
       "c3": 4,
       "c4": 5,
-      "c5": 4,
-      "overall": 4.4,
-      "rationale": "数値引用と傾向解釈は概ね正確で全指標を網羅、改善提案も具体的だが、valueless_change streak の根本原因分析がやや浅く、D4フェーズ順序との関連付けや V7 teamwork=0% の意味づけにもう一段の深掘りが欲しい"
+      "c5": 5,
+      "overall": 4.8,
+      "rationale": "Accurate metric citations, full V1-V7 coverage, well-structured, correct manifesto concepts; proposals are actionable though #2/#3 could specify concrete next steps."
     },
     "local": {
       "c1": 4,
       "c2": 4,
-      "c3": 4,
+      "c3": 5,
       "c4": 5,
-      "c5": 4,
-      "overall": 4.2,
-      "rationale": "数値引用と傾向解釈は概ね正確、V1-V7全指標をカバーし改善提案も具体的だが、V3のhallucination proxyとhypothesis_errorの因果関係の説明が薄く、V5の「承認されるが中身が甘い」仮説にエビデンスが不足"
+      "c5": 5,
+      "overall": 4.6,
+      "rationale": "構造化・提案の具体性・ドメイン知識は優秀。V1の'non_triviality=0'とsaturation傾向の解釈は一貫するが、verifier_pass_rate 77%の'健全なフィルタリング'評価は数値引用だけでは裏付け不足。"
     }
   },
   "mechanical_agreement": {
@@ -36,9 +36,9 @@
     "proposal_count_local": 1,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": false,
-    "key_insight_match": false,
-    "agreement_score": 0.5
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 0.75
   },
   "delta": 0.2
 }

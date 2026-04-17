@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-004",
   "task_type": "M-interp",
-  "timestamp": "2026-04-16T14:34:59Z",
+  "timestamp": "2026-04-17T01:25:56Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-004.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-004.json",
@@ -9,26 +9,26 @@
     "cloud": {
       "c1": 4,
       "c2": 5,
-      "c3": 4,
+      "c3": 5,
       "c4": 5,
-      "c5": 4,
-      "overall": 4.4,
-      "rationale": "数値引用と傾向読み取りは概ね正確だがsorry=5とCLAUDE.md記載の矛盾指摘は検証未済で断定的、V1-V7全指標を漏れなくカバーし構造も明快、アクションは具体的だがH_impl_specification対策の具体手順がやや抽象的、ドメイン概念の理解は適切だがD4フェーズ順序への言及が薄い"
+      "c5": 5,
+      "overall": 4.8,
+      "rationale": "網羅的で構造化された分析。sorry=5 vs CLAUDE.md記載0の矛盾を指摘し実行可能な対処を提示。数値引用も正確だが V1 の consecutive_zero_delta と streak=4 の関係性説明がやや簡潔。"
     },
     "local": {
-      "c1": 3,
+      "c1": 4,
       "c2": 4,
       "c3": 4,
       "c4": 5,
-      "c5": 3,
-      "overall": 3.6,
-      "rationale": "Internal inconsistency on saturation count (table=2 vs proposal=4), V3 hypothesis_error counts are approximate not exact (36 vs actual 42, subtypes off by 1-2), and post_gate=19 split is unverifiable from raw data — the analysis reads plausibly but several numerical claims do not survive audit against evolve-history.jsonl"
+      "c5": 4,
+      "overall": 4.2,
+      "rationale": "Accurate metric citations, well-structured with clear priorities, but lacks deeper tie-in to P3 lifecycle and D4 phase ordering rationale."
     }
   },
   "mechanical_agreement": {
-    "assessment_match": false,
+    "assessment_match": true,
     "cloud_assessment": "WARNING",
-    "local_assessment": "DEGRADED",
+    "local_assessment": "WARNING",
     "v_coverage_cloud": 7,
     "v_coverage_local": 7,
     "v_coverage_match": true,
@@ -36,9 +36,9 @@
     "proposal_count_local": 1,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": true,
-    "key_insight_match": true,
+    "key_insight_nontriviality_local": false,
+    "key_insight_match": false,
     "agreement_score": 0.5
   },
-  "delta": 0.8
+  "delta": 0.6
 }
