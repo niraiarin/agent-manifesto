@@ -1,0 +1,268 @@
+# Verifier 独立検証記録
+
+**対象**: `docs/research/new-foundation-survey/` 配下の全サーベイ成果物（00-survey-plan, 01-06, 00-synthesis）
+
+## Round 1（2026-04-17）
+
+**検証者**: verifier subagent（独立コンテキスト、framing 独立、実行手動起動、モデル非独立）
+**EVALUATOR INDEPENDENCE**: 2/4 条件充足（contextSeparated ✓ / framingIndependent ✓ / executionAutomatic ✗ 手動起動 / evaluatorIndependent ✗ 同モデル族）
+**RISK LEVEL**: moderate
+
+### 指摘サマリ
+
+- **addressable**: 10 件
+- **informational**: 5 件
+- **unaddressable**: 0 件
+- **取り消し**: 1 件（指摘 6: 47 対象数は整合確認）
+
+### addressable 指摘と対処
+
+| # | 指摘要旨 | 対象ファイル | 対処 |
+|---|---|---|---|
+| 1 | axiom 数 53→55、theorem 数 462→1670 の実測乖離 | 06, 00-synthesis, 00-survey-plan, 03 | 全ファイルで 2026-04-17 実測値に統一 |
+| 2 | D1-D17 表記と CLAUDE.md 公式 D1-D18 の不整合 | 06 | 06 を D1-D18 に修正、実装本文に D18 定理存在を追記 |
+| 3 | FolgeID の BEq 欠落 + Bool→Prop 変換欠落 | 00-synthesis, 01 | 両ファイルで `BEq (α ⊕ β)` instance 明示、`= true` 追加、「設計スケッチ」注記 |
+| 4 | ResearchEdge constructor で `(a b : ResearchNode)` 引数省略 | 00-synthesis | 明示引数を追加、「設計スケッチ」注記 |
+| 5 | `no_active_reference_to_retired` の結論が 2 ファイルで不統一 | 00-synthesis, 01 | 結論を「`¬ m.references.contains n.id`」で統一 |
+| 8 | PropositionId の行番号誤記（line 37-47 は AgentId 等） | 06 | line 1104 に修正、line 37-47 は AgentId/SessionId/ResourceId/StructureId/ProcessId と明記 |
+| 11 | インターフェース図の矢印方向曖昧（独立性主張と整合） | 00-synthesis | 矢印意味「A→B は A が B の構築に使われる」を明示、起点/中間/応用/統合の層構造を追記 |
+| 13 | D4 フェーズ順序（L1→P2→P4→P3→動的調整）と Phase 1-5 の対応未明示 | 00-synthesis | Phase 1=L1, Phase 2=P2, Phase 3=P4, Phase 4=P3, Phase 5=動的調整 の対応を明示、能力割当を再整理 |
+| 14 | 「88% 再利用可能性」の計算根拠なし | 06, 00-synthesis | 対象数ベース 14/15 ≈ 93% に訂正、計算根拠を明示、旧 88% 記述は撤回 |
+| 15 | `baseed` typo（複数箇所） | 02 | 7 件を `based` に修正（sed 一括） |
+| 17 | TypeSpec/FuncSpec の cross-project import 未処理 | 03 | 依存解決案（(a) Lake require / (b) 型再定義）を明示、「未検証」注記 |
+
+### informational 指摘と対処
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| 7 | 比較表の評価基準（型理論的半順序 vs 運用的半順序）明示不足 | Round 2 で必要なら対応（本 Round は保留） |
+| 9 | d13_propagation の確認証拠不足 | Round 1 中に実機確認済み（DesignFoundation.lean 同ファイル内に定義あり、line 1586-1628 に D18 群と並ぶ）。06 に反映 |
+| 10 | 99-verifier-rounds.md が未作成 | 本ファイルで対応 |
+| 12 | Lean-Auto arXiv URL の確認証跡なし | Round 2 で必要なら対応 |
+| 16 | gtm/git-ticket 対象変更の理由未記録 | 05 冒頭に「対象選定の注記」セクション追加 |
+
+### 完了条件判定
+
+P2 完了条件:
+1. Verifier の最終ラウンドで addressable = 0 件 → Round 2 で検証
+2. その最終ラウンド以降に成果物への変更がないこと → Round 2 前に修正停止
+
+現状: Round 1 で 10 件 addressable を確認、全て対処済み。修正差分を以て Round 2 へ。
+
+### 変更サマリ（Round 1 修正）
+
+**ファイル変更**:
+- `00-survey-plan.md`: axiom/theorem 数を実測値に
+- `01-knowledge-graph-tools.md`: FolgeID Lean コード修正、`no_active_reference_to_retired` 統一、設計スケッチ注記
+- `02-data-provenance.md`: `baseed` → `based` (7 箇所)
+- `03-lean-metaprogramming.md`: axiom/theorem 数実測値、TypeSpec/FuncSpec 依存解決案注記
+- `06-internal-assets.md`: axiom/theorem/sorry 実測値、PropositionId 行番号、D1-D18 表記、d13_propagation 位置確認、88% → 93% (14/15) 計算根拠明示
+- `00-synthesis.md`: Lean 設計スケッチを全て注記化、インターフェース図の矢印方向明示、D4 対応関係明示、`baseed`→`based`、93% に更新
+- `99-verifier-rounds.md`: 本ファイル新規作成
+
+## Round 2（2026-04-17）
+
+**結果**: FAIL（addressable = 1 件）
+
+### 指摘サマリ
+
+- addressable: **1 件**（R2-1）
+- informational: 0 件
+
+### 指摘と対処
+
+| # | 指摘要旨 | 対象 | 対処 |
+|---|---|---|---|
+| R2-1 | `00-synthesis.md` line 133 のコメント「結論は `m.isRetired` ではなく `False` で統一」が誤記。`False` は `isRetired` 定義内 `match` arm の値であり、定理結論ではない。実際の統一は `¬ m.references.contains n.id` | 00-synthesis.md | コメントを「結論は `¬ m.references.contains n.id` で 01-knowledge-graph-tools.md §4.4 と統一」に修正 |
+
+Round 1 で対処された 10 件全ての指摘は再検証で正常修正確認済み（Round 2 verifier による引用確認）。
+
+## Round 3（2026-04-17）
+
+**結果**: **PASS — P2 完了条件充足**
+
+### 検証項目（R2-1 修正の波及確認）
+
+| # | 項目 | 結果 |
+|---|---|---|
+| 1 | 00-synthesis.md line 132-133 に修正反映 | PASS |
+| 2 | 前後の theorem 定義との一致 | PASS |
+| 3 | 01-knowledge-graph-tools.md §4.4 との整合 | PASS（双方向に相互参照明示） |
+| 4 | 他ファイルへの波及的変更必要性 | なし（PASS） |
+
+**新規 addressable 指摘**: なし
+
+### P2 完了条件判定
+
+- ✓ Verifier の最終ラウンドで addressable = 0 件
+- ✓ その最終ラウンド以降に成果物への変更なし
+
+**結論**: P2 完了条件を満たして新基盤サーベイの検証完了。次フェーズ（Gap Analysis）の入力として使用可能。
+
+---
+
+## Round 補遺 (2026-04-17)
+
+**追加対象**: `research/lean4-handoff.md` 引用先 22 リンクの 4 グループ並列調査結果（G1-G4 計 2269 行）と 00-synthesis.md Section 7 補遺。
+
+### 補遺 Round 1 結果
+
+- **addressable**: 2 件
+  - 補遺 R1-1: Section 1.1 ヘッダー「6 グループ・47 対象」と冒頭文が旧値のまま（表は新値）
+  - 補遺 R1-2: Section 7.7 が「Section 6.1 に追加」と宣言したが実際は未統合
+- **informational**: 3 件
+  - 補遺 I-1: 「22 リンク」の根拠（実測 19 ユニーク）
+  - 補遺 I-2: G1-G4 ファイルの行数 1 差（末尾改行カウント差）
+  - 補遺 I-3: CLEVER 0.6% vs 0.621% の表記揺れ
+
+### 対処
+
+| # | 対処 |
+|---|---|
+| R1-1 | ヘッダー「10 グループ・69 対象」、冒頭「10 グループ精読ノート（01-06 + G1-G4）」、前提資産に lean4-handoff.md 追記 |
+| R1-2 | Section 6.1 課題リスト本体に CLEVER, 仕様生成困難, Vericoding, culture change の 4 行を実際に追加 / Section 7.7 を「統合済み」報告に書き換え |
+| I-3 | Section 7.5 Phase 0 の説明で「CLEVER 0.621% = 1/161」に統一 |
+| I-1, I-2 | informational 範囲のため対処なし |
+
+### 補遺 Round 2 (2026-04-17)
+
+**結果**: **PASS — 補遺 P2 完了条件充足**
+
+| 検証項目 | 結果 |
+|---|---|
+| R1-1 (ヘッダー/冒頭/Section 1.1 タイトル) | PASS |
+| R1-2 (Section 6.1 に 4 行統合 + 7.7 書き換え) | PASS |
+| 副作用 | なし |
+| 新規 addressable 指摘 | なし |
+
+**結論**: 補遺（G1-G4 + Section 7）も含めた全サーベイが P2 完了条件を満たして検証完了。Gap Analysis フェーズの入力として使用可能。
+
+---
+
+## Gap Analysis 検証（2026-04-17、SKILL.md Step 1.5）
+
+**対象**: `10-gap-analysis.md`（1325 行、104 Gap + 10 Warning = 114 項目）
+**前提**: Pass 1-7 で収束（46 → 79 → 89 → 97 → 99 → 104 → 104）
+
+### Round 1 (2026-04-17)
+
+**結果**: FAIL（addressable = 4）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| 1 | GA-C15 リスクが本文 high / Matrix medium で不整合 | GA-C15 を high 確定、Matrix 更新 (C-high 7→8、total 18→19) |
+| 2 | #599 Gap 9/10/14 の対応未説明 | GA-S1/S3/C11/C15/M3/M4 の導出元に明示追加、Pass 2 テキストに構造的吸収節追加 |
+| 3 | GA-S1 種別テキストが stale (S2-S14) | S2-S20 に更新 |
+| 4 | Pass 2「C12-C21」と Section 3.2「C11-C20」不整合 | 「C11-C21 (11 件)」+ 明示マッピング表に統一 |
+
+### Round 2 (2026-04-17)
+
+**結果**: FAIL（addressable = 1）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| R2-1 | 「最終確定」ブロック line 1312 の high=18/medium=64 が Matrix high=19/medium=63 と不整合 (Round 1 Matrix 更新時の同期漏れ) | 最終確定ブロックを high=19/medium=63 に統一 |
+
+### Round 3 (2026-04-17)
+
+**結果**: **PASS — P2 完了条件充足**
+
+| 検証項目 | 結果 |
+|---|---|
+| 最終確定ブロックの修正反映 | PASS |
+| Matrix / Section 3.3 / 最終確定 3 箇所の整合 | PASS (全て high=19, medium=63) |
+| 旧値 `high=18, medium=64` の残存 | なし |
+| 新規副作用 | なし |
+
+### P2 完了条件判定
+
+- ✓ Verifier 最終ラウンド (Round 3) で addressable = 0 件
+- ✓ その最終ラウンド以降に Gap Analysis テキストへの変更なし
+
+**結論**: Gap Analysis (104 Gap + 10 Warning) が P2 完了条件を満たして検証完了。Sub-Issue 設計・実装フェーズの入力として使用可能。
+
+---
+
+## Phase 0 Week 1 (環境準備) 検証 (2026-04-17)
+
+**対象**: `agent-spec-lib/` 新規 Lean パッケージ (独立 `agent-spec-lib/` ディレクトリ、Mathlib 依存、agent-manifesto 本体とは隔離)
+**構成**:
+- `lean-toolchain` (v4.29.0 pin)
+- `lakefile.lean` (Mathlib 依存、Week 6 で LeanHammer/CSLib 追加予定)
+- `AgentSpec.lean` (root、ロードマップ記載)
+- `AgentSpec/Core.lean` (最小プレースホルダ)
+- `README.md` (8 週ロードマップ + Gap 参照)
+**ビルド確認**: `lake build AgentSpec` exit 0, 4 jobs PASS
+
+### Week 1 Verifier Round 1
+
+**結果**: FAIL（addressable = 5 件）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| 1 | `version_nonempty` が trivially-true (definitional numeric literal) | 定理削除、削除理由をコメントで記録 |
+| 2 | `linter.deprecated` が GA-W7 (termination 保証) と誤ラベル | コメント修正: 廃止予定 API 警告 + GA-W7 はコード設計レベル対応と明示 |
+| 3 | G5-1 Section 3.5 Week 1「Cslib 依存確立」との乖離が未文書化 | README.md に「G5-1 Section 3.5 Week 1 完了基準からの縮小定義」セクション追加、GA-I5 根拠明示 |
+| 4 | README.md `lake build` チェックボックスが未完了のまま | `[x]` に更新、ビルド済み事実 (exit 0, 4 jobs) を記載 |
+| 5 | axiom 数 55 vs CLAUDE.md 53 の不一致 | README.md に 2026-04-17 実測根拠 (`grep -r "^axiom [a-z]" Manifest/ --include="*.lean"`) を明記、CLAUDE.md の 53 は旧値と注記 |
+
+informational 2 件 (weak.linter コメント誇張、Week 2-3 CSLib 制約未明示) も合わせて対処。
+
+### Week 1 Verifier Round 2
+
+**結果**: **PASS — Week 1 P2 完了条件充足**
+
+| 検証項目 | 結果 |
+|---|---|
+| 指摘 1 対処 (version_nonempty 削除) | PASS |
+| 指摘 2 対処 (linter.deprecated コメント修正) | PASS |
+| 指摘 3 対処 (縮小定義セクション追加) | PASS |
+| 指摘 4 対処 (チェックボックス更新) | PASS |
+| 指摘 5 対処 (axiom 実測値根拠) | PASS |
+| 副作用 | なし |
+| 新規 addressable 指摘 | なし |
+| 再ビルド確認 | `lake build AgentSpec` exit 0, 4 jobs |
+
+### P2 完了条件判定
+
+- ✓ Verifier 最終ラウンド (Round 2) で addressable = 0 件
+- ✓ その最終ラウンド以降に Week 1 成果物への変更なし
+- ✓ `lake build AgentSpec` 通過
+
+**結論**: Phase 0 Week 1 (環境準備) が P2 完了条件を満たして検証完了。Week 2-3 (Spine 層: EvolutionStep / SafetyConstraint / LearningCycle / Observable) に進行可能。
+
+---
+
+## Round 補遺 G5 (2026-04-17)
+
+**追加対象**: `research/lean4-handoff.md` Section 7 (Atlas 12 プロジェクト提案書) で引用された 5 リンクの並列調査結果（G5-1〜G5-5 計 1831 行）と 00-synthesis.md Section 7.8-7.14 追加 + Section 1.1 表更新 + Section 6.1 課題統合。
+
+### 検証結果（3 ラウンドで収束）
+
+#### 補遺 G5 Round 1 (FAIL, addressable=4)
+
+| # | 指摘要旨 | 対象 | 対処 |
+|---|---|---|---|
+| R1-1 | DafnyBench「+23pt」が実測 +24pt と乖離 | G5-2, synthesis | +24pt + 論文原文「+23pt」注記に修正 |
+| R1-2 | G5-3/G5-4 に旧値「53 axioms / 462 theorems」残存 | G5-3, G5-4, G5-1 | 55/1670 (2026-04-17 実測) に統一 |
+| R1-3 | G5-3 の †/‡ 注記に説明なし | G5-3 | Curated/Full Repo Context 条件の説明追加 |
+| R1-5 | synthesis 7.8 LegacyCode→ATLAS マッピング乖離 | synthesis | handoff 原文「限定的」+ ATLAS algorithmic 限定を注記 |
+
+#### 補遺 G5 Round 2 (FAIL, addressable=1)
+
+| # | 指摘要旨 | 対象 | 対処 |
+|---|---|---|---|
+| R2-A | G5-2 line 229, 246, 415 に旧値残存 | G5-2 | 3 箇所を 55/1670 に修正 |
+
+追加スキャンで G3 (line 488, 591) と G5-5 (line 109, 143) にも旧値残存が発覚 → 全て 55/1670 に修正。
+
+#### 補遺 G5 Round 3 (**PASS**)
+
+| 検証項目 | 結果 |
+|---|---|
+| 旧値 `53 axioms / 462 theorems` の完全除去 (99-verifier-rounds.md を除く全ファイル) | PASS (0 件残存) |
+| 指摘 6 箇所 (G5-2×3, G3×2, G5-5×2) の正確な修正 | PASS |
+| 副作用・整合性破壊 | なし |
+| 新規 addressable 指摘 | なし |
+
+**結論**: G5 補遺 P2 完了条件充足。Round 1-3 計 5 件 addressable + 1 件 informational (取消) を全て解消。Gap Analysis フェーズの入力として全サーベイ成果物が使用可能。
