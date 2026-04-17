@@ -1413,3 +1413,5 @@ docs/research/golden-dataset/
 | 2026-04-16 | google/gemma-4-26b-a4b (MoE 26B, active 4B) での比較実験。input-004: delta=1.3 (C5=2), input-001: delta=0.7 (C5=4, agreement=100%)。入力依存で不安定。active パラメータが少なく dense 27B 系に劣る |
 | 2026-04-16 | gemma-4-31b-it-claude-opus-distill: 31B dense で prefill 中に client disconnected (93.6%)。ccr のアイドル接続タイムアウトが原因。スキップ |
 | 2026-04-16 | qwen3.6-35b-a3b (MoE 35B, active 3B) での比較実験。input-004: delta=0.8 (数値不正確, assessment mismatch), input-001: delta=0.2 (judge=4.2)。入力依存で不安定。速い(77-118s)が精度にムラ |
+| 2026-04-17 | ccr EHOSTUNREACH 問題: Node.js undici が LAN IP に到達不能。SSH tunnel (ssh -L 11234:localhost:1234) で回避。ccr config を localhost:11234 に変更 |
+| 2026-04-17 | T-interp 実験開始。qwen3.6-35b-a3b (FP16) で trace-input-001 (238KB): Cloud=4.8, Local=4.6, delta=0.2 PASS。C5=5 で D13 影響波及を正確にトレース。M-interp に続き T-interp でも Local 化 Go 判定可能 |
