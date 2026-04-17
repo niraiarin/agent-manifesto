@@ -1,3 +1,13 @@
+-- Week 1 時点で実際に使用するのは Lean core (Init) のみ。
+-- Mathlib は lakefile.lean で require 済（Week 2 以降の Spine 層で本格利用予定）。
+-- autoImplicit=false 下での明示性保証と /verify Round 1 指摘 7 への対応のため
+-- 依存モジュールを explicit import で宣言する。
+import Init.Data.Nat.Basic
+import Init.Data.String.Basic
+import Init.Data.List.Basic
+import Init.Data.Option.Basic
+import Init.Data.Ord
+
 /-!
 # AgentSpec.Core: 基本型と基本 instance
 

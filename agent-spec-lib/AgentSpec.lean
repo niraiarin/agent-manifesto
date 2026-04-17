@@ -1,5 +1,8 @@
 import AgentSpec.Core
+import AgentSpec.Spine.FolgeID
+import AgentSpec.Proofs.RoundTrip
 import AgentSpec.Test.CoreTest
+import AgentSpec.Test.Spine.FolgeIDTest
 
 /-!
 # AgentSpec: agent-manifesto 新基盤 Lean ライブラリ ルート
