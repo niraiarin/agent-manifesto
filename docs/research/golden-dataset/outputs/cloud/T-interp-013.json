@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-013",
+  "task_type": "T-interp",
+  "input_file": "trace-input-013.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 全命題 | 43 |\n| カバー済み | 43 (100%) |\n| 未カバー | 0 |\n| 弱カバー | 0 |\n| Evidence 欠落 | 24 命題 (55.8%) |\n| Derivation 欠落 | 4 命題 (T4, T5, T6, T7) |\n\n**未カバー命題**: なし（全 43 命題が成果物にマッピング済み）\n\nただし以下の質的ギャップが存在する：\n\n- **Evidence 欠落 (24)**: T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14, V6\n- **Derivation 欠落 (4)**: T4, T5, T6, T7（公理として保持、導出不要なものもある）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 最重要ギャップ: P3 の Evidence 欠落\n\n- **P3（学習の統治）** は強度 3、`depended_by: [L6, D4, D9, D13, D17]` と影響範囲が広い\n- 42 成果物でカバーされているが Evidence なし → 仮説検証の経験データが Lean に未取り込み\n- **波及**: P3 が変動すると D13 影響波及機構自体が動揺する（メタレベル不安定性）\n\n### 第二: D1（境界の構造的強制）の Evidence 欠落\n\n- D1 は L1–L6 全境界を depends_on → ボトルネック構造\n- 50 成果物の最大被覆だが、Evidence ゼロ\n- **波及**: D1 仮定の経験的裏付けがないと、L1–L6 全体の正当化根拠が手薄\n\n### 第三: L 層 (L1, L3–L6) の Evidence 欠落\n\n- 境界層（強度 2）の経験証拠が体系的に欠落\n- 制約 T からの導出は揃っているが、**実運用での境界破り事例の体系記録**が不足\n- **波及**: V1–V7 観測値の意味付けが弱まる\n\n## 3. 改善提案（優先度順）\n\n### [P1: 高] P3 への Evidence 追加\n\n- **対象**: `lean-formalization/Manifest/Principles.lean` の P3 ブロック\n- **アクション**: `.claude/metrics/evolve-history.jsonl` から成功/失敗事例を抽出し、`evidence` フィールド（layer / basis / source / refutation）を追加\n- **互換性分類**: conservative extension\n\n### [P2: 中] D1 の Evidence 追加\n\n- **対象**: `lean-formalization/Manifest/DesignFoundation.lean`\n- **アクション**: hook 阻止ログ（L1 違反検知件数等）を `evidence` として形式化\n- **互換性分類**: conservative extension\n\n### [P3: 中] L 層 Evidence の体系収集フック導入\n\n- **対象**: 新規 `.claude/hooks/l-boundary-evidence-recorder.sh`\n- **アクション**: 境界違反検知時にメトリクス追記 → 定期的に Lean Evidence へ昇格\n- **互換性分類**: compatible change（運用フローに新工程を追加）",
+  "tokens_in": 6,
+  "tokens_out": 1270,
+  "latency_ms": 26219,
+  "timestamp": "2026-04-17T01:56:54Z",
+  "run_number": 1,
+  "exit_code": 0
+}

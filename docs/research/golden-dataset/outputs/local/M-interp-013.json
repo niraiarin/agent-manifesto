@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-013",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-013.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## V1-V7 メトリクス分析レポート (Run 107)\n\n---\n\n### 1. 全体評価: WARNING\n\n**理由**: 2つの重大なシグナルが検出されている。\n- **Valueless change streak = 5** — 連続5回の改善なし。`halt_recommended: true`。/evolve の実行を停止すべき状態。\n- **Failed tests = 18** — テスト失敗が18件存在（Passed 721 / Failed 18）。L1安全境界の文脈で即座の調査が必要。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | `trivial` (score=0) | WARNING | theorem/test/axiom の delta が全て 0。飽和状態。Graduation済みだが、改善の兆しなし |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable | OK | 15% divergence は軽度。コスト効率 mean=$2.33/improvement は健全 |\n| **V3 Output Quality** | hallucination_active: H=36, A=7 | WARNING | hypothesis_error が36件で未解決の大半を占める。品質ゲート導入後も19件がポストゲートに残る |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | 良好。ブロック率1%は許容範囲 |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 良好。schema_drift=false |\n| **V6 Knowledge Structure** | retired=0, entries=12 | WARNING | 陳腐化知識の退役が0件。MEMORY のクリーンアップが必要 |\n| **V7 Task Design** | completed=188, teamwork=0 | OK (設計通り) | single_agent で抑制は意図的 |\n\n**補足 — Lean 状態**: Axioms=48, Theorems=429, **Sorry=9**, Warnings=7。Sorry 9件は形式検証の完全性観点で懸念材料。\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### Priority 1: /evolve の一時停止 + Valueless streak の根本原因分析\n- **現状**: 連続5回の valueless change。Observer が740件の発見を出し、Hypothesizer が466件を提案しても、実質改善に繋がっていない\n- **アクション**: `halt_recommended: true` を尊重して /evolve を停止。Observer の発見の「質」ではなく「量」が肥大化している疑いを検証\n- **互換性分類**: conservative extension（一時的な停止のみ）\n\n#### Priority 2: Failed tests (18件) の原因特定と修正\n- **現状**: `tests/test-all.sh` で18件の失敗。Golden dataset の出力ファイルも複数変更中（M-interp, T-interp）\n- **アクション**: テスト失敗の詳細を特定し、根本原因が実験結果のドリフトかテスト自体の不備かを判定\n- **互換性分類**: 原因による（bug fix = compatible change）\n\n#### Priority 3: Hypothesis error (active=36) の削減戦略\n- **現状**: 42件中36件が未解決。特に `H_impl_specification`(8), `H_wrong_premise`(6) が多い\n- **アクション**: Observer → Hypothesizer の間の前提検証を強化。仮説化前に観測結果の再検証ステップを /evolve SKILL.md に追加\n- **互換性分類**: compatible change（/evolve ワークフローの変更）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 113300,
+  "timestamp": "2026-04-17T02:25:17Z",
+  "run_number": 1,
+  "exit_code": 0
+}

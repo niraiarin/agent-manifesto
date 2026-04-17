@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-023",
+  "task_type": "T-interp",
+  "input_file": "trace-input-023.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティ分析レポート\n\n## 1. カバレッジ状況\n\n- **成果物カバレッジ**: 43/43 命題 = **100%**（uncovered / weak いずれも空）\n- **証拠 (evidence) カバレッジ**: 19/43 = **44.2%**（24 命題が証拠欠落）\n- **導出 (derivation) カバレッジ**: 39/43 = **90.7%**（4 命題が導出欠落）\n\n**証拠欠落命題（24）**: T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14, V6\n**導出欠落命題（4）**: T4, T5, T6, T7\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n| ギャップ | 命題 | 影響波及 |\n|---|---|---|\n| **A. ルート制約の導出欠落** | T4, T5, T6, T7 | 最重大。`depended_by` の合計 = 21 命題（P2/P4/P5/P6/L1/L3/L4/L6/D3/D5/D8/D9/D13/D15–D18/V1–V7）。根拠を欠いたまま設計定理に波及するリスク |\n| **B. 設計定理群の証拠欠落** | D1–D14 全て | D1 は `depended_by: [D11]` + 47 artifacts を抱え、証拠なしで実装が先行。`ground-axiom` 未適用 |\n| **C. 実装なし命題** | T3, L3, D6, D11 | L3 は V2/V7 の土台だが実装層が document/lean のみ。V2/V7 の測定妥当性が構造的に裏付けられない |\n| **D. P2/P3 証拠欠落** | P2, P3 | 検証・統治の中核原理が経験的/理論的根拠記録なし。D4 フェーズ順序の前提を揺るがす |\n\n## 3. 優先改善アクション\n\n1. **[最優先] T4–T7 の導出記述を追加** — ルート制約の数理根拠を `Foundation/` に形式化。D13 波及範囲が最大（21 命題）で、`ground-axiom` スキルを T4→T5→T6→T7 の順で適用\n2. **[高] L3 と D6/D11 に実装を追加** — L3 は V2/V7 の測定を支える境界、D6/D11 は設計定理。`implementation-check.sh` で検出可能な構造ギャップ\n3. **[中] D1–D14 の証拠集めを体系化** — 各 Design Theorem に axiom card（basis/source/refutation）を付与。特に依存度の高い D1 (P5/L1–L6 依存, 47 artifacts) から着手",
+  "tokens_in": 6,
+  "tokens_out": 1231,
+  "latency_ms": 23338,
+  "timestamp": "2026-04-17T02:01:44Z",
+  "run_number": 1,
+  "exit_code": 0
+}

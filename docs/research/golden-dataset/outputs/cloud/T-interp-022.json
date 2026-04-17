@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-022",
+  "task_type": "T-interp",
+  "input_file": "trace-input-022.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティ分析レポート\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 43/43 = **100%**（全命題が artifact で参照されている）\n- **未カバー命題**: なし\n- **弱カバレッジ命題**: なし\n- **総 artifact 数**: 476\n\nただし、artifact 数だけでは「形式的に覆われている」に過ぎず、**証拠（evidence）と導出（derivation）の欠落** に以下のギャップが存在する。\n\n| 次元 | 充足 | 欠落 |\n|---|---|---|\n| Evidence | 19 | **24** (T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14大半, V6) |\n| Derivation | 39 | **4** (T4, T5, T6, T7) |\n| Implementation なし | — | T3, T4, L3, D6, D11 |\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n最重要のギャップは **3 箇所**:\n\n**(a) P3「学習の統治」に evidence 欠落** — 構造変更のコミット互換性分類を支える中核原理。P3 は L6, D4, D9, D13, D17 に影響を波及する（depended_by）。この根拠が弱いと、**下流の D9 / D13 全体の正当性が型依存のみで支えられる**状態となる。\n\n**(b) T4/T5/T6/T7 に derivation なし** — T 系公理は root（depends_on: 空）であり本来 derivation は不要だが、**T4（output_nondeterministic）は E1, P2, P5, L2 が依存** する主要 root。Evidence は存在するが、数理的 grounding の構造が浅い場合、**E1→P2→D2→D17 への波及** で後続の形式根拠が損なわれる。\n\n**(c) L3「リソース境界」に implementation なし** — artifact 内訳が document 4 / lean 1 / test 1 のみ。T6, T7 から導出される境界で、V2, V7 が依存。**実装層での強制機構が無いため、V2/V7 計測値の意味論が規範文書依存** となる。\n\n## 3. 改善提案（優先度順）\n\n1. **【高】P3 evidence の補強** — axiom カードに統治ライフサイクル（観察→仮説化→検証→統合→退役）の経験的・理論的根拠を追加。D13 影響波及的に 5 命題（L6, D4, D9, D13, D17）の下流信頼性を同時に底上げ。\n\n2. **【中】L3 実装層の補強** — `scripts/implementation-check.sh` 類似のリソース監視 hook を追加し、L3 を procedural enforcement へ昇格。V2/V7 計測に structural 根拠を付与。\n\n3. **【中】T 系 root 公理の Foundation 参照を追補** — T5, T6, T7 の evidence には参照文献があるが derivation 欄が空。Foundation/ 層の定理への bridge を明記し、`ground-axiom` skill で形式根拠を再確認する。",
+  "tokens_in": 6,
+  "tokens_out": 1358,
+  "latency_ms": 33176,
+  "timestamp": "2026-04-17T02:01:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

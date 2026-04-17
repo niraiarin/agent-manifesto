@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-002",
+  "task_type": "T-interp",
+  "input_file": "trace-input-002.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 100% (43/43 命題に artifact が紐付け済)\n- **未カバー命題**: なし\n- **弱カバー命題**: なし\n- **アーティファクト総数**: 219\n\nただし補助指標を見ると質的ギャップあり:\n- **evidence 欠如**: 24 命題 (T8, P2, P3, P6, L1, L3-L6, D1-D14 大半, V6)\n- **derivation 欠如**: 4 命題 (T4, T5, T6, T7 — 根本 constraint)\n\n## 2. ギャップ分析 (D13 影響波及の観点)\n\n**最も重要なギャップ: constraint 層 T4-T7 の derivation 欠如**\n\nT4-T7 は依存グラフの根 (strength=5) で、下流への影響半径が最大:\n- **T4** (非決定性) → E1, P2, P5, L2, D15 を支配。evidence は存在するが derivation チェーン未構築\n- **T5** (observability) → P4, D3, D13, D15, D17 を支配\n- **T6** (human authority) → L1, L3, L4, L6, D15, D17 を支配\n- **T7** (有限性) → P4, P6, L3, D12, D14-D16, D18 を支配\n\nD13 の影響波及原理に照らすと、根の根拠が弱いとき下流の design theorem (D1-D14) 全体の信頼性が連鎖的に希薄化する。実際 D1-D14 の大半で evidence 欠如しており、根の弱さが下流に伝播している。\n\n**二次ギャップ: P2/P3/P6 の evidence 欠如**\n\n原理層に evidence がない状態で、下位の D2, D4, D6, D9, D12-D14 が derivation のみに依存している。\n\n## 3. 改善提案 (優先度順)\n\n1. **T4-T7 の derivation 補完** (最優先) — 根 constraint に数理的導出 (形式化根拠) を与える。`/ground-axiom` で T5, T6, T7 に derivation を追加。T4 は既に Foundation/Probability.lean に R1-R4 の根拠があるので derivation として明示するだけでよい。影響半径は全 design theorem。\n\n2. **P2/P3/P6 に empirical evidence を付与** — 原理層は derivation 済みだが、経験的裏付けが欠けている。`.claude/metrics/` のログから evidence を抽出可能 (P2: verify 失敗事例, P3: 退役記録, P6: 制約違反事例)。\n\n3. **D1-D14 の evidence 体系化** — 現状 derivation のみに依存。各 design theorem について、実装上で観測された事例 (hook blocking 事例, evolve-history の成功/失敗) を evidence として紐付ける。D13 影響波及の検出精度向上に直結。",
+  "tokens_in": 6,
+  "tokens_out": 1187,
+  "latency_ms": 23232,
+  "timestamp": "2026-04-17T01:51:49Z",
+  "run_number": 1,
+  "exit_code": 0
+}

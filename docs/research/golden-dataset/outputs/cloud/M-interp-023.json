@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-023",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-023.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価\n**WARNING** — 構造は概ね健全だが、学習ループが停滞（valueless_change streak=4, halt_recommended=true）し、新規 `sorry` 1件 + テスト失敗 1件が発生。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 状態 | 所見 |\n|---|---|---|---|\n| **V1 スキル品質** | non_triviality=0 (trivial), verifier_pass=77% | ⚠️ 注意 | 直近 run で定理・テスト増分ゼロ。saturation streak=2。卒業済 (formal) だが実質的寄与が枯れている |\n| **V2 文脈効率** | recent_avg=46, cumulative=40 | ✅ 良好 | trend=stable、divergence 15%。問題なし |\n| **V3 出力品質** | test_pass=100%, hypothesis_error=36 未解決 | ⚠️ 注意 | テスト合格率は良いが、hypothesis_error の未解決累積が多い（H_impl_specification=8, H_wrong_premise=6） |\n| **V4 ゲート通過率** | 99% | ✅ 良好 | 安定 |\n| **V5 提案精度** | 96% | ✅ 良好 | schema_drift なし |\n| **V6 知識構造** | 12 entries, 0 days stale, 0 orphan | ✅ 良好 | 完全整合 |\n| **V7 タスク設計** | teamwork=suppressed_single_agent | — | 単一エージェント運用のため抑制中（問題ではない） |\n\n**赤信号**:\n- `sorry=1`（前回 0 から増加）、`failed=1`（テスト失敗）\n- `valueless_change.halt_recommended=true`（4連続で価値ある変更なし）\n- stale 構造ファイル 4件（evolve/research SKILL.md, Ontology.lean, V7Metrics.lean）\n\n## 3. 改善提案（優先順）\n\n### 🔴 優先度 1: 学習ループの停滞解除\n4連続 valueless_change は D4（フェーズ順序）違反の兆候。**evolve を一旦停止**し、human feedback に蓄積されている未実装タスク（半順序公理の追加、トレーサビリティ機構、failure feedback の Lean 形式化）に焦点を切り替える。メタ改善偏重（meta_runs=8/10）を矯正する。\n\n### 🟡 優先度 2: sorry 1件 + failed test 1件の解消\n`sorry_classification.total=0` と報告されているが lean.sorry=1 と不整合。`failed_test_details` が空だが failed=1。**計測と実体の乖離**を先に解消してから修復（L1/P4 違反リスク）。\n\n### 🟡 優先度 3: hypothesis_error サブタイプへの構造的対処\nH_impl_specification (8) と H_wrong_premise (6) が post_gate でも発生。**仮説化前の spec 逆引きチェック**を hypothesizer agent に組み込む（human feedback 2026-03-24 で提案済みの「逆引きチェックリスト」実装）。",
+  "tokens_in": 6,
+  "tokens_out": 1403,
+  "latency_ms": 27069,
+  "timestamp": "2026-04-17T01:51:07Z",
+  "run_number": 1,
+  "exit_code": 0
+}

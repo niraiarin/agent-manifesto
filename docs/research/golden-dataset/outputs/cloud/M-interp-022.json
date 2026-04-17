@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-022",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-022.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# システムメトリクス分析レポート (Run 107)\n\n## 1. 全体評価: **WARNING**\n\n形式検証は健全だが、**valueless_change streak=4 で halt 推奨**、テスト 9 件失敗、sorry 9 件残存、最新 evolve から 5 日経過。改善活動が空転傾向。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | コメント |\n|------|-----|------|---------|\n| **V1 Skill Quality** | non-triviality=trivial, pass=77% | ⚠️ 注意 | 直近 run の theorem/test delta=0、saturation status=ok だが non-triviality がゼロ。形式卒業済みだが直近の構造寄与なし |\n| **V2 Context Efficiency** | recent_avg=46, cumulative=40 | ⚠️ 注意 | divergence=15%、recent が cumulative を上回る。trend=stable だが微増傾向 |\n| **V3 Output Quality** | test_pass=100%, hypothesis_error=42 | ⚠️ 注意 | テスト通過率は良好だが H_wrong_premise=6, H_impl_specification=8 が post_gate でも残存 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | ✅ 良好 | 安定 |\n| **V5 Proposal Accuracy** | 96% (162/168) | ✅ 良好 | grep_crosscheck 一致、schema_drift なし |\n| **V6 Knowledge Structure** | 12 entries, orphan=0 | ✅ 良好 | last_update=0d、整合性維持 |\n| **V7 Task Design** | 188 completed, teamwork=suppressed | ⚠️ 注意 | single_agent suppressed 状態継続 |\n\n**追加懸念**:\n- `tests.failed = 9`、`lean.sorry = 9`（sorry_classification は 0 と矛盾、計測不整合の可能性）\n- `valueless_change.current_streak = 4`、`halt_recommended = true`\n- `unresolved judge rejections = 55/69`（80%未解決）\n\n---\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: valueless_change streak の打破 / evolve 一時停止判断\n- `halt_recommended=true`、4 連続で価値なき変更。次回 evolve 起動前に **観察フェーズの再設計** が必要\n- Observer が trivial（theorem/test delta=0）な改善ばかり提案している。**スコープを substance（meta 比率を下げる）へ強制シフト** すべき\n- 人間フィードバック（2026-03-24）の半順序公理・トレーサビリティ機構の実装が未着手の可能性 → これを次回 evolve の必須課題に固定\n\n### 🟡 P2: テスト失敗 9 件と sorry 9 件の解消\n- `tests.failed = 9` だが `failed_test_details = []`（詳細欠落＝可観測性 D3 違反）\n- `lean.sorry = 9` vs `sorry_classification.total = 0` の **計測不整合** を解消\n- まず failed_test_details の充填と sorry の分類が先決\n\n### 🟡 P3: unresolved judge rejection 55 件の整理\n- hypothesis_error 36 件が滞留、特に H_impl_specification（8）/H_wrong_premise（6）\n- Hypothesizer プロンプトに失敗パターン辞書を組み込み、再発防止\n- 同時に解決済み 14 件を退役処理して memory のノイズを減らす",
+  "tokens_in": 6,
+  "tokens_out": 1237,
+  "latency_ms": 26229,
+  "timestamp": "2026-04-17T01:50:41Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-020",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-020.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — 基盤指標は堅調（V4:99%, V5:96%, test pass 100%）だが、`valueless_change.halt_recommended=true`（連続4回の無価値変更）と tests.failed=2, lean.sorry=3 が警告を示す。\n\n## 2. V1-V7 指標解釈\n\n| 指標 | 値 | 評価 | 所見 |\n|---|---|---|---|\n| **V1 スキル品質** | non_triviality=0 (trivial) | ⚠️ 注意 | 直近 run で theorem/test 増加なし。saturation 兆候 |\n| **V2 文脈効率** | recent_avg=46 / cumulative=40 | ⚠️ 微悪化 | divergence 15%、recent が cumulative を上回る |\n| **V3 出力品質** | test_pass=100%, hypothesis_error=42 (unresolved 36) | ⚠️ 注意 | 表層テストは通るが、hypothesis_error 累積が支配的失敗要因 |\n| **V4 ゲート通過率** | 99% | ✅ 良好 | 安定 |\n| **V5 提案精度** | 96% | ✅ 良好 | schema_drift=false |\n| **V6 知識構造** | 12 entries, orphan=0 | ✅ 良好 | 構造整合 |\n| **V7 タスク設計** | completed=188, teamwork=0% (suppressed) | ℹ️ 情報 | 単一エージェント運用で抑制中 |\n\n**その他の警告信号:**\n- `lean.sorry=3` だが `sorry_classification.total=0` ← **スキーマ乖離**（分類漏れ）\n- `tests.failed=2` かつ `failed_test_details=[]` ← **詳細欠落**\n- `valueless_change.current_streak=4 / halt_recommended=true` ← **停止推奨**\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: 無価値変更連鎖の停止と原因特定\n`halt_recommended=true` を尊重し、次回 /evolve を**一時停止**。直近 4 run の Observer findings が実体変更に結実しなかった原因を、hypothesis_error 42件（unresolved 36）と照合して特定する。D4（フェーズ順序）違反の疑い。\n\n### 🟠 P2: テスト失敗とsorry分類乖離の解消\n- `tests.failed=2` の詳細が空 → `observe.sh` の failed_test_details 出力ロジックを修正\n- `lean.sorry=3` vs `sorry_classification.total=0` → 分類プロセスが 3 件を捕捉できていない。L1（安全境界）の観測穴\n- **これらは観測系のバグなので P2/P4 優先**\n\n### 🟡 P3: hypothesis_error の型別対策\nPost-gate の hypothesis_error subtype: `H_wrong_premise=6`, `H_impl_specification=8`。Hypothesizer の前提検証ステップを強化し、実装仕様と Lean 仕様の差異を事前照合する仕組みを導入（human feedback 2026-03-24 の半順序公理 #290 と整合）。",
+  "tokens_in": 6,
+  "tokens_out": 1437,
+  "latency_ms": 27989,
+  "timestamp": "2026-04-17T01:49:39Z",
+  "run_number": 1,
+  "exit_code": 0
+}

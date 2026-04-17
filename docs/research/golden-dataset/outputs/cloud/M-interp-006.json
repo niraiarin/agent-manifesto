@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-006",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-006.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# メトリクス分析レポート (Run 107)\n\n## 1. 全体評価\n\n**WARNING** — 基盤は堅牢（Lean/テスト/Gate 健全）だが、**改善の実質性が停滞**している。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 判定 | 備考 |\n|---|---|---|---|\n| **V1 skill_quality** | trivial (score=0) | ⚠️ 注意 | 直近 run の theorem/test delta=0、連続 0-delta が 2 回。飽和兆候 |\n| **V2 context_efficiency** | 46 calls/session | ✓ 安定 | ただし recent vs cumulative で +15% 乖離、微増傾向 |\n| **V3 output_quality** | test 100%、hypothesis_error 42 | ⚠️ 注意 | テストは完璧だが **hypothesis_error が active 36 件**と突出 |\n| **V4 gate_pass_rate** | 99% | ✓ 良好 | 28,587/28,693 |\n| **V5 proposal_accuracy** | 96% (162/168) | ✓ 良好 | schema_drift なし |\n| **V6 knowledge_structure** | 12 entries、retired=0 | ⚠️ 注意 | 退役ゼロは P3 ライフサイクル未完遂の可能性 |\n| **V7 task_design** | teamwork 0% | — | single-agent 運用のため抑制中（問題なし） |\n\n**🚨 最重要シグナル**: `valueless_change.current_streak=4`、`halt_recommended=true` — 連続 4 回の evolve で実質的価値なし。\n\n---\n\n## 3. 改善提案（優先度順）\n\n### 優先度 1: valueless_change への対応（HALT 推奨）\n- **根拠**: 4 連続で価値ある変更なし。V1 non_triviality=trivial、test_consecutive_zero_delta=2 と整合\n- **アクション**: 次回 /evolve を自動実行せず、**観察フェーズで halt 要因を分析**。Observer に \"構造が局所最適に達したか、観察粒度が不足か\" を問う\n\n### 優先度 2: hypothesis_error の構造的削減\n- **根拠**: unresolved 55 件中 36 件が hypothesis_error（post_gate でも 19 件残存）。サブタイプ H_impl_specification=8、H_wrong_premise=6 が主犯\n- **アクション**: Hypothesizer の前提検証を強化。提案前に \"Lean 定義→実装の双方向対応チェック\" を必須化（feedback_self_sufficiency_check.md に整合）\n\n### 優先度 3: 次回 evolve の人間指示 3 件を実行\n- **根拠**: human_feedback_recent に 2026-03-24 付の 3 件の未消化指示（/evolve 自体のコスト最適化、D5 三層断裂、半順序公理の追加）\n- **アクション**: 優先度 1 の halt 後、これらを次回 evolve のスコープとして明示的に取り込む",
+  "tokens_in": 6,
+  "tokens_out": 1560,
+  "latency_ms": 28180,
+  "timestamp": "2026-04-17T01:42:56Z",
+  "run_number": 1,
+  "exit_code": 0
+}

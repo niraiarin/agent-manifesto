@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-004",
+  "task_type": "T-interp",
+  "input_file": "trace-input-004.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ**: 43/43 = **100%**（未カバー命題なし、弱カバレッジもなし）\n- **証拠付き (evidence)**: 19/43 = **44.2%**\n- **導出付き (derivation)**: 39/43 = **90.7%**\n- **総アーティファクト数**: 219\n\n| 次元 | 充足率 | 欠如している命題 |\n|---|---|---|\n| アーティファクト | 100% | なし |\n| 証拠 (evidence) | 44.2% | **24 件**（T8, P2, P3, P6, L1, L3–L6, D1–D14 の大半, V6）|\n| 導出 (derivation) | 90.7% | **T4, T5, T6, T7**（全て T₀ 制約、根ノード） |\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 最重要ギャップ: **P3 の evidence 欠如**\n\n- P3 は **T1, T2** から派生し、**L6, D4, D9, D13, D17** の 5 ノードを支える中核原理\n- `depended_by` が 5 ノード → D13 の `assumptionImpactRaw` で影響波及範囲が最大級\n- P3 の根拠が空のまま退役判定できず、下流の学習統治全体が揺らぐ\n\n### 第二のギャップ: **D1 の evidence 欠如（50 アーティファクト依存）**\n\n- D1（構造的強制）は 7 つの boundary (L1–L6) と P5 から派生\n- 最大の artifact 数（50）を抱えるが evidence 0 → 波及最大の設計定理に経験的根拠なし\n\n### 第三のギャップ: **T4–T7 の derivation 欠如**\n\n- T4（出力非決定性）, T5（フィードバック必要性）, T6（人間介入）, T7（資源有限）は根ノードだが derivation 皆無\n- 根ノードは axiom として性質上 derivation 不要だが、**Foundation 層での compositional property 証明**が T1, T2 のみ行われており、T4–T7 は未着手\n\n## 3. 改善提案（優先度順）\n\n### [優先度 高] P3 の evidence を追加する\n\n- `Axioms.lean` 相当の evidence ブロックを Principles.lean に追加\n- 根拠: T1, T2 の evidence（Lamport 1978）に倣い、**ライフサイクル統治の数学的基盤**（例: 閉ループ制御・状態機械）を引用\n- 影響: D13 経由で下流 5 ノードの根拠連鎖が確立\n\n### [優先度 中] T4–T7 の Foundation 層 compositional theorem を追加\n\n- T1, T2 と同様、`Foundation/ProcessModel.lean` 等に `*_composes` 補題を配置\n- T4（非決定性合成）, T5（観測可能性連鎖）, T7（資源消費合成）の 3 本から着手\n- 影響: 根ノードの形式的裏付けが揃い、`without_derivation` が 4 → 1 以下に\n\n### [優先度 低] D1 の evidence を structural enforcement 実例として蓄積\n\n- `.claude/metrics/` の既存データ（hook 発火ログ、違反ブロック実績）を集計\n- D1 の `derives_from` に P5 の nondeterminism を既に持つため、**経験的実証**で補強\n- 影響: 最大依存定理の自信度向上、evidence 率が 44.2% → 50% 超",
+  "tokens_in": 6,
+  "tokens_out": 1523,
+  "latency_ms": 29581,
+  "timestamp": "2026-04-17T01:52:43Z",
+  "run_number": 1,
+  "exit_code": 0
+}

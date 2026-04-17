@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-014",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-014.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## メトリクス分析レポート (Run 107)\n\n### 1. 全体評価: WARNING\n\nV1/V3 は formally graduated しているが、複数の警告サインが同時に発火している。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | Graduated (formal) | OK | だが `non_triviality.score = 0`。Graduation 後の改善が止まっている可能性 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | trend: stable。divergence 15% は許容範囲内 |\n| **V3 Output Quality** | test_pass_rate=100%, formal | OK | ただし hallucination proxy で hypothesis_error_active=36 が最大要因 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | ほぼ問題なし |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | schema_drift=false。健全 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | **退役0件**。陳腐化した知識が混入している可能性。stale_files が3件確認済み |\n| **V7 Task Design** | completed=188 | OK | teamwork suppressed は設定通り |\n\n**補足メトリクス:**\n- `sorry = 5`: CLAUDE.md の \"0 sorry\" と矛盾。Lean 健全性に影響\n- `tests: failed = 19`: テストスイートの 19 失敗は許容範囲外\n- **valueless_change streak = 7** (max=8): `/evolve halt_recommended=true`。直近7回の改善が構造のみを変化させている\n- **Verifier pass rate = 77%**: 360/465。23% が FAIL。hypothesis_error(36) が支配的\n\n---\n\n### 3. 優先度が高い改善アクション（3件）\n\n#### (1) `/evolve` の一時停止\n- **理由**: valueless_change streak=7 で `halt_recommended=true`。構造変更が改善を伴っていない\n- **アクション**: 次の human feedback（T6）で halt 承認か再開判断を仰ぐ\n- **影響**: コスト効率改善（mean_cost_per_improvement=$2.33 の維持）\n\n#### (2) Lean `sorry = 5` とテスト失敗 19 の解消\n- **理由**: CLAUDE.md は \"0 sorry, 0 failed\" を謳っているが現実と乖離。V1/V3 graduation の前提を揺るぐ\n- **アクション**: sorry の分類（placeholder/dangling/deferred/exploratory）を実行し、解消可能ものを優先対応。テスト失敗の原因特定\n- **影響**: V1/V3 graduation の正当性検証\n\n#### (3) Memory 退役プロセスの導入\n- **理由**: `retired_count=0`、stale_files が3件（V7Metrics.lean, Ontology.lean, design-development-foundation.md）。V6 knowledge structure の信頼性が低下\n- **アクション**: stale ファイルの検証→不要なら退役処理。MEMORY.md のポインタ更新\n- **影響**: V6 数値の正当性回復、誤情報に基づく判断の防止",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 112489,
+  "timestamp": "2026-04-17T02:27:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-005",
+  "task_type": "T-interp",
+  "input_file": "trace-input-005.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 100% (43/43 命題)\n- **未カバー命題**: なし\n- **弱カバレッジ命題**: なし\n- **総アーティファクト**: 219\n\n**補助指標の欠損**:\n- **Evidence 欠損** (24/43, 55.8%): T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14 の大半, V6\n- **Derivation 欠損** (4/43, 9.3%): T4, T5, T6, T7 （ただし T1–T8 は公理のため形式導出不要）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n最重要ギャップは **P2, P3, P6 の Evidence 欠損**。これらは強度 3 の Principle であり、下流への依存が広い：\n\n- **P3 (学習の統治)**: L6, D4, D9, D13, D17 が依存。Evidence が欠けると、T1/T2 由来の仮定が失効した際の影響範囲を `d13_assumption_impact_monotone` で評価できない。下流 5 命題が根拠なしで浮く。\n- **P2 (検証の独立性)**: D2, D17 が依存。E1 から `d2_from_e1` で導出済みだが、実運用の経験的裏付けがなく、E1 の反証に脆弱。\n- **P6 (タスク制約充足)**: D5, D12, D14, D15 が依存。T3/T7/T8 すべてに接続する中核で、Evidence 欠損は設計定理群の基盤を弱くする。\n\n**波及効果**: D13 の `assumptionImpactRaw` 単調性により、上流 Principle の仮定破綻は下流の Design Theorem 群（D1–D14）全体に伝播する。現状は構造的に繋がっているが、経験的裏付けが希薄。\n\n## 3. 改善提案（優先度順）\n\n1. **P3 への Evidence 追加**（高）: `.claude/metrics/evolve-history.jsonl` と `deferred-status.json` から「観察→仮説化→検証」ライフサイクルの実績を経験的命題として `Principles.lean` に記録。影響最大（下流 5 命題）。\n2. **P2 への Evidence 追加**（中）: `p2-verified.jsonl` から「独立検証により欠陥検出した事例」を抽出し、`verification_requires_independence` の経験的根拠として登録。E1 依存の下流保護。\n3. **D1–D14 の Evidence 段階的補完**（中）: 13/14 の Design Theorem で Evidence 欠損。`/ground-axiom` スキルを順次適用し、下流葉（D4, D6, D7, D10, D11, D14）から着手して波及リスクの小さいものから埋める。",
+  "tokens_in": 6,
+  "tokens_out": 980,
+  "latency_ms": 21479,
+  "timestamp": "2026-04-17T01:53:13Z",
+  "run_number": 1,
+  "exit_code": 0
+}

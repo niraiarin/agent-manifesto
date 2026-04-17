@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-005",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-005.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "## 全体評価\n\n**WARNING** — Lean/テスト基盤は堅牢（0 sorry, 760 tests pass）だが、直近 4 回連続で無価値変更が検出され `halt_recommended: true`。改善ループの生産性が低下している。\n\n## V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 備考 |\n|------|-----|------|------|\n| **V1 スキル品質** | pass rate 77%, non_triviality=**trivial** | ⚠️ 注意 | 直近ランで theorem/test delta=0、飽和兆候 |\n| **V2 context 効率** | recent 46 / cumulative 40 (+15%) | ⚠️ 注意 | 乖離が閾値近傍。セッションあたりコスト増加傾向 |\n| **V3 出力品質** | test pass 100%, 未解決 hypothesis_error 36 | △ 条件付 | 形式品質は高いが hypothesis_error が累積 |\n| **V4 Gate 通過** | 99% (28587/28693) | ✅ 良好 | 安定 |\n| **V5 提案精度** | 96% (162/168) | ✅ 良好 | crosscheck 整合 |\n| **V6 知識構造** | 12 entries, orphan=0, 直近更新 0d | ✅ 良好 | 退役候補なし |\n| **V7 タスク設計** | 188 completed, teamwork=suppressed | △ 単一エージェント設計 | teamwork 測定抑制中 |\n\n## 改善提案（優先度順）\n\n1. **【最優先】無価値変更ストリークの根絶** — `valueless_change.current_streak=4` かつ halt_recommended=true。直近 4 run で実質的構造改善が生まれていない。次 evolve は**停止し人間レビュー**、または Observer 入力を「substance 寄り」に明示偏向させる（`scope_balance: meta_runs 8 / substance_runs 7` で meta 過多傾向）。\n\n2. **hypothesis_error の根本原因分析** — 未解決 55 件中 36 件が hypothesis_error（うち `H_impl_specification` 8, `H_wrong_premise` 6）。Hypothesizer の前提検証を強化し、Lean 仕様 → 実装の逆引きチェック（#290 半順序公理の活用）を Hypothesizer AGENT.md に反映。\n\n3. **V2 コンテキスト効率の改善トリガー発動** — recent/cumulative 乖離 15% で閾値圏内だがトレンド注視。`.claude/metrics/` に session cost breakdown を追加し、どのフェーズでトークンが膨張しているか可視化（human_feedback 2026-03-24 の「コスト予算導入」提案と整合）。",
+  "tokens_in": 6,
+  "tokens_out": 1444,
+  "latency_ms": 27524,
+  "timestamp": "2026-04-17T01:42:29Z",
+  "run_number": 1,
+  "exit_code": 0
+}

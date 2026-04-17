@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-025",
+  "task_type": "T-interp",
+  "input_file": "trace-input-025.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ**: 43/43 命題 = **100%**（未カバーなし、weak なし）\n- **ルート命題**: 10 件（T1–T8, E2, L5）\n- **葉命題**: 13 件（D4, D6, D7, D10, D11, D14, V1–V7）\n- **総アーティファクト数**: 591\n\n構造的には完全に接続されているが、**質的なギャップ**が存在する。\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### ギャップ A: T4 が evidence も derivation も持たない（最重要）\n- T4（解釈の非決定性）は **T0 制約**だが、`evidence: []` かつ `derivations: []`\n- T4 の影響波及先: **E1, P2, P5, L2, D15** — 検証の独立性、構造解釈の頑健性を支える\n- D13 の観点: T4 の基礎が曖昧なまま下流の 5 命題が依存している → T4 が失効した場合の影響範囲が追跡不能\n\n### ギャップ B: T4–T7 が derivation を欠く（`without_derivation`: 4 件）\n- すべて T0 ルート制約のため derivation 不要 — ただし T4 のみ evidence も欠くのが異常\n- T5, T6, T7 は evidence 済み（Foundation/*.lean に数学的根拠）\n\n### ギャップ C: 24 命題が evidence を欠く\n- 内訳: 原理（P2, P3, P6）、境界（L1, L3–L6）、設計定理（D1–D14）、V6\n- これらは derivation を持つため構造的には正当。ただし D13 の「根拠ドキュメント」としては薄い\n- 特に **L5（プラットフォーム境界）** は ルートかつ evidence なし — プロバイダ固有の制約として明記が必要\n\n## 3. 改善提案（優先度順）\n\n### 提案 1【高】 T4 の evidence を補完\n- `Axioms.lean` の T4 に根拠（例: LLM の stochastic sampling、decoder temperature）と refutation 条件を追記\n- 影響範囲: E1, P2, P5, L2, D15 の依存鎖全体の信頼性向上\n- 分類: **compatible change**\n\n### 提案 2【中】 L5 に evidence を追加\n- プラットフォーム選択が T6（人間権威）の上流であることを明記\n- `Ontology.lean` または `Models/Instances/ClaudeCode/` に根拠文書化\n- 分類: **conservative extension**\n\n### 提案 3【低】 D1–D14 の evidence 方針を明確化\n- 設計定理は derivation で十分かを `p3-axiom-evidence-check.sh` のポリシーとして規定\n- 現状の「24/43 が evidence なし」の正常性を明示 → 将来の誤検知を予防\n- 分類: **conservative extension**",
+  "tokens_in": 6,
+  "tokens_out": 1757,
+  "latency_ms": 32506,
+  "timestamp": "2026-04-17T02:02:37Z",
+  "run_number": 1,
+  "exit_code": 0
+}

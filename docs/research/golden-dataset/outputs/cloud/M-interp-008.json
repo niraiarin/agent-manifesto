@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-008",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-008.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\n中核指標（V4/V5/テスト）は健全だが、**`valueless_change.halt_recommended=true`（連続4回）** と **`sorry=1` 出現**、V1 non_triviality=trivial が警告信号。構造は安定しているが、直近の evolve 実行が価値を生んでいない。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 解釈 |\n|---|---|---|---|\n| **V1** スキル品質 | non_triviality=0 (trivial), verifier_pass=77% | ⚠️ 注意 | 直近 run で定理/テスト増分ゼロ。飽和の兆候 |\n| **V2** context効率 | recent_avg=46, stable | ✅ 良好 | 発散15%以内、トレンド安定 |\n| **V3** 出力品質 | test_pass=100%, hypothesis_error=42/69 | ⚠️ 注意 | テストは通るが、仮説誤りが失敗の大半（61%） |\n| **V4** ゲート通過率 | 99% | ✅ 良好 | 極めて健全 |\n| **V5** 提案承認率 | 96% (162/168) | ✅ 良好 | schema drift なし |\n| **V6** 知識構造 | 12 entries, orphan=0, invalidated=0 | ✅ 良好 | index 整合、退役候補なし |\n| **V7** タスク設計 | teamwork=0% (suppressed) | ⚠️ 注意 | single agent 運用で teamwork 評価が停止 |\n\n**追加懸念**:\n- `sorry=1`（未分類） — 形式化の後退\n- `stale_files`: research/evolve SKILL.md が陳腐化候補\n- `valueless_change.current_streak=4` — D9 自己適用の危機\n\n## 3. 改善提案（優先度順）\n\n1. **【最優先】valueless streak=4 の根本原因調査**\n   Run 104-107 の observer_findings/hypothesizer_proposals を分析し、なぜ改善が価値を生まないかを特定。halt_recommended=true は evolve 一時停止の構造的シグナル。Observer の観察粒度か、Hypothesizer の提案の質に偏りがある可能性。\n\n2. **hypothesis_error 42件の subtype 分析と Hypothesizer プロンプト改訂**\n   `H_impl_specification=8` と `H_wrong_premise=6` が post_gate で再発。Hypothesizer の AGENT.md に「前提検証チェックリスト」を追加し、仕様化誤りを構造的に防ぐ。\n\n3. **sorry=1 の分類と解消、stale_files の更新**\n   `sorry_classification` は total=0 だが Lean ビルドでは sorry=1 検出 — 分類漏れ。該当ファイルを特定し placeholder/deferred に分類。併せて research/evolve SKILL.md を現行 AGENT 実装と同期。",
+  "tokens_in": 6,
+  "tokens_out": 1429,
+  "latency_ms": 26103,
+  "timestamp": "2026-04-17T01:43:48Z",
+  "run_number": 1,
+  "exit_code": 0
+}

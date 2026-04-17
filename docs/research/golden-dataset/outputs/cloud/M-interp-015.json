@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-015",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-015.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\nLean ビルド自体は健全（定理 462、V4 99%、V5 96%）だが、**3 件の無分類 sorry**、**29 件のテスト失敗**、**valueless_change 連続 4 回で halt 推奨**が並走しており、改善ループが空回りしている兆候。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 解釈 |\n|---|---|---|---|\n| **V1** skill quality | non-triviality=trivial (0), pass_rate 77% | ⚠️ 注意 | 直近 run で定理/テスト増分 0。飽和傾向 |\n| **V2** context efficiency | recent 46 / cumulative 40 | ✅ 良好 | stable、divergence 15% 許容域 |\n| **V3** output quality | test_pass 100%, hypothesis_error 42（post_gate 19） | ⚠️ 注意 | hypothesis_error が支配的。`H_impl_specification`(8) と `H_wrong_premise`(6) が根 |\n| **V4** gate pass rate | 99% (28587/28693) | ✅ 良好 | 定着 |\n| **V5** proposal accuracy | 96% (162/168) | ✅ 良好 | crosscheck 一致、schema_drift なし |\n| **V6** knowledge structure | 12 entries, 0 stale, 0 orphan | ✅ 良好 | 整合済 |\n| **V7** task design | teamwork 0% (suppressed) | ➖ 不可評価 | single-agent 運用中のため測定抑制 |\n\n**構造系の警告**:\n- `lean.sorry = 3`（前コミットまで 0） — 回帰の疑い\n- `tests.failed = 29` — 失敗詳細が空配列で可視化されていない（観測欠損）\n- `valueless_change.current_streak = 4, halt_recommended = true` — D8 均衡に反し改善が蓄積していない\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: 改善ループを一旦停止し、退行の根因を調査\n- `evolve_history.valueless_change.halt_recommended = true` に従い /evolve を停止。\n- 新規 `sorry` 3 件と 29 件のテスト失敗を最優先で分類・修復。`failed_test_details` が空になっている観測パスを修正して可視化を回復（P4）。\n\n### 🟡 P2: hypothesis_error の構造的削減\n- post_gate で `H_impl_specification`(8) と `H_wrong_premise`(6) が過半。Hypothesizer の前提検証を強化（仮説生成前に既存 Lean 仕様と突き合わせる事前チェックを追加）。\n- V1 non-triviality が `trivial` 連続である点と同根の可能性 — 仮説が実装改変に至らない小粒度ばかり。\n\n### 🟢 P3: 人間フィードバック 2026-03-24 の 3 本を着地させる\n- 「半順序公理の追加」「Lean→テスト→実装の網羅性逆引きチェック」「ccusage 導入」が未処理のまま。これらが未実施なことが P1/P2 の背景を作っている可能性が高い。",
+  "tokens_in": 6,
+  "tokens_out": 1558,
+  "latency_ms": 28564,
+  "timestamp": "2026-04-17T01:47:16Z",
+  "run_number": 1,
+  "exit_code": 0
+}

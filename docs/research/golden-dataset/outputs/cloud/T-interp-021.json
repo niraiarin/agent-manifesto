@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-021",
+  "task_type": "T-interp",
+  "input_file": "trace-input-021.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 43/43 = **100%**（uncovered: 0、weak: 0）\n- **アーティファクト総数**: 384\n- **未カバー命題**: なし\n- **エビデンス欠落**: 24命題（T8, P2, P3, P6, L1, L3–L6, D1–D14, V6）\n- **導出欠落**: 4命題（T4, T5, T6, T7）\n\nすべての命題に少なくとも1つのアーティファクトが紐づいており、構造的カバレッジは完成している。\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n| ギャップ | 対象 | D13 影響 |\n|---|---|---|\n| **A. エビデンス欠落（principle層）** | P2, P3, P6 | 高強度 principle（strength=3）が経験的裏付けなしで depended_by の 10+ 命題を支える。P3 が揺らぐと L6/D4/D9/D13/D17 へ伝播 |\n| **B. 設計定理のエビデンス欠落** | D1–D14（ほぼ全滅） | 導出のみで observable evidence なし → 反証条件が未定義。D1 が崩れると L1–L6 全体に逆伝播 |\n| **C. 制約命題の導出欠落** | T4, T5, T6, T7 | 根命題（strength=5）だが、自身の導出記録なし。T₀ 環境公理として自然だが、`has_derivation: false` は検索性の低下を招く |\n| **D. V6 のエビデンス欠落** | V6（知識構造の質） | 観測変数なのに経験的裏付けがない。他 V1–V5/V7 は evidence あり |\n\n最重要ギャップは **B**（設計定理群のエビデンス欠落）。D13 の `assumption_subsumes_proposition` により、仮定崩壊時の影響範囲が広いにもかかわらず反証条件が未記録。\n\n## 3. 改善提案（優先度順）\n\n### 優先度1: P2/P3/P6 にエビデンスを追加\n- principle 層の経験的命題（E1/E2 パターン）を `ObservableDesign.lean` に追加\n- 特に P3（depended_by 5命題）は学習統治の中核。反証条件を明示化する\n- **互換性**: conservative extension\n\n### 優先度2: D1–D14 のエビデンス記録方針を確立\n- 全 14 設計定理に統一的に適用可能な evidence テンプレを整備（例: Axiom Card の拡張）\n- 当面は `strength=1` の高依存ノード（D1, D3, D5, D9, D13）から着手\n- **互換性**: compatible change（記録形式の追加）\n\n### 優先度3: V6 のエビデンス整備\n- 知識構造の質（traceability coverage, sorry 数等）を裏付ける経験則を `ObservableDesign.lean` に追加\n- `trace-coverage.sh` の出力を evidence source として形式化\n- **互換性**: conservative extension",
+  "tokens_in": 6,
+  "tokens_out": 1306,
+  "latency_ms": 25605,
+  "timestamp": "2026-04-17T02:00:45Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-005",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-005.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## V1-V7 メトリクス分析レポート (Run #107)\n\n### 1. 全体評価: WARNING\n\nLeanビルドは健全（axioms=55, theorems=475, sorry=0）だが、**直近4回のevolve runで定理・テスト両方のデルタがゼロ**（saturation status: warning）。V1非自明性スコアが0（trivialラベル）を4連発しており、改善の質が低下している兆候。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | Q1: theorem+6.3/test+8.9 (avg 10r) | OK | ただし直近runはdelta=0。test_delta_outlier=true（#104で+224の異常値） |\n| | Q2: verifier_pass_rate=77% (360/465) | **注意** | FAIL 105件が未解決。rejected_avg=0.5は低い |\n| | Q3: evolve_success_rate=98%, lean_health=1 | OK | 安定稼働中 |\n| | non_triviality: score=0, trivial | **問題** | 直近4連発で改善の質が失われている |\n| | saturation: consecutive_zero_delta=2→4 | **注意** | warning閾値に到達 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | trend=stable。divergence=15%は許容範囲 |\n| **V3 Output Quality** | test_pass_rate=100%, formal classification | OK | hallucination: hypothesis_error_active=36が最多。quality_gate導入後でも19件がpost_gateを通過 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | blocked_excluded=10620は除外済み |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | schema_drift=false |\n| **V6 Knowledge Structure** | entries=12, orphan=0, retired=0 | **注意** | retired_count=0。陳腐化した知識が退役していない |\n| **V7 Task Design** | completed=188, teamwork=0% | OK | single_agentモードで抑制中 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n**(1) Evolveの「非自明性」回復 — breaking change**\n直近4 runが定理・テスト両方delta=0のtrivial状態。saturation閾値到達によりhalt_recommended=true。Observerが「価値のない変更」を検出する仕組みを/evolveに組み込み、デルタゼロのrunを自動スキップするガードを実装すべき。\n\n**(2) Hypothesis Error (36件) の根本解消 — conservative extension**\nFAILループバックで最も多い失敗タイプ（hypothesis_error_active=36）。特に `H_impl_specification`(8), `H_wrong_premise`(6) が集中。品質ゲート（Run 57導入）でpost_gate通過が19件仍有り。仮説検証の前段階チェックを強化し、post_gate通過率を改善する。\n\n**(3) Memory Retirement の実装 — compatible change**\nretired_count=0。V6_knowledge_structureで陳腐化検知はしているが退役処理がない。MEMORY.mdのエントリが古くなっても参照され続ける状態。assumption_trackerのinvalidated=0も同様。知識ライフサイクルの「退役」フェーズを実装する。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 670816,
+  "timestamp": "2026-04-17T02:05:45Z",
+  "run_number": 1,
+  "exit_code": 0
+}

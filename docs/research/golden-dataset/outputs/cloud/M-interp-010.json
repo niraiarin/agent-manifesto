@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-010",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-010.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **DEGRADED**\n\n`valueless_change.halt_recommended=true`（価値無し変更が4連続）、`tests.failed=2`、`lean.sorry=6`、V1 non_triviality が `trivial` と複数の赤信号が重なっている。\n\n## 2. V1-V7 指標の解釈\n\n| 指標 | 値 | 判定 | 所見 |\n|---|---|---|---|\n| **V1** 品質 | non_triviality=trivial, score=0 | ⚠️ 注意 | 直近 run で theorem/test デルタ 0。saturation 兆候（zero_delta=2） |\n| **V2** 効率 | recent_avg=46 / cumulative=40 | ⚠️ 軽微注意 | 発散 15%、trend=stable だが直近やや増加 |\n| **V3** 出力 | test_pass_rate=100% / sorry=6 | ⚠️ 注意 | `lean.sorry=6` は 0 から後退。`tests.failed=2` と pass_rate=100% が不整合 |\n| **V4** ゲート | 99% | ✅ 良好 | passed=28587 / blocked=106 |\n| **V5** 提案精度 | 96% | ✅ 良好 | drift なし |\n| **V6** 知識 | 12 entries / retired=0 | ✅ 良好 | 陳腐化なし |\n| **V7** タスク | completed=188 / teamwork=0 | ⚪ 中立 | single_agent suppress 中 |\n\n**Evolve 健全性**: hypothesis_error 未解決 36 件が支配的（全体の 65%）。根本原因クラスターあり。\n\n## 3. 優先改善アクション（Top 3）\n\n### 🔴 P1: evolve ループの停止と再診断（halt_recommended 対応）\n- **根拠**: valueless_change 4連続、V1 trivial、test_delta=0\n- **アクション**: `/evolve` を止め、Observer が「meta_only_runs=1 / meta=8, substance=7」の偏りと failure_patterns 上位（`H_impl_specification=8`, `H_wrong_premise=6`）の根本原因を分析。human_feedback_recent の「半順序公理追加提案」を次回 run の主題にする\n\n### 🔴 P2: テスト失敗 2件 と sorry=6 の解消\n- **根拠**: L1 安全境界の回帰（`failed=2`, `sorry` 0→6）、V3 pass_rate=100% と矛盾し計測信頼性に影響\n- **アクション**: `failed_test_details` が空な原因を調査し、実 failure を特定。sorry 6件を sorry_classification で分類（現在 classified=0）\n\n### 🟡 P3: hypothesis_error クラスタの構造的対処\n- **根拠**: 未解決 55 件中 36 件 (65%) が hypothesis_error、post_gate でも 19 件継続\n- **アクション**: Hypothesizer の事前検証ステップを強化。`H_impl_specification`（実装を仕様と誤認）と `H_wrong_premise` の検出ルールを verifier に追加",
+  "tokens_in": 6,
+  "tokens_out": 1569,
+  "latency_ms": 27900,
+  "timestamp": "2026-04-17T01:44:50Z",
+  "run_number": 1,
+  "exit_code": 0
+}

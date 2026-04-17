@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-028",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-028.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nメトリクスを分析します。\n\n## 1. 全体評価: WARNING\n\n**理由**: 運用基盤は健全だが、`valueless_change` が streak=4 で `halt_recommended=true`。V1/V3 は formal graduation 済みで、改善の質が低下しているシグナル。\n\n---\n\n## 2. V1-V7 各指標解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | graduated (formal) | OK | theorem_delta_last_run=0, saturation検知済み。改善の質が低下中 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | WARNING | 直近が累積平均を15%上回る（divergence=15%）。トークン消費が増加傾向 |\n| **V3 Output Quality** | hallucination: H_error=42, loopback=19 | WARNING | hypothesis_error が最多(42)。品質ゲート導入後も post_gate で19件残存 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | 堅調。blocked=106 は適切に機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 高い承認率。schema_drift=false |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | 退役0件。陳腐化した知識が蓄積している可能性 |\n| **V7 Task Design** | completed=188, teamwork=0% | OK | single_agent 動作は意図的（suppressed） |\n\n---\n\n## 3. 改善提案（優先度順）\n\n### (1) valueless_change streak 4 の解除 — 最優先\n`valueless_change.halt_recommended=true`。theorem_delta/test_delta が last_run=0 で、改善が実質停止している。\n- **アクション**: evolve を一時停止し、Observer で「何が測定できていないか」を特定してから再開する\n- **互換性**: conservative extension（観察メトリクスの改善のみ）\n\n### (2) hypothesis_error 42件の根本原因解消 — V3 品質回復\nhypothesis_error が failure_patterns の7割を占める。特に `H_impl_specification`(8件)、`H_wrong_premise`(6件)。\n- **アクション**: Observer が FAIL エントリをクラスタリングし、共通の誤りパターンを特定。仮説化段階で事前検証チェックリストを追加\n- **互換性**: compatible change（Hypothesizer AGENT.md の拡張）\n\n### (3) memory retired=0 → 退役プロセス導入 — V6 健全性\n12エントリ全てがアクティブで退役ゼロ。陳腐化した知識がメモリを圧迫。\n- **アクション**: assumption_tracker の review_overdue=0 が「レビュー未実施」の可能性もある。定期レビューと退役フローを /evolve で設計\n- **互換性**: conservative extension（新規プロセス追加）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 56488,
+  "timestamp": "2026-04-17T02:45:58Z",
+  "run_number": 1,
+  "exit_code": 0
+}

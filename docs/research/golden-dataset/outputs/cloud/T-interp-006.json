@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-006",
+  "task_type": "T-interp",
+  "input_file": "trace-input-006.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 43/43 = **100%**（全命題が何らかのアーティファクトで被覆）\n- **未カバー命題**: なし（`uncovered: []`）\n- **弱カバー命題**: なし（`weak: []`）\n- **ルート命題** (10): T1-T8, E2, L5\n- **リーフ命題** (13): D4, D6, D7, D10, D11, D14, V1-V7\n\nただし「構造的カバレッジ」と「質的カバレッジ」は別問題。以下にギャップを分析する。\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### ギャップ A: Evidence 欠落（24命題 / 55.8%）\n\n`without_evidence` に **T8, P2, P3, P6, L1, L3-L6, D1-D14, V6** が含まれる。特に重大:\n\n| 命題 | 深刻度 | 影響範囲（D13 波及） |\n|------|--------|---------------------|\n| **P3** (学習の統治) | 🔴 高 | depended_by: L6, D4, D9, D13, D17 — 5命題へ波及 |\n| **P2** (検証独立性) | 🔴 高 | depended_by: D2, D17 — E1 依存の連鎖 |\n| **P6** (タスク制約充足) | 🟡 中 | depended_by: D5, D12, D14, D15 — 4命題へ波及 |\n| **L1** (安全境界) | 🔴 高 | depended_by: D1, V3 — L1 は T6/P1 から導出されるため evidence 欠落は derivation の質に依存 |\n\nP3 は `depended_by` 5件のハブ命題でありながら evidence も derivation (T0) も弱い。ここが倒れると D4/D9/D13/D17 の基盤が揺らぐ。\n\n### ギャップ B: Derivation 欠落（4命題）\n\n`without_derivation`: **T4, T5, T6, T7** — いずれも T₀ ルート制約なので正常（公理に導出不要）。問題なし。\n\n### ギャップ C: Implementation 欠落\n\n`has_implementation: false` の命題:\n- **T3** (コンテキスト有限性): テスト・Lean のみ。hook/script なし\n- **T4** (出力非決定性): 同上\n- **T7** (リソース有限性): テスト・Lean のみ\n- **L3** (リソース境界): 文書・Lean のみ\n- **D6, D11**: 文書・Lean のみ\n\nT3/T4/T7 は T₀ 環境制約なので「実装で強制」は不要だが、**L3 と D6/D11 は運用実装が薄い**。特に D11（enforcement_cost_inverse）は設計原則ありながら実装なしで、D1 に依存されている。\n\n## 3. 改善提案（優先度順）\n\n### 🥇 優先度 1: P3 の Evidence 補強\n\n**根拠**: P3 は depended_by 5件のハブ命題で、P3 のエビデンス欠落は D4/D9/D13/D17 全体の信頼性を損なう。\n**アクション**: P3 に axiom evidence または Foundation 定理を追加。`.claude/hooks/p3-axiom-evidence-check.sh` が既に存在するので、このフック自身が P3 の evidence 条件を満たすことを自己言及的に示す。\n**互換性**: conservative extension\n\n### 🥈 優先度 2: L1/P2 の Evidence 文脈化\n\n**根拠**: L1 (depended_by: D1, V3) と P2 (depended_by: D2, D17) は安全・検証の中核で、構造カバレッジは厚いが evidence レコード上は空。\n**アクション**: 既存の `hook:l1-safety-check`, `hook:p2-verify-on-commit` の「何を根拠に成立するか」を Axiom Card 形式で lean-formalization 側に記録し、trace json の evidence に反映させる（manifest-trace 抽出ロジックの拡張）。\n**互換性**: compatible change（trace ツール側の変更）\n\n### 🥉 優先度 3: D11 の実装ギャップ補填\n\n**根拠**: D11（enforcement cost inverse correlation）は D1 に依存されているが、実装レイヤで `contextCost` を観測する仕組みが欠落。Lean 上の定理のみ。\n**アクション**: `.claude/hooks/` 内の enforcement タイプ（structural/procedural/normative）を集計して V2（context efficiency）と相関させる script を `.claude/skills/metrics/` に追加。\n**互換性**: conservative extension\n\n---\n\n**総評**: 構造カバレッジは完全（100%）、derivation カバレッジも妥当（T₀ ルート以外は全て導出あり）。最大の実質ギャップは **P3 のエビデンス薄**。D13 波及性の観点で P3 の強化が最大 ROI。",
+  "tokens_in": 6,
+  "tokens_out": 1705,
+  "latency_ms": 32526,
+  "timestamp": "2026-04-17T01:53:34Z",
+  "run_number": 1,
+  "exit_code": 0
+}

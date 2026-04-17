@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-011",
+  "task_type": "T-interp",
+  "input_file": "trace-input-011.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# マニフェスト・トレーサビリティ分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: **100%** (43/43 命題)\n- **未カバー命題**: なし（`uncovered: []`）\n- **弱カバレッジ命題**: なし（`weak: []`）\n- **総成果物数**: 699 件\n- 全 43 命題に対し、少なくとも 1 つのテスト・実装・文書・形式化が紐付いている\n\n## 2. ギャップ分析（D13 影響波及観点）\n\nカバレッジは完全だが、**根拠の欠落**に構造的弱点が存在:\n\n### ギャップ A: Evidence 欠落（24/43 = 55.8%）\n| 層 | 命題 | 影響度 |\n|---|---|---|\n| 原則 (strength=3) | **P2, P3, P6** | 高 — 下流 D2/D9/D13/D17 等への波及経路で根拠が断絶 |\n| 境界 (strength=2) | L1, L3, L4, L5, L6 | 中 — V1-V7 観測量への接続が規範のみ |\n| 設計定理 (strength=1) | D1-D14（D13 自身を含む） | 低〜中 — `test_result` のみで正当化が希薄 |\n\n→ **D13 影響波及の観点**: 上流公理（T1-T8）の変更時、Evidence 経路を介した下流への影響評価ができない。特に P2/P3/P6 は V1-V7 への合流点であり、根拠断絶が測定の意味論を弱める。\n\n### ギャップ B: Derivation 欠落（4/43）\n- **T4, T5, T6, T7**: T₀ 公理（環境制約）であり導出不可は自然だが、T1/T2/T3/T8 は導出を持つ一方 T4-T7 は持たない非対称性が存在。Foundation 由来の間接的根拠は各 axiom の `basis` に記載済みだが、形式的な `derives_from` フィールドが空。\n\n### ギャップ C: P3 下流の集中\n- P3（学習の統治、artifacts=42）は最大の成果物集積地だが Evidence 欠落。自己適用（D9）を含むため、根拠欠落は自己改善ループの正当性を弱める。\n\n## 3. 改善提案（優先度順）\n\n### 優先度 1: P2/P3/P6 への Evidence 追加【高影響】\n- **根拠**: strength=3 の原則で 3 命題が Evidence 欠落。下流の D2/D9/D13/D17 および V1-V7 測定の意味論を支える結節点。\n- **アクション**: 各原則に対し、`manifesto.md` の該当節を `source` として axiom card を追加し、Foundation/*.lean の関連定理を `basis` に明示。\n- **波及効果（D13）**: 42 artifacts を持つ P3 を起点とする変更影響の追跡可能性が向上。\n\n### 優先度 2: T4-T7 の Derivation 非対称性解消【中影響】\n- **根拠**: T1/T2/T3/T8 は `derivations` を持つが T4-T7 は持たない。導出不可理由が axiom body にはあるが、トレースフィールドに反映されていない。\n- **アクション**: T4-T7 の Foundation 由来根拠（Probability, ControlTheory, RiskTheory 等）を `derivations` フィールドに明示的追加。または「導出不可」を構造化メタデータとして記録。\n\n### 優先度 3: D-層 Evidence の `test_result` 以外への拡充【低〜中影響】\n- **根拠**: D1-D14 の Evidence は `auto-generated-*.sh` のテスト実行結果のみ。設計定理の正当化としては弱い。\n- **アクション**: `design-development-foundation.md` の該当節を `source` として Evidence エントリを追加。特に D13（影響波及）自体に Evidence を補強することで、他 D 層への拡張の雛形とする。",
+  "tokens_in": 6,
+  "tokens_out": 1916,
+  "latency_ms": 36144,
+  "timestamp": "2026-04-17T01:55:52Z",
+  "run_number": 1,
+  "exit_code": 0
+}

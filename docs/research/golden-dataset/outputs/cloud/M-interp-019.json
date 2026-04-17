@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-019",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-019.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート (Run 107)\n\n## 1. 全体評価: **WARNING**\n\n改善サイクルに複数の停滞・退行シグナルあり。即時的な破局はないが、4 回連続 valueless_change + テスト退行 + 定理数減少が同時発生。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 状態 | 解釈 |\n|---|---|---|---|\n| **V1 スキル品質** | non_triviality=trivial, verifier_pass=77% | 注意 | 直近 run で theorem/test delta=0。saturation 接近（2連続ゼロ）。verifier 77% は改善余地あり |\n| **V2 コンテキスト効率** | recent=46, cumulative=36, +15% | 注意 | 発散 15% で stable 判定ながら、最近のセッションがやや重い |\n| **V3 出力品質** | test_pass=100%, rejected=69 (未解決55) | 注意 | hypothesis_error が 36件 active。post_gate でも 19件残存 |\n| **V4 ゲート通過率** | 99% (28587/28693) | **良好** | 安定運用 |\n| **V5 提案精度** | 96% (162/168) | **良好** | schema_drift=false |\n| **V6 知識構造** | 12 entries, 退役=0 | 注意 | 退役ゼロは P3 退役ライフサイクル未運用の兆候 |\n| **V7 タスク設計** | teamwork=0% (suppressed) | 情報 | single agent モード。現状は仕様通り |\n\n### 退行・警告シグナル（CLAUDE.md 記載値との差分）\n- axioms: 53 → **55** (増加)\n- theorems: 462 → **456** (-6, 退行)\n- sorry: 0 → **3** (退行)\n- tests: 1 failed（CLAUDE.md と矛盾）\n- **valueless_change streak=4 → halt_recommended=true**\n\n## 3. 改善提案（優先度順）\n\n### 🔴 優先度 1: halt シグナルへの即応\n`valueless_change current_streak=4 / halt_recommended=true` かつ scope_balance が meta 8/10 に偏重。  \n**アクション**: 次回 /evolve を起動する前に、human review で「何を改善したいのか」を再定義。meta 改善から substance 改善へ軸足を移す。\n\n### 🟡 優先度 2: 退行の根本原因特定\n- 定理数 462→456 (-6)、sorry 0→3、failing tests 1 の 3 つが同時発生。  \n**アクション**: `git log --since=2026-04-01 -- lean-formalization/Manifest/` で該当コミットを特定し、退行か意図的かを分類。失敗テストを最優先で修復。\n\n### 🟢 優先度 3: hypothesis_error の系統的削減\n未解決 55件中 36件が hypothesis_error（うち post_gate 後 19件）。H_impl_specification=8, H_wrong_premise=6 が目立つ。  \n**アクション**: Hypothesizer AGENT.md に前提検証チェックリストを追加し、Verifier FAIL のフィードバックループを強化。",
+  "tokens_in": 6,
+  "tokens_out": 1718,
+  "latency_ms": 30856,
+  "timestamp": "2026-04-17T01:49:08Z",
+  "run_number": 1,
+  "exit_code": 0
+}

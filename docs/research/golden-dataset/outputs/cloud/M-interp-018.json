@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-018",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-018.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — 構造指標は健全だが、3 つの停止サインが点灯している（valueless_change halt 推奨、テスト 1 件失敗、直近 evolve が trivial）。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | コメント |\n|---|---|---|---|\n| **V1 skill_quality** | non_triviality=**0 (trivial)**, 成功率 98% | ⚠️ 注意 | 直近 run で theorem/test delta=0。飽和傾向 2 連続 |\n| **V2 context_efficiency** | recent_avg=46, cumulative=40, divergence=15% | ⚠️ 軽微 | recent が cumulative を 15% 上回る（劣化方向）|\n| **V3 output_quality** | test_pass_rate=100% だが **unresolved=55** | ⚠️ 注意 | hypothesis_error 36 件が未解決、H_impl_specification 8 件が post_gate |\n| **V4 gate_pass_rate** | 99% (28,587 / 28,693) | ✅ 良好 | gate 機能は有効 |\n| **V5 proposal_accuracy** | 96% (162/168) | ✅ 良好 | schema_drift=false |\n| **V6 knowledge_structure** | 12 entries, 最終更新 0 日前, 孤児 0 | ✅ 良好 | retirement 候補なし |\n| **V7 task_design** | completed=188, teamwork=0% | ℹ️ 仕様通り | single_agent モードで抑制中 |\n\n### その他の構造的シグナル\n- **Lean**: 55 axioms / 454 theorems / **sorry=4**（未分類 0、`sorry_classification.total=0` と矛盾）／warnings=5\n- **tests**: 770 pass / **1 fail**（L1 観点で要確認、ただし `failed_test_details` は空）\n- **valueless_change**: `current_streak=4`, **halt_recommended=true** ← 最重要\n- **stale_files**: 3 件（design-development-foundation, evolve/SKILL.md, Ontology.lean）\n- **scope_balance**: meta=8 / substance=7（均衡）\n\n## 3. 改善提案（優先度順）\n\n### 🔴 優先度 1: valueless_change halt に従い /evolve を一時停止し原因究明\n`halt_recommended=true` かつ V1 non_triviality=trivial。直近 4 run が実質無価値。次回 evolve を起動する前に、Observer が「なぜ改善が定常化したか」を分析すべき。human_feedback の最新項目（2026-03-24 半順序公理提案）も未反映の可能性あり。\n\n### 🟡 優先度 2: 失敗テスト 1 件と sorry=4 の突合\n`tests.failed=1` だが `failed_test_details=[]`、`sorry.total=4` だが `sorry_classification.total=0`。**可観測性の自己矛盾**（P4 違反）。observe.sh の収集ロジックを検証し、実体を特定する必要あり。\n\n### 🟡 優先度 3: V3 hypothesis_error の分類ドリブン対策\nunresolved 55 件のうち `H_impl_specification=8` が post_gate（gate 後に発生）。仮説段階で実装仕様と噛み合っていない失敗が繰り返されており、Hypothesizer の事前仕様照合ステップ追加が候補。",
+  "tokens_in": 6,
+  "tokens_out": 1725,
+  "latency_ms": 29688,
+  "timestamp": "2026-04-17T01:48:38Z",
+  "run_number": 1,
+  "exit_code": 0
+}

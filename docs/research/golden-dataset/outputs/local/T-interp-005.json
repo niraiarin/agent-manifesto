@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-005",
+  "task_type": "T-interp",
+  "input_file": "trace-input-005.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| **カバー済み** | **43 (100%)** — 未カバー命題なし |\n| ギャップ種別 | 全命題が少なくとも1つのartifactでカバーされている |\n\n**不完全なカバレッジ（必須要素欠落）**\n\n| 欠落要素 | 命題数 | 該当命題 |\n|---|---|---|\n| `has_test` = false | **4** | T3, L3, D6, D11 |\n| `has_implementation` = false | **5** | T3, L3, D6, D11, D12 |\n| `has_evidence` = false | **24** | T8〜L6(10) + D1〜D14(14) |\n| `has_derivation` = false | **5** | T4, T5, T6, T7, (none extra) |\n\n---\n\n## 2. ギャップ分析 — 最重要ギャップ\n\n### ギャップ A: D1 の evidence 欠落（最大影響度）\n\n**D1** は `depends_on: [P5, L1-L6]` を持ち、**下位層の全boundaryを統合する設計定理**。evidence が空だが、`depended_by: [D11]` のみで直接影響は限定的。ただし D1 自体が **50 artifacts**（最大クラス）を持つ重要命題であり、formal/structural enforcement の根幹をなすため、evidence 欠落は信頼性リスクが高い。\n\n### ギャップ B: P2/P3 の evidence 欠落 + T4/T5/T6/T7 の derivation 欠落\n\n- **P2**（検証の独立性）と **P3**（学習の統治）はマニフェストの中核原則だが、`evidence: []`。これらは実運用で最も頻繁に参照される命題であり、実績データによる裏付けがないのは P4 可観測性の観点から重大な穴。\n- **T4-T7**（constraint 層）は derivation が欠如。下位層（L1-L6, D1-D14）の多くが T4-T7 に依存しているため、**前提の導出不能が上位層の正当性を揺るがす**。\n\n### ギャップ C: テスト未実装命題 4件（T3, L3, D6, D11）\n\n`has_test = false` の命題は全43件中僅かだが、**T3**（有限コンテキスト）と **L3**（リソース境界）は P4/P6/T7 と密接に関連。テストなしで「有限性」を主張するのは可観測性の原則に反する。\n\n---\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: P2・P3 の evidence 充実に着手\n- **理由**: マニフェスト中核原則の裏付け欠落は、P4（可観測性）と P3（学習の統治）の両方を脆弱にする。`/evolve` の observer エージェントが実績データ（metrics, git history）から evidence を抽出可能。\n- **具体策**: `.claude/metrics/p2-verified.jsonl` と `p3-governed-learning.md` の既存データを evidence として proposition にリンクする\n\n### Priority 2: T4-T7 の derivation 補完\n- **理由**: constraint 層の導出不能が D1-D14 の全設計定理の正当性を根底から支える。T4（構造解釈の不確定性）と T6（人間の最終決定権）は特に重要。\n- **具体策**: Lean 形式検証での theorem 証明追加。T6 は既に `constraintBoundary` から L1-L4 を導出している手法を T4-T7 にも適用\n\n### Priority 3: T3・L3 のテスト実装\n- **理由**: テスト未実装命題の多くは「有限性」制約に関連。有限性の主張は検証可能でなければならない（D5: `d5_test_has_precision`）。\n- **具体策**: `tests/phase5/test-l5-ssot-structural.sh` のパターンを T3（メタカウント非対称性）と L3（リソース境界）に適用",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 88966,
+  "timestamp": "2026-04-17T02:59:45Z",
+  "run_number": 1,
+  "exit_code": 0
+}

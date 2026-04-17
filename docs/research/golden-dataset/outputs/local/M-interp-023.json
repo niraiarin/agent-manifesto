@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-023",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-023.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n分析完了。以下に報告をまとめる。\n\n---\n\n## メトリクス分析レポート (Run 107)\n\n### 1. 全体評価: WARNING\n\n**理由**: `valueless_change.current_streak = 4` で `halt_recommended: true`。直近4回の改善が実質的価値を持たない状態が継続しており、このまま進めるのはトークンコストの浪費。加えて Lean に **sorry が1件**、テストに **1件の失敗** がある（目標は両方0）。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | graduated | OK | `test_consecutive_zero_delta=2` で飽和。theorem/test とも直近delta=0 |\n| **V2 Context Efficiency** | stable / divergence=15% | 要注視 | recent_avg=46 vs cumulative_avg=40。コストが右肩上がり傾向 |\n| **V3 Output Quality** | formal / hallucination_high | WARNING | hypothesis_error_active=36, loopback_total=19。出力の質が劣化 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | L1安全境界は堅牢 |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 人間承認率は高いが、FAILループの根本原因は未解決 |\n| **V6 Knowledge Structure** | clean / retirement=0 | WARNING | stale_files=4件、retired_count=0。陳腐化した知識が退役していない |\n| **V7 Task Design** | completed=188 | OK | teamwork suppressed は意図的設定 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n**(1) /evolve を一時停止（最優先）**\n- `valueless_change.streak=4, halt_recommended=true`。コスト効率が悪化しており、構造変更が実質的価値を生んでいない。観測フェーズに退回し、何が値しない変更を生んでいるか分析してから再開すべき。\n\n**(2) Lean sorry 1件の解消**\n- `sorry: 1` は目標0件と乖離。どの axiom/theorem で sorry が使われているか特定し、形式証明へ書き換えるか、正当な理由で deferred クラスに分類し直す。\n\n**(3) メトリクス報告の stale_files 4件の退役処理**\n- `.claude/skills/evolve/SKILL.md`, `Ontology.lean`, `.claude/skills/research/SKILL.md`, `V7Metrics.lean` が stale として検出。これらが本当に不要か検証し、退役させるか更新するか判断する。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 224468,
+  "timestamp": "2026-04-17T02:38:11Z",
+  "run_number": 1,
+  "exit_code": 0
+}

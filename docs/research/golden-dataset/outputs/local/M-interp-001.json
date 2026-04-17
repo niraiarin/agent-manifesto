@@ -1,14 +1,10 @@
 {
   "id": "M-interp-001",
-  "task_type": "M-interp",
-  "input_file": "metrics-input-001.json",
   "label": "local",
   "model": "unknown",
-  "output": "\n\n## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: WARNING\n\n**理由**: テスト健全性（0 sorry, 769/769 pass）と統治インフラ（V4=99%）は良好だが、**改善の質が失われている**。`valueless_change.current_streak=4` で `halt_recommended=true`。直近4回の evolve 実行が実質的な構造変更を伴っていない。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | 備考 |\n|------|--------|------|------|\n| **V1 Skill Quality** | non_triviality=0 (trivial) | **問題** | theorem_delta_avg_10r=6.3, test_delta_avg_10r=8.9 は良いが、直近2回で delta=0。saturation 始動済み |\n| **V1 verifier_pass_rate** | 77% (360/465) | **要注意** | 過去最大規模の検証数。FAIL=105 は多いが、これは健全なフィルタリング |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable | **良好** | cumulative_avg=40 との乖離(15%)は許容範囲。収束傾向を観察 |\n| **V3 Output Quality** | hallucination: hypothesis_error_active=36 | **要注意** | 仮説の前提誤り(H_wrong_premise=8)が FAIL の主因。品質ゲート(Run 57〜)は有効に働いている |\n| **V4 Gate Pass Rate** | 99% (28,587/28,693) | **良好** | L1安全境界が機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | **良好** | T6 human review の選別精度が高い |\n| **V6 Knowledge Structure** | retired_count=0 | **要注意** | 陳腐化した memory が1件も退役していない。MEMORY 運用が停滞 |\n| **V7 Task Design** | teamwork_percent=0 | **想定内** | suppressed_single_agent 設定による |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### (1) [最優先] evolve の一時的停止 + 根本原因分析\n`valueless_change.streak=4` で halt が推奨されている。無理に evolve を回すのではなく、**なぜ delta=0 が続いているか**を Observer が分析すべき。考えられる原因:\n- V1 saturation（test_consecutive_zero_delta=2）で改善余地が枯渇している\n- 残る改善候補がすべて breaking change 扱いされ、保守的変更として選別されていない\n\n#### (2) [重要] hypothesis_error の根本原因対策（36件未解決）\nFAIL の過半を占める `hypothesis_error`（特に `H_wrong_premise`=6, `H_impl_specification`=8）のパターン分析を行い、**仮説立案段階での事前検証チェックリスト**を /evolve に組み込む。これは D3 可観測性不足の継続的な現れ。\n\n#### (3) [中優先] memory retirement の再開\n`retired_count=0` は知識管理が凍結している兆候。active な memory entry（5件）のうち、既に解決した T6 issue や完了した実験結果に関連するものを退役させる。V6_knowledge_structure の健全性を取り戻すため。",
-  "tokens_in": 0,
-  "tokens_out": 0,
-  "latency_ms": 125475,
-  "timestamp": "2026-04-17T01:26:19Z",
+  "error": "exit_code=1",
+  "latency_ms": 106261,
+  "timestamp": "2026-04-17T02:01:43Z",
   "run_number": 1,
-  "exit_code": 0
+  "exit_code": 1
 }

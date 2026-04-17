@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-021",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-021.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## V1-V7 メトリクス分析レポート (Run 107)\n\n### 1. 全体評価: WARNING\n\nシステムは機能的に健全だが、**改善の停滞**と**未解決エラーの蓄積**の2つの懸念シグナルが検出されている。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | コメント |\n|--------|--------|------|----------|\n| **V1 Skill Quality** | formal graduated | OK | verifier pass率77%は許容範囲。non_triviality=0 は注意 |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable | OK | 安定。divergence=15% は閾値内 |\n| **V3 Output Quality** | test_pass=100%, hallucination_active=63 | **要注視** | hypothesis_error_active=36 が最大要因。post_gate 解決は19/69(28%)のみ |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | 良好 | L1安全境界は堅牢 |\n| **V5 Proposal Accuracy** | 96% (162/168) | 良好 | T6承認パイプラインは正常動作 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | **要注視** | 陳腐化知識の退役が1件もなし。MEMORY のクリーンアップ未実施 |\n| **V7 Task Design** | completed=188, unique=180 | 良好 | タスク品質は安定 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### (1) Valueless Change ストップ — 即時対応必要\n- **状況**: `current_streak=4`, `halt_recommended=true`。直近4回の evolve で theorem_delta=0, test_delta=0\n- **アクション**: evolve を一時停止し、なぜ改善が止まったかの根本原因分析を Observer に実施させる。無理やり改善を続ける方がコスト浪費になる\n\n#### (2) 未解決 hypothesis_error の解消 — 36件蓄積\n- **状況**: `H_impl_specification=8`, `H_wrong_premise=6` が上位。post_gate 解決率28%は低い\n- **アクション**: `/evolve` Phase 1 で failed_test_details と judge_patterns を相関分析し、top-3 根本原因を特定。hypothesis_error は V3 (Output Quality) の主要低下要因\n\n#### (3) Memory Retirement の実施 — retired=0 は異常\n- **状況**: evolve 107回・メトリクス2年以上の履歴がありながら退役件数0。陳腐化した memory が混在している可能性が高い\n- **アクション**: MEMORY.md の各 entry を最新メトリクスと照合し、無効化・陳腐化したものを退役処理（retired_count を増やすのは健全性のサイン）\n\n---\n\n**まとめ**: システムは「動いている」が「成長していない」。Valueless Change streak 4 は halt の合図。まずは evolve ループを止め、停滞原因を診断してから再開すべき段階です。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 63530,
+  "timestamp": "2026-04-17T02:36:23Z",
+  "run_number": 1,
+  "exit_code": 0
+}

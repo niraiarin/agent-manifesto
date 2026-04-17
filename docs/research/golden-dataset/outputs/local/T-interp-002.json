@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-002",
+  "task_type": "T-interp",
+  "input_file": "trace-input-002.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのカバレッジあり | **43 (100%)** |\n| 未カバー命題 | なし |\n\nただし、カバレッジの質に大きな偏りがある:\n\n| 状態 | 件数 | 割合 |\n|---|---|---|\n| `has_evidence` が true | **19** | 44% |\n| `has_evidence` が false | **24** | 56% |\n| `has_implementation` が true | **39** | 91% |\n| `has_implementation` が false | **4** | 9% |\n\n## 2. ギャップ分析 — 最重要ギャップ\n\n### Gap A: P2/P3（統治層）の証拠欠如 — 致命的\n\n```\nP2 (検証の独立性)   → evidence:false, depended_by: [D2]\nP3 (学習の統治)     → evidence:false, depended_by: [L6, D4, D9, D13, D17]\n```\n\n**影響**: P3 は **D13（トレーサビリティ）** の直接依存先。D13 が P3 の証拠を持たないということは、トレーサビリティ自体の根拠が自己言及的になる。P2 は D2（検証設計）を通じて D17 へ波及し、最終的に D1/D2 の信頼性を損なう。\n\n### Gap B: L1（安全境界）の証拠欠如 — 危険\n\n```\nL1 (ethics/safety) → evidence:false, depended_by: [D1, V3]\n```\n\n**影響**: L1 は最上位制約（L1 safety boundary）だが、実装に証拠がない。D1（設計基盤）と V3（出力品質）の両方が L1 に依存するため、安全主張が形式的導出のみで裏付けられる状態。\n\n### Gap C: `has_implementation=false` の命題 — 4件\n\n| 命題 | 意味 |\n|---|---|\n| T3 (コンテキスト有限) | テストは存在するが実装コードなし |\n| L3 (役割境界) | テストは存在するが実装コードなし |\n| D6 (観測可能改善) | テストは存在するが実装コードなし |\n| D11 (強制コスト逆相関) | テストは存在するが実装コードなし |\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: P3 の証拠補強（breaking change リスクあり）\n\n**理由**: P3 は D13 を経由してトレーサビリティ全体に影響。P3 が空洞化すると、`/evolve` の互換性分類プロセス自体の根拠が失われる。\n\n**アクション**:\n- `.claude/metrics/evolve-history.jsonl` の実績データから P3 準拠性を定量評価する証拠を抽出\n- `p3-governed-learning.md` ルールの遵守率をメトリクス化（V5 承認データとの相関）\n- Lean formalization (`Framework/CompatibilityClassification.lean`) に実証的定理を追加\n\n### Priority 2: L1 の証拠補強（conservative extension）\n\n**理由**: 安全境界の主張に証拠がないのはプロジェクトの最上位原則に対する矛盾。\n\n**アクション**:\n- `tests/phase1/test-l1-behavioral.sh` の実績を証拠として `evidence` フィールドに記録\n- `l1-safety-check.sh` フックの実行ログを `.claude/metrics/` に蓄積し、時系列証拠とする\n- Lean formalization (`Observable.lean`) の `ethicsSafety_covered_by_constraint` 導出に実証データを追記\n\n### Priority 3: D6/D11 の実装補完（compatible change）\n\n**理由**: テストは存在するが `has_implementation=false`。設計定理が「テストのみ」で完結しており、実際のコードベースにマッピングされていない状態を是正。\n\n**アクション**:\n- D6 (`d3_observability_precedes_improvement`) → evolve スキルの observe→improve フローに実装コードとして明示化\n- D11 (`d11_enforcement_cost_inverse`) → 強制力レベル（structural/procedural/normative）とコンテキスト消費量の相関を `scripts/` で計測スクリプトとして実装",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 100462,
+  "timestamp": "2026-04-17T02:52:56Z",
+  "run_number": 1,
+  "exit_code": 0
+}

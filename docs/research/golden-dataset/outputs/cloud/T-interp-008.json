@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-008",
+  "task_type": "T-interp",
+  "input_file": "trace-input-008.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n**全体カバレッジ率**: 43/43 = **100%** （未カバー命題なし）\n**総アーティファクト数**: 523\n**弱カバレッジ命題**: 0\n\nただし、「カバー済み」は artifact 存在ベース。**evidence（根拠）/ derivation（導出）の欠落**を見ると実質的ギャップあり:\n\n| ギャップ種別 | 該当命題数 | 命題 |\n|---|---|---|\n| Evidence 欠落 | 24 | T8, P2, P3, P6, L1, L3-L6, D1-D14, V6 |\n| Derivation 欠落 | 4 | T4, T5, T6, T7 |\n| **両方欠落** | 0 | なし |\n\n## 2. ギャップ分析（D13 影響波及観点）\n\n**最重要ギャップ: T4, T5, T6, T7 の derivation 欠落**\n\n- これら4つはすべて **constraint (T₀層, strength=5)** で、多数の命題が依存:\n  - **T6** ← L1, L3, L4, L6（4つの境界）\n  - **T5** ← P4, D3（可観測性の根幹）\n  - **T7** ← P4, P6, L3, D12, D14, D18（リソース制約）\n  - **T4** ← E1, P2, P5（検証の独立性）\n- T₀ axiom は「環境由来」のため導出不可は設計通り。ただし **Foundation 層で構成的性質が証明済み**（T2=persistence_composes, T5=feedback_interval_widen 等）のため、これらの参照を derivation フィールドに反映すれば見かけ上のギャップは解消可能。\n\n**二次ギャップ: D1-D14 系列の evidence 欠落**\n- 設計定理（strength=1）は derivation 済みだが empirical evidence なし\n- D13（影響波及そのもの）も evidence 欠落 → 自己適用の弱点\n\n## 3. 改善提案（優先度順）\n\n1. **[高] T4-T7 の derivation フィールド補完** — Foundation/*.lean の既存証明（ControlTheory, InformationTheory, ProcessModel, StatisticalTesting）を derivation として参照明記。影響波及が最大（constraint 層の根幹）。互換性: **conservative extension**。\n\n2. **[中] D13 の evidence 追加** — 影響波及原理自体の経験的根拠（過去の ungoverned breaking change 事例、#446 閉環未稼働など project memory 参照）を ObservableDesign.lean 型の axiom として追加。自己適用の完備化。互換性: **compatible change**。\n\n3. **[低] 設計定理 D1-D14 の共通 evidence テンプレート整備** — 全 24 件の evidence 欠落を個別対応せず、Foundation 層への参照規約を策定。長期的メンテ負荷低減。互換性: **conservative extension**。",
+  "tokens_in": 6,
+  "tokens_out": 1017,
+  "latency_ms": 22087,
+  "timestamp": "2026-04-17T01:54:39Z",
+  "run_number": 1,
+  "exit_code": 0
+}

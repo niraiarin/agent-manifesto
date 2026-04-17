@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-019",
+  "task_type": "T-interp",
+  "input_file": "trace-input-019.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 全命題数 | 43 |\n| アーティファクト付与済み | 43 (**100%**) |\n| 未カバー | 0 |\n| 弱カバレッジ | 0 |\n| **Evidence 欠落** | **24 命題** |\n| **Derivation 欠落** | **4 命題** (T4, T5, T6, T7) |\n\n**Evidence 欠落命題**: T8, P2, P3, P6, L1, L3, L4, L5, L6, D1〜D14 (全 D), V6\n\n**Derivation 欠落命題**: T4, T5, T6, T7 (いずれも root axiom — 派生元なし、想定内)\n\n## 2. ギャップ分析 (D13 影響波及観点)\n\n### ギャップ A: 境界 L1–L6 の経験的根拠欠落 (高影響)\nL1, L3, L4, L5, L6 の 5/6 境界で evidence 未記載。境界は V1–V7 観測可能量の親ノード（`depended_by: V1–V7`）であり、D13 伝播により **観測可能量全体の正当化根拠が脆弱**。L1 は T6（人間権威）への唯一の構造的対応物で、ここの evidence 欠落は「安全境界の経験的裏付け」を持たない。\n\n### ギャップ B: 設計定理 D1–D14 の evidence ゼロ\n全 14 設計定理で evidence 欠落。derivation は全て存在するため **論理的整合性は担保**されているが、**経験的裏付け（失敗事例・成功事例）が蓄積されていない**。D9（圧縮分類）の depended_by=D17 経由で plugin 生成系へ伝播。\n\n### ギャップ C: P3（学習の統治）の evidence 欠落\nP3 は `depended_by: L6, D4, D9, D13, D17` を持つ重要ハブ。artifacts は 42 個と最多だが evidence 0。P3 の崩壊は**学習ライフサイクル全体**に伝播する。\n\n## 3. 改善提案 (優先度順)\n\n### 優先度 1: L1 の evidence 追加 (conservative extension)\n`Axioms.lean` または `EmpiricalPostulates.lean` に、L1 の経験的根拠（過去のインシデント、prompt injection 事例、pre-commit hook で検知された違反ログ）を記載。`.claude/metrics/v5-approvals.jsonl` と `decision-log.jsonl` が実データ源として利用可能。\n\n### 優先度 2: D13 影響波及テストの常時稼働化\n`tests/phase5/test-skill-depgraph.sh` と `test-refs-integrity.sh` は既にあるが、**命題グラフ（T→P→L→D→V）の到達可能性検査**が未実装。`manifest-trace` に `--impact <proposition>` モード追加で、任意命題変更時の影響範囲を機械的に列挙可能にする。\n\n### 優先度 3: P3 の evidence を `evolve-history.jsonl` から自動抽出\nP3 の運用記録（観察→仮説化→検証→統合→退役の各サイクル）は既に `.claude/metrics/evolve-history.jsonl` に蓄積。`manifest-trace` のスキーマを拡張し、**jsonl を evidence として自動参照**できるようにする（compatible change）。",
+  "tokens_in": 6,
+  "tokens_out": 1641,
+  "latency_ms": 30860,
+  "timestamp": "2026-04-17T01:59:39Z",
+  "run_number": 1,
+  "exit_code": 0
+}

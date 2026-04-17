@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-016",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-016.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## V1-V7 メトリクス分析レポート (Run 107)\n\n---\n\n### 1. 全体評価: WARNING\n\nLean 形式検証（52 axioms, 457 theorems, **0 sorry**）とテスト（737/737 PASS）は健全。しかし **valueless_change streak = 4** で `halt_recommended: true` が出力されており、直近の evolve 改善が実質無価値な状態が続いている。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | graduated (formal) | OK | non_triviality=0 は formal graduation 後の代理指標低下。saturation test_delta consecutive=2 でまだ危険域外 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | trend=stable、divergence=15%（閾値内） |\n| **V3 Output Quality** | hallucination errors 増加中 | **注意** | hypothesis_error_active=36 が最大。品質ゲート導入後（Run 57+）の追跡で post_gate 値も上昇傾向 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | **良好** | L1/P2/L3 が適切に機能 |\n| **V5 Proposal Accuracy** | 96% (162/168) | **良好** | schema_drift=false |\n| **V6 Knowledge Structure** | entries=12, retired=0 | **注意** | 退役件数 0 は知識陳腐化の兆候。stale_files: verify/SKILL.md, research/SKILL.md が検出済み |\n| **V7 Task Design** | completed=188, teamwork=0% | OK | suppressed_single_agent は意図的設定 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### (1) [緊急] evolve ハルト検討 — valueless_change streak = 4\n- **理由**: 直近 4回の evolve が構造変更のみで定理/テストの正味増加分なし。`halt_recommended: true`\n- **アクション**: 次 evolve で Observer が「なぜ改善が止まったか」を分析。V1 saturation と合わせ、学習曲線の平坦化を T6（人間判断）に報告\n\n#### (2) [重要] hypothesis_error_active = 36 の根本原因解消\n- **理由**: V3 hallucination proxy の最大要因。42件中36件が未解決。`H_impl_specification`(8), `H_wrong_premise`(6) が主要subtype\n- **アクション**: Observer が過去10回の FAIL エントリをクラスタ分析し、共通パターンを特定。Hypothesizer に「仮説前検証チェックリスト」の実装を提案\n\n#### (3) [中程度] stale files 更新または退役 — verify/SKILL.md, research/SKILL.md\n- **理由**: V6 knowledge structure の信頼性を低下させる。retired_count=0 と合わせ、知識ライフサイクル（観察→統合→退役）が機能していない兆候\n- **アクション**: 各ファイルの最終実体変更日を調査。実装と乖離していれば退役処理（MEMORY退役と同プロセス）を実行",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 165343,
+  "timestamp": "2026-04-17T02:29:47Z",
+  "run_number": 1,
+  "exit_code": 0
+}

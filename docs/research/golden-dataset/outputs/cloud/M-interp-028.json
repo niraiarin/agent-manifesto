@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-028",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-028.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# システム健全性レポート\n\n## 1. 全体評価\n\n**WARNING** — 形式系・テスト・カバレッジは極めて健全だが、`valueless_change.halt_recommended: true`（連続4回の無価値変更）と V1 non-triviality=trivial（直近 run で theorem/test delta ともに 0）が警告信号。\n\n## 2. V1–V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 解釈 |\n|---|---|---|---|\n| **V1** 技能品質 | formal, trivial | ⚠️ 注意 | 卒業済だが直近 run の構造寄与ゼロ。test 連続ゼロ delta=2、飽和傾向 |\n| **V2** コンテキスト効率 | 46 calls/session (recent) | ✅ 良好 | trend=stable、cumulative 40 との乖離 15% で許容内 |\n| **V3** 出力品質 | test pass 100%, commits 573 | ⚠️ 注意 | formal 卒業。ただし unresolved hypothesis_error=36 が多く、仮説段階の精度に課題 |\n| **V4** ゲート通過率 | 99% (28587/28693) | ✅ 良好 | 極めて安定 |\n| **V5** 提案精度 | 96% (162/168) | ✅ 良好 | grep cross-check 一致、schema drift なし |\n| **V6** 知識構造 | 12 entries, orphan 0 | ✅ 良好 | 索引一貫性維持、stale なし |\n| **V7** タスク設計 | 188 完了, teamwork 0% | ⚠️ 要監視 | single-agent 運用で suppressed 判定。協調設計の計測不能 |\n| **Lean** | 55 axioms / 494 thm / 0 sorry | ✅ 良好 | 理論体系は健全。warning 1 件のみ |\n| **manifest_trace** | 43/43 covered | ✅ 完璧 | 強度別カバレッジ全て 100% |\n\n## 3. 優先改善アクション\n\n### 🔴 最優先: 無価値変更ループの遮断\n- **事実**: `valueless_change.current_streak=4, halt_recommended=true`、V1 non-triviality=trivial が直近 run で顕在。\n- **アクション**: 次回 /evolve を起動する前に Observer 入力を見直す。人間 feedback（2026-03-24）で指摘された「半順序公理の追加」「末端エラーからの遡及検証」「失敗パターンの Lean 形式化」など実体的課題へ focus を切り替える。\n\n### 🟡 準最優先: hypothesis_error サブタイプの根治\n- **事実**: unresolved 55 件中 hypothesis_error が 36 件、特に `H_impl_specification=8`, `H_wrong_premise=6` が post_gate でも残存。\n- **アクション**: Hypothesizer の事前条件チェックを強化し、「前提の誤り」と「仕様を実装と混同する誤り」を Judge の典型 rejection パターンとして構造化フィードバック化する。\n\n### 🟢 中期: V7 チームワーク計測の設計\n- **事実**: `teamwork_percent=0, status=suppressed_single_agent` で協調の健全性が観測不能。\n- **アクション**: Managed Agents 再検証（2026-06-10 予定、project_managed_agents_research.md）と合わせ、マルチエージェント運用の計測指標を先行設計する。",
+  "tokens_in": 6,
+  "tokens_out": 1240,
+  "latency_ms": 25663,
+  "timestamp": "2026-04-17T01:53:23Z",
+  "run_number": 1,
+  "exit_code": 0
+}
