@@ -1,4 +1,5 @@
 import AgentSpec.Core
+import AgentSpec.Test.CoreTest
 
 /-!
 # AgentSpec: agent-manifesto 新基盤 Lean ライブラリ ルート

@@ -1,0 +1,182 @@
+{
+  "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
+  "version": "0.1.0-week1",
+  "package": "agent-spec-lib",
+  "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
+  "scopes": [
+    "formalization",
+    "test",
+    "config"
+  ],
+  "propositions_referenced": [
+    "GA-S15",
+    "GA-S18",
+    "GA-T8",
+    "GA-I5",
+    "GA-I7",
+    "GA-I9",
+    "GA-C2",
+    "GA-C27",
+    "GA-C32",
+    "GA-M12",
+    "GA-W4",
+    "GA-W7"
+  ],
+  "artifacts": [
+    {
+      "id": "agent-spec-lib:AgentSpec.Core",
+      "path": "AgentSpec/Core.lean",
+      "scope": "formalization",
+      "refs": ["GA-S15", "GA-S18", "GA-T8", "GA-I7", "GA-C32", "GA-C2", "GA-W7", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "mathlib",
+          "version": "v4.29.0",
+          "rev": "8a178386",
+          "edge": "wasDerivedFrom",
+          "source": "lake-manifest.json"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.SemVer"
+      ],
+      "provides_functions": [
+        "AgentSpec.SemVer.render",
+        "AgentSpec.SemVer.parse",
+        "AgentSpec.SemVer.charToDigit?",
+        "AgentSpec.SemVer.consumeNat",
+        "AgentSpec.SemVer.consumeChar",
+        "AgentSpec.SemVer.parseList",
+        "AgentSpec.SemVer.comparePreRelease",
+        "AgentSpec.SemVer.compare",
+        "AgentSpec.version"
+      ],
+      "provides_instances": [
+        "Ord SemVer",
+        "LE SemVer",
+        "LT SemVer",
+        "Decidable (v₁ ≤ v₂)",
+        "Decidable (v₁ < v₂)"
+      ],
+      "codec_completeness": "bidirectional (render + parse + round-trip example-level verified + 125-case universal via decide)",
+      "round_trip_properties": [
+        "∀ stable v, parse (render v) = some v (individual examples verified)",
+        "∀ pre-release v, parse (render v) = some v (individual examples verified for version)",
+        "∀ (m,n,p) ∈ [0..4]³, isRoundTripStable ⟨m,n,p,none⟩ = true (125 cases via decide)"
+      ],
+      "ordering": "lexicographic total order (major > minor > patch > preRelease; stable > pre-release per SemVer 2.0)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.CoreTest",
+      "path": "AgentSpec/Test/CoreTest.lean",
+      "scope": "test",
+      "refs": ["GA-I9", "GA-C2"],
+      "test_targets": [
+        "AgentSpec.SemVer.render forward codec",
+        "AgentSpec.SemVer.parse backward codec",
+        "AgentSpec.SemVer round-trip (render ∘ parse) (TyDD-H3 BiTrSpec)",
+        "AgentSpec.SemVer.parse negative cases (empty, invalid, truncated, dangling hyphen)",
+        "AgentSpec.SemVer field projection",
+        "AgentSpec.SemVer DecidableEq / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Core",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "example_count": 24,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "tydd_alignment": {
+        "S1_types_first": "verified",
+        "S4_refinement_type": "verified (SemVer with Nat refinement)",
+        "F6_codec_round_trip": "verified at example level (value-specific) + 125-case universal",
+        "H3_BiTrSpec": "example-level for version + stable release + Fin 5 finite-bounded universal",
+        "F2_lattice_prelim": "LE / LT / Ord instance on SemVer (lexicographic)",
+        "H7_3level_verify": "declarative in README (L3 Lean only in Week 1, L2/L1 planned)",
+        "GA_S15_lattice_basis": "Ord instance as foundation for Week 4-5 ResearchSpec Lattice"
+      }
+    },
+    {
+      "id": "agent-spec-lib:lakefile",
+      "path": "lakefile.lean",
+      "scope": "config",
+      "refs": ["GA-I5", "GA-T8", "GA-C27", "GA-C32"],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "lean-toolchain",
+          "version": "v4.29.0",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "future_additions": {
+        "week6": ["LeanHammer", "Lean-Auto", "Duper", "CSLib"]
+      }
+    },
+    {
+      "id": "agent-spec-lib:lean-toolchain",
+      "path": "lean-toolchain",
+      "scope": "config",
+      "refs": ["GA-T8"],
+      "enforces": "structural",
+      "pinned_version": "leanprover/lean4:v4.29.0"
+    }
+  ],
+  "build_status": {
+    "last_verified": "2026-04-17",
+    "lake_build_result": "exit 0",
+    "job_count": 5,
+    "sorry_count": 0,
+    "axiom_count": 0,
+    "theorem_count": 0,
+    "example_count": 24,
+    "warning_count": 0,
+    "deprecated_api_usage": 0,
+    "native_decide_usage": 0,
+    "finite_bounded_universal_cases": 125
+  },
+  "verifier_history": [
+    {
+      "round": "Week 1 Round 1",
+      "date": "2026-04-17",
+      "result": "FAIL",
+      "addressable_count": 5,
+      "addressed": true,
+      "note": "最小プレースホルダ実装に対する検証 (SemVer 型化前)"
+    },
+    {
+      "round": "Week 1 Round 2",
+      "date": "2026-04-17",
+      "result": "PASS",
+      "addressable_count": 0,
+      "p2_complete_for": "minimal-placeholder",
+      "note": "最小プレースホルダ実装の検証 PASS。TyDD/TDD 原則未適用のため Round 3 で re-do"
+    },
+    {
+      "round": "Week 1 Round 3 (TyDD/TDD re-do)",
+      "date": "2026-04-17",
+      "result": "FAIL",
+      "addressable_count": 2,
+      "addressed": true,
+      "addressable_items": [
+        "artifact-manifest propositions_referenced から GA-C27 欠落",
+        "verifier_history に Round 3 結果未記録"
+      ],
+      "informational_count": 3,
+      "note": "SemVer refinement type + 10 件 example + artifact-manifest.json 追加後の検証。両 addressable を対処して Round 4 へ"
+    },
+    {
+      "round": "Week 1 Round 4 (軽量確認)",
+      "date": "2026-04-17",
+      "result": "PASS",
+      "addressable_count": 0,
+      "p2_complete_for": "tydd-tdd-redo",
+      "note": "Round 3 指摘 1-2 修正反映を確認。Week 2 進行可能。informational 指摘 3-5 (テスト/本番混在、example 8 コメント、$schema URI) は将来対応予定"
+    }
+  ]
+}
