@@ -76,7 +76,7 @@
       "test_targets": [
         "AgentSpec.SemVer.render forward codec",
         "AgentSpec.SemVer.parse backward codec",
-        "AgentSpec.SemVer round-trip (render ∘ parse) (TyDD-H3 BiTrSpec)",
+        "AgentSpec.SemVer round-trip (parse ∘ render = some, TyDD-H3 BiTrSpec forward direction)",
         "AgentSpec.SemVer.parse negative cases (empty, invalid, truncated, dangling hyphen)",
         "AgentSpec.SemVer field projection",
         "AgentSpec.SemVer DecidableEq / Inhabited"

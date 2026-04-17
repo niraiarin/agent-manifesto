@@ -31,11 +31,11 @@ agent-manifesto 研究プロセスの型安全な Lean 表現。
 | **TyDD-H3** (BiTrSpec) | 個別 example + **`Fin 5³ = 125` ケースの `decide` 網羅検証**、普遍定理は Week 2 |
 | **TyDD-H7** (3-level verify、GA-M12) | L3 Lean のみ (現 Week 1)、L2 SMT は Week 6、L1 pytest は Week 7 — README に宣言 |
 | **Recipe 11** (Bidirectional Codec Round-Trip Testing) | 正例 7 件 + 負例 4 件 + 有限量化 125 ケース |
-| **TDD** (Red→Green→Refactor) | `AgentSpec/Test/CoreTest.lean` に **22 件 `example`** 検証 |
+| **TDD** (Red→Green→Refactor) | `AgentSpec/Test/CoreTest.lean` に **24 件 `example`** 検証 |
 | **GA-W7** (termination 保証) | `partial def` 不使用、明示的 recursive + `let rec go` で termination 自動推論 |
 | **GA-C27** (Trusted code 最小化) | `native_decide` 不使用、全て `rfl` / `decide` |
 | **GA-I1** (artifact-manifest) | `agent-spec-lib/artifact-manifest.json` で GA- 参照 + 依存 edge + codec_completeness + tydd_alignment |
-| **GA-I9** (テストカバレッジ) | Test/CoreTest.lean で 22 件 behavior assertion + 125 ケース有限量化 |
+| **GA-I9** (テストカバレッジ) | Test/CoreTest.lean で 24 件 behavior assertion + 125 ケース有限量化 |
 | **GA-W4** (sorry accumulation) | sorry 0、axiom 0、theorem 0 |
 
 ### Verify Strategy (TyDD-H7 Minimal Viable Pipeline, GA-M12)
@@ -47,7 +47,7 @@ TyDD-H7 は「L1 pytest → L2 +Z3 SMT → L3 +Lean」の 3 段階検証 pipelin
 |---|---|---|---|
 | **L1** | pytest / 実行時 assert (Python 層) | 未実装 | Week 7 以降の Python 層追加時に導入 |
 | **L2** | Z3 SMT solver による自動放電 | 未実装 | Week 6 で LeanHammer / Duper / Lean-Auto 統合時（GA-C7、GA-I5）|
-| **L3** | Lean 型検査 + `decide` + `rfl` | **実装済** | Week 1 で完了（`lake build` + 22 `example`）|
+| **L3** | Lean 型検査 + `decide` + `rfl` | **実装済** | Week 1 で完了（`lake build` + 24 `example` + 125 ケース有限量化）|
 
 Week 1 は L3 単独で TyDD-H3 BiTrSpec の round-trip 性質を:
 - **個別 example 検証**: 正例 7 件 + 負例 4 件 = 11 件
