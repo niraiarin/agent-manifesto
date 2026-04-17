@@ -1,10 +1,14 @@
 {
   "id": "M-interp-011",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-011.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 51589,
-  "timestamp": "2026-04-17T02:22:47Z",
+  "output": "\n\nメトリクスを分析します。\n\n## 1. 全体評価: **WARNING**\n\nコア構造（Lean 公理系、テスト基盤）は健全だが、`/evolve` ループが停滞し、未解決問題が蓄積している。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | graduated (formal) | OK | 非自明性スコア=0。定理成長は止まっている |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable | OK | 収束傾向。大きな改善余地なし |\n| **V3 Output Quality** | hallucination: HE=42, AE=11 | **要注意** | hypothesis_error が55件の未解決中最多（36件未解決）。品質ゲート導入後も19件がポストゲートで漏洩 |\n| **V4 Gate Pass Rate** | 99% (28,587/28,693) | **良好** | ゲート機構は正常動作 |\n| **V5 Proposal Accuracy** | 96% (162/168) | **良好** | 提案品質は高い |\n| **V6 Knowledge Structure** | retired=0, entries=12 | **要注意** | 運用開始から1年以上経過、退役0件。陳腐化知識が放置されている可能性 |\n| **V7 Task Design** | teamwork=0% | OK (設計通り) | single_agent モードで意図的 |\n\n**その他の懸念点:**\n- `sorry`: lean section で 2、sorry_classification で 0（不一致。測定バグまたは非公式 sorry）\n- `valueless_change`: current_streak=4, **halt_recommended=true**。連続4回の無価値変更で `/evolve` 停止が推奨されている\n- `failed_test`: 4件失敗（tests section）、但し V3 では test_pass_rate=100% と矛盾\n\n---\n\n## 3. 改善提案（優先度順）\n\n### (1) `/evolve` ループの再開判断 — valueless_change streak の根本原因特定\n**現在:** streak=4, halt_recommended=true。Run 97 以降、人間のフィードバックで優先課題が固定され、Observer が新しい発見を出せていない可能性が高い。\n**アクション:** Observer findings を手動レビューし、「観察データ枯渇」か「観測性の不足」かを判定。前者なら halt を承認、後者なら D3 可観測性改善を先に行う。\n\n### (2) hypothesis_error (HE) 36件の未解決解消\n**現在:** HE は未解決55件中最多（36件）。特に `H_impl_specification`(8件) と `H_wrong_premise`(6件) が集中。\n**アクション:** Judge パターンを分析し、共通する誤謬タイプを特定。HE の根本原因が `/evolve` 設計の欠陥なら Hypothesizer AGENT.md の修正を、単発ミスなら assumption tracker での閉環を行う。\n\n### (3) memory_retirement_candidates の実装\n**現在:** retired=0。MEMORY.md エントリ12件中、陳腐化したものがあっても退役されていない。\n**アクション:** P3 学習統治の最終フェーズ「退役」を実稼動させる。`memory_retirement_candidates` が空なのは測定不備か、退役プロセス未実装のどちらか。まず `metrics` ツールの退役判定ロジックを確認し、手動で退役候補をリストアップする。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 85440,
+  "timestamp": "2026-04-17T11:44:19Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

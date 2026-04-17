@@ -1,10 +1,14 @@
 {
   "id": "M-interp-026",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-026.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 44016,
-  "timestamp": "2026-04-17T02:44:28Z",
+  "output": "\n\nメトリクスを分析して報告します。\n\n---\n\n## 全体評価: WARNING\n\n**理由**: `valueless_change.current_streak=4` で `halt_recommended=true`。直近の改善が構造的価値を持たない状態が継続中。Leanビルドは健全（0 sorry, 777/777 pass）だが、進化ループが実質停止している兆候。\n\n---\n\n## V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | formal graduated | OK | theorem_delta_last_run=0 は卒業後の期待値だが、saturation.test_consecutive_zero_delta=2 で漸進停止入り |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable | OK | 急増なし。divergence_percent=15 は許容範囲 |\n| **V3 Output Quality** | test_pass_rate=100% | OK | ただし hallucination proxy: hypothesis_error_active=36 が最大悪性因子。品質ゲート導入後でも post_gate=19 残留 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | L1ガード機能正常作動 |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 提案品質は高い。ただし pass の多くが meta-only 可能性あり |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | メモリ退役ゼロ。陳腐化知識が蓄積一方。MEMORY.md のメンテンスが必要 |\n| **V7 Task Design** | completed=188 | OK | teamwork suppressed は意図的設定通り |\n\n---\n\n## 改善提案（優先度順）\n\n### 1. [緊急] Valueless change streak 解除 — evolve ハルト検討\n- `current_streak=4, halt_recommended=true`。直近4回の evolve エントリが構造的価値を生んでいない\n- **アクション**: 次 evolve で Observer が各エントリの delta（theorem/test/structural）を明示計測し、valueless 判定の根拠を提示する。改善価値なしと判断されれば一時的ハルトを T6 に提案\n\n### 2. [高] hypothesis_error_active=36 の根本解消\n- 未解決失敗パターンの 65% (36/55) が hypothesis_error。うち `H_impl_specification`=8, `H_wrong_premise`=6\n- **アクション**: Observer が過去10回の FAIL エントリをタイプ別分析し、共通の誤推論パターンを特定。Hypothesizer に事前検証チェックリスト（pre_verification）の強化を提案\n\n### 3. [中] Memory retirement の導入\n- `retired_count=0`。12エントリー全てがアクティブだが、陳腐化した知識が含まれている可能性が高い\n- **アクション**: Observer が MEMORY.md エントリー各件の最終更新日と参照頻度を調査し、退役候補を列挙。P3 学習ライフサイクルの「退役」フェーズを実稼働させる",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 70244,
+  "timestamp": "2026-04-17T11:55:52Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

@@ -1,10 +1,14 @@
 {
   "id": "M-interp-008",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-008.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 90121,
-  "timestamp": "2026-04-17T02:19:46Z",
+  "output": "\n\n分析完了。結果を報告します。\n\n---\n\n## V1-V7 メトリクス分析レポート (Run 107)\n\n### 1. 全体評価: WARNING\n\n**理由**: `valueless_change.current_streak = 4` で `halt_recommended = true`。直近4回のevolve実行（#104-#107）はすべて theorem_delta=0, test_delta=0 の無改善バースト。システム自体の健全性（テスト全通、Leanビルド成功、V4/V5高率）は保たれているが、「構造が改善し続ける」という使命に対して現在停止状態にある。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 値 | 判定 | 備考 |\n|--------|-----|------|------|\n| **V1 Skill Quality** | formal graduated | OK | verifier_pass_rate=77% (360/465)、evolve_success_rate=98%。saturation: consecutive_zero_delta=2 で改善鈍化の兆候 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | trend=stable、divergence=15%（閾値以内）。トークン消費は安定 |\n| **V3 Output Quality** | test_pass_rate=100%, formal graduated | WARNING | hallucination_proxy で **hypothesis_error_active=36** が最大。品質ゲート導入後でも19件がアクティブ。仮説の前提誤りが根本課題 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | blocked=106のみ。L1安全境界は堅牢 |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | schema_drift=false。提案の精度は高い |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | **退役件数0**。陳腐化した知識が12件中混在（stale_files: research/SKILL.md, evolve/SKILL.md）。P3学習ライフサイクルの「退役」フェーズが機能していない |\n| **V7 Task Design** | completed=188, teamwork=0% | INFO | single_agentモード。並列化の余地あり |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### ① [緊急] Evolve バースト停止の解除 — 価値ある変更の基準を明確化\n- **現状**: 4回連続で theorem/test/axiom delta=0。`valueless_change.halt_recommended=true`\n- **原因**: Run #105-#107 は AGENT.md の追記、count sync、test fix など「維持作業」であり、公理系の成長（theorem_delta, axiom_delta）を生まない\n- **アクション**: evolve の成功判定に `theorem_delta >= 1` または `axiom_delta >= 1` を必須条件として追加。維持作業（count sync等）は「改善」としてカウントしない\n\n#### ② V6 Knowledge Retirement — 陳腐化メモリを退役させる\n- **現状**: retired_count=0。stale_files が2件確認済み（research/SKILL.md, evolve/SKILL.md は実際には最近更新されているが、memory の退役メカニズム自体が未実装）\n- **アクション**: P3 学習ライフサイクルの「退役」フェーズを実装。MEMORY.md のポインタと実ファイルの整合性を定期チェックし、参照切れエントリを退役処理\n\n#### ③ V3 Hypothesis Error 低減 — 品質ゲートの効果検証\n- **現状**: hypothesis_error_active=36（全失敗パターンの65%）。hypothesis_error_post_gate=19 で、品質ゲート導入後も半分が残っている\n- **根本原因**: Run #94 の human feedback で指摘された「D5 三層断裂」（Lean仕様→テスト→SKILL.md実装のトレースビリティ欠如）が仮説の前提誤りを生んでいる\n- **アクション**: /evolve SKILL.md の Lean 対応表を「名前参照」から「逆引きチェックリスト」へ拡張（Run #94 feedback で既に設計済み）。これにより H_wrong_premise (6件) と H_impl_specification (8件) の両方を削減可能",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 280491,
+  "timestamp": "2026-04-17T11:36:45Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }
