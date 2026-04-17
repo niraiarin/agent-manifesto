@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-020",
+  "task_type": "T-interp",
+  "input_file": "trace-input-020.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのartifactsを持つ | **43/43 (100%)** |\n| evidenceあり | 19/43 (44%) |\n| derivationあり | 38/43 (88%) |\n| testあり | 42/43 (98%) |\n| implementationあり | 35/43 (81%) |\n\n**未カバー命題: なし** — 全命題が少なくとも1つのartifactsでカバーされている。\n\n---\n\n## 2. ギャップ分析\n\n### 重大度順ギャップ\n\n**(A) evidence欠如 — 25命題 (58%) が根拠なし**\n\n最も深刻な構造的問題。特に重要なのは:\n\n| 命題 | 種別 | 影響範囲 (depended_by) |\n|---|---|---|\n| **P3** (学習の統治) | principle | L6, D4, D9, D13, D17 — **5つの設計定理が依存** |\n| **D1** (強制階層化) | designTheorem | D11 — 全L1-L6が依存済みで下流は広い |\n| **P2** (検証の独立性) | principle | D2 — P3と並ぶ核心原則 |\n| **T8** (精度要件) | constraint | D5, D12, D14, D15, D16 — 8命題が依存 |\n\n**D13観点での影響**: D13自身はevidenceなしだが、assumption impact monotonicity (`d13_assumption_impact_monotone`) が導出されており、仮説の期限切れが波及する範囲は形式化されている。しかし D13 が P3 に依存しており、P3にevidenceがないと「P3の改善提案全体が根拠薄弱になる」という再帰的問題が生じる。\n\n**(B) derivation欠如 — 5命題 (12%)**\n\nT4, T5, T6, T7 はすべて T₀（環境制約）層で、型から導出できないためaxiom維持は正当。ただし **T8のみderivationあり**（`task_has_precision` が空コンテンツで未実装）。\n\n---\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: P3 の evidence 補強\n- **理由**: P3 は D4/D9/D13/D17/L6 の5命題が依存する核心原則。P3にevidenceがないと、改善ワークフロー全体の実証基盤が脆弱になる\n- **アクション**: evolve-history.jsonl の実績データ（これまでに統合された改善案の成功/失敗率）を P3 の evidence としてカード化\n- **互換性**: conservative extension\n\n### Priority 2: D1 の evidence 補強 + T8 derivation 実装\n- **理由**: D1 は全境界(L1-L6)の設計基盤。また T8 の `task_has_precision` derivation が空コンテンツ（content/proof_strategy両方空）で、導出が未完成\n- **アクション**: \n  - T8 の derivation を実際に `task_is_constraint_satisfaction (P6)` から導出する形で埋める\n  - D1 の evidence として、hookが実際に違反をブロックした実例を記録\n- **互換性**: conservative extension\n\n### Priority 3: L5, L6 の evidence 補強\n- **理由**: L5（プラットフォーム境界）と L6（設計規約境界）はどちらも evidence なし。L5 は technology-dependent な制約なので evidence の性質が異なるが、少なくとも L6 は P3 に依存しており P3 と同時に改善すべき\n- **アクション**: L6 については gate-logger.sh の実績データ、L5 についてはプラットフォーム固有の制約文書を evidence として登録\n- **互換性**: conservative extension",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 159288,
+  "timestamp": "2026-04-17T03:36:27Z",
+  "run_number": 1,
+  "exit_code": 0
+}

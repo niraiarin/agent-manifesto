@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-022",
+  "task_type": "T-interp",
+  "input_file": "trace-input-022.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのカバーあり | **43 (100%)** |\n| エビデンス付き | **19/43 (44%)** |\n| 導出付き | **39/43 (91%)** |\n\n**未カバー命題**: なし（全命題が何らかのartifactsまたはderivationsを持つ）\n\nただし「エビデンスなし」命題が24件を占めるのが実態。\n\n## 2. ギャップ分析 — 重大度順\n\n### Critical: P2 (Verification Independence) — エビデンスなし、依存数最大(27)\n- **P2** は `depended_by: [D2]` で直接の依存は少ないが、**artifacts数27**で全命題中最も実装が密接\n- P2 なし → D2 (Valid Verification Requires Separation) の根幹がエビデンス欠如\n- D2 は E1 に依存するが、E1のエビデンス（`verification_requires_independence`）は形式的導出のみで、**P2自体の動作検証エビデンスがない**\n\n### Critical: P3 (Governed Learning) — エビデンスなし、artifacts数42で最大\n- **P3** は全命題中最も多くのartifacts(42)を持つが、evidenceが空\n- P3 なし → D4, D9, D13, D17 の連鎖的エビデンス欠如\n- **D13 (Assumption Lifecycle)** はエビデンスなしで退役メカニズムの正当性が不透明\n\n### High: L1-L6 境界条件の過半数未検証\n- `L1, L3, L4, L5, L6`（5/6）がエビデンスなし\n- **D1 (Enforcement Layering)** はこれら全境界に依存するが、エビデンスなし → D1自体のエビデンスも欠如\n- 安全境界(L1)の検証不備は最上位リスク\n\n### Moderate: T4-T7 導出なし（基底制約）\n- T4(output nondeterministic), T5(no improvement without feedback), T6(human authority), T7(resource finite) は導出なし\n- これらは基底公理(T₀)由来であり、**導出不可能として正当**だが、P2-P6の全原則がこれらに依存するため間接的リスク\n\n## 3. 改善提案（優先度順）\n\n### Action 1: P2 のエビデンス強化（最優先）\n- **理由**: 検証独立性はプロジェクトの中核原理。E1は理論的根拠のみで、P2の実際の動作（hook/agent/skill）のエビデンスがない\n- **具体策**: `tests/phase2/test-p2-behavioral.sh` で generator-verifier分離の動的検証を追加し、p2-verified.jsonl に実証データを蓄積\n\n### Action 2: P3 のエビデンス強化（第二優先）\n- **理由**: 最も多くのartifacts(42)を持つがevidenceゼロ。D9(互換性分類)とD13(退役ライフサイクル)の正当性が不透明\n- **具体策**: evolve-history.jsonl から統計的エビデンスを抽出し、`breaking change` の退役ケースに具体的な事例を追加\n\n### Action 3: D1 の境界検証統合\n- **理由**: L1-L6のうち5/6が未検証。D1はこれら全境界に依存するがエビデンスなし\n- **具体策**: `tests/phase1/test-l1-behavioral.sh` を拡張し、L3(L4,L6)の境界条件もカバーする統合テストを作成。L5(platform boundary)は環境固有のため除外可能",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 129646,
+  "timestamp": "2026-04-17T03:42:43Z",
+  "run_number": 1,
+  "exit_code": 0
+}

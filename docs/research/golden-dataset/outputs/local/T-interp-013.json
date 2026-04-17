@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-013",
+  "task_type": "T-interp",
+  "input_file": "trace-input-013.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバー済み | 43 (100%) |\n| 未カバー | 0 |\n| エビデンス付き | 19/43 (44%) |\n| 導出付き | 39/43 (91%) |\n\n**構図**: 全命題に少なくとも1つのアーティファクトが紐づいているが、エビデンスの欠如が半数を占める。\n\n## 2. ギャップ分析\n\n### Gap A: T4-T7（基礎制約）の導出欠落 — 最深刻\n\n```\nT4 (output_nondeterministic) ─┐\nT5 (feedback_necessity)      ├→ D1(50アールファクト) → D11, D17\nT6 (human_authority)         ├→ D13(36アールファクト) → D17, D18\nT7 (resource_finite)         └→ 他12命題の依存基盤\n```\n\n**問題**: 全命题の根幹をなす T0層（自然科学由来の制約）4命題が、いずれも `derivations` 空配列。型定義からの導出不可能性は Lean の `axiom` として維持されているが、「なぜ axiom でなければならないか」のメタ証明が欠如している。\n\n**影響**: D13（propagation semantics）を通じて下位26命題へ伝播。D17 は D1, D2, D3, D5, D9, D13 の6依存で最大ファンアウトを持つが、その基盤が axiom 留保に依存している。\n\n### Gap B: エビデンス欠落の集中 — Design Theorems 層\n\n| 命題 | エビデンス | ファンアウト（depended_by） |\n|---|---|---|\n| D1 | ✗ | D11 (1) |\n| D3 | ✗ | D6, D11, D17 (3) |\n| D5 | ✗ | D17 (1) |\n| D13 | ✗ | D17, D18 (2) |\n\n**問題**: D3 と D13 はそれぞれ3と2の依存先を持つがエビデンスなし。D17 はこれら全てに依存する「 convergence point 」で、エビデンスのボトルネックになっている。\n\n## 3. 改善提案（優先度順）\n\n### ① T4-T7 の降格判定レポート正式化（breaking change）\n\n**内容**: Lean の各 axiom に `refutation` フィールドを埋め、なぜ導出不可能かを形式的に記録する。T5 は既に evidence に例があるが、T4/T6/T7 は欠落。\n\n**影響範囲**: 全 D1-D14・V1-V7（基盤変更）\n**労力**: 低 — Lean ファイルへの追記\n\n### ② D13 のエビデンス補強（conservative extension）\n\n**内容**: D13 が主張する「半順序導出の検証」が実際に機能していることを示す実証データ。現在のアーティファクトは36件（スクリプト10本、テスト8本）だが、いずれも procedural/structural enforcement であり、独立した evidence（例: 過去の変更で逸脱を検出した事例）がない。\n\n**影響範囲**: D17, D18 のみ\n**労力**: 中 — 過去の evolve 履歴からの事例抽出が必要\n\n### ③ D17 の收敛点テスト（compatible change）\n\n**内容**: D17 は6つの設計定理に依存する最大ファンアウトの命題。D17 単独の structural/behavioral テストを追加し、依存チェーン全体の整合性を検証するゲートとする。\n\n**影響範囲**: D17 のみ\n**労力**: 中 — テスト実装 + 既存テストとの整合性確認",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 90028,
+  "timestamp": "2026-04-17T03:20:49Z",
+  "run_number": 1,
+  "exit_code": 0
+}

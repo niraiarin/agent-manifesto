@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-026",
+  "task_type": "T-interp",
+  "input_file": "trace-input-026.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## manifest-trace レポート分析\n\n### 1. カバレッジ状況\n\n| メトリック | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのカバレッジあり | **43/43 (100%)** |\n| テストあり | 43/43 (100%) |\n| 導出あり | 41/43 (95.3%) |\n| **実証(evidence)あり** | **19/43 (44.2%)** |\n\n未カバー命題（artifacts=0）は存在しない。全命題が何らかのartifact・テスト・導出を持っている。\n\nただし、`has_evidence: true` は19命題のみ。**24命題（55.8%）が evidence なし** — 構造的には存在するが、実証的根拠（axiom entry with basis/source/refutation）を欠く。\n\n### 2. ギャップ分析\n\n**最重要ギャップ: P3（学習の統治）— evidence なしの最大ノード**\n\n| 項目 | 値 |\n|---|---|\n| artifacts数 | **42**（全命題中最大級） |\n| depends_on | T1, T2 |\n| depended_by | L6, D4, D9, D13, D17 |\n\nP3はevidenceなしながら、5つの設計定理を支配し、その下流で **D13（トレーサビリティ）** がさらに36のartifactを持つ。P3の根拠薄弱はD13→D17チェーン全体に伝播する（D13: `assumption_impact_monotone` の前提が揺らぐ）。\n\n**2次的ギャップ: P2（検証の独立性）— D17への影響経路**\n\nP2 depends_on: T4, E1 → depended_by: D2 → D17。P2もevidenceなしだが、artifactsは空でhook/skill/agentに委譲している。実装は存在するが命題自体の実証的根拠がない。\n\n### 3. 改善提案（優先度順）\n\n| # | アクション | 理由 | 影響範囲 |\n|---|---|---|---|\n| **1** | **P3 の axiom evidence を Axioms.lean に追記** — `ungoverned_breaking_change_irrecoverable` の下位公理（session_bounded, structure_persists の組み合わせがなぜ不可逆かを明示）を basis/source/refutation 付きで記載 | D13→D17チェーンの根幹。42 artifact の割に evidence なしは信頼性リスク最大 | P3 → L6, D4, D9, **D13**, D17 |\n| **2** | **P2 の axiom evidence を EmpiricalPostulates.lean に追記** — `cognitive_separation_required` の実証的根拠（peer review 事例、共有バイアスの定量データ）を記載 | D2→D17への影響経路を補強。self-verification の危険性を実証で裏付ける | P2 → **D2** → D17 |\n| **3** | **L1/L3/L4/L6 の boundary evidence を Observable.lean に追記** — 各境界がなぜその制約から導かれるかの具体的な根拠（source + refutation）を記載 | 4命題連続で evidence なし。D1（enforcement layering）の土台が薄弱 | L1→D1, L3→D1, L4→D1, L6→D1 |\n\n**補足**: T4/T5/T6/T7 の `without_derivation` は意図的（T₀ 環境制約・自然科学的事実であり型定義から導出不可能）。これはギャップではなく設計判断。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 144521,
+  "timestamp": "2026-04-17T03:51:48Z",
+  "run_number": 1,
+  "exit_code": 0
+}

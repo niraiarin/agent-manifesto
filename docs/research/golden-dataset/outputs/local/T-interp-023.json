@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-023",
+  "task_type": "T-interp",
+  "input_file": "trace-input-023.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## Manifest Trace レポート分析\n\n### 1. カバレッジ状況\n\n| メトリック | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのカバーあり | **43 (100%)** |\n| エビデンス付き | 19/43 (44%) |\n| 導出付き | 39/43 (91%) |\n\n**未カバー命題**: なし（全命題が少なくとも1つの artifact でカバーされている）\n\nただし、**エビデンス欠如命題 24件** が存在する:\n\n```\nT8, P2, P3, P6, L1, L3, L4, L5, L6, D1〜D14 全14件, V6\n```\n\n**導出欠如命題 4件**（基底制約 T4-T7）:\n```\nT4 (nondeterminism), T5 (observability), T6 (human authority), T7 (finite resources)\n→ T₀ 環境制約として型から導出不可能であり、axiom として維持（意図的）\n```\n\n---\n\n### 2. ギャップ分析 — D13 影響波及観点\n\n**最優先ギャップ: P3（学習の統治）— エビデンスなし**\n\nP3 の依存関係チェーン:\n```\nP3 ← D4, D9, D13, L6, V4, V5\n     ↓    ↓    ↓    ↓    ↓   ↓\n  evolve 設計  仮説化  規約  ゲート  提案精度\n  スキル  フロー  退役  P3ルール gate logger  judge agent\n```\n\nP3 にエビデンスがない意味:\n- **D13（仮説の退役メカニクス）** がエビデンスなし → 「陳腐化した知識は退役する」という P3 ルールの実際の稼働実績が計測されていない\n- **V5（提案精度）と V4（ゲート通過率）** はエビデンスありだが、P3 統治下の改善サイクル自体のエビデンスがない\n- つまり「P3 が機能している」ことの**直接観測**が存在しない\n\n**2番目のギャップ: D1-D14 の連続欠落（設計定理の全滅）**\n\n設計定理 14件中すべてがエビデンスなし。これは構造的な問題:\n- 設計定理は「〜すべき」という規範記述であり、実証的エビデンスで検証しにくい\n- Lean 形式導出（theorem）は存在するため、論理的整合性は保たれている\n- ただし D13 のような**影響範囲の広い定理**ほど、実稼働データの欠如が危険\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### ① P3/D13 統治サイクルの実測エビデンス構築（breaking change 注意）\n\n**理由**: P3 は D4→D9→evolve の全フローを統括。P3 自体のエビデンス欠如は「学習の統治」の信頼性を根底から揺るがす。\n\n**アクション**:\n- `evolve-history.jsonl` から退役（retirement）された改善案の実績を抽出し、V7（task design efficiency）として定量化する\n- 具体的には: observer が列挙 → hypothesizer が分類 → integrator が統合/退役 の各ステップのタイムスタンプと結果を `p3-governance-metrics.jsonl` に記録\n- **互換性**: conservative extension（新規データファイル追加のみ）\n\n#### ② D13 仮説影響範囲の自動検出テスト追加\n\n**理由**: D13 の定理 `d13_assumption_impact_monotone` と `d13_propagation` は Lean で証明済みだが、実システムでの動作検証がない。\n\n**アクション**:\n- `tests/phase4/test-d13-propagation.sh` を新規作成\n- 仮説（hypothesis）の追加/退役時に、影響を受ける命題群が正しく更新されることを検証\n- **互換性**: conservative extension（新規テストのみ）\n\n#### ③ 設計定理のエビデンス代替指標の定義\n\n**理由**: D1-D14 のエビデンス欠如は構造的。規範記述を「実証」する新たな枠組みが必要。\n\n**アクション**:\n- 各設計定理について、代替エビデンス源をマッピングする（例: D1 → structural enforcement hooks が実際に blocking した回数 / D6 → stage ordering の違反検出ゼロ）\n- `docs/research/design-theorem-evidence.md` に記録\n- **互換性**: compatible change（文書追加、既存ワークフロー継続可能）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 128232,
+  "timestamp": "2026-04-17T03:44:52Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-018",
+  "task_type": "T-interp",
+  "input_file": "trace-input-018.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nmanifest-trace レポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバー済み | **43 (100%)** |\n| 未カバー | なし |\n| 証拠付き | 19/43 (44%) |\n| 証拠なし | **24/43 (56%)** |\n| 導出付き | 38/43 (88%) |\n| 導出なし | 5/43 (12%) |\n\n全命題が少なくとも1つのアーティファクトでカバーされているが、**証拠（empirical grounding）の欠如が半数を占める**。\n\n## 2. ギャップ分析\n\n### 深刻度順ギャップ\n\n| 優先度 | ギャップ | 影響範囲 (depended_by) |\n|---|---|---|\n| **最高** | D13（トレーサビリティ）に証拠なし | D17 を経由して P2/P3/D4/D5 に波及。D13 は「半順序導出・カバレッジ検出」そのものなので、自己言及のパラドックス |\n| **高** | P2/P3（検証の統治・学習の統治）に証拠なし | P2→D2→D17, P3→D4/D9/D13/D17。P3 は 5 個の D を支配する |\n| **中** | L1/L4/L6（境界層）に証拠なし | L1→D1→全 D、L4→V3/V4/V5、L6→V4/V5/V7。境界層の非検証は観測量 V1-V7 の基盤を脆弱にする |\n\n### 致命的な構造的問題\n\n**D13（トレーサビリティ設計定理）に証拠がない**。D13 は `manifest-trace` ツール、`trace` スキル、`p4-manifest-refs-check` フックなど 36 個のアーティファクトを支配するが、それら自体が「証拠」として機能しているという循環性がある。外部検証可能な証拠（例: trace accuracy の定量評価）が存在しない。\n\n## 3. 改善提案\n\n### Priority 1: D13 実証的証拠の追加（breaking change）\n**理由**: D13 はトレーサビリティそのものを定義する定理だが、自己言及的な証拠しか持たない。`manifest-trace` の出力精度を定量評価する証拠を追加すべき。\n**アクション**: `tests/phase5/test-d13-empirical.sh` を作成し、trace 結果の ground truth との一致率（V6 関連指標）を測定する。\n\n### Priority 2: P2/P3 実証的証拠の追加（conservative extension）\n**理由**: 検証と学習統治に証拠がないのは不自然。evolve-history.jsonl と p2-verified.jsonl が既に存在するので、それらを「証拠」として宣言的にマッピングする。\n**アクション**: `lean-formalization/Manifest/ObservableDesign.lean` に `p3_governed_learning_evidence` および `p2_verification_evidence` の axiom evidence entries を追加し、evolve-history と p2-verified の実データを根拠として参照させる。\n\n### Priority 3: L1/L4/L6 境界証拠の補完（compatible change）\n**理由**: 境界層は技術非依存制約として位置づけられているが、L1（安全境界）と L4（行動空間境界）に実証的証拠がない。Claude Code の具体的な制約（hook イベント、permission モデル）を証拠として記録する。\n**アクション**: `ObservableDesign.lean` に `l1_safety_boundary_evidence` および `l4_action_space_evidence` を追加し、既存の hook 構成と permission config を根拠とする。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 148638,
+  "timestamp": "2026-04-17T03:31:22Z",
+  "run_number": 1,
+  "exit_code": 0
+}

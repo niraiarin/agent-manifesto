@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-012",
+  "task_type": "T-interp",
+  "input_file": "trace-input-012.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nトレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのartifactsを持つ命題 | **32/43 (74%)** |\n| artifactsがゼロの命題 | **11/43 (26%)** |\n| evidenceを持つ命題 | 19/43 (44%) |\n| derivationを持つ命題 | 38/43 (88%) |\n\n**artifactsゼロの命題（未実装）**: T8, L5, L6, D2, D3, D7, D8, D9, V3, V5, V7\n\n## 2. ギャップ分析\n\n### 重大度: HIGH — P3 (学習の統治) に evidence が存在しない\n\nP3 は **6つの後続命題** を支配する: L6 → D4 → D13 → D17 の連鎖を含む。\nevidenceなし、derivationのみ（`t0_contraction_forbidden`, `ungoverned_breaking_change_irrecoverable`）に依存しているが、これらは内部的な導出であり、外部的事実による裏付けではない。\n\n**D13 影響波及**: P3 → D4, D9, **D13**, D17 の順で影響が伝播する。\nD13（トレーサビリティ）自体も evidence=0 で、36 artifacts を持つにもかかわらず根拠がない。D13 が破綻すると、全命題の半順序導出と逸脱検出が信頼不能になる。\n\n### 重大度: MEDIUM — T8 (課題の精密さ) に evidence が存在しない\n\nT8 は P6, D5, D12 の **3つの原理** の根拠（depends_on）だが、evidenceもartifactsもゼロ。\nP6 → D5/D12/D14/D15 への影響連鎖の起点が空洞化している。\n\n### 重大度: MEDIUM — L5/L6 に artifacts が存在しない\n\nL5（プラットフォーム境界）と L6（アーキテクチャ規約境界）は boundary 層だが、artifacts=0。\nD1 が全境界を depends_on しているため、L5/L6 の欠落は D1 の実装検証に影響する。\n\n## 3. 改善提案（優先度順）\n\n| # | アクション | 影響範囲 | 互換性分類 |\n|---|---|---|---|\n| **1** | **P3 に evidence を付与**: evolve-history.jsonl の実績データ（互換性分類付きコミットの成功率/失敗率）を P3 の axiom として EmpiricalPostulates.lean に記録する | L6, D4, D9, D13, D17 (5命題) の根拠強化 | conservative extension |\n| **2** | **T8 に evidence を付与**: Lean build成功率、theorem/axiom比の経時変化を T8 `task_has_precision` の証拠として Axioms.lean に記録する | P6, D5, D12, D14 (4命題) の根拠強化 | conservative extension |\n| **3** | **L5/L6 に artifacts を作成**: L5 は `docs/l5-platform-capabilities.json` が既に存在（traceレポートのpathと一致するか要確認）。L6 は hook (`p4-gate-logger.sh`) のartifacts登録不足か。両者の artifact 欠落を実装レベルで是正する | D1, V4, V5, V7 (4命題) の境界実装検証 | compatible change |",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 157392,
+  "timestamp": "2026-04-17T03:18:12Z",
+  "run_number": 1,
+  "exit_code": 0
+}

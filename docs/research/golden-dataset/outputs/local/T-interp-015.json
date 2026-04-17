@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-015",
+  "task_type": "T-interp",
+  "input_file": "trace-input-015.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## マニフェストトレーサビリティレポート分析\n\n### 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかのartifactsを持つ | **43/43 (100%)** |\n| evidenceを持つ | 19/43 (44%) |\n| derivationを持つ | 39/43 (91%) |\n\n**uncovered: なし** — 全命題が少なくとも1つのartifactsでカバーされている。\n\nただし、**evidence欠如が構造的に深刻**:\n- T層（基礎制約）: T8のみ evidence なし\n- P層（原理）: **P2, P3, P6** の3つが evidence なし\n- L層（境界）: **L1, L3, L4, L5, L6** の5つが evidence なし\n- D層（設計定理）: **D1〜D14 全14個** が evidence なし（理論命題としては想定内だが、実装との橋渡しが不十分）\n\n---\n\n### 2. ギャップ分析 — 最も重要なギャップ\n\n**P3（学習の統治）と P6（タスクは制約充足問題）の evidence 欠如が最大リスク。**\n\n理由:\n- **P3** は D4, D9, D13, D17 を導出。特に **D13（仮定期限切れの影響伝播）** は10個以上のスクリプト・テストで実装されているが、evidence がゼロ。「実装は豊富だが根拠の提示がない」状態\n- **P6** は P6→D5, D12, D14 の連鎖を支える。evidence なし → 下位定理の実践的正当性が脆弱\n- **P2**（検証の独立性）は D2 を介して D17 に波及。E1→P2→D2→D17 のチェーン全体が evidence 欠如\n\n---\n\n### 3. 改善提案（優先度順）\n\n| # | アクション | 理由 | 影響範囲 |\n|---|---|---|---|\n| **1** | **P3 の evidence 補強**: evolve-history.jsonl の実績データから「互換性分類が breaking change を検知した実例」を抽出し、axiom card に追加 | D13(36 artifacts) は最も豊富な実装を持つ命題の1つ。evidence なしが不均衡 | P3→D4,D9,D13,D17（5命題） |\n| **2** | **P2 の evidence 補強**: p2-verified.jsonl と hook 失敗ログから「自己検証がバグを見逃した事例」を列挙 | E1→P2→D2→D17 チェーン全体が根拠なし。E1自体は evidence ありなので、P2への橋渡しのみ必要 | P2→D2→D17（3命題） |\n| **3** | **T8 の evidence 追加**: 「精度レベル0のタスクが無意味だった実例」を1-2件収集 | T層は唯一 evidence が不足している基礎層。T8→P6→D5,D12,D14 の連鎖を支える要 | T8→P6→D5,D12,D14（4命題） |",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 151056,
+  "timestamp": "2026-04-17T03:25:05Z",
+  "run_number": 1,
+  "exit_code": 0
+}

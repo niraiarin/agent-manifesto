@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-007",
+  "task_type": "T-interp",
+  "input_file": "trace-input-007.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## Manifest Trace レポート分析 (v0.3.0)\n\n### 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバー済み | 43 (100%) |\n| 未カバー | なし |\n| 証拠付き | 19/43 (44%) |\n| 導出付き | 39/43 (91%) |\n\n全命題が少なくとも1つのアーティファクトでカバーされている。ただし**証拠（evidence）の欠如が21命題（49%）**に及んでいる。\n\n---\n\n### 2. ギャップ分析 — 最も重要な未証拠命題\n\nD13（仮説追跡・影響波及）の観点から、`depended_by` が多く证据のない命題を優先度順で評価:\n\n| 命題 | カテゴリ | 被依存数 | 被依存命題 | D13影響度 |\n|---|---|---|---|---|\n| **P2** (検証の独立性) | principle | 1 | D2 → D17 | ★★★★★ |\n| **P3** (学習の統治) | principle | 5 | L6, D4, D9, D13, D17 | ★★★★★ |\n| **L1** (安全境界) | boundary | 2 | D1, V3 | ★★★★☆ |\n| **D1** (強制階層化) | designTheorem | 1 | D11 | ★★★☆☆ |\n\n**P3 が最優先**: P3 は5つの命題を被依存させており、そのうち D13 は自身も未証拠。P3 の証拠欠如は「観察→仮説化→検証→統合」サイクル全体の正当性を根底から揺るがす。\n\n**P2 も重要**: 直接の被依存は D1 つだけだが、D2 → D17 と連鎖しており、検証独立性の証拠なしに P2/D2/D17 の全てが「主張のみ」状態になる。\n\n---\n\n### 3. 改善提案（優先度順）\n\n**① P3 の証拠カード作成（breaking change 注意）**\n- `.claude/metrics/evolve-history.jsonl` と `decision-log.jsonl` の実績データから、互換性分類の実績を抽出し、P3 axiom card を補強する\n- D13（仮説追跡）の証拠も同時に作成可能\n- 影響: P3 → L6, D4, D9, D13, D17 の5命題が連鎖的に証拠付きに\n\n**② P2 の証拠カード作成（conservative extension）**\n- `p2-verified.jsonl` と hook 実行ログから、検証独立性の実績を定量化する\n- D2 導出定理の Lean 証明で `verification_requires_independence (E1)` からの連鎖を明示\n- 影響: P2 → D2 → D17 の3命題が連鎖的に証拠付きに\n\n**③ L1 の証拠カード作成（compatible change）**\n- `l1-safety-check.sh` と `l1-file-guard.sh` の hook 実行記録から、安全境界違反の検知実績を抽出\n- V3（出力品質）への影響も評価可能\n- 影響: L1 → D1, V3 の2命題が証拠付きに",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 138383,
+  "timestamp": "2026-04-17T03:06:20Z",
+  "run_number": 1,
+  "exit_code": 0
+}

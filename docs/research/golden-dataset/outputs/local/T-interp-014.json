@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-014",
+  "task_type": "T-interp",
+  "input_file": "trace-input-014.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## トレーサビリティレポート分析\n\n### 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 (全命題が何らかのアーティファクトでカバー) |\n| テスト存在率 | **29/43 = 67%** (14命題にテストなし) |\n| 実装存在率 | **38/43 = 88%** |\n| 証拠あり率 | **19/43 = 44%** (24命題に証拠なし) |\n| 導出あり率 | **39/43 = 91%** |\n\n**テスト未存在の命題 (14件):**\n`T4, P2, P3, L1, L3, L5, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12`\n\n**実装未存在の命題 (5件):**\n`T3, T4, L3, L5, D6, D11`\n\n---\n\n### 2. ギャップ分析 — D13 影響波及観点\n\n**最重要ギャップ: `D1` (enforcement layering) のテスト・実装欠落**\n\n```\nD1 depended_by → D11\nD1 depends_on → P5, L1-L6 (全境界層)\n```\n\nD1 は全境界層 (L1-L6) を統合する設計定理であり、下流に D11 を依存させる。D1 に `has_test=false`, `has_implementation=false` という穴があるため:\n- **L1-L6 の実装検証が D1 経由で欠落** — 境界層の構造正しさが間接検証されていない\n- **D11 (T3+D1+D3 統合) の基盤が不安定**\n\n**2番目の重要ギャップ: `P2, P3` (検証の独立性 / 学習の統治) に証拠なし**\n\n```\nP2 depended_by → D2 → D17 (5命題を支配)\nP3 depended_by → D4, D9, D13, D17\n```\n\nP2 と P3 はマニフェストの中核原則だが、Lean axioms での証拠（反証可能性の明示）がない。これは **D13 (知識退役の統治)** の基盤が弱く、evolve ワークフローの学習ループ全体が証拠ベースでないことを意味する。\n\n---\n\n### 3. 改善提案（優先度順）\n\n| 優先度 | アクション | 理由 |\n|---|---|---|\n| **1** | **D1 のテスト実装** — `tests/phase1/` または `tests/phase5/` に D1 (enforcement layering) の構造検証テストを追加。L1-L6 の統合動作を検証する | D1 が未テストの設計定理で最大(50アーティファクト)。下流 D11 を含む複数命題が基盤なしで依存中 |\n| **2** | **P2, P3 の証拠補強** — Lean `Axioms.lean` または専用ファイルで、P2 (verification_requires_independence) と P3 (compatibility_classification_exhaustive) の axiom 証拠を追加。T3/T5 と同様の T₀ 自然科学根拠 + 降格判定を記載 | マニフェスト中核原則の証拠率 0% → D13 の知識退役ループが非証拠ベースで稼働 |\n| **3** | **L3, L5, D6 の実装補完** — L3 (resource boundary), L5 (platform boundary) は Lean Ontology.lean での定義のみ。対応するフック/スクリプトの実装または「意図的な非実装」のドキュメント化 | 境界層の 2/6 が実装欠落。L5 は provider-specific という正当理由があるが、L3 と D6 は補完余地あり |",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 165663,
+  "timestamp": "2026-04-17T03:22:20Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-011",
+  "task_type": "T-interp",
+  "input_file": "trace-input-011.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## manifest-trace レポート分析\n\n### 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| 何らかの形でカバー済み | **43/43 (100%)** |\n| 証拠(Artifact)付き | 19/43 (44%) |\n| 導出(Theorem)付き | 39/43 (91%) |\n\n「未カバー命題」は空だが、**24命題が evidence なし**。特に設計定理層(D)の脆弱性が顕著:\n\n```\nevidence なし命題 — 24件\n  T8(1): 制約層\n  P2,P3,P5,P6(4): 原則層\n  L1-L6(6): 境界層\n  D1-D14(14): 設計定理層 ← 全体の過半数\n```\n\n### 2. ギャップ分析 — D13 影響波及の観点\n\n**D13（traceability）は 36 artifacts を持つ中核命題**だが evidence なし。D13 の理論的性質:\n\n- `d13_assumption_subsumes_propagation`: 前提の期限切れが個々の命題否定を包含する\n- `d13_assumption_impact_monotone`: 広範な前提ほど広範な影響を持つ\n\n**このギャップの影響**: D13 が機能しない = 前提(expired)→命題→構造 の連鎖的退役メカニズムが観測不能。つまり「構造が改善されたが、どの前提が期限切れになったか」を追跡できない。P4（可観測性）の根幹を揺るぐ。\n\n**2番目の重要ギャップ**: T8 に evidence なし。T8 は D5,D12,D14,L6 の**4命題の基底**。T8 が不確かなら precision 関連設計定理全体が基盤を失う。\n\n### 3. 改善提案（優先度順）\n\n| # | アクション | 理由 | 影響範囲 |\n|---|---|---|---|\n| **1** | **D13 assumption expiration の実測データを `.claude/metrics/assumptions.jsonl` に追加** | D13 は traceability の中核だが evidence なし。仮説化→検証サイクルの退役フェーズを実証する必要がある | P4, D9, D17 にも波及 |\n| **2** | **T8 `task_has_precision` の根拠文書を作成（manifesto.md 引用 + 実例）** | T8 は precision 関連設計定理(D5,D12,D14)の唯一の制約基底。T₀ natural-science-derived として具体例で補強すべき | D5(29 artifacts), D12, D14 |\n| **3** | **P2/P3 の evidence なしを解消: evolve-history から定量指標を抽出** | P2(27 artifacts) と P3(42 artifacts) は最も多くの構造を持つ命題だが、test_result などの証拠がない。evolve-history.jsonl の実績データを evidence に昇格させる | D1,D2,D4,D9,D13 |",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 156603,
+  "timestamp": "2026-04-17T03:15:35Z",
+  "run_number": 1,
+  "exit_code": 0
+}
