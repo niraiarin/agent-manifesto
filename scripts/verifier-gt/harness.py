@@ -35,6 +35,20 @@ def _checkpoint(output_file: Path, summary: dict, per_example: list):
         json.dump({"summary": summary, "per_example": per_example}, f, indent=2)
 
 
+def _query_model_name() -> str:
+    """Query llama-server for the currently loaded model name."""
+    try:
+        import urllib.request
+        with urllib.request.urlopen("http://localhost:8090/v1/models", timeout=3) as resp:
+            data = json.loads(resp.read())
+        models = data.get("models") or data.get("data") or []
+        if models:
+            return models[0].get("name") or models[0].get("id") or "unknown"
+    except Exception:
+        pass
+    return "unknown"
+
+
 def evaluate(
     dataset: str,
     limit: Optional[int] = None,
@@ -46,6 +60,7 @@ def evaluate(
     stratified: bool = False,
     checkpoint_every: int = 100,
     resume: bool = True,
+    model_name: Optional[str] = None,
 ) -> dict:
     """Run pairwise evaluation over a benchmark.
 
@@ -56,6 +71,10 @@ def evaluate(
     """
     if not verifier_local.ensure_server():
         raise RuntimeError("llama-server unavailable")
+
+    # Auto-detect model name if not provided
+    if model_name is None:
+        model_name = _query_model_name()
 
     overall_correct = 0
     overall_total = 0
@@ -127,8 +146,9 @@ def evaluate(
 
         if verbose and (overall_total) % 10 == 0:
             elapsed = time.time() - start
-            processed_this_run = overall_total - (len(processed_ids) if False else 0)
-            rate = overall_total / elapsed if elapsed > 0 else 0
+            # processed_this_run excludes resumed examples for accurate rate
+            processed_this_run = overall_total - len(processed_ids)
+            rate = processed_this_run / elapsed if elapsed > 0 else 0
             print(f"  [{overall_total}] acc={overall_correct/overall_total:.3f} "
                   f"({overall_correct}/{overall_total}) "
                   f"rate={rate:.2f}/s",
@@ -137,7 +157,8 @@ def evaluate(
         # Checkpoint periodically
         if output_file and overall_total % checkpoint_every == 0:
             ckpt_summary = {
-                "dataset": dataset, "limit": limit, "k_rounds": k_rounds,
+                "dataset": dataset, "model_name": model_name,
+                "limit": limit, "k_rounds": k_rounds,
                 "bidirectional": bidirectional, "total": overall_total,
                 "correct": overall_correct,
                 "accuracy": round(overall_correct / overall_total, 6),
@@ -161,6 +182,7 @@ def evaluate(
 
     summary = {
         "dataset": dataset,
+        "model_name": model_name,
         "limit": limit,
         "k_rounds": k_rounds,
         "bidirectional": bidirectional,
@@ -196,6 +218,7 @@ if __name__ == "__main__":
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--stratified", action="store_true", help="Stratified sampling across subsets")
     parser.add_argument("--decomposed", action="store_true", help="Use 3 decomposed criteria instead of 1")
+    parser.add_argument("--model-name", type=str, default=None, help="Model identifier (auto-detected if omitted)")
     args = parser.parse_args()
 
     criteria = None
@@ -215,6 +238,7 @@ if __name__ == "__main__":
         output_file=out,
         stratified=args.stratified,
         criteria=criteria,
+        model_name=args.model_name,
     )
 
     print("\n" + "=" * 60)
