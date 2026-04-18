@@ -85,6 +85,41 @@ Provenance + Cross test の 4 layer) 内、新たな循環依存問題なし。
 - **採用**: 1 ファイル `RetiredEntity.lean` に統合
 - **理由**: RetirementReason は RetiredEntity 専用の payload type、密接に関連、
   1 ファイルで cohesion 高い、import 簡素化 (Day 11 ProvRelation の 3 structure 統合と同パターン)。
+
+## Day 14 意思決定ログ (linter A-Minimal 実装)
+
+### D1. Lean 4 標準 `@[deprecated]` attribute による退役 entity 警告 (Q1 A 案 + Q2 A-Minimal)
+- **代案 B**: custom attribute `@[retired]` + elaborator hook (A-Compact)
+- **代案 C**: custom linter (`Lean.Elab.Command` 拡張、A-Standard)
+- **代案 D**: elaborator による型レベル強制 (compile error 化、A-Maximal)
+- **採用**: 案 A 標準 `@[deprecated]` attribute 付与 (test fixture 対象、A-Minimal)
+- **理由**: Day 1-13 で custom Lean compiler 拡張はやっていない新分野、minimal で学習 +
+  設計判断を集めて Day 15+ で段階的拡張パスを開ける (A-Compact → A-Standard → A-Maximal)。
+  Lean 4 標準機能のみで学習コスト最小、Day 14 1 日で完結。
+
+### D2. test fixture 対象、production code 変更なし (Q3 案 A)
+- **代案 B**: production code に helper 関数 + 直接構築 deprecated 警告
+- **代案 C**: namespace marker function (`Retired.markDeprecated`)
+- **採用**: 案 A test fixture (新規 `*Deprecated` 4 variant fixture を追加) 対象のみ
+- **理由**: backward compatible (既存 `RetiredEntity.trivial` / smart constructor / structure 自体には影響なし)、
+  案 B (helper) は既存 smart constructor と重複、案 C (marker) は新運用パターンで概念重複。
+  test 内で `set_option linter.deprecated false in` で warning 抑制し build PASS 維持、
+  外部利用箇所では warning 発生で linter 効果確認可能。
+
+## Day 14 `@[deprecated]` 使用例 (production code から外部利用箇所への gentle warning)
+
+外部利用者が以下の deprecated fixture を参照すると Lean 4 linter が warning を発生:
+
+    -- 利用側 (warning 発生):
+    #check RetiredEntity.refutedTrivialDeprecated  -- warning: deprecated, use ...
+
+    -- 利用側 (warning 抑制):
+    set_option linter.deprecated false in
+    example := RetiredEntity.refutedTrivialDeprecated  -- no warning
+
+これは PROV-O §4.4 「退役済 entity 参照は警告」semantic を Lean 4 標準機能で
+A-Minimal 実装したもの。Day 15+ で custom attribute (`@[retired]`) や custom linter
+(Lean.Elab.Command 拡張) で精緻化予定。
 -/
 
 namespace AgentSpec.Provenance
@@ -157,6 +192,35 @@ def trivial : RetiredEntity :=
 
 /-- `reason` accessor の alias (Day 6 Failure.whyFailed と同パターン)。 -/
 def whyRetired (r : RetiredEntity) : RetirementReason := r.reason
+
+/-! ### Day 14 deprecated fixture (linter A-Minimal 実装、Q3 案 A test fixture のみ対象)
+
+これら 4 variant fixture は `@[deprecated]` attribute 付与で外部利用時に warning を
+発生させる (PROV-O §4.4 退役 entity 参照警告の Lean 4 標準機能実装)。
+
+利用側で `set_option linter.deprecated false in` により warning 抑制可能 (test 用途)。
+production code (RetiredEntity structure / smart constructor 自体) は backward compatible
+で変更なし。Day 15+ で custom attribute / linter / elaborator に段階的拡張予定。 -/
+
+/-- Refuted variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
+def refutedTrivialDeprecated : RetiredEntity :=
+  refuted ResearchEntity.trivial AgentSpec.Process.Failure.trivial
+
+/-- Superseded variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
+def supersededTrivialDeprecated : RetiredEntity :=
+  superseded ResearchEntity.trivial ResearchEntity.trivial
+
+/-- Obsolete variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
+def obsoleteTrivialDeprecated : RetiredEntity :=
+  obsolete ResearchEntity.trivial
+
+/-- Withdrawn variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
+def withdrawnTrivialDeprecated : RetiredEntity :=
+  withdrawn ResearchEntity.trivial
 
 end RetiredEntity
 

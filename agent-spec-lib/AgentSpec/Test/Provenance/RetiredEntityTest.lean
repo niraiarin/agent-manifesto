@@ -118,4 +118,53 @@ example :
         RetiredEntity.withdrawn h ]
     allRetired.length = 4 := rfl
 
+/-! ### Day 14 deprecated fixture 動作確認 (linter A-Minimal、Q4 案 C rfl preference 維持)
+
+Day 14 D1 linter A-Minimal 実装で追加された `@[deprecated]` 付き fixture
+(refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated /
+withdrawnTrivialDeprecated) が Inhabited / mk' / accessor で引き続き rfl 動作することを確認。
+
+`set_option linter.deprecated false in` で warning を抑制 (test 用途、build PASS 維持)。
+Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 3 度目、Day 11-14 = 4 Day 連続
+rfl preference 維持)。 -/
+
+set_option linter.deprecated false in
+/-- Refuted deprecated fixture: entity が trivial -/
+example : RetiredEntity.refutedTrivialDeprecated.entity = ResearchEntity.trivial := rfl
+
+set_option linter.deprecated false in
+/-- Refuted deprecated fixture: reason が Refuted Failure.trivial -/
+example : RetiredEntity.refutedTrivialDeprecated.reason = .Refuted Failure.trivial := rfl
+
+set_option linter.deprecated false in
+/-- Superseded deprecated fixture: entity が trivial -/
+example : RetiredEntity.supersededTrivialDeprecated.entity = ResearchEntity.trivial := rfl
+
+set_option linter.deprecated false in
+/-- Superseded deprecated fixture: reason が Superseded trivial -/
+example : RetiredEntity.supersededTrivialDeprecated.reason =
+          .Superseded ResearchEntity.trivial := rfl
+
+set_option linter.deprecated false in
+/-- Obsolete deprecated fixture: reason が Obsolete -/
+example : RetiredEntity.obsoleteTrivialDeprecated.reason = .Obsolete := rfl
+
+set_option linter.deprecated false in
+/-- Withdrawn deprecated fixture: reason が Withdrawn -/
+example : RetiredEntity.withdrawnTrivialDeprecated.reason = .Withdrawn := rfl
+
+set_option linter.deprecated false in
+/-- whyRetired accessor on deprecated fixture -/
+example : RetiredEntity.refutedTrivialDeprecated.whyRetired = .Refuted Failure.trivial := rfl
+
+set_option linter.deprecated false in
+/-- Day 14 deprecated fixture 4 variant を List 集約 (既存 4 variant List 集約との対称性) -/
+example :
+    let allDeprecated : List RetiredEntity :=
+      [ RetiredEntity.refutedTrivialDeprecated,
+        RetiredEntity.supersededTrivialDeprecated,
+        RetiredEntity.obsoleteTrivialDeprecated,
+        RetiredEntity.withdrawnTrivialDeprecated ]
+    allDeprecated.length = 4 := rfl
+
 end AgentSpec.Test.Provenance.RetiredEntity

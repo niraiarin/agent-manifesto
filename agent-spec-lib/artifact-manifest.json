@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.13.0-week2-day13",
+  "version": "0.14.0-week2-day14",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -304,7 +304,7 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 346,
+      "aggregated_example_count": 354,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -1051,15 +1051,17 @@
       "provides_definitions": [
         "RetiredEntity.mk' / refuted / superseded / obsolete / withdrawn (5 smart constructors)",
         "RetiredEntity.trivial",
-        "RetiredEntity.whyRetired (reason accessor alias、Day 6 Failure.whyFailed と同パターン)"
+        "RetiredEntity.whyRetired (reason accessor alias、Day 6 Failure.whyFailed と同パターン)",
+        "RetiredEntity.refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated / withdrawnTrivialDeprecated (Day 14 deprecated fixture 4 variant、@[deprecated ... (since := \"2026-04-18\")] 付与、linter A-Minimal 実装)"
       ],
       "provides_instances": [
         "Inhabited / Repr (RetirementReason + RetiredEntity 全て、deriving)",
-        "DecidableEq 省略: Superseded payload の ResearchEntity recursive 制約継承 (Day 13+ 検討)"
+        "DecidableEq 省略: Superseded payload の ResearchEntity recursive 制約継承 (Day 15+ 検討)"
       ],
-      "design_origin": "02-data-provenance §4.4 退役 entity の構造的検出を Lean 化 (Day 12 Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure / D3 1 ファイル統合配置、Day 11 ProvRelation パターン踏襲、ResearchEntity 拡張不要 backward compatible)",
-      "tydd_alignment": "TyDD-S1 types-first (4 variant inductive で退役理由 semantic を型レベル区別) + S4 P2 Refinement (案 B String を退ける) + S4 P5 explicit assumptions 3 度目強適用 (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化、Refuted (failure : Failure) / Superseded (replacement : ResearchEntity))",
-      "decision_log": "RetiredEntity.lean docstring D1-D3 (Q3 案 A 4 variant 型化 / Q4 案 A separate / D3 1 ファイル統合配置)"
+      "design_origin": "02-data-provenance §4.4 退役 entity の構造的検出を Lean 化 (Day 12 Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure / D3 1 ファイル統合配置、Day 11 ProvRelation パターン踏襲、ResearchEntity 拡張不要 backward compatible)。Day 14 で linter A-Minimal 実装 (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 C、Lean 4 標準 @[deprecated] attribute で退役済 entity 参照警告を実現、test fixture のみ対象、production code structure / smart constructor は backward compatible)",
+      "tydd_alignment": "TyDD-S1 types-first (4 variant inductive で退役理由 semantic を型レベル区別) + S4 P2 Refinement (案 B String を退ける) + S4 P5 explicit assumptions 3 度目強適用 (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化、Refuted (failure : Failure) / Superseded (replacement : ResearchEntity))。Day 14 で TyDD-G3 linter integration (Lean 4 標準 @[deprecated] 活用、Day 15+ で custom attribute / linter / elaborator へ段階的拡張パス)",
+      "decision_log": "RetiredEntity.lean docstring D1-D3 (Q3 案 A 4 variant 型化 / Q4 案 A separate / D3 1 ファイル統合配置)。Day 14 で D1-D2 追加 (Q3 案 A test fixture 対象 @[deprecated] / Q4 案 C rfl preference 維持、A-Minimal から A-Compact / A-Standard / A-Maximal への段階的拡張パス)",
+      "linter_status": "A-Minimal (Day 14 linter 実装第一段階、Lean 4 標準 @[deprecated] (since := \"2026-04-18\") 付与、test fixture 4 variant 対象)。Day 15+ で A-Compact (custom attribute @[retired]) / A-Standard (custom linter Lean.Elab.Command) / A-Maximal (elaborator 型レベル強制) へ段階的拡張予定"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
@@ -1073,16 +1075,18 @@
         "5 smart constructors: mk' / refuted / superseded / obsolete / withdrawn (rfl)",
         "trivial fixture + whyRetired accessor",
         "Day 6 Failure 経由パターン (案 C 利点吸収) との整合性",
-        "4 variant 全種類を List で集約 (内部規範 layer 横断 transfer 7 段階目)"
+        "4 variant 全種類を List で集約 (内部規範 layer 横断 transfer 7 段階目)",
+        "Day 14 deprecated fixture 4 variant の entity / reason / whyRetired accessor rfl 確認 (set_option linter.deprecated false in で warning 抑制、build PASS 維持)",
+        "Day 14 deprecated fixture 4 variant の List 集約 (既存 4 variant List 集約との対称性)"
       ],
       "enforces": "structural",
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 22,
+      "example_count": 30,
       "sorry_count": 0,
       "axiom_count": 0,
-      "rfl_preference_pattern": "Day 11 Subagent I3 教訓を反映: 全 example で rfl preference 維持 (simp tactic 不使用)、Day 11 ProvRelationTest L111-123 simp 利用箇所への改善対応"
+      "rfl_preference_pattern": "Day 11 Subagent I3 教訓を継続反映 (cycle 内学習 transfer 3 度目、Day 11-14 = 4 Day 連続 rfl preference 維持): 全 example で rfl preference 維持 (simp tactic 不使用)、Day 14 追加 8 example も rfl 基底、set_option linter.deprecated false in で warning 抑制するのみ"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelationAuxiliary",
@@ -1171,23 +1175,23 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 13",
+    "last_verified_phase": "Week 2 Day 14",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 102, "scope": "production-only", "note": "Day 13 で ProvRelationAuxiliary +1 で 101→102"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 121, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 102, "scope": "production-only", "note": "Day 14 は既存 RetiredEntity MODIFY のみで jobs 変化なし (102 維持)、@[deprecated] 4 fixture 追加は既存 module 内"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 121, "scope": "test only", "note": "Day 14 は既存 RetiredEntityTest MODIFY のみで jobs 変化なし (121 維持)"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
     "process_layer_progress": "Day 6 Hypothesis + Failure、Day 7 Evolution + HandoffChain 完了 (4 type 完備)",
-    "provenance_layer_completed_5_type_plus_6_relation": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 main relation 追加、Day 12 で RetiredEntity + RetirementReason 4 variant 追加 = §4.1 完全カバー + §4.4 完全カバー到達、**Day 13 で WasInformedBy + ActedOnBehalfOf + WasRetiredBy 3 relation 追加 = 5 type + 6 relation 完備 (PROV-O §4.1 main 3 + auxiliary 2 + §4.4 retirement 1 統合)**",
-    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10/11/12/13 で 8 度運用検証成功 (Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11 で v2 適用初の Provenance 新規 .lean commit、Day 12 で v2 2 度目、**Day 13 で v2 3 度目** = 運用安定性継続確認)",
+    "provenance_layer_completed_5_type_plus_6_relation_plus_linter": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 main relation 追加、Day 12 で RetiredEntity + RetirementReason 4 variant 追加 = §4.1 完全カバー + §4.4 完全カバー到達、Day 13 で WasInformedBy + ActedOnBehalfOf + WasRetiredBy 3 relation 追加 = 5 type + 6 relation 完備 (PROV-O §4.1 main 3 + auxiliary 2 + §4.4 retirement 1 統合)、**Day 14 で RetiredEntity linter A-Minimal 実装 (Lean 4 標準 @[deprecated] 4 fixture、Day 15+ で custom attribute / linter / elaborator へ段階的拡張)**",
+    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10/11/12/13 で 8 度運用検証成功 + Day 14 既存 module MODIFY のため hook 新規 detection なし (artifact-manifest 同 commit は継続、Pattern #7 が MODIFY path でも機能することを Day 14 で確認)。Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11/12/13 で v2 適用初-3 度目の Provenance 新規 .lean commit = 運用定常化",
     "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent.toEntity、Day 11 で PROV-O triple set test (3 relation 同一 example)、Day 12 で 4 RetirementReason variant 全種類を List で集約 test (内部規範 layer 横断 transfer 7 段階目)、**Day 13 で PROV-O 6 relation 統合 example** (Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1、内部規範 layer 横断 transfer 8 段階目)",
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
-    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation の Lean 化完了、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 退役 entity の構造的検出完備、**Day 13 で PROV-O auxiliary 2 relation (WasInformedBy / ActedOnBehalfOf) + §4.4 retirement relation (WasRetiredBy = Entity → RetiredEntity 2-arg、Day 12 RetiredEntity 再利用) で 6 relation 完備**",
+    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation の Lean 化完了、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 退役 entity の構造的検出完備、Day 13 で PROV-O auxiliary 2 relation (WasInformedBy / ActedOnBehalfOf) + §4.4 retirement relation (WasRetiredBy = Entity → RetiredEntity 2-arg、Day 12 RetiredEntity 再利用) で 6 relation 完備、**Day 14 で RetiredEntity linter A-Minimal (Lean 4 標準 @[deprecated] 4 fixture) で §4.4 構造的検出を強制化 (外部利用時 warning)**",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 346,
+    "example_count": 354,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1229,7 +1233,7 @@
       "Provenance/ProvRelation.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ProvRelationTest.lean": {"theorems": 0, "examples": 22},
       "Provenance/RetiredEntity.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetiredEntityTest.lean": {"theorems": 0, "examples": 22},
+      "Test/Provenance/RetiredEntityTest.lean": {"theorems": 0, "examples": 30},
       "Provenance/ProvRelationAuxiliary.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ProvRelationAuxiliaryTest.lean": {"theorems": 0, "examples": 24},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
@@ -1440,6 +1444,15 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」5 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent / Day 12 I1+I2 即時対処 / Day 13 I1 即時対処 の継続)"
       },
       "note": "Day 13 Provenance 層 PROV-O auxiliary relations + WasRetiredBy 3 structure 追加 (WasInformedBy + ActedOnBehalfOf + WasRetiredBy、Q1 A-Minimal / Q3 案 B 別 file 配置 / Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg)。PROV-O §4.1 main 3 + auxiliary 2 + §4.4 retirement 1 統合 = 5 type + 6 relation 完備。Build 102+121 jobs、example 322→346 (+24)。Pattern #7 hook v2 3 度目の Provenance 新規 .lean commit (Day 11/12 に続く運用検証)。Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 2 度目): ProvRelationAuxiliaryTest 全 example で rfl preference 維持 (最終 example の And 分解 refine + rfl のみ rfl 連鎖として許容)。Day 12 D2 separate structure 配置の妥当性が WasRetiredBy 経由参照で確認。Subagent VERDICT: PASS (addressable 0、informational 1: I1 即時対処)"
+    },
+    {
+      "round": "Week 2 Day 14 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (102+121 jobs、MODIFY のみで jobs 変化なし)、Subagent 検証は本 commit 後の cycle step 1 (改訂 66 paper サーベイ評価サイクル) で実施予定 (Day 12-13 同パターン継続)",
+      "p2_complete_for": "day-14-provenance-retired-entity-linter-a-minimal",
+      "note": "Day 14 Provenance 層 RetiredEntity linter A-Minimal 実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C、Day 12-13 の structural detection + relation 完備を Lean 4 標準 @[deprecated] attribute で強制化)。4 deprecated fixture 追加 (refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated / withdrawnTrivialDeprecated、@[deprecated \"退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)\" (since := \"2026-04-18\")] 付与、test fixture のみ対象で production code backward compatible)。Build 102+121 jobs 維持 (MODIFY のみで jobs 変化なし)、example 346→354 (+8 RetiredEntityTest 内)。Pattern #7 hook は MODIFY path でも artifact-manifest 同 commit を確認 (Day 14 新分野パターン: 新規 file 追加なしでも linter 実装可能)。Day 11-14 で 4 Day 連続 rfl preference 維持 (cycle 内学習 transfer 3 度目適用)。Day 15+ で A-Compact (custom attribute @[retired]) / A-Standard (custom linter Lean.Elab.Command) / A-Maximal (elaborator 型レベル強制) へ段階的拡張パス"
     }
   ]
 }
