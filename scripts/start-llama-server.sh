@@ -15,7 +15,7 @@
 set -euo pipefail
 
 PORT="${LLAMA_PORT:-8090}"
-MODEL="${LLAMA_MODEL:-$HOME/models/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf}"
+MODEL="${LLAMA_MODEL:-$HOME/models/Qwen3.5-4B-UD-Q6_K_XL.gguf}"
 NGL="${LLAMA_NGL:-99}"
 CTX="${LLAMA_CTX:-4096}"
 HEALTH_URL="http://localhost:${PORT}/health"

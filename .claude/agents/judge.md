@@ -387,14 +387,23 @@ Gate 基準: [Sub-Issue で定義した PASS/FAIL 基準]
 ### llama-server 起動（手動）
 
 ```bash
-# Qwen3.6-35B-A3B (11GB, Q2_K_XL)
+# Qwen3.5-4B (3.9GB, UD-Q6_K_XL) — RewardBench 82.6% (論文 Gemini 2.5 Flash 77% を +5.6pp 上回る)
 llama-server \
-  -m ~/models/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf \
+  -m ~/models/Qwen3.5-4B-UD-Q6_K_XL.gguf \
   --port 8090 \
   -ngl 99 \
   -c 4096 \
   --no-mmap
 ```
+
+**モデル選択の根拠 (#618 research)**:
+N=92 stratified RewardBench で 5 モデル比較:
+- Qwen3.5-4B UD-Q6_K_XL: 82.6% (最高コスパ、3.9GB、5.8分)
+- Gemma-4-E4B-it UD-Q6_K_XL: 83.7% (最高精度、6.9GB)
+- Qwen3.5-9B UD-Q6_K_XL: 82.6% (4B と同等)
+- Qwen3.6-35B-A3B Q2_K_XL: 66.3% (量子化で劣化、非推奨)
+
+デフォルトは **Qwen3.5-4B Q6** (精度・速度・サイズの最適バランス)。
 
 ### 起動管理
 
