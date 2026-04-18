@@ -214,10 +214,11 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | ✅ **Day 12 完了** | ~~02-data-provenance §4.4 退役の構造的検出 (RetiredEntity structure)~~ — Day 12 で `RetiredEntity` separate structure + `RetirementReason` 4 variant inductive (Refuted/Superseded/Obsolete/Withdrawn、PROV-O §4.4 1:1 対応) として実装完了 (Q3 案 A 4 variant 型化 + Q4 案 A separate、ResearchEntity 拡張不要 backward compatible) | 02-data-provenance §4.4 | Day 12 commit `49510c6` で対処 |
 | ✅ **Day 13 完了** | ~~PROV-O auxiliary relations (WasInformedBy / ActedOnBehalfOf) + WasRetiredBy~~ — Day 13 で 3 separate structure (`WasInformedBy { activity, informer : ResearchActivity }` + `ActedOnBehalfOf { agent, on_behalf_of : ResearchAgent }` + `WasRetiredBy { entity : ResearchEntity, retired : RetiredEntity }`) として実装完了 (Q3 案 B 別 file 配置 ProvRelationAuxiliary.lean + Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg、Day 12 RetiredEntity 再利用) | 02-data-provenance §4.1 + §4.4 | Day 13 commit `40ccd78` で対処 |
 | ✅ **Day 14 A-Minimal 完了** | ~~RetiredEntity linter / elaborator (A-Minimal)~~ — Day 14 で Lean 4 標準 `@[deprecated "msg" (since := "2026-04-18")]` 4 fixture (Refuted / Superseded / Obsolete / Withdrawn variant) として実装完了 (test fixture のみ対象、production code backward compatible) | 02-data-provenance §4.4 + TyDD-G3 linter integration | Day 14 commit `13c4e77` で対処 |
-| 🟡 Day 15 | **A-Compact: custom attribute `@[retired]`** — Lean 4 `register_simp_attr` + elaborator hook、Day 14 A-Minimal の自然な拡張 | TyDD-G3 + §4.4 (Day 14 段階的拡張パス) | Day 15 メイン候補 |
-| 🟢 Day 15+ | **A-Standard: custom linter** — `Lean.Elab.Command` 拡張 | TyDD-G3 + §4.4 | Day 15+ (A-Compact 確立後) |
+| ✅ **Day 15 完了** | ~~A-Compact: custom attribute `@[retired]`~~ — Day 15 で Lean 4 elab macro (`macro_rules`) による Hybrid 実装完了 (`@[retired msg since]` → `@[deprecated msg (since := since)]` 展開、新 module `RetirementLinter.lean` で隔離、Day 14 backward compatible 維持) | TyDD-G3 + §4.4 (Day 14 段階的拡張パス第 2 段階) | Day 15 commit `17db6ef` で対処 |
+| 🟡 Day 16 | **A-Standard: custom linter** — `Lean.Elab.Command` 拡張 (Day 15 macro 学習が前提準備) | TyDD-G3 + §4.4 | Day 16 メイン候補 |
+| 🟡 Day 16+ | **transitionLegacy 削除 (Day 14 `@[deprecated]` + Day 15 `@[retired]` 両モデル転用)** — cycle 内学習 transfer の 2 段階別分野転用、2 モデル揃ったことで最適 timing 到達 | TyDD + Day 14-15 両モデル | Day 16+ (Day 15 で新規識別) |
 | 🟢 Week 5-6 | **A-Maximal: elaborator 型レベル強制** — compile error で退役違反 rejection | TyDD-G3 + §4.4 | Week 5-6 Tooling 層 (本丸案件) |
-| 🟡 Day 15+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) — Day 13 WasRetiredBy 案 C で考察した拡張 | 02-data-provenance §4.1 (Day 13 paper サーベイで再認識) | Day 15+ (Day 9 paper サーベイから継続、Day 13-14 で繰り延べ明示) |
+| 🟡 Day 16+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) — Day 13 WasRetiredBy 案 C で考察した拡張 | 02-data-provenance §4.1 (Day 13 paper サーベイで再認識) | Day 16+ (Day 9 paper サーベイから継続、Day 13-15 で繰り延べ明示) |
 | 🟡 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** — Lean tree → JSON-LD schema-preserving 変換 (Lean meta-program)、外部 tool (WorkflowHub, Galaxy) との interop 確保 | 02-data-provenance §4.7 | Week 6-7 (CI 整備時) (Day 6 paper サーベイ評価で識別) |
 | 🟢 Week 5-6 | **02-data-provenance §4.5 Pipeline 段階表現** — DSL ≤ AST ≤ LeanSpec ≤ SMTSpec ≤ Tests ≤ Code を Spec 精緻化として Lean で表現 (Snakemake rule 対応) | 02-data-provenance §4.5 | Week 5-6 Tooling 層 (Day 6 paper サーベイ評価で識別) |
 | 🟢 Day 7+ | **S6 Paper 1 (BST/AVL invariants)** — Hypothesis chain の order を invariant 付き structure 化 (Evolution と統合時) | S6 TyDe 2025 Paper 1 | Day 7+ (Evolution と統合) (Day 6 paper サーベイ評価で識別、Section 2.10 既存項目から Day 7+ に具体化) |
@@ -3113,6 +3114,71 @@ Section 12.39 Day 14 想定目標 (67/68 = 98.5%) を **予想を上回って達
 
 ---
 
+### 12.43 Day 15 論文サーベイ視点評価結果（2026-04-18 実施）
+
+Day 15 (`17db6ef` Provenance 層 RetirementLinter A-Compact Hybrid macro 実装) を 74 対象サーベイの paper findings に対して評価。
+
+#### Day 15 で活用された paper findings (5 件)
+
+1. **02-data-provenance §4.4 PROV-O `retired` semantic 直接表現** → `@[retired msg since]` custom attribute syntax で PROV-O §4.4 "退役" を syntax レベルで表現 (Day 14 `@[deprecated]` の一般機能を PROV-O 特化化)
+2. **TyDD-G3 linter integration + macro 拡張** → Day 14 Lean 4 標準 `@[deprecated]` 活用から Day 15 Lean 4 elab macro 活用へ、段階的 Lean 機能習得パス確立
+3. **TyDD-S4 P5 explicit assumptions 6 度目強適用** → macro syntax で since 引数必須化 (`"retired " str ppSpace str : attr`)、attribute assumption の explicit 強制を syntax level で実現 (Day 14 個別 fixture での付与から Day 15 全 `@[retired]` 利用への一般化)
+4. **G5-1 §6.2.1 Pattern #7 hook v2 4 度目運用検証 (新規 file パターン復帰)** → Day 14 MODIFY path から Day 15 新規 file パターンへ復帰、hook v2 が両パターンで機能することを Day 11-15 の 5 回適用で実証
+5. **cycle 内学習 transfer 拡張: 逆方向修正** → Day 15 Subagent I1 (docstring/実装齟齬) で初の「Subagent 推奨と逆方向修正」実例 (docstring を実装に合わせる align、Lean 4 parser 仕様根拠)、cycle 内学習 transfer が単純 transfer から cross-verification まで発展
+
+#### Day 15 で paper finding と実装の双方向影響
+
+| Direction | 内容 |
+|---|---|
+| **paper → Day 15** | 02-data-provenance §4.4 PROV-O `retired` semantic / TyDD-G3 macro 拡張 / TyDD-S4 P5 syntax-level enforcement / Pattern #7 hook 新規 file パターン |
+| **実装 → paper 評価更新** | **A-Compact Hybrid macro 実装** (A-Minimal 標準機能から A-Compact macro 機能への段階的学習、Day 16+ A-Standard Lean.Elab.Command 拡張への前提準備)、**段階的 Lean 機能習得パス確立** (標準 attribute → macro → Elab.Command → elaborator)、**初の「Subagent 推奨と逆方向修正」実例** (docstring ← 実装の align、Lean 4 parser 仕様根拠、cycle 内学習 transfer の cross-verification 発展)、**初期 build error からの即時修復実例** ($msg:str 型注釈追加で parser 適合、新分野学習の実装 iteration) |
+
+これは Day 4-14 の paper × 実装合流 (11 種) に続く **12 度目: A-Compact macro × 段階的 Lean 機能習得パス × 逆方向修正実例** カテゴリ確立 (linter 段階的拡張の 2 段階目 + cycle 内学習 transfer の cross-verification 発展)。
+
+#### Day 15 で paper との矛盾
+
+**なし**。02-data-provenance §4.4 PROV-O `retired` を Lean 4 macro で直接表現、Day 14 A-Minimal backward compatible 維持、TyDD-G3 linter integration / S4 P5 syntax-level enforcement 同時遵守。Subagent I1 での齟齬は docstring/実装間の局所的不整合 (paper との矛盾ではない)、本評価で即時解消済。
+
+#### Paper-grounded な Day 15 強み
+
+| Paper finding | Day 15 実装での顕在化 |
+|---|---|
+| **02-data-provenance §4.4 PROV-O `retired` semantic** | `@[retired]` custom attribute で syntax-level に PROV-O 名称を直接表現 (Day 14 `@[deprecated]` より PROV-O 特化) |
+| **TyDD-G3 macro 拡張** | Lean 4 elab macro で `@[retired]` → `@[deprecated]` 展開、Day 16+ Elab.Command への前提準備 |
+| **TyDD-S4 P5 syntax-level enforcement 6 度目強適用** | macro syntax で since 必須化 = 全 `@[retired]` 利用で explicit assumption 自動強制 |
+| **Pattern #7 hook 両パターン対応** | Day 11-13 新規 file + Day 14 MODIFY + Day 15 新規 file 復帰 = 両パターン 5 度の運用検証 |
+| **逆方向修正実例** | Subagent I1 で docstring ← 実装 align (初の逆方向)、Lean 4 parser 仕様根拠 |
+| **初期 build error からの即時修復** | `$msg:str` 型注釈必須 (Lean 4 deprecated parser が第一位置 ident 期待仕様) |
+
+#### Day 15 で識別された改善提案 (4 件、Section 2.10 で反映) + 実装修正対処
+
+| 優先度 | 提案 | 根拠 paper | 対処タイミング |
+|---|---|---|---|
+| 🟡 Day 16 | **A-Standard custom linter** (Lean.Elab.Command 拡張) | TyDD-G3 + §4.4 (Day 15 macro 学習が前提準備) | Day 16 メイン候補 |
+| 🟡 Day 16+ | **transitionLegacy 削除 (Day 14 `@[deprecated]` モデル + Day 15 `@[retired]` モデル両転用)** | TyDD + Day 14-15 両モデル確立 | Day 16+ (cycle 内学習 transfer の 2 段階別分野転用、2 モデル揃ったことで最適 timing 到達) |
+| 🟡 Day 16+ | **ResearchActivity payload 拡充** (Day 13-14 から継続) | 02-data-provenance §4.1 | Day 16+ |
+| 🟢 Week 5-6 | **A-Maximal elaborator 型レベル強制** (compile error rejection) | TyDD-G3 + §4.4 | Week 5-6 Tooling 層本丸 |
+| ✅ **本評価で実装修正対処** | **Subagent I1 (addressable、docstring/実装齟齬) + docstring を実装に align (初の逆方向修正)** | Subagent I1 Day 15 | 本 commit で即時対処 (paper サーベイ評価サイクル「実装修正組込み」7 度目適用、Day 9-15 継続、Day 15 で逆方向修正実例として発展) |
+
+#### Subagent 検証結果 (本評価サイクルで即時実施、Day 12-14 同パターン継続 + 逆方向修正発展)
+
+Day 15 code commit `17db6ef` の Subagent 検証を本 paper サーベイ評価サイクル内で即時実施:
+
+- **VERDICT**: PASS (with I1 raised to addressable → 改訂 71 で即時対処済 → addressable 0)
+- **I1 (addressable、改訂 71 で即時対処)**: macro RHS (`$msg:str (since := $since:str)`) と docstring 展開例 (`$msg (since := $since)`) の齟齬。Subagent は docstring 形式への align を推奨だが、`$msg` (型注釈なし) は Lean 4 `deprecated` parser が第一引数に ident を期待するため build error。**実装側を保持し、docstring を実装に align + 理由注記追加**で齟齬解消 (逆方向の解決、Lean 4 4.29.0 parser 仕様に基づく判断)
+- **I2 (informational)**: build PASS は self-reported (Subagent が Lean build 自前実行不可のため監査記録、action 不要)
+- **I3 (informational)**: `ppSpace` は pretty-printer directive (parsing には必須でない、harmless cosmetic)、attr-category syntax 慣習として保持、action 不要
+
+**Day 15 cycle 内学習 transfer の cross-verification 発展**: Day 11-14 まで Subagent 指摘は「実装を直す」単方向対処だったが、Day 15 で初めて「Subagent 推奨を検証し、Lean 4 parser 仕様を根拠に逆方向 (docstring ← 実装) を採用」の cross-verification 発展。cycle pattern が単なる learning transfer から critical evaluation まで進化している実証。
+
+#### 結論
+
+Day 15 は **A-Compact Hybrid macro 実装 (linter 段階的拡張第 2 段階)** + **PROV-O §4.4 `retired` semantic syntax-level 表現** + **TyDD-S4 P5 6 度目強適用 (syntax-level explicit assumption enforcement)** + **paper × 実装 12 度目合流カテゴリ確立** (A-Compact macro × 段階的 Lean 機能習得パス × 逆方向修正実例) + **Subagent 検証 PASS + I1 初 addressable → 即時対処 (逆方向修正実例)** + **cycle 内学習 transfer の cross-verification 発展** (単純 transfer から critical evaluation へ)。paper サーベイ評価サイクル「実装修正組込み」は Day 9-15 で 7 度連続適用、Day 15 は逆方向修正実例で質的発展。
+
+Day 1-15 累計で **paper finding 59 件顕在化** (Day 4-15 × 5 件 + Day 1-3 関連 1 件 = 60 件の計算 missing、再カウント: Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 13: 5 / Day 14: 5 / Day 15: 5 / Day 1-3 関連: 1 = 合計 59)。
+
+---
+
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
 
 Day 9 (`fa5b373` Provenance 層継続 ResearchEntity + ResearchActivity) を TyDD Tag Index と Section 10.2 パターンに対して評価。
@@ -4214,6 +4280,27 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - Section 10.1 Day 15 行を確定版に更新 (Q1-Q4 採用案反映)
   - cycle 内学習 transfer 4 度目適用予定: Day 11 Subagent I3 教訓 (rfl preference) を Day 15 RetirementLinterTest でも継続適用 (Day 11-15 = 5 Day 連続 rfl preference 維持、quality loop の長期持続性実証)
   - 主要決定: Day 15 メイン = A-Compact Hybrid macro 実装 (新 module 隔離、Day 14 backward compatible)、A-Standard custom linter (Day 16+、macro 学習が前提準備) / A-Maximal elaborator (Week 5-6 本丸) へ段階的拡張、transitionLegacy 削除は Day 16+ で Day 14 + Day 15 両モデル確立後の最適 timing (cycle 内学習 transfer の 2 段階別分野転用)
+- 2026-04-18 (**改訂 71**): Day 15 論文サーベイ視点評価 + Subagent 検証 + I1 逆方向修正 (cycle step 1+2)
+  - Section 12.43 (新規): Day 15 論文サーベイ視点評価結果
+    - 活用 paper findings 5 件: §4.4 `retired` semantic syntax 直接表現 / TyDD-G3 macro 拡張 / S4 P5 syntax-level enforcement 6 度目 / Pattern #7 hook 両パターン対応 / cycle 内学習 transfer 逆方向修正
+    - 双方向影響: paper → Day 15 + 実装 → paper 評価更新 (A-Compact Hybrid macro 実装 / 段階的 Lean 機能習得パス確立 / 初の逆方向修正実例 / 初期 build error 即時修復)
+    - **paper × 実装 12 度目合流カテゴリ確立**: A-Compact macro × 段階的 Lean 機能習得パス × 逆方向修正実例
+    - paper との矛盾なし (§4.4 `retired` 直接表現、Subagent I1 齟齬は local 不整合で即時解消)
+    - 改善提案 4 件: A-Standard Day 16 / transitionLegacy 削除 Day 16+ (2 モデル揃い最適 timing) / ResearchActivity payload 拡充 Day 16+ / A-Maximal Week 5-6
+    - paper finding 累計 59 件 (Day 1-3: 1 / Day 4-15: 58)
+  - Section 2.10 更新:
+    - A-Compact custom attribute `@[retired]` ✅ Day 15 完了 (commit `17db6ef`、Hybrid macro 実装)
+    - A-Standard 🟡 Day 16 に格上げ (Day 15 macro 学習が前提準備)
+    - transitionLegacy 削除 🟡 Day 16+ 新規追加 (Day 14 + Day 15 両モデル転用、最適 timing 到達)
+    - A-Maximal 🟢 Week 5-6 (elaborator 本丸案件、変化なし)
+    - ResearchActivity payload 拡充 🟡 Day 16+ (Day 13-15 から継続)
+  - **実装修正対処**: Day 15 code commit `17db6ef` の Subagent 検証 PASS (本評価サイクル内で即時実施)
+    - I1 (**初の addressable**、改訂 71 で即時対処): macro RHS (`$msg:str (since := $since:str)`) と docstring 展開例 (`$msg (since := $since)`) の齟齬
+      - Subagent 推奨は docstring 形式への align (`$msg` / `$since` 型注釈なし) だが、Lean 4 `deprecated` parser が第一引数に ident を期待するため型注釈なしだと build error
+      - **実装側を保持し、docstring を実装に合わせて align + 理由注記追加**で齟齬解消 (初の「Subagent 推奨と逆方向修正」実例、Lean 4 4.29.0 parser 仕様根拠)
+    - I2/I3 informational のみ (build self-reported / ppSpace cosmetic、action なし)
+    - paper サーベイ評価サイクル「実装修正組込み」7 度目適用 (Day 9-15 継続、**Day 15 で質的発展**: 単純 transfer → cross-verification 発展、逆方向修正実例)
+  - **cycle 内学習 transfer の cross-verification 発展**: Day 11-14 まで Subagent 指摘は「実装を直す」単方向対処だったが、Day 15 で初めて「Subagent 推奨を検証し、Lean 4 parser 仕様を根拠に逆方向 (docstring ← 実装) を採用」の cross-verification 発展。cycle pattern が単なる learning transfer から critical evaluation まで進化している実証
 
 ## マーク凡例
 

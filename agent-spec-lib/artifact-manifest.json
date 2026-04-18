@@ -1514,9 +1514,24 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (103+123 jobs)、Subagent 検証は本 commit 後の cycle step 1 (改訂 71 paper サーベイ評価サイクル) で実施予定 (Day 12-14 同パターン継続)",
+      "informational_count": 2,
+      "evaluator": "build PASS (103+123 jobs) + Subagent 検証 PASS (改訂 71 paper サーベイ評価サイクルで実施、addressable 0 (I1 即時対処) + informational 2)",
       "p2_complete_for": "day-15-provenance-retirement-linter-a-compact",
-      "note": "Day 15 Provenance 層 RetirementLinter A-Compact Hybrid macro 実装 (Q1 A 案 / Q2 A-Compact-Hybrid / Q3 案 B 新 module / Q4 案 A 新 file test、Day 14 A-Minimal の段階的拡張第 2 段階)。@[retired msg since] syntax を @[deprecated msg (since := since)] に展開する macro で Lean 4 elab 機能学習 + Day 14 backward compatible 維持 (既存 @[deprecated] fixture 動作継続)。新 module RetirementLinter.lean + RetirementLinterTest.lean (新 file 9 example)、production RetiredEntity.lean は変更なし (別 module 隔離で backward compatible 完全維持)。Build 102→103 + 121→123 jobs、example 354→363 (+9)。Pattern #7 hook v2 4 度目運用検証 (Day 11-13 + Day 15 で新規 file パターン、Day 14 は MODIFY パターン = 両対応の運用安定性)。Day 11-15 で 5 Day 連続 rfl preference 維持 (cycle 内学習 transfer 4 度目適用)、Day 14 I1 教訓 (evaluator プレースホルダ) は本 commit 後の paper サーベイ評価 cycle で即時対処予定 (Day 12-14 同パターン継続)。Day 16+ で A-Standard custom linter / A-Maximal elaborator へ段階的拡張パス継続。transitionLegacy 削除は Day 14 @[deprecated] モデル + Day 15 @[retired] モデル両確立後の最適 timing で対処 (cycle 内学習 transfer の 2 段階別分野転用)"
+      "subagent_verification": {
+        "executed_in_commit": "改訂 71 paper サーベイ評価サイクル",
+        "verdict": "PASS (with I1 raised to addressable level → 改訂 71 で即時対処済)",
+        "addressable_initially": 1,
+        "addressable_after_fix": 0,
+        "immediate_fix_details": [
+          "I1 (addressable 元、改訂 71 で即時対処): macro RHS (`$msg:str (since := $since:str)`) と docstring 展開例 (`$msg (since := $since)`) の齟齬。Subagent は docstring 形式への align を推奨だが、`$msg` (型注釈なし) は Lean 4 deprecated parser が第一引数に ident を期待するため build error。**実装側を保持し、docstring を実装に合わせて align + 理由注記追加**で齟齬解消 (逆方向の解決、Lean 4 4.29.0 deprecated parser 仕様に基づく判断)"
+        ],
+        "informational": [
+          "I2: build PASS は self-reported (Subagent が Lean build を自前実行不可のため監査記録として明示)、action 不要",
+          "I3: `ppSpace` は pretty-printer directive で parsing には必須でない (harmless cosmetic)、attr-category syntax 慣習として保持、action 不要"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」7 度目適用 (Day 9-14 継続、**Day 15 は初の Subagent 推奨と逆方向修正実例**: docstring を実装に合わせる align 方向、Lean 4 parser 仕様が根拠)"
+      },
+      "note": "Day 15 Provenance 層 RetirementLinter A-Compact Hybrid macro 実装 (Q1 A 案 / Q2 A-Compact-Hybrid / Q3 案 B 新 module / Q4 案 A 新 file test、Day 14 A-Minimal の段階的拡張第 2 段階)。@[retired msg since] syntax を @[deprecated msg (since := since)] に展開する macro で Lean 4 elab 機能学習 + Day 14 backward compatible 維持 (既存 @[deprecated] fixture 動作継続)。新 module RetirementLinter.lean + RetirementLinterTest.lean (新 file 9 example)、production RetiredEntity.lean は変更なし (別 module 隔離で backward compatible 完全維持)。Build 102→103 + 121→123 jobs、example 354→363 (+9)。Pattern #7 hook v2 4 度目運用検証 (Day 11-13 + Day 15 で新規 file パターン、Day 14 は MODIFY パターン = 両対応の運用安定性)。Day 11-15 で 5 Day 連続 rfl preference 維持 (cycle 内学習 transfer 4 度目適用)。**Subagent VERDICT: PASS (I1 初 addressable → 改訂 71 即時対処、I2/I3 注記のみ)**、I1 は初の「Subagent 推奨と逆方向修正」実例 (docstring を実装に align、Lean 4 parser 仕様が根拠)。Day 16+ で A-Standard custom linter / A-Maximal elaborator へ段階的拡張パス継続"
     }
   ]
 }

@@ -23,7 +23,11 @@ PROV-O `@[retired]` semantic を型レベルで直接表現可能に。
     -- macro 展開:
     macro_rules
       | `(attr| retired $msg:str $since:str) =>
-        `(attr| deprecated $msg (since := $since))
+        `(attr| deprecated $msg:str (since := $since:str))
+
+`$msg:str` / `$since:str` 型注釈は Lean 4 `deprecated` parser が第一位置に `ident` を
+期待する仕様に合わせて必要 (型注釈なしだと `msg` が `ident` と解釈されて build error)。
+Day 15 Subagent 検証 I1 (改訂 71) で docstring と実装の整合を確認。
 
 これにより利用側で以下が可能:
 
@@ -78,6 +82,17 @@ Day 14 で `@[deprecated]` 直接付与した 4 fixture (refutedTrivialDeprecate
   Day 15 で since を必須にすることで attribute assumption の explicit 化を macro 側で強制
   (TyDD-S4 P5 explicit assumptions 6 度目強適用)。
   macro 定義は単一形式で単純化、利用側は「全ての `@[retired]` は since 指定必須」の規約に統一。
+
+### Day 15 Subagent 検証結果 (改訂 71)
+
+Subagent 検証 PASS (addressable 0 → 1、informational 2):
+- I1 (addressable、改訂 71 で対処): macro RHS と docstring の齟齬
+  → docstring の展開形式を実装 ($msg:str / $since:str 型注釈付き) に合わせて更新
+  (理由: Lean 4 `deprecated` parser の第一引数が ident を期待する仕様、型注釈なしだと build error)
+- I2 (informational、対処不要): build PASS は self-reported (Subagent が Lean build を
+  自前実行不可のため監査記録として明示)
+- I3 (informational、対処不要): `ppSpace` は pretty-printer directive (parsing には必須でない、
+  harmless cosmetic)、attr-category syntax での慣習として保持
 -/
 
 namespace AgentSpec.Provenance
