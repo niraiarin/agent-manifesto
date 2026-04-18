@@ -1,6 +1,8 @@
 import AgentSpec.Core
 import AgentSpec.Spine.FolgeID
 import AgentSpec.Spine.Edge
+import AgentSpec.Spine.EvolutionStep
+import AgentSpec.Spine.SafetyConstraint
 import AgentSpec.Proofs.RoundTrip
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)

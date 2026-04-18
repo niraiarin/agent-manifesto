@@ -1,6 +1,8 @@
 import AgentSpec.Test.CoreTest
 import AgentSpec.Test.Spine.FolgeIDTest
 import AgentSpec.Test.Spine.EdgeTest
+import AgentSpec.Test.Spine.EvolutionStepTest
+import AgentSpec.Test.Spine.SafetyConstraintTest
 
 /-!
 # AgentSpecTest: agent-spec-lib の test 専用ルート
