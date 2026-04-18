@@ -4853,6 +4853,13 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - Day 17 = 議論で確定するメイン候補、🟡 transitionLegacy 完全削除 A-Standard (`since := "2026-04-19"` 指定日 = Day 17、breaking change)
     - Day 18+ = Day 16 評価で繰り延べ + 新規識別項目 (A-Standard custom linter / ResearchActivity payload / DecidableEq / その他継続項目)
     - 関連 Section に 2.31 追加 (Day 6-16 評価導出 = 2.10 + 2.12 + 2.13 + 2.15 + 2.17 + 2.19 + 2.21 + 2.23 + 2.25 + 2.27 + 2.29 + 2.31)
+- 2026-04-18 (**改訂 80**): Day 16 やり残し対処 — deprecation_history commit hash 修正 (cycle step 7 で発見)
+  - 検出経緯: Day 16 cycle step 7 (やり残し調査) で発見、Day 12-15 は 4 回連続空ぶりだったが Day 16 で初発見 (Day 11 改訂 55 以来 2 度目)
+  - 誤記内容: artifact-manifest.json の EvolutionStep entry `deprecation_history.transitionLegacy.deprecated` field が `Day 16 (`17db6ef` 以降の Day 16 commit、...)` となっていたが、`17db6ef` は **Day 15 code commit** (RetirementLinter A-Compact Hybrid macro)、Day 16 code commit は **`b678856`** が正しい
+  - 他の箇所は正しく Day 16 commit `b678856` と記載 (99-verifier-rounds.md Day 16 R1 / Section 12.46 Day 16 評価 / Section 2.30 Day 16 判断 / Section 10.1 Day 16 行 / README.md Day 16 セクション)
+  - 対処内容: `deprecation_history.transitionLegacy.deprecated` を `Day 16 (`b678856`、@[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")] 付与、Q1 B 案 A-Compact)` に修正
+  - 結果: artifact-manifest.json の deprecation_history が他 docs と整合 (Day 16 code commit は `b678856` で全 docs 一致)
+  - 発見意義: cycle step 7 が空ぶりでない場合の実例、Day 11 改訂 55 以来の 2 度目 (manifest 内部の詳細 field で発見されやすい傾向)、cycle 内学習 transfer の別形態 (先回り適用されず後追いで発見)
 
 ## マーク凡例
 
