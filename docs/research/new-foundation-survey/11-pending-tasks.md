@@ -939,6 +939,67 @@ Day 5 は **paper finding × Day 5 実装の双方向影響** を初めて実証
 
 **Mathlib 大規模 import** は Day 5 の最大構造変化 (11→90 jobs)。N1 NbE Performance 監視を Week 6 CI 整備時に組込む必要あり。Pattern #7 hook 化により **Day 6 以降の構造的整合性が自動強制** され、4 連続違反の繰り返しは構造上不可能となった。
 
+### 12.14 Day 5 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 5 (`f4d2c93` Pattern #7 hook + LearningStage LE/LT + FolgeID PartialOrder + RoundTrip 部分達成) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 1-5 推移)
+
+| 評価軸 | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 | 変化 |
+|---|---|---|---|---|---|---|
+| S1 5 軸 | 5/5 | 5/5 | 5/5 | 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 8/10 | 8/10 | 8/10 | 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | 0/5 | 1/5 | 1/5 | 3/5 | **3/5 (派生拡張)** | 維持、P2 派生継続 |
+| F/B/H 強適用 | 0 | 0 | 0 | B3 | **B3 + F2 部分** | F2 部分達成 |
+| G1-G6 anti-pattern 回避 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 維持 |
+| Section 10.2 適合 | — | 6/8 | 5/8 | 5/8 + 1 構造違反 | **6/8 + 0 構造違反** ↑ | **Pattern #7 構造的解決** |
+
+#### Day 5 で前進した項目
+
+1. **Pattern #7 構造的解決** (4/8 適合) — hook 化により以後自動強制、4 連続違反の繰り返し不可能
+2. **F2 Lattice 部分達成** — LearningStage LE/LT instance + FolgeID PartialOrder で順序関係完備、Lattice 完全形への基盤
+3. **Mathlib 正式統合** — 自前実装ではなく標準 type class、コミュニティ規約遵守
+4. **paper × pattern 合流の継続** — Day 4 (S4 × Pattern #5) → Day 5 (G5-1 × Pattern #7) で 2 度目達成
+
+#### Day 5 で paper finding と TyDD の合流
+
+Day 5 で **構造的 governance hook の実装** という形で paper finding と established pattern が合流:
+
+| Direction | Day 4 (1 度目) | Day 5 (2 度目) |
+|---|---|---|
+| **paper finding** | S4 P1+P2+P4 (Refinement-Types Driven Development) | G5-1 §6.2.1 (Pattern #7 hook 化提案) |
+| **established pattern** | Pattern #5 (def Prop signature) | Pattern #7 (artifact-manifest 同 commit) |
+| **合流結果** | SafetyConstraint Bool→Prop refactor | hook による構造的強制 |
+
+#### 改善余地（優先度順）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🔴 高 | **S2 Lean-Auto / Recipe 4-6 (Day 5 で必要性顕在化)** | **Week 6 へ前倒し** | Section 2.10 (🟢→🔴 更新済) |
+| 🟡 中 | **Universal round-trip proof** — Day 5 で部分達成、universal 完全達成は要 SMT hammer | Day 6 / Week 3 | Section 2.2 |
+| 🟡 中 | **F2 Lattice 完全形** — LearningStage に `Lattice` instance 追加 | Week 4-5 | Section 2.10 |
+| 🟡 中 | **N1 NbE Performance 監視** — Mathlib 11→90 jobs 増大の影響計測 | Week 6 CI | Section 12.13 |
+| 🟢 低 | **EvolutionStep B4 4-arg post** — Process 層と同時設計 | Week 4-5 | Section 2.9 |
+| 🟢 低 | **F8 FiberedTypeSpec** (Observable V1-V7 fibered 化) | Week 4-5 | Section 2.10 |
+
+#### Day 6 で意識すべき改善事項
+
+| Day 5 評価から導出 | 反映先 |
+|---|---|
+| 🔴 Lean-Auto 統合準備 (まず research/poc) | Day 6 検討 |
+| 🟡 Universal round-trip 残作業 (consumeNat correctness 等) | Day 6 |
+| 🟡 Mathlib 影響評価 (build time / binary size) | Week 6 CI |
+| 🟢 Process 層着手判断 (Hypothesis / Verdict / Failure 等) | Day 6 / Week 3 |
+
+#### 結論
+
+Day 5 は TyDD 視点で **構造的整合性の自動化を達成**:
+- **Pattern #7 構造的解決** により Day 6 以降は Pattern #7 違反を構造上発生させない
+- **F2 Lattice 部分達成** で順序関係完備、Mathlib 統合の入口
+- **paper × pattern 合流の 2 度目** (G5-1 × Pattern #7)
+
+S2 Lean-Auto の必要性顕在化は **Day 5 のメタ的成果**: 評価ループが「将来候補」を「明確な必要性」に精緻化することで、Phase 0 後半の優先度判断に貢献。
+
 ---
 
 ## 13. 更新履歴
@@ -1032,6 +1093,14 @@ Day 5 は **paper finding × Day 5 実装の双方向影響** を初めて実証
     - 矛盾なし、Mathlib 11→90 jobs は N1 監視を Week 6 CI で組込み必要
   - Section 2.10 更新: S2 Lean-Auto / Recipe 4-6 を 🟢→🔴 格上げ (Day 5 で必要性顕在化、Week 6 へ前倒し)
   - 主要発見: paper finding が「優先度未定」→「具体的タイミング」へ精度向上 (Day 4 評価ループ実証に続くループ拡張)
+- 2026-04-18 (**改訂 15**): Day 5 TyDD 視点評価結果の反映
+  - Section 12.14 (新規): Day 5 TyDD 達成度評価 (Day 1-5 推移表含む)
+    - S1 5/5 維持、benefits 9/10 維持
+    - S4 3/5 強適用維持 (P2 派生継続: SafetyConstraint refinement → LearningStage LE/LT)
+    - F2 Lattice 部分達成 (LearningStage + FolgeID で順序関係完備)
+    - Section 10.2 適合: 5/8 + 1 構造違反 → **6/8 + 0 構造違反** (Pattern #7 構造的解決)
+  - 主要発見: paper × pattern 合流の 2 度目達成 (Day 4 S4 × Pattern #5 → Day 5 G5-1 × Pattern #7)
+  - Day 6 改善事項: 🔴 Lean-Auto 統合準備 / 🟡 Universal round-trip 残作業 / 🟡 Mathlib 影響評価
 
 ## マーク凡例
 
