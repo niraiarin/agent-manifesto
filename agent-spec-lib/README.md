@@ -732,6 +732,65 @@ Section 2.26 Day 14 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案
 - **cycle 内学習 transfer 構造的効果継続** (Day 11-14 で 4 Day 連続 rfl preference 維持、Day 13-14 で Subagent 検出項目数 1 安定維持 = quality loop 持続的効果)
 - **transitionLegacy 削除パスの linter モデル転用** (Day 14 `@[deprecated]` パターンが既存 transitionLegacy (Section 2.15 Day 9+) にも転用可能、cycle 内学習 transfer の別分野拡張)
 
+## 現状: Phase 0 Week 2 Day 15 完了（2026-04-18 追加）
+
+Section 2.28 Day 15 着手前判断 (Q1 A 案 / Q2 A-Compact-Hybrid / Q3 案 B 新 module / Q4 案 A 新 file test) に従い実装。
+**A-Compact Hybrid macro 実装** (Lean 4 elab macro で `@[retired msg since]` を `@[deprecated msg (since := since)]` に展開、新 module `RetirementLinter.lean` で隔離)、
+**Day 14 backward compatible 維持** (production `RetiredEntity.lean` / `RetiredEntityTest.lean` は変更なし)、
+**段階的 Lean 機能習得パス確立** (A-Minimal 標準 attribute → **A-Compact macro** → A-Standard Elab.Command → A-Maximal elaborator の 4 段階、2/4 完了)、
+**Subagent 検証 PASS + I1 初 addressable 逆方向修正対処** (改訂 71 で実施、docstring ← 実装 align、Lean 4 parser 仕様根拠、cycle 内学習 transfer の cross-verification 発展実例)、
+**Day 11-15 で 5 Day 連続 rfl preference 維持** (cycle 内学習 transfer 4 度目適用、quality loop 長期持続性実証)、
+**Pattern #7 hook 八段階発展完了** (新規 file パターン復帰で両パターン運用 5 度目)。
+
+### Day 15 の 1 項目 (Q2 A-Compact-Hybrid scope、新 module + 新 file)
+
+- [x] **A-Compact Hybrid macro 実装** (`AgentSpec/Provenance/RetirementLinter.lean` NEW、Q3 案 B 新 module 隔離)
+  - `syntax (name := retired) "retired " str ppSpace str : attr` (新 attribute syntax 定義)
+  - `macro_rules`: `@[retired $msg:str $since:str]` → `@[deprecated $msg:str (since := $since:str)]` 展開
+  - docstring に Day 15 D1-D3 意思決定ログ + 使用例 + Subagent 検証結果注記 (改訂 71 逆方向修正対応)
+  - `$msg:str` / `$since:str` 型注釈は Lean 4 4.29.0 `deprecated` parser が第一引数に ident を期待する仕様に合わせて必要 (初期 build error から即時修復、新分野学習 iteration)
+- [x] `AgentSpec/Test/Provenance/RetirementLinterTest.lean` NEW (**9 example**)
+  - `@[retired]` macro 展開後の 4 fixture (obsolete / withdrawn / refuted / superseded) が entity / reason / whyRetired accessor で rfl 動作
+  - Day 14 `@[deprecated]` fixture と Day 15 `@[retired]` macro fixture の並存確認 (backward compatibility)
+  - 8 variant 全体 List 集約 (Day 14 4 + Day 15 4 = 内部規範 layer 横断 transfer 9 段階目)
+  - `set_option linter.deprecated false in` で warning 抑制、rfl preference 維持 (cycle 内学習 transfer 4 度目、Day 11-15 = 5 Day 連続)
+- [x] `AgentSpec/Provenance/RetiredEntity.lean` / `AgentSpec/Test/Provenance/RetiredEntityTest.lean` **変更なし** (Day 14 backward compatible 完全維持)
+- [x] `lake build AgentSpec` ✓ (exit 0, **103 jobs**、+1 RetirementLinter)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **123 jobs**、+2 RetirementLinterTest + derived)
+- [x] /verify Round 1 PASS (build PASS + Subagent 即時検証 PASS + I1 初 addressable 逆方向修正対処、本評価サイクル内で即時実施、改訂 71 で対処)
+- [x] **Pattern #7 hook v2 4 度目運用検証** (新規 file パターン復帰、Day 11-13 3 度 + Day 14 MODIFY + Day 15 新規 file = 両パターン 5 度運用安定性)
+- [x] **Subagent I1 初 addressable 逆方向修正対処** (docstring ← 実装 align、Lean 4 4.29.0 parser 仕様根拠、初の Subagent 推奨と逆方向採用実例)
+- [x] **Day 14 I1 version field 教訓継続適用** (Day 15 で `0.15.0-week2-day15` に先回り bump)
+
+### Week 2 Day 15 時点の累計指標
+
+| 指標 | Day 14 | Day 15 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 354 | +9 (RetirementLinterTest) | **363** |
+| Provenance 層 type | 5 | 0 | **5 type** |
+| Provenance 層 relation | 6 | 0 | **6 relation** |
+| Provenance 層 linter | 1 (A-Minimal) | +1 (A-Compact Hybrid macro) | **2 linter: A-Minimal + A-Compact** |
+| AgentSpec build jobs | 102 | +1 (RetirementLinter) | **103 jobs** |
+| AgentSpecTest build jobs | 121 | +2 (RetirementLinterTest + derived) | **123 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 + 9 度連続検証 + 七段階発展完了 | 10 度目運用検証 (八段階発展 = 新規 file パターン復帰) | **1 + 10 度連続検証 + 八段階発展完了** |
+| 段階的 Lean 機能習得 | A-Minimal のみ (1/4) | +A-Compact macro (2/4) | **A-Minimal + A-Compact (2/4 段階完了)** |
+
+### Day 15 で達成した TyDD / paper 進展 (Section 12.43 + 12.44)
+
+- **02-data-provenance §4.4 PROV-O `retired` semantic syntax-level 直接表現** (`@[retired]` custom attribute で Day 14 `@[deprecated]` 一般機能を PROV-O 特化)
+- **A-Compact Hybrid macro 実装** (Lean 4 elab macro `macro_rules` で Day 14 A-Minimal backward compatible 維持しつつ PROV-O semantic 強化)
+- **段階的 Lean 機能習得パス確立** (A-Minimal → A-Compact の 2 段階、Day 16+ A-Standard Elab.Command → Week 5-6 A-Maximal elaborator への前提準備完了)
+- **TyDD-S4 P5 explicit assumptions 6 度目強適用** (syntax-level since 必須化 = 全 `@[retired]` 利用で explicit assumption 自動強制、Day 14 個別付与から一般化)
+- **Pattern #7 hook 八段階発展完了** (Day 5 設計→Day 6/7/8/9 4 度運用→Day 10 v2 拡張→Day 11/12/13 v2 3 度連続→Day 14 MODIFY path 対応→Day 15 新規 file パターン復帰、両パターン運用 5 度目)
+- **paper × 実装 12 度目合流カテゴリ確立** (A-Compact macro × 段階的 Lean 機能習得パス × 逆方向修正実例)
+- **paper finding 59 件累計** (Day 4-15 + Day 1-3 関連)
+- **Subagent 検証 PASS + I1 初 addressable 逆方向修正対処** (改訂 71 で実施、docstring ← 実装 align、Lean 4 parser 仕様根拠、paper サーベイ評価サイクル「実装修正組込み」7 度目適用で質的発展)
+- **cycle 内学習 transfer の cross-verification 発展** (Day 11-14 単純 transfer → Day 15 critical evaluation、Subagent 推奨を Lean 4 parser 仕様根拠で逆方向評価採用)
+- **初期 build error からの即時修復実例** (`$msg:str` 型注釈必須、新分野 Lean 4 4.29.0 parser 仕様学習の実装 iteration)
+- **Day 14 + Day 15 両モデル揃い transitionLegacy 削除の最適 timing 到達** (Day 16+ で cycle 内学習 transfer 2 段階別分野転用実例として実施候補、Section 2.15 Day 9+ からの繰り延べ解消候補)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

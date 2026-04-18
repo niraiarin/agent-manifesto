@@ -4415,6 +4415,27 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 16+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25/2.27 継続)
   - 実装修正なし (Day 9-14 同パターン継続): S4 P4 power-to-weight + A-Compact scope 制御遵守、Subagent 検証 PASS + I1 逆方向修正は paper サーベイ評価で対処済 (改訂 71)
   - Day 16 改善事項: A-Standard main / transitionLegacy 削除 (別分野転用) / ResearchActivity payload / DecidableEq / cross-interaction test
+- 2026-04-18 (**改訂 73**): Day 15 metadata 反映 (cycle step 5)
+  - README.md: Phase 0 Week 2 Day 15 完了セクション新設
+    - Day 15 1 項目詳細 (A-Compact Hybrid macro 実装、Q3 案 B 新 module + Q4 案 A 新 file)
+    - 初期 build error からの即時修復注記 ($msg:str 型注釈、新分野 iteration)
+    - Day 11 Subagent I3 教訓継続適用 (rfl preference、Day 11-15 = 5 Day 連続)
+    - Day 14 I1 version field 教訓先回り適用 (Day 15 で day15 に bump)
+    - 累計指標表 (Day 14 vs Day 15、103+123 jobs、example 363、Provenance 5 type + 6 relation + 2 linter)
+    - 段階的 Lean 機能習得 = 2/4 完了 (A-Minimal + A-Compact、Day 16+ A-Standard / Week 5-6 A-Maximal)
+    - Day 15 で達成した TyDD/paper 進展 10 項目:
+      - PROV-O §4.4 `retired` semantic syntax-level 直接表現
+      - A-Compact Hybrid macro 実装
+      - 段階的 Lean 機能習得パス確立
+      - TyDD-S4 P5 6 度目強適用
+      - Pattern #7 hook 八段階発展完了
+      - paper × 実装 12 度目合流カテゴリ
+      - paper finding 59 件累計
+      - Subagent 検証 PASS + I1 初 addressable 逆方向修正対処
+      - cycle 内学習 transfer の cross-verification 発展
+      - 初期 build error 即時修復実例
+      - Day 14 + Day 15 両モデル transitionLegacy 削除最適 timing 到達
+  - 注: artifact-manifest.json の Day 15 主要 metadata は Day 15 code commit `17db6ef` + 改訂 71 (Subagent I1 逆方向修正対処) に既に含まれているため本改訂では README 追加のみ (Day 6-14 改訂 21/27/33/39/45/51/58/63/68 同パターン)
 
 ## マーク凡例
 
