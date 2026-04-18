@@ -1,44 +1,44 @@
 {
   "run_id": "T-interp-025",
   "task_type": "T-interp",
-  "timestamp": "2026-04-17T03:58:34Z",
+  "timestamp": "2026-04-18T15:22:28Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/T-interp-025.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/T-interp-025.json",
   "judge_scoring": {
     "cloud": {
-      "c1": 5,
-      "c2": 4,
-      "c3": 5,
-      "c4": 5,
-      "c5": 4,
-      "overall": 4.6,
-      "rationale": "構造的に正確でギャップ特定と改善提案が具体的だが、D13 波及の定量的な影響度（例: 依存鎖の深さ）まで踏み込むとさらに強い分析になる"
-    },
-    "local": {
       "c1": 4,
       "c2": 4,
       "c3": 4,
       "c4": 5,
       "c5": 4,
       "overall": 4.2,
-      "rationale": "正確なカバレッジ数値と構造化された提案だが、未カバー命題の確認はレポート内容に依存し、D13波及の解釈もやや表層的"
+      "rationale": "正確なカバレッジ測定と D13 観点での的確なギャップ特定、分類付き具体提案だが evidence 根拠の検証深度にやや余地あり"
+    },
+    "local": {
+      "c1": 4,
+      "c2": 4,
+      "c3": 3,
+      "c4": 5,
+      "c5": 4,
+      "overall": 4.0,
+      "rationale": "カバレッジ数値と証拠ギャップの特定は正確で構造化も明快だが、改善提案が抽象的（具体ファイル/手順の指示が弱い）でドメイン知識も D13 影響波及の説明が簡略。"
     }
   },
   "mechanical_agreement": {
-    "assessment_match": true,
+    "assessment_match": false,
     "cloud_assessment": "UNKNOWN",
-    "local_assessment": "UNKNOWN",
+    "local_assessment": "HEALTHY",
     "v_coverage_cloud": 3,
-    "v_coverage_local": 1,
+    "v_coverage_local": 0,
     "v_coverage_match": false,
     "proposal_count_cloud": 4,
-    "proposal_count_local": 4,
-    "proposal_count_similar": true,
+    "proposal_count_local": 1,
+    "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": false,
     "key_insight_nontriviality_local": false,
     "key_insight_match": true,
-    "agreement_score": 0.75
+    "agreement_score": 0.25
   },
-  "delta": 0.4
+  "delta": 0.2
 }

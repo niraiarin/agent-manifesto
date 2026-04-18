@@ -1,7 +1,7 @@
 {
   "run_id": "T-interp-020",
   "task_type": "T-interp",
-  "timestamp": "2026-04-17T03:57:38Z",
+  "timestamp": "2026-04-18T15:20:55Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/T-interp-020.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/T-interp-020.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.2,
-      "rationale": "Well-structured analysis with accurate coverage metrics and actionable proposals, though evidence-source claims (e.g., V6 test_result only) would benefit from direct verification against ObservableDesign.lean."
+      "rationale": "構造化されたレポートで D13 波及を正しく適用し具体的提案も含むが、evidence 欠損 24/43 の内訳検証や提案の互換性分類根拠がやや薄い"
     },
     "local": {
-      "c1": 5,
+      "c1": 4,
       "c2": 4,
-      "c3": 5,
+      "c3": 4,
       "c4": 5,
-      "c5": 5,
-      "overall": 4.8,
-      "rationale": "正確で構造化された分析、D13波及・P3依存関係の理解が的確。網羅性はL5 evidence性質の掘り下げがやや浅いが実行可能な優先順位付きアクションが秀逸。"
+      "c5": 4,
+      "overall": 4.2,
+      "rationale": "Correctly identifies 56% evidence gap and D-layer cascade via D1→D13→D17, though lacks verification of raw counts and concrete evidence examples per axiom."
     }
   },
   "mechanical_agreement": {
@@ -30,15 +30,15 @@
     "cloud_assessment": "UNKNOWN",
     "local_assessment": "UNKNOWN",
     "v_coverage_cloud": 4,
-    "v_coverage_local": 0,
+    "v_coverage_local": 7,
     "v_coverage_match": false,
     "proposal_count_cloud": 3,
-    "proposal_count_local": 9,
-    "proposal_count_similar": false,
+    "proposal_count_local": 3,
+    "proposal_count_similar": true,
     "key_insight_nontriviality_cloud": false,
     "key_insight_nontriviality_local": false,
     "key_insight_match": true,
-    "agreement_score": 0.5
+    "agreement_score": 0.75
   },
-  "delta": -0.6
+  "delta": 0.0
 }
