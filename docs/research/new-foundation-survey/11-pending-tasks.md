@@ -3030,6 +3030,20 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 12+ Test 内 simp vs rfl preference (Subagent I3)
   - 実装修正なし (Day 9-10 同パターン継続): S4 P4 power-to-weight + Q2 A-Minimal scope 制御遵守、Subagent 遡及検証は改訂 49 で対処済
   - Day 12 改善事項: RetiredEntity main / auxiliary relations / DecidableEq / payload 拡充
+- 2026-04-18 (**改訂 51**): Day 11 後続影響の metadata 反映 (README + artifact-manifest 整合)
+  - README.md: Phase 0 Week 2 Day 11 完了セクション新設
+    - Day 11 1 項目詳細 (PROV-O 3 relation 3 separate structure、Q3 案 A、PROV-O 1:1 対応)
+    - 累計指標表 (Day 10 vs Day 11、100+117 jobs、example 300、Provenance 4 type + 3 relation 完備)
+    - Day 11 で達成した TyDD/paper 進展:
+      - PROV-O 3 main relation 完備 (PROV-O §4.1 完全カバー到達)
+      - TyDD-S4 P5 explicit assumptions 2 度目強適用 (Day 8 B4 → Day 11 PROV-O relation)
+      - Pattern #7 hook v2 初運用検証成功
+      - Section 10.2 Pattern #7 hook の四段階発展完了
+      - PROV-O triple set 統合 example (内部規範 layer 横断 transfer 6 段階目)
+      - paper × 実装 8 度目合流カテゴリ (PROV-O triple completion × hook v2 first verification)
+      - paper finding 39 件累計
+      - Subagent 遡及検証 PASS (改訂 49 で対処)
+  - 注: artifact-manifest.json の Day 11 主要 metadata は Day 11 code commit `11a32bd` に既に含まれているため本改訂では README 追加のみ (Day 6-10 改訂 21/27/33/39/45 同パターン)
 
 ## マーク凡例
 
