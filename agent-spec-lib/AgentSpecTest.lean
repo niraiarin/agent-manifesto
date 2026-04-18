@@ -10,6 +10,8 @@ import AgentSpec.Test.Process.FailureTest
 import AgentSpec.Test.Process.EvolutionTest
 import AgentSpec.Test.Process.HandoffChainTest
 import AgentSpec.Test.Provenance.VerdictTest
+import AgentSpec.Test.Provenance.ResearchEntityTest
+import AgentSpec.Test.Provenance.ResearchActivityTest
 import AgentSpec.Test.Cross.SpineProcessTest
 
 /-!

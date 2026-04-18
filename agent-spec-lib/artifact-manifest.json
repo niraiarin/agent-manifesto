@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.9.0-week2-day8",
+  "version": "0.10.0-week2-day9",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -294,10 +294,12 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 197,
+      "aggregated_example_count": 240,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -775,6 +777,111 @@
       "axiom_count": 0
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+      "path": "AgentSpec/Provenance/ResearchEntity.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Provenance.ResearchEntity (4 constructor inductive: Hypothesis/Failure/Evolution/Handoff embed、Q3 案 A 確定)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Provenance.ResearchEntity.trivial (test fixture)",
+        "AgentSpec.Provenance.ResearchEntity.isHypothesis / isFailure / isEvolution / isHandoff (Bool 判定)",
+        "AgentSpec.Process.Hypothesis.toEntity (Q4 案 A、namespace extension)",
+        "AgentSpec.Process.Failure.toEntity (Q4 案 A)",
+        "AgentSpec.Process.Evolution.toEntity (Q4 案 A)",
+        "AgentSpec.Process.Handoff.toEntity (Q4 案 A)"
+      ],
+      "provides_instances": [
+        "Inhabited ResearchEntity / Repr (deriving、DecidableEq は Evolution recursive のため省略)"
+      ],
+      "design_origin": "02-data-provenance §4.1 PROV-O ResearchEntity の Lean 化 (Day 9 Q3 案 A 4 constructor minimal、Day 10+ で 7 variant 拡充検討)",
+      "namespace_role": "Provenance 層の Day 9 メイン構成要素。Day 8 Verdict 先行配置に続く 2 type 追加で Provenance 層 3 type へ",
+      "circular_dependency_avoidance": "Mapping 関数 (toEntity) を本ファイル内で namespace AgentSpec.Process 配下に配置することで、Process → Provenance 循環依存を回避 (Q4 案 A 確定方針 Section 2.16)",
+      "week2_status": "Day 9 hole-driven 着手 (Q3 案 A 4 constructor minimal)。Day 10+ で ResearchAgent 追加 + 02-data-provenance §4.4 RetiredEntity 連携検討",
+      "decision_log": "ResearchEntity.lean docstring D1-D3 (Q3 案 A 4 constructor / Q4 案 A 循環依存回避 / DecidableEq 省略)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
+      "path": "AgentSpec/Provenance/ResearchActivity.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Provenance.ResearchActivity (5 variant inductive: investigate/decompose/refine/verify/retire、verify は Hypothesis+Verdict payload)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Provenance.ResearchActivity.trivial (= investigate、test fixture)",
+        "AgentSpec.Provenance.ResearchActivity.isVerify (Bool 判定)",
+        "AgentSpec.Provenance.ResearchActivity.isRetire (Bool 判定)"
+      ],
+      "provides_instances": [
+        "DecidableEq ResearchActivity / Inhabited / Repr (deriving)"
+      ],
+      "design_origin": "02-data-provenance §4.1 PROV-O ResearchActivity の Lean 化 (Day 9、5 variant 完全実装)",
+      "verify_variant_alignment": "verify variant の (input : Hypothesis, output : Verdict) は Day 8 EvolutionStep B4 4-arg post と直接整合。Day 10+ で EvolutionStep transition を ResearchActivity.verify として PROV mapping する path 確立",
+      "week2_status": "Day 9 hole-driven 着手 (5 variant、verify は payload 完備、他 4 variant は payload なし)。Day 10+ で payload 拡充候補 (investigate / decompose / refine / retire)",
+      "decision_log": "ResearchActivity.lean docstring D1-D3 (5 variant 採用 / verify payload Hypothesis+Verdict / payload なし variant は Day 10+)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest",
+      "path": "AgentSpec/Test/Provenance/ResearchEntityTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "ResearchEntity 4 constructor 構築 (Hypothesis / Failure / Evolution / Handoff)",
+        "Q4 案 A Mapping: Process side .toEntity dot notation (Hypothesis.toEntity / Failure.toEntity / Evolution.toEntity / Handoff.toEntity)",
+        "isHypothesis / isFailure / isEvolution / isHandoff Bool 判定",
+        "trivial fixture",
+        "Inhabited (DecidableEq は省略)",
+        "Cross-process embed: Process 4 type 全てが ResearchEntity に embed 可能 (List ResearchEntity)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 21,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest",
+      "path": "AgentSpec/Test/Provenance/ResearchActivityTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "ResearchActivity 5 variant 構築 (investigate / decompose / refine / verify / retire)",
+        "verify variant の Hypothesis/Verdict payload (proven/refuted ケース)",
+        "isVerify / isRetire Bool 判定",
+        "trivial fixture (= investigate)",
+        "DecidableEq (5 variant + verify payload 含む) / Inhabited",
+        "Day 8 EvolutionStep B4 4-arg post との整合検証 (verify signature 対応)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 22,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "evolutionstep_alignment": "verify variant の (input : Hypothesis, output : Verdict) が Day 8 EvolutionStep B4 4-arg post と整合、Day 10+ で PROV mapping path 確立予定"
+    },
+    {
       "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
       "path": "AgentSpec/Test/Cross/SpineProcessTest.lean",
       "scope": "test",
@@ -807,22 +914,23 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 8",
+    "last_verified_phase": "Week 2 Day 9",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 95, "scope": "production-only", "note": "Day 8 で Verdict (新 namespace AgentSpec.Provenance) +1、EvolutionStep refactor 反映で 94→95"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 107, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 97, "scope": "production-only", "note": "Day 9 で ResearchEntity + ResearchActivity 2 type 追加で 95→97"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 111, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
-    "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT) + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
-    "process_layer_progress": "Day 6 Hypothesis + Failure 着手、Day 7 Evolution + HandoffChain 完了 (4 type 完備)。Day 8 で Process 層から Verdict 出力受領 (EvolutionStep 経由)",
-    "provenance_layer_started": "Day 8 で Verdict 先行配置 (Q3 案 A 3 variant minimal、Section 2.14 D2)。Day 9+ で ResearchEntity / ResearchActivity / ResearchAgent + Mapping 関数を追加して namespace 完成予定",
-    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、Day 6 初適用 + Day 7 2 度目適用 + Day 8 3 度目適用 (Verdict + SpineProcessTest 新 namespace 配置)",
-    "cross_process_test": "Day 7 で Q2 案 A により実装 (Section 2.12 🟡 解消)、Day 8 で SpineProcessTest.lean (新 namespace AgentSpec.Test.Cross) で Q2 B-Medium 拡張 (Spine 4 type class + Process 4 type 同時要求の 8 layer 要素テスト)",
+    "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
+    "process_layer_progress": "Day 6 Hypothesis + Failure 着手、Day 7 Evolution + HandoffChain 完了 (4 type 完備)",
+    "provenance_layer_progress": "Day 8 Verdict 先行配置、Day 9 ResearchEntity + ResearchActivity 追加 (3 type)。Day 10+ で ResearchAgent + 02-data-provenance §4.4 RetiredEntity 完成予定",
+    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9 で 4 度運用検証成功",
+    "cross_process_test": "Day 7 で Q2 案 A 実装、Day 8 で SpineProcessTest 拡張、Day 9 で ResearchEntity の cross-process embed test (Process 4 type 全てが ResearchEntity に embed)",
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
+    "prov_mapping_status": "Day 9 で Process 層 4 type → ResearchEntity Mapping 完成 (Q4 案 A、Process side .toEntity dot notation、循環依存回避)。ResearchActivity verify variant は Day 8 EvolutionStep B4 4-arg post と整合 (Day 10+ で transition → activity mapping path)",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 197,
+    "example_count": 240,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -853,6 +961,10 @@
       "Provenance/Verdict.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/VerdictTest.lean": {"theorems": 0, "examples": 17},
       "Test/Cross/SpineProcessTest.lean": {"theorems": 0, "examples": 4},
+      "Provenance/ResearchEntity.lean": {"theorems": 0, "examples": 0},
+      "Test/Provenance/ResearchEntityTest.lean": {"theorems": 0, "examples": 21},
+      "Provenance/ResearchActivity.lean": {"theorems": 0, "examples": 0},
+      "Test/Provenance/ResearchActivityTest.lean": {"theorems": 0, "examples": 22},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },
@@ -893,6 +1005,102 @@
       "addressable_count": 0,
       "p2_complete_for": "tydd-tdd-redo",
       "note": "Round 3 指摘 1-2 修正反映を確認。Week 2 進行可能。informational 指摘 3-5 (テスト/本番混在、example 8 コメント、$schema URI) は将来対応予定"
+    },
+    {
+      "round": "Week 2 Day 1 Round 1",
+      "date": "2026-04-17",
+      "result": "FAIL",
+      "addressable_count": 2,
+      "addressed": true,
+      "evaluator": "subagent",
+      "note": "Day 1 Spine FolgeID 着手。A1 unfold 脆弱性 (instLE 明示命名 + inferInstanceAs)、A2 abbrev → def 修正"
+    },
+    {
+      "round": "Week 2 Day 1 Round 2",
+      "date": "2026-04-17",
+      "result": "PASS",
+      "addressable_count": 0,
+      "p2_complete_for": "day-1-spine-folgeid",
+      "evaluator": "subagent",
+      "note": "Day 1 R1 修正反映を確認。Week 2 Day 2 進行可能"
+    },
+    {
+      "round": "Week 2 Day 2 Round 1",
+      "date": "2026-04-17",
+      "result": "PASS",
+      "addressable_count": 2,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-2-spine-edge",
+      "note": "Day 2 Spine Edge + lean_lib AgentSpecTest 分離。logprob A 全 3 基準 (margin 0.277)"
+    },
+    {
+      "round": "Week 2 Day 3 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 2,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-3-spine-evolutionstep-safetyconstraint",
+      "note": "Day 3 EvolutionStep + SafetyConstraint type class。logprob margin 0.408、A1 trivially-true → doSafeOperation、A2 cross-class test を Day 4 へ"
+    },
+    {
+      "round": "Week 2 Day 4 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 1,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-4-learningcycle-observable-prerefactor",
+      "note": "Day 4 LearningCycle + Observable + Pre-Day-4 refactor (SafetyConstraint Bool→Prop / SafeState.mk / EvolutionStep Decidable) + cross-class 4-instance test。logprob margin 0.306"
+    },
+    {
+      "round": "Week 2 Day 5 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 1,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-5-pattern7-hook-partialorder-roundtrip",
+      "note": "Day 5 Pattern #7 hook 化 + LearningStage LE/LT + FolgeID PartialOrder (Mathlib import) + RoundTrip 部分達成。logprob margin 0.049 (Mathlib 影響)、A1 lt_iff_le_not_ge field はビルド成功で resolve"
+    },
+    {
+      "round": "Week 2 Day 6 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-6-process-hypothesis-failure",
+      "note": "Day 6 Process 層着手 Hypothesis + Failure。logprob margin 0.073、I1 Inhabited Failure 対称性 +1 example、I2 manifest aggregated 補完 (改訂 21)"
+    },
+    {
+      "round": "Week 2 Day 7 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 2,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-7-process-evolution-handoffchain",
+      "note": "Day 7 Process 層継続 Evolution + HandoffChain (Q3 案 B / Q4 案 A) + cross-process test。logprob margin 0.232、A1 Inhabited deriving 注記 / A2 cross-process simp 使用理由 docstring 追加"
+    },
+    {
+      "round": "Week 2 Day 8 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 1,
+      "addressed": true,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-8-verdict-evolutionstep-b4-spineprocess-test",
+      "note": "Day 8 Verdict + EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消) + SpineProcessTest。logprob margin 0.051 (breaking change 影響)、A1 manifest EvolutionStep entry Day 8 未反映 即対処"
+    },
+    {
+      "round": "Week 2 Day 9 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "logprob+subagent",
+      "p2_complete_for": "day-9-provenance-researchentity-researchactivity",
+      "note": "Day 9 Provenance 層継続 ResearchEntity + ResearchActivity + Mapping (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 A 循環依存回避設計)。logprob margin 0.601、informational I1 verifier_history Day 1-9 一括追加 (本 commit 対処)、I2/I3 Day 10+ 検討"
     }
   ]
 }
