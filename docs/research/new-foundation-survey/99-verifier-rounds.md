@@ -1076,3 +1076,86 @@ informational 3 件:
 - **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5 設計→Day 6/7/8/9 4 度運用検証→Day 10 v2 拡張→Day 11 v2 初運用検証、7 セッション governance 進化)**、**PROV-O 4 type + 3 relation (Day 8→Day 11 4 セッション完全実装、§4.1 完全カバー到達)**
 - **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10 同パターン継続 (A1/I2 即時対処) + **Day 11 同パターン 3 度目適用 (Subagent 遡及検証 PASS)**、TyDD 評価サイクル「実装修正なし」(Day 9-11 で全て Day 12+ 繰り延べ)
 - **verifier_history**: Day 9 Week 1-9 一括補完 (14 entries) + Day 10 R1 追加 (15 entries) + **Day 11 R1 追加 (16 entries)**
+
+---
+
+## Phase 0 Week 2 Day 12 検証 (2026-04-18 — Day 12 commit `49510c6` 後)
+
+**背景**: Section 2.22 Day 12 着手前判断 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure、Day 11 ProvRelation パターン踏襲) に従い実装。**PROV-O §4.4 退役 entity 構造的検出 完備** (RetiredEntity + RetirementReason 4 variant) + **PROV-O §4.1 + §4.4 同時完全カバー到達** (Day 11 §4.1 + Day 12 §4.4)。Day 11 教訓 (Subagent 遡及検証になった反省) を反映し、Subagent 検証を本評価サイクル (改訂 56) 内で即時実施。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 12 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (build PASS で代替検査、winner A 全体)
+
+**Subagent 検証** (改訂 56 で実施): VERDICT = PASS（addressable = 0、informational 4）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 | artifact-manifest.json version field `0.12.0-week2-day11` のまま (Pattern #7 satisfied in content, version label の不整合) | **改訂 56 で即時対処済** (`0.12.0-week2-day12` に更新、paper サーベイ評価サイクル「実装修正組込み」4 度目適用) |
+| I2 | verifier_history Day 12 R1 evaluator が「本 commit 後に実施予定」のまま、Subagent 検証結果未反映 | **改訂 56 で即時対処済** (evaluator 更新 + 新規 subagent_verification field 追加、Day 11 改訂 55 同パターン: VERDICT/addressable/informational I1-I4 full text/pattern) |
+| I3 | RetiredEntity.lean の import が ResearchEntity + Failure のみで clean、over-import なし | **対処不要** (informational 注記のみ) |
+| I4 | trivial fixture (RetiredEntity.lean L155-156) が ResearchEntity.trivial 直接利用、docstring に展開先注記なし | **対処不要** (informational 注記のみ、Day 13+ で docstring 強化検討余地) |
+
+**Day 12 1 項目詳細** (Q1 A-Minimal / Q3 案 A / Q4 案 A 採用案反映):
+
+1. **AgentSpec/Provenance/RetiredEntity.lean** (Q3 案 A + Q4 案 A、PROV-O §4.4 1:1 対応):
+   - `inductive RetirementReason { Refuted (failure : Failure) | Superseded (replacement : ResearchEntity) | Obsolete | Withdrawn }` (4 variant 型化、TyDD-S4 P5 3 度目強適用)
+   - `structure RetiredEntity { entity : ResearchEntity, reason : RetirementReason }` (separate structure、ResearchEntity 拡張不要 backward compatible)
+   - 5 smart constructor (mk' / refuted / superseded / obsolete / withdrawn)
+   - trivial fixture + whyRetired accessor (Day 6 Failure.whyFailed と同パターン)
+   - 1 ファイル統合配置 (D3、Day 11 ProvRelation パターン踏襲)
+   - `deriving Inhabited, Repr` (DecidableEq は Superseded payload の ResearchEntity recursive 制約継承で省略)
+   - Day 12 意思決定ログ D1-D3
+
+2. **AgentSpec/Test/Provenance/RetiredEntityTest.lean** (NEW、22 example):
+   - 4 RetirementReason variant 構築 + Inhabited
+   - RetiredEntity 直接構築 (3 種 entity × 3 種 reason)
+   - field projection: entity / reason (rfl)
+   - 5 smart constructor (rfl)
+   - trivial fixture + whyRetired accessor
+   - Day 6 Failure 経由パターン (案 C 利点吸収) との整合性 example
+   - 4 variant 全種類を List で集約 example (内部規範 layer 横断 transfer 7 段階目)
+   - **Day 11 Subagent I3 教訓反映**: 全 example で rfl preference 維持 (simp tactic 不使用)
+
+**Pattern #7 hook v2 2 度目運用検証成功**: Day 12 code commit は Day 11 v2 初運用検証に続く 2 度目、Provenance 配下新規 .lean (`RetiredEntity.lean` + `RetiredEntityTest.lean`) を hook v2 が検出、artifact-manifest 同 commit 強制成功。Day 5 hook 設計 → Day 6/7/8/9 4 度連続運用検証 → Day 10 v2 拡張 → Day 11 v2 初運用検証 → **Day 12 v2 2 度目運用検証** の五段階発展完了。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 101 jobs (Provenance 層 +1)、`lake build AgentSpecTest` exit 0 / 119 jobs、theorem 15 (不変), example 300→322 (+22), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-12 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性 / 後続 Docs) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | `d1031d5` (conservative) | R1 PASS | written |
+| Day 7 | `941b25c` (compatible) | `04c632b` (conservative) | `e4d5dda` (conservative) | `760f014` (compatible) | `32baacf` (conservative) | R1 PASS | written |
+| Day 8 | `0f78fa6` (compatible) | `53db950` (conservative) | `168d369` (conservative) | `d35dd08` (compatible) | `36f354a` (conservative) | R1 PASS | written |
+| Day 9 | `fa5b373` (compatible) | `4fd2656` (conservative、I2 即時実装修正含む) | `0781b20` (conservative、実装修正なし) | `16551d4` (compatible) | `1ccdb88` (conservative) | R1 PASS | written |
+| Day 10 | `b652347` (compatible) | `cf8aea7` (conservative、A1/I2 実装修正対処) | `55cbc1a` (conservative、実装修正なし) | `1418ddc` (compatible、hook v2 配置含む) | `f904c17` (conservative) | R1 PASS (margin 2.335 過去最高) | written |
+| Day 11 | `11a32bd` (compatible) | `95a99aa` (conservative、Subagent 遡及検証 PASS) | `52b911d` (conservative、実装修正なし) | `fb0749b` (compatible) | `ec38bb5` (conservative) | R1 PASS (Subagent 遡及検証 PASS) | written |
+| Day 12 | `49510c6` (compatible) | `9efc9cc` (conservative、Subagent 即時検証 PASS + I1/I2 実装修正対処) | `33a180a` (conservative、実装修正なし) | `94b7a0d` (compatible) | (本 commit) | R1 PASS (Subagent 即時検証 PASS) | written |
+
+**Day 12 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-12 追加 0)
+- example: 322 (Day 11 300 + Day 12 追加 22: RetiredEntity)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 101 jobs) + AgentSpecTest (test 119 jobs)** (Day 11 100+117 から RetiredEntity +1/+2)
+- **Spine 層 4 type class 完備 + 順序関係完備 + EvolutionStep B4 4-arg post 完全統合 (Day 8、Section 2.9 完全解消)**
+- **Process 層 4 type 完備** (Day 6-7)
+- **Provenance 層 5 type + 3 relation 完備** (Day 8 Verdict + Day 9 ResearchEntity + ResearchActivity + Day 10 ResearchAgent + EvolutionMapping + Day 11 WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 relation + **Day 12 RetiredEntity + RetirementReason 4 variant**)
+- **PROV-O §4.1 + §4.4 同時完全カバー到達** (Day 11 §4.1 + Day 12 §4.4)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8/9/10 5 度連続運用検証 + Day 10 v2 拡張 + Day 11 v2 初運用検証 + Day 12 v2 2 度目運用検証 = 7 度連続検証**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 3 度目強適用、Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化)** / Section 10.2 6/8 + 0 構造違反 (7 度連続) / **F/B/H 強適用 = B3 + B4 + F2 部分 + H4 + H10 部分 (5 強適用継続)** (詳細 Section 12.35)
+- 論文サーベイ達成度: **paper finding 44 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 1-3 関連: 1、詳細 Section 12.34)
+- paper × 概念 合流カテゴリ: **9 種** (Day 4-7 4 種 / Day 8 layer architecture redefinition / Day 9 namespace extension pattern / Day 10 PROV-O completion milestone × governance evolution / Day 11 PROV-O triple completion × hook v2 first verification / **Day 12 PROV-O §4.1 + §4.4 同時完全カバー × cycle 内学習 transfer**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5 設計→Day 6/7/8/9 4 度運用検証→Day 10 v2 拡張→Day 11 v2 初運用検証→Day 12 v2 2 度目運用検証、8 セッション governance 進化)**、**PROV-O 5 type + 3 relation (Day 8→Day 12 5 セッション完全実装、§4.1 + §4.4 完全カバー到達)**
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10 同パターン継続 (A1/I2 即時対処) + Day 11 同パターン 3 度目適用 (Subagent 遡及検証 PASS) + **Day 12 同パターン 4 度目適用 (Subagent 即時検証 PASS + I1/I2 即時対処、Day 11 教訓反映で遡及検証回避)**、TyDD 評価サイクル「実装修正なし」(Day 9-12 で全て Day 13+ 繰り延べ)
+- **cycle 内学習 transfer**: Day 11 Subagent I3 教訓 (rfl preference) を Day 12 RetiredEntityTest 実装で適用 (初の cycle 教訓 → 次 day 実装 transfer)
+- **verifier_history**: Day 9 Week 1-9 一括補完 (14 entries) + Day 10 R1 追加 (15 entries) + Day 11 R1 追加 (16 entries) + **Day 12 R1 追加 (17 entries)**
