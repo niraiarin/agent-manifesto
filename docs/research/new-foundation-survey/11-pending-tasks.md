@@ -499,6 +499,30 @@ Day 17 TyDD 評価 (Section 12.50) で識別された改善余地を Day 18+ で
 - deprecation_history 3-state complete lifecycle 構造化完成
 - Pattern #7 hook 十段階発展到達 (breaking change commit 対応確認)
 
+### 2.35 Day 18 評価から導出した改善余地 (Day 19+ 対処)
+
+Day 18 TyDD 評価 (Section 12.53) で識別された改善余地を Day 19+ で対処。**Day 18 は Subagent indication addressable ゼロ維持 + informational 2 件 (Day 17 指摘ゼロ持続性検証結果、structural quality vs design space richness の区別明確化)**。
+
+| マーク | 項目 | 現状 (Day 18) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 19 | **A-Standard-Lite: namespace 検出拡張** (`#check_retired_in_namespace NS` で NS 配下 RetiredEntity 全検出、Day 18 A-Minimal の自然な拡張) | Day 18 A-Minimal 完備 (single identifier 検出のみ) | Day 19 メイン候補、Lean.Elab.Command API の namespace enumeration 学習 |
+| 🟡 Day 19+ | **Day 15 `@[retired]` macro fixture × Day 18 `#check_retired` 連携テスト追加** (Subagent I2 Day 18、A-Standard ← A-Compact 連携完全実証) | Day 14 `@[deprecated]` 直接付与 fixture のみで `#check_retired` テスト、Day 15 `@[retired]` macro 展開後 fixture は未テスト | Day 19+ で macro 展開後の deprecated attribute 伝搬確認、A-Standard ← A-Compact 連携完全実証候補 |
+| 🟡 Day 19+ | **ResearchActivity payload 拡充** (Day 13-15 から継続) | Day 9 paper サーベイから継続繰り延べ | Day 19+ で payload 設計 |
+| 🟢 Day 19+ or Day 20+ | **A-Standard-Full: elaborator hook** (command 実行時自動 linting) | Day 18 A-Minimal + Day 19 A-Standard-Lite 完備後の自然な次 step | Day 20+ (Lean 4 elaborator hook 学習、Week 5-6 A-Maximal の pre-stage) |
+| 🟢 Day 19+ | **ResearchEntity DecidableEq 手動実装** | Day 9-18 で省略継続 | Day 19+ で必要時に手動実装 |
+| 🟢 Week 4-5 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形) | Day 8 で transition 4-arg post 統合のみ | Week 4-5 で追加 |
+| 🟢 Week 4-5 | **G5-1 §3.4 step 2 LearningM indexed monad** | Day 10 transitionToActivity 連携 path 確立 | Week 4-5 Tooling 層で `LearningM` 実装 |
+| 🟢 Week 5-6 | **A-Maximal elaborator 型レベル強制** (compile error rejection、4/4 段階目) | Day 18 で 3/4 段階目達成、残り 1/4 | Week 5-6 Tooling 層本丸案件 |
+| 🟢 Day 19+ 設計判断 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 11 trivial fixture で self-derivation 許容 | Day 19+ で acyclic invariant 強化検討 (Section 2.21/2.23/2.25/2.27/2.29/2.31/2.33 から継続) |
+
+**根拠**: Section 12.53 Day 18 TyDD 評価結果テーブル + Section 12.52 Day 18 paper サーベイ評価 Subagent I1 (evaluator back-fill、即時対処済) + I2 (Day 15 × Day 18 連携テスト未実施、Day 19+ improvement proposal)。Day 18 A-Standard custom linter A-Minimal 完備 + Pattern #7 hook 十一段階発展到達後の次の改善余地を集約。**Day 18 特筆**:
+- 段階的 Lean 機能習得 3/4 段階目達成 (A-Minimal → A-Compact → **A-Standard A-Minimal**)
+- Day 17 指摘ゼロ持続性検証結果: addressable 0 維持 (cycle 内学習 transfer 累積効果継続)、informational 2 は design space richness (新分野 Elab.Command)
+- structural quality vs design space richness の区別明確化 (quality metric の多層構造確立)
+- TyDD-S4 P4 power-to-weight 強化 (Lean 4 core API 活用)
+- 初期 build error 即時修復 2 度目実例 (Day 15 パターン継続)
+- Pattern #7 hook 十一段階発展到達
+
 ### 2.22 Day 12 着手前判断結果 (確定済、Day 11 完了後の議論結果)
 
 #### Day 12 全体方針 (Q1-Q4 採用案、確定済)
@@ -3943,6 +3967,80 @@ Day 18 は **A-Standard custom linter A-Minimal 実装 (3/4 段階目達成)** +
 
 Day 1-18 累計で **paper finding 74 件顕在化** (Day 4=4 / Day 5=4 / Day 6-18=5×13=65 / Day 1-3=1 / 合計 74)。
 
+### 12.53 Day 18 TyDD / サーベイ視点評価結果（2026-04-19 実施）
+
+Day 18 (`f127774` A-Standard custom linter A-Minimal、`#check_retired` command、段階的 Lean 機能習得 3/4 段階目達成) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 4-18 推移)
+
+| 評価軸 | Day 4-17 変化 | Day 18 | 変化 |
+|---|---|---|---|
+| S1 5 軸 | 全日 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 全日 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | Day 17 4/5 (P5 8 度目) | **4/5 (P4 強化: Lean 4 core API 活用で自前 implementation 回避、power-to-weight 最大化)** | 維持 + P4 強化 |
+| F/B/H 強適用 | Day 9-17 5 強適用継続 | **5 強適用継続** | 維持 |
+| G1-G6 anti-pattern 回避 | 全日 4/4 | **4/4** | 維持 |
+| Section 10.2 適合 | Day 17 6/8+0 (12 度目、MODIFY 3 度目、十段階発展到達) | **6/8+0 (13 度目、新規 file パターン復帰、十一段階発展到達)** | hook 十一段階発展 |
+| 強制化次元 | Day 17 2 (A-Minimal + A-Compact) | **3 (A-Minimal + A-Compact + A-Standard A-Minimal)** | **3/4 段階目達成で +1** |
+| Subagent 指摘項目 | Day 17 0 (Day 9-17 で初) | **2 informational (addressable 0 維持、Day 17 指摘ゼロ持続性検証)** | structural quality vs design space 区別 |
+
+#### Day 18 で前進した項目
+
+1. **A-Standard custom linter A-Minimal 完備** (`#check_retired` command、Lean.Elab.Command 拡張、Lean.Linter.isDeprecated API 利用)
+2. **段階的 Lean 機能習得 3/4 段階目達成** (A-Minimal → A-Compact → **A-Standard A-Minimal** → Week 5-6 A-Maximal)
+3. **Pattern #7 hook 十一段階発展到達** (Day 17 MODIFY 3 度目 → Day 18 新規 file パターン復帰、v2 5 度目運用検証)
+4. **初期 build error 即時修復 2 度目実例** (Day 15 macro syntax に続くパターン、新分野学習 iteration の構造的 pattern 確立、artifact-manifest `initial_build_error_pattern` field 記録)
+5. **Day 17 指摘ゼロ持続性検証結果**: structural quality vs design space richness の区別明確化
+6. **TyDD-S4 P4 power-to-weight 強化**: Lean 4 core API (Lean.Linter.isDeprecated) 活用で自前 implementation 回避、最小実装で最大効果
+7. **強制化次元 +1 (3 到達)**: A-Minimal + A-Compact + **A-Standard A-Minimal** で Day 11-15 type/relation 軸と直交する強制化次元が 3 段階
+
+#### Day 18 で paper finding と TyDD の合流
+
+Day 17 で確立した **cycle 内学習 transfer 累積効果極致 (Subagent 指摘ゼロ)** を Day 18 で **新分野適用限界検証に発展**:
+- 新分野 (Elab.Command) で addressable レベルは cycle 内学習 transfer 累積効果継続、informational レベルは design space richness 発生
+- TyDD-G3 (linter integration) 3/4 段階目達成で段階的 Lean 機能習得パスの残り 1/4 (A-Maximal elaborator、Week 5-6) のみ
+- TyDD-S4 P4 (power-to-weight) は Day 18 で Lean 4 core API 活用として最大化、自前 implementation を避ける工学的 best practice
+
+**Section 10.2 Pattern #7 hook の十一段階発展**:
+- **Day 5**: hook 設計 + 構造的 closure
+- **Day 6/7/8/9**: 4 度連続運用検証
+- **Day 10**: v2 拡張 (governance evolution)
+- **Day 11/12/13**: v2 3 度連続運用検証 = 運用定常化 (新規 file)
+- **Day 14**: MODIFY path 対応確認 (1 度目)
+- **Day 15**: 新規 file パターン復帰
+- **Day 16**: MODIFY path 2 度目運用検証 (九段階発展完了)
+- **Day 17**: MODIFY path 3 度目運用検証 (breaking change 対応、十段階発展到達)
+- **Day 18**: **新規 file パターン復帰 (v2 5 度目運用検証、十一段階発展到達)**
+
+#### 改善余地（優先度順、Section 2.35 で記録）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **A-Standard-Lite: namespace 検出拡張** (`#check_retired_in_namespace NS` で NS 配下 RetiredEntity 全検出、Day 18 A-Minimal の自然な拡張) | Day 19 メイン候補 | Section 2.35 |
+| 🟡 中 | **Day 15 `@[retired]` macro × Day 18 `#check_retired` 連携テスト追加** (Subagent I2、A-Standard ← A-Compact 連携完全実証) | Day 19+ | Section 2.35 |
+| 🟡 中 | **ResearchActivity payload 拡充** (Day 13-15 から継続) | Day 19+ | Section 2.35 |
+| 🟢 低 | **A-Standard-Full: elaborator hook** (command 実行時自動 linting、Day 19+ or Day 20+) | Day 19+ or Day 20+ | Section 2.35 |
+| 🟢 低 | **A-Maximal elaborator 型レベル強制** (compile error rejection、4/4 段階目) | Week 5-6 Tooling 層本丸 | Section 2.35 |
+| 🟢 低 | **ResearchEntity DecidableEq 手動実装** | Day 19+ | Section 2.35 |
+| 🟢 低 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形) | Week 4-5 | Section 2.35 |
+| 🟢 低 | **G5-1 §3.4 step 2 LearningM indexed monad** | Week 4-5 | Section 2.35 |
+| 🟢 低 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 19+ 設計判断 | Section 2.35 |
+
+#### Day 18 TyDD 評価で識別された実装修正 (即時対処なし、paper サーベイ評価で I1 対処済)
+
+Day 18 TyDD 評価では **追加実装修正なし** (Day 9-17 同パターン継続、Subagent I1 即時対処 + I2 Day 19+ 提案は paper サーベイ評価で対処済 改訂 87)。
+
+S4 P4 power-to-weight (Lean 4 core API 活用) + A-Minimal scope 制御を遵守、その他全て Day 19+ で対処判断。
+
+#### 結論
+
+Day 18 は TyDD 視点で **Day 17 の S4 4/5 + 5 強適用維持 + S4 P4 強化 (Lean 4 core API 活用で power-to-weight 最大化)** + **A-Standard custom linter A-Minimal 完備 (3/4 段階目達成)** + **Pattern #7 hook 十一段階発展到達** + **強制化次元 +1 (3 到達)** + **Day 17 指摘ゼロ持続性検証結果** (structural quality vs design space richness 区別):
+- 段階的 Lean 機能習得パス 3/4 段階目達成 (A-Minimal → A-Compact → A-Standard A-Minimal、残り 1/4 A-Maximal)
+- 初期 build error 即時修復 2 度目実例 (Day 15 macro syntax に続くパターン確立)
+- cycle 内学習 transfer 累積効果は addressable レベルで継続実証 (新分野でも structural quality maturity 維持)
+
+Day 19 は A-Standard-Lite (namespace 検出拡張) が main scope 候補 (Day 18 A-Minimal の自然な拡張)。Day 1-18 累計で **S4 4/5 + P5 8 度目 + P4 強化 / F/B/H 5 強適用 / paper finding 74 件 / Section 10.2 6/8 + 0 構造違反 (13 度連続) / paper × 実装合流 15 種カテゴリ / 強制化次元 3 (A-Minimal + A-Compact + A-Standard A-Minimal) / cycle 内学習 transfer 4 形態体系化 + 累積効果継続 (addressable レベル)** 確立。
+
 ---
 
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
@@ -5367,6 +5465,29 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - I2 (Day 19+ improvement proposal): Day 15 `@[retired]` fixture × `#check_retired` 連携テスト未実施、A-Standard ← A-Compact 連携完全実証候補 (設計上機能、実装修正不要、Section 2.35 Day 19+ 候補)
     - **Day 17 指摘ゼロ持続性検証結果構造化**: Day 17=0 → Day 18=2 informational (addressable 0 維持)、**structural quality vs design space richness の区別明確化** (cycle 内学習 transfer 累積効果は addressable レベルで継続、design space 新規性は informational で appropriate)
     - paper サーベイ評価サイクル「実装修正組込み」10 度目適用 (Day 9-17 継続 + Day 18 I1 即時対処 + I2 Day 19+ 提案 の新形態)
+- 2026-04-19 (**改訂 88**): Day 18 TyDD 視点評価 + 改善提案 9 件追加 (実装修正なし、cycle step 3+4)
+  - Section 12.53 (新規): Day 18 TyDD 達成度評価 (Day 4-18 推移表含む)
+    - S1 5/5 + benefits 9/10 + **S4 4/5 強適用維持 + P4 強化** (Lean 4 core API 活用、power-to-weight 最大化)
+    - F/B/H 5 強適用継続、Section 10.2 6/8+0 (13 度連続)、Pattern #7 hook 十一段階発展到達
+    - **強制化次元 = 3** (A-Minimal + A-Compact + A-Standard A-Minimal、Day 18 で +1 = 3/4 段階目達成)
+    - Subagent 指摘: Day 17=0 → Day 18=2 informational (addressable 0 維持、structural quality vs design space 区別)
+  - 主要発見:
+    - 段階的 Lean 機能習得 3/4 段階目達成 (残り 1/4 = A-Maximal Week 5-6)
+    - Pattern #7 hook 十一段階発展到達 (新規 file 復帰)
+    - Day 17 指摘ゼロ持続性検証結果 (addressable 継続、informational は design space richness)
+    - TyDD-S4 P4 power-to-weight 強化 (Lean 4 core API 活用)
+    - 初期 build error 即時修復 2 度目実例 (Day 15 パターン継続)
+    - structural quality vs design space richness の区別明確化 (quality metric 多層構造)
+  - Section 2.35 (新規): Day 18 評価から導出した改善余地 (Day 19+ 対処、9 項目)
+    - 🟡 Day 19 A-Standard-Lite namespace 検出拡張 (Day 18 A-Minimal 自然な拡張)
+    - 🟡 Day 19+ Day 15×Day 18 連携テスト (Subagent I2、A-Standard ← A-Compact 完全実証)
+    - 🟡 Day 19+ ResearchActivity payload 拡充 (Day 13-15 継続)
+    - 🟢 Day 19+ A-Standard-Full elaborator hook / DecidableEq
+    - 🟢 Week 4-5 EvolutionStep 4 member / LearningM
+    - 🟢 Week 5-6 A-Maximal elaborator 4/4 段階目
+    - 🟢 Day 19+ 設計判断 WasDerivedFrom DAG 制約 (継続)
+  - 実装修正なし (Day 9-17 同パターン継続): S4 P4 power-to-weight + A-Minimal scope 制御遵守、Subagent I1 即時対処 + I2 Day 19+ 提案は paper サーベイ評価で対処済 (改訂 87)
+  - Day 19 改善事項: A-Standard-Lite main / Day 15×Day 18 連携テスト / ResearchActivity payload / A-Standard-Full
 
 ## マーク凡例
 
