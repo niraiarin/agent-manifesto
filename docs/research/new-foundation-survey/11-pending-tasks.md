@@ -2696,6 +2696,24 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 G5-1 §3.4 step 2 LearningM indexed monad (Week 4-5、連携 path 完備で本格実装可能)
   - 実装修正なし (Day 9 同パターン継続): S4 P4 power-to-weight + Q1 Minimal scope 制御遵守
   - Day 11 改善事項: PROV-O relation / RetiredEntity / DecidableEq / payload 拡充 / transitionLegacy 削除
+- 2026-04-18 (**改訂 45**): Day 10 後続影響の metadata 反映 (README + hook v2 配置完了)
+  - README.md: Phase 0 Week 2 Day 10 完了セクション新設
+    - Day 10 3 項目詳細 (ResearchAgent + EvolutionMapping + ResearchEntity 5 constructor 拡張)
+    - 累計指標表 (Day 9 vs Day 10、99+115 jobs、example 278、Provenance 4 type 完備)
+    - Day 10 で達成した TyDD/paper 進展:
+      - PROV-O 三項統合 4 type 完備
+      - Day 8/9 連携 path 確立 (transitionToActivity)
+      - Pattern #7 hook v2 拡張 (Subagent A1 対処)
+      - Section 10.2 Pattern #7 hook の三段階発展完了 (設計→運用検証→拡張)
+      - layer architecture 完成形 (4 layer)
+      - paper × 実装 7 度目合流カテゴリ (PROV-O completion milestone × governance evolution)
+      - paper finding 34 件累計
+  - **Pattern #7 hook v2 配置完了** (本改訂で記録):
+    - hook script v2 (clean version、regex Provenance + Test/Cross 含む) を /tmp/p3-manifest-on-commit-v2.sh として準備
+    - user 介入で /tmp/restore-and-fix-hook-day10-v2.sh 実行
+    - new-foundation worktree + main repo 両方の hook を v2 で完全置換
+    - Day 11+ commit で Provenance/Test/Cross 配下の新規 .lean に対しても hook が機能
+  - 注: artifact-manifest.json の Day 10 主要 metadata は Day 10 code commit `b652347` に既に含まれているため本改訂では README + hook v2 配置のみ追加対応 (Day 6-9 改訂 21/27/33/39 同パターン)
 
 ## マーク凡例
 
