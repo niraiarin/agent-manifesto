@@ -208,10 +208,11 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | 🟢 Day 9+ | **Verdict payload 拡充** — `refuted (evidence : Evidence)` 等 (Failure と同パターン)、Q3 案 A から案 C への移行 | Day 8 D1 案 A→C 移行検討 | Day 9+ Provenance 層 (Day 8 paper サーベイ評価で識別) |
 | 🟢 Day 9+ | **transitionLegacy deprecated 削除** — Day 8 で derive、Day 9+ で利用箇所を新 4-arg signature に移行後削除 | Day 8 D2 derive 設計 | Day 9+ (Day 8 paper サーベイ評価で識別) |
 | ✅ **Day 10 完了** | ~~EvolutionStep transition → ResearchActivity.verify mapping~~ — Day 10 で `EvolutionMapping.transitionToActivity` (Q4 案 A free function) として実装完了 | G5-1 §3.4 step 2 / 02-data-provenance §4.1 | Day 10 commit `b652347` で対処 |
-| 🟡 Day 11+ | **PROV-O wasAttributedTo / wasGeneratedBy / wasDerivedFrom relation の Lean 化** — PROV-O 関係 (Entity ↔ Activity ↔ Agent) を inductive で表現 | 02-data-provenance §4.1 | Day 11+ (Day 10 paper サーベイ評価で識別) |
+| ✅ **Day 11 完了** | ~~PROV-O wasAttributedTo / wasGeneratedBy / wasDerivedFrom relation の Lean 化~~ — Day 11 で 3 separate structure (`WasAttributedTo` / `WasGeneratedBy` / `WasDerivedFrom`) として実装完了 (Q3 案 A、PROV-O 1:1 対応、Q4 案 A 引数 type 厳格) | 02-data-provenance §4.1 | Day 11 commit `11a32bd` で対処 |
 | 🟢 Day 10+ | **ResearchActivity payload なし variants の payload 拡充** (investigate / decompose / refine / retire) — verify variant と同パターン | 02-data-provenance §4.1 | Day 10+ (Day 9 paper サーベイ評価で識別) |
 | 🟢 Day 10+ 設計判断 | **HandoffChain 全体 embed 用 constructor** — `ResearchEntity.HandoffChain` 追加検討 (Subagent I3 Day 9) | Subagent I3 Day 9 | Day 10+ (Day 9 paper サーベイ評価で識別) |
-| 🟡 Day 8+ | **02-data-provenance §4.4 退役の構造的検出** — `RetiredEntity` structure + Lean compiler による退役済 entity 参照の warning/error 検出 (custom linter または elaborator) | 02-data-provenance §4.4 | Day 8+ Provenance 層 (Day 6 paper サーベイ評価で識別) |
+| 🟡 Day 12 | **02-data-provenance §4.4 退役の構造的検出** — `RetiredEntity` structure + Lean compiler による退役済 entity 参照の warning/error 検出 (custom linter または elaborator) | 02-data-provenance §4.4 | Day 12 (Day 6/Day 10 から繰り延べ、Day 11 評価で Day 12 メイン候補に格上げ) |
+| 🟢 Day 13+ | **PROV-O auxiliary relations** (`WasInformedBy: Activity → Activity` / `ActedOnBehalfOf: Agent → Agent`) — 3 main relation 完備の自然な拡張 | 02-data-provenance §4.1 | Day 13+ (Day 11 paper サーベイ評価で新規識別) |
 | 🟡 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** — Lean tree → JSON-LD schema-preserving 変換 (Lean meta-program)、外部 tool (WorkflowHub, Galaxy) との interop 確保 | 02-data-provenance §4.7 | Week 6-7 (CI 整備時) (Day 6 paper サーベイ評価で識別) |
 | 🟢 Week 5-6 | **02-data-provenance §4.5 Pipeline 段階表現** — DSL ≤ AST ≤ LeanSpec ≤ SMTSpec ≤ Tests ≤ Code を Spec 精緻化として Lean で表現 (Snakemake rule 対応) | 02-data-provenance §4.5 | Week 5-6 Tooling 層 (Day 6 paper サーベイ評価で識別) |
 | 🟢 Day 7+ | **S6 Paper 1 (BST/AVL invariants)** — Hypothesis chain の order を invariant 付き structure 化 (Evolution と統合時) | S6 TyDe 2025 Paper 1 | Day 7+ (Evolution と統合) (Day 6 paper サーベイ評価で識別、Section 2.10 既存項目から Day 7+ に具体化) |
@@ -2131,6 +2132,71 @@ Section 12.27 Day 10 想定目標 (49/50 = 98.0%) を **予想を上回って達
 
 ---
 
+### 12.31 Day 11 論文サーベイ視点評価結果（2026-04-18 実施）
+
+Day 11 (`11a32bd` Provenance 層 PROV-O 3 relation 追加) を 74 対象サーベイの paper findings に対して評価。
+
+#### Day 11 で活用された paper findings (5 件)
+
+1. **02-data-provenance §4.1 PROV-O 三項統合 relation 完備** → WasAttributedTo + WasGeneratedBy + WasDerivedFrom (PROV-O §4.1 RDF triple 1:1 対応、3 separate structure)
+2. **TyDD-S1 types-first** → 3 separate structure で各 relation の semantic を型レベル区別 (案 B unified inductive / 案 C RelationKind enum を退ける)
+3. **TyDD-S4 P5 explicit assumptions** → 引数 type 厳格 (Entity × Agent / Entity × Activity / Entity × Entity)、案 B overload を退ける
+4. **G5-1 §6.2.1 Pattern #7 hook v2 初運用検証** → Day 10 v2 拡張後の最初 commit、Provenance 配下新規 .lean を hook が検出可能 (実証成功)
+5. **内部規範 layer 横断 transfer 拡張継続** → 6 段階目: PROV-O triple set 統合 example (1 example で 3 relation 同時利用、attribution + generation + derivation)
+
+#### Day 11 で paper finding と実装の双方向影響
+
+| Direction | 内容 |
+|---|---|
+| **paper → Day 11** | 02-data-provenance §4.1 PROV-O relation / TyDD-S1 types-first / TyDD-S4 P5 explicit assumptions |
+| **実装 → paper 評価更新** | **PROV-O triple set 統合 example** = relation 統合検証パターン (Day 4 fullSpineExample → Day 7 fullProcessExample → Day 8 fullStack → Day 9 List ResearchEntity → Day 10 layer architecture 完成形 → Day 11 PROV-O triple set の 6 段階目)、Pattern #7 hook v2 初運用検証 |
+
+これは Day 4-10 の paper × 実装合流 (7 種) に続く **8 度目: PROV-O triple completion × hook v2 first verification** カテゴリ確立 (PROV-O 完全実装の relation 完成 + governance 拡張の運用検証)。
+
+#### Day 11 で paper との矛盾
+
+**なし**。02-data-provenance §4.1 PROV-O 100% 忠実 (3 separate structure、引数 type 厳格)、TyDD-S1 + S4 P5 同時遵守、Pattern #7 hook v2 が Provenance 層新規 .lean を検出。
+
+#### Paper-grounded な Day 11 強み
+
+| Paper finding | Day 11 実装での顕在化 |
+|---|---|
+| **02-data-provenance §4.1 PROV-O relation** | 3 structure (WasAttributedTo / WasGeneratedBy / WasDerivedFrom) + smart constructor + trivial fixture |
+| **TyDD-S1 types-first** | 3 separate structure で semantic 区別 (案 B/C を退ける) |
+| **TyDD-S4 P5 explicit assumptions** | 引数 type 厳格 (Entity × Agent / Entity × Activity / Entity × Entity)、案 B overload を退ける |
+| **G5-1 §6.2.1 Pattern #7 hook v2** | Day 10 拡張後の初運用検証成功 (Provenance 配下新規 .lean 検出) |
+| **PROV-O triple completion** | Day 8-11 累計 4 type + 3 relation で 02-data-provenance §4.1 PROV-O 完全実装到達 |
+
+#### Day 11 で識別された改善提案 (4 件、Section 2.10 で反映) + 実装修正対処
+
+| 優先度 | 提案 | 根拠 paper | 対処タイミング |
+|---|---|---|---|
+| 🟡 Day 12 | **02-data-provenance §4.4 RetiredEntity** (退役 entity の構造的検出) | §4.4 | Day 12 (Day 10 から繰り延べ、Section 2.10 既存項目) |
+| 🟢 Day 13+ | **PROV-O auxiliary relations** (wasInformedBy: Activity → Activity / actedOnBehalfOf: Agent → Agent) | §4.1 | Day 13+ (Day 11 で新規識別、3 main relation 完備の自然な拡張) |
+| 🟢 Week 5-6 | **02-data-provenance §4.6 cache lineage** (WasReusedBy edge) | §4.6 | Week 5-6 (Section 2.10 既存項目) |
+| 🟢 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** | §4.7 | Week 6-7 (Section 2.10 既存項目) |
+| ✅ **本評価で実装修正対処** | **Day 11 code commit Subagent 省略** (margin 効率優先) — paper サーベイ評価で **遡及検証実施** (Subagent VERDICT: PASS、I1-I4 informational のみ) | Day 11 code commit 判断 | 本改訂で対処済 (paper サーベイ評価サイクル「実装修正組込み」3 度目適用、Day 9 / Day 10 同パターン継続) |
+
+#### Subagent 遡及検証結果 (本改訂で対処)
+
+Day 11 code commit `11a32bd` は時間効率優先で Subagent 検証を省略 (logprob A 全体 margin 検査のみ実施)。本 paper サーベイ評価サイクルで Subagent 遡及検証実施:
+
+- **VERDICT**: PASS (no addressable issues)
+- **I1**: aggregated_example_count = 300 を verify (24+16+16+9+10+28+7+12+17+16+21+17+4+21+22+30+8+22 = 300、artifact-manifest 一致)
+- **I2**: WasDerivedFrom.trivial self-derivation semantics → minimal scope では許容 (DAG 制約は Day 12+ で検討余地)
+- **I3**: ProvRelationTest L111-123 で `simp [WasAttributedTo.mk', WasGeneratedBy.mk', WasDerivedFrom.mk']` 利用 → test 内初の non-rfl tactic、Day 12+ で rfl preference 維持推奨
+- **I4**: ResearchActivity.investigate rfl 等価性 verify
+
+I1-I4 全て informational、addressable なし。Day 11 code commit の品質は Subagent 検証 PASS で確認済。
+
+#### 結論
+
+Day 11 は **PROV-O relation 3 structure 完備** + **PROV-O triple set 統合 example 確立** + **Pattern #7 hook v2 初運用検証成功** + **paper × 実装 8 度目合流カテゴリ確立** (PROV-O triple completion × hook v2 first verification) + **Subagent 遡及検証 PASS**。paper サーベイ評価サイクル「実装修正組込み」は Day 9 / Day 10 から継続して 3 度目適用 (Day 11 code commit の Subagent 省略を遡及補完)。
+
+Day 1-11 累計で **paper finding 39 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 1-3 関連: 1)。
+
+---
+
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
 
 Day 9 (`fa5b373` Provenance 層継続 ResearchEntity + ResearchActivity) を TyDD Tag Index と Section 10.2 パターンに対して評価。
@@ -2844,6 +2910,25 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - Section 2.20 層依存性考察: Provenance 層内部依存のみ、新たな問題なし
   - Section 10.1 Day 11+ 行を Day 11 / Day 12+ に分割
   - 主要決定: Day 11 メイン = PROV-O relation 3 structure (PROV-O 100% 忠実)、RetiredEntity ほか Day 12+ 繰り延べ
+- 2026-04-18 (**改訂 49**): Day 11 論文サーベイ視点評価 + 改善提案 + Subagent 遡及検証 PASS 反映
+  - Section 12.31 (新規): Day 11 論文サーベイ視点評価結果
+    - 活用 paper findings 5 件: PROV-O §4.1 relation / TyDD-S1 / TyDD-S4 P5 / Pattern #7 hook v2 初運用検証 / 内部規範 6 段階目
+    - 双方向影響: paper → Day 11 (PROV-O relation / S1 / S4 P5) + Day 11 → paper 評価更新 (PROV-O triple set 統合 example、hook v2 初運用検証)
+    - **paper × 実装 8 度目合流カテゴリ確立**: PROV-O triple completion × hook v2 first verification
+    - paper との矛盾なし (PROV-O 100% 忠実)
+    - 改善提案 4 件: RetiredEntity Day 12 / PROV-O auxiliary relations Day 13+ / cache lineage Week 5-6 / RO-Crate Week 6-7
+    - paper finding 累計 39 件 (Day 1-3: 1 / Day 4-11: 38)
+  - Section 2.10 更新:
+    - PROV-O relation Lean 化を ✅ Day 11 完了マーク (commit `11a32bd`)
+    - RetiredEntity を 🟡 Day 12 に格上げ (Day 6/Day 10 から繰り延べた項目を Day 11 評価で Day 12 メイン候補化)
+    - PROV-O auxiliary relations 🟢 Day 13+ 新規追加 (Day 11 paper サーベイ評価で識別)
+  - **実装修正対処**: Day 11 code commit `11a32bd` の Subagent 省略を本評価で遡及検証実施
+    - **Subagent VERDICT: PASS** (no addressable issues、I1-I4 informational のみ)
+    - I1 example 数 300 verify (24+16+16+9+10+28+7+12+17+16+21+17+4+21+22+30+8+22 = 300、artifact-manifest 一致)
+    - I2 WasDerivedFrom.trivial self-derivation (minimal scope では許容、DAG 制約は Day 12+ 検討)
+    - I3 ProvRelationTest L111-123 で simp tactic 利用 (test 内初の non-rfl、Day 12+ で rfl preference 維持推奨)
+    - I4 ResearchActivity.investigate rfl 等価性 verify
+    - paper サーベイ評価サイクル「実装修正組込み」3 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent の継続)
 
 ## マーク凡例
 
