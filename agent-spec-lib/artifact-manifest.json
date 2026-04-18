@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.12.0-week2-day11",
+  "version": "0.12.0-week2-day12",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1348,9 +1348,22 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (101+119 jobs) + Day 12 着手前判断 Section 2.22 確定方針反映確認、/verify は本 commit 後に実施予定",
+      "informational_count": 4,
+      "evaluator": "build PASS (101+119 jobs) + Subagent 検証 PASS (改訂 56 paper サーベイ評価サイクルで実施、addressable 0 + informational 4)",
       "p2_complete_for": "day-12-provenance-retired-entity",
-      "note": "Day 12 Provenance 層 RetiredEntity + RetirementReason 4 variant 追加 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure、Day 11 ProvRelation パターン踏襲)。02-data-provenance §4.4 退役 entity の構造的検出 完備 (§4.1 完全カバー継続 + §4.4 完全カバー到達)。Build 101+119 jobs、example 300→322 (+22)。Pattern #7 hook v2 2 度目の Provenance 新規 .lean commit (Day 11 1 度目に続く運用検証)。Day 11 Subagent I3 教訓を反映: RetiredEntityTest 全 example で rfl preference 維持 (simp tactic 不使用)"
+      "subagent_verification": {
+        "executed_in_commit": "改訂 56 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": [
+          "I1: artifact-manifest.json version field が `0.12.0-week2-day11` のまま (本 commit で `0.12.0-week2-day12` に更新対処)",
+          "I2: verifier_history Day 12 R1 entry の evaluator が `本 commit 後に実施予定` のまま、本 Subagent 検証結果未反映 (本 commit で更新対処)",
+          "I3: RetiredEntity.lean の import が ResearchEntity + Failure のみで clean (over-import なし、informational 注記のみ)",
+          "I4: trivial fixture (RetiredEntity.lean L155-156) が ResearchEntity.trivial 直接利用、docstring に展開先注記なし (action なし、informational 注記のみ)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」4 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent / Day 12 I1+I2 即時対処の継続)"
+      },
+      "note": "Day 12 Provenance 層 RetiredEntity + RetirementReason 4 variant 追加 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure、Day 11 ProvRelation パターン踏襲)。02-data-provenance §4.4 退役 entity の構造的検出 完備 (§4.1 完全カバー継続 + §4.4 完全カバー到達)。Build 101+119 jobs、example 300→322 (+22)。Pattern #7 hook v2 2 度目の Provenance 新規 .lean commit (Day 11 1 度目に続く運用検証)。Day 11 Subagent I3 教訓を反映: RetiredEntityTest 全 example で rfl preference 維持 (simp tactic 不使用)。Subagent VERDICT: PASS (addressable 0、informational 4: I1/I2 即時対処、I3/I4 注記のみ)"
     }
   ]
 }
