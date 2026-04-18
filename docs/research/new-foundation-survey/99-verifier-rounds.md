@@ -1453,3 +1453,83 @@ informational 3 件:
 - **cycle 内学習 transfer 形態選択使い分け実証**: Day 15 cross-verification / Day 16 単純 transfer、Subagent 推奨の評価基準 (parser 仕様根拠の有無 + semantic integrity) が確立
 - **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-16 同パターン継続 (8 度連続)、Day 15 で質的発展 (逆方向修正)、Day 16 で形態選択使い分け実証
 - **verifier_history**: Day 15 R1 (20 entries) + **Day 16 R1 追加 (21 entries)**
+
+---
+
+## Phase 0 Week 2 Day 17 検証 (2026-04-18 — Day 17 commit `a8bcf69` 後、**breaking change**)
+
+**背景**: Section 2.32 Day 17 着手前判断 (Q1 A 案 / Q2 A-Medium / Q3 案 A / Q4 案 A) に従い実装。**transitionLegacy 完全削除 A-Standard 完遂** (Day 14-15-16-17 の段階的 deprecation → removal 工学的 best practice 4 Day 完結、`since := "2026-04-19"` = Day 17 指定日履行) + **Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消** (agent-manifesto 内最長記録繰り延べ解消) + **cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結**。Day 12-16 で確立した cycle pattern (Subagent 即時検証) を Day 17 でも継続適用、改訂 82 で **Day 9-17 で初の Subagent 指摘ゼロ到達** (cycle 内学習 transfer 累積効果の極致実例、quality loop 完全機能実証)。Day 11-17 で 7 Day 連続 rfl preference 維持の記録更新 (set_option 不要化でより pure)。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 17 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (build PASS で代替検査、winner A 全体)
+
+**Subagent 検証** (改訂 82 で実施): **VERDICT = PASS、addressable 0、informational 0 (Day 9-17 で初の Subagent 指摘ゼロ到達)**
+
+Day 17 Subagent 検証は **指摘項目ゼロ** で本 Round 1 における修正項目もゼロ (evaluator back-fill + subagent_verification field 追加のみ)。cycle 内学習 transfer 4 形態 (単純 transfer / 先回り適用 / cross-verification / 2 段階別分野転用) が累積適用済 → Day 17 Subagent が新規指摘を見出せない maturity 到達、quality loop 完全機能実証。
+
+**Subagent 指摘項目推移**: Day 9 I2=1 → Day 10 A1+I2=2 → Day 11 I1-I4=4 → Day 12 I1-I4=4 → Day 13 I1=1 → Day 14 I1-I3=3 → Day 15 I1-I3=3 (I1 addressable) → Day 16 I1-I2=2 → **Day 17=0**、cycle pattern quality loop 完全機能実証。
+
+**Day 17 1 項目詳細** (Q1 A 案 / Q2 A-Medium / Q3 案 A / Q4 案 A 採用案反映、MODIFY のみ、**breaking change**):
+
+1. **AgentSpec/Test/Spine/EvolutionStepTest.lean (MODIFY、先行、13→10 example、-3)** (Q3 案 A Test 先行 → Production 後続):
+   - deprecated 利用 example 3 件全削除 (既存 Day 8 から 1 件 + Day 16 新規 2 件)
+   - 新 signature 直接展開 proof 2 件 (Day 16 新規 `TransitionReflexive` / `TransitionTransitive` witness) は保持
+   - `set_option linter.deprecated false in` 全て不要化 (transitionLegacy 完全削除でより pure な rfl preference)
+   - **Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、Day 11-17 = 7 Day 連続 rfl preference 維持の記録更新、quality loop 長期持続性 7 Day 実証)**
+
+2. **AgentSpec/Spine/EvolutionStep.lean (MODIFY、後続)** (Q1 A 案 A-Standard、**breaking change**):
+   - `transitionLegacy` 定義完全削除 (`@[deprecated] def transitionLegacy ... := ∃ h v, transition pre h v post` 全削除)
+   - `TransitionReflexive` / `TransitionTransitive` は Day 16 4-arg signature 直接展開済のため変更不要
+   - docstring に Day 17 D7 意思決定ログ追加 (transitionLegacy 完全削除 A-Standard、breaking change、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消)
+   - Day 16 deprecated 関連記述を Day 8-16 history セクションに整理
+
+**Pattern #7 hook MODIFY path 3 度目運用検証 = 十段階発展到達**: Day 17 commit は既存 EvolutionStep.lean + EvolutionStepTest.lean MODIFY のみ (新規 file 追加なし、**breaking change**)、Pattern #7 hook が breaking change commit でも artifact-manifest 同 commit を機能確認。Day 5 hook 設計 → Day 6-9 4 度運用 → Day 10 v2 拡張 → Day 11/12/13 v2 3 度連続 → Day 14 MODIFY 1 度目 → Day 15 新規 file 復帰 → Day 16 MODIFY 2 度目 (九段階発展完了) → **Day 17 MODIFY 3 度目 (breaking change 対応、十段階発展到達)**。
+
+**cycle 内学習 transfer 累積効果の極致実例**: Day 11-16 で確立した 4 形態 (単純 / 先回り / cross-verification / 2 段階別分野転用) が累積適用済、Day 17 で **Subagent 指摘ゼロ到達** → **quality loop 完全機能実証の構造的 maturity 到達**。Day 17 Subagent は「no action required. All verification criteria are satisfied. The breaking change classification is appropriate and its scope impact is minimal」と評価。
+
+**deprecation_history 3-state complete lifecycle 構造化完成**: `deprecation_history.transitionLegacy` に Day 17 で `removal_actual` field + `complete_lifecycle` field 追加、3-state lifecycle (introduced Day 8 → deprecated Day 16 → removed Day 17) 完成、artifact-manifest 上に agent-manifesto の長期繰り延べ課題解消パターン (Section 2.15 9 セッション) を構造化記録。
+
+**新規 `section_2_15_completely_resolved_day17` field (build_status 直下)**: Section 2.15 完全解消を build_status レベルで構造化記録、agent-manifesto 内 long-term deferred task の解消 milestone として可視化。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 103 jobs 維持 (MODIFY のみ)、`lake build AgentSpecTest` exit 0 / 123 jobs 維持、theorem 15 (不変), example 367→364 (-3), sorry 0, axiom 0。
+
+**compatibility_classification: breaking change** (Day 17 transitionLegacy 定義完全削除、影響は Day 16 A-Compact で TransitionReflexive/Transitive 4-arg 直接展開に移行済のため最小、外部 public API なし、internal test の deprecated 利用 example 3 件は本 commit で削除)。
+
+---
+
+## Phase 0 Week 2 Day 1-17 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性 / 後続 Docs) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1-15 | (省略、Section 12.45 Day 15 累計参照) | | | | | | |
+| Day 16 | `b678856` (compatible) | `823d715` (conservative、Subagent 即時検証 PASS + I1/I2 即時対処) | `3004fc3` (conservative、実装修正なし) | `549e34e` (compatible) | `ba2f653` (conservative) + `7271cc8` 改訂 80 (conservative、step 7 やり残し対処) | R1 PASS (Subagent 即時検証 PASS、形態選択使い分け実証) | written |
+| Day 17 | `a8bcf69` (**breaking change**) | `0f99afe` (conservative、**Subagent 指摘ゼロ初到達**) | `9d4599e` (conservative、実装修正なし) | `6fffa6a` (compatible) | (本 commit) | R1 PASS (Subagent 指摘ゼロ、cycle 内学習 transfer 累積効果極致実例) | written |
+
+**Day 17 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-17 追加 0)
+- example: 364 (Day 16 367 + Day 17 削除 3: EvolutionStepTest 内 deprecated 利用 example)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 103 jobs) + AgentSpecTest (test 123 jobs)** (Day 16 から jobs 変化なし、Day 17 MODIFY のみ)
+- **Provenance 層 5 type + 6 relation + 2 linter (A-Minimal + A-Compact) 完備** (Day 14-15 確立、Day 16-17 は Spine 層で不変)
+- **Spine 層 deprecation 0** (Day 16 で transitionLegacy A-Compact 追加、**Day 17 で完全削除**、Section 2.15 完全解消)
+- **段階的 Lean 機能習得 = 2/4 完了** (Day 14 A-Minimal + Day 15 A-Compact、Day 18+ A-Standard / Week 5-6 A-Maximal へ)
+- **PROV-O §4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合) + 強制化次元 A-Minimal + A-Compact** (Day 11-15 累計、Day 16-17 は維持)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6-13 8 度連続 + Day 10 v2 拡張 + Day 11-13 v2 3 度連続 + Day 14 MODIFY 1 度目 + Day 15 新規 file 復帰 + Day 16 MODIFY 2 度目 + Day 17 MODIFY 3 度目 (breaking change 対応) = 12 度連続検証、十段階発展到達**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 8 度目強適用、Day 8→17 で累積 8 セッション、Day 17 で since 履行により 2 Day にまたがる explicit 実証)** / Section 10.2 6/8 + 0 構造違反 (12 度連続) / **F/B/H 強適用 = 5 強適用継続** / **強制化次元 = 2 維持 (Day 18+ A-Standard 拡張予定)** (詳細 Section 12.50)
+- 論文サーベイ達成度: **paper finding 69 件累計** (Day 4-17 + Day 1-3 関連、詳細 Section 12.49)
+- paper × 概念 合流カテゴリ: **14 種** (Day 4-16 13 種 / **Day 17 cycle 内学習 transfer 累積効果による Subagent 指摘ゼロ × deprecation_history 3-state lifecycle 完成 × breaking change 安全実施パターン**)
+- **multi-session 累積改善実例**:
+  - Section 2.9 (Day 3→Day 16 14 セッション完全解消、Day 16 で Day 8 D3 暫定方針撤回完結)
+  - **Pattern #7 hook (Day 5→Day 17 13 セッション governance 進化 = 十段階発展到達、breaking change 対応確認)**
+  - **Section 2.15 (Day 8→Day 17 10 セッション繰り延べから完全解消、agent-manifesto 内最長記録解消、Day 14→16→17 cycle 内学習 transfer 2 段階別分野転用の 3 Day 完結で段階的 deprecation → removal best practice 4 Day 完結)**
+- **cycle 内学習 transfer 4 形態体系化完了 + 累積効果極致到達**:
+  - **単純 transfer** (Day 11 I3 → Day 12-17 rfl preference、Day 11-17 = **7 Day 連続** 記録更新)
+  - **先回り適用** (Day 12 I1 → Day 13-17 で先回り bump)
+  - **cross-verification** (Day 15 I1 で Subagent 推奨を Lean 4 parser 仕様根拠で逆方向採用)
+  - **2 段階別分野転用** (Day 14 `@[deprecated]` PROV-O 特化 → Day 16 Spine 層 A-Compact → Day 17 Spine 層 A-Standard、3 Day 完結)
+  - **累積効果の極致**: Day 17 で Subagent 指摘ゼロ到達 (quality loop 完全機能実証、Day 9-17 累積 9 セッションの maturity)
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-16 同パターン継続 (8 度連続) + **Day 17 実装修正項目ゼロの新形態到達** (evaluator back-fill のみ、cycle pattern quality loop の maturity)
+- **verifier_history**: Day 16 R1 (21 entries) + **Day 17 R1 追加 (22 entries、compatibility_classification: breaking change field 新規)**
