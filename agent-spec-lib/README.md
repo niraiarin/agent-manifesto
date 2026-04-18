@@ -966,6 +966,51 @@ Section 2.34 Day 18 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案
 - **初期 build error 即時修復 2 度目実例** (Day 15 パターン継続確立)
 - **structural quality vs design space richness の区別明確化** (quality metric 多層構造)
 
+## 現状: Phase 0 Week 2 Day 19 完了（2026-04-19 追加、A-Standard-Lite 拡張）
+
+Section 2.36 Day 19 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 A) に従い実装。
+**A-Standard-Lite namespace 検出拡張** (`#check_retired_in_namespace` command、Environment.constants + Name.isPrefixOf + Lean.Linter.isDeprecated 経由 NS 配下 any depth descendants 列挙)、
+Day 18 `RetirementLinterCommand.lean` + Test MODIFY (同 module + 同 file、command 系統 cohesion 維持)、
+**Day 11-19 で 9 Day 連続 rfl preference 維持の記録更新**、
+**Pattern #7 hook 十二段階発展到達** (MODIFY path 4 度目運用検証、両パターン運用 7 度目)、
+**initial build error 即時修復 3 度目実例** (Day 15/18 パターン継続、Lean 4 parser 状態競合 → section 分離)、
+**Day 17 成果 (transitionLegacy 完全削除) の Day 19 linter 経由 independent 再確認** (AgentSpec.Spine.EvolutionStep 配下 0 retired)、
+**Day 17 指摘ゼロ持続性推移構造化** (Day 17=0 → Day 18=2 → Day 19=3 累積 informational、addressable 0 維持)。
+
+### Day 19 の 1 項目 (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **`#check_retired_in_namespace` command 追加** (RetirementLinterCommand.lean MODIFY、Day 18 同 module)
+- [x] RetirementLinterCommandTest.lean MODIFY (**6→7 example、+1 example + 3 command invocations 5→8**)
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (104 / 125 jobs、Day 18 変化なし)
+- [x] Subagent 検証 PASS (addressable 0、informational 3、I1/I2 即時対処 + I3 Day 20+ 繰り延べ)
+- [x] `#check_retired_in_namespace` 3 invocations 動作確認:
+  - AgentSpec.Provenance.RetiredEntity → 4 retired (Day 14 fixture 検出 ✓)
+  - AgentSpec.Process.Failure → no retired ✓
+  - **AgentSpec.Spine.EvolutionStep → no retired (Day 17 transitionLegacy 完全削除 independent 再確認 ✓)**
+
+### Week 2 Day 19 時点の累計指標
+
+| 指標 | Day 18 | Day 19 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 370 | 0 / +1 | **15 / 371** |
+| Provenance 層 linter | 3 (A-Minimal + A-Compact + A-Standard A-Minimal) | +1 Lite 拡張 | **3 + Lite (A-Standard-Lite 完了)** |
+| Command invocations (RetirementLinterCommandTest) | 5 | +3 | **8** |
+| Pattern #7 hook | 十一段階発展到達 | 12 度目運用検証 (MODIFY 4 度目) | **12 度連続、十二段階発展到達** |
+| Subagent 指摘項目数 | 2 informational | 3 informational (addressable 0 維持) | Day 17=0→18=2→19=3 累積 design space 傾向 |
+| initial build error 即時修復 | 2 度 (Day 15/18) | +1 (Day 19) | **3 度確立 (pattern maturity)** |
+
+### Day 19 で達成した TyDD / paper 進展 (Section 12.55 + 12.56)
+
+- A-Standard-Lite namespace 検出拡張完了 / 段階的 Lean 機能習得 3/4 + Lite 拡張到達
+- Environment.constants + Name.isPrefixOf API 活用 (TyDD-S4 P4 継続強化)
+- Pattern #7 hook 十二段階発展到達 (MODIFY path 4 度目、両パターン運用 7 度目)
+- paper × 実装 16 度目合流カテゴリ確立 (A-Standard-Lite × Day 17 成果 independent 再確認 × initial build error pattern 3 度確立)
+- paper finding 79 件累計
+- Day 17 指摘ゼロ持続性推移構造化 (Day 17=0→18=2→19=3 累積 design space richness 傾向、全て non-addressable)
+- Day 17 成果の Day 19 linter 経由 independent 再確認 (transitionLegacy 完全削除確認 reproducibility 実証)
+- initial build error pattern 3 度目継続実例 (Day 15/18/19 で確立)
+- cycle 内学習 transfer 6 度目適用継続 (Day 11-19 = 9 Day 連続記録更新)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
