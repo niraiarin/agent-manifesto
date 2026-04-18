@@ -412,6 +412,24 @@ Day 13 TyDD 評価 (Section 12.38) で識別された改善余地を Day 14+ で
 
 **根拠**: Section 12.38 Day 13 TyDD 評価結果テーブル + Section 12.37 Day 13 paper サーベイ評価 Subagent I1。Day 13 PROV-O 6 relation 完備 + Pattern #7 hook v2 3 度目運用検証 (運用定常化) 後の次の改善余地を集約。Day 13 TyDD 評価では追加実装修正なし (Day 9-12 同パターン継続、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 改訂 61)。**cycle 内学習 transfer の効果測定**: Day 11 I3 → Day 12 → Day 13 の rfl preference 継続、Day 12 I1 → Day 13 先回り適用で Subagent 検出項目数 4→1 減少 (構造的効果実証)。
 
+### 2.27 Day 14 評価から導出した改善余地 (Day 15+ 対処)
+
+Day 14 TyDD 評価 (Section 12.41) で識別された改善余地を Day 15+ で対処。
+
+| マーク | 項目 | 現状 (Day 14) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 15 | **A-Compact: custom attribute `@[retired]`** (Day 14 A-Minimal の自然な拡張) | Day 14 で Lean 4 標準 `@[deprecated]` A-Minimal 完備、custom attribute は別分野 | Day 15 メイン候補、Lean 4 `register_simp_attr` + elaborator hook で `@[retired "reason"]` を設計 |
+| 🟡 Day 15+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) | Day 13 から継続 | Day 15+ で payload 設計 (verify variant と同パターン) |
+| 🟢 Day 15+ | **A-Standard: custom linter** (Lean.Elab.Command 拡張) | Day 14 A-Minimal 完備、custom linter は更に高度 | Day 15+ (A-Compact 確立後、linter paradigm 学習段階) |
+| 🟢 Week 5-6 | **A-Maximal: elaborator 型レベル強制** (compile error で退役違反 rejection) | Day 14 A-Minimal のみ完備 | Week 5-6 Tooling 層本丸案件 (Lean 4 Elab knowledge 必要) |
+| 🟢 Day 15+ | **ResearchEntity DecidableEq 手動実装** (Day 12-13 で全 type 制約継承継続) | Day 9-14 で省略 | Day 15+ で必要時に手動実装 |
+| 🟢 Day 15+ | **transitionLegacy deprecated 削除** (Day 14 `@[deprecated]` パターン転用可能) | Day 8 で derive、Day 14 で linter パターン確立 | Day 15+ で Day 14 `@[deprecated]` モデル適用 + 利用箇所移行後削除 (cycle 内学習 transfer の拡張、linter パターンを別分野に転用) |
+| 🟢 Week 4-5 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形) | Day 8 で transition 4-arg post 統合のみ | Week 4-5 で hypothesis / observation accessor 追加 |
+| 🟢 Week 4-5 | **G5-1 §3.4 step 2 LearningM indexed monad** | Day 10 transitionToActivity 連携 path 確立 | Week 4-5 Tooling 層で `LearningM` 実装 |
+| 🟢 Day 15+ 設計判断 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 11 trivial fixture で self-derivation 許容 | Day 15+ で acyclic invariant 強化検討 (Section 2.21/2.23/2.25 継続) |
+
+**根拠**: Section 12.41 Day 14 TyDD 評価結果テーブル + Section 12.40 Day 14 paper サーベイ評価 Subagent I1+I2+I3。Day 14 linter A-Minimal 完備 + Pattern #7 hook MODIFY path 対応後の次の改善余地を集約。Day 14 TyDD 評価では追加実装修正なし (Day 9-13 同パターン継続、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 改訂 66)。**注目**: transitionLegacy deprecated 削除 (Section 2.15 Day 9+ からの繰り延べ) は、Day 14 で `@[deprecated]` 活用モデルが確立されたことで Day 15+ で同パターン転用可能 (cycle 内学習 transfer の拡張、linter パターンが別分野に転用される新パターン)。
+
 ### 2.22 Day 12 着手前判断結果 (確定済、Day 11 完了後の議論結果)
 
 #### Day 12 全体方針 (Q1-Q4 採用案、確定済)
@@ -2920,6 +2938,82 @@ Day 14 は **RetiredEntity linter A-Minimal 実装** (Lean 4 標準 `@[deprecate
 
 Day 1-14 累計で **paper finding 54 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 13: 5 / Day 14: 5 / Day 1-3 関連: 1)。
 
+### 12.41 Day 14 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 14 (`13c4e77` Provenance 層 RetiredEntity linter A-Minimal 実装、@[deprecated] 4 fixture) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 4-14 推移)
+
+| 評価軸 | Day 4-13 変化 | Day 14 | 変化 |
+|---|---|---|---|
+| S1 5 軸 | 全日 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 全日 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | Day 8-13 4/5 (P5 1-4 度目強適用) | **4/5 (P5 5 度目強適用: linter attribute assumption の explicit 化)** | 維持 + P5 5 度目 |
+| F/B/H 強適用 | Day 9-13 5 強適用継続 | **5 強適用継続** | 維持 |
+| G1-G6 anti-pattern 回避 | 全日 4/4 | **4/4** | 維持 |
+| Section 10.2 適合 | Day 5-13 6/8+0 | **6/8+0 (9 度目、Pattern #7 MODIFY path 対応確認)** | hook MODIFY 対応 |
+| **新軸**: 強制化次元 | 0 (Day 11-13 は type/relation のみ) | **1 (Day 14 linter A-Minimal)** | **新次元追加** |
+
+#### Day 14 で前進した項目
+
+1. **RetiredEntity linter A-Minimal 実装** (Lean 4 標準 `@[deprecated]` 4 fixture、PROV-O §4.4 "退役済 entity 参照は警告" の 1:1 対応)
+2. **TyDD-S4 P5 explicit assumptions 5 度目強適用** (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary → Day 14 `@[deprecated]` attribute assumption の explicit 化、since + message で assumption を型レベル記録)
+3. **新次元「強制化」追加** (Day 11-13 の type / relation 軸と直交する新評価軸)
+4. **段階的拡張パス確立** (A-Minimal → A-Compact → A-Standard → A-Maximal、Day 15+ 3 段階プラン)
+5. **Pattern #7 hook MODIFY path 対応確認** (Day 11-13 の新規 file パターンから MODIFY path への拡張、Day 14 新パターン)
+6. **cycle 内学習 transfer 3 度目適用継続** (Day 11-14 で 4 Day 連続 rfl preference 維持)
+7. **Subagent 検出項目数安定維持** (Day 13 1 → Day 14 1、cycle 内学習 transfer の構造的効果継続実証)
+
+#### Day 14 で paper finding と TyDD の合流
+
+Day 13 で確立した **PROV-O 6 relation 完備 × separate design 妥当性** を Day 14 で **linter A-Minimal に拡張**:
+- Lean 4 標準 `@[deprecated]` は TyDD-G3 (linter integration) + 02-data-provenance §4.4 semantic の同時満足
+- `(since := "2026-04-18")` による explicit assumption は TyDD-S4 P5 の 5 度目強適用 (assumption を型レベル記録、暗黙の前提を排除)
+- test fixture のみ対象は TyDD-S1 (types first) + backward compatibility の両立 (production code structure は変更なし)
+- 段階的拡張パス (A-Minimal → A-Compact → A-Standard → A-Maximal) は TyDD-S4 P4 power-to-weight + Day 1-13 リズム維持の方針の延長
+
+**Section 10.2 Pattern #7 hook の七段階発展**:
+- **Day 5**: hook 設計 + 構造的 closure
+- **Day 6/7/8/9**: 4 度連続運用検証 (運用安定性)
+- **Day 10**: v2 拡張 (governance evolution)
+- **Day 11**: v2 初運用検証 (Provenance 配下新規 .lean detection)
+- **Day 12**: v2 2 度目運用検証
+- **Day 13**: v2 3 度目運用検証 = 運用定常化 (新規 file パターン完成)
+- **Day 14**: **MODIFY path 対応確認** (新規 file 追加なしでも artifact-manifest 同 commit 機能、新パターン拡張)
+
+#### 改善余地（優先度順、Section 2.27 で記録）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **A-Compact: custom attribute `@[retired]`** (Day 14 A-Minimal の自然な拡張) | Day 15 メイン候補 | Section 2.27 |
+| 🟡 中 | **ResearchActivity payload 拡充** (Day 13 から継続、verify variant 同パターン) | Day 15+ | Section 2.27 |
+| 🟢 低 | **A-Standard: custom linter (Lean.Elab.Command 拡張)** | Day 15+ (A-Compact 確立後) | Section 2.27 |
+| 🟢 低 | **A-Maximal: elaborator 型レベル強制** (compile error rejection) | Week 5-6 Tooling 層本丸 | Section 2.27 |
+| 🟢 低 | **ResearchEntity DecidableEq 手動実装** | Day 15+ | Section 2.27 |
+| 🟢 低 | **transitionLegacy deprecated 削除** (Day 14 で `@[deprecated]` 活用モデル確立したため、transitionLegacy にも適用可能) | Day 15+ (Day 14 linter パターン適用) | Section 2.27 |
+| 🟢 低 | **EvolutionStep 完全 4 member 化** | Week 4-5 | Section 2.27 |
+| 🟢 低 | **G5-1 §3.4 step 2 LearningM indexed monad** | Week 4-5 | Section 2.27 |
+
+#### Day 14 TyDD 評価で識別された実装修正 (即時対処なし)
+
+Day 14 TyDD 評価では **追加実装修正なし** (Day 9-13 同パターン継続):
+- A-Compact custom attribute → Day 15 メイン候補 (新分野で別 Day 集中)
+- ResearchActivity payload 拡充 → Day 15+ (Day 13 から継続繰り延べ)
+
+S4 P4 power-to-weight + Q1 A-Minimal scope 制御を遵守、全て Day 15+ で対処判断。Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 (改訂 66)。
+
+**注目点 (Day 14 新発見)**: transitionLegacy deprecated 削除 (Section 2.15 Day 9+ からの繰り延べ課題) は、Day 14 で `@[deprecated]` 活用モデルが確立されたことで、**Day 15+ で同パターン適用して整理可能** (別分野の課題に linter パターンが転用される cycle 内学習 transfer の拡張)。
+
+#### 結論
+
+Day 14 は TyDD 視点で **Day 13 の S4 4/5 + 5 強適用維持 + S4 P5 5 度目強適用** + **linter A-Minimal 完備 (TyDD-G3 + S4 P5 同時実証)** + **新次元「強制化」追加** (Day 11-13 と直交) + **Pattern #7 hook MODIFY path 対応確認 = 七段階発展** + **cycle 内学習 transfer 構造的効果継続 (Subagent 検出 1 安定維持)**:
+- Lean 4 標準 `@[deprecated]` で custom extension 不要、Day 1-13 リズム維持しつつ強制化次元追加
+- Day 12 RetiredEntity + Day 13 WasRetiredBy relation の downstream 利用として linter A-Minimal 実装
+- 段階的拡張パス (A-Minimal → A-Compact → A-Standard → A-Maximal) 確立で Day 15+ 方針明確化
+- `@[deprecated]` パターンは transitionLegacy 等の既存 deprecated 課題にも転用可能 (cycle 内学習 transfer の拡張)
+
+Day 15 は A-Compact (custom attribute `@[retired]`) が main scope 候補。Day 1-14 累計で **S4 4/5 + P5 5 度目 / F/B/H 5 強適用 / paper finding 54 件 / Section 10.2 6/8 + 0 構造違反 (9 度連続) / paper × 実装合流 11 種カテゴリ / 強制化次元 1 (linter A-Minimal)** 確立。
+
 ---
 
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
@@ -3945,6 +4039,28 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - I3: deprecated_api_usage: 0 self-reported (action 不要、Day 15+ linter で機械化ヒント)
     - paper サーベイ評価サイクル「実装修正組込み」6 度目適用 (Day 9-14 継続)
   - **cycle 内学習 transfer の構造的効果継続**: Day 13-14 で Subagent 検出項目数 1 安定維持 (Day 12 4 → Day 13 1 → Day 14 1 = cycle 内学習 transfer が quality loop として持続的効果)
+- 2026-04-18 (**改訂 67**): Day 14 TyDD 視点評価 + 改善提案 9 件追加 (実装修正なし、cycle step 3+4)
+  - Section 12.41 (新規): Day 14 TyDD 達成度評価 (Day 4-14 推移表含む)
+    - S1 5 軸 5/5 維持、S1 benefits 9/10 維持
+    - S4 4/5 強適用維持 (P5 explicit assumptions **5 度目強適用** = `@[deprecated]` attribute assumption の explicit 化、since + message で assumption を型レベル記録)
+    - F/B/H 5 強適用継続
+    - Section 10.2 適合 6/8+0 (9 度目、Pattern #7 MODIFY path 対応確認)
+    - **新評価軸「強制化次元」追加**: 0 (Day 11-13 type/relation のみ) → 1 (Day 14 linter A-Minimal)
+  - 主要発見:
+    - 新次元「強制化」追加 (Day 11-13 の type/relation 軸と直交する新評価軸)
+    - 段階的拡張パス確立 (A-Minimal → A-Compact → A-Standard → A-Maximal、Day 15+ 3 段階プラン)
+    - Pattern #7 hook MODIFY path 対応確認 (Day 11-13 新規 file パターンから拡張、七段階発展完了)
+    - cycle 内学習 transfer 構造的効果継続 (Subagent 検出 Day 13-14 で 1 安定)
+    - transitionLegacy deprecated 削除が Day 14 `@[deprecated]` モデルで Day 15+ 対処可能化 (linter パターン別分野転用)
+  - Section 2.27 (新規): Day 14 評価から導出した改善余地 (Day 15+ 対処、9 項目)
+    - 🟡 Day 15 A-Compact custom attribute `@[retired]` (Day 14 A-Minimal 自然な拡張)
+    - 🟡 Day 15+ ResearchActivity payload 拡充 (Day 13 から継続)
+    - 🟢 Day 15+ A-Standard custom linter / 🟢 Week 5-6 A-Maximal elaborator 型レベル強制
+    - 🟢 Day 15+ DecidableEq / transitionLegacy 削除 (`@[deprecated]` パターン転用可能、cycle 内学習 transfer 拡張)
+    - 🟢 Week 4-5 EvolutionStep 4 member / LearningM
+    - 🟢 Day 15+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25 継続)
+  - 実装修正なし (Day 9-13 同パターン継続): S4 P4 power-to-weight + Q1 A-Minimal scope 制御遵守、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 (改訂 66)
+  - Day 15 改善事項: A-Compact main / A-Standard / A-Maximal / ResearchActivity payload / transitionLegacy (linter パターン転用)
 
 ## マーク凡例
 
