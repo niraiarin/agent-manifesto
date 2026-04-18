@@ -348,6 +348,66 @@ Process 層継続実装。**Process 層 4 type 完備** (Hypothesis + Failure + 
 - **paper × 実装 4 度目合流カテゴリ確立** (internal-norm × layer transfer)
 - **paper finding 19 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 1-3 関連: 1)
 
+## 現状: Phase 0 Week 2 Day 8 完了（2026-04-18 追加）
+
+Section 2.14 Day 8 着手前判断 (Q1 B-Medium / Q3 案 A / Q4 案 A) に従い実装。
+**Section 2.9 (B4 4-arg post 残課題、Day 3 識別) を完全解消** (5 セッション累積改善)。
+**S4 4/5 強適用達成** (P5 explicit assumptions 新規) + **B4 Hoare 4-arg post 新規強適用**。
+
+### Day 8 の 3 項目 (Q1 B-Medium scope)
+
+- [x] **Verdict 3 variant inductive** (`AgentSpec/Provenance/Verdict.lean`、新 namespace `AgentSpec.Provenance` 先行配置、Q3 案 A)
+  - `inductive Verdict { proven, refuted, inconclusive }` (3 variant minimal)
+  - `isProven` / `isRefuted` / `isInconclusive` Bool 判定 helper
+  - `trivial` fixture (= inconclusive)
+  - deriving `DecidableEq, Inhabited, Repr`
+  - **PROV mapping in docstring**: `ResearchActivity` の output (Day 9+ 実装)
+  - Day 8 意思決定ログ D1-D2 (3 variant minimal Q3 案 A / 新 namespace 配置 D2)
+- [x] **EvolutionStep B4 4-arg post 完全統合** (`AgentSpec/Spine/EvolutionStep.lean`、refactor、Q4 案 A)
+  - **transition signature**: `(pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop`
+  - **transitionLegacy** : `S → S → Prop` を existential で derive (∃ h v, transition pre h v post)、後方互換性
+  - TransitionReflexive / TransitionTransitive を transitionLegacy ベースに更新
+  - Unit instance + Decidable instance を 4-arg signature 対応に更新
+  - **layer architecture redefinition**: Spine → Process / Provenance import を意識的受容 (Q4 案 A D4)
+    Spine の役割を「下位層」→「core abstraction」に再定義
+  - Day 8 意思決定ログ D1-D4 (revised D1-D3 + 新 D2/D4)
+- [x] **Spine + Process cross-layer test** (`AgentSpec/Test/Cross/SpineProcessTest.lean`、新 namespace `AgentSpec.Test.Cross`、Q2 B-Medium 副成果)
+  - `fullStackExample`: Spine 4 type class + Process 4 type 同時要求 (8 layer 要素)
+  - `evolveWithVerdict`: Spine EvolutionStep B4 + Process Hypothesis + Provenance Verdict 連携
+  - `fullProcessReuse`: Day 7 fullProcessExample 構造の継承
+  - **内部規範 layer 横断 transfer 拡張**: fullSpineExample (Day 4) → fullProcessExample (Day 7) → fullStackExample (Day 8) の 3 段階
+- [x] `AgentSpec/Test/Provenance/VerdictTest.lean` (**17 件**、3 variant + isXxx + DecidableEq)
+- [x] `AgentSpec/Test/Spine/EvolutionStepTest.lean` modify (**4→9 件**、新 4-arg signature + transitionLegacy + decide test)
+- [x] `lake build AgentSpec` ✓ (exit 0, **95 jobs**、Verdict +1)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **107 jobs**)
+- [x] /verify Round 1 PASS (logprob A 全体 margin 0.051 + Subagent PASS、addressable A1 manifest 即対処)
+- [x] **Pattern #7 hook 3 度目適用** (運用安定性継続検証成功)
+
+### Week 2 Day 8 時点の累計指標
+
+| 指標 | Day 7 | Day 8 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 171 | +26 (Verdict 17 + SpineProcess 4 + EvolutionStep modify +5) | **197** |
+| Spine 層 type class | 4 完備 + 順序関係 | 0 (refactor: B4 4-arg post) | **4 + 順序 + B4 統合** |
+| Process 層 type | 4 完備 | 0 | **4 完備** |
+| Provenance 層 type | 0 | +1 (Verdict 先行配置) | **1 (Day 9+ 完成予定)** |
+| AgentSpec build jobs | 94 | +1 (Verdict) | **95 jobs** |
+| AgentSpecTest build jobs | 104 | +3 (Verdict + SpineProcess + EvolutionStep modify) | **107 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 (2 度運用検証) | 3 度目適用 | **1 + 3 度運用検証** |
+
+### Day 8 で達成した TyDD / paper 進展 (Section 12.22 + 12.23)
+
+- **Section 2.9 完全解消** (Day 3 識別→Day 8 解消、5 セッション累積改善)
+- **S4 4/5 強適用達成** (P5 explicit assumptions 新規、Day 4 P1+P2+P4 から +1)
+- **B4 Hoare 4-arg post 新規強適用** (EvolutionStep transition で完全実装)
+- **Pattern #7 hook 3 度目適用** (運用安定性継続検証)
+- **layer architecture redefinition** (Spine = 下位層 → core abstraction)
+- **内部規範 layer 横断 transfer 拡張** (fullSpine → fullProcess → fullStack 3 段階)
+- **paper × 実装 5 度目合流カテゴリ確立** (layer architecture redefinition)
+- **paper finding 24 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 1-3 関連: 1)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
