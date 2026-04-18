@@ -218,7 +218,9 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | 🟡 Day 16 | **A-Standard: custom linter** — `Lean.Elab.Command` 拡張 (Day 15 macro 学習が前提準備) | TyDD-G3 + §4.4 | Day 16 メイン候補 |
 | ✅ **Day 16 A-Compact 完了** | ~~transitionLegacy 削除 A-Compact~~ — Day 16 で `@[deprecated "Use new 4-arg transition" (since := "2026-04-19")]` 付与 + `TransitionReflexive` / `TransitionTransitive` を 4-arg signature 直接展開に refactor (cycle 内学習 transfer 2 段階別分野転用実例、Section 2.15 Day 9+ 繰り延べ課題 6 セッションを半解消) | TyDD + Day 14 `@[deprecated]` モデル Spine 層転用 | Day 16 commit `b678856` で対処 |
 | ✅ **Day 17 完了** | ~~transitionLegacy 完全削除 A-Standard~~ — Day 17 で定義完全削除 + test 3 件削除 (既存 1 + Day 16 新規 2)、breaking change classification、`since := "2026-04-19"` 履行、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、cycle 内学習 transfer 2 段階別分野転用の Day 14→16→17 3 Day 完結、**Day 9-17 で初の Subagent 指摘ゼロ到達 (cycle 内学習 transfer 累積効果極致実例)** | TyDD + 段階的 deprecation → removal best practice 完遂 | Day 17 commit `a8bcf69` で対処 |
-| 🟡 Day 18 | **A-Standard custom linter (Lean.Elab.Command 拡張)** — Day 15 macro 学習 + Day 16-17 別分野転用実例確立後の自然な次 step、段階的 Lean 機能習得 3/4 段階目 | TyDD-G3 + §4.4 | Day 18 メイン候補 |
+| ✅ **Day 18 A-Minimal 完了** | ~~A-Standard custom linter~~ — Day 18 で `elab "#check_retired " ident : command` + `Lean.Linter.isDeprecated` API 利用として実装完了 (新 module `RetirementLinterCommand.lean`、段階的 Lean 機能習得 3/4 段階目達成) | TyDD-G3 + §4.4 | Day 18 commit `f127774` で対処 |
+| 🟡 Day 19 | **A-Standard-Lite: namespace 検出拡張** (`#check_retired_in_namespace NS` で NS 配下の RetiredEntity 全検出、Day 18 A-Minimal の自然な拡張) | TyDD-G3 + §4.4 (A-Minimal → A-Standard-Lite 段階的拡張) | Day 19 メイン候補 |
+| 🟡 Day 19+ | **Day 15 `@[retired]` macro fixture × Day 18 `#check_retired` 連携テスト追加** (Subagent I2 Day 18、A-Standard ← A-Compact 連携完全実証) | TyDD-G3 + Subagent I2 Day 18 | Day 19+ (Day 18 paper サーベイで新規識別) |
 | 🟢 Week 5-6 | **A-Maximal: elaborator 型レベル強制** — compile error で退役違反 rejection | TyDD-G3 + §4.4 | Week 5-6 Tooling 層 (本丸案件) |
 | 🟡 Day 16+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) — Day 13 WasRetiredBy 案 C で考察した拡張 | 02-data-provenance §4.1 (Day 13 paper サーベイで再認識) | Day 16+ (Day 9 paper サーベイから継続、Day 13-15 で繰り延べ明示) |
 | 🟡 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** — Lean tree → JSON-LD schema-preserving 変換 (Lean meta-program)、外部 tool (WorkflowHub, Galaxy) との interop 確保 | 02-data-provenance §4.7 | Week 6-7 (CI 整備時) (Day 6 paper サーベイ評価で識別) |
@@ -3876,6 +3878,73 @@ Section 12.48 Day 17 想定目標 (82/83 = 98.8%) を **予想を上回って達
 
 ---
 
+### 12.52 Day 18 論文サーベイ視点評価結果（2026-04-19 実施）
+
+Day 18 (`f127774` A-Standard custom linter A-Minimal、`#check_retired` command、段階的 Lean 機能習得 3/4 段階目達成) を 74 対象サーベイの paper findings に対して評価。
+
+#### Day 18 で活用された paper findings (5 件)
+
+1. **TyDD-G3 linter integration 拡張 3/4 段階目達成** → Day 14 A-Minimal (標準 attribute) → Day 15 A-Compact (Hybrid macro) → **Day 18 A-Standard A-Minimal (Lean.Elab.Command 拡張)** → Week 5-6 A-Maximal (elaborator 4/4 段階目) の段階的 Lean 機能習得パス 3/4 到達
+2. **初期 build error 即時修復パターン 2 度目実例** → Day 15 macro syntax (`$msg:str` 型注釈必須) に続く Day 18 新分野 (Elab.Command) での parser 状態競合解決 (section 分離)、新分野学習 iteration の構造的 pattern 確立 (`initial_build_error_pattern` field で artifact-manifest に記録)
+3. **G5-1 §6.2.1 Pattern #7 hook 十一段階発展到達** → Day 17 MODIFY path 3 度目 (breaking change 対応、十段階発展到達) から Day 18 新規 file パターン復帰で十一段階発展、hook v2 5 度目運用検証
+4. **Day 17 Subagent 指摘ゼロ持続性検証** → Day 17 = 0 に対し Day 18 = 2 (informational 2、addressable 0)、新分野 Elab.Command で informational 発生するも cycle 内学習 transfer 累積効果は addressable レベルで継続実証 (structural quality の maturity 継続)
+5. **Lean 4 core API 活用 (Lean.Elab.Command + Lean.Linter.isDeprecated)** → 自前 implementation 回避、Lean 4 core library 標準 API 利用で TyDD-S4 P4 (power-to-weight) 最大化、A-Standard-Full で custom elaborator 実装時の比較基準確立
+
+#### Day 18 で paper finding と実装の双方向影響
+
+| Direction | 内容 |
+|---|---|
+| **paper → Day 18** | TyDD-G3 linter integration 拡張 3/4 段階目 / 初期 build error 即時修復 2 度目 / Pattern #7 hook 十一段階発展 / Day 17 指摘ゼロ持続性検証 / Lean 4 core API 活用 |
+| **実装 → paper 評価更新** | **Day 17 指摘ゼロ持続性検証結果**: 新分野では informational 発生するが addressable レベルで maturity 継続 (structural quality vs design space richness の区別明確化)、**初期 build error 即時修復 2 度目実例** (Day 15 に続くパターン確立、`initial_build_error_pattern` field で 2 回分記録)、**Day 15 @[retired] macro と Day 18 #check_retired command の連携未テスト発見** (Day 19+ で A-Standard ← A-Compact 連携完全実証候補、Subagent I2) |
+
+これは Day 4-17 の paper × 実装合流 (14 種) に続く **15 度目: 段階的 Lean 機能習得 3/4 達成 × 初期 build error 即時修復 2 度目 × 指摘ゼロ持続性検証 (structural vs design space)** カテゴリ確立 (新分野で cycle 内学習 transfer の適用限界 = addressable レベルでの継続 vs informational レベルでの新規性発生の区別実証)。
+
+#### Day 18 で paper との矛盾
+
+**なし**。TyDD-G3 3/4 段階目達成、Lean.Elab.Command + Lean.Linter.isDeprecated 標準 API 利用で paper-grounded、Pattern #7 hook 十一段階発展は Day 5-18 累積 14 セッションの自然進展、Subagent I2 (Day 15 fixture 連携テスト未実施) は改善機会で矛盾ではない。
+
+#### Paper-grounded な Day 18 強み
+
+| Paper finding | Day 18 実装での顕在化 |
+|---|---|
+| **TyDD-G3 linter integration 3/4 段階目** | Lean.Elab.Command 拡張 `#check_retired` command (Day 15 macro 学習 + Day 16-17 別分野転用実例確立が前提準備完了) |
+| **Lean 4 core API 活用** | `Lean.Linter.isDeprecated (env : Environment) (declName : Name) : Bool` 利用で自前 implementation 回避、TyDD-S4 P4 最大化 |
+| **Pattern #7 hook 十一段階発展** | Day 17 MODIFY 3 度目 (breaking change) → Day 18 新規 file 復帰で十一段階発展 |
+| **Day 17 指摘ゼロ持続性検証** | Day 17 = 0 → Day 18 = 2 informational (addressable 0 維持)、structural quality vs design space の区別明確化 |
+| **初期 build error 即時修復 2 度目** | Day 15 macro syntax → Day 18 parser 状態競合、新分野学習 iteration pattern 確立 |
+
+#### Day 18 で識別された改善提案 (4 件、Section 2.10 で反映) + 実装修正対処
+
+| 優先度 | 提案 | 根拠 paper | 対処タイミング |
+|---|---|---|---|
+| 🟡 Day 19 | **A-Standard-Lite: namespace 検出拡張** (`#check_retired_in_namespace NS` で NS 配下の RetiredEntity 全検出) | TyDD-G3 + §4.4 (A-Minimal → A-Standard-Lite 段階的拡張) | Day 19 メイン候補 |
+| 🟡 Day 19+ | **Day 15 `@[retired]` macro fixture × Day 18 `#check_retired` 連携テスト追加** (Subagent I2、A-Standard ← A-Compact 連携完全実証) | TyDD-G3 + Subagent I2 Day 18 | Day 19+ (cross-interaction test 拡張、Day 17+ ResearchActivity payload と並列候補) |
+| 🟡 Day 19+ | **ResearchActivity payload 拡充** (Day 13-15 から継続、Day 18 は linter 系専念のため繰り延べ継続) | 02-data-provenance §4.1 | Day 19+ |
+| 🟢 Week 5-6 | **A-Maximal elaborator 型レベル強制** (4/4 段階目、Tooling 層本丸) | TyDD-G3 + §4.4 | Week 5-6 |
+| ✅ **本評価で実装修正対処** | **Subagent I1 (evaluator プレースホルダ back-fill、Day 12-17 同パターン)** | Subagent I1 Day 18 | 本 commit で即時対処 (paper サーベイ評価サイクル「実装修正組込み」10 度目適用、Day 9-17 継続 + Day 18) |
+
+#### Subagent 検証結果 (本評価サイクルで即時実施、Day 17 指摘ゼロ持続性検証結果)
+
+Day 18 code commit `f127774` の Subagent 検証を本 paper サーベイ評価サイクル内で即時実施 (Day 12-17 で確立したパターン):
+
+- **VERDICT**: PASS
+- **addressable**: 0
+- **informational**: 2
+  - **I1 (即時対処)**: evaluator placeholder (Day 12-17 I1 同パターン) → back-fill
+  - **I2 (Day 19+ improvement proposal)**: Day 15 `@[retired]` macro fixture に対する `#check_retired` テストが現状なし (Day 14 `@[deprecated]` 直接付与 4 fixture のみ) → Day 19+ で A-Standard ← A-Compact 連携完全実証候補 (実装修正不要、改善機会記録)
+
+**Day 17 指摘ゼロ持続性検証結果**: Day 17 = 0 → **Day 18 = 2 informational (addressable 0 維持)**。新分野 (Elab.Command) で design space richness により informational 発生するが、**addressable レベルで cycle 内学習 transfer 累積効果継続実証** (structural quality の maturity 維持、design space での新規改善機会発見は informational で appropriate)。これは **structural quality vs design space richness の区別明確化** の重要実例、cycle pattern の適用限界と新規性発見能力の両立を構造化。
+
+**paper サーベイ評価サイクル「実装修正組込み」10 度目適用**: Day 9-17 継続 (9 度連続) + Day 18 I1 即時対処、Day 17 の「実装修正項目ゼロ」新形態から Day 18 は「I1 即時対処 + I2 Day 19+ 提案」の新形態に移行 (新分野でのバランス)。
+
+#### 結論
+
+Day 18 は **A-Standard custom linter A-Minimal 実装 (3/4 段階目達成)** + **Lean 4 core API 活用 (Lean.Linter.isDeprecated)** + **初期 build error 即時修復 2 度目実例** + **paper × 実装 15 度目合流カテゴリ確立** (段階的 Lean 機能習得 3/4 × 初期 build error 即時修復 2 度目 × 指摘ゼロ持続性検証 structural vs design space) + **Pattern #7 hook 十一段階発展到達** + **Subagent 検証 PASS + I1 即時対処 + I2 Day 19+ 提案** + **Day 17 指摘ゼロ持続性検証結果** (addressable 0 維持、informational 2 は design space richness)。paper サーベイ評価サイクル「実装修正組込み」は Day 9-18 で 10 度連続適用、Day 18 は「I1 即時対処 + I2 improvement proposal」の新形態。
+
+Day 1-18 累計で **paper finding 74 件顕在化** (Day 4=4 / Day 5=4 / Day 6-18=5×13=65 / Day 1-3=1 / 合計 74)。
+
+---
+
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
 
 Day 9 (`fa5b373` Provenance 層継続 ResearchEntity + ResearchActivity) を TyDD Tag Index と Section 10.2 パターンに対して評価。
@@ -5281,6 +5350,23 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - cycle 内学習 transfer 6 度目適用予定: Day 11 Subagent I3 教訓 (rfl preference) を Day 18 でも継続適用 (Day 11-18 = **8 Day 連続 rfl preference 維持の記録更新**)
   - Day 17 Subagent 指摘ゼロ到達の持続性観測: Day 18 は新分野 (Elab.Command) のため潜在的に増加可能性、2 Day 連続ゼロ維持できるか maturity 検証
   - 主要決定: Day 18 メイン = A-Standard custom linter A-Minimal 実装 (3/4 段階目達成)、A-Standard-Lite / A-Standard-Full / A-Maximal elaborator (4/4 段階目) は Day 19+ / Week 5-6 段階的拡張、ResearchActivity payload 拡充は Day 19+ へ
+- 2026-04-19 (**改訂 87**): Day 18 論文サーベイ視点評価 + Subagent 検証 PASS + I1 即時対処 + I2 Day 19+ improvement proposal (cycle step 1+2)
+  - Section 12.52 (新規): Day 18 論文サーベイ視点評価結果
+    - 活用 paper findings 5 件: TyDD-G3 3/4 段階目 / 初期 build error 即時修復 2 度目 / Pattern #7 hook 十一段階発展 / Day 17 指摘ゼロ持続性検証 / Lean 4 core API 活用
+    - 双方向影響: paper → Day 18 + 実装 → paper 評価更新 (structural quality vs design space richness の区別明確化 / 初期 build error 即時修復 pattern 確立 / Day 15×Day 18 連携未テスト発見)
+    - **paper × 実装 15 度目合流カテゴリ確立**: 段階的 Lean 機能習得 3/4 × 初期 build error 即時修復 2 度目 × 指摘ゼロ持続性検証 (structural vs design space)
+    - paper との矛盾なし
+    - 改善提案 4 件: A-Standard-Lite Day 19 / Day 15×Day 18 連携テスト Day 19+ / ResearchActivity payload Day 19+ / A-Maximal Week 5-6
+    - paper finding 累計 74 件
+  - Section 2.10 更新:
+    - A-Standard custom linter A-Minimal ✅ Day 18 完了 (commit `f127774`、3/4 段階目達成)
+    - A-Standard-Lite namespace 検出 🟡 Day 19 新規追加 (Day 18 A-Minimal の自然な拡張)
+    - Day 15 `@[retired]` macro × Day 18 `#check_retired` 連携テスト 🟡 Day 19+ 新規追加 (Subagent I2、A-Standard ← A-Compact 連携完全実証候補)
+  - **Subagent 検証結果**: VERDICT: PASS、addressable 0、**informational 2** (Day 17 指摘ゼロ持続性検証: addressable 維持、informational は新分野 design space richness で発生)
+    - I1 (即時対処): evaluator placeholder → back-fill (Day 12-17 同パターン)
+    - I2 (Day 19+ improvement proposal): Day 15 `@[retired]` fixture × `#check_retired` 連携テスト未実施、A-Standard ← A-Compact 連携完全実証候補 (設計上機能、実装修正不要、Section 2.35 Day 19+ 候補)
+    - **Day 17 指摘ゼロ持続性検証結果構造化**: Day 17=0 → Day 18=2 informational (addressable 0 維持)、**structural quality vs design space richness の区別明確化** (cycle 内学習 transfer 累積効果は addressable レベルで継続、design space 新規性は informational で appropriate)
+    - paper サーベイ評価サイクル「実装修正組込み」10 度目適用 (Day 9-17 継続 + Day 18 I1 即時対処 + I2 Day 19+ 提案 の新形態)
 
 ## マーク凡例
 

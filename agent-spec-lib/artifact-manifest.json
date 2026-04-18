@@ -1634,11 +1634,23 @@
     },
     {
       "round": "Week 2 Day 18 Round 1",
-      "date": "2026-04-18",
+      "date": "2026-04-19",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (104+125 jobs、+1/+2)、Subagent 検証は本 commit 後の cycle step 1 (改訂 87 paper サーベイ評価サイクル) で実施予定 (Day 12-17 同パターン継続)",
+      "informational_count": 2,
+      "evaluator": "build PASS (104+125 jobs、+1/+2) + Subagent 検証 PASS (改訂 87 paper サーベイ評価サイクルで実施、addressable 0 + informational 2)",
       "p2_complete_for": "day-18-provenance-retirement-linter-command-a-standard-a-minimal",
+      "subagent_verification": {
+        "executed_in_commit": "改訂 87 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": 2,
+        "informational_items": [
+          "I1: evaluator placeholder (Day 12-17 同パターン)、本 Subagent 検証結果で back-fill (本 commit で対処)",
+          "I2: Day 15 @[retired] macro で付与された fixture に対する #check_retired テストが現状なし (Day 14 @[deprecated] 直接付与 4 fixture のみ)、Day 19+ で Day 15 fixture 対象 #check_retired テスト追加で A-Standard ← A-Compact 連携の完全実証可能 (設計上機能するはずだが未テスト、action 不要 improvement proposal、Section 2.35 Day 19+ 候補)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」10 度目適用 (Day 9-17 継続) だが Day 18 は I1 のみ即時対処 + I2 は Day 19+ improvement proposal (実装修正項目なし)、**Day 17 Subagent 指摘ゼロ持続性検証結果**: 新分野 (Elab.Command) で informational 2 件発生するも addressable ゼロ維持、cycle 内学習 transfer 累積効果は addressable レベルで継続実証"
+      },
       "note": "Day 18 Provenance 層 A-Standard custom linter A-Minimal 実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A 新 module / Q4 案 A 新 file test、段階的 Lean 機能習得 **3/4 段階目達成**)。`elab \"#check_retired \" ident : command` 定義で Lean.Linter.isDeprecated API 経由に RetiredEntity 利用箇所の deprecated 判定機能を実装、Day 14 A-Minimal @[deprecated] + Day 15 A-Compact @[retired] macro 展開 fixture を実行時検査可能に。新 module RetirementLinterCommand.lean + RetirementLinterCommandTest.lean (新 file 6 example + 5 #check_retired command invocation)、production RetiredEntity.lean / RetirementLinter.lean は変更なし (backward compatible 完全維持)。Build 103+123 → 104+125 jobs、example 364→370 (+6)。Pattern #7 hook v2 5 度目運用検証 (新規 file パターン復帰、Day 17 MODIFY 3 度目から復帰で Day 18 十一段階発展到達)。**Day 11-18 で 8 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用、quality loop 長期持続性 8 Day 実証)。Day 18 初期 build error 即時修復実例 (2 度目、Day 15 macro syntax 同パターン): #check_retired command 連続 + set_option ... in example 混在で parser 状態競合 → section 区切り明確分離で解決。Day 19+ で A-Standard-Lite (namespace 検出) / A-Standard-Full (elaborator hook)、Week 5-6 で A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続。Day 17 Subagent 指摘ゼロの持続性は本 commit 後の Subagent 検証で検証 (新分野 Elab.Command で 2 Day 連続ゼロ維持できるか maturity 検証)"
     }
   ]
