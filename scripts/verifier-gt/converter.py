@@ -46,6 +46,28 @@ SWEBENCH_CRITERION = {
     ),
 }
 
+LEAN_PROOF_CRITERION = {
+    "id": "lean_proof_matching",
+    "name": "Lean Proof Matching",
+    "description": (
+        "Does this Lean 4 proof body prove the given theorem signature? "
+        "A proof whose tactics match the goal type scores HIGH. "
+        "A proof that targets a different theorem or uses wrong lemmas "
+        "scores LOW."
+    ),
+}
+
+COMMIT_FAITHFULNESS_CRITERION = {
+    "id": "commit_message_faithfulness",
+    "name": "Commit Message Faithfulness",
+    "description": (
+        "Does this commit message accurately describe the diff? A message that "
+        "matches the files changed, scale of changes, and nature of the work "
+        "scores HIGH. A message that describes unrelated changes, wrong scope, "
+        "or different type of work scores LOW."
+    ),
+}
+
 # Multi-criteria decomposition (for RQ2 — decomposition effect)
 REWARDBENCH_CRITERIA_DECOMPOSED = [
     {
@@ -112,6 +134,10 @@ def convert_pairwise(
             criteria = [JUDGEBENCH_CRITERION]
         elif source == "swebench-verified":
             criteria = [SWEBENCH_CRITERION]
+        elif source == "git-commit-faithfulness":
+            criteria = [COMMIT_FAITHFULNESS_CRITERION]
+        elif source == "lean-proof-matching":
+            criteria = [LEAN_PROOF_CRITERION]
         else:
             criteria = [REWARDBENCH_CRITERION]  # default
 
