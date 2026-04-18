@@ -844,3 +844,77 @@ informational 3 件:
 - 論文サーベイ達成度: **paper finding 24 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 1-3 関連: 1、詳細 Section 12.22)
 - paper × 概念 合流カテゴリ: **5 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C / Day 7 internal-norm × layer transfer / **Day 8 layer architecture redefinition Spine = core abstraction**)
 - **multi-session 累積改善実例**: Section 2.9 (B4 4-arg post) は Day 3 識別 → Day 4-7 部分対処 → Day 8 完全解消 (5 セッション)
+
+---
+
+## Phase 0 Week 2 Day 9 検証 (2026-04-18 — Day 9 commit `fa5b373` 後)
+
+**背景**: Section 2.16 Day 9 着手前判断 (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 A 循環依存回避設計) に従い実装。Provenance 層 3 type 完備 (Verdict + ResearchEntity + ResearchActivity)。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 9 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体、margin **0.601**、Day 8 0.051 から大幅改善)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 0、informational 3）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 | artifact-manifest verifier_history に Day 9 エントリ未記録 (Week 1 Round 4 が最終) | **Day 1-9 全 round entry を一括追加** (4 → 14 entries に拡充、過去の Day 1-8 もまとめて補完) |
+| I2 | ResearchActivityTest 最終 example が parameter 形式、example_count 集計方針不明確 | **即時実装修正**: docstring 注記追加 (parameter 形式は universal property 表現、Day 10+ で集計方針統一検討と明記)。これは「paper サーベイ評価サイクルに実装修正を組込む」新パターン |
+| I3 | HandoffChain 全体 embed 用 constructor (`ResearchEntity.HandoffChain`) の代替設計検討 | Day 10+ 設計判断 (Q1 Minimal scope 維持で Day 9 では未対処、Section 2.10 / 2.17 で記録) |
+
+**Day 9 2 項目詳細** (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 A 採用案反映):
+
+1. **AgentSpec/Provenance/ResearchEntity.lean** (Q3 案 A 4 constructor):
+   - `inductive ResearchEntity { Hypothesis (h : Hypothesis), Failure (f : Failure), Evolution (e : Evolution), Handoff (h : Handoff) }` (既存 Process 4 type を payload として embed)
+   - **4 toEntity Mapping** (Q4 案 A、本ファイル内 `namespace AgentSpec.Process` 配下に配置で循環依存回避)
+   - 4 isXxx Bool 判定 helper + trivial fixture
+   - `deriving Inhabited, Repr` (DecidableEq は Evolution recursive 制約で省略、Day 10+ 検討)
+   - Day 9 意思決定ログ D1-D3
+
+2. **AgentSpec/Provenance/ResearchActivity.lean** (5 variant、02-data-provenance §4.1 PROV-O 通り):
+   - `inductive ResearchActivity { investigate, decompose, refine, verify (input : Hypothesis) (output : Verdict), retire }`
+   - **verify variant は Day 8 EvolutionStep B4 4-arg post と整合** (Day 10+ で transition → activity mapping path 確立予定)
+   - isVerify / isRetire 判定 + trivial fixture (= investigate)
+   - `deriving DecidableEq, Inhabited, Repr`
+   - Day 9 意思決定ログ D1-D3
+
+**Pattern #7 hook 4 度目適用**: 新規 Provenance .lean (2 個) + Test .lean (2 個) が staged されたため `agent-spec-lib/artifact-manifest.json` も同 commit に含めて構造的整合性を確保。**hook が pass-through 確認** (Day 6/7/8/9 で 4 度連続)、**運用安定性 4 度連続検証成功**。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 97 jobs (Provenance 層 +2)、`lake build AgentSpecTest` exit 0 / 111 jobs、theorem 15 (不変), example 197→240 (+43), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-9 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | `d1031d5` (conservative) | R1 PASS | written |
+| Day 7 | `941b25c` (compatible) | `04c632b` (conservative) | `e4d5dda` (conservative) | `760f014` (compatible) | `32baacf` (conservative) | R1 PASS | written |
+| Day 8 | `0f78fa6` (compatible) | `53db950` (conservative) | `168d369` (conservative) | `d35dd08` (compatible) | `36f354a` (conservative) | R1 PASS | written |
+| Day 9 | `fa5b373` (compatible) | `4fd2656` (conservative、I2 即時実装修正含む) | `0781b20` (conservative、実装修正なし) | `16551d4` (compatible) | (本 commit) | R1 PASS | written |
+
+**Day 9 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-9 追加 0)
+- example: 240 (Day 8 197 + Day 9 追加 43: ResearchEntity 21 + ResearchActivity 22)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 97 jobs) + AgentSpecTest (test 111 jobs)** (Day 8 95+107 から Provenance 2 type +2/+4)
+- **Spine 層 4 type class 完備 + 順序関係完備 + EvolutionStep B4 4-arg post 完全統合 (Day 8、Section 2.9 完全解消)**
+- **Process 層 4 type 完備** (Day 6-7)
+- **Provenance 層 3 type 完備** (Day 8 Verdict + Day 9 ResearchEntity + ResearchActivity、ResearchAgent のみ Day 10+)
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8/9 で 4 度連続運用検証成功**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 新規、Day 8)** / Section 10.2 6/8 + 0 構造違反 (4 度連続) / **F/B/H 強適用 = B3 + B4 + F2 部分 + H4 + H10 部分 (5 強適用、Day 9 維持)** (詳細 Section 12.26)
+- 論文サーベイ達成度: **paper finding 29 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 1-3 関連: 1、詳細 Section 12.25)
+- paper × 概念 合流カテゴリ: **6 種** (Day 4-7 4 種 / Day 8 layer architecture redefinition / **Day 9 namespace extension pattern by layer architecture**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)
+- **新パターン (Day 9)**: paper サーベイ評価サイクルに「実装修正」を組込む (Subagent I2 即時対処) / TyDD 評価サイクルでの「実装修正なし」(全て Day 10+ 繰り延べ) も新パターン
+- **verifier_history**: Day 9 で Week 1 Round 1-4 + Week 2 Day 1-9 R1 を一括補完 (4 → 14 entries)
