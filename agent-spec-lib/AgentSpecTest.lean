@@ -14,6 +14,7 @@ import AgentSpec.Test.Provenance.ResearchEntityTest
 import AgentSpec.Test.Provenance.ResearchActivityTest
 import AgentSpec.Test.Provenance.ResearchAgentTest
 import AgentSpec.Test.Provenance.EvolutionMappingTest
+import AgentSpec.Test.Provenance.ProvRelationTest
 import AgentSpec.Test.Cross.SpineProcessTest
 
 /-!

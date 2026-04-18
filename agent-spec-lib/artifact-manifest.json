@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.11.0-week2-day10",
+  "version": "0.12.0-week2-day11",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -298,10 +298,11 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchAgentTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.EvolutionMappingTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 278,
+      "aggregated_example_count": 300,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -977,6 +978,59 @@
       "evolutionstep_b4_alignment": "Day 8 EvolutionStep transition の (input, output) を Day 9 ResearchActivity.verify として PROV-O Activity 化する path 検証"
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelation",
+      "path": "AgentSpec/Provenance/ProvRelation.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Provenance.WasAttributedTo (structure: entity : ResearchEntity, agent : ResearchAgent)",
+        "AgentSpec.Provenance.WasGeneratedBy (structure: entity : ResearchEntity, activity : ResearchActivity)",
+        "AgentSpec.Provenance.WasDerivedFrom (structure: entity : ResearchEntity, source : ResearchEntity)"
+      ],
+      "provides_definitions": [
+        "WasAttributedTo.mk' / WasAttributedTo.trivial",
+        "WasGeneratedBy.mk' / WasGeneratedBy.trivial",
+        "WasDerivedFrom.mk' / WasDerivedFrom.trivial"
+      ],
+      "provides_instances": [
+        "Inhabited / Repr (3 relation 全て、deriving)",
+        "DecidableEq 省略: ResearchEntity recursive 制約継承 (Day 12+ 検討)"
+      ],
+      "design_origin": "02-data-provenance §4.1 PROV-O 三項 relation の Lean 化 (Day 11 Q3 案 A 3 separate structure + Q4 案 A 厳格 type、PROV-O 1:1 対応)",
+      "namespace_role": "Provenance 層 Day 11 構成要素。Day 8-10 で 4 type 完備、Day 11 で 3 relation 追加で PROV-O 三項統合 + relation の最小実装完了",
+      "week2_status": "Day 11 hole-driven 完了 (Q1 A-Minimal)。Day 12+ で RetiredEntity / Hypothesis rationale 型化 / Failure payload 型化 等の paper-grounded 改善",
+      "decision_log": "ProvRelation.lean docstring D1-D3 (Q3 案 A 3 separate / Q4 案 A 厳格 type / D3 1 ファイル統合配置)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest",
+      "path": "AgentSpec/Test/Provenance/ProvRelationTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "WasAttributedTo 構築 + field projection + Smart constructor + trivial fixture",
+        "WasGeneratedBy 構築 + field projection (verify variant 含む) + Smart constructor + trivial",
+        "WasDerivedFrom 構築 + field projection (refined → original) + Smart constructor + trivial",
+        "Inhabited 3 relation",
+        "PROV-O 三項統合: 3 relation を同一 example で利用 (PROV-O triple set)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ProvRelation", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 22,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "prov_o_triple_test": "Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom を同一 example で構築 (PROV-O triple set 表現)"
+    },
+    {
       "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
       "path": "AgentSpec/Test/Cross/SpineProcessTest.lean",
       "scope": "test",
@@ -1009,23 +1063,23 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 10",
+    "last_verified_phase": "Week 2 Day 11",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 99, "scope": "production-only", "note": "Day 10 で ResearchAgent + EvolutionMapping 2 type 追加で 97→99"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 115, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 100, "scope": "production-only", "note": "Day 11 で ProvRelation +1 で 99→100"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 117, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
     "process_layer_progress": "Day 6 Hypothesis + Failure、Day 7 Evolution + HandoffChain 完了 (4 type 完備)",
-    "provenance_layer_completed_4_type": "Day 8 Verdict 先行配置、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = **PROV-O 三項統合 4 type 完備**",
-    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10 で 5 度運用検証成功",
-    "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent の toEntity Mapping (Day 9 同パターン)",
+    "provenance_layer_completed_4_type_plus_3_relation": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、**Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 relation 追加 = 4 type + 3 relation 完備**",
+    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10/11 で 6 度運用検証成功 (Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11 で v2 適用初の Provenance 新規 .lean commit)",
+    "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent.toEntity、Day 11 で PROV-O triple set test (3 relation 同一 example)",
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
-    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity (Day 8/9 連携 path 確立)",
+    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity、**Day 11 で 3 PROV-O relation の Lean 化完了 (4 type + 3 relation = PROV-O 三項統合の主要要素全完備)**",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 278,
+    "example_count": 300,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1064,6 +1118,8 @@
       "Test/Provenance/ResearchAgentTest.lean": {"theorems": 0, "examples": 30},
       "Provenance/EvolutionMapping.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/EvolutionMappingTest.lean": {"theorems": 0, "examples": 8},
+      "Provenance/ProvRelation.lean": {"theorems": 0, "examples": 0},
+      "Test/Provenance/ProvRelationTest.lean": {"theorems": 0, "examples": 22},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },
@@ -1209,6 +1265,15 @@
       "evaluator": "logprob+subagent",
       "p2_complete_for": "day-10-provenance-researchagent-evolutionmapping",
       "note": "Day 10 Provenance 層 4 type 完備 (ResearchAgent + EvolutionMapping、Q1 B-Medium / Q3 案 A / Q4 案 A)。ResearchEntity 5 constructor 拡張 (Agent embed、Day 10 D2 設計判断)。Day 8/9 連携 path 確立 (transitionToActivity free function、Q4 案 A)。Build 99+115 jobs、example 240→278 (+38: ResearchAgent 30 + EvolutionMapping 8)"
+    },
+    {
+      "round": "Week 2 Day 11 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "logprob (margin 2.460 過去最高、Subagent 省略)",
+      "p2_complete_for": "day-11-provenance-prov-relation-3-structure",
+      "note": "Day 11 Provenance 層 PROV-O 3 relation 追加 (WasAttributedTo + WasGeneratedBy + WasDerivedFrom、Q1 A-Minimal / Q3 案 A 3 separate structure / Q4 案 A 厳格 type)。PROV-O 三項統合 4 type + 3 relation 完備。Build 100+117 jobs、example 278→300 (+22)。logprob margin 2.460 (Day 10 2.335 から更新の過去最高、PROV-O 完全実装の効果)。Pattern #7 hook v2 適用初の Provenance 新規 .lean commit (hook pass-through 確認 = v2 拡張の運用検証 1 度目)"
     }
   ]
 }

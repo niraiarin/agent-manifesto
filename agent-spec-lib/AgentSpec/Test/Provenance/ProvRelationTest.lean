@@ -1,0 +1,125 @@
+import AgentSpec.Provenance.ProvRelation
+
+/-!
+# AgentSpec.Test.Provenance.ProvRelationTest: PROV-O 3 relation の behavior test
+
+Day 11 Q3 案 A + Q4 案 A: WasAttributedTo / WasGeneratedBy / WasDerivedFrom の
+3 structure (PROV-O 1:1 対応、厳格 type) の検証。
+-/
+
+namespace AgentSpec.Test.Provenance.ProvRelation
+
+open AgentSpec.Provenance
+open AgentSpec.Process
+
+/-! ### WasAttributedTo (Entity → Agent) -/
+
+/-- 直接構築 -/
+example : WasAttributedTo :=
+  { entity := .Hypothesis Hypothesis.trivial,
+    agent := ResearchAgent.mkResearcher "alice" }
+
+/-- field projection: entity -/
+example : ({entity := .Hypothesis Hypothesis.trivial,
+             agent := ResearchAgent.trivial} : WasAttributedTo).entity =
+          .Hypothesis Hypothesis.trivial := rfl
+
+/-- field projection: agent -/
+example : ({entity := .Hypothesis Hypothesis.trivial,
+             agent := ResearchAgent.mkVerifier "v1"} : WasAttributedTo).agent =
+          ResearchAgent.mkVerifier "v1" := rfl
+
+/-- Smart constructor mk' -/
+example : WasAttributedTo.mk' (.Hypothesis Hypothesis.trivial)
+            (ResearchAgent.mkReviewer "bob") =
+          { entity := .Hypothesis Hypothesis.trivial,
+            agent := ResearchAgent.mkReviewer "bob" } := rfl
+
+/-- trivial fixture -/
+example : WasAttributedTo.trivial.entity = ResearchEntity.trivial := rfl
+example : WasAttributedTo.trivial.agent = ResearchAgent.trivial := rfl
+
+/-- Inhabited instance 解決 -/
+example : Inhabited WasAttributedTo := inferInstance
+
+/-! ### WasGeneratedBy (Entity → Activity) -/
+
+/-- 直接構築 -/
+example : WasGeneratedBy :=
+  { entity := .Hypothesis Hypothesis.trivial,
+    activity := .verify Hypothesis.trivial Verdict.proven }
+
+/-- field projection: entity -/
+example : ({entity := .Hypothesis Hypothesis.trivial,
+             activity := ResearchActivity.trivial} : WasGeneratedBy).entity =
+          .Hypothesis Hypothesis.trivial := rfl
+
+/-- field projection: activity (verify variant) -/
+example : ({entity := .Hypothesis Hypothesis.trivial,
+             activity := .verify Hypothesis.trivial Verdict.refuted}
+            : WasGeneratedBy).activity =
+          .verify Hypothesis.trivial Verdict.refuted := rfl
+
+/-- Smart constructor mk' -/
+example : WasGeneratedBy.mk' (.Hypothesis Hypothesis.trivial)
+            ResearchActivity.investigate =
+          { entity := .Hypothesis Hypothesis.trivial,
+            activity := .investigate } := rfl
+
+/-- trivial fixture: investigate activity 生成 entity -/
+example : WasGeneratedBy.trivial.entity = ResearchEntity.trivial := rfl
+example : WasGeneratedBy.trivial.activity = ResearchActivity.investigate := rfl
+
+/-- Inhabited instance 解決 -/
+example : Inhabited WasGeneratedBy := inferInstance
+
+/-! ### WasDerivedFrom (Entity → Entity) -/
+
+/-- 直接構築: refined hypothesis derived from original hypothesis -/
+example : WasDerivedFrom :=
+  { entity := .Hypothesis { claim := "refined" },
+    source := .Hypothesis Hypothesis.trivial }
+
+/-- field projection: entity (derived) -/
+example : ({entity := .Hypothesis { claim := "derived" },
+             source := .Hypothesis Hypothesis.trivial}
+            : WasDerivedFrom).entity =
+          .Hypothesis { claim := "derived" } := rfl
+
+/-- field projection: source (original) -/
+example : ({entity := .Hypothesis { claim := "derived" },
+             source := .Hypothesis Hypothesis.trivial}
+            : WasDerivedFrom).source =
+          .Hypothesis Hypothesis.trivial := rfl
+
+/-- Smart constructor mk' -/
+example : WasDerivedFrom.mk' (.Failure Failure.trivial)
+            (.Hypothesis Hypothesis.trivial) =
+          { entity := .Failure Failure.trivial,
+            source := .Hypothesis Hypothesis.trivial } := rfl
+
+/-- trivial fixture: 同一 entity を source/target に (self-derivation) -/
+example : WasDerivedFrom.trivial.entity = ResearchEntity.trivial := rfl
+example : WasDerivedFrom.trivial.source = ResearchEntity.trivial := rfl
+
+/-- Inhabited instance 解決 -/
+example : Inhabited WasDerivedFrom := inferInstance
+
+/-! ### PROV-O 三項統合: 3 relation 全てが同時利用可能 -/
+
+/-- 3 relation を同一 example で利用 (PROV-O triple set) -/
+example :
+    let alice := ResearchAgent.mkResearcher "alice"
+    let originalHyp := Hypothesis.trivial
+    let refinedHyp := { claim := "refined" }
+    let attribution : WasAttributedTo := .mk' (.Hypothesis refinedHyp) alice
+    let generation : WasGeneratedBy := .mk' (.Hypothesis refinedHyp)
+                       (.verify originalHyp Verdict.proven)
+    let derivation : WasDerivedFrom := .mk' (.Hypothesis refinedHyp)
+                       (.Hypothesis originalHyp)
+    (attribution.agent = alice) ∧
+    (generation.activity = .verify originalHyp Verdict.proven) ∧
+    (derivation.source = .Hypothesis originalHyp) := by
+  simp [WasAttributedTo.mk', WasGeneratedBy.mk', WasDerivedFrom.mk']
+
+end AgentSpec.Test.Provenance.ProvRelation
