@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.16.0-week2-day16",
+  "version": "0.17.0-week2-day17",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -305,7 +305,7 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 367,
+      "aggregated_example_count": 364,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -326,23 +326,23 @@
         "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : (pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop (Day 8 で B4 Hoare 4-arg post に refactor、Q4 案 A 確定、Section 2.9 完全解消)"
       ],
       "provides_definitions": [
-        "AgentSpec.Spine.EvolutionStep.transitionLegacy (Day 8 追加: 後方互換、∃ h v, transition pre h v post で derive、**Day 16 で @[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")] 付与**、Day 17+ で完全削除予定)",
-        "AgentSpec.Spine.EvolutionStep.TransitionReflexive (Day 8 で transitionLegacy ベースに更新 → **Day 16 で 4-arg signature 直接展開に refactor**、transitionLegacy deprecated 警告を波及させないため)",
-        "AgentSpec.Spine.EvolutionStep.TransitionTransitive (Day 8 で transitionLegacy ベースに更新 → **Day 16 で 4-arg signature 直接展開に refactor**)"
+        "AgentSpec.Spine.EvolutionStep.TransitionReflexive (Day 8 で transitionLegacy ベースに更新 → Day 16 で 4-arg signature 直接展開に refactor、**Day 17 で transitionLegacy 完全削除後も 4-arg 直接展開のまま継続**)",
+        "AgentSpec.Spine.EvolutionStep.TransitionTransitive (Day 8 で transitionLegacy ベースに更新 → Day 16 で 4-arg signature 直接展開に refactor、**Day 17 で transitionLegacy 完全削除後も 4-arg 直接展開のまま継続**)"
       ],
       "provides_instances": [
         "instEvolutionStepUnit (Day 8 で 4-arg signature 対応に更新: transition _ _ _ _ := True)",
         "Decidable (transition a h v b) for Unit (Day 8 で 4-arg signature 対応)"
       ],
       "g5_1_section": "3.4 ステップ 1 (ResearchEvolutionStep type class)、Day 8 で B4 4-arg post 完全統合",
-      "week2_status": "Day 8 で B4 Hoare 4-arg post 完全統合済 (Q4 案 A、Section 2.9 完全解消)。layer 依存性は Spine → Process / Provenance を Q4 案 A D4 で受容。**Day 16 で transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive を 4-arg signature 直接展開に refactor** (Section 2.15 Day 9+ 繰り延べ課題 A-Compact 解消、cycle 内学習 transfer 2 段階別分野転用実例、Day 14 `@[deprecated]` モデル Spine 層転用)、完全削除は Day 17+ A-Standard で breaking change として実施予定",
-      "decision_log": "EvolutionStep.lean docstring D1-D3 (Day 3) + D1-D4 revised (Day 8 Q4 案 A 反映) + **D5-D6 added (Day 16 Q1 B 案 A-Compact: transitionLegacy @[deprecated] 付与 / TransitionReflexive/Transitive 4-arg 直接展開 refactor)**",
+      "week2_status": "Day 8 で B4 Hoare 4-arg post 完全統合済 (Q4 案 A、Section 2.9 完全解消)。layer 依存性は Spine → Process / Provenance を Q4 案 A D4 で受容。Day 16 で transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive を 4-arg signature 直接展開に refactor (A-Compact 半解消)。**Day 17 で transitionLegacy 定義完全削除 A-Standard 完遂** (breaking change、`since := \"2026-04-19\"` 履行、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結)",
+      "decision_log": "EvolutionStep.lean docstring D1-D3 (Day 3) + D1-D4 revised (Day 8 Q4 案 A 反映) + D5-D6 added (Day 16 Q1 B 案 A-Compact) + **D7 added (Day 17 Q1 A 案 A-Standard: transitionLegacy 定義完全削除、breaking change)**",
       "deprecation_history": {
         "transitionLegacy": {
           "introduced": "Day 8 (`0f78fa6`、Section 2.14 Q4 案 A D2: 後方互換のため derive で残置)",
           "deprecated": "Day 16 (`b678856`、@[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")] 付与、Q1 B 案 A-Compact)",
-          "removal_scheduled": "Day 17+ A-Standard (breaking change として別 Day で実施予定)",
-          "transfer_pattern": "Day 14 `@[deprecated]` モデル (PROV-O 退役 entity linter) → Day 16 Spine 層 transitionLegacy に別分野転用 (cycle 内学習 transfer 2 段階別分野転用実例)"
+          "removal_actual": "Day 17 (Day 17 code commit、定義完全削除 A-Standard 完遂、breaking change compatibility classification、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、段階的 deprecation → removal 工学的 best practice 完遂、since=\"2026-04-19\" 指定日履行)",
+          "transfer_pattern": "Day 14 `@[deprecated]` モデル (PROV-O 退役 entity linter) → Day 16 Spine 層 transitionLegacy に別分野転用 (A-Compact、cycle 内学習 transfer 2 段階別分野転用実例) → Day 17 A-Standard 完全削除 (3 Day 完結)",
+          "complete_lifecycle": "Day 8 introduced → Day 16 deprecated → Day 17 removed (artifact-manifest 上で complete lifecycle 構造化記録完成、Day 12-16 改訂 55 で `deprecation_history` field 新規追加、Day 17 で removal_actual state 追加で 3-state lifecycle 完成)"
         }
       }
     },
@@ -384,22 +384,22 @@
       "refs": ["GA-S1", "GA-I9"],
       "test_targets": [
         "transition behavior (Unit dummy instance)",
-        "TransitionReflexive Unit instance (Day 16 で 4-arg signature 直接展開に refactor 後も proof 形式不変)",
-        "TransitionTransitive Unit instance (Day 16 で 4-arg signature 直接展開に refactor 後も proof 形式不変)",
+        "TransitionReflexive Unit instance (Day 16 で 4-arg signature 直接展開に refactor 後も proof 形式不変、Day 17 transitionLegacy 削除後も継続)",
+        "TransitionTransitive Unit instance (Day 16 で 4-arg signature 直接展開に refactor 後も proof 形式不変、Day 17 transitionLegacy 削除後も継続)",
         "type class instance 解決",
-        "Day 16 新規: @[deprecated] 付与 transitionLegacy の Inhabited 構築確認 (2 variant、set_option linter.deprecated false in で warning 抑制)",
-        "Day 16 新規: 新 signature 直接展開 TransitionReflexive / TransitionTransitive の witness proof (transitionLegacy 非経由、2 variant)"
+        "Day 16 新規 → Day 17 保持: 新 signature 直接展開 TransitionReflexive / TransitionTransitive の witness proof (transitionLegacy 非経由、2 variant)"
       ],
       "enforces": "structural",
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 13,
+      "example_count": 10,
       "sorry_count": 0,
       "axiom_count": 0,
       "day8_update": "Day 8 で EvolutionStep B4 4-arg post refactor 反映、example 4→9 (新 4-arg signature の test 4 件 + transitionLegacy + decide test 1 件)",
-      "day16_update": "Day 16 で transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive 4-arg signature 直接展開 refactor 反映、example 9→13 (+4: Day 16 新規 deprecated 動作確認 2 件 + 新 signature 直接展開 proof 2 件)、既存 2 transitionLegacy 直接利用 example は set_option linter.deprecated false in で warning 抑制",
-      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 5 度目、Day 11-16 = **6 Day 連続 rfl preference 維持の記録更新**): 全 example で rfl preference 維持 (simp tactic 不使用)、set_option linter.deprecated false in で warning 抑制のみ"
+      "day16_update": "Day 16 で transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive 4-arg signature 直接展開 refactor 反映、example 9→13 (+4: Day 16 新規 deprecated 動作確認 2 件 + 新 signature 直接展開 proof 2 件)、既存 1 transitionLegacy 直接利用 example は set_option linter.deprecated false in で warning 抑制",
+      "day17_update": "Day 17 で transitionLegacy 定義完全削除 A-Standard 完遂に伴い、deprecated 利用 example 3 件全削除 (既存 Day 8 から 1 件 + Day 16 新規 2 件)、example 13→10 (-3)。新 signature 直接展開 proof 2 件 (Day 16 新規) は保持、TransitionReflexive/Transitive / transition behavior / type class 解決 は全て保持。breaking change 影響は test 内のみ",
+      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、Day 11-17 = **7 Day 連続 rfl preference 維持の記録更新**): 全 example で rfl preference 維持 (simp tactic 不使用)、**Day 17 で set_option linter.deprecated false in は不要** (transitionLegacy 完全削除で deprecated 利用 example が存在しなくなったため)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest",
@@ -1228,24 +1228,25 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 16",
+    "last_verified_phase": "Week 2 Day 17",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 103, "scope": "production-only", "note": "Day 16 は既存 EvolutionStep MODIFY のみで jobs 変化なし (103 維持)、transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive 4-arg 直接展開 refactor"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 123, "scope": "test only", "note": "Day 16 は既存 EvolutionStepTest MODIFY のみで jobs 変化なし (123 維持)、example 9→13 (+4)"}
+      "AgentSpec": {"result": "exit 0", "job_count": 103, "scope": "production-only", "note": "Day 17 は既存 EvolutionStep MODIFY のみで jobs 変化なし (103 維持)、transitionLegacy 定義完全削除 A-Standard 完遂"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 123, "scope": "test only", "note": "Day 17 は既存 EvolutionStepTest MODIFY のみで jobs 変化なし (123 維持)、example 13→10 (-3: deprecated 利用 example 全削除)"}
     },
+    "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
     "process_layer_progress": "Day 6 Hypothesis + Failure、Day 7 Evolution + HandoffChain 完了 (4 type 完備)",
     "provenance_layer_completed_5_type_plus_6_relation_plus_linter_a_compact": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、Day 11 で 3 main relation、Day 12 で RetiredEntity + RetirementReason 4 variant 追加 = §4.1 + §4.4 完全カバー到達、Day 13 で auxiliary 2 + WasRetiredBy 1 = 5 type + 6 relation 完備、Day 14 で RetiredEntity linter A-Minimal 実装 (Lean 4 標準 @[deprecated] 4 fixture)、Day 15 で linter A-Compact 実装 (Hybrid macro、@[retired msg since] → @[deprecated msg (since := since)] 展開、Day 14 backward compatible、新 module RetirementLinter.lean で隔離)",
     "spine_layer_deprecation_a_compact_day16": "**Day 16 で Spine 層 transitionLegacy @[deprecated] 付与 + TransitionReflexive/Transitive 4-arg signature 直接展開 refactor** (Section 2.15 Day 9+ 繰り延べ課題 A-Compact 解消、Day 14 `@[deprecated]` モデル Spine 層別分野転用 = cycle 内学習 transfer 2 段階別分野転用実例)、完全削除は Day 17+ A-Standard で breaking change として実施予定",
-    "governance_hook": "Day 5 hook 化完了、Day 6-13 で 8 度運用検証成功、Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11/12/13 で v2 適用初-3 度目 = 運用定常化、Day 14 MODIFY path 対応確認、Day 15 で v2 4 度目運用検証 (新 module RetirementLinter.lean commit、新規 file パターン復帰)、**Day 16 で MODIFY path 2 度目運用検証 (既存 EvolutionStep.lean/EvolutionStepTest.lean MODIFY、Pattern #7 hook 九段階発展完了)**",
+    "governance_hook": "Day 5 hook 化完了、Day 6-13 で 8 度運用検証成功、Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11/12/13 で v2 適用初-3 度目 = 運用定常化、Day 14 MODIFY path 対応確認、Day 15 で v2 4 度目運用検証 (新規 file パターン復帰)、Day 16 で MODIFY path 2 度目運用検証 (九段階発展完了)、**Day 17 で MODIFY path 3 度目運用検証 (breaking change コミットでも artifact-manifest 同 commit 機能確認、Pattern #7 hook 十段階発展到達)**",
     "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent.toEntity、Day 11 で PROV-O triple set test (3 relation 同一 example)、Day 12 で 4 RetirementReason variant 全種類を List で集約 test (内部規範 layer 横断 transfer 7 段階目)、**Day 13 で PROV-O 6 relation 統合 example** (Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1、内部規範 layer 横断 transfer 8 段階目)",
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
-    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、**Day 16 は Spine 層 transitionLegacy deprecation で Provenance 層は不変 (cycle 内学習 transfer 2 段階別分野転用実例)**",
+    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、**Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂 (Provenance 層は不変、Day 14→16→17 cycle 内学習 transfer 2 段階別分野転用 3 Day 完結)**",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 367,
+    "example_count": 364,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1258,7 +1259,7 @@
       "Spine/Edge.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
       "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 13},
+      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 10},
       "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 10},
       "Spine/LearningCycle.lean": {"theorems": 0, "examples": 0},
@@ -1565,6 +1566,16 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」8 度目適用 (Day 9-15 継続、Day 16 は I1 docstring 明文化 + I2 evaluator back-fill の 2 対処)"
       },
       "note": "Day 16 Spine 層 transitionLegacy deprecation A-Compact 実装 (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案 A、Day 14 `@[deprecated]` モデルの Spine 層別分野転用、cycle 内学習 transfer 2 段階別分野転用実例)。`transitionLegacy` に `@[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")]` 付与 + `TransitionReflexive` / `TransitionTransitive` を 4-arg signature 直接展開に refactor (transitionLegacy deprecated 警告を波及させないため)。Section 2.15 Day 9+ 繰り延べ課題 (cycle 6 セッション) を A-Compact で半解消、完全削除は Day 17+ A-Standard で breaking change として実施予定。Build 103+123 jobs 維持 (MODIFY のみで jobs 変化なし)、example 363→367 (+4 EvolutionStepTest 内: Day 16 新規 deprecated 動作確認 2 + 新 signature 直接展開 proof 2)。Pattern #7 hook MODIFY path 2 度目運用検証 (Day 14 1 度目に続く、九段階発展完了)。**Day 11-16 で 6 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 5 度目適用)、cycle 内学習 transfer の **4 形態目「2 段階別分野転用実例」構造化** (Day 14 PROV-O 特化 @[deprecated] → Day 16 Spine 層単純 deprecation 別分野転用、新規 `deprecation_history` field で artifact-manifest 上に構造化記録)。Subagent VERDICT: PASS (addressable 0、informational 2: I1 即時対処 + I2 自己参照)"
+    },
+    {
+      "round": "Week 2 Day 17 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (103+123 jobs、MODIFY のみで jobs 変化なし、**breaking change** compatibility classification)、Subagent 検証は本 commit 後の cycle step 1 (改訂 82 paper サーベイ評価サイクル) で実施予定 (Day 12-16 同パターン継続)",
+      "p2_complete_for": "day-17-spine-transition-legacy-removal-a-standard",
+      "compatibility_classification": "**breaking change** (Day 17 transitionLegacy 定義完全削除、利用箇所は Day 16 A-Compact で TransitionReflexive/Transitive 4-arg 直接展開に移行済のため影響最小、agent-spec-lib 外部 utilizer 用 public API なし、内部 test の deprecated 利用 example 3 件は本 commit で削除)",
+      "note": "Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 実装 (Q1 A 案 / Q2 A-Medium / Q3 案 A Test 先行 / Q4 案 A deprecated 利用 example 3 件全削除)。Day 16 A-Compact の自然な続きで段階的 deprecation → removal 工学的 best practice 完遂、`since := \"2026-04-19\"` = Day 17 指定日履行、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結。Build 103+123 jobs 維持 (MODIFY のみ)、example 367→364 (-3: EvolutionStepTest 内 deprecated 利用 example 既存 1 件 + Day 16 新規 2 件 を全削除、新 signature 直接展開 proof 2 件は保持で 13→10)。Pattern #7 hook MODIFY path 3 度目運用検証 (breaking change コミットでも artifact-manifest 同 commit 機能確認、十段階発展到達)。**Day 11-17 で 7 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用、Day 17 で set_option linter.deprecated false in 不要になったのでより pure な rfl preference)。`deprecation_history.transitionLegacy.removal_actual` field 新規追加で complete lifecycle 3-state 記録完成 (Day 8 introduced → Day 16 deprecated → Day 17 removed)。新規 `section_2_15_completely_resolved_day17` field (build_status 直下) で Section 2.15 完全解消を構造化記録"
     }
   ]
 }
