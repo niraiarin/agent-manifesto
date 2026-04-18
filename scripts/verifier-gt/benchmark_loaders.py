@@ -208,10 +208,157 @@ def load_swebench(
             break
 
 
+def load_git_commit_faithfulness(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+    repo_path: str = ".",
+    max_commits: int = 500,
+    min_diff_lines: int = 10,
+) -> Iterator[PairwiseExample]:
+    """Git commit message faithfulness benchmark (#623).
+
+    Construct pairs from real git history:
+        prompt  = diff stat (files changed + +/- counts)
+        chosen  = actual commit message
+        rejected = another commit's message (distractor)
+
+    Ground truth: chosen (actual message matching diff) should win.
+    """
+    import subprocess
+    import re as _re
+
+    log_output = subprocess.check_output(
+        ["git", "-C", repo_path, "log", "--no-merges",
+         "--pretty=format:%H\t%s", f"-{max_commits}"],
+        text=True,
+    ).strip().split("\n")
+
+    commits = []
+    for line in log_output:
+        if "\t" not in line:
+            continue
+        sha, subject = line.split("\t", 1)
+        try:
+            stat = subprocess.check_output(
+                ["git", "-C", repo_path, "show", "--stat", "--format=", sha],
+                text=True,
+            ).strip()
+        except subprocess.CalledProcessError:
+            continue
+        if not stat:
+            continue
+        summary = stat.split("\n")[-1]
+        total = sum(int(m.group(1)) for m in _re.finditer(r"(\d+)\s+(?:insertion|deletion)", summary))
+        if total < min_diff_lines:
+            continue
+        cat = "other"
+        for prefix in ["feat", "fix", "refactor", "docs", "test", "chore", "style", "perf"]:
+            if subject.lower().startswith(prefix):
+                cat = prefix
+                break
+        commits.append({"sha": sha, "subject": subject, "stat": stat, "category": cat})
+
+    n = len(commits)
+    if n < 2:
+        return
+
+    def convert(c, d):
+        return PairwiseExample(
+            example_id=c["sha"][:12],
+            prompt=f"Diff stat for commit:\n{c['stat']}",
+            chosen=c["subject"],
+            rejected=d["subject"],
+            category=c["category"],
+            metadata={"source": "git-commit-faithfulness", "sha": c["sha"], "distractor_sha": d["sha"]},
+        )
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_cat = defaultdict(list)
+        for c in commits:
+            by_cat[c["category"]].append(c)
+        n_cats = len(by_cat)
+        per_cat = max(1, limit // n_cats)
+        count = 0
+        for cat, cs in by_cat.items():
+            for c in cs[:per_cat]:
+                idx = commits.index(c)
+                yield convert(c, commits[(idx + n // 2) % n])
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for i, c in enumerate(commits):
+        yield convert(c, commits[(i + n // 2) % n])
+        if limit is not None and i + 1 >= limit:
+            break
+
+
+def load_lean_proof_matching(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+    lean_root: str = "../agent-manifesto/lean-formalization",
+) -> Iterator[PairwiseExample]:
+    """Lean theorem/proof matching benchmark (#624).
+
+    prompt   = theorem signature
+    chosen   = actual proof body
+    rejected = different theorem's proof body (distractor)
+    """
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent))
+    from lean_extractor import extract_theorems as _extract
+
+    theorems = list(_extract(_Path(lean_root)))
+    n = len(theorems)
+    if n < 2:
+        return
+
+    def convert(t, d):
+        return PairwiseExample(
+            example_id=t["name"],
+            prompt=f"Lean 4 theorem signature:\n{t['signature']}",
+            chosen=t["body"],
+            rejected=d["body"],
+            category=_Path(t["file"]).stem,
+            metadata={"source": "lean-proof-matching",
+                      "file": t["file"],
+                      "distractor": d["name"]},
+        )
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_file = defaultdict(list)
+        for t in theorems:
+            by_file[_Path(t["file"]).stem].append(t)
+        n_files = len(by_file)
+        per_file = max(1, limit // n_files)
+        count = 0
+        for stem, ts in by_file.items():
+            for t in ts[:per_file]:
+                idx = theorems.index(t)
+                yield convert(t, theorems[(idx + n // 2) % n])
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for i, t in enumerate(theorems):
+        yield convert(t, theorems[(i + n // 2) % n])
+        if limit is not None and i + 1 >= limit:
+            break
+
+
 LOADERS = {
     "rewardbench": load_rewardbench,
     "judgebench": load_judgebench,
     "swebench": load_swebench,
+    "commit-faithfulness": load_git_commit_faithfulness,
+    "lean-proof": load_lean_proof_matching,
 }
 
 
