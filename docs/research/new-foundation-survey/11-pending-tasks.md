@@ -1694,6 +1694,22 @@ Day 8+ は Provenance 層着手 + Verdict 型 + B4 4-arg post 完全統合 + S6 
     - 🟢 Evolution DecidableEq 手動実装 (Day 8+ 検討)
     - 🟢 HandoffChain concat (chain 連結、Day 8+ 検討)
   - Day 8+ 改善事項: Verdict 型 / S6 Paper 1 / Provenance 層 / Spine+Process cross-layer test
+- 2026-04-18 (**改訂 27**): Day 7 後続影響の metadata 反映 (README のみ追加対応)
+  - README.md: Phase 0 Week 2 Day 7 完了セクション新設
+    - Day 7 2 項目詳細 (Evolution inductive Q3 案 B / HandoffChain inductive T1 一時性)
+    - 累計指標表 (Day 6 vs Day 7、Process 層 4 type 完備、94+104 jobs)
+    - Day 7 で達成した TyDD/paper 進展:
+      - Process 層 4 type 完備 / agent-manifesto T1 一時性 100% 忠実
+      - Pattern #7 hook 2 度目適用 (運用安定性継続検証)
+      - 内部規範 layer 横断 transfer (fullSpineExample → fullProcessExample)
+      - H10 (Spec normal forms) 新規部分達成
+      - paper × 実装 4 度目合流カテゴリ確立 (internal-norm × layer transfer)
+      - paper finding 19 件累計
+  - 注: artifact-manifest.json の Day 7 主要 metadata (version 0.8、4 新規 entries、
+    build_status 94+104、example 171、process_layer_progress / governance_hook 2 度目 /
+    cross_process_test フィールド) は Day 7 code commit `941b25c` に既に含まれている
+    ため本改訂では README のみ追加対応 (Day 6 改訂 21 同パターン、Pattern #7 hook 強制
+    で manifest は code commit に統合される構造)
 
 ## マーク凡例
 
