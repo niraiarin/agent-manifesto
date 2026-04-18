@@ -351,3 +351,79 @@ informational 3 件 (テスト/本番混在、example 8 コメント、$schema U
 | 新規 addressable 指摘 | なし |
 
 **結論**: G5 補遺 P2 完了条件充足。Round 1-3 計 5 件 addressable + 1 件 informational (取消) を全て解消。Gap Analysis フェーズの入力として全サーベイ成果物が使用可能。
+
+---
+
+## Phase 0 Week 2 Day 1 検証 (2026-04-17 — Day 1 commit `a43eef4` 後)
+
+**背景**: Week 1 完了後、Section 10.1 Day 1 タスク（Core.lean explicit import / FolgeID hole-driven signature / Proofs/RoundTrip universal signature + bounded 7³ 証明）を実装。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1-2 実施。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 1 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A overall margin 0.194)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: **B 優勢** (新規コード追加の一般的リスクシグナル)
+
+**Subagent**: FAIL（addressable = 2、informational 3）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 | `instance : LE FolgeID` の Decidable 実装で `by unfold LE.le instLE` を使用、anonymous instance 名依存で fragility | `instance instLE` 明示命名 + `inferInstanceAs (Decidable (...))` で書換、unfold を排除 |
+| A2 | `roundTripUniversal` を `abbrev` で定義、定義透過で hole-driven identity が失われる | `abbrev` → `def` に変更、コメントで意図明示 |
+
+informational 3 件:
+- I1: Test/本番混在（`AgentSpec.lean` が Test を import）→ Day 2 Section 2.3 で対処予定
+- I2: bounded 343 ケースが universal でない点の明示 → docstring 充足
+- I3: `PartialOrder FolgeID` instance 不在 → Day 3-5 で追加予定
+
+### Day 1 /verify Round 2
+
+**結果**: PASS — Round 1 addressable 2 件修正反映を確認、副作用なし
+
+informational 1 件: docstring に「`abbrev` で定義」の旧記述残存 → 即時修正済 (`def` に統一)
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 8 jobs、theorem 3, example 35, sorry 0, axiom 0、有限量化 343 ケース。
+
+---
+
+## Phase 0 Week 2 Day 2 検証 (2026-04-18 — Day 2 commit `58b75a0` 後)
+
+**背景**: Section 10.1 Day 2 タスク（`lean_lib AgentSpecTest` 分離 + GA-S4 Edge Type signature）を実装。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 2 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A overall margin 0.277、全 3 基準 A 優勢)
+- safety_preservation: 0.272 vs 0.158
+- test_alignment: 0.214 vs 0.158
+- compatibility_preservation: 0.266 vs 0.160
+
+**Subagent**: PASS（addressable = 2 [low]、informational 2）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| Issue 1 (low) | `Edge.lean` の `import Init.Data.List.Basic` が `FolgeID` 経由で推移的に解決済、明示重複 | 明示 import 方針との一貫性のため残置（修正不要と判断） |
+| Issue 2 (low) | `Edge.reverse` involutivity テストが `refines` のみ | 全 6 variant の involutivity example を追加（11→16 examples に拡張） |
+
+informational 2 件:
+- Pattern #7（artifact-manifest 同 commit）: 別 commit で対処予定（Section 10.2）
+- Week 4-5 で `Process/Edge.lean` への移動と dependent type 化 → Section 2.8 で計画化
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 7 jobs (production-only)、`lake build AgentSpecTest` exit 0 / 9 jobs、theorem 3, example 50, sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-2 累計サマリ
+
+| Day | commit | /verify ラウンド | 最終 verdict | addressable 対処 | P2 token |
+|---|---|---|---|---|---|
+| Day 1 | `a43eef4` (code) + `32b13fa` (metadata) | R1 FAIL → R2 PASS | PASS | A1 unfold→inferInstanceAs / A2 abbrev→def | written (`evaluator_independent: true`) |
+| Day 2 | `58b75a0` (code) + `24ad32c` (metadata) + `743a0fc` (TyDD 評価) | R1 PASS | PASS | involutivity 全 6 variant 拡充 | written (`evaluator_independent: true`) |
+
+**累計指標** (Day 2 終了時):
+- theorem: 3 (Day 1 で追加、Day 2 維持)
+- example: 50 (Week 1: 24 + Day 1: 11 + Day 2: 16, ただし Day 1 の Edge involutivity は当初 11 → addressable 対処で 16)
+- sorry / axiom / native_decide / partial def: いずれも 0
+- 有限量化: 343 ケース (Fin 7³)
+- lib 構成: AgentSpec (production 7 jobs) + AgentSpecTest (test 9 jobs) の分離達成
+- TyDD 達成度: S1 5 軸 5/5、S1 10 benefits 8/10、S4 1/5 強適用（詳細は 11-pending-tasks.md Section 12.6）

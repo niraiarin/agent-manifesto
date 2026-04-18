@@ -30,19 +30,52 @@ import AgentSpec.Spine.FolgeID
 
 ## Week 4-5 への遷移計画
 
-```lean
     -- 現在（Day 2）:
     structure Edge where
       src  : FolgeID
       dst  : FolgeID
       kind : EdgeKind
 
-    -- Week 4-5 (ResearchNode 定義後):
-    inductive ResearchEdge : ResearchNode → ResearchNode → Type where
-      | wasDerivedFrom : ResearchEdge a b
-      | refines        : ResearchEdge a b
+    -- Week 4-5 (ResearchNode 定義後、Section 2.8 S4 P2 / F8 適用):
+    inductive ResearchEdge : (k : EdgeKind) → (src dst : ResearchNode)
+        → (h : src ≠ dst) → Type where
+      | wasDerivedFrom : ResearchEdge .wasDerivedFrom a b h
+      | refines        : ResearchEdge .refines a b h
       -- ...
-```
+
+## Day 2 意思決定ログ（後続セッション参照用）
+
+詳細は docs Section 2.8 / 2.9 / 12.6 / 10.2 を参照。本 module 固有の判断点のみ要約。
+
+### D1. EdgeKind を inductive enum とする選択（commit `58b75a0`）
+- **代案 A**: `inductive ResearchEdge : ResearchNode → ResearchNode → Type` (GA-S4 最終形)
+- **採用**: enum + structure 迂回実装
+- **理由**: Day 2 時点で ResearchNode 未定義。dependent type 化は Week 4-5 で実施
+  （Section 2.8 で計画化）。
+
+### D2. field 名 `src` / `dst` 採用（commit `58b75a0`）
+- **代案 A**: `from` / `to` (graph theory 慣習)
+- **採用**: `src` / `dst`
+- **理由**: `from` は Lean 4 予約語（ビルドエラーで判明）。Section 10.2 Pattern #8 として明文化。
+
+### D3. `isSelfLoop` を Bool 関数とする選択（commit `58b75a0`）
+- **代案 A**: `{e : Edge // e.src ≠ e.dst}` の subtype refinement で型レベル排除
+- **採用**: Bool 関数で実行時判定
+- **理由**: Day 2 hole-driven 段階。refinement 設計は dependent type 化と同時に
+  Week 4-5 で実施するのが自然（Section 2.8 S4 P2）。
+
+### D4. `Edge.reverse` の kind 不変設計（commit `58b75a0`）
+- **代案 A**: kind ごとに reverse 動作を分岐
+- **採用**: kind を保持した uniform reverse
+- **理由**: kind の意味論制約は PROV-strict / research-mode 分離（Week 6-7）と
+  併せて検討。reverse は graph 操作プリミティブとし、意味論妥当性は呼び出し側責任。
+- **検証**: 全 6 variant について `reverse.reverse = id` を Test/Spine/EdgeTest.lean で検証。
+
+### D5. `deriving DecidableEq, Inhabited, Repr` を採用（Pattern #3 部分違反容認）
+- **代案 A**: instance を明示命名で Pattern #3 厳格適用
+- **採用**: `deriving` で anonymous instance 自動生成
+- **理由**: deriving は Lean 4 の標準命名規約で安定した名前を生成。
+  Pattern #3 の意図は unfold の脆弱性回避だが、deriving では unfold 不要のため違反の害がない。
 -/
 
 namespace AgentSpec.Spine
