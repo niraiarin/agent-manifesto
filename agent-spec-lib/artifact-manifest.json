@@ -1551,9 +1551,20 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (103+123 jobs、MODIFY のみで jobs 変化なし)、Subagent 検証は本 commit 後の cycle step 1 (改訂 76 paper サーベイ評価サイクル) で実施予定 (Day 12-15 同パターン継続)",
+      "informational_count": 2,
+      "evaluator": "build PASS (103+123 jobs、MODIFY のみで jobs 変化なし) + Subagent 検証 PASS (改訂 76 paper サーベイ評価サイクルで実施、addressable 0 + informational 2 + I1 即時対処)",
       "p2_complete_for": "day-16-spine-transition-legacy-deprecation-a-compact",
-      "note": "Day 16 Spine 層 transitionLegacy deprecation A-Compact 実装 (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案 A、Day 14 `@[deprecated]` モデルの Spine 層別分野転用、cycle 内学習 transfer 2 段階別分野転用実例)。`transitionLegacy` に `@[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")]` 付与 + `TransitionReflexive` / `TransitionTransitive` を 4-arg signature 直接展開に refactor (transitionLegacy deprecated 警告を波及させないため)。Section 2.15 Day 9+ 繰り延べ課題 (cycle 6 セッション) を A-Compact で半解消、完全削除は Day 17+ A-Standard で breaking change として実施予定。Build 103+123 jobs 維持 (MODIFY のみで jobs 変化なし)、example 363→367 (+4 EvolutionStepTest 内: Day 16 新規 deprecated 動作確認 2 + 新 signature 直接展開 proof 2)。Pattern #7 hook MODIFY path 2 度目運用検証 (Day 14 1 度目に続く、九段階発展完了)。**Day 11-16 で 6 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 5 度目適用)、cycle 内学習 transfer の **4 形態目「2 段階別分野転用実例」構造化** (Day 14 PROV-O 特化 @[deprecated] → Day 16 Spine 層単純 deprecation 別分野転用、新規 `deprecation_history` field で artifact-manifest 上に構造化記録)"
+      "subagent_verification": {
+        "executed_in_commit": "改訂 76 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": [
+          "I1 (改訂 76 で即時対処): @[deprecated] since=\"2026-04-19\" が Day 16 実装日 (2026-04-18) より 1 日後に設定されている理由が 明文化不足。EvolutionStep.lean docstring に「since は Day 17 の予定日を設定、完全削除 timing の signal として機能」と明文化追加",
+          "I2 (対処不要): evaluator プレースホルダ (Day 12-15 I1 同パターン)、本 Subagent 検証結果で back-fill (本 commit で対処済)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」8 度目適用 (Day 9-15 継続、Day 16 は I1 docstring 明文化 + I2 evaluator back-fill の 2 対処)"
+      },
+      "note": "Day 16 Spine 層 transitionLegacy deprecation A-Compact 実装 (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案 A、Day 14 `@[deprecated]` モデルの Spine 層別分野転用、cycle 内学習 transfer 2 段階別分野転用実例)。`transitionLegacy` に `@[deprecated \"Use new 4-arg transition\" (since := \"2026-04-19\")]` 付与 + `TransitionReflexive` / `TransitionTransitive` を 4-arg signature 直接展開に refactor (transitionLegacy deprecated 警告を波及させないため)。Section 2.15 Day 9+ 繰り延べ課題 (cycle 6 セッション) を A-Compact で半解消、完全削除は Day 17+ A-Standard で breaking change として実施予定。Build 103+123 jobs 維持 (MODIFY のみで jobs 変化なし)、example 363→367 (+4 EvolutionStepTest 内: Day 16 新規 deprecated 動作確認 2 + 新 signature 直接展開 proof 2)。Pattern #7 hook MODIFY path 2 度目運用検証 (Day 14 1 度目に続く、九段階発展完了)。**Day 11-16 で 6 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 5 度目適用)、cycle 内学習 transfer の **4 形態目「2 段階別分野転用実例」構造化** (Day 14 PROV-O 特化 @[deprecated] → Day 16 Spine 層単純 deprecation 別分野転用、新規 `deprecation_history` field で artifact-manifest 上に構造化記録)。Subagent VERDICT: PASS (addressable 0、informational 2: I1 即時対処 + I2 自己参照)"
     }
   ]
 }

@@ -115,7 +115,10 @@ namespace EvolutionStep
 /-- Legacy 2-arg transition (Day 1-7 まで)。Day 8 で B4 4-arg post に refactor、
     legacy 形式は existential での derive (Section 2.14 D2)。
     **Day 16 で @[deprecated] 付与** (Q1 B 案 A-Compact、Day 14 `@[deprecated]` モデルの Spine 層別分野転用、
-    cycle 内学習 transfer 2 段階別分野転用実例)。完全削除は Day 17+ A-Standard で実施予定。 -/
+    cycle 内学習 transfer 2 段階別分野転用実例)。完全削除は Day 17+ A-Standard で実施予定。
+
+    `since := "2026-04-19"` は **Day 17 の予定日** (Day 16 実装日 = 2026-04-18 より 1 日後) を設定、
+    完全削除 timing の signal として機能 (Day 17+ A-Standard plan に一致、Day 16 Subagent I1 受けて明文化)。 -/
 @[deprecated "Use new 4-arg transition (EvolutionStep.transition pre input output post)。transitionLegacy は Day 16 で deprecated 付与、Day 17+ で完全削除予定" (since := "2026-04-19")]
 def transitionLegacy {S : Type u} [EvolutionStep S] (pre post : S) : Prop :=
   ∃ (h : Hypothesis) (v : Verdict), transition pre h v post
