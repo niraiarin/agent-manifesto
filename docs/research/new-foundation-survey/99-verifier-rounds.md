@@ -1001,3 +1001,78 @@ informational 3 件:
 - **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5 設計→Day 6/7/8/9 4 度運用検証→Day 10 v2 拡張、6 セッション governance 進化)**
 - **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10 同パターン継続 (A1/I2 即時対処)、TyDD 評価サイクル「実装修正なし」(Day 9-10 で全て Day 11+ 繰り延べ)
 - **verifier_history**: Day 9 Week 1-9 一括補完 (14 entries) + Day 10 R1 追加 (15 entries)
+
+---
+
+## Phase 0 Week 2 Day 11 検証 (2026-04-18 — Day 11 commit `11a32bd` 後)
+
+**背景**: Section 2.20 Day 11 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 A) に従い実装。**PROV-O 三項統合 relation 完備** (WasAttributedTo + WasGeneratedBy + WasDerivedFrom) + **PROV-O §4.1 完全カバー到達** (Day 8-11 累計 4 type + 3 relation)。Day 11 code commit 自体は時間効率優先で Subagent 検証を省略 (logprob A 全体 margin 検査のみ)、paper サーベイ評価サイクルで **Subagent 遡及検証 PASS** (改訂 49 で対処)。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 11 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体)
+
+**Subagent 遡及検証** (改訂 49 で対処): VERDICT = PASS（addressable = 0、informational 4）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 | aggregated_example_count = 300 verify (24+16+16+9+10+28+7+12+17+16+21+17+4+21+22+30+8+22 = 300、artifact-manifest 一致) | **対処不要** (実カウントと一致確認) |
+| I2 | WasDerivedFrom.trivial self-derivation semantics (DAG 制約なし) | **対処不要** (minimal scope では許容、DAG 制約は Section 2.21 Day 13+ 設計判断として記録、SOurce ≠ entity proof 引数追加 vs separate WasDerivedFromAcyclic structure) |
+| I3 | ProvRelationTest L111-123 で simp tactic 利用 (test 内初の non-rfl) | **対処不要** (PROV-O triple set 統合 example の必要簡約、Section 2.21 Day 12+ で rfl 化検討) |
+| I4 | ResearchActivity.investigate rfl 等価性 verify | **対処不要** (verify 成功) |
+
+**Day 11 1 項目詳細** (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 A 採用案反映):
+
+1. **AgentSpec/Provenance/ProvRelation.lean** (Q3 案 A、PROV-O 1:1 対応):
+   - `structure WasAttributedTo { entity : ResearchEntity, agent : ResearchAgent }` (Q4 案 A 引数 type 厳格)
+   - `structure WasGeneratedBy { entity : ResearchEntity, activity : ResearchActivity }`
+   - `structure WasDerivedFrom { entity : ResearchEntity, source : ResearchEntity }`
+   - 各 mk' smart constructor + trivial fixture
+   - 1 ファイル統合配置 (D3、cohesion 高い、import 簡素化)
+   - `deriving Inhabited, Repr` (DecidableEq は ResearchEntity recursive 制約継承で省略)
+   - Day 11 意思決定ログ D1-D3
+
+2. **AgentSpec/Test/Provenance/ProvRelationTest.lean** (NEW、22 example):
+   - 3 relation 構築 + accessor + smart constructor + trivial + Inhabited
+   - PROV-O triple set 統合 example (1 example で 3 relation 同時利用、attribution + generation + derivation)
+   - 内部規範 layer 横断 transfer 拡張 6 段階目
+
+**Pattern #7 hook v2 初運用検証成功**: Day 11 code commit は Day 10 拡張後の v2 hook で実施され、Provenance 配下新規 .lean (`ProvRelation.lean` + `ProvRelationTest.lean`) を hook が検出、artifact-manifest 同 commit 強制成功。Day 5 hook 設計 → Day 6/7/8/9 4 度連続運用検証 → Day 10 v2 拡張 → **Day 11 v2 初運用検証** の四段階発展完了。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 100 jobs (Provenance 層 +1)、`lake build AgentSpecTest` exit 0 / 117 jobs、theorem 15 (不変), example 278→300 (+22), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-11 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | `d1031d5` (conservative) | R1 PASS | written |
+| Day 7 | `941b25c` (compatible) | `04c632b` (conservative) | `e4d5dda` (conservative) | `760f014` (compatible) | `32baacf` (conservative) | R1 PASS | written |
+| Day 8 | `0f78fa6` (compatible) | `53db950` (conservative) | `168d369` (conservative) | `d35dd08` (compatible) | `36f354a` (conservative) | R1 PASS | written |
+| Day 9 | `fa5b373` (compatible) | `4fd2656` (conservative、I2 即時実装修正含む) | `0781b20` (conservative、実装修正なし) | `16551d4` (compatible) | `1ccdb88` (conservative) | R1 PASS | written |
+| Day 10 | `b652347` (compatible) | `cf8aea7` (conservative、A1/I2 実装修正対処) | `55cbc1a` (conservative、実装修正なし) | `1418ddc` (compatible、hook v2 配置含む) | `f904c17` (conservative) | R1 PASS (margin 2.335 過去最高) | written |
+| Day 11 | `11a32bd` (compatible) | `95a99aa` (conservative、Subagent 遡及検証 PASS) | `52b911d` (conservative、実装修正なし) | `fb0749b` (compatible) | (本 commit) | R1 PASS (Subagent 遡及検証 PASS) | written |
+
+**Day 11 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-11 追加 0)
+- example: 300 (Day 10 278 + Day 11 追加 22: ProvRelation)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 100 jobs) + AgentSpecTest (test 117 jobs)** (Day 10 99+115 から Provenance relation +1/+2)
+- **Spine 層 4 type class 完備 + 順序関係完備 + EvolutionStep B4 4-arg post 完全統合 (Day 8、Section 2.9 完全解消)**
+- **Process 層 4 type 完備** (Day 6-7)
+- **Provenance 層 4 type + 3 relation 完備** (Day 8 Verdict + Day 9 ResearchEntity + ResearchActivity + Day 10 ResearchAgent + EvolutionMapping + **Day 11 WasAttributedTo + WasGeneratedBy + WasDerivedFrom = PROV-O §4.1 完全カバー**)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8/9/10 5 度連続運用検証 + Day 10 v2 拡張 + Day 11 v2 初運用検証 = 6 度連続検証**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 2 度目強適用、Day 8 B4 → Day 11 PROV-O relation)** / Section 10.2 6/8 + 0 構造違反 (6 度連続) / **F/B/H 強適用 = B3 + B4 + F2 部分 + H4 + H10 部分 (5 強適用継続)** (詳細 Section 12.32)
+- 論文サーベイ達成度: **paper finding 39 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 1-3 関連: 1、詳細 Section 12.31)
+- paper × 概念 合流カテゴリ: **8 種** (Day 4-7 4 種 / Day 8 layer architecture redefinition / Day 9 namespace extension pattern / Day 10 PROV-O completion milestone × governance evolution / **Day 11 PROV-O triple completion × hook v2 first verification**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5 設計→Day 6/7/8/9 4 度運用検証→Day 10 v2 拡張→Day 11 v2 初運用検証、7 セッション governance 進化)**、**PROV-O 4 type + 3 relation (Day 8→Day 11 4 セッション完全実装、§4.1 完全カバー到達)**
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10 同パターン継続 (A1/I2 即時対処) + **Day 11 同パターン 3 度目適用 (Subagent 遡及検証 PASS)**、TyDD 評価サイクル「実装修正なし」(Day 9-11 で全て Day 12+ 繰り延べ)
+- **verifier_history**: Day 9 Week 1-9 一括補完 (14 entries) + Day 10 R1 追加 (15 entries) + **Day 11 R1 追加 (16 entries)**
