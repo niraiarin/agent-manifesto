@@ -204,7 +204,8 @@ def score_pair(problem: str, trace_a: str, trace_b: str, criterion: dict) -> dic
 
 
 def pairwise_compare(problem: str, trace_a: str, trace_b: str,
-                     criteria: list, k_rounds: int = 1) -> dict:
+                     criteria: list, k_rounds: int = 1,
+                     bidirectional: bool = True) -> dict:
     """Full pairwise comparison across all criteria with optional K-rounds.
 
     Args:
@@ -213,17 +214,78 @@ def pairwise_compare(problem: str, trace_a: str, trace_b: str,
         trace_b: Description of proposal B
         criteria: List of {"id", "name", "description"}
         k_rounds: Number of independent rounds (K>1 only meaningful for pairwise)
+        bidirectional: When True (default), run forward (A-B) and reverse (B-A)
+            and average symmetrically to cancel first-position bias (#606).
+            Doubles API cost but corrects position bias artifact from
+            conditional score_B on score_A's token.
 
     Returns: {
         "winner": "A"|"B",
         "total_a": float, "total_b": float,
         "criteria_results": [...],
-        "k_stats": {...} (if K>1)
+        "k_stats": {...} (if K>1),
+        "bidirectional": bool,
     }
     """
     if k_rounds < 1:
         k_rounds = 1
 
+    if bidirectional:
+        # Forward: trace_a in slot A, trace_b in slot B
+        fwd = _pairwise_single_direction(problem, trace_a, trace_b, criteria, k_rounds)
+        # Reverse: trace_b in slot A, trace_a in slot B (swapped)
+        rev = _pairwise_single_direction(problem, trace_b, trace_a, criteria, k_rounds)
+
+        # Symmetric averaging:
+        # trace_a's score = (fwd.total_a + rev.total_b) / 2
+        # trace_b's score = (fwd.total_b + rev.total_a) / 2
+        total_a = (fwd["total_a"] + rev["total_b"]) / 2
+        total_b = (fwd["total_b"] + rev["total_a"]) / 2
+
+        criteria_results = []
+        for ci, crit in enumerate(criteria):
+            f = fwd["criteria_results"][ci]
+            r = rev["criteria_results"][ci]
+            mean_a = (f["mean_a"] + r["mean_b"]) / 2
+            mean_b = (f["mean_b"] + r["mean_a"]) / 2
+
+            entry = {
+                "criterion": crit["id"],
+                "mean_a": round(mean_a, 6),
+                "mean_b": round(mean_b, 6),
+                "winner": "A" if mean_a > mean_b else "B",
+                "forward": {"mean_a": f["mean_a"], "mean_b": f["mean_b"]},
+                "reverse": {"mean_a": r["mean_a"], "mean_b": r["mean_b"]},
+            }
+
+            # Merge K-stats from both directions if present
+            if k_rounds > 1 and "k_stats" in f and "k_stats" in r:
+                entry["k_stats"] = {
+                    "fwd_margin_sd": f["k_stats"]["margin_sd"],
+                    "rev_margin_sd": r["k_stats"]["margin_sd"],
+                }
+
+            criteria_results.append(entry)
+
+        return {
+            "winner": "A" if total_a > total_b else "B",
+            "total_a": round(total_a, 6),
+            "total_b": round(total_b, 6),
+            "margin": round(total_a - total_b, 6),
+            "criteria_results": criteria_results,
+            "k_rounds": k_rounds,
+            "bidirectional": True,
+        }
+
+    # Unidirectional (legacy / for explicit position bias measurement)
+    result = _pairwise_single_direction(problem, trace_a, trace_b, criteria, k_rounds)
+    result["bidirectional"] = False
+    return result
+
+
+def _pairwise_single_direction(problem: str, trace_a: str, trace_b: str,
+                                criteria: list, k_rounds: int) -> dict:
+    """Single-direction pairwise (legacy behavior). Used as building block."""
     all_results = []
 
     for _k in range(k_rounds):
@@ -233,7 +295,6 @@ def pairwise_compare(problem: str, trace_a: str, trace_b: str,
             round_results.append(result)
         all_results.append(round_results)
 
-    # Aggregate across criteria and K-rounds
     total_a = 0.0
     total_b = 0.0
     criteria_results = []
@@ -278,7 +339,7 @@ def pairwise_compare(problem: str, trace_a: str, trace_b: str,
 
 
 def tournament(problem: str, proposals: list, criteria: list,
-               k_rounds: int = 1) -> dict:
+               k_rounds: int = 1, bidirectional: bool = True) -> dict:
     """Round-robin tournament: C(N,2) pairwise comparisons.
 
     Args:
@@ -286,10 +347,13 @@ def tournament(problem: str, proposals: list, criteria: list,
         proposals: List of {"id": str, "description": str}
         criteria: List of {"id", "name", "description"}
         k_rounds: K-rounds per comparison
+        bidirectional: When True (default), each pair is run forward+reverse
+            and averaged symmetrically to cancel first-position bias (#606).
 
     Returns: {
         "ranking": [{"id": str, "wins": int, "total_margin": float}],
         "matches": [...],
+        "bidirectional": bool,
     }
     """
     n = len(proposals)
@@ -297,6 +361,7 @@ def tournament(problem: str, proposals: list, criteria: list,
         return {
             "ranking": [{"id": proposals[0]["id"], "wins": 0, "total_margin": 0.0}] if proposals else [],
             "matches": [],
+            "bidirectional": bidirectional,
         }
 
     wins = {p["id"]: 0 for p in proposals}
@@ -311,6 +376,7 @@ def tournament(problem: str, proposals: list, criteria: list,
                 proposals[j]["description"],
                 criteria,
                 k_rounds,
+                bidirectional=bidirectional,
             )
 
             winner_id = proposals[i]["id"] if result["winner"] == "A" else proposals[j]["id"]
@@ -333,7 +399,7 @@ def tournament(problem: str, proposals: list, criteria: list,
         key=lambda x: (-x["wins"], -x["total_margin"]),
     )
 
-    return {"ranking": ranking, "matches": matches}
+    return {"ranking": ranking, "matches": matches, "bidirectional": bidirectional}
 
 
 def _std(arr: list) -> float:
@@ -401,6 +467,7 @@ def cmd_pairwise():
         trace_b=data["proposal_b"],
         criteria=data["criteria"],
         k_rounds=data.get("k_rounds", 1),
+        bidirectional=data.get("bidirectional", True),
     )
     json.dump(result, sys.stdout, indent=2)
     print()
@@ -416,6 +483,7 @@ def cmd_tournament():
         proposals=data["proposals"],
         criteria=data["criteria"],
         k_rounds=data.get("k_rounds", 1),
+        bidirectional=data.get("bidirectional", True),
     )
     json.dump(result, sys.stdout, indent=2)
     print()
