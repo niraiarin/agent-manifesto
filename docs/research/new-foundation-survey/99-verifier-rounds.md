@@ -536,3 +536,84 @@ informational 5 件:
 - **Spine 層 4 type class 完備**: FolgeID + Edge + EvolutionStep + SafetyConstraint + LearningCycle + Observable (Section 1 Week 2-3 完了基準達成)
 - TyDD 達成度: **S1 5/5 維持 / benefits 9/10 (#9 復活) / S4 3/5 強適用 (P1+P2+P4 同時達成)** (詳細 Section 12.11)
 - 論文サーベイ達成度: **paper finding 4 件 顕在化** (S4 P1+P2+P4 / G5-1 §3.4 / agent-manifesto P4 / S2 将来準備、詳細 Section 12.10)
+
+---
+
+## Phase 0 Week 2 Day 5 検証 (2026-04-18 — Day 5 commit `f4d2c93` 後)
+
+**背景**: Section 10.1 元 Day 5 task (FolgeID PartialOrder/Ord 拡張) に加え、Day 4 評価 Section 12.11 / 2.10 / 2.11 で識別された改善余地 (🔴 Pattern #7 hook 化 / 🟡 LearningStage LE/LT / 🟡 普遍 round-trip) を Day 5 で対処。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 5 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体、margin 0.049 と小さい、1 基準 B - Mathlib 大規模 import 推定)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: B 優勢 (Mathlib 11→90 jobs 増大の risk signal)
+
+**Subagent**: PASS（addressable = 1 [moderate]、informational 5）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 (moderate) | `lt_iff_le_not_ge` field 名が Lean エラボレータで受け入れられるかビルド証跡なしには断言不可 | ビルド成功 (AgentSpec exit 0 / 90 jobs、AgentSpecTest exit 0 / 96 jobs) で resolve |
+
+informational 5 件:
+- I1: listIsPrefixOf_trans の split_ifs 分岐網羅性 → ビルド成功で問題なし
+- I2: consumeChar_dot_mismatch は rfl ではなく simp [h] (ドキュメント記述の軽微不正確) → 安全性影響なし
+- I3: LearningCycle に Mathlib import 無し (FolgeID と非対称) → 意図的設計 (Lattice は Week 4-5)、scope 制御適切
+- I4: Mathlib 依存増大 (11→~90 jobs) の代替案未評価 → Week 6 CI 整備時の最適化タスク、Day 5 blocking ではない
+- I5: roundTripUniversal が `def` のまま (transparent unfold 制御) → 現状 sorry 0 なので問題なし、Week 3+ で要再考
+
+**Day 5 4 項目詳細**:
+
+1. **Pattern #7 hook 化** (Section 6.2.1 提案を完全実装):
+   - `.claude/hooks/p3-manifest-on-commit.sh`: 新規 Spine/Proofs/Process .lean が staged されたら artifact-manifest.json も同 commit に staged されていることを要求
+   - `.claude/settings.json`: PreToolUse[Bash] hook 配列に登録 (10 → 11 entries)
+   - 設計判断 (Section 6.2.1): A1 狭 + B2 block + C1 settings.json + D1 new-foundation only + E2 `[no-manifest]` bypass
+   - **L1 governance 制約**: 人間承認下で手動配置 (cp + chmod + python3 settings 編集)
+   - **Day 5 自体は modify only のため hook はスルー設計通り** (本検証 commit でも同様)
+
+2. **LearningStage LE/LT/Decidable instance** (Section 12.11 🟡 F2 Lattice 部分対処):
+   - `instLE` / `Decidable (a ≤ b)` / `instLT` / `Decidable (a < b)` (FolgeID パターン踏襲)
+   - Lattice instance は overspec として Week 4-5 へ繰り延べ
+   - +6 LE/LT test (LearningCycleTest 22→28)
+
+3. **FolgeID PartialOrder/LT 拡張** (Section 10.1 元 Day 5 task):
+   - **Mathlib import 追加**: `Mathlib.Order.Defs.PartialOrder` + `Mathlib.Tactic.SplitIfs`
+   - LT instance + Decidable
+   - 3 List-level lemmas: `listIsPrefixOf_refl/_trans/_antisymm` (split_ifs ベース)
+   - 3 FolgeID-level lemmas: `le_refl' / le_trans' / le_antisymm'` (Lean core 名衝突回避のため `'` 付き)
+   - PartialOrder bundle (`lt_iff_le_not_ge` は Mathlib 新名)
+   - +6 PartialOrder/LT test (FolgeIDTest 10→16)
+   - Ord (lex total order) は Day 6+/Week 4-5 へ繰り延べ
+
+4. **普遍 round-trip 定理 部分達成** (Section 2.2 Day 5 残):
+   - +6 helper theorems: `consumeChar_dot_cons/_mismatch/_nil` + `charToDigit?_zero/_nine` + `roundTrip_bounded_stable_8`
+   - bounded universal 拡張: 7³=343 → **8³=512 ケース** (10³ は decide heartbeat 200000 超過)
+   - universal proof は consumeNat correctness + String/List interop + parseList induction (推定 100+ 行) のため Day 6/Week 3 へ繰り延げ
+   - **Section 2.10 で S2 Lean-Auto を 🟢→🔴 格上げ** (Day 5 で必要性顕在化)
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 90 jobs (Mathlib 推移依存)、`lake build AgentSpecTest` exit 0 / 96 jobs、theorem 3→15 (+12), example 93→105 (+12), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-5 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | (本 commit) | R1 PASS | written |
+
+**Day 5 終了時点 累計指標**:
+- theorem: 15 (Day 1-4 合計 3 + Day 5 追加 12: FolgeID 6 + RoundTrip 6)
+- example: 105 (Week 1: 24 + Day 1: 10 + Day 2: 16 + Day 3: 12 + Day 4: 31 + Day 5: 12)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: **512 ケース** (Fin 8³、Day 5 で 7³→8³ 拡張、10³ は heartbeat 限界)
+- lib 構成: **AgentSpec (production 90 jobs) + AgentSpecTest (test 96 jobs)** (Mathlib 推移依存で Day 4 11+17 から大幅増)
+- **Spine 層 4 type class 完備 + 順序関係完備** (LearningStage LE/LT + FolgeID PartialOrder)
+- **構造的 governance hook**: 1 (Pattern #7、4 連続違反の構造的解決)
+- TyDD 達成度: **S1 5/5 / benefits 9/10 / S4 3/5 強適用 / Section 10.2 6/8 + 0 構造違反** (詳細 Section 12.14)
+- 論文サーベイ達成度: **paper finding 8 件 顕在化** (Day 4: 4 件 + Day 5: 4 件、詳細 Section 12.13)
+- paper × pattern 合流: 2 度 (Day 4 S4 × Pattern #5 / Day 5 G5-1 × Pattern #7)
