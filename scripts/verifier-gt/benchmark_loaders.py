@@ -101,40 +101,117 @@ def load_rewardbench(
 def load_judgebench(
     limit: Optional[int] = None,
     cache_dir: Optional[str] = None,
+    stratified: bool = False,
+    split: str = "all",
 ) -> Iterator[PairwiseExample]:
-    """Load JudgeBench (pending concrete HF dataset name verification)."""
+    """Load JudgeBench (ScalerLab/JudgeBench).
+
+    Schema: pair_id, question, response_A, response_B, label ("A>B" or "B>A"),
+            source (category), response_model.
+    Splits: 'claude' (350), 'gpt' (350), 'all' (700).
+    """
     if load_dataset is None:
         raise RuntimeError("datasets library not installed")
 
-    # JudgeBench canonical dataset: ScalerLab/JudgeBench (tentative)
-    ds = load_dataset("ScalerLab/JudgeBench", split="train", cache_dir=cache_dir)
+    splits = ["claude", "gpt"] if split == "all" else [split]
+    all_rows = []
+    for sp in splits:
+        ds = load_dataset("ScalerLab/JudgeBench", split=sp, cache_dir=cache_dir)
+        for row in ds:
+            all_rows.append({**row, "_split": sp})
 
-    count = 0
-    for row in ds:
-        # JudgeBench format may differ — normalize best-effort
-        prompt = row.get("question") or row.get("prompt") or ""
-        chosen = row.get("chosen") or row.get("response_A") or ""
-        rejected = row.get("rejected") or row.get("response_B") or ""
-
-        yield PairwiseExample(
-            example_id=str(row.get("id", count)),
-            prompt=prompt,
+    def convert(row, idx):
+        label = row.get("label", "A>B")
+        if label.startswith("A>"):
+            chosen, rejected = row["response_A"], row["response_B"]
+        else:
+            chosen, rejected = row["response_B"], row["response_A"]
+        return PairwiseExample(
+            example_id=str(row.get("pair_id", idx)),
+            prompt=row["question"],
             chosen=chosen,
             rejected=rejected,
-            category=row.get("category"),
-            metadata={"source": "judgebench"},
+            category=row.get("source"),
+            metadata={
+                "source": "judgebench",
+                "split": row["_split"],
+                "response_model": row.get("response_model"),
+                "original_label": label,
+            },
         )
-        count += 1
-        if limit is not None and count >= limit:
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_subset = defaultdict(list)
+        for row in all_rows:
+            by_subset[row.get("source") or "unknown"].append(row)
+        n_subsets = len(by_subset)
+        per_subset = max(1, limit // n_subsets)
+        count = 0
+        for subset, rows in by_subset.items():
+            for idx, row in enumerate(rows[:per_subset]):
+                yield convert(row, f"{subset}-{idx}")
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for idx, row in enumerate(all_rows):
+        yield convert(row, idx)
+        if limit is not None and idx + 1 >= limit:
             break
 
 
 # --- Registry ---
 
+def load_swebench(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """Load SWE-Bench Verified as distractor pairs.
+
+    Since SWE-Bench Verified has a single correct patch per issue, we
+    construct pairwise comparisons by using another issue's patch as the
+    distractor (rejected). The correct patch should be preferred because
+    it actually addresses the given problem.
+
+    Schema mapping:
+        prompt = problem_statement
+        chosen = own patch (correct)
+        rejected = another issue's patch (distractor)
+        category = difficulty bucket
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("princeton-nlp/SWE-bench_Verified", split="test", cache_dir=cache_dir)
+    rows = list(ds)
+
+    n = len(rows)
+    for i, row in enumerate(rows):
+        # Distractor: use row ((i + n//2) % n) — deterministic, far from own
+        distractor = rows[(i + n // 2) % n]
+        yield PairwiseExample(
+            example_id=row["instance_id"],
+            prompt=row["problem_statement"],
+            chosen=row["patch"],
+            rejected=distractor["patch"],
+            category=row.get("difficulty") or "unknown",
+            metadata={
+                "source": "swebench-verified",
+                "repo": row.get("repo"),
+                "distractor_instance": distractor["instance_id"],
+            },
+        )
+        if limit is not None and i + 1 >= limit:
+            break
+
+
 LOADERS = {
     "rewardbench": load_rewardbench,
     "judgebench": load_judgebench,
-    # SS3 SWE-Bench, SA1 commit, SA2 lean — added in later phases
+    "swebench": load_swebench,
 }
 
 
