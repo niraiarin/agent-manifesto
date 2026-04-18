@@ -299,10 +299,11 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchAgentTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.EvolutionMappingTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 300,
+      "aggregated_example_count": 322,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -1031,6 +1032,58 @@
       "prov_o_triple_test": "Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom を同一 example で構築 (PROV-O triple set 表現)"
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
+      "path": "AgentSpec/Provenance/RetiredEntity.lean",
+      "scope": "formalization",
+      "refs": ["GA-S5", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Provenance.RetirementReason (inductive: Refuted (failure : Failure) | Superseded (replacement : ResearchEntity) | Obsolete | Withdrawn)",
+        "AgentSpec.Provenance.RetiredEntity (structure: entity : ResearchEntity, reason : RetirementReason)"
+      ],
+      "provides_definitions": [
+        "RetiredEntity.mk' / refuted / superseded / obsolete / withdrawn (5 smart constructors)",
+        "RetiredEntity.trivial",
+        "RetiredEntity.whyRetired (reason accessor alias、Day 6 Failure.whyFailed と同パターン)"
+      ],
+      "provides_instances": [
+        "Inhabited / Repr (RetirementReason + RetiredEntity 全て、deriving)",
+        "DecidableEq 省略: Superseded payload の ResearchEntity recursive 制約継承 (Day 13+ 検討)"
+      ],
+      "design_origin": "02-data-provenance §4.4 退役 entity の構造的検出を Lean 化 (Day 12 Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure / D3 1 ファイル統合配置、Day 11 ProvRelation パターン踏襲、ResearchEntity 拡張不要 backward compatible)",
+      "tydd_alignment": "TyDD-S1 types-first (4 variant inductive で退役理由 semantic を型レベル区別) + S4 P2 Refinement (案 B String を退ける) + S4 P5 explicit assumptions 3 度目強適用 (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化、Refuted (failure : Failure) / Superseded (replacement : ResearchEntity))",
+      "decision_log": "RetiredEntity.lean docstring D1-D3 (Q3 案 A 4 variant 型化 / Q4 案 A separate / D3 1 ファイル統合配置)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
+      "path": "AgentSpec/Test/Provenance/RetiredEntityTest.lean",
+      "scope": "test",
+      "refs": ["GA-S5", "GA-I9"],
+      "test_targets": [
+        "RetirementReason 4 variant 構築 (Refuted / Superseded / Obsolete / Withdrawn) + Inhabited",
+        "RetiredEntity 直接構築 (Hypothesis Obsolete / Failure Refuted / Hypothesis Superseded with successor)",
+        "field projection: entity / reason (rfl)",
+        "5 smart constructors: mk' / refuted / superseded / obsolete / withdrawn (rfl)",
+        "trivial fixture + whyRetired accessor",
+        "Day 6 Failure 経由パターン (案 C 利点吸収) との整合性",
+        "4 variant 全種類を List で集約 (内部規範 layer 横断 transfer 7 段階目)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 22,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "rfl_preference_pattern": "Day 11 Subagent I3 教訓を反映: 全 example で rfl preference 維持 (simp tactic 不使用)、Day 11 ProvRelationTest L111-123 simp 利用箇所への改善対応"
+    },
+    {
       "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
       "path": "AgentSpec/Test/Cross/SpineProcessTest.lean",
       "scope": "test",
@@ -1063,23 +1116,23 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 11",
+    "last_verified_phase": "Week 2 Day 12",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 100, "scope": "production-only", "note": "Day 11 で ProvRelation +1 で 99→100"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 117, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 101, "scope": "production-only", "note": "Day 12 で RetiredEntity +1 で 100→101"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 119, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
     "process_layer_progress": "Day 6 Hypothesis + Failure、Day 7 Evolution + HandoffChain 完了 (4 type 完備)",
-    "provenance_layer_completed_4_type_plus_3_relation": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、**Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 relation 追加 = 4 type + 3 relation 完備**",
-    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10/11 で 6 度運用検証成功 (Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11 で v2 適用初の Provenance 新規 .lean commit)",
-    "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent.toEntity、Day 11 で PROV-O triple set test (3 relation 同一 example)",
+    "provenance_layer_completed_4_type_plus_3_relation_plus_retirement": "Day 8 Verdict、Day 9 ResearchEntity (Day 10 で 5 constructor 拡張) + ResearchActivity、Day 10 ResearchAgent + EvolutionMapping = PROV-O 三項統合 4 type、Day 11 で WasAttributedTo + WasGeneratedBy + WasDerivedFrom 3 relation 追加 = 4 type + 3 relation 完備、**Day 12 で RetiredEntity + RetirementReason 4 variant 追加 = §4.1 完全カバー + §4.4 完全カバー到達**",
+    "governance_hook": "Day 5 hook 化完了、Day 6/7/8/9/10/11/12 で 7 度運用検証成功 (Day 10 v2 拡張で Provenance/Test/Cross 検出可能、Day 11 で v2 適用初の Provenance 新規 .lean commit、Day 12 で v2 2 度目の Provenance 新規 .lean commit)",
+    "cross_process_test": "Day 7-9 で各種 cross-process test 実装、Day 10 で ResearchAgent.toEntity、Day 11 で PROV-O triple set test (3 relation 同一 example)、Day 12 で 4 RetirementReason variant 全種類を List で集約 test (内部規範 layer 横断 transfer 7 段階目)",
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
-    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity、**Day 11 で 3 PROV-O relation の Lean 化完了 (4 type + 3 relation = PROV-O 三項統合の主要要素全完備)**",
+    "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity 追加 (5 toEntity Mapping)、Day 10 EvolutionMapping.transitionToActivity、Day 11 で 3 PROV-O relation の Lean 化完了、**Day 12 で RetiredEntity + RetirementReason 4 variant (Refuted (failure : Failure) / Superseded (replacement : ResearchEntity) / Obsolete / Withdrawn) で §4.4 退役 entity の構造的検出を完備**",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 300,
+    "example_count": 322,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1120,6 +1173,8 @@
       "Test/Provenance/EvolutionMappingTest.lean": {"theorems": 0, "examples": 8},
       "Provenance/ProvRelation.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ProvRelationTest.lean": {"theorems": 0, "examples": 22},
+      "Provenance/RetiredEntity.lean": {"theorems": 0, "examples": 0},
+      "Test/Provenance/RetiredEntityTest.lean": {"theorems": 0, "examples": 22},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },
@@ -1287,6 +1342,15 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」3 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent の継続)"
       },
       "note": "Day 11 Provenance 層 PROV-O 3 relation 追加 (WasAttributedTo + WasGeneratedBy + WasDerivedFrom、Q1 A-Minimal / Q3 案 A 3 separate structure / Q4 案 A 厳格 type)。PROV-O 三項統合 4 type + 3 relation 完備 = 02-data-provenance §4.1 完全カバー到達。Build 100+117 jobs、example 278→300 (+22)。logprob margin 2.460 (Day 10 2.335 から更新の過去最高、PROV-O 完全実装の効果)。Pattern #7 hook v2 適用初の Provenance 新規 .lean commit (hook pass-through 確認 = v2 拡張の運用検証 1 度目 = 初運用検証成功)。Day 11 code commit `11a32bd` では時間効率優先で Subagent 検証を省略、改訂 49 paper サーベイ評価サイクルで Subagent 遡及検証 PASS (addressable 0、informational 4)"
+    },
+    {
+      "round": "Week 2 Day 12 Round 1",
+      "date": "2026-04-18",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (101+119 jobs) + Day 12 着手前判断 Section 2.22 確定方針反映確認、/verify は本 commit 後に実施予定",
+      "p2_complete_for": "day-12-provenance-retired-entity",
+      "note": "Day 12 Provenance 層 RetiredEntity + RetirementReason 4 variant 追加 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure、Day 11 ProvRelation パターン踏襲)。02-data-provenance §4.4 退役 entity の構造的検出 完備 (§4.1 完全カバー継続 + §4.4 完全カバー到達)。Build 101+119 jobs、example 300→322 (+22)。Pattern #7 hook v2 2 度目の Provenance 新規 .lean commit (Day 11 1 度目に続く運用検証)。Day 11 Subagent I3 教訓を反映: RetiredEntityTest 全 example で rfl preference 維持 (simp tactic 不使用)"
     }
   ]
 }

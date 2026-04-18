@@ -15,6 +15,7 @@ import AgentSpec.Provenance.ResearchEntity
 import AgentSpec.Provenance.ResearchActivity
 import AgentSpec.Provenance.EvolutionMapping
 import AgentSpec.Provenance.ProvRelation
+import AgentSpec.Provenance.RetiredEntity
 import AgentSpec.Proofs.RoundTrip
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)
