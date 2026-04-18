@@ -427,3 +427,51 @@ informational 2 件:
 - 有限量化: 343 ケース (Fin 7³)
 - lib 構成: AgentSpec (production 7 jobs) + AgentSpecTest (test 9 jobs) の分離達成
 - TyDD 達成度: S1 5 軸 5/5、S1 10 benefits 8/10、S4 1/5 強適用（詳細は 11-pending-tasks.md Section 12.6）
+
+---
+
+## Phase 0 Week 2 Day 3 検証 (2026-04-18 — Day 3 commit `0eb1b78` 後)
+
+**背景**: Section 10.1 Day 3 タスク（EvolutionStep + SafetyConstraint type class 宣言 + dummy instance）を実装。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 3 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A overall margin 0.408、全 3 基準 A 優勢)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 2 [low]、informational 5）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 (low) | `(⟨(), rfl⟩ : SafeState Unit).property = rfl := rfl` は trivially-true (定義的等価の確認のみ) | `.property` テストを削除し、`doSafeOperation : SafeState S → Unit` を引数として渡す test に置換。refinement type の有用性を実例で示す形に変更 (B3 Call-site obligation 最小実例) |
+| A2 (low) | EvolutionStep + SafetyConstraint の cross-class interaction test が皆無 | Day 3 hole-driven scope 外として Section 10.1 Day 4 列に「LearningCycle 統合時に追加」と注記 |
+
+informational 5 件:
+- I1: G5-1 §3.4 の 4 member のうち `transition` のみ実装 → docstring D1 で明示済
+- I2: SafeState subtype 設計の妥当性 → 確認済 (Edge.lean D3 と対称)
+- I3: Pattern #5/#6/#8 遵守 → 全て適合
+- I4: `universe u` 宣言 → autoImplicit=false 環境で正しい
+- I5: instance 命名 (`instEvolutionStepUnit`, `instSafetyConstraintUnit`) → Pattern #3 適合
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 9 jobs (production)、`lake build AgentSpecTest` exit 0 / 13 jobs、theorem 3 (不変), example 50→62 (+12), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-3 累計サマリ
+
+| Day | commit (code) | commit (metadata) | commit (TyDD 評価) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | `32b13fa` (compatible) | `743a0fc` (conservative) | `70f9080` (conservative) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | `24ad32c` (compatible) | (Day 1-2 共通 `743a0fc`) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | `77bf94f` (compatible) | `d35c94b` (conservative) | (本 commit) | R1 PASS | written |
+
+**Day 3 終了時点 累計指標**:
+- theorem: 3 (Day 1 で追加、Day 2-3 維持)
+- example: 62 (Week 1: 24 + Day 1: 10 + Day 2: 16 + Day 3: 12)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 343 ケース (Fin 7³、Day 1 で導入)
+- lib 構成: AgentSpec (production 9 jobs) + AgentSpecTest (test 13 jobs)
+- Spine 層型: 4 type families (FolgeID, Edge, EvolutionStep, SafetyConstraint)
+- TyDD 達成度: S1 5 軸 5/5、S1 10 benefits 8/10、**S4 P2 が初の強適用達成** (Day 2 評価 → Day 3 実装の改善ループ機能の証拠、詳細 Section 12.8)
