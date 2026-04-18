@@ -1,8 +1,10 @@
 import AgentSpec.Core
 import AgentSpec.Spine.FolgeID
+import AgentSpec.Spine.Edge
 import AgentSpec.Proofs.RoundTrip
-import AgentSpec.Test.CoreTest
-import AgentSpec.Test.Spine.FolgeIDTest
+
+-- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)
+-- → `lake build AgentSpecTest` で test lib をビルドする
 
 /-!
 # AgentSpec: agent-manifesto 新基盤 Lean ライブラリ ルート

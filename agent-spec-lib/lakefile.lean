@@ -32,3 +32,8 @@ lean_lib «AgentSpec» where
   -- 到達不能タクティクへの警告（記録目的、Mathlib コンパイル時には無視される weak. プレフィックス形式）
   -- GA-C31 / GA-W7 の partial def 防止はコード設計レベル対応（fuel pattern 等）で実現
   leanOptions := #[⟨`weak.linter.unreachableTactic, true⟩]
+
+-- Week 2 Day 2 で分離: test lib は本番 AgentSpec から独立してビルドされる
+-- 対処: Verifier Round 3 indicate 3、/verify Round 1 指摘 4、Day 1 /verify R1 I1
+lean_lib «AgentSpecTest» where
+  leanOptions := #[⟨`weak.linter.unreachableTactic, true⟩]
