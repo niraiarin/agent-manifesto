@@ -97,6 +97,36 @@ Week 1 の基盤に Spine 層・Proofs 層の最小実装を追加。
 5. **hole-driven signature**: `def roundTripUniversal` のように `abbrev` を避け
    opaque identity を保持
 
+## 現状: Phase 0 Week 2 Day 2 完了（2026-04-18 追加）
+
+Day 1 の基盤に Edge Type と test lib 分離を追加。
+
+- [x] `AgentSpec/Spine/Edge.lean` (**GA-S4 EdgeKind 6 variant + Edge structure**、
+  `inductive EdgeKind` (wasDerivedFrom/refines/refutes/blocks/relates/wasReplacedBy)
+  + `structure Edge { src dst : FolgeID, kind : EdgeKind }` + isSelfLoop / reverse)
+- [x] `AgentSpec/Test/Spine/EdgeTest.lean` (**16 件の behavior assertion**、reverse の involutivity を全 6 variant 検証)
+- [x] `AgentSpecTest.lean` 新規 (test lib root、Verifier R3 i3 / /verify R1 i4 / Day 1 R1 I1 対処)
+- [x] `lakefile.lean` に `lean_lib AgentSpecTest` 別 target 追加
+- [x] `lake build AgentSpec` ✓ (exit 0, **7 jobs production-only**)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **9 jobs test-only**)
+- [x] /verify Round 1 PASS (logprob + Subagent、margin 0.277、addressable 2 のうち involutivity 拡充実施)
+
+### Week 2 Day 2 時点の累計指標
+
+| 指標 | Day 1 | Day 2 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 3 | 0 | **3** |
+| example 数 | 35 | 16 (Edge: 11→16 拡充含) | **50** |
+| Spine 層型 | 1 (FolgeID) | 1 (Edge) | **2 type families** |
+| build target | `AgentSpec` (8 jobs) | `AgentSpec` 7 + `AgentSpecTest` 9 | **2 lib (test 分離済)** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+
+### Day 2 で追加した実装パターン (Section 10.2 #8)
+
+- **Pattern #8**: Lean 4 予約語 (`from`, `to`, `match`, `let` 等) を field 名・variable 名に使用しない
+  - 適用例: `Edge.src`/`Edge.dst` (`from`/`to` の代わり)
+  - 違反時の症状: `unexpected token 'from'; expected '_', '}', identifier or term`
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

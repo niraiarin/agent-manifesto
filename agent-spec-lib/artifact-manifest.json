@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.2.0-week2-day1",
+  "version": "0.3.0-week2-day2",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -10,6 +10,7 @@
   ],
   "propositions_referenced": [
     "GA-S2",
+    "GA-S4",
     "GA-S15",
     "GA-S18",
     "GA-T8",
@@ -184,6 +185,84 @@
       "axiom_count": 0
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Spine.Edge",
+      "path": "AgentSpec/Spine/Edge.lean",
+      "scope": "formalization",
+      "refs": ["GA-S4", "GA-W4", "GA-W7", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.FolgeID",
+          "edge": "wasDerivedFrom",
+          "purpose": "Edge endpoint type"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.EdgeKind (inductive enum, 6 variants)",
+        "AgentSpec.Spine.Edge (structure)"
+      ],
+      "provides_functions": [
+        "AgentSpec.Spine.Edge.isSelfLoop",
+        "AgentSpec.Spine.Edge.reverse"
+      ],
+      "provides_instances": [
+        "DecidableEq EdgeKind",
+        "Inhabited EdgeKind",
+        "Repr EdgeKind",
+        "DecidableEq Edge",
+        "Inhabited Edge",
+        "Repr Edge"
+      ],
+      "edge_kind_variants": [
+        "wasDerivedFrom",
+        "refines",
+        "refutes",
+        "blocks",
+        "relates",
+        "wasReplacedBy"
+      ],
+      "week2_status": "Day 2 hole-driven via FolgeID endpoint. Week 4-5 で `inductive ResearchEdge : ResearchNode → ResearchNode → Type` に refactor 予定 (GA-S4 最終形)",
+      "naming_note": "from/to は Lean 4 予約語のため src/dst を採用 (Section 10.2 pattern #8)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest",
+      "path": "AgentSpec/Test/Spine/EdgeTest.lean",
+      "scope": "test",
+      "refs": ["GA-S4", "GA-I9"],
+      "test_targets": [
+        "EdgeKind 6 variant DecidableEq",
+        "Edge structure equality",
+        "Edge.isSelfLoop",
+        "Edge.reverse 全 6 variant involutivity",
+        "DecidableEq / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Edge",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "example_count": 16,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpecTest",
+      "path": "AgentSpecTest.lean",
+      "scope": "test",
+      "refs": ["GA-I9"],
+      "description": "Test lib root. AgentSpec から Test 混在を分離 (Verifier R3 i3 / /verify R1 i4 / Day 1 R1 I1 対処)",
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Test.CoreTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest", "edge": "wasDerivedFrom"}
+      ],
+      "build_target": "lake build AgentSpecTest"
+    },
+    {
       "id": "agent-spec-lib:lakefile",
       "path": "lakefile.lean",
       "scope": "config",
@@ -210,14 +289,17 @@
     }
   ],
   "build_status": {
-    "last_verified": "2026-04-17",
-    "last_verified_phase": "Week 2 Day 1",
-    "lake_build_result": "exit 0",
-    "job_count": 8,
+    "last_verified": "2026-04-18",
+    "last_verified_phase": "Week 2 Day 2",
+    "lake_build_results": {
+      "AgentSpec": {"result": "exit 0", "job_count": 7, "scope": "production-only"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 9, "scope": "test only"}
+    },
+    "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 3,
-    "example_count": 35,
+    "example_count": 50,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -227,6 +309,8 @@
       "Test/CoreTest.lean": {"theorems": 0, "examples": 24},
       "Spine/FolgeID.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 11},
+      "Spine/Edge.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
       "Proofs/RoundTrip.lean": {"theorems": 3, "examples": 0}
     }
   },
