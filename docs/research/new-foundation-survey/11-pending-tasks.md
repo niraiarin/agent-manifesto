@@ -3180,6 +3180,21 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - Section 2.22 層依存性考察: ResearchEntity (Superseded payload) + Failure (Refuted payload) を import、Day 9 namespace extension pattern 確立済 layer architecture 内、新たな問題なし
   - Section 10.1 Day 12 行を確定版に更新 (Q1-Q4 採用案反映)
   - 主要決定: Day 12 メイン = RetiredEntity (§4.4 完全カバー、Q3 案 A 4 variant、Q4 案 A separate)、linter / elaborator は Day 13+ 集中、PROV-O auxiliary relations + WasRetiredBy relation は Day 13+ で同時追加候補 (relation 系 grouping)
+- 2026-04-18 (**改訂 55**): Day 11 やり残し対処 — artifact-manifest.json verifier_history 整合性更新
+  - 検出経緯: Day 12 着手前判断確定後の最終やり残し点検で発見
+    - 99-verifier-rounds.md (改訂 52): Day 11 R1 PASS + Subagent 遡及検証 PASS 記載済
+    - artifact-manifest.json verifier_history Day 11 R1 entry: `evaluator: "logprob (margin 2.460 過去最高、Subagent 省略)"` のまま、Subagent 遡及検証 PASS 未反映
+    - 情報齟齬: 99-verifier-rounds と manifest の不一致
+  - 対処内容:
+    - Day 11 R1 entry の `evaluator` を `logprob ... + Subagent 遡及検証 (改訂 49 で実施、VERDICT: PASS)` に更新
+    - 新規 field `informational_count: 4` を追加
+    - 新規 field `subagent_retroactive_verification` (object) を追加:
+      - `executed_in_commit`: `95a99aa` (改訂 49 paper サーベイ評価サイクル)
+      - `verdict`: PASS、`addressable`: 0
+      - `informational` 4 件 (I1-I4) を full text で記録
+      - `pattern`: paper サーベイ評価サイクル「実装修正組込み」3 度目適用
+    - `note` を更新: PROV-O §4.1 完全カバー到達 + hook v2 初運用検証成功 + Subagent 遡及検証 PASS 経緯を full record
+  - 結果: 99-verifier-rounds.md と artifact-manifest.json の verifier_history が整合 (Day 11 R1 状態 = logprob PASS + Subagent 遡及 PASS)
 
 ## マーク凡例
 

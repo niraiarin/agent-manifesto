@@ -1271,9 +1271,22 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "logprob (margin 2.460 過去最高、Subagent 省略)",
+      "informational_count": 4,
+      "evaluator": "logprob (margin 2.460 過去最高) + Subagent 遡及検証 (改訂 49 で実施、VERDICT: PASS)",
       "p2_complete_for": "day-11-provenance-prov-relation-3-structure",
-      "note": "Day 11 Provenance 層 PROV-O 3 relation 追加 (WasAttributedTo + WasGeneratedBy + WasDerivedFrom、Q1 A-Minimal / Q3 案 A 3 separate structure / Q4 案 A 厳格 type)。PROV-O 三項統合 4 type + 3 relation 完備。Build 100+117 jobs、example 278→300 (+22)。logprob margin 2.460 (Day 10 2.335 から更新の過去最高、PROV-O 完全実装の効果)。Pattern #7 hook v2 適用初の Provenance 新規 .lean commit (hook pass-through 確認 = v2 拡張の運用検証 1 度目)"
+      "subagent_retroactive_verification": {
+        "executed_in_commit": "95a99aa (改訂 49 paper サーベイ評価サイクル)",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": [
+          "I1: aggregated_example_count = 300 verify (24+16+16+9+10+28+7+12+17+16+21+17+4+21+22+30+8+22 = 300、artifact-manifest 一致)",
+          "I2: WasDerivedFrom.trivial self-derivation semantics (minimal scope では許容、DAG 制約は Day 13+ 設計判断)",
+          "I3: ProvRelationTest L111-123 で simp tactic 利用 (test 内初の non-rfl、Day 12+ で rfl preference 維持推奨)",
+          "I4: ResearchActivity.investigate rfl 等価性 verify"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」3 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent の継続)"
+      },
+      "note": "Day 11 Provenance 層 PROV-O 3 relation 追加 (WasAttributedTo + WasGeneratedBy + WasDerivedFrom、Q1 A-Minimal / Q3 案 A 3 separate structure / Q4 案 A 厳格 type)。PROV-O 三項統合 4 type + 3 relation 完備 = 02-data-provenance §4.1 完全カバー到達。Build 100+117 jobs、example 278→300 (+22)。logprob margin 2.460 (Day 10 2.335 から更新の過去最高、PROV-O 完全実装の効果)。Pattern #7 hook v2 適用初の Provenance 新規 .lean commit (hook pass-through 確認 = v2 拡張の運用検証 1 度目 = 初運用検証成功)。Day 11 code commit `11a32bd` では時間効率優先で Subagent 検証を省略、改訂 49 paper サーベイ評価サイクルで Subagent 遡及検証 PASS (addressable 0、informational 4)"
     }
   ]
 }
