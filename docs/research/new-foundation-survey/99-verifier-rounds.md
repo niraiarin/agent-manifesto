@@ -475,3 +475,64 @@ informational 5 件:
 - lib 構成: AgentSpec (production 9 jobs) + AgentSpecTest (test 13 jobs)
 - Spine 層型: 4 type families (FolgeID, Edge, EvolutionStep, SafetyConstraint)
 - TyDD 達成度: S1 5 軸 5/5、S1 10 benefits 8/10、**S4 P2 が初の強適用達成** (Day 2 評価 → Day 3 実装の改善ループ機能の証拠、詳細 Section 12.8)
+
+---
+
+## Phase 0 Week 2 Day 4 検証 (2026-04-18 — Day 4 commit `216cbbd` 後)
+
+**背景**: Section 10.1 Day 4 タスク（LearningCycle + Observable type class 宣言）に加え、Day 3 評価 Section 2.9 で識別された 🔴 SafetyConstraint Bool→Prop refactor 前倒し / 🟡 SafeState.mk smart constructor / 🟡 EvolutionStep Decidable instance を pre-Day-4 改善として実施。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 4 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A overall margin 0.306、全 3 基準 A 優勢)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 1 [low]、informational 5）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 (low) | `attribute [reducible, instance] SafetyConstraint.safeDec` の `reducible` 必要性が docstring から不明確 | docstring に注記追加 (「class field を global instance に lift する際必要、Lean 4 警告対処」)、build 警告解消も併記 |
+
+informational 5 件:
+- I1: SafetyConstraint.lean 冒頭 comment が旧 Bool 形式のまま (Day 4 Prop refactor 後) → 冒頭 comment を Prop 形式に統一
+- I2: `SafeState.mk` の重複定義リスク (将来 structure 化時) → 実害なし、現状維持
+- I3: `LearningStage.le` 自己反射性テストが retirement のみ → 全 5 variant の `s.le s = true` 追加 (5 example 追加)
+- I4: cross-class テストに Observable 含まれず (3-class のみ) → Observable 含む 4-class test 追加 (`fullSpineExample`、example 2 追加)
+- I5: ObservableTest.lean に `universe u` 宣言なし → 実害なし (具体型 Unit のみ使用)、現状維持
+
+**Pre-Day-4 refactor 詳細**:
+- SafetyConstraint Bool→Prop: `class SafetyConstraint S where safe : S → Prop; safeDec : DecidablePred safe`
+  + `attribute [reducible, instance] SafetyConstraint.safeDec` で auto-resolution
+  + Unit instance: `safe _ := True; safeDec _ := isTrue True.intro`
+- SafeState.mk: smart constructor `def SafeState.mk (s : S) (h : SafetyConstraint.safe s) : SafeState S := ⟨s, h⟩`
+- EvolutionStep: `instance (a b : Unit) : Decidable (EvolutionStep.transition a b) := isTrue trivial`
+
+**Day 4 main 詳細**:
+- LearningCycle: `inductive LearningStage` 5 variant (observation/hypothesis/verification/integration/retirement) + `next` (forward total + retirement self-loop) + `le` (Bool 全順序) + `isTerminal` + `class LearningCycle (S : Type u)` + `instLearningCycleUnit` (currentStage = observation)
+- Observable: `structure ObservableSnapshot` 7-field Nat tuple (V1-V7) + `class Observable (S : Type u)` + `instObservableUnit` (全 0)
+- Cross-class test: `fullSpineExample` で 4 type class (`[EvolutionStep S] [SafetyConstraint S] [LearningCycle S] [Observable S]`) 同時要求
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 11 jobs (production)、`lake build AgentSpecTest` exit 0 / 17 jobs、theorem 3 (不変), example 62→93 (+31), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-4 累計サマリ
+
+| Day | commit (code) | commit (metadata) | commit (TyDD 評価) | commit (paper サーベイ評価) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | `32b13fa` (compatible) | (Day 1-2 共通 `743a0fc`) | — | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | `24ad32c` (compatible) | (Day 1-2 共通 `743a0fc`) | — | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | `77bf94f` (compatible) | `d35c94b` (conservative) | — | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `bc7ff50` (compatible) | `195ba3d` (conservative) | `428b06e` (conservative) | (本 commit) | R1 PASS | written |
+
+**Day 4 終了時点 累計指標**:
+- theorem: 3 (Day 1 追加、Day 2-4 維持)
+- example: 93 (Week 1: 24 + Day 1: 10 + Day 2: 16 + Day 3: 12 + Day 4: 31)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 343 ケース (Fin 7³、Day 1 で導入)
+- lib 構成: AgentSpec (production 11 jobs) + AgentSpecTest (test 17 jobs)
+- **Spine 層 4 type class 完備**: FolgeID + Edge + EvolutionStep + SafetyConstraint + LearningCycle + Observable (Section 1 Week 2-3 完了基準達成)
+- TyDD 達成度: **S1 5/5 維持 / benefits 9/10 (#9 復活) / S4 3/5 強適用 (P1+P2+P4 同時達成)** (詳細 Section 12.11)
+- 論文サーベイ達成度: **paper finding 4 件 顕在化** (S4 P1+P2+P4 / G5-1 §3.4 / agent-manifesto P4 / S2 将来準備、詳細 Section 12.10)
