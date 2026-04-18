@@ -617,3 +617,71 @@ informational 5 件:
 - TyDD 達成度: **S1 5/5 / benefits 9/10 / S4 3/5 強適用 / Section 10.2 6/8 + 0 構造違反** (詳細 Section 12.14)
 - 論文サーベイ達成度: **paper finding 8 件 顕在化** (Day 4: 4 件 + Day 5: 4 件、詳細 Section 12.13)
 - paper × pattern 合流: 2 度 (Day 4 S4 × Pattern #5 / Day 5 G5-1 × Pattern #7)
+
+---
+
+## Phase 0 Week 2 Day 6 検証 (2026-04-18 — Day 6 commit `917c752` 後)
+
+**背景**: Section 2.11 確定方針 (Q1 Option C / Q2 Minimal / Q3 PROV vocab in docstring) に従い、Process 層 (Week 4-5 前倒し) を hole-driven Minimal scope で着手。Day 6 = Hypothesis + Failure (2 inductive/structure)、Day 7+ = Evolution + HandoffChain。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 6 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体、margin 0.073)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 0、informational 3）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 | FailureTest で `Failure : Inhabited` の直接テスト欠落 (HypothesisTest との対称性) | 1 example 追加 (`example : Inhabited Failure := inferInstance`)、FailureTest 16→17 |
+| I2 | artifact-manifest AgentSpecTest entry に example_count フィールド不在 (他 test entries との非対称) | 改訂 21 (Day 6 metadata commit) で aggregated_example_count 等追加、Section 2.12 🟢 解消 |
+| I3 | `whyFailed = reason` の「定義展開のみ」テストの位置付け (情報のみ、対処不要) | Day 7+ で Evolution 結合時に意義明確化、現状維持 |
+
+**Day 6 2 項目詳細**:
+
+1. **AgentSpec/Process/Hypothesis.lean** (Section 2.11 Q1 Option C 第 1 要素):
+   - `structure Hypothesis { claim : String, rationale : Option String := none }`
+   - `mk'` smart constructor + `trivial` fixture
+   - `deriving DecidableEq, Inhabited, Repr`
+   - **PROV mapping in docstring** (Q3 Option C): `ResearchEntity.Hypothesis` (Day 8+ で実装)
+   - Day 6 意思決定ログ D1-D3 (claim String / structure 採用 / 関係は Edge graph)
+
+2. **AgentSpec/Process/Failure.lean** (02-data-provenance §4.3 100% 忠実実装):
+   - `inductive FailureReason` 4 variant: HypothesisRefuted / ImplementationBlocked / SpecInconsistent / Retired (各 payload は Day 6 hole-driven String、Day 7+ で型化)
+   - `structure Failure { failedHypothesis : String, reason : FailureReason }`
+   - `whyFailed` accessor + `refuted` / `retired` smart constructors + `trivial` fixture
+   - `deriving DecidableEq, Inhabited, Repr`
+   - **PROV mapping in docstring** (Q3 Option C): `ResearchEntity.Failure` (Day 8+ で実装)
+   - Day 6 意思決定ログ D1-D3 (FailureReason inductive / payload String / failedHypothesis String 参照)
+
+**Pattern #7 hook 初の適用 commit**: 新規 Spine/Proofs/Process .lean が staged されたため、`agent-spec-lib/artifact-manifest.json` も同 commit に含めて構造的整合性を確保。**hook が pass-through 確認**、Day 5 Section 6.2.1 hook 設計の運用検証成功。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 92 jobs (Process 層 +2)、`lake build AgentSpecTest` exit 0 / 100 jobs、theorem 15 (不変), example 105→134 (+29), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-6 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | (本 commit) | R1 PASS | written |
+
+**Day 6 終了時点 累計指標**:
+- theorem: 15 (Day 1-4 合計 3 + Day 5 追加 12: FolgeID 6 + RoundTrip 6、Day 6 追加 0)
+- example: 134 (Day 5 105 + Day 6 追加 29: HypothesisTest 12 + FailureTest 17)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 92 jobs) + AgentSpecTest (test 100 jobs)** (Day 5 90+96 から Process 層 +2/+4)
+- **Spine 層 4 type class 完備 + 順序関係完備** (Day 4-5 達成)
+- **Process 層着手** (Day 6 で Hypothesis + Failure、Day 7+ で Evolution + HandoffChain)
+- **構造的 governance hook**: 1 (Pattern #7、Day 5 設計実装、Day 6 運用検証完了 = **三段階 closure**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / S4 3/5 強適用 / **Section 10.2 6/8 + 0 構造違反 (運用検証完了)** / **F/B/H 強適用 = B3 + F2 部分 + H4 新規部分** (詳細 Section 12.17)
+- 論文サーベイ達成度: **paper finding 14 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 1-3 関連: 1、詳細 Section 12.16)
+- paper × 概念 合流カテゴリ: **3 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C)
