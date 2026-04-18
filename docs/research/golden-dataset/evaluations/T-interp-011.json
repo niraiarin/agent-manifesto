@@ -1,36 +1,36 @@
 {
   "run_id": "T-interp-011",
   "task_type": "T-interp",
-  "timestamp": "2026-04-17T03:56:13Z",
+  "timestamp": "2026-04-18T12:50:41Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/T-interp-011.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/T-interp-011.json",
   "judge_scoring": {
     "cloud": {
-      "c1": 5,
+      "c1": 4,
       "c2": 4,
-      "c3": 5,
+      "c3": 4,
       "c4": 5,
-      "c5": 5,
-      "overall": 4.8,
-      "rationale": "Accurate coverage and gap identification with concrete D13-aware proposals; slight deduction on completeness as downstream V1-V7 evidence linkage could be examined more deeply."
+      "c5": 4,
+      "overall": 4.2,
+      "rationale": "構造化と読みやすさに優れ、ギャップ特定と提案も具体的だが、評価対象データの独立検証を経ていない点で正確性・網羅性に留保がある"
     },
     "local": {
       "c1": 5,
       "c2": 4,
-      "c3": 5,
+      "c3": 4,
       "c4": 5,
       "c5": 5,
-      "overall": 4.8,
-      "rationale": "Accurate coverage metrics, well-structured gap analysis with concrete actionable proposals grounded in D13/T8 semantics; minor deduction for not exploring L1-L6 boundary-layer gaps in depth."
+      "overall": 4.6,
+      "rationale": "正確なカバレッジ集計とD13波及の理解は的確だが、V1-V5/V7やL1-L6個別の証拠欠落への言及が薄く網羅性でやや減点。"
     }
   },
   "mechanical_agreement": {
-    "assessment_match": true,
+    "assessment_match": false,
     "cloud_assessment": "UNKNOWN",
-    "local_assessment": "UNKNOWN",
+    "local_assessment": "WARNING",
     "v_coverage_cloud": 2,
-    "v_coverage_local": 0,
+    "v_coverage_local": 3,
     "v_coverage_match": false,
     "proposal_count_cloud": 12,
     "proposal_count_local": 1,
@@ -38,7 +38,7 @@
     "key_insight_nontriviality_cloud": false,
     "key_insight_nontriviality_local": false,
     "key_insight_match": true,
-    "agreement_score": 0.5
+    "agreement_score": 0.25
   },
-  "delta": 0.0
+  "delta": -0.4
 }
