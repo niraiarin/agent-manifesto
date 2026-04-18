@@ -702,6 +702,13 @@ Day 3 は **TyDD 基盤として S4 P2 Refinement を初の強適用達成**。D
   - Section 2.9 (新規): EvolutionStep + SafetyConstraint 改善余地（Bool→Prop refactor 前倒し、Decidable transition、smart constructor、cross-class test、opaque placeholder）
   - 主要発見: Day 2 評価で識別された S4 P2 改善余地が Day 3 で初の強適用達成 → 評価→実装の改善ループが機能している証拠
   - Day 4 着手前判断事項: 🔴 SafetyConstraint Bool→Prop 前倒し / 🟡 Section 6.2.1 hook 化検討（Pattern #7 違反 3 連続）
+- 2026-04-18 (**改訂 8**): Day 3 後続影響の metadata 反映
+  - artifact-manifest.json: version 0.3→0.4-week2-day3、propositions に GA-S1 追加
+    artifacts に 4 エントリ追加 (Spine/{EvolutionStep, SafetyConstraint} + Test/Spine/{EvolutionStepTest, SafetyConstraintTest})
+    build_status: AgentSpec 7→9 jobs / AgentSpecTest 9→13 jobs / example 50→62
+    breakdown 拡充 + 既存 FolgeIDTest example_count 11→10 修正 (実態確認)
+  - README.md: Phase 0 Week 2 Day 3 完了セクション新設、累計指標 (4 type families)、
+    Day 3 で達成した TyDD 進展 (S4 P2 強適用 / B3 最小実例 / Pattern #8 派生)
 
 ## マーク凡例
 

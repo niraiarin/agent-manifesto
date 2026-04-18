@@ -127,6 +127,41 @@ Day 1 の基盤に Edge Type と test lib 分離を追加。
   - 適用例: `Edge.src`/`Edge.dst` (`from`/`to` の代わり)
   - 違反時の症状: `unexpected token 'from'; expected '_', '}', identifier or term`
 
+## 現状: Phase 0 Week 2 Day 3 完了（2026-04-18 追加）
+
+Day 2 の Spine 層に EvolutionStep / SafetyConstraint type class を追加。
+
+- [x] `AgentSpec/Spine/EvolutionStep.lean` (**G5-1 §3.4 ステップ 1 ResearchEvolutionStep**、
+  `class EvolutionStep (S : Type u) where transition : S → S → Prop`
+  + TransitionReflexive / TransitionTransitive property + Unit dummy instance)
+- [x] `AgentSpec/Spine/SafetyConstraint.lean` (**L1 安全境界 + S4 P2 Refinement 強適用**、
+  `class SafetyConstraint S where safe : S → Bool` + `SafeState` subtype refinement
+  + Unit dummy instance + `doSafeOperation` 利用例)
+- [x] `AgentSpec/Test/Spine/EvolutionStepTest.lean` (**4 件の behavior assertion**)
+- [x] `AgentSpec/Test/Spine/SafetyConstraintTest.lean` (**8 件の behavior assertion**、
+  `doSafeOperation` で B3 Call-site obligation の最小実例提示)
+- [x] `lake build AgentSpec` ✓ (exit 0, **9 jobs production-only**)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **13 jobs test-only**)
+- [x] /verify Round 1 PASS (logprob A 全 3 基準 margin 0.408 + Subagent PASS、
+  addressable A1 trivially-true → doSafeOperation テストに置換、A2 cross-class test → Day 4 対処)
+
+### Week 2 Day 3 時点の累計指標
+
+| 指標 | Day 2 | Day 3 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 3 | 0 | **3** |
+| example 数 | 50 | 12 (EvolutionStepTest 4 + SafetyConstraintTest 8) | **62** |
+| Spine 層型 | 2 (FolgeID, Edge) | 2 (EvolutionStep, SafetyConstraint) | **4 type families** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+
+### Day 3 で達成した TyDD 進展 (Section 12.8)
+
+- **S4 P2 Refinement の初の強適用**: `SafeState S := { s : S // safe s = true }`
+  は subtype refinement の典型。Day 2 評価で「最大改善余地」と識別された項目を Day 3 で解消
+- **B3 Call-site obligation の最小実例**: `doSafeOperation : SafeState S → Unit` で
+  「safe state のみ受理する関数」のシグネチャを test に組込み、refinement type の生きた価値を実証
+- **Pattern #8 派生**: `refl` を class member 外に出した判断（Lean 4 tactic shadow 回避）
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

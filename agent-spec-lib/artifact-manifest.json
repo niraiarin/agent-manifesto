@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.3.0-week2-day2",
+  "version": "0.4.0-week2-day3",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -9,6 +9,7 @@
     "config"
   ],
   "propositions_referenced": [
+    "GA-S1",
     "GA-S2",
     "GA-S4",
     "GA-S15",
@@ -180,7 +181,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "example_count": 11,
+      "example_count": 10,
       "sorry_count": 0,
       "axiom_count": 0
     },
@@ -263,6 +264,96 @@
       "build_target": "lake build AgentSpecTest"
     },
     {
+      "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
+      "path": "AgentSpec/Spine/EvolutionStep.lean",
+      "scope": "formalization",
+      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_classes": [
+        "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : S → S → Prop"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Spine.EvolutionStep.TransitionReflexive",
+        "AgentSpec.Spine.EvolutionStep.TransitionTransitive"
+      ],
+      "provides_instances": [
+        "instEvolutionStepUnit"
+      ],
+      "g5_1_section": "3.4 ステップ 1 (ResearchEvolutionStep type class)",
+      "week2_status": "Day 3 hole-driven: transition member のみ。Week 4-5 で B4 Hoare 4-arg post + hypothesis/verdict/observation 追加予定 (Section 12.6 / 2.9)",
+      "decision_log": "EvolutionStep.lean docstring D1-D3 (transition のみ / refl 分離 / Unit instance)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
+      "path": "AgentSpec/Spine/SafetyConstraint.lean",
+      "scope": "formalization",
+      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_classes": [
+        "AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Bool"
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.SafetyConstraint.SafeState (S : Type u) [SafetyConstraint S] — subtype refinement (S4 P2 application)"
+      ],
+      "provides_instances": [
+        "instSafetyConstraintUnit"
+      ],
+      "g5_1_section": "3.4 + L1 manifesto",
+      "tydd_alignment": {
+        "S4_P2_refinement_subtyping": "強適用 — SafeState は subtype refinement の典型 (Day 2 評価で「最大改善余地」と識別された項目を Day 3 で解消)"
+      },
+      "week2_status": "Day 3 hole-driven: safe Bool 形式。Week 4-5 で `safe : S → Prop` + `safeDec : DecidablePred safe` への refactor 計画 (Section 2.9 で前倒し検討中)",
+      "decision_log": "SafetyConstraint.lean docstring D1-D3 (Bool 採用 / Subtype 採用 / Unit instance)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest",
+      "path": "AgentSpec/Test/Spine/EvolutionStepTest.lean",
+      "scope": "test",
+      "refs": ["GA-S1", "GA-I9"],
+      "test_targets": [
+        "transition behavior (Unit dummy instance)",
+        "TransitionReflexive Unit instance",
+        "TransitionTransitive Unit instance",
+        "type class instance 解決"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 4,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest",
+      "path": "AgentSpec/Test/Spine/SafetyConstraintTest.lean",
+      "scope": "test",
+      "refs": ["GA-S1", "GA-I9"],
+      "test_targets": [
+        "safe Bool 動作 (Unit dummy)",
+        "decide(safe) 評価",
+        "SafeState 構築",
+        "SafeState .val / .property (Subtype 標準 API)",
+        "doSafeOperation 関数引数として SafeState を要求 (B3 Call-site obligation 最小実例)",
+        "SafeState Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 8,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
       "id": "agent-spec-lib:lakefile",
       "path": "lakefile.lean",
       "scope": "config",
@@ -290,16 +381,16 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 2",
+    "last_verified_phase": "Week 2 Day 3",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 7, "scope": "production-only"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 9, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 9, "scope": "production-only"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 13, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 3,
-    "example_count": 50,
+    "example_count": 62,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -308,9 +399,13 @@
       "Core.lean": {"theorems": 0, "examples": 0},
       "Test/CoreTest.lean": {"theorems": 0, "examples": 24},
       "Spine/FolgeID.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 11},
+      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 10},
       "Spine/Edge.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
+      "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 4},
+      "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 8},
       "Proofs/RoundTrip.lean": {"theorems": 3, "examples": 0}
     }
   },
