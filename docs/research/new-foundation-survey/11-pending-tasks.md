@@ -248,6 +248,19 @@ Day 5 完結性整備後の Day 6 着手前判断議論で以下に確定。
 
 **根拠**: Day 5 評価 Section 12.13 paper finding (02-data-provenance §4.1 PROV-O) + Section 12.14 TyDD 評価 (paper × pattern 合流) + Section 6.2.1 Pattern #7 hook 効力範囲 (Process 配下も対象) を統合。
 
+### 2.12 Process 層 Day 6 評価から導出した改善余地
+
+Day 6 TyDD 評価 (Section 12.17) で識別された改善余地を Day 7+ で対処。
+
+| マーク | 項目 | 現状 (Day 6) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 7 | **Process 層 cross-process test** — Hypothesis × Failure × Evolution の relation test | Day 6 で Hypothesis + Failure 独立 test (12 + 17 examples) のみ、cross-process 関係は未検証 | Day 7 Evolution 実装と同時に 1-2 cross-process example 追加 (Day 4 fullSpineExample パターン踏襲) |
+| 🟡 Day 8+ | **Hypothesis rationale Refinement 強化** | `rationale : Option String` (弱 refinement) | Day 8+ Provenance 層で `rationale : Option Evidence` 型化 (S4 P2 強化) |
+| 🟡 Day 8+ | **Failure payload 型化** | 各 variant payload は Day 6 hole-driven String | Day 8+ Provenance 層で各専用型に refactor: `Evidence` (HypothesisRefuted) / `Spec` (ImplementationBlocked) / `InconsistencyProof` (SpecInconsistent) / `ResearchEntity` (Retired) |
+| 🟢 metadata 整備時 | **artifact-manifest AgentSpecTest entry に example_count 等フィールド追加** (Subagent I2) | 他 test entries には example_count あるが AgentSpecTest root には不在、集計の網羅性で Day 5 以前と非対称 | Day 7 metadata commit で追加 |
+
+**根拠**: Section 12.17 Day 6 TyDD 評価結果テーブル。Process 層 hole-driven 設計の Day 7 / Day 8+ refactor 計画を集約。
+
 ---
 
 ## 3. Gap Analysis で「Week 2 以降」と明示した項目
@@ -1162,6 +1175,68 @@ Day 6 は **paper finding × Day 6 実装の継続的な双方向影響** を実
 
 新規 4 件の paper-grounded 改善提案を Section 2.10 に追加 (02-data-provenance §4.4 / §4.5 / §4.7 / S6 Paper 1)。Day 8+ Provenance 層実装と Week 5-6 Tooling 層整備への paper-grounded 入力を確立。
 
+### 12.17 Day 6 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 6 (`917c752` Process 層着手 Hypothesis + Failure) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 1-6 推移)
+
+| 評価軸 | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 | Day 6 | 変化 |
+|---|---|---|---|---|---|---|---|
+| S1 5 軸 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 8/10 | 8/10 | 8/10 | 9/10 | 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | 0/5 | 1/5 | 1/5 | 3/5 | 3/5 | **3/5 (派生継続)** | 維持、P2 派生継続 |
+| F/B/H 強適用 | 0 | 0 | 0 | B3 | B3 + F2 部分 | **B3 + F2 部分 + H4 新規部分** | H4 新規部分達成 |
+| G1-G6 anti-pattern 回避 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 維持 |
+| Section 10.2 適合 | — | 6/8 | 5/8 | 5/8 + 1 構造違反 | 6/8 + 0 構造違反 | **6/8 + 0 構造違反 (運用検証完了)** | hook 運用検証成功 |
+
+#### Day 6 で前進した項目
+
+1. **Pattern #7 hook 運用検証完了** (設計→実装→運用 三段階 closure)
+2. **02-data-provenance §4.3 100% 忠実実装** (FailureReason 4 variant の paper-grounded design)
+3. **TyDD-S1 × PROV mapping 両立** (独立 type + docstring alignment で coordination cost 最小化)
+4. **H4 新規部分達成** (PROV mapping in docstring は将来 LLM mapping 生成 hint)
+
+#### Day 6 で paper finding と TyDD の合流
+
+Day 6 では **TyDD-S1 (paper) × Q3 Option C (Day 6 議論) の合流** が顕在化:
+- TyDD-S1 (types-first) は Hypothesis/Failure を独立 type として定義
+- Q3 Option C は PROV mapping を docstring 注記レベルで先行記録
+- Day 8+ で `Hypothesis.toEntity : Hypothesis → ResearchEntity` mapping 関数追加 (TyDD-S1 を保ったまま PROV 統合)
+
+これは Day 4-5 の paper × pattern 合流に続く **新カテゴリ: principle × decision の合流**。Day 1-6 累計で 3 種類の合流カテゴリが確立:
+- Day 4: paper × pattern (S4 × Pattern #5、SafetyConstraint Bool→Prop refactor)
+- Day 5: paper × pattern (G5-1 × Pattern #7、hook 設計実装)
+- Day 6: principle × decision (TyDD-S1 × Q3 Option C、Process 独立 type + docstring PROV)
+
+#### 改善余地（優先度順、Section 2.12 で記録済）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **Process 層 cross-process test** — Hypothesis × Failure × Evolution relation test | Day 7 (Evolution と同時) | Section 2.12 |
+| 🟡 中 | **Hypothesis rationale Refinement 強化** — `Option String` → `Option Evidence` | Day 8+ Provenance 層 | Section 2.12 |
+| 🟡 中 | **Failure payload 型化** — String → Evidence/Spec/InconsistencyProof/ResearchEntity | Day 8+ Provenance 層 | Section 2.12 |
+| 🟢 低 | **artifact-manifest AgentSpecTest entry に example_count 追加** (Subagent I2) | Day 7 metadata commit | Section 2.12 |
+
+#### Day 7 で意識すべき改善事項
+
+| Day 6 評価から導出 | 反映先 |
+|---|---|
+| 🟡 cross-process test (Hypothesis × Failure × Evolution) | Day 7 Evolution |
+| 🟡 EvolutionStep B4 4-arg post の I/O type 確定 (Hypothesis/Verdict/Observable 統合) | Day 7 Evolution |
+| 🟡 HandoffChain の T1 一時性 inductive 表現 | Day 7 HandoffChain |
+| 🟢 artifact-manifest AgentSpecTest entry 補完 | Day 7 metadata commit |
+
+#### 結論
+
+Day 6 は TyDD 視点で **Pattern #7 hook の運用検証完了** + **paper-grounded 設計の 100% 忠実実装** を達成:
+- Section 10.2 適合: 6/8 + 0 構造違反 維持 (Day 5 で達成、Day 6 で運用検証)
+- 02-data-provenance §4.3 → FailureReason 4 variant 100% 忠実実装
+- TyDD-S1 + Q3 Option C 合流 (新カテゴリ: principle × decision)
+- H4 新規部分達成 (PROV mapping in docstring as LLM hint)
+
+Day 7 は Process 層継続 (Evolution + HandoffChain) で cross-process test と EvolutionStep B4 4-arg post 統合が主要対象。Day 1-6 累計で **paper finding 14 件顕在化** (Day 4: 4 件 + Day 5: 4 件 + Day 6: 5 件 + Day 1-3 関連: 1 件)、評価ループ拡張により後続作業の優先度精度が向上。
+
 ---
 
 ## 13. 更新履歴
@@ -1318,6 +1393,22 @@ Day 6 は **paper finding × Day 6 実装の継続的な双方向影響** を実
     - 🟢 02-data-provenance §4.5 Pipeline 段階表現 (Week 5-6 Tooling 層)
     - 🟢 S6 Paper 1 BST/AVL invariants (Day 7+ Evolution と統合)
   - 主要発見: Pattern #7 hook の設計→実装→運用 三段階 closure 達成、Day 8+ Provenance 層と Week 5-7 Tooling 層への paper-grounded 入力を確立
+- 2026-04-18 (**改訂 20**): Day 6 TyDD 視点評価結果の反映 + 改善提案 4 件追加
+  - Section 12.17 (新規): Day 6 TyDD 達成度評価 (Day 1-6 推移表含む)
+    - S1 5/5 維持、benefits 9/10 維持
+    - S4 3/5 強適用維持 (P2 派生継続: refinement → LE/LT → Hypothesis structure)
+    - F/B/H 強適用: B3 + F2 部分 + **H4 新規部分達成** (PROV mapping in docstring as LLM hint)
+    - Section 10.2 適合: 6/8 + 0 構造違反 維持 (Day 5 設計実装、Day 6 運用検証完了)
+  - 主要発見: 新カテゴリ「principle × decision」合流達成 (TyDD-S1 × Q3 Option C)
+    - Day 4: paper × pattern (S4 × Pattern #5)
+    - Day 5: paper × pattern (G5-1 × Pattern #7 設計実装)
+    - Day 6: principle × decision (TyDD-S1 × Q3 Option C、Process 独立 type + docstring PROV)
+  - Section 2.12 (新規): Process 層 Day 6 評価から導出した改善余地 (4 項目)
+    - 🟡 cross-process test (Day 7 Evolution と同時)
+    - 🟡 Hypothesis rationale 型化 (Day 8+ Provenance 層)
+    - 🟡 Failure payload 型化 (Day 8+ Provenance 層)
+    - 🟢 artifact-manifest AgentSpecTest entry 補完 (Day 7 metadata commit、Subagent I2 対処)
+  - Day 7 改善事項: cross-process test / EvolutionStep B4 4-arg post / HandoffChain T1 一時性 / metadata 補完
 
 ## マーク凡例
 
