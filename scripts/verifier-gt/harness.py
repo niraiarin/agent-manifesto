@@ -106,7 +106,9 @@ def evaluate(
     start = time.time()
 
     loader_kwargs = {"limit": limit}
-    if dataset in ("rewardbench", "judgebench", "commit-faithfulness", "lean-proof"):
+    if dataset in ("rewardbench", "judgebench", "commit-faithfulness", "lean-proof",
+                   "ultrafeedback", "chatbot-arena", "mt-bench",
+                   "humaneval", "gsm8k", "fever"):
         loader_kwargs["stratified"] = stratified
 
     for i, ex in enumerate(load(dataset, **loader_kwargs)):
