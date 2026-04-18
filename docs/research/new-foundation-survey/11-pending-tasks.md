@@ -901,6 +901,17 @@ Pre-Day-4 refactor の意思決定（Day 3 評価 🔴 を Day 4 着手前に対
     - Spine 層 4 type class 完備 (Section 1 Week 2-3 完了基準達成)
   - 主要発見: paper finding と established pattern が同時強適用された initial 例
   - Day 5 改善事項: 🔴 Pattern #7 hook 化 (4 連続違反) / 🟡 F2 Lattice / 🟡 B4 Hoare 4-arg
+- 2026-04-18 (**改訂 12**): Day 4 後続影響の metadata 反映
+  - artifact-manifest.json: version 0.4→0.5-week2-day4
+    AgentSpecTest dependencies に 4 新規 test ファイル追加
+    SafetyConstraint エントリを Day 4 Prop refactor に更新 (provides_classes / tydd_alignment 拡充: S4 P1+P2+P4 強適用記録 / SafeState.mk smart constructor 追加)
+    SafetyConstraintTest example_count 8→10 + test_targets 更新 (smart constructor 反映)
+    artifacts に 4 エントリ追加 (Spine/{LearningCycle, Observable} + Test/Spine/{LearningCycleTest, ObservableTest})
+    build_status: AgentSpec 9→11 jobs / AgentSpecTest 13→17 jobs / example 62→93
+    spine_layer_completeness フィールド追加 (Section 1 Week 2-3 完了基準達成記録)
+    breakdown 拡充 + LearningCycleTest 23→22 修正 (実態 22)
+  - README.md: Phase 0 Week 2 Day 4 完了セクション新設、累計指標 (4 type class 完備)、
+    Day 4 で達成した TyDD 進展 (S1 #9 復活 / S4 3 強適用 / cross-class 4-instance / Spine 完備)
 
 ## マーク凡例
 

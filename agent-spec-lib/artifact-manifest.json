@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.4.0-week2-day3",
+  "version": "0.5.0-week2-day4",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -259,7 +259,11 @@
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Test.CoreTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest", "edge": "wasDerivedFrom"}
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest"
     },
@@ -298,20 +302,25 @@
         {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
       ],
       "provides_classes": [
-        "AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Bool"
+        "AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Prop, safeDec : DecidablePred safe (Day 4 で Bool→Prop refactor 完了)"
       ],
       "provides_types": [
-        "AgentSpec.Spine.SafetyConstraint.SafeState (S : Type u) [SafetyConstraint S] — subtype refinement (S4 P2 application)"
+        "AgentSpec.Spine.SafetyConstraint.SafeState (S : Type u) [SafetyConstraint S] — subtype refinement { s // safe s } (S4 P2 application)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Spine.SafetyConstraint.SafeState.mk — smart constructor (Day 4 追加、Section 2.9 🟡 対処)"
       ],
       "provides_instances": [
-        "instSafetyConstraintUnit"
+        "instSafetyConstraintUnit (safe = True, safeDec = isTrue True.intro)"
       ],
       "g5_1_section": "3.4 + L1 manifesto",
       "tydd_alignment": {
-        "S4_P2_refinement_subtyping": "強適用 — SafeState は subtype refinement の典型 (Day 2 評価で「最大改善余地」と識別された項目を Day 3 で解消)"
+        "S4_P1_prove_vs_smt": "強適用 (Day 4) — bundled safeDec で decide 自動化と手動 proof の両立",
+        "S4_P2_refinement_subtyping": "強適用 — SafeState は subtype refinement の典型 (Day 2 識別 → Day 3 初適用 → Day 4 Prop 完全達成、3 セッション累積改善)",
+        "S4_P4_power_to_weight": "強適用 (Day 4) — 1 method + bundled Decidable で最小実装"
       },
-      "week2_status": "Day 3 hole-driven: safe Bool 形式。Week 4-5 で `safe : S → Prop` + `safeDec : DecidablePred safe` への refactor 計画 (Section 2.9 で前倒し検討中)",
-      "decision_log": "SafetyConstraint.lean docstring D1-D3 (Bool 採用 / Subtype 採用 / Unit instance)"
+      "week2_status": "Day 4 で Bool→Prop refactor 完了 (Day 3 評価 Section 2.9 🔴 前倒し対処)。Week 4-5 で Recipe 10 (Opaque) + PROV-O 統合検討 (Section 2.10)",
+      "decision_log": "SafetyConstraint.lean docstring (D1 Prop 採用 / D2 Subtype + smart constructor / D3 Unit instance)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest",
@@ -338,18 +347,115 @@
       "scope": "test",
       "refs": ["GA-S1", "GA-I9"],
       "test_targets": [
-        "safe Bool 動作 (Unit dummy)",
-        "decide(safe) 評価",
-        "SafeState 構築",
+        "safe Prop 動作 (Unit dummy、Day 4 Bool→Prop refactor 反映)",
+        "decide(safe) 評価 (bundled safeDec 経由)",
+        "SafeState 構築 (anonymous + smart constructor SafeState.mk)",
         "SafeState .val / .property (Subtype 標準 API)",
-        "doSafeOperation 関数引数として SafeState を要求 (B3 Call-site obligation 最小実例)",
+        "doSafeOperation 関数引数として SafeState を要求 (B3 Call-site obligation 最小実例、smart constructor 版併記)",
         "SafeState Inhabited"
       ],
       "enforces": "structural",
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 8,
+      "example_count": 10,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.LearningCycle",
+      "path": "AgentSpec/Spine/LearningCycle.lean",
+      "scope": "formalization",
+      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.LearningStage (5-variant inductive: observation/hypothesis/verification/integration/retirement)"
+      ],
+      "provides_functions": [
+        "AgentSpec.Spine.LearningStage.next (forward-only, terminal self-loop)",
+        "AgentSpec.Spine.LearningStage.le (forward 全順序)",
+        "AgentSpec.Spine.LearningStage.isTerminal"
+      ],
+      "provides_classes": [
+        "AgentSpec.Spine.LearningCycle (S : Type u) — class with currentStage : S → LearningStage"
+      ],
+      "provides_instances": [
+        "instLearningCycleUnit (currentStage = observation)",
+        "DecidableEq LearningStage / Inhabited / Repr (deriving)"
+      ],
+      "g5_1_section": "3.4 ステップ 2 (LearningM indexed monad の前段階)",
+      "week2_status": "Day 4 hole-driven: LearningStage enum + class。Week 4-5 で `LearningM (s : LearningStage) (α : Type u)` indexed monad に昇格予定 (G5-1 §3.4 ステップ 2 完全版)",
+      "decision_log": "LearningCycle.lean docstring D1-D3 (inductive enum / next total / le Bool 関数)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.Observable",
+      "path": "AgentSpec/Spine/Observable.lean",
+      "scope": "formalization",
+      "refs": ["GA-S1", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.ObservableSnapshot (7-field structure: V1-V7 metric tuple、Day 4 hole-driven Nat 統一)"
+      ],
+      "provides_classes": [
+        "AgentSpec.Spine.Observable (S : Type u) — class with snapshot : S → ObservableSnapshot"
+      ],
+      "provides_instances": [
+        "instObservableUnit (全 metric 0 snapshot)",
+        "DecidableEq ObservableSnapshot / Inhabited / Repr (deriving)"
+      ],
+      "agent_manifesto_link": "P4 可観測性、`.claude/metrics/v[1-7]-*.jsonl` と直接対応",
+      "week2_status": "Day 4 hole-driven: 7-field Nat tuple。Week 4-5 で V1-V7 個別 type 化 (F8 fibered) 予定 (Section 2.10)",
+      "decision_log": "Observable.lean docstring D1-D2 (Nat tuple 採用 / pure function)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest",
+      "path": "AgentSpec/Test/Spine/LearningCycleTest.lean",
+      "scope": "test",
+      "refs": ["GA-S1", "GA-I9"],
+      "test_targets": [
+        "LearningStage.next 動作 (5 variant + terminal self-loop)",
+        "LearningStage.le 順序関係 (observation/retirement 端点 + forward 検証 + 全 5 variant 自己反射性)",
+        "LearningStage.isTerminal",
+        "Unit instance currentStage",
+        "cross-class interaction: 4 type class 同時要求 (EvolutionStep × SafetyConstraint × LearningCycle × Observable)",
+        "fullSpineExample による LearningCycle.currentStage + Observable.snapshot の統合利用"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Spine.LearningCycle", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 22,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "cross_class_test": "Day 3 /verify R1 A2 への対処、Day 4 /verify R1 I4 で Observable 含む 4-class 完全化"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest",
+      "path": "AgentSpec/Test/Spine/ObservableTest.lean",
+      "scope": "test",
+      "refs": ["GA-S1", "GA-I9"],
+      "test_targets": [
+        "ObservableSnapshot field projection (v1, v7)",
+        "DecidableEq ObservableSnapshot",
+        "Unit instance snapshot (全 0)",
+        "Inhabited ObservableSnapshot"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 7,
       "sorry_count": 0,
       "axiom_count": 0
     },
@@ -381,16 +487,17 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 3",
+    "last_verified_phase": "Week 2 Day 4",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 9, "scope": "production-only"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 13, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 11, "scope": "production-only"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 17, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
+    "spine_layer_completeness": "Day 4 で 4 type class 完備 (FolgeID + Edge + EvolutionStep + SafetyConstraint + LearningCycle + Observable)、Section 1 Week 2-3 完了基準達成",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 3,
-    "example_count": 62,
+    "example_count": 93,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -405,7 +512,11 @@
       "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 4},
       "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 8},
+      "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 10},
+      "Spine/LearningCycle.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/LearningCycleTest.lean": {"theorems": 0, "examples": 22},
+      "Spine/Observable.lean": {"theorems": 0, "examples": 0},
+      "Test/Spine/ObservableTest.lean": {"theorems": 0, "examples": 7},
       "Proofs/RoundTrip.lean": {"theorems": 3, "examples": 0}
     }
   },

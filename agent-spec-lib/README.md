@@ -162,6 +162,49 @@ Day 2 の Spine 層に EvolutionStep / SafetyConstraint type class を追加。
   「safe state のみ受理する関数」のシグネチャを test に組込み、refinement type の生きた価値を実証
 - **Pattern #8 派生**: `refl` を class member 外に出した判断（Lean 4 tactic shadow 回避）
 
+## 現状: Phase 0 Week 2 Day 4 完了（2026-04-18 追加）
+
+Day 3 Spine 層に LearningCycle / Observable type class を追加し、
+**Section 1 Week 2-3 完了基準 (4 type class + dummy instance) 達成**。
+Pre-Day-4 refactor として SafetyConstraint Bool→Prop 完全移行も実施。
+
+### Pre-Day-4 refactor (Day 3 評価 Section 2.9 🔴/🟡 前倒し)
+
+- [x] **SafetyConstraint Bool→Prop refactor** (`safe : S → Prop` + bundled
+  `safeDec : DecidablePred safe`、S4 P1+P2+P4 同時強適用、S1 #9 復活)
+- [x] **SafeState.mk smart constructor** (Section 2.9 🟡 対処)
+- [x] **EvolutionStep に Decidable transition instance** (cross-class test 用)
+
+### Day 4 main
+
+- [x] `AgentSpec/Spine/LearningCycle.lean` (**G5-1 §3.4 ステップ 2 LearningM 前段階**、
+  `inductive LearningStage` 5 variant + `next`/`le`/`isTerminal` helpers + class + Unit instance)
+- [x] `AgentSpec/Spine/Observable.lean` (**P4 可観測性、V1-V7 metric tuple**、
+  `structure ObservableSnapshot` 7-field + class + Unit instance)
+- [x] `AgentSpec/Test/Spine/LearningCycleTest.lean` (**22 件の behavior assertion**、
+  cross-class 4-instance test (`fullSpineExample`) で Day 3 A2 完全対処)
+- [x] `AgentSpec/Test/Spine/ObservableTest.lean` (**7 件の behavior assertion**)
+- [x] `lake build AgentSpec` ✓ (exit 0, **11 jobs production-only**)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **17 jobs test-only**)
+- [x] /verify Round 1 PASS (logprob A 全 3 基準 margin 0.306 + Subagent PASS、
+  addressable A1 reducible 文書化 / informational I1/I3/I4 対処)
+
+### Week 2 Day 4 時点の累計指標
+
+| 指標 | Day 3 | Day 4 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 3 | 0 | **3** |
+| example 数 | 62 | 31 (Pre-Day-4 +2 / LearningCycleTest 22 / ObservableTest 7) | **93** |
+| Spine 層 type class | 2 (EvolutionStep, SafetyConstraint) | 2 (LearningCycle, Observable) | **4 type class 完備** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+
+### Day 4 で達成した TyDD 進展 (Section 12.11)
+
+- **S1 benefit #9 復活** (⚠⚠→✓): Bool→Prop refactor 完了で将来 refactor コスト解消
+- **S4 1→3 強適用達成** (P1 prove vs SMT + P2 subtyping + P4 power-to-weight 同時)
+- **Cross-class 4-instance test** (`fullSpineExample`): Spine 層 uniform structure 実証
+- **Spine 層 4 type class 完備**: Section 1 Week 2-3 完了基準達成
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
