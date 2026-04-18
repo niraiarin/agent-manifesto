@@ -87,4 +87,9 @@ end EvolutionStep
 instance instEvolutionStepUnit : EvolutionStep Unit where
   transition _ _ := True
 
+/-- Unit instance の transition は常に True (decidable as `isTrue trivial`)。
+    Day 4 cross-class test で `decide` を使うため明示的 Decidable instance を提供。 -/
+instance (a b : Unit) : Decidable (EvolutionStep.transition a b) :=
+  isTrue trivial
+
 end AgentSpec.Spine

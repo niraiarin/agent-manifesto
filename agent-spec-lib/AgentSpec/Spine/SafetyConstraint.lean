@@ -1,6 +1,7 @@
 -- L1 Spine type class: 安全境界の判定を抽象化
--- Day 3 hole-driven: safe : S → Bool (Bool 形式で完全 decidable)
--- Week 4-5 で `Decidable (safe_prop s)` 付きの Prop 形式に refactor 予定 (S4 P2)
+-- Day 4: Bool→Prop refactor 完了 (Day 3 評価 Section 2.9 🔴 を前倒し対処)
+-- `safe : S → Prop` + bundled `safeDec : DecidablePred safe` で
+-- Prop の generality と decide の自動化を両立 (S4 P2 / S1 #9 強化)
 import Init.Core
 
 /-!
@@ -9,15 +10,18 @@ import Init.Core
 L1 manifesto (脅威認識・安全境界) を Lean 型として埋め込む基盤 (G5-1 §3.4 + G5-1 L1 章)。
 SafeState refinement type は Day 2 評価 (Section 12.6) で識別された S4 P2 適用例。
 
-## 設計
+## 設計 (Day 4 で Prop 形式完了)
 
-    class SafetyConstraint (S : Type u) where
-      safe : S → Bool   -- Day 3 hole-driven (Bool で decidable)
-
-    -- Week 4-5 refactor (S4 P2 Refinement, Section 2.8 と同思想):
     class SafetyConstraint (S : Type u) where
       safe : S → Prop
-      safeDec : DecidablePred safe
+      safeDec : DecidablePred safe   -- bundled Decidable for `decide` automation
+
+    attribute [reducible, instance] SafetyConstraint.safeDec
+    -- → reducible: class field を global instance に lift する際必要 (Lean 4 警告対処)
+    -- → instance: 自動 type class resolution に組込み
+
+旧 Bool 形式 (Day 3): `safe : S → Bool` は Day 4 で Prop へ refactor。
+理由は Day 3 評価 Section 2.9 🔴 の S1 benefit #9 影響。
 
 ## TyDD 原則 (Day 1-2 確立パターン適用)
 
@@ -58,34 +62,44 @@ namespace AgentSpec.Spine
 
 /-- L1 安全境界判定の type class (G5-1 §3.4 + L1 manifesto)。
 
-    Day 3 hole-driven: `safe : S → Bool` で Bool 形式の decidable 判定。
-    Week 4-5 で `Decidable (safe_prop s)` 付き Prop 形式に refactor 予定 (S4 P2)。 -/
+    Day 4 で Bool→Prop refactor 完了 (Day 3 評価 Section 2.9 🔴 を前倒し対処)。
+    `safe : S → Prop` + bundled `safeDec : DecidablePred safe` で
+    Prop の generality と decide の自動化を両立 (S4 P2 / S1 benefit #9 強化)。 -/
 class SafetyConstraint (S : Type u) where
-  /-- 状態が L1 安全境界内かどうかの Bool 判定。
-      Week 4-5 で `safe_prop : S → Prop` + `Decidable (safe_prop s)` に拡張予定。 -/
-  safe : S → Bool
+  /-- 状態が L1 安全境界内かどうかを Prop で判定。 -/
+  safe : S → Prop
+  /-- safety predicate の decidability。`decide` で auto-evaluation 可能。 -/
+  safeDec : DecidablePred safe
+
+attribute [reducible, instance] SafetyConstraint.safeDec
 
 namespace SafetyConstraint
 
-/-- S4 P2 Refinement type (Day 2 評価 Section 12.6 から導出)。
+/-- S4 P2 Refinement type (Day 2 評価 Section 12.6 から導出、Day 4 で Prop 形式化)。
 
-    `SafeState S` は `safe s = true` を満たす state のみを表す subtype。
+    `SafeState S` は `safe s` (Prop) を満たす state のみを表す subtype。
     Edge.lean の no-self-loop refinement と同思想。
 
     `def` で Subtype の alias として定義。`.val` / `.property` は Subtype 標準 API
-    として直接利用可能（ヘルパー toState/proof は不要、Subtype API 統一の方針）。
-
-    Week 4-5 で Prop 形式 SafetyConstraint に refactor 後、
-    `{ s : S // safe_prop s }` に進化予定。 -/
+    として直接利用可能。 -/
 def SafeState (S : Type u) [SafetyConstraint S] : Type u :=
-  { s : S // SafetyConstraint.safe s = true }
+  { s : S // SafetyConstraint.safe s }
+
+/-- Smart constructor (Day 3 評価 Section 2.9 🟡 を前倒し対処)。
+
+    `SafeState.mk s h` で safety proof と共に SafeState を構築。
+    `⟨s, h⟩` の Subtype anonymous constructor 直接呼び出しよりも intent が明示的。 -/
+def SafeState.mk {S : Type u} [SafetyConstraint S] (s : S) (h : SafetyConstraint.safe s) :
+    SafeState S :=
+  ⟨s, h⟩
 
 end SafetyConstraint
 
-/-! ### Dummy instance for Unit (Day 3 hole-driven、Spine layer 最小 instance) -/
+/-! ### Dummy instance for Unit (Spine layer 最小 instance、Day 4 で Prop 形式に更新) -/
 
-/-- `Unit` への dummy instance: 1 値しかない `()` を常に safe とする。 -/
+/-- `Unit` への dummy instance: 1 値しかない `()` を常に safe とする (Prop = True)。 -/
 instance instSafetyConstraintUnit : SafetyConstraint Unit where
-  safe _ := true
+  safe _ := True
+  safeDec _ := isTrue True.intro
 
 end AgentSpec.Spine
