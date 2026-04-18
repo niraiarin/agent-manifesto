@@ -393,6 +393,22 @@ Day 12 TyDD 評価 (Section 12.35) で識別された改善余地を Day 13+ で
 
 **根拠**: Section 12.35 Day 12 TyDD 評価結果テーブル + Section 12.34 Day 12 paper サーベイ評価 Subagent I3+I4。Day 12 PROV-O §4.4 RetiredEntity 完備 + Pattern #7 hook v2 2 度目運用検証後の次の改善余地を集約。Day 12 TyDD 評価では追加実装修正なし (Day 9-11 同パターン継続、Subagent 検証 PASS は paper サーベイ評価で対処済 改訂 56)。
 
+### 2.25 Day 13 評価から導出した改善余地 (Day 14+ 対処)
+
+Day 13 TyDD 評価 (Section 12.38) で識別された改善余地を Day 14+ で対処。
+
+| マーク | 項目 | 現状 (Day 13) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 14 | **RetiredEntity linter / elaborator** (退役済 entity 参照の warning/error 検出、custom Lean compiler 拡張、新分野) | Day 12 で structural detection 完備、Day 13 で WasRetiredBy relation 完備、linter は別 Day | Day 14 メイン候補、Lean 4 elaborator hook / @[deprecated] attribute / namespace marker のいずれかを設計 (Day 14 議論で確定) |
+| 🟡 Day 14+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) | Day 13 WasRetiredBy 案 C で考察した拡張 (Activity 経由 retirement)、Day 13 では案 A 採用で繰り延べ | Day 14+ で payload 設計 (verify variant と同パターン)、必要時に WasRetiredBy 案 C 設計に refactor 検討 |
+| 🟢 Day 14+ | **ResearchEntity DecidableEq 手動実装** (Day 12-13 で全 type が制約継承継続) | Day 9-13 で省略 (Evolution recursive 制約継承、Day 13 で WasRetiredBy 経由 RetiredEntity も含む 5 type 全て継承) | Day 14+ で必要時に手動実装 (全 5 constructor + Evolution recursive equation + RetirementReason 4 variant + 6 relation) |
+| 🟢 Day 14+ | **transitionLegacy deprecated 削除** | Day 8 で derive、後方互換性のため残置 | Day 14+ で利用箇所 (TransitionReflexive/Transitive) を新 4-arg signature に移行後削除 |
+| 🟢 Week 4-5 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形) | Day 8 で transition 4-arg post 統合のみ | Week 4-5 で `hypothesis : S → Option Hypothesis` + `observation : S → Observable` 追加 |
+| 🟢 Week 4-5 | **G5-1 §3.4 step 2 LearningM indexed monad** | Day 10 で transitionToActivity 連携 path 確立、indexed monad 本体は未実装 | Week 4-5 Tooling 層で `LearningM (s : LearningStage) (α : Type u)` 実装 (連携 path 完備で本格実装可能) |
+| 🟢 Day 14+ 設計判断 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 11 trivial fixture で self-derivation 許容 (minimal scope) | Day 14+ で acyclic invariant 強化検討 (Section 2.21 / 2.23 から繰り延べ継続) |
+
+**根拠**: Section 12.38 Day 13 TyDD 評価結果テーブル + Section 12.37 Day 13 paper サーベイ評価 Subagent I1。Day 13 PROV-O 6 relation 完備 + Pattern #7 hook v2 3 度目運用検証 (運用定常化) 後の次の改善余地を集約。Day 13 TyDD 評価では追加実装修正なし (Day 9-12 同パターン継続、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 改訂 61)。**cycle 内学習 transfer の効果測定**: Day 11 I3 → Day 12 → Day 13 の rfl preference 継続、Day 12 I1 → Day 13 先回り適用で Subagent 検出項目数 4→1 減少 (構造的効果実証)。
+
 ### 2.22 Day 12 着手前判断結果 (確定済、Day 11 完了後の議論結果)
 
 #### Day 12 全体方針 (Q1-Q4 採用案、確定済)
@@ -2677,6 +2693,73 @@ Day 13 は **PROV-O auxiliary 2 relation + WasRetiredBy 完備** + **PROV-O 6 re
 
 Day 1-13 累計で **paper finding 49 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 13: 5 / Day 1-3 関連: 1)。
 
+### 12.38 Day 13 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 13 (`40ccd78` Provenance 層 PROV-O auxiliary relations + WasRetiredBy 3 structure 追加) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 4-13 推移)
+
+| 評価軸 | Day 4 | Day 5 | Day 6 | Day 7 | Day 8 | Day 9 | Day 10 | Day 11 | Day 12 | Day 13 | 変化 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 5 軸 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | 3/5 | 3/5 | 3/5 | 3/5 | 4/5 | 4/5 | 4/5 | 4/5 | 4/5 (P5 3 度目) | **4/5 (P5 4 度目強適用)** | 維持 + P5 4 度目 |
+| F/B/H 強適用 | B3 | +F2 部分 | +H4 | +H10 部分 | +B4 | (5 強適用) | (5 強適用継続) | (5 強適用継続) | (5 強適用継続) | **5 強適用継続** | 維持 |
+| G1-G6 anti-pattern 回避 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 維持 |
+| Section 10.2 適合 | 5/8+1 構造違反 | 6/8+0 | 6/8+0 (運用検証) | 6/8+0 (2 度目) | 6/8+0 (3 度目) | 6/8+0 (4 度目) | 6/8+0 (5 度目、v2 拡張) | 6/8+0 (6 度目、v2 初運用検証) | 6/8+0 (7 度目、v2 2 度目運用検証) | **6/8+0 (8 度目、v2 3 度目運用検証)** | hook v2 3 度目運用検証 |
+
+#### Day 13 で前進した項目
+
+1. **PROV-O auxiliary relations + WasRetiredBy 完備** (3 separate structure で §4.1 auxiliary + §4.4 retirement relation を型レベル区別)
+2. **TyDD-S4 P5 explicit assumptions 4 度目強適用** (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary 引数 type 厳格)
+3. **Day 12 D2 separate structure 配置の妥当性確認** (WasRetiredBy 経由で RetiredEntity 再利用 = separate 設計が relation 増加時にも壊れない確認)
+4. **cycle 内学習 transfer 2 度目適用** (Day 11 I3 rfl preference 教訓 → Day 12 → Day 13 継続)
+5. **Day 12 I1 教訓先回り適用** (version field を code commit 時点で正しく設定 = Day 13 Subagent 検出項目数 4→1 減少)
+
+#### Day 13 で paper finding と TyDD の合流
+
+Day 12 で確立した **RetiredEntity separate structure × TyDD-S1** を Day 13 で **PROV-O 6 relation 完備に拡張**:
+- 3 separate structure の選択 (Q3 案 B 別 file 配置) は Day 11 D3 (1 ファイル統合配置) を auxiliary 側で踏襲しつつ main/auxiliary の semantic 区別を file 単位で構造化
+- 引数 type 厳格 (Q4 案 A WasRetiredBy = Entity × RetiredEntity) は TyDD-S4 P5 (explicit assumptions) + 02-data-provenance §4.4 semantic 厳守 + Day 12 RetiredEntity 再利用の 3 軸同時満足
+- snake_case field name (on_behalf_of) は PROV-O §4.1 命名規約準拠 (D3)
+
+**Section 10.2 Pattern #7 hook の六段階発展**:
+- **Day 5**: hook 設計 + 構造的 closure
+- **Day 6/7/8/9**: 4 度連続運用検証 (運用安定性)
+- **Day 10**: v2 拡張 (governance evolution)
+- **Day 11**: v2 初運用検証 (Provenance 配下新規 .lean detection)
+- **Day 12**: v2 2 度目運用検証 (運用安定性継続確認)
+- **Day 13**: v2 3 度目運用検証 (運用安定性 3 度連続確認 = 運用定常化)
+
+#### 改善余地（優先度順、Section 2.25 で記録）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **RetiredEntity linter / elaborator** (退役済 entity 参照の warning/error 検出、新分野) | Day 14 メイン候補 | Section 2.25 |
+| 🟡 中 | **ResearchActivity payload 拡充** (Day 13 WasRetiredBy 案 C 考察分の繰り延べ、verify variant 同パターン) | Day 14+ | Section 2.25 |
+| 🟢 低 | **ResearchEntity DecidableEq 手動実装** (全 type で制約継承継続) | Day 14+ | Section 2.25 |
+| 🟢 低 | **transitionLegacy deprecated 削除** | Day 14+ | Section 2.25 |
+| 🟢 低 | **EvolutionStep 完全 4 member 化** | Week 4-5 | Section 2.25 |
+| 🟢 低 | **G5-1 §3.4 step 2 LearningM indexed monad** | Week 4-5 | Section 2.25 |
+| 🟢 低 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続、Day 14+ 設計判断) | Day 14+ 設計判断 | Section 2.25 |
+
+#### Day 13 TyDD 評価で識別された実装修正 (即時対処なし)
+
+Day 13 TyDD 評価では **追加実装修正なし** (Day 9-12 同パターン継続):
+- RetiredEntity linter → Day 14 メイン候補 (新分野、Q1 A-Minimal scope 制御で別 Day 集中)
+- ResearchActivity payload 拡充 → Day 14+ (Day 13 案 C 退けた分の繰り延べ)
+
+S4 P4 power-to-weight + Q1 A-Minimal scope 制御を遵守、全て Day 14+ で対処判断。Subagent 検証 PASS + I1 即時対処は paper サーベイ評価サイクルで対処済 (改訂 61)。
+
+#### 結論
+
+Day 13 は TyDD 視点で **Day 12 の S4 4/5 + 5 強適用維持 + S4 P5 4 度目強適用** + **PROV-O 6 relation 完備 (TyDD-S1 + S4 P5 同時実証)** + **Pattern #7 hook v2 3 度目運用検証成功 = 運用定常化** + **cycle 内学習 transfer 構造的効果実証 (Subagent 検出 4→1 減少)**:
+- PROV-O §4.1 main + auxiliary + §4.4 retirement relation 統合完備 (Day 11-13 累計で 6 relation)
+- Day 11 ProvRelation 設計パターンを Day 13 ProvRelationAuxiliary に踏襲 (separate structure + 1 ファイル統合配置を別 file で区分)
+- Section 10.2 Pattern #7 hook の六段階発展完了 (設計→運用検証 4 度→v2 拡張→v2 運用検証 3 度)
+
+Day 14 は RetiredEntity linter / elaborator が main scope 候補 (新分野)。Day 1-13 累計で **S4 4/5 + P5 4 度目 / F/B/H 5 強適用 / paper finding 49 件 / Section 10.2 6/8 + 0 構造違反 (8 度連続) / paper × 実装合流 10 種カテゴリ** 確立。
+
 ---
 
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
@@ -3606,6 +3689,24 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - Day 11 I3 教訓 (rfl preference) → Day 12 RetiredEntityTest 適用 → Day 13 ProvRelationAuxiliaryTest 継続
     - Day 12 I1 教訓 (version field) → Day 13 code commit で先回り適用 (version `0.13.0-week2-day13` が正しく設定)
     - Day 13 Subagent 検出項目数 Day 12 の 4 → 1 に減少 (cycle 内学習 transfer の構造的効果実証)
+- 2026-04-18 (**改訂 62**): Day 13 TyDD 視点評価 + 改善提案 7 件追加 (実装修正なし、cycle step 3+4)
+  - Section 12.38 (新規): Day 13 TyDD 達成度評価 (Day 4-13 推移表含む)
+    - S1 5 軸 5/5 維持、S1 benefits 9/10 維持
+    - S4 4/5 強適用維持 (P5 explicit assumptions **4 度目強適用** = Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary 引数 type 厳格)
+    - F/B/H 5 強適用継続
+    - Section 10.2 適合 6/8+0 (8 度連続)、Pattern #7 hook v2 3 度目運用検証成功 = 運用定常化
+  - 主要発見:
+    - Day 12 D2 separate structure 配置の妥当性確認 (WasRetiredBy 経由で RetiredEntity 再利用)
+    - cycle 内学習 transfer 構造的効果実証 (Day 12 I1 教訓 → Day 13 先回り適用で Subagent 検出 4→1 減少)
+  - Section 10.2 Pattern #7 hook の六段階発展完了 (Day 5 設計 + Day 6/7/8/9 4 度運用 + Day 10 v2 拡張 + Day 11/12/13 v2 3 度連続運用検証)
+  - Section 2.25 (新規): Day 13 評価から導出した改善余地 (Day 14+ 対処、7 項目)
+    - 🟡 Day 14 RetiredEntity linter / elaborator (新分野で別 Day 集中)
+    - 🟡 Day 14+ ResearchActivity payload 拡充 (Day 13 案 C 考察分の繰り延べ)
+    - 🟢 Day 14+ DecidableEq / transitionLegacy 削除
+    - 🟢 Week 4-5 EvolutionStep 4 member / LearningM
+    - 🟢 Day 14+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23 から繰り延べ継続)
+  - 実装修正なし (Day 9-12 同パターン継続): S4 P4 power-to-weight + Q1 A-Minimal scope 制御遵守、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 (改訂 61)
+  - Day 14 改善事項: RetiredEntity linter / elaborator main / ResearchActivity payload 拡充 / DecidableEq / その他継続項目
 
 ## マーク凡例
 
