@@ -1101,6 +1101,17 @@ S2 Lean-Auto の必要性顕在化は **Day 5 のメタ的成果**: 評価ルー
     - Section 10.2 適合: 5/8 + 1 構造違反 → **6/8 + 0 構造違反** (Pattern #7 構造的解決)
   - 主要発見: paper × pattern 合流の 2 度目達成 (Day 4 S4 × Pattern #5 → Day 5 G5-1 × Pattern #7)
   - Day 6 改善事項: 🔴 Lean-Auto 統合準備 / 🟡 Universal round-trip 残作業 / 🟡 Mathlib 影響評価
+- 2026-04-18 (**改訂 16**): Day 5 後続影響の metadata 反映
+  - artifact-manifest.json: version 0.5→0.6-week2-day5
+    FolgeID: Mathlib dependencies 追加、6 Day 5 theorems 追加、LT/PartialOrder instance 追加
+    RoundTrip: 6 Day 5 helper theorems 追加、bounded 7³→8³ (512 ケース)、universal 残課題明示 + Lean-Auto Week 6 へ繰り延げ記録
+    LearningCycle: Day 5 LE/LT/Decidable instance 追加、tydd_alignment_day5 (F2 部分達成)
+    FolgeIDTest example_count 10→16、LearningCycleTest 22→28、各 day5_additions 詳細記録
+    breakdown FolgeID 0→6 theorems / RoundTrip 3→9 theorems
+    build_status: AgentSpec 11→90 jobs (Mathlib 推移依存) / AgentSpecTest 17→96
+    theorem_count 3→15、example_count 93→105、finite_bounded_universal_cases 343→512
+    governance_hook フィールド追加 (Pattern #7 構造的解決記録)、N1 監視を Week 6 CI で組込み必要明記
+  - README.md: Phase 0 Week 2 Day 5 完了セクション新設、Day 5 4 項目詳細、累計指標 (Mathlib 推移依存影響含む)、Day 5 で達成した TyDD 進展 (Pattern #7 構造的解決 / F2 部分達成 / paper × pattern 合流 2 度目 / S2 必要性顕在化)
 
 ## マーク凡例
 

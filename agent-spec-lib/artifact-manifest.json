@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.5.0-week2-day4",
+  "version": "0.6.0-week2-day5",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -108,7 +108,7 @@
       "id": "agent-spec-lib:AgentSpec.Spine.FolgeID",
       "path": "AgentSpec/Spine/FolgeID.lean",
       "scope": "formalization",
-      "refs": ["GA-S2", "GA-W4", "GA-W7", "GA-C27"],
+      "refs": ["GA-S2", "GA-W4", "GA-W7", "GA-C27", "GA-S15"],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
@@ -116,6 +116,12 @@
           "id": "lean-init",
           "module": "Init.Data.List.Basic, Init.Data.Sum.Basic",
           "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "mathlib",
+          "module": "Mathlib.Order.Defs.PartialOrder, Mathlib.Tactic.SplitIfs",
+          "edge": "wasDerivedFrom",
+          "added_in": "Day 5"
         }
       ],
       "provides_types": [
@@ -128,15 +134,26 @@
         "AgentSpec.Spine.FolgeID.root",
         "AgentSpec.Spine.FolgeID.child"
       ],
+      "provides_theorems_day5": [
+        "AgentSpec.Spine.FolgeID.listIsPrefixOf_refl",
+        "AgentSpec.Spine.FolgeID.listIsPrefixOf_trans",
+        "AgentSpec.Spine.FolgeID.listIsPrefixOf_antisymm",
+        "AgentSpec.Spine.FolgeID.le_refl'",
+        "AgentSpec.Spine.FolgeID.le_trans'",
+        "AgentSpec.Spine.FolgeID.le_antisymm'"
+      ],
       "provides_instances": [
         "LE FolgeID (prefix partial order)",
         "DecidableEq FolgeID",
         "Inhabited FolgeID",
         "Repr FolgeID",
-        "Decidable (a ≤ b) via inferInstanceAs"
+        "Decidable (a ≤ b) via inferInstanceAs",
+        "LT FolgeID (Day 5 追加: a < b ⇔ a ≤ b ∧ a ≠ b)",
+        "Decidable (a < b) (Day 5 追加)",
+        "PartialOrder FolgeID (Day 5 追加: Mathlib bundle、le_refl'/le_trans'/le_antisymm' を field)"
       ],
       "ordering": "prefix partial order (not total); a ≤ b ⇔ a.path is prefix of b.path",
-      "week2_status": "Day 1 hole-driven signature. PartialOrder / Ord instance は Day 3-5 追加予定"
+      "week2_status": "Day 5 で PartialOrder/LT 拡張完了 (Section 10.1 元 plan)。Ord (lex total order) は Day 6+ または Week 4-5 へ繰り延べ。tydd_alignment: F2 部分達成 (Lattice 完全形は Week 4-5)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Proofs.RoundTrip",
@@ -158,10 +175,17 @@
       "provides_theorems": [
         "roundTrip_zero_stable (base case)",
         "roundTrip_version (version constant case)",
-        "roundTrip_bounded_stable_7 (7³ = 343 cases via decide)"
+        "roundTrip_bounded_stable_7 (7³ = 343 cases via decide)",
+        "consumeChar_dot_cons (Day 5 追加: rfl)",
+        "consumeChar_dot_mismatch (Day 5 追加: simp [h])",
+        "consumeChar_dot_nil (Day 5 追加: rfl)",
+        "charToDigit?_zero (Day 5 追加: rfl)",
+        "charToDigit?_nine (Day 5 追加: rfl)",
+        "roundTrip_bounded_stable_8 (Day 5 追加: 8³ = 512 cases via decide、10³ は heartbeat 超過)"
       ],
-      "week2_status": "Day 1 signature + bounded proof. universal theorem `roundTripUniversal_proved` は Day 4-5 実装予定",
-      "finite_bounded_universal_cases": 343
+      "week2_status": "Day 5 部分達成: 6 helper theorems + bounded 8³ 拡張。universal theorem `roundTripUniversal_proved` は consumeNat correctness + String/List interop + parseList induction (100+ 行) のため Day 6/Week 3 へ繰り延げ。Lean-Auto 統合 (Week 6、Section 2.10 で 🔴 格上げ済) 後の SMT hammer 自動証明発見の可能性あり",
+      "finite_bounded_universal_cases": 512,
+      "day5_decide_heartbeat_limit": "10³ = 1000 ケースで heartbeat 200000 超過 (timeout)、現実的上限は 8³ = 512"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest",
@@ -181,9 +205,10 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "example_count": 10,
+      "example_count": 16,
       "sorry_count": 0,
-      "axiom_count": 0
+      "axiom_count": 0,
+      "day5_additions": "PartialOrder/LT instance test 6 件追加 (LT root.child / LT 反射不可 / LT 並行 / le_refl' / le_trans' / le_antisymm')"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Spine.Edge",
@@ -387,8 +412,15 @@
       ],
       "provides_instances": [
         "instLearningCycleUnit (currentStage = observation)",
-        "DecidableEq LearningStage / Inhabited / Repr (deriving)"
+        "DecidableEq LearningStage / Inhabited / Repr (deriving)",
+        "instLE LearningStage (Day 5 追加: a.le b = true への昇格、FolgeID パターン踏襲)",
+        "Decidable (a ≤ b) via inferInstanceAs (Day 5 追加)",
+        "instLT LearningStage (Day 5 追加: a ≤ b ∧ a ≠ b)",
+        "Decidable (a < b) (Day 5 追加)"
       ],
+      "tydd_alignment_day5": {
+        "F2_lattice_partial": "LE/LT instance で順序関係完備、Lattice 完全形は Week 4-5"
+      },
       "g5_1_section": "3.4 ステップ 2 (LearningM indexed monad の前段階)",
       "week2_status": "Day 4 hole-driven: LearningStage enum + class。Week 4-5 で `LearningM (s : LearningStage) (α : Type u)` indexed monad に昇格予定 (G5-1 §3.4 ステップ 2 完全版)",
       "decision_log": "LearningCycle.lean docstring D1-D3 (inductive enum / next total / le Bool 関数)"
@@ -435,10 +467,11 @@
         {"id": "agent-spec-lib:AgentSpec.Spine.LearningCycle", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 22,
+      "example_count": 28,
       "sorry_count": 0,
       "axiom_count": 0,
-      "cross_class_test": "Day 3 /verify R1 A2 への対処、Day 4 /verify R1 I4 で Observable 含む 4-class 完全化"
+      "cross_class_test": "Day 3 /verify R1 A2 への対処、Day 4 /verify R1 I4 で Observable 含む 4-class 完全化",
+      "day5_additions": "LE/LT instance test 6 件追加 (LE 経由 observation→retirement / LE 反射 / LE 後退不可 / LT 厳密 / LT 反射不可 / integration→retirement)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest",
@@ -487,26 +520,27 @@
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 4",
+    "last_verified_phase": "Week 2 Day 5",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 11, "scope": "production-only"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 17, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 90, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存により 11→90 jobs (Section 12.13 N1 監視を Week 6 CI で組込み必要)"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 96, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
-    "spine_layer_completeness": "Day 4 で 4 type class 完備 (FolgeID + Edge + EvolutionStep + SafetyConstraint + LearningCycle + Observable)、Section 1 Week 2-3 完了基準達成",
+    "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT)",
+    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、4 連続違反の構造的解決",
     "sorry_count": 0,
     "axiom_count": 0,
-    "theorem_count": 3,
-    "example_count": 93,
+    "theorem_count": 15,
+    "example_count": 105,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
-    "finite_bounded_universal_cases": 343,
+    "finite_bounded_universal_cases": 512,
     "breakdown": {
       "Core.lean": {"theorems": 0, "examples": 0},
       "Test/CoreTest.lean": {"theorems": 0, "examples": 24},
-      "Spine/FolgeID.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 10},
+      "Spine/FolgeID.lean": {"theorems": 6, "examples": 0},
+      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 16},
       "Spine/Edge.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
       "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
@@ -514,10 +548,10 @@
       "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 10},
       "Spine/LearningCycle.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/LearningCycleTest.lean": {"theorems": 0, "examples": 22},
+      "Test/Spine/LearningCycleTest.lean": {"theorems": 0, "examples": 28},
       "Spine/Observable.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/ObservableTest.lean": {"theorems": 0, "examples": 7},
-      "Proofs/RoundTrip.lean": {"theorems": 3, "examples": 0}
+      "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },
   "verifier_history": [
