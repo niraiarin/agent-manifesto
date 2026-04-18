@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.6.0-week2-day5",
+  "version": "0.7.0-week2-day6",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -288,7 +288,9 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest", "edge": "wasDerivedFrom"}
+        {"id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest"
     },
@@ -516,22 +518,117 @@
       "refs": ["GA-T8"],
       "enforces": "structural",
       "pinned_version": "leanprover/lean4:v4.29.0"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+      "path": "AgentSpec/Process/Hypothesis.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Process.Hypothesis (structure: claim : String, rationale : Option String)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Process.Hypothesis.trivial (test fixture)",
+        "AgentSpec.Process.Hypothesis.mk' (smart constructor)"
+      ],
+      "provides_instances": [
+        "DecidableEq Hypothesis / Inhabited / Repr (deriving)"
+      ],
+      "prov_mapping_planned": "Day 8+ で AgentSpec.Provenance.ResearchEntity.Hypothesis に mapping (02-data-provenance §4.1 設計、Section 2.11 Q3 Option C: docstring 注記レベルで先行記録)",
+      "week2_status": "Day 6 hole-driven 着手 (Section 10.1 Day 6、Section 2.11 Q1 Option C / Q2 Minimal)。claim を String 表現、Day 8+ で型化検討",
+      "decision_log": "Hypothesis.lean docstring D1-D3 (claim String / structure 採用 / 関係は Edge graph)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Process.Failure",
+      "path": "AgentSpec/Process/Failure.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Process.FailureReason (4 variant inductive: HypothesisRefuted / ImplementationBlocked / SpecInconsistent / Retired)",
+        "AgentSpec.Process.Failure (structure: failedHypothesis : String, reason : FailureReason)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Process.Failure.whyFailed (accessor)",
+        "AgentSpec.Process.Failure.trivial (test fixture)",
+        "AgentSpec.Process.Failure.refuted (smart constructor)",
+        "AgentSpec.Process.Failure.retired (smart constructor)"
+      ],
+      "provides_instances": [
+        "DecidableEq FailureReason / Inhabited / Repr (deriving)",
+        "DecidableEq Failure / Inhabited / Repr (deriving)"
+      ],
+      "design_origin": "02-data-provenance §4.3 first-class Failure 設計 (MLflow/DVC の post-hoc 化を回避)",
+      "prov_mapping_planned": "Day 8+ で AgentSpec.Provenance.ResearchEntity.Failure に mapping (Section 2.11 Q3 Option C)",
+      "week2_status": "Day 6 hole-driven 着手 (Section 10.1 Day 6)。各 variant payload を String 表現、Day 7+ で専用型 (Evidence/Spec/InconsistencyProof/ResearchEntity) に refactor",
+      "decision_log": "Failure.lean docstring D1-D3 (FailureReason inductive / payload String / failedHypothesis String name 参照)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest",
+      "path": "AgentSpec/Test/Process/HypothesisTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "Hypothesis 構築 (anonymous + smart constructor mk')",
+        "claim / rationale field projection",
+        "rationale デフォルト none",
+        "trivial fixture",
+        "DecidableEq / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 12,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest",
+      "path": "AgentSpec/Test/Process/FailureTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "FailureReason 4 variant 構築",
+        "Failure 構築 + reason field",
+        "whyFailed accessor",
+        "smart constructor refuted / retired",
+        "trivial fixture",
+        "DecidableEq / Inhabited (FailureReason + Failure)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 17,
+      "sorry_count": 0,
+      "axiom_count": 0
     }
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 5",
+    "last_verified_phase": "Week 2 Day 6",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 90, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存により 11→90 jobs (Section 12.13 N1 監視を Week 6 CI で組込み必要)"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 96, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 92, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存により 11→90 jobs、Day 6 Process 層追加で 90→92"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 100, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT)",
-    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、4 連続違反の構造的解決",
+    "process_layer_started": "Day 6 で Hypothesis + Failure hole-driven 着手 (Week 4-5 前倒し、Section 2.11 Q1 Option C / Q2 Minimal)、Day 7+ で Evolution + HandoffChain 予定",
+    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、4 連続違反の構造的解決。Day 6 で初の hook 適用 commit (新規 Process .lean 同 commit に manifest 含む) を予定",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 105,
+    "example_count": 134,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -551,6 +648,10 @@
       "Test/Spine/LearningCycleTest.lean": {"theorems": 0, "examples": 28},
       "Spine/Observable.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/ObservableTest.lean": {"theorems": 0, "examples": 7},
+      "Process/Hypothesis.lean": {"theorems": 0, "examples": 0},
+      "Test/Process/HypothesisTest.lean": {"theorems": 0, "examples": 12},
+      "Process/Failure.lean": {"theorems": 0, "examples": 0},
+      "Test/Process/FailureTest.lean": {"theorems": 0, "examples": 17},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },

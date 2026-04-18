@@ -5,6 +5,8 @@ import AgentSpec.Spine.EvolutionStep
 import AgentSpec.Spine.SafetyConstraint
 import AgentSpec.Spine.LearningCycle
 import AgentSpec.Spine.Observable
+import AgentSpec.Process.Hypothesis
+import AgentSpec.Process.Failure
 import AgentSpec.Proofs.RoundTrip
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)
