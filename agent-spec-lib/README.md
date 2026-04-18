@@ -565,6 +565,59 @@ Section 2.20 Day 11 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案
 - **paper finding 39 件累計** (Day 4-11 + Day 1-3 関連)
 - **Subagent 遡及検証 PASS** (paper サーベイ評価サイクル「実装修正組込み」3 度目適用、改訂 49 で対処)
 
+## 現状: Phase 0 Week 2 Day 12 完了（2026-04-18 追加）
+
+Section 2.22 Day 12 着手前判断 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure) に従い実装。
+**PROV-O §4.4 退役 entity 構造的検出 完備** (RetiredEntity + RetirementReason 4 variant)、
+**PROV-O §4.1 + §4.4 同時完全カバー到達** (Day 11 §4.1 + Day 12 §4.4)、
+**Pattern #7 hook v2 2 度目運用検証成功** (Day 11 1 度目に続く Provenance 配下新規 .lean commit)、
+**Subagent 検証 PASS** (本評価サイクル内で即時実施、Day 11 教訓反映で省略せず、改訂 56 で対処)、
+**cycle 内学習 transfer** (Day 11 Subagent I3 教訓 = rfl preference を Day 12 RetiredEntityTest で実装適用)。
+
+### Day 12 の 1 項目 (Q2 A-Minimal scope)
+
+- [x] **RetiredEntity + RetirementReason 4 variant inductive** (`AgentSpec/Provenance/RetiredEntity.lean`、Q3 案 A + Q4 案 A、PROV-O §4.4 1:1 対応)
+  - `inductive RetirementReason { Refuted (failure : Failure) | Superseded (replacement : ResearchEntity) | Obsolete | Withdrawn }`
+  - `structure RetiredEntity { entity : ResearchEntity, reason : RetirementReason }` (separate structure、ResearchEntity 拡張不要 backward compatible)
+  - 5 smart constructor (mk' / refuted / superseded / obsolete / withdrawn)
+  - trivial fixture + whyRetired accessor
+  - 1 ファイル統合配置 (D3、Day 11 ProvRelation パターン踏襲)
+  - deriving Inhabited, Repr (DecidableEq は Superseded payload の ResearchEntity recursive 制約継承で省略)
+- [x] `AgentSpec/Test/Provenance/RetiredEntityTest.lean` (**22 件**、4 RetirementReason variant + RetiredEntity 構築 + 5 smart constructor + trivial + whyRetired + 4 variant List 集約)
+  - Day 11 Subagent I3 教訓反映: 全 example で rfl preference 維持 (simp tactic 不使用)
+- [x] `lake build AgentSpec` ✓ (exit 0, **101 jobs**、Provenance 層 +1)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **119 jobs**)
+- [x] /verify Round 1 PASS (build PASS + Subagent 検証 PASS、本評価サイクル内で即時実施、改訂 56 で対処)
+- [x] **Pattern #7 hook v2 2 度目運用検証成功** (Day 11 1 度目に続く Provenance 配下新規 .lean detection 動作確認)
+- [x] **Subagent I1+I2 即時実装修正対処** (artifact-manifest version day11→day12 / verifier_history Day 12 R1 evaluator + subagent_verification field 追加)
+
+### Week 2 Day 12 時点の累計指標
+
+| 指標 | Day 11 | Day 12 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 300 | +22 (RetiredEntity) | **322** |
+| Provenance 層 type | 4 | +1 (RetiredEntity) | **5 type 完備** |
+| Provenance 層 relation | 3 | 0 | **3 relation (Day 13 で auxiliary 追加予定)** |
+| AgentSpec build jobs | 100 | +1 (RetiredEntity) | **101 jobs** |
+| AgentSpecTest build jobs | 117 | +2 (RetiredEntity test + derived) | **119 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 + 6 度連続検証 + v2 初運用検証 | 7 度目運用検証 (v2 2 度目運用検証) | **1 + 7 度連続検証 + v2 2 度目運用検証** |
+| PROV-O 完全カバー | §4.1 のみ | +§4.4 (RetiredEntity 完備) | **§4.1 + §4.4 同時完全カバー到達** |
+
+### Day 12 で達成した TyDD / paper 進展 (Section 12.34 + 12.35)
+
+- **02-data-provenance §4.4 退役 entity 構造的検出 完備** (RetiredEntity + RetirementReason 4 variant inductive、PROV-O §4.4 1:1 対応)
+- **PROV-O §4.1 + §4.4 同時完全カバー到達** (Day 11 §4.1 + Day 12 §4.4 で PROV-O 主要 spec 完備)
+- **TyDD-S1 types-first** (4 variant inductive で退役理由 semantic を型レベル区別、案 B String を退ける)
+- **TyDD-S4 P5 explicit assumptions 3 度目強適用** (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化)
+- **Pattern #7 hook v2 2 度目運用検証成功** (Day 11 1 度目に続く Provenance 配下新規 .lean detection)
+- **Section 10.2 Pattern #7 hook の五段階発展完了** (Day 5 設計→Day 6/7/8/9 4 度運用→Day 10 v2 拡張→Day 11 v2 初運用検証→Day 12 v2 2 度目運用検証)
+- **cycle 内学習 transfer** (Day 11 Subagent I3 教訓 = rfl preference を Day 12 RetiredEntityTest で実装適用、初の cycle 教訓 → 次 day 実装 transfer)
+- **paper × 実装 9 度目合流カテゴリ確立** (PROV-O §4.1 + §4.4 同時完全カバー × cycle 内学習 transfer)
+- **paper finding 44 件累計** (Day 4-12 + Day 1-3 関連)
+- **Subagent 検証 PASS** (本評価サイクル内で即時実施、Day 11 遡及検証教訓反映、paper サーベイ評価サイクル「実装修正組込み」4 度目適用、改訂 56 で対処)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

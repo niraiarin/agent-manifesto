@@ -3378,6 +3378,23 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 13+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21 から繰り延べ継続)
   - 実装修正なし (Day 9-11 同パターン継続): S4 P4 power-to-weight + Q1 A-Minimal scope 制御遵守、Subagent 検証 PASS は paper サーベイ評価で対処済 (改訂 56)
   - Day 13 改善事項: PROV-O auxiliary relations + WasRetiredBy main / linter 別 Day / DecidableEq / payload 拡充
+- 2026-04-18 (**改訂 58**): Day 12 metadata 反映 (cycle step 5)
+  - README.md: Phase 0 Week 2 Day 12 完了セクション新設
+    - Day 12 1 項目詳細 (RetiredEntity + RetirementReason 4 variant、Q3 案 A + Q4 案 A、PROV-O §4.4 1:1 対応)
+    - Day 11 Subagent I3 教訓反映 (rfl preference 維持) を明示
+    - 累計指標表 (Day 11 vs Day 12、101+119 jobs、example 322、Provenance 5 type + 3 relation)
+    - PROV-O §4.1 + §4.4 同時完全カバー到達 を新規累計指標として追加
+    - Day 12 で達成した TyDD/paper 進展 10 項目:
+      - PROV-O §4.4 退役 entity 構造的検出完備
+      - PROV-O §4.1 + §4.4 同時完全カバー到達
+      - TyDD-S4 P5 3 度目強適用
+      - Pattern #7 hook v2 2 度目運用検証
+      - Section 10.2 Pattern #7 hook の五段階発展完了
+      - cycle 内学習 transfer (Day 11 Subagent I3 → Day 12 実装)
+      - paper × 実装 9 度目合流カテゴリ
+      - paper finding 44 件累計
+      - Subagent 検証 PASS (本評価サイクル内で即時実施)
+  - 注: artifact-manifest.json の Day 12 主要 metadata は Day 12 code commit `49510c6` + 改訂 56 (Subagent I1+I2 即時対処) に既に含まれているため本改訂では README 追加のみ (Day 6-11 改訂 21/27/33/39/45/51 同パターン)
 
 ## マーク凡例
 
