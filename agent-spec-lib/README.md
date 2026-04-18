@@ -914,6 +914,58 @@ Section 2.32 Day 17 着手前判断 (Q1 A 案 / Q2 A-Medium / Q3 案 A / Q4 案 
 - **新規 `section_2_15_completely_resolved_day17` field** (artifact-manifest 上に Section 2.15 完全解消を構造化記録)
 - **set_option linter.deprecated false in 不要化** (Day 11-17 rfl preference がより pure、7 Day 連続記録更新)
 
+## 現状: Phase 0 Week 2 Day 18 完了（2026-04-19 追加、段階的 Lean 機能習得 3/4 段階目達成）
+
+Section 2.34 Day 18 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 A) に従い実装。
+**A-Standard custom linter A-Minimal 実装** (`#check_retired` command、Lean.Elab.Command 拡張、Lean.Linter.isDeprecated API 利用、段階的 Lean 機能習得 **3/4 段階目達成**)、
+**Day 11-18 で 8 Day 連続 rfl preference 維持の記録更新**、
+**Pattern #7 hook 十一段階発展到達** (新規 file パターン復帰、v2 5 度目運用検証)、
+**強制化次元 +1 (3 到達)** (A-Minimal + A-Compact + A-Standard A-Minimal)、
+**Day 17 指摘ゼロ持続性検証結果** (addressable 0 維持、informational 2 は design space richness)、
+**初期 build error 即時修復 2 度目実例** (Day 15 macro syntax に続くパターン)。
+
+### Day 18 の 1 項目 (Q2 A-Minimal scope)
+
+- [x] **`#check_retired` command** (`AgentSpec/Provenance/RetirementLinterCommand.lean` NEW、Q3 案 A 新 module 隔離)
+  - `elab "#check_retired " id:ident : command => do ...` 定義、Lean.Linter.isDeprecated API 経由で @[deprecated] 付き判定、info output 発生
+  - Day 14 A-Minimal fixture / Day 15 @[retired] macro 展開後を実行時検査可能
+  - docstring に Day 18 D1-D3 意思決定ログ + 使用例
+- [x] `AgentSpec/Test/Provenance/RetirementLinterCommandTest.lean` NEW (**6 example + 5 `#check_retired` command invocation**)
+  - Day 14 deprecated fixture 4 variant → retired 判定 (✓ info output)
+  - Day 12 通常 fixture 1 variant → not retired 判定 (✗ info output)
+  - rfl preference 維持 (cycle 内学習 transfer 6 度目、Day 11-18 = 8 Day 連続)
+  - 初期 build error (parser 状態競合) から section 分離で修復済
+- [x] `lake build AgentSpec` ✓ (exit 0, **104 jobs**、+1 RetirementLinterCommand)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **125 jobs**、+2 RetirementLinterCommandTest + derived)
+- [x] /verify Round 1 PASS (Subagent 検証 PASS、addressable 0、informational 2 = I1 即時対処 + I2 Day 19+ improvement proposal)
+- [x] **Pattern #7 hook v2 5 度目運用検証 (新規 file 復帰、十一段階発展到達)**
+- [x] **段階的 Lean 機能習得 3/4 段階目達成** (A-Minimal → A-Compact → **A-Standard A-Minimal** → Week 5-6 A-Maximal)
+- [x] **Day 17 指摘ゼロ持続性検証結果構造化** (addressable 0 維持、informational 2 は design space richness)
+
+### Week 2 Day 18 時点の累計指標
+
+| 指標 | Day 17 | Day 18 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 364 | 0 / +6 | **15 / 370** |
+| Provenance 層 linter | 2 (A-Minimal + A-Compact) | +1 (A-Standard A-Minimal) | **3 (3/4 段階目達成)** |
+| AgentSpec / AgentSpecTest build jobs | 103 / 123 | +1 / +2 | **104 / 125** |
+| 強制化次元 | 2 | +1 (A-Standard A-Minimal) | **3** |
+| Pattern #7 hook 運用検証 | 11 度連続、十段階発展到達 | 12 度目運用検証 (新規 file 復帰) | **12 度連続、十一段階発展到達** |
+| Subagent 指摘項目数 | 0 (Day 17 初到達) | 2 informational (addressable 0 維持) | design space richness で informational 発生、structural quality 継続 |
+
+### Day 18 で達成した TyDD / paper 進展 (Section 12.52 + 12.53)
+
+- **A-Standard custom linter A-Minimal 完備** (段階的 Lean 機能習得 3/4 段階目達成)
+- **Lean 4 core API 活用** (Lean.Linter.isDeprecated、TyDD-S4 P4 power-to-weight 最大化)
+- **Pattern #7 hook 十一段階発展到達** (新規 file パターン復帰)
+- **強制化次元 +1 (3 到達)** (Day 14 A-Minimal + Day 15 A-Compact + Day 18 A-Standard A-Minimal)
+- **paper × 実装 15 度目合流カテゴリ確立** (段階的 Lean 機能習得 3/4 × 初期 build error 即時修復 2 度目 × 指摘ゼロ持続性検証)
+- **paper finding 74 件累計**
+- **Subagent 検証 PASS + I1 即時対処 + I2 Day 19+ improvement proposal** (新形態)
+- **Day 17 指摘ゼロ持続性検証結果** (addressable 0 維持、informational 2 は design space)
+- **初期 build error 即時修復 2 度目実例** (Day 15 パターン継続確立)
+- **structural quality vs design space richness の区別明確化** (quality metric 多層構造)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

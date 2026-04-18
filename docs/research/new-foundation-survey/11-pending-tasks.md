@@ -5488,6 +5488,22 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 19+ 設計判断 WasDerivedFrom DAG 制約 (継続)
   - 実装修正なし (Day 9-17 同パターン継続): S4 P4 power-to-weight + A-Minimal scope 制御遵守、Subagent I1 即時対処 + I2 Day 19+ 提案は paper サーベイ評価で対処済 (改訂 87)
   - Day 19 改善事項: A-Standard-Lite main / Day 15×Day 18 連携テスト / ResearchActivity payload / A-Standard-Full
+- 2026-04-19 (**改訂 89**): Day 18 metadata 反映 (cycle step 5、段階的 Lean 機能習得 3/4 段階目達成記載)
+  - README.md: Phase 0 Week 2 Day 18 完了セクション新設 (段階的 Lean 機能習得 3/4 段階目達成記載)
+  - Day 18 1 項目詳細 (#check_retired command、RetirementLinterCommand.lean + Test、6 example + 5 command invocation)
+  - 累計指標表 (Day 17 vs Day 18、104+125 jobs、example 370、Provenance 層 linter 3 = 3/4 段階目達成、強制化次元 +1 で 3 到達)
+  - Subagent 指摘項目数推移 (Day 17 0 → Day 18 2 informational = addressable 0 維持、design space richness) を新規指標追加
+  - Day 18 で達成した TyDD/paper 進展 10 項目:
+    - A-Standard custom linter A-Minimal 完備 (3/4 段階目)
+    - Lean 4 core API 活用 (Lean.Linter.isDeprecated)
+    - Pattern #7 hook 十一段階発展到達
+    - 強制化次元 +1 (3 到達)
+    - paper × 実装 15 度目合流カテゴリ
+    - paper finding 74 件累計
+    - Subagent 検証 PASS + I1 即時対処 + I2 Day 19+ 提案
+    - Day 17 指摘ゼロ持続性検証結果 (addressable 0 維持)
+    - 初期 build error 即時修復 2 度目実例
+    - structural quality vs design space richness 区別明確化
 
 ## マーク凡例
 
