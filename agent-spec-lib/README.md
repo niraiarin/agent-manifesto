@@ -851,6 +851,69 @@ Section 2.30 Day 16 着手前判断 (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案
 - **cycle 内学習 transfer 形態選択使い分け実証** (Day 15 cross-verification / Day 16 単純 transfer、Subagent 推奨の評価基準が確立)
 - **新規 `deprecation_history` field 構造化記録** (artifact-manifest 上で deprecation 変遷を追跡可能、introduced / deprecated / removal_scheduled / transfer_pattern)
 
+## 現状: Phase 0 Week 2 Day 17 完了（2026-04-18 追加、breaking change）
+
+Section 2.32 Day 17 着手前判断 (Q1 A 案 / Q2 A-Medium / Q3 案 A / Q4 案 A) に従い実装。
+**transitionLegacy 完全削除 A-Standard 完遂** (Day 14-15-16-17 の段階的 deprecation → removal 工学的 best practice 4 Day 完結、`since := "2026-04-19"` = Day 17 指定日履行)、
+**Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消** (agent-manifesto 内最長記録繰り延べ解消)、
+**cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結** (PROV-O 特化 → Spine 層 A-Compact → Spine 層 A-Standard)、
+**Day 9-17 で初の Subagent 指摘ゼロ到達** (cycle 内学習 transfer 累積効果の極致実例、quality loop 完全機能実証)、
+**Day 11-17 で 7 Day 連続 rfl preference 維持の記録更新** (set_option 不要化でより pure)、
+**Pattern #7 hook 十段階発展到達** (MODIFY path 3 度目運用検証、breaking change commit 対応確認)、
+**deprecation_history 3-state complete lifecycle 構造化完成** (Day 8 introduced → Day 16 deprecated → Day 17 removed)。
+
+### Day 17 の 1 項目 (Q2 A-Medium scope、MODIFY のみ、**breaking change**)
+
+- [x] **transitionLegacy 定義完全削除 + 利用箇所 test 3 件削除** (Q3 案 A Test 先行 → Production 後続)
+- [x] `AgentSpec/Test/Spine/EvolutionStepTest.lean` MODIFY (先行、**13→10 example、-3**)
+  - deprecated 利用 example 3 件全削除 (既存 Day 8 から 1 件 + Day 16 新規 2 件)
+  - 新 signature 直接展開 proof 2 件 (Day 16 新規 TransitionReflexive / TransitionTransitive witness) は保持
+  - `set_option linter.deprecated false in` 全て不要化 (transitionLegacy 完全削除でより pure な rfl preference)
+  - rfl preference 維持 (cycle 内学習 transfer 6 度目、Day 11-17 = **7 Day 連続記録更新**)
+- [x] `AgentSpec/Spine/EvolutionStep.lean` MODIFY (後続)
+  - `transitionLegacy` 定義完全削除 (`@[deprecated] def transitionLegacy` 全削除)
+  - `TransitionReflexive` / `TransitionTransitive` は Day 16 4-arg 直接展開済のため変更不要
+  - docstring に Day 17 D7 意思決定ログ追加 + Day 8-16 history セクション整理
+- [x] `lake build AgentSpec` ✓ (exit 0, **103 jobs 維持**、MODIFY のみ)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **123 jobs 維持**)
+- [x] /verify Round 1 PASS (**build PASS + Subagent 検証 PASS + 指摘ゼロ到達**、改訂 82 で対処)
+- [x] **Pattern #7 hook MODIFY path 3 度目運用検証 (十段階発展到達、breaking change commit 対応確認)**
+- [x] **新規 `deprecation_history.transitionLegacy.removal_actual` field** (artifact-manifest.json の EvolutionStep entry に追加、3-state complete lifecycle 完成)
+- [x] **新規 `section_2_15_completely_resolved_day17` field** (build_status 直下、Section 2.15 完全解消構造化記録)
+- [x] **compatibility_classification: breaking change** (verifier_history Day 17 R1 entry)
+
+### Week 2 Day 17 時点の累計指標
+
+| 指標 | Day 16 | Day 17 追加/変化 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 367 | -3 (EvolutionStepTest 内 deprecated 3 件削除) | **364** |
+| Provenance 層 type | 5 | 0 | **5 type** |
+| Provenance 層 relation | 6 | 0 | **6 relation** |
+| Provenance 層 linter | 2 (A-Minimal + A-Compact) | 0 | **2 linter** |
+| Spine 層 deprecation | 1 (transitionLegacy A-Compact) | **-1 (完全削除 A-Standard)** | **0 (削除完了)** |
+| AgentSpec build jobs | 103 | 0 (MODIFY のみ) | **103 jobs 維持** |
+| AgentSpecTest build jobs | 123 | 0 (MODIFY のみ) | **123 jobs 維持** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 + 11 度連続検証 + 九段階発展完了 | 12 度目運用検証 (MODIFY path 3 度目、breaking change 対応) | **1 + 12 度連続検証 + 十段階発展到達** |
+| cycle 内学習 transfer 形態 | 4 形態体系化完了 | **+累積効果極致実例 (Day 17 Subagent 指摘ゼロ)** | **4 形態体系化 + 累積効果極致到達** |
+| Subagent 指摘項目数 | 2 (Day 16) | **-2 (Day 17 で 0 到達)** | **0 (Day 9-17 で初)** |
+
+### Day 17 で達成した TyDD / paper 進展 (Section 12.49 + 12.50)
+
+- **Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消** (agent-manifesto 内最長記録繰り延べ解消)
+- **段階的 deprecation → removal 工学的 best practice 4 Day 完結** (Day 14 A-Minimal → Day 15 A-Compact Hybrid → Day 16 A-Compact deprecated → Day 17 A-Standard removal)
+- **cycle 内学習 transfer 2 段階別分野転用の Day 14→16→17 3 Day 完結** (PROV-O 特化 → Spine 層 A-Compact → Spine 層 A-Standard)
+- **TyDD-S4 P5 explicit assumptions 8 度目強適用** (`since := "2026-04-19"` 履行で attribute 約束遵守、2 Day にまたがる explicit 実証)
+- **Pattern #7 hook 十段階発展到達** (MODIFY path 3 度目、breaking change commit 対応確認、Day 5-17 累積 13 セッション)
+- **paper × 実装 14 度目合流カテゴリ確立** (cycle 内学習 transfer 累積効果による Subagent 指摘ゼロ × deprecation_history 3-state lifecycle 完成 × breaking change 安全実施パターン)
+- **paper finding 69 件累計** (Day 4-17 + Day 1-3 関連)
+- **Subagent 検証 PASS + 指摘ゼロ到達** (Day 9-17 で初、cycle 内学習 transfer 累積効果の極致実例、quality loop 完全機能実証、maturity 到達)
+- **breaking change 安全実施パターン確立** (Day 16 A-Compact で利用箇所移行済のため影響最小、外部 public API なし、internal test のみ影響)
+- **deprecation_history 3-state complete lifecycle 構造化完成** (introduced Day 8 → deprecated Day 16 → removal_actual Day 17)
+- **新規 `section_2_15_completely_resolved_day17` field** (artifact-manifest 上に Section 2.15 完全解消を構造化記録)
+- **set_option linter.deprecated false in 不要化** (Day 11-17 rfl preference がより pure、7 Day 連続記録更新)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

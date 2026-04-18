@@ -5127,6 +5127,25 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 18+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25/2.27/2.29/2.31 継続)
   - 実装修正なし (**Day 17 は Subagent 指摘ゼロ + TyDD 評価でも追加実装修正なし**、Day 9-16 同パターン継続): S4 P4 power-to-weight + A-Standard scope 制御遵守、Subagent 検証 PASS + 指摘ゼロは paper サーベイ評価で対処済 (改訂 82)
   - Day 18 改善事項: A-Standard custom linter main (3/4 段階目) / ResearchActivity payload / DecidableEq / 両モデル cross-interaction test 拡張
+- 2026-04-18 (**改訂 84**): Day 17 metadata 反映 (cycle step 5、breaking change 記載)
+  - README.md: Phase 0 Week 2 Day 17 完了セクション新設 (breaking change 記載)
+    - Day 17 1 項目詳細 (transitionLegacy 定義削除 + 利用箇所 test 3 件削除、Q3 案 A Test 先行 → Production 後続、MODIFY のみ)
+    - 累計指標表 (Day 16 vs Day 17、103+123 jobs 維持、example 367→364、Spine 層 deprecation 1→0 完全削除)
+    - Subagent 指摘項目数推移 (Day 16 2 → **Day 17 0**) を新規指標追加
+    - Day 17 で達成した TyDD/paper 進展 11 項目:
+      - Section 2.15 Day 9+ 9 セッション繰り延べ完全解消 (最長記録)
+      - 段階的 deprecation → removal best practice 4 Day 完結
+      - cycle 内学習 transfer 2 段階別分野転用 3 Day 完結
+      - TyDD-S4 P5 8 度目強適用
+      - Pattern #7 hook 十段階発展到達
+      - paper × 実装 14 度目合流カテゴリ
+      - paper finding 69 件累計
+      - **Subagent 検証 PASS + 指摘ゼロ到達** (Day 9-17 で初、cycle 内学習 transfer 累積効果極致実例)
+      - breaking change 安全実施パターン確立
+      - deprecation_history 3-state complete lifecycle 構造化完成
+      - 新規 section_2_15_completely_resolved_day17 field
+      - set_option linter.deprecated false in 不要化 (rfl preference がより pure)
+  - 注: artifact-manifest.json の Day 17 主要 metadata は Day 17 code commit `a8bcf69` + 改訂 82 (Subagent 指摘ゼロ確認、evaluator back-fill のみ) に既に含まれているため本改訂では README 追加のみ (Day 6-16 改訂 21/27/33/39/45/51/58/63/68/73/78 同パターン)
 
 ## マーク凡例
 
