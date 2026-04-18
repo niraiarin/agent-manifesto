@@ -3707,6 +3707,27 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 14+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23 から繰り延べ継続)
   - 実装修正なし (Day 9-12 同パターン継続): S4 P4 power-to-weight + Q1 A-Minimal scope 制御遵守、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 (改訂 61)
   - Day 14 改善事項: RetiredEntity linter / elaborator main / ResearchActivity payload 拡充 / DecidableEq / その他継続項目
+- 2026-04-18 (**改訂 63**): Day 13 metadata 反映 (cycle step 5)
+  - README.md: Phase 0 Week 2 Day 13 完了セクション新設
+    - Day 13 1 項目詳細 (PROV-O auxiliary + WasRetiredBy 3 structure、Q3 案 B + Q4 案 A)
+    - Day 11 Subagent I3 教訓継続適用 (rfl preference) を明示
+    - Day 12 I1 教訓先回り適用 (version field) を明示
+    - 累計指標表 (Day 12 vs Day 13、102+121 jobs、example 346、Provenance 5 type + 6 relation 完備)
+    - PROV-O §4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合) を新規累計指標として追加
+    - Day 13 で達成した TyDD/paper 進展 12 項目:
+      - PROV-O auxiliary relations 完備
+      - PROV-O §4.4 retirement relation 完備
+      - PROV-O 6 relation 完備到達
+      - TyDD-S4 P5 4 度目強適用
+      - Pattern #7 hook v2 3 度目運用検証 = 運用定常化
+      - Section 10.2 Pattern #7 hook の六段階発展完了
+      - Day 12 D2 separate structure 配置の妥当性確認
+      - 内部規範 layer 横断 transfer 8 段階目
+      - paper × 実装 10 度目合流カテゴリ
+      - paper finding 49 件累計
+      - Subagent 検証 PASS + I1 即時対処
+      - cycle 内学習 transfer 構造的効果実証
+  - 注: artifact-manifest.json の Day 13 主要 metadata は Day 13 code commit `40ccd78` + 改訂 61 (Subagent I1 即時対処) に既に含まれているため本改訂では README 追加のみ (Day 6-12 改訂 21/27/33/39/45/51/58 同パターン)
 
 ## マーク凡例
 

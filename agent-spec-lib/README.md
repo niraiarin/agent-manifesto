@@ -618,6 +618,63 @@ Section 2.22 Day 12 着手前判断 (Q1 A-Minimal / Q3 案 A 4 variant 型化 / 
 - **paper finding 44 件累計** (Day 4-12 + Day 1-3 関連)
 - **Subagent 検証 PASS** (本評価サイクル内で即時実施、Day 11 遡及検証教訓反映、paper サーベイ評価サイクル「実装修正組込み」4 度目適用、改訂 56 で対処)
 
+## 現状: Phase 0 Week 2 Day 13 完了（2026-04-18 追加）
+
+Section 2.24 Day 13 着手前判断 (Q1 A-Minimal / Q3 案 B 別 file 配置 / Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg) に従い実装。
+**PROV-O auxiliary relations + WasRetiredBy 完備** (WasInformedBy + ActedOnBehalfOf + WasRetiredBy、3 structure)、
+**PROV-O 6 relation 完備到達** (Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1 = §4.1 main + auxiliary + §4.4 retirement 統合)、
+**Pattern #7 hook v2 3 度目運用検証成功 = 運用定常化** (Day 11 1 度目 / Day 12 2 度目 / Day 13 3 度目連続)、
+**Subagent 検証 PASS + I1 即時対処** (本評価サイクル内で即時実施、Day 12 同パターン継続、改訂 61 で対処)、
+**cycle 内学習 transfer 構造的効果実証** (Day 12 I1 教訓 → Day 13 先回り適用で Subagent 検出項目数 4→1 減少)。
+
+### Day 13 の 1 項目 (Q2 A-Minimal scope)
+
+- [x] **PROV-O auxiliary + WasRetiredBy 3 separate structure** (`AgentSpec/Provenance/ProvRelationAuxiliary.lean`、Q3 案 B 別 file 配置 + Q4 案 A、PROV-O §4.1 auxiliary + §4.4 retirement 1:1 対応)
+  - `structure WasInformedBy { activity : ResearchActivity, informer : ResearchActivity }` (PROV-O §4.1 auxiliary)
+  - `structure ActedOnBehalfOf { agent : ResearchAgent, on_behalf_of : ResearchAgent }` (PROV-O §4.1 auxiliary、snake_case = PROV-O 命名規約準拠)
+  - `structure WasRetiredBy { entity : ResearchEntity, retired : RetiredEntity }` (PROV-O §4.4 retirement relation、Day 12 RetiredEntity 再利用 = 2-arg relation)
+  - 各 mk' smart constructor + trivial fixture
+  - 1 ファイル統合配置 (D1、Day 11 ProvRelation の auxiliary 側踏襲)
+  - 別 file 配置 (D1、ProvRelation.lean = main、本 file = auxiliary、main/auxiliary の semantic 区別)
+  - deriving Inhabited, Repr (DecidableEq は WasRetiredBy が RetiredEntity 経由で ResearchEntity recursive 制約継承で省略)
+- [x] `AgentSpec/Test/Provenance/ProvRelationAuxiliaryTest.lean` (**24 件**、3 relation 構築 + accessor + smart constructor + trivial + Inhabited + entity 重複参照 accessor pattern + PROV-O 6 relation 統合 example)
+  - Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 2 度目): 全 example で rfl preference 維持 (simp tactic 不使用、最終 And 分解のみ refine + rfl 連鎖)
+- [x] `lake build AgentSpec` ✓ (exit 0, **102 jobs**、Provenance 層 +1)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **121 jobs**)
+- [x] /verify Round 1 PASS (build PASS + Subagent 即時検証 PASS、本評価サイクル内で即時実施、改訂 61 で対処)
+- [x] **Pattern #7 hook v2 3 度目運用検証成功** (Day 11/12/13 で 3 度連続、運用定常化)
+- [x] **Subagent I1 即時実装修正対処** (Day 13 R1 evaluator back-fill = Day 12 I2 同パターン)
+- [x] **Day 12 I1 教訓先回り適用** (version field `0.13.0-week2-day13` を code commit 時点で正しく設定、Subagent 検出項目数 Day 12 の 4→1 減少 = cycle 内学習 transfer の構造的効果実証)
+
+### Week 2 Day 13 時点の累計指標
+
+| 指標 | Day 12 | Day 13 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 322 | +24 (ProvRelationAuxiliary) | **346** |
+| Provenance 層 type | 5 | 0 (relation のみ追加) | **5 type** |
+| Provenance 層 relation | 3 | +3 (auxiliary 2 + WasRetiredBy 1) | **6 relation 完備** |
+| AgentSpec build jobs | 101 | +1 (ProvRelationAuxiliary) | **102 jobs** |
+| AgentSpecTest build jobs | 119 | +2 (ProvRelationAuxiliary test + derived) | **121 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 + 7 度連続検証 + v2 2 度目運用検証 | 8 度目運用検証 (v2 3 度目運用検証) | **1 + 8 度連続検証 + v2 3 度目運用検証 = 運用定常化** |
+| PROV-O 完全カバー | §4.1 + §4.4 | +§4.1 auxiliary + §4.4 retirement relation | **§4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合)** |
+
+### Day 13 で達成した TyDD / paper 進展 (Section 12.37 + 12.38)
+
+- **02-data-provenance §4.1 auxiliary relations 完備** (WasInformedBy + ActedOnBehalfOf 2 structure、PROV-O §4.1 auxiliary 1:1 対応)
+- **02-data-provenance §4.4 retirement relation 完備** (WasRetiredBy = Entity → RetiredEntity 2-arg、Day 12 RetiredEntity 再利用)
+- **PROV-O 6 relation 完備到達** (Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1 = §4.1 + §4.4 relation 主要 spec 統合)
+- **TyDD-S4 P5 explicit assumptions 4 度目強適用** (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary 引数 type 厳格)
+- **Pattern #7 hook v2 3 度目運用検証成功 = 運用定常化** (Day 11/12/13 で 3 度連続)
+- **Section 10.2 Pattern #7 hook の六段階発展完了** (Day 5 設計→Day 6/7/8/9 4 度運用→Day 10 v2 拡張→Day 11/12/13 v2 3 度連続運用検証)
+- **Day 12 D2 separate structure 配置の妥当性確認** (WasRetiredBy 経由で RetiredEntity 再利用)
+- **内部規範 layer 横断 transfer 8 段階目** (PROV-O 6 relation 統合 example、Day 11 triple set / Day 12 4 variant List 集約に続く)
+- **paper × 実装 10 度目合流カテゴリ確立** (PROV-O 6 relation 完備 × separate design 妥当性継続確認)
+- **paper finding 49 件累計** (Day 4-13 + Day 1-3 関連)
+- **Subagent 検証 PASS + I1 即時対処** (本評価サイクル内で即時実施、paper サーベイ評価サイクル「実装修正組込み」5 度目適用、改訂 61 で対処)
+- **cycle 内学習 transfer 構造的効果実証** (Day 12 I1 教訓 → Day 13 先回り適用、Subagent 検出項目数 4→1 減少)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
