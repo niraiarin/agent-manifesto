@@ -92,7 +92,8 @@ theorem roundTrip_bounded_stable_7 :
 theorem consumeChar_dot_cons (rest : List Char) :
     SemVer.consumeChar '.' ('.' :: rest) = some rest := rfl
 
-/-- consumeChar が不一致時に none を返す (rfl で証明可能)。 -/
+/-- consumeChar が不一致時に none を返す。`if-then-else` の偽分岐を `simp [h]` で
+    展開する必要があるため、`rfl` ではなく tactic mode で証明。 -/
 theorem consumeChar_dot_mismatch (c : Char) (h : c ≠ '.') (rest : List Char) :
     SemVer.consumeChar '.' (c :: rest) = none := by
   show (if c = '.' then some rest else none) = none
