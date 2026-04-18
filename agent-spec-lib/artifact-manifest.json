@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.7.0-week2-day6",
+  "version": "0.8.0-week2-day7",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -290,10 +290,12 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest", "edge": "wasDerivedFrom"}
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 134,
+      "aggregated_example_count": 171,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -616,23 +618,126 @@
       "example_count": 17,
       "sorry_count": 0,
       "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Process.Evolution",
+      "path": "AgentSpec/Process/Evolution.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Process.Evolution (inductive 2 constructor: initial / refineWith、Hypothesis 依存)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Process.Evolution.origin (recursive accessor)",
+        "AgentSpec.Process.Evolution.latest (recursive accessor)",
+        "AgentSpec.Process.Evolution.stepCount (recursive accessor)",
+        "AgentSpec.Process.Evolution.trivial (test fixture)"
+      ],
+      "provides_instances": [
+        "Inhabited Evolution / Repr Evolution (deriving)"
+      ],
+      "prov_mapping_planned": "Day 8+ で AgentSpec.Provenance.ResearchActivity に mapping (02-data-provenance §4.1)",
+      "week2_status": "Day 7 hole-driven (Q3 案 B 確定)。Day 8+ で Verdict 型を追加して B4 Hoare 4-arg post (`(pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop`) に refactor 予定 (Section 2.9 完全解消)",
+      "decision_log": "Evolution.lean docstring D1-D3 (inductive 採用 / refineWith payload は Hypothesis のみ Q3 案 B / accessor は recursive def)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
+      "path": "AgentSpec/Process/HandoffChain.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Process.Handoff (structure: fromAgent / toAgent / payload、全て String hole-driven)",
+        "AgentSpec.Process.HandoffChain (inductive 2 constructor: empty / cons、List 風)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Process.HandoffChain.length (recursive Nat)",
+        "AgentSpec.Process.HandoffChain.append (末尾追加)",
+        "AgentSpec.Process.HandoffChain.trivialHandoff (test fixture)",
+        "AgentSpec.Process.HandoffChain.trivial (= empty)"
+      ],
+      "provides_instances": [
+        "DecidableEq Handoff / Inhabited Handoff / Repr Handoff (deriving)",
+        "Inhabited HandoffChain / Repr HandoffChain (deriving)"
+      ],
+      "manifesto_link": "T1 一時性 (セッション間 handoff の連鎖)、Day 8+ で fromAgent/toAgent を ResearchAgent 型 (02-data-provenance §4.1) に refactor 予定",
+      "week2_status": "Day 7 hole-driven (Q4 案 A 確定: LearningCycle/Observable 統合 test は Day 8+ で別 test file)",
+      "decision_log": "HandoffChain.lean docstring D1-D3 (Handoff structure + HandoffChain inductive の 2 type / cons inductive 採用 / agent identifier は String hole-driven)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest",
+      "path": "AgentSpec/Test/Process/EvolutionTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "Evolution 構築 (initial / refineWith)",
+        "origin / latest / stepCount accessor (recursive)",
+        "trivial fixture",
+        "Inhabited",
+        "Q2 案 A: cross-process test (Hypothesis × Failure × Evolution × HandoffChain)、fullProcessExample 関数 + 4-tuple 同時利用",
+        "Section 2.12 🟡 cross-process interaction test 解消"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 16,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "cross_process_test": "Day 7 で Q2 案 A 1-2 件実装 (Section 2.12 🟡 解消)、Day 4 fullSpineExample パターン踏襲"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest",
+      "path": "AgentSpec/Test/Process/HandoffChainTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "Handoff structure 構築 + field projection",
+        "trivialHandoff fixture",
+        "HandoffChain 構築 (empty / cons)",
+        "length recursive def",
+        "append (末尾追加)",
+        "trivial fixture",
+        "DecidableEq Handoff / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 21,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "spine_integration_planned": "Day 8+ で別 test file (Q4 案 A、LearningCycle/Observable 統合)"
     }
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 6",
+    "last_verified_phase": "Week 2 Day 7",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 92, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存により 11→90 jobs、Day 6 Process 層追加で 90→92"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 100, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 94, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存 11→90、Day 6 Process 層追加 90→92、Day 7 +2 (Evolution + HandoffChain) で 92→94"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 104, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
     "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT)",
-    "process_layer_started": "Day 6 で Hypothesis + Failure hole-driven 着手 (Week 4-5 前倒し、Section 2.11 Q1 Option C / Q2 Minimal)、Day 7+ で Evolution + HandoffChain 予定",
-    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、4 連続違反の構造的解決。Day 6 で初の hook 適用 commit (新規 Process .lean 同 commit に manifest 含む) を予定",
+    "process_layer_progress": "Day 6 Hypothesis + Failure 着手、Day 7 Evolution + HandoffChain 完了 (4 type 完備、Section 2.11 Q1-Q4 確定方針通り)。Day 8+ で Provenance 層 (PROV-O Lean 化) と Verdict 型 + B4 4-arg post 完全統合 (Section 2.9 完全解消)",
+    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、Day 6 で初の hook 適用 + pass-through 確認、Day 7 で 2 度目の hook 適用 (Process Evolution + HandoffChain) で運用安定性検証",
+    "cross_process_test": "Day 7 で Q2 案 A により実装 (Section 2.12 🟡 解消)、Hypothesis × Failure × Evolution × HandoffChain 4-tuple 同時利用",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 134,
+    "example_count": 171,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -656,6 +761,10 @@
       "Test/Process/HypothesisTest.lean": {"theorems": 0, "examples": 12},
       "Process/Failure.lean": {"theorems": 0, "examples": 0},
       "Test/Process/FailureTest.lean": {"theorems": 0, "examples": 17},
+      "Process/Evolution.lean": {"theorems": 0, "examples": 0},
+      "Test/Process/EvolutionTest.lean": {"theorems": 0, "examples": 16},
+      "Process/HandoffChain.lean": {"theorems": 0, "examples": 0},
+      "Test/Process/HandoffChainTest.lean": {"theorems": 0, "examples": 21},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },

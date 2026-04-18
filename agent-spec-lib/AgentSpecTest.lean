@@ -7,6 +7,8 @@ import AgentSpec.Test.Spine.LearningCycleTest
 import AgentSpec.Test.Spine.ObservableTest
 import AgentSpec.Test.Process.HypothesisTest
 import AgentSpec.Test.Process.FailureTest
+import AgentSpec.Test.Process.EvolutionTest
+import AgentSpec.Test.Process.HandoffChainTest
 
 /-!
 # AgentSpecTest: agent-spec-lib の test 専用ルート
