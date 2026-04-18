@@ -212,8 +212,9 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | 🟢 Day 10+ | **ResearchActivity payload なし variants の payload 拡充** (investigate / decompose / refine / retire) — verify variant と同パターン | 02-data-provenance §4.1 | Day 10+ (Day 9 paper サーベイ評価で識別) |
 | 🟢 Day 10+ 設計判断 | **HandoffChain 全体 embed 用 constructor** — `ResearchEntity.HandoffChain` 追加検討 (Subagent I3 Day 9) | Subagent I3 Day 9 | Day 10+ (Day 9 paper サーベイ評価で識別) |
 | ✅ **Day 12 完了** | ~~02-data-provenance §4.4 退役の構造的検出 (RetiredEntity structure)~~ — Day 12 で `RetiredEntity` separate structure + `RetirementReason` 4 variant inductive (Refuted/Superseded/Obsolete/Withdrawn、PROV-O §4.4 1:1 対応) として実装完了 (Q3 案 A 4 variant 型化 + Q4 案 A separate、ResearchEntity 拡張不要 backward compatible) | 02-data-provenance §4.4 | Day 12 commit `49510c6` で対処 |
-| 🟡 Day 13 | **PROV-O auxiliary relations** (`WasInformedBy: Activity → Activity` / `ActedOnBehalfOf: Agent → Agent`) + **WasRetiredBy** (Day 12 で開いたパス) — 3 main relation + RetiredEntity 完備の自然な拡張、relation 系 grouping | 02-data-provenance §4.1 + §4.4 | Day 13 (Day 11 paper サーベイで識別 + Day 12 paper サーベイで WasRetiredBy 統合) |
-| 🟡 Day 13+ | **RetiredEntity linter / elaborator** — 退役済 entity 参照の warning/error 検出 (custom Lean compiler 拡張) | 02-data-provenance §4.4 (structural detection は Day 12 で完了、linter は別 day) | Day 13+ (Day 12 で structural detection 完備、linter は新分野で別 Day 集中) |
+| ✅ **Day 13 完了** | ~~PROV-O auxiliary relations (WasInformedBy / ActedOnBehalfOf) + WasRetiredBy~~ — Day 13 で 3 separate structure (`WasInformedBy { activity, informer : ResearchActivity }` + `ActedOnBehalfOf { agent, on_behalf_of : ResearchAgent }` + `WasRetiredBy { entity : ResearchEntity, retired : RetiredEntity }`) として実装完了 (Q3 案 B 別 file 配置 ProvRelationAuxiliary.lean + Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg、Day 12 RetiredEntity 再利用) | 02-data-provenance §4.1 + §4.4 | Day 13 commit `40ccd78` で対処 |
+| 🟡 Day 14 | **RetiredEntity linter / elaborator** — 退役済 entity 参照の warning/error 検出 (custom Lean compiler 拡張) | 02-data-provenance §4.4 (structural detection は Day 12 で完了、linter は別 day) | Day 14 (Day 13 完了で relation 系 grouping 完了、linter は自然な次 step、Day 12 から繰り延べ) |
+| 🟡 Day 14+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) — Day 13 WasRetiredBy 案 C で考察した拡張 | 02-data-provenance §4.1 (Day 13 paper サーベイで再認識) | Day 14+ (Day 9 paper サーベイから継続、Day 13 で繰り延べ明示) |
 | 🟡 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** — Lean tree → JSON-LD schema-preserving 変換 (Lean meta-program)、外部 tool (WorkflowHub, Galaxy) との interop 確保 | 02-data-provenance §4.7 | Week 6-7 (CI 整備時) (Day 6 paper サーベイ評価で識別) |
 | 🟢 Week 5-6 | **02-data-provenance §4.5 Pipeline 段階表現** — DSL ≤ AST ≤ LeanSpec ≤ SMTSpec ≤ Tests ≤ Code を Spec 精緻化として Lean で表現 (Snakemake rule 対応) | 02-data-provenance §4.5 | Week 5-6 Tooling 層 (Day 6 paper サーベイ評価で識別) |
 | 🟢 Day 7+ | **S6 Paper 1 (BST/AVL invariants)** — Hypothesis chain の order を invariant 付き structure 化 (Evolution と統合時) | S6 TyDe 2025 Paper 1 | Day 7+ (Evolution と統合) (Day 6 paper サーベイ評価で識別、Section 2.10 既存項目から Day 7+ に具体化) |
@@ -2616,6 +2617,68 @@ Section 12.33 Day 12 想定目標 (58/59 = 98.3%) を **予想を上回って達
 
 ---
 
+### 12.37 Day 13 論文サーベイ視点評価結果（2026-04-18 実施）
+
+Day 13 (`40ccd78` Provenance 層 PROV-O auxiliary relations + WasRetiredBy 3 structure 追加) を 74 対象サーベイの paper findings に対して評価。
+
+#### Day 13 で活用された paper findings (5 件)
+
+1. **02-data-provenance §4.1 PROV-O auxiliary relations 完備** → WasInformedBy (Activity → Activity) + ActedOnBehalfOf (Agent → Agent)、PROV-O §4.1 auxiliary 1:1 対応
+2. **02-data-provenance §4.4 retirement relation 完備** → WasRetiredBy (Entity → RetiredEntity、Day 12 RetiredEntity 再利用、2-arg relation)
+3. **TyDD-S4 P5 explicit assumptions 4 度目強適用** → Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary 引数 type 厳格 (特に WasRetiredBy = Entity × RetiredEntity)
+4. **G5-1 §6.2.1 Pattern #7 hook v2 3 度目運用検証成功** → Day 11/12 に続く Provenance 配下新規 .lean commit、hook v2 (Day 10 拡張) の運用安定性 3 度連続確認
+5. **内部規範 layer 横断 transfer 8 段階目** → Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1 = PROV-O 6 relation 統合 example (Day 11 triple set / Day 12 4 variant List 集約に続く)
+
+#### Day 13 で paper finding と実装の双方向影響
+
+| Direction | 内容 |
+|---|---|
+| **paper → Day 13** | 02-data-provenance §4.1 auxiliary relations / §4.4 retirement relation / TyDD-S4 P5 explicit assumptions |
+| **実装 → paper 評価更新** | **PROV-O 6 relation 完備** (§4.1 main 3 + auxiliary 2 + §4.4 retirement 1 = Day 11-13 累計で PROV-O relation 主要 spec 統合完備)、**Day 12 D2 separate structure 配置の妥当性確認** (WasRetiredBy 経由で RetiredEntity 再利用 = separate 設計が relation 増加時も壊れない確認)、cycle 内学習 transfer 2 度目適用 (Day 11 I3 → Day 12 → Day 13 継続) |
+
+これは Day 4-12 の paper × 実装合流 (9 種) に続く **10 度目: PROV-O 6 relation 完備 × separate design 妥当性継続確認** カテゴリ確立 (PROV-O relation 主要 spec 統合 + Day 12 設計判断の downstream 検証)。
+
+#### Day 13 で paper との矛盾
+
+**なし**。02-data-provenance §4.1 auxiliary (wasInformedBy / actedOnBehalfOf) + §4.4 wasRetiredBy を 1:1 対応、TyDD-S1 + S4 P5 同時遵守、Pattern #7 hook v2 が Provenance 配下新規 .lean を検出、Day 12 RetiredEntity separate structure を WasRetiredBy が再利用。
+
+#### Paper-grounded な Day 13 強み
+
+| Paper finding | Day 13 実装での顕在化 |
+|---|---|
+| **02-data-provenance §4.1 auxiliary relations** | WasInformedBy (Activity → Activity) + ActedOnBehalfOf (Agent → Agent) 2 structure (PROV-O §4.1 1:1 対応) |
+| **02-data-provenance §4.4 retirement relation** | WasRetiredBy (Entity → RetiredEntity、Day 12 RetiredEntity 再利用、2-arg relation) |
+| **TyDD-S4 P5 explicit assumptions 4 度目強適用** | 引数 type 厳格 (Activity × Activity / Agent × Agent / Entity × RetiredEntity) |
+| **G5-1 §6.2.1 Pattern #7 hook v2 3 度目運用検証** | Day 11/12 に続く運用安定性継続確認 (Provenance 配下新規 .lean detection) |
+| **PROV-O 6 relation 完備** | Day 11 main 3 + Day 13 auxiliary 2 + WasRetiredBy 1 = PROV-O relation 主要 spec 統合完備 |
+
+#### Day 13 で識別された改善提案 (4 件、Section 2.10 で反映) + 実装修正対処
+
+| 優先度 | 提案 | 根拠 paper | 対処タイミング |
+|---|---|---|---|
+| 🟡 Day 14 | **RetiredEntity linter / elaborator** (退役済 entity 参照の warning/error 検出) | §4.4 (Day 12 で structural detection 完備、linter は新分野で別 Day) | Day 14 (Day 13 完了で relation 系 grouping 完了、linter は自然な次 step) |
+| 🟡 Day 14+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants の payload、Day 13 D2 案 C で考慮した拡張) | §4.1 (Day 13 paper サーベイで WasRetiredBy 案 C 考察で再認識) | Day 14+ (verify variant と同パターンで payload 型化、Day 13 で Activity payload 拡充案 C を退けた分の繰り延べ) |
+| 🟢 Week 5-6 | **02-data-provenance §4.6 cache lineage** (WasReusedBy edge) | §4.6 | Week 5-6 (Section 2.10 既存項目) |
+| 🟢 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** | §4.7 | Week 6-7 (Section 2.10 既存項目) |
+| ✅ **本評価で実装修正対処** | **Subagent I1 (verifier_history Day 13 R1 evaluator プレースホルダ、Day 12 I2 同パターン)** | Subagent I1 Day 13 | 本 commit で即時対処 (paper サーベイ評価サイクル「実装修正組込み」5 度目適用、Day 9-13 継続) |
+
+#### Subagent 検証結果 (本評価サイクルで即時実施、Day 12 同パターン継続)
+
+Day 13 code commit `40ccd78` の Subagent 検証を本 paper サーベイ評価サイクル内で即時実施 (Day 12 で確立したパターン):
+
+- **VERDICT**: PASS (addressable 0、informational 1)
+- **I1**: Day 13 R1 evaluator が「実施予定」プレースホルダのまま (Day 12 R1 I2 同パターン) → 本 commit で evaluator 更新 + 新規 subagent_verification field 追加で back-fill
+
+I1 のみ informational、addressable なし。Day 13 code commit の品質は Subagent 検証 PASS で確認済。Day 12 I1 (version field) 教訓は Day 13 で先回り適用済 (version `0.13.0-week2-day13` が code commit 時点で正しく設定)、Day 13 Subagent 検証で I 種類が 4→1 に減少 = cycle 内学習 transfer の効果測定。
+
+#### 結論
+
+Day 13 は **PROV-O auxiliary 2 relation + WasRetiredBy 完備** + **PROV-O 6 relation 完備到達** (Day 11-13 累計で §4.1 main 3 + auxiliary 2 + §4.4 retirement 1) + **paper × 実装 10 度目合流カテゴリ確立** (PROV-O 6 relation 完備 × separate design 妥当性継続確認) + **Subagent 検証 PASS + I1 即時対処** (Day 12 同パターン継続)。paper サーベイ評価サイクル「実装修正組込み」は Day 9-13 で 5 度連続適用、**cycle 内学習 transfer の効果測定**: Day 11 I3 教訓 → Day 12 適用 → Day 13 継続 / Day 12 I1 教訓 → Day 13 先回り適用 (version 正しく設定で Subagent 検出項目数 4→1 減少)。
+
+Day 1-13 累計で **paper finding 49 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 13: 5 / Day 1-3 関連: 1)。
+
+---
+
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
 
 Day 9 (`fa5b373` Provenance 層継続 ResearchEntity + ResearchActivity) を TyDD Tag Index と Section 10.2 パターンに対して評価。
@@ -3524,6 +3587,25 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - Section 10.1 Day 13 行を確定版に更新 (Q1-Q4 採用案反映)
   - cycle 内学習 transfer 2 度目適用予定: Day 11 Subagent I3 教訓 (rfl preference) を Day 13 ProvRelationAuxiliaryTest でも継続適用
   - 主要決定: Day 13 メイン = PROV-O auxiliary 2 + WasRetiredBy 1 = 3 structure (PROV-O §4.1 auxiliary + §4.4 retirement relation 完備)、linter / elaborator + ResearchActivity payload 拡充は Day 14+ 集中
+- 2026-04-18 (**改訂 61**): Day 13 論文サーベイ視点評価 + Subagent 検証 + I1 即時対処 (cycle step 1+2)
+  - Section 12.37 (新規): Day 13 論文サーベイ視点評価結果
+    - 活用 paper findings 5 件: PROV-O §4.1 auxiliary / §4.4 retirement relation / TyDD-S4 P5 (4 度目強適用) / Pattern #7 hook v2 3 度目運用検証 / 内部規範 8 段階目
+    - 双方向影響: paper → Day 13 + 実装 → paper 評価更新 (PROV-O 6 relation 完備到達 / Day 12 D2 separate structure 妥当性確認 / cycle 内学習 transfer 2 度目)
+    - **paper × 実装 10 度目合流カテゴリ確立**: PROV-O 6 relation 完備 × separate design 妥当性継続確認
+    - paper との矛盾なし (PROV-O §4.1 auxiliary + §4.4 wasRetiredBy 1:1 対応)
+    - 改善提案 4 件: RetiredEntity linter / elaborator Day 14 / ResearchActivity payload 拡充 Day 14+ / cache lineage Week 5-6 / RO-Crate Week 6-7
+    - paper finding 累計 49 件 (Day 1-3: 1 / Day 4-13: 48)
+  - Section 2.10 更新:
+    - PROV-O auxiliary relations + WasRetiredBy を ✅ Day 13 完了マーク (commit `40ccd78`)
+    - RetiredEntity linter / elaborator を 🟡 Day 14 に格上げ (Day 13 完了で relation 系 grouping 完了、linter は自然な次 step)
+    - ResearchActivity payload 拡充を 🟡 Day 14+ 新規追加 (Day 13 WasRetiredBy 案 C で考察した拡張、Day 9 paper サーベイからの継続)
+  - **実装修正対処**: Day 13 code commit `40ccd78` の Subagent 検証 PASS (本評価サイクル内で即時実施、Day 12 同パターン継続)
+    - I1: Day 13 R1 evaluator プレースホルダ (Day 12 I2 同パターン) → 即時対処 (evaluator 更新 + subagent_verification field 追加で back-fill)
+    - paper サーベイ評価サイクル「実装修正組込み」5 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent / Day 12 I1+I2 / Day 13 I1 即時対処の継続)
+  - **cycle 内学習 transfer の効果測定**:
+    - Day 11 I3 教訓 (rfl preference) → Day 12 RetiredEntityTest 適用 → Day 13 ProvRelationAuxiliaryTest 継続
+    - Day 12 I1 教訓 (version field) → Day 13 code commit で先回り適用 (version `0.13.0-week2-day13` が正しく設定)
+    - Day 13 Subagent 検出項目数 Day 12 の 4 → 1 に減少 (cycle 内学習 transfer の構造的効果実証)
 
 ## マーク凡例
 

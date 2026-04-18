@@ -1427,9 +1427,19 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (102+121 jobs)、Subagent 検証は本 commit 後の cycle step 1 (改訂 61 paper サーベイ評価サイクル) で実施予定 (Day 12 同パターン)",
+      "informational_count": 1,
+      "evaluator": "build PASS (102+121 jobs) + Subagent 検証 PASS (改訂 61 paper サーベイ評価サイクルで実施、addressable 0 + informational 1)",
       "p2_complete_for": "day-13-provenance-prov-relation-auxiliary",
-      "note": "Day 13 Provenance 層 PROV-O auxiliary relations + WasRetiredBy 3 structure 追加 (WasInformedBy + ActedOnBehalfOf + WasRetiredBy、Q1 A-Minimal / Q3 案 B 別 file 配置 / Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg)。PROV-O §4.1 main 3 + auxiliary 2 + §4.4 retirement 1 統合 = 5 type + 6 relation 完備。Build 102+121 jobs、example 322→346 (+24)。Pattern #7 hook v2 3 度目の Provenance 新規 .lean commit (Day 11/12 に続く運用検証)。Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 2 度目): ProvRelationAuxiliaryTest 全 example で rfl preference 維持 (最終 example の And 分解 refine + rfl のみ rfl 連鎖として許容)。Day 12 D2 separate structure 配置の妥当性が WasRetiredBy 経由参照で確認"
+      "subagent_verification": {
+        "executed_in_commit": "改訂 61 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": [
+          "I1: Day 13 R1 evaluator が「本 commit 後の cycle step 1 で実施予定」プレースホルダのまま (Day 12 R1 I2 同パターン)、本 Subagent 検証結果で back-fill (本 commit で対処)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」5 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent / Day 12 I1+I2 即時対処 / Day 13 I1 即時対処 の継続)"
+      },
+      "note": "Day 13 Provenance 層 PROV-O auxiliary relations + WasRetiredBy 3 structure 追加 (WasInformedBy + ActedOnBehalfOf + WasRetiredBy、Q1 A-Minimal / Q3 案 B 別 file 配置 / Q4 案 A WasRetiredBy = Entity → RetiredEntity 2-arg)。PROV-O §4.1 main 3 + auxiliary 2 + §4.4 retirement 1 統合 = 5 type + 6 relation 完備。Build 102+121 jobs、example 322→346 (+24)。Pattern #7 hook v2 3 度目の Provenance 新規 .lean commit (Day 11/12 に続く運用検証)。Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 2 度目): ProvRelationAuxiliaryTest 全 example で rfl preference 維持 (最終 example の And 分解 refine + rfl のみ rfl 連鎖として許容)。Day 12 D2 separate structure 配置の妥当性が WasRetiredBy 経由参照で確認。Subagent VERDICT: PASS (addressable 0、informational 1: I1 即時対処)"
     }
   ]
 }
