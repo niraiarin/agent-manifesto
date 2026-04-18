@@ -450,6 +450,29 @@ Day 15 TyDD 評価 (Section 12.44) で識別された改善余地を Day 16+ で
 
 **根拠**: Section 12.44 Day 15 TyDD 評価結果テーブル + Section 12.43 Day 15 paper サーベイ評価 Subagent I1 (初 addressable、逆方向修正実例)。Day 15 A-Compact Hybrid macro 完備 + Pattern #7 hook 両パターン運用 5 度目後の次の改善余地を集約。**Day 15 特筆**: Subagent 検証で初の「逆方向修正」実例 (docstring を実装に合わせる align、Lean 4 parser 仕様根拠)、cycle 内学習 transfer が単純 transfer から cross-verification まで発展、Day 14 + Day 15 両モデル揃ったことで transitionLegacy 削除の最適 timing 到達 (Day 16+ で cycle 内学習 transfer 2 段階別分野転用実例として実施候補)。
 
+### 2.31 Day 16 評価から導出した改善余地 (Day 17+ 対処)
+
+Day 16 TyDD 評価 (Section 12.47) で識別された改善余地を Day 17+ で対処。
+
+| マーク | 項目 | 現状 (Day 16) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 17 | **transitionLegacy 完全削除 A-Standard** (breaking change、`since := "2026-04-19"` = Day 17 指定日、Day 16 A-Compact からの自然な続き) | Day 16 で @[deprecated] 付与 + 利用箇所移行、定義残置 | Day 17 メイン候補、`transitionLegacy` 定義完全削除 + 残存 2 example を完全撤廃 (test scope 含む)、breaking change classification |
+| 🟡 Day 17+ | **A-Standard custom linter (Lean.Elab.Command 拡張)** | Day 14 A-Minimal + Day 15 A-Compact 完備、Day 17+ で第 3 段階実装 | Day 17+ (Day 15 macro 学習 + Day 16 別分野転用実例確立後の自然な次 step) |
+| 🟡 Day 17+ | **ResearchActivity payload 拡充** (Day 13-15 から継続、verify variant 同パターン) | Day 9 paper サーベイから継続 | Day 17+ (Day 17 transitionLegacy 完全削除後の次 scope) |
+| 🟢 Day 17+ | **ResearchEntity DecidableEq 手動実装** (Day 9-15 で省略継続) | Day 9-16 で省略継続 | Day 17+ で必要時に手動実装 |
+| 🟢 Day 17+ | **Day 14 + Day 15 両モデル cross-interaction test 拡張** | Section 2.29 から継続 | Day 17+ で 8 variant 統合の検討拡張 |
+| 🟢 Week 4-5 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形、hypothesis / observation accessor) | Day 8 で transition 4-arg post 統合、hypothesis / observation accessor 未追加 | Week 4-5 で追加 |
+| 🟢 Week 4-5 | **G5-1 §3.4 step 2 LearningM indexed monad** | Day 10 transitionToActivity 連携 path 確立 | Week 4-5 Tooling 層で `LearningM` 実装 |
+| 🟢 Week 5-6 | **A-Maximal elaborator 型レベル強制** (compile error で退役違反 rejection) | Day 14-15 A-Minimal + A-Compact 完備、Day 16 Spine 層転用 | Week 5-6 Tooling 層本丸案件 |
+| 🟢 Day 17+ 設計判断 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 11 trivial fixture で self-derivation 許容 | Day 17+ で acyclic invariant 強化検討 (Section 2.21/2.23/2.25/2.27/2.29 継続) |
+
+**根拠**: Section 12.47 Day 16 TyDD 評価結果テーブル + Section 12.46 Day 16 paper サーベイ評価 Subagent I1 (docstring 明文化) + I2 (evaluator back-fill)。Day 16 transitionLegacy deprecation A-Compact 完備 + Pattern #7 hook MODIFY path 2 度目運用検証 (九段階発展完了) 後の次の改善余地を集約。**Day 16 特筆**:
+- Day 14 `@[deprecated]` モデルの Spine 層別分野転用 (cycle 内学習 transfer 2 段階別分野転用実例)
+- Section 2.15 Day 9+ 繰り延べ 6 セッション課題を A-Compact で半解消、Day 17 A-Standard で完全解消予定
+- cycle 内学習 transfer 4 形態 (単純 / 先回り / cross-verification / 2 段階別分野転用) 体系化完了
+- Day 8 D3 暫定方針撤回 (TransitionReflexive/Transitive 4-arg 直接展開、Section 2.9 完結)
+- 新規 `deprecation_history` field で artifact-manifest 上に deprecation 変遷を構造化記録
+
 ### 2.22 Day 12 着手前判断結果 (確定済、Day 11 完了後の議論結果)
 
 #### Day 12 全体方針 (Q1-Q4 採用案、確定済)
@@ -3425,6 +3448,79 @@ Day 16 は **transitionLegacy deprecation A-Compact 実装 (Day 14 モデル Spi
 
 Day 1-16 累計で **paper finding 64 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 12: 5 / Day 13: 5 / Day 14: 5 / Day 15: 5 / Day 16: 5 / Day 1-3 関連: 1 = 合計 64)。
 
+### 12.47 Day 16 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 16 (`b678856` Spine 層 transitionLegacy @[deprecated] + TransitionReflexive/Transitive 4-arg 直接展開 refactor) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 4-16 推移)
+
+| 評価軸 | Day 4-15 変化 | Day 16 | 変化 |
+|---|---|---|---|
+| S1 5 軸 | 全日 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 全日 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | Day 15 4/5 (P5 6 度目) | **4/5 (P5 7 度目強適用: transitionLegacy deprecation since 指定で assumption 強制)** | 維持 + P5 7 度目 |
+| F/B/H 強適用 | Day 9-15 5 強適用継続 | **5 強適用継続** | 維持 |
+| G1-G6 anti-pattern 回避 | 全日 4/4 | **4/4** | 維持 |
+| Section 10.2 適合 | Day 15 6/8+0 (10 度目、新規 file パターン復帰) | **6/8+0 (11 度目、MODIFY path 2 度目運用検証、Pattern #7 hook 九段階発展完了)** | hook 九段階発展完了 |
+| 強制化次元 | Day 15 2 (A-Minimal + A-Compact) | **2 (維持、Day 17+ A-Standard へ)** | 維持 (Day 16 は別分野転用) |
+
+#### Day 16 で前進した項目
+
+1. **Section 2.15 Day 9+ 繰り延べ課題 A-Compact 解消** (6 セッション繰り延べから A-Compact で半解消、完全削除は Day 17+)
+2. **cycle 内学習 transfer 4 形態体系化完了** (単純 / 先回り / cross-verification / 2 段階別分野転用)
+3. **TyDD-S4 P5 explicit assumptions 7 度目強適用** (transitionLegacy deprecation since 指定で「Day 17+ 完全削除予告」を attribute assumption として explicit 記録)
+4. **Day 8 D3 暫定方針撤回 + Section 2.9 完結** (TransitionReflexive/Transitive を 4-arg signature 直接展開に refactor、Day 8 で legacy 版 properties を暫定採用した方針を Day 16 で完全撤回)
+5. **Pattern #7 hook 九段階発展完了** (両パターン運用 6 度目、Day 5-16 累積 11 セッション)
+6. **deprecation_history field の構造化記録** (artifact-manifest に新規追加、transitionLegacy の introduced / deprecated / removal_scheduled / transfer_pattern を記録)
+7. **cycle 内学習 transfer 形態の使い分け実証** (Day 15 cross-verification vs Day 16 単純 transfer)
+
+#### Day 16 で paper finding と TyDD の合流
+
+Day 15 で確立した **A-Compact Hybrid macro × 段階的 Lean 機能習得パス 2/4** を Day 16 で **別分野転用 (Spine 層 transitionLegacy A-Compact)** に発展:
+- Day 14 `@[deprecated]` モデルの Spine 層別分野転用は TyDD-G3 linter integration の応用範囲拡張 (PROV-O 特化 → 汎用 deprecation)
+- 段階的 deprecation → removal (Day 16 A-Compact → Day 17 A-Standard) は TyDD-S4 P4 (power-to-weight) + 工学的 best practice
+- TransitionReflexive/Transitive 4-arg 直接展開は TyDD-S1 (types-first、Day 8 D3 暫定から Day 16 完全型依存への refactor)
+- `deprecation_history` field は TyDD-F6 (documentation alongside code) + Section 12.3 benefit #4 (contracts/APIs via manifest)
+
+**Section 10.2 Pattern #7 hook の九段階発展**:
+- **Day 5**: hook 設計 + 構造的 closure
+- **Day 6/7/8/9**: 4 度連続運用検証 (運用安定性)
+- **Day 10**: v2 拡張 (governance evolution)
+- **Day 11/12/13**: v2 3 度連続運用検証 = 運用定常化 (新規 file パターン)
+- **Day 14**: MODIFY path 対応確認 (1 度目)
+- **Day 15**: 新規 file パターン復帰 (両パターン 4 度目運用)
+- **Day 16**: **MODIFY path 2 度目運用検証 (両パターン運用 6 度目、九段階発展完了)**
+
+#### 改善余地（優先度順、Section 2.31 で記録）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **transitionLegacy 完全削除 A-Standard** (breaking change、`since := "2026-04-19"` = Day 17 指定日) | Day 17 メイン候補 | Section 2.31 |
+| 🟡 中 | **A-Standard custom linter (Lean.Elab.Command 拡張)** | Day 17+ (Day 15 macro 学習継続、Day 16 別分野転用実例確立後の自然な次 step) | Section 2.31 |
+| 🟡 中 | **ResearchActivity payload 拡充** (Day 13-15 から継続) | Day 17+ | Section 2.31 |
+| 🟢 低 | **A-Maximal elaborator 型レベル強制** (compile error で退役違反 rejection) | Week 5-6 Tooling 層本丸 | Section 2.31 |
+| 🟢 低 | **ResearchEntity DecidableEq 手動実装** | Day 17+ | Section 2.31 |
+| 🟢 低 | **EvolutionStep 完全 4 member 化** (hypothesis / observation accessor 追加) | Week 4-5 | Section 2.31 |
+| 🟢 低 | **G5-1 §3.4 step 2 LearningM indexed monad** | Week 4-5 | Section 2.31 |
+| 🟢 低 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11 から継続) | Day 17+ 設計判断 | Section 2.31 |
+| 🟢 低 | **Day 14 + Day 15 両モデル cross-interaction test 拡張** | Day 17+ | Section 2.31 |
+
+#### Day 16 TyDD 評価で識別された実装修正 (本評価サイクル内で対処)
+
+Day 16 TyDD 評価では **追加実装修正なし** (Day 9-15 同パターン継続、Subagent I1 docstring 明文化 + I2 evaluator back-fill は paper サーベイ評価で対処済 改訂 76)。
+
+S4 P4 power-to-weight + A-Compact scope 制御を遵守、全て Day 17+ で対処判断。
+
+#### 結論
+
+Day 16 は TyDD 視点で **Day 15 の S4 4/5 + 5 強適用維持 + S4 P5 7 度目強適用 (since 指定で完全削除予告 explicit)** + **transitionLegacy deprecation A-Compact 完備 (Day 14 モデル別分野転用)** + **Section 2.9 完結 (Day 8 D3 暫定方針撤回、TransitionReflexive/Transitive 4-arg 直接展開)** + **Pattern #7 hook 九段階発展完了 (両パターン運用 6 度目)** + **cycle 内学習 transfer 4 形態体系化完了**:
+- Section 2.15 Day 9+ 6 セッション繰り延べ課題を A-Compact で半解消、Day 17+ 完全削除予告
+- Day 8 暫定方針 (legacy ベース properties) → Day 16 完全型依存 (4-arg 直接展開) の本格 refactor
+- cycle 内学習 transfer の 4 形態 (単純 / 先回り / cross-verification / 2 段階別分野転用) が Day 16 で体系化完了
+- `deprecation_history` field で artifact-manifest 上に deprecation 変遷を構造化記録
+
+Day 17 は transitionLegacy 完全削除 A-Standard が main scope 候補 (`since := "2026-04-19"` = Day 17 指定日、breaking change で 1 日の間を置いて実施、工学的 best practice)。Day 1-16 累計で **S4 4/5 + P5 7 度目 / F/B/H 5 強適用 / paper finding 64 件 / Section 10.2 6/8 + 0 構造違反 (11 度連続) / paper × 実装合流 13 種カテゴリ / 強制化次元 2 (維持) / cycle 内学習 transfer 4 形態体系化完了** 確立。
+
 ---
 
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
@@ -4645,6 +4741,29 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - I2 (自己参照): evaluator プレースホルダ → back-fill + subagent_verification field 追加
     - **Day 15 cross-verification とは異なり Day 16 は単純 transfer 対応** (Subagent 推奨を素直採用)、cycle 内学習 transfer 形態選択の使い分け実証
     - paper サーベイ評価サイクル「実装修正組込み」8 度目適用 (Day 9-16 継続)
+- 2026-04-18 (**改訂 77**): Day 16 TyDD 視点評価 + 改善提案 9 件追加 (実装修正なし、cycle step 3+4)
+  - Section 12.47 (新規): Day 16 TyDD 達成度評価 (Day 4-16 推移表含む)
+    - S1 5 軸 5/5 維持、S1 benefits 9/10 維持
+    - S4 4/5 強適用維持 (P5 explicit assumptions **7 度目強適用**: transitionLegacy deprecation since 指定で「Day 17+ 完全削除予告」を attribute assumption として explicit 記録)
+    - F/B/H 5 強適用継続
+    - Section 10.2 適合 6/8+0 (**11 度連続**、MODIFY path 2 度目運用検証で Pattern #7 hook **九段階発展完了**)
+    - 強制化次元 = 2 (維持、Day 16 は別分野転用、Day 17+ A-Standard で拡張)
+  - 主要発見:
+    - Section 2.15 Day 9+ 繰り延べ 6 セッション課題を A-Compact で半解消 (Day 17 A-Standard で完全解消予定)
+    - **cycle 内学習 transfer 4 形態体系化完了** (単純 / 先回り / cross-verification / 2 段階別分野転用)
+    - Day 8 D3 暫定方針撤回 (TransitionReflexive/Transitive 4-arg 直接展開、Section 2.9 完結)
+    - Pattern #7 hook 九段階発展完了 (両パターン運用 6 度目、Day 5-16 累積 11 セッション)
+    - `deprecation_history` field 構造化記録 (artifact-manifest 上で deprecation 変遷追跡)
+    - cycle 内学習 transfer 形態選択使い分け実証 (Day 15 cross-verification / Day 16 単純 transfer)
+  - Section 2.31 (新規): Day 16 評価から導出した改善余地 (Day 17+ 対処、9 項目)
+    - 🟡 Day 17 transitionLegacy 完全削除 A-Standard (`since := "2026-04-19"` = Day 17 指定日、breaking change)
+    - 🟡 Day 17+ A-Standard custom linter / ResearchActivity payload 拡充 (Day 13-15 継続)
+    - 🟢 Day 17+ DecidableEq / 両モデル cross-interaction test 拡張
+    - 🟢 Week 4-5 EvolutionStep 4 member / LearningM
+    - 🟢 Week 5-6 A-Maximal elaborator (Tooling 層本丸)
+    - 🟢 Day 17+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25/2.27/2.29 継続)
+  - 実装修正なし (Day 9-15 同パターン継続): S4 P4 power-to-weight + A-Compact scope 制御遵守、Subagent 検証 PASS + I1 docstring 明文化 + I2 evaluator back-fill は paper サーベイ評価で対処済 (改訂 76)
+  - Day 17 改善事項: transitionLegacy 完全削除 A-Standard main / A-Standard custom linter / ResearchActivity payload / DecidableEq
 
 ## マーク凡例
 
