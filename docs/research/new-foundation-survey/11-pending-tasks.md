@@ -2370,6 +2370,25 @@ Day 10 は ResearchAgent 着手 + EvolutionStep transition → ResearchActivity.
     全て Day 10+ で対処判断 (TyDD 評価サイクルでの「実装修正なし」も新パターン)
   - Day 10 改善事項: ResearchAgent / EvolutionStep transition mapping / DecidableEq /
     payload 拡充 / HandoffChain 全体 embed
+- 2026-04-18 (**改訂 39**): Day 9 後続影響の metadata 反映 (README のみ追加対応)
+  - README.md: Phase 0 Week 2 Day 9 完了セクション新設
+    - Day 9 2 項目詳細 (ResearchEntity 4 constructor + 4 toEntity Mapping / ResearchActivity 5 variant)
+    - 累計指標表 (Day 8 vs Day 9、97+111 jobs、example 240)
+    - Day 9 で達成した TyDD/paper 進展:
+      - 02-data-provenance §4.1 PROV-O 3 type 完備
+      - G5-1 §3.4 step 2 LearningM 前提構築 (verify ≡ EvolutionStep B4 整合)
+      - namespace extension pattern × TyDD-S1 合流 (循環依存回避設計)
+      - Pattern #7 hook 4 度連続運用検証 (運用安定性確立)
+      - 内部規範 layer 横断 transfer 拡張継続 (4 段階)
+      - Subagent I2 即時実装修正対処 (paper サーベイ評価サイクル新パターン)
+      - paper × 実装 6 度目合流カテゴリ確立 (namespace extension pattern by layer architecture)
+      - paper finding 29 件累計
+    - verifier_history Day 1-9 一括補完 (4 → 14 entries) も明示
+  - 注: artifact-manifest.json の Day 9 主要 metadata (version 0.10、4 新規 entries、
+    build_status 97+111、example 240、provenance_layer_progress / governance_hook 4 度目 /
+    cross_process_test 更新 / prov_mapping_status フィールド + verifier_history 拡充) は
+    Day 9 code commit `fa5b373` に既に含まれているため本改訂では README のみ追加対応
+    (Day 6-8 改訂 21/27/33 同パターン)
 
 ## マーク凡例
 

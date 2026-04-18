@@ -408,6 +408,59 @@ Section 2.14 Day 8 着手前判断 (Q1 B-Medium / Q3 案 A / Q4 案 A) に従い
 - **paper × 実装 5 度目合流カテゴリ確立** (layer architecture redefinition)
 - **paper finding 24 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 1-3 関連: 1)
 
+## 現状: Phase 0 Week 2 Day 9 完了（2026-04-18 追加）
+
+Section 2.16 Day 9 着手前判断 (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 A 循環依存回避設計)
+に従い実装。**Provenance 層 3 type 完備** (Verdict + ResearchEntity + ResearchActivity)、
+**Pattern #7 hook 4 度連続運用検証**、**namespace extension pattern × TyDD-S1 合流**、
+**Subagent I2 実装修正即時対処** (paper サーベイ評価サイクル新パターン)。
+
+### Day 9 の 2 項目 (Q2 A-Minimal scope)
+
+- [x] **ResearchEntity 4 constructor inductive** (`AgentSpec/Provenance/ResearchEntity.lean`、Q3 案 A、Process embed)
+  - `inductive ResearchEntity { Hypothesis (h : Hypothesis), Failure (f : Failure), Evolution (e : Evolution), Handoff (h : Handoff) }`
+  - **4 toEntity Mapping** (Q4 案 A、本ファイル内 namespace AgentSpec.Process 配下に配置で循環依存回避)
+  - 4 isXxx Bool 判定 helper + trivial fixture
+  - deriving Inhabited, Repr (DecidableEq は Evolution recursive 制約で省略、Day 10+ 検討)
+  - Day 9 意思決定ログ D1-D3
+- [x] **ResearchActivity 5 variant inductive** (`AgentSpec/Provenance/ResearchActivity.lean`、02-data-provenance §4.1 PROV-O 通り)
+  - `inductive ResearchActivity { investigate, decompose, refine, verify (input : Hypothesis) (output : Verdict), retire }`
+  - **verify variant は Day 8 EvolutionStep B4 4-arg post と整合** (Day 10+ で transition → activity mapping path 確立予定)
+  - isVerify / isRetire 判定 + trivial fixture (= investigate)
+  - deriving DecidableEq, Inhabited, Repr
+  - Day 9 意思決定ログ D1-D3
+- [x] `AgentSpec/Test/Provenance/ResearchEntityTest.lean` (**21 件**、4 toEntity dot notation + Cross-process embed: `List ResearchEntity.length = 4`)
+- [x] `AgentSpec/Test/Provenance/ResearchActivityTest.lean` (**22 件**、verify payload + EvolutionStep B4 整合検証 + Subagent I2 docstring 注記)
+- [x] `lake build AgentSpec` ✓ (exit 0, **97 jobs**、Provenance 層 +2)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **111 jobs**)
+- [x] /verify Round 1 PASS (logprob A 全体 margin **0.601** + Subagent PASS、addressable 0、informational I1 verifier_history Day 1-9 一括追加 / I2 即時実装修正対処 / I3 Day 10+ 検討)
+- [x] **Pattern #7 hook 4 度目適用** (運用安定性 4 度連続検証成功)
+- [x] **verifier_history Day 1-9 一括補完** (Week 1 Round 1-4 のみから 14 entries に拡充)
+
+### Week 2 Day 9 時点の累計指標
+
+| 指標 | Day 8 | Day 9 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 197 | +43 (ResearchEntity 21 + ResearchActivity 22) | **240** |
+| Provenance 層 type | 1 (Verdict) | +2 (ResearchEntity + ResearchActivity) | **3 type (ResearchAgent は Day 10+)** |
+| AgentSpec build jobs | 95 | +2 (Provenance 2 type) | **97 jobs** |
+| AgentSpecTest build jobs | 107 | +4 (Provenance 2 test + 2 derived) | **111 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 (3 度運用検証) | 4 度目適用 | **1 + 4 度連続検証** |
+| verifier_history entries | 4 (Week 1 Round 1-4 のみ) | +10 (Day 1-9 補完) | **14 entries** |
+
+### Day 9 で達成した TyDD / paper 進展 (Section 12.25 + 12.26)
+
+- **02-data-provenance §4.1 PROV-O 3 type 完備** (Verdict + ResearchEntity + ResearchActivity)
+- **G5-1 §3.4 step 2 LearningM 前提構築** (ResearchActivity.verify ≡ EvolutionStep B4 整合)
+- **namespace extension pattern × TyDD-S1 合流** (循環依存回避設計)
+- **Pattern #7 hook 4 度連続運用検証** (運用安定性確立)
+- **内部規範 layer 横断 transfer 拡張継続** (4 段階: fullSpine → fullProcess → fullStack → List ResearchEntity)
+- **Subagent I2 即時実装修正対処** (paper サーベイ評価サイクル新パターン)
+- **paper × 実装 6 度目合流カテゴリ確立** (namespace extension pattern by layer architecture)
+- **paper finding 29 件累計** (Day 4-9 + Day 1-3 関連)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
