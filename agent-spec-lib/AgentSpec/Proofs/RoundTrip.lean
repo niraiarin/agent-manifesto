@@ -86,22 +86,70 @@ theorem roundTrip_bounded_stable_7 :
           roundTripOk ⟨m, n, p, none⟩ := by
   decide
 
-/-! ### 補助 signature（Day 2-5 で証明実装予定）
+/-! ### Day 5: 補助 lemma の段階的証明 + bounded 拡張 -/
 
-以下の theorem 宣言は Day 1 では保留。Day 2-5 で `induction` / `simp` / `rfl`
-を用いて順次埋めていく。`sorry` 禁止 (GA-W4) のため、本節はコメントとして記載し、
-実装完了時に theorem ブロックに移行する。
+/-- consumeChar が指定文字 + 任意 rest を一致時に消費する (rfl で証明可能)。 -/
+theorem consumeChar_dot_cons (rest : List Char) :
+    SemVer.consumeChar '.' ('.' :: rest) = some rest := rfl
 
-    -- Day 2 想定:
-    theorem consumeChar_dot_cons (rest : List Char) :
-        SemVer.consumeChar '.' ('.' :: rest) = some rest := rfl
+/-- consumeChar が不一致時に none を返す (rfl で証明可能)。 -/
+theorem consumeChar_dot_mismatch (c : Char) (h : c ≠ '.') (rest : List Char) :
+    SemVer.consumeChar '.' (c :: rest) = none := by
+  show (if c = '.' then some rest else none) = none
+  simp [h]
 
-    -- Day 3 想定:
-    theorem parseList_three_digits (m n p : Nat) (hm : m < 10) (hn : n < 10) (hp : p < 10) :
-        SemVer.parseList (SemVer.render ⟨m, n, p, none⟩).toList = some ⟨m, n, p, none⟩
+/-- consumeChar の空リスト動作: 何も消費できない。 -/
+theorem consumeChar_dot_nil :
+    SemVer.consumeChar '.' [] = none := rfl
 
-    -- Day 4-5 想定:
-    theorem roundTripUniversal_proved : roundTripUniversal
+/-- charToDigit? は 0-9 で some、それ以外で none。Day 6 で consumeNat の
+    universal proof に活用予定。 -/
+theorem charToDigit?_zero : SemVer.charToDigit? '0' = some 0 := rfl
+theorem charToDigit?_nine : SemVer.charToDigit? '9' = some 9 := rfl
+
+/-! ### 範囲拡張 bounded universal: 7³ → 8³ (Day 5)
+
+    Day 1 の 7³ = 343 ケースを 8³ = 512 ケースに拡張。
+    `decide` の heartbeat 制約 (default 200000) のため 10³ = 1000 ケースは
+    timeout。8³ = 512 が現実的上限。10³ 達成は Lean-Auto 統合 (Week 6) 待ち。
+    finite-bounded universal proof として GA-C2 / TyDD-H3 の保証強化に寄与
+    (ただし真の universal proof ではない)。 -/
+
+/-- stable release の bounded universal (8³ = 512 ケース)。Day 1 の 7³ から拡張。 -/
+theorem roundTrip_bounded_stable_8 :
+    (List.range 8).all fun m =>
+      (List.range 8).all fun n =>
+        (List.range 8).all fun p =>
+          roundTripOk ⟨m, n, p, none⟩ := by
+  decide
+
+/-! ### Day 6+ / Week 3 残課題 (universal proof 構造)
+
+universal `roundTripUniversal_proved : roundTripUniversal` を完成させるには
+以下の補題が必要:
+
+1. **consumeNat correctness** (難易度: 高):
+   ```
+   consumeNat (Nat.toString n).toList = some (n, [])
+   ```
+   `Nat.toString` の equational behavior (decimal digit decomposition) を inductive に
+   解明する必要あり。Lean 4 core / Mathlib `Nat.Digits` 関連 lemma の調査含む。
+
+2. **String/List interconversion** (難易度: 中):
+   ```
+   (String.ofList l).toList = l
+   ```
+   Lean 4 core の `String.toList_ofList` を活用。
+
+3. **parseList の inductive 構造** (難易度: 高):
+   render が出力する形式 ("M.N.P" or "M.N.P-X") の各部分を順次消費することの証明。
+   match 各分岐の正当性を induction で示す。
+
+4. **roundTripUniversal_proved 結合** (難易度: 中):
+   上記 1-3 を組合わせて全 SemVer に対する round-trip を結合。
+
+**推定工数**: 100+ 行の Lean、Day 6-Week 3 で段階的に対処。Lean-Auto / Duper 統合
+(Week 6) で SMT hammer による自動証明発見の可能性もあり。
 -/
 
 end AgentSpec.Proofs.RoundTrip

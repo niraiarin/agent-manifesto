@@ -47,6 +47,26 @@ example : LearningStage.verification.le LearningStage.verification = true := rfl
 example : LearningStage.integration.le LearningStage.integration = true := rfl
 example : LearningStage.retirement.le LearningStage.retirement = true := rfl
 
+/-! ### Day 5: LE/LT instance (Section 12.11 Day 4 評価 🟡 F2 部分対処) -/
+
+/-- LE instance 経由: observation ≤ retirement (Bool 関数の Prop 昇格) -/
+example : LearningStage.observation ≤ LearningStage.retirement := by decide
+
+/-- LE instance 経由: 反射性 -/
+example : LearningStage.observation ≤ LearningStage.observation := by decide
+
+/-- LE instance 経由: 後退不可 (verification ≤ hypothesis は false) -/
+example : ¬ (LearningStage.verification ≤ LearningStage.hypothesis) := by decide
+
+/-- LT instance 経由: 厳密順序 observation < hypothesis -/
+example : LearningStage.observation < LearningStage.hypothesis := by decide
+
+/-- LT instance 経由: 反射不可 (s < s は false、LT は strict) -/
+example : ¬ (LearningStage.observation < LearningStage.observation) := by decide
+
+/-- LT instance 経由: integration < retirement -/
+example : LearningStage.integration < LearningStage.retirement := by decide
+
 /-! ### LearningStage.isTerminal -/
 
 example : LearningStage.retirement.isTerminal = true := rfl

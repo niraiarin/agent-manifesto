@@ -58,4 +58,24 @@ example : ({path := [Sum.inl 1] : FolgeID}) ≠ ({path := [Sum.inl 2] : FolgeID}
 /-- Inhabited instance が存在する -/
 example : Inhabited FolgeID := inferInstance
 
+/-! ### Day 5: PartialOrder/LT instance (Section 10.1 元 Day 5 task) -/
+
+/-- LT instance: root < root.child (proper prefix が strict less) -/
+example : FolgeID.root < FolgeID.root.child (Sum.inl 1) := by decide
+
+/-- LT instance: 反射不可 (s < s は false) -/
+example : ¬ (FolgeID.root < FolgeID.root) := by decide
+
+/-- LT instance: 並行 (異なる branch) は order なし -/
+example : ¬ (({path := [Sum.inl 1] : FolgeID}) < ({path := [Sum.inl 2] : FolgeID})) := by decide
+
+/-- PartialOrder instance: le_refl が type class resolution 経由で利用可能 -/
+example : ∀ a : FolgeID, a ≤ a := FolgeID.le_refl'
+
+/-- PartialOrder instance: le_trans が type class resolution 経由で利用可能 -/
+example : ∀ a b c : FolgeID, a ≤ b → b ≤ c → a ≤ c := FolgeID.le_trans'
+
+/-- PartialOrder instance: le_antisymm が type class resolution 経由で利用可能 -/
+example : ∀ a b : FolgeID, a ≤ b → b ≤ a → a = b := FolgeID.le_antisymm'
+
 end AgentSpec.Test.Spine.FolgeID

@@ -111,6 +111,29 @@ def isTerminal : LearningStage → Bool
   | .retirement => true
   | _ => false
 
+/-! ### Day 5: LE/LT/Decidable instance (FolgeID パターン踏襲、Section 2.10 + 2.11 対処)
+
+    Day 4 評価 Section 2.11 🟡 F2 Lattice 部分対処として、Bool 関数 `le` を
+    `LE`/`LT` instance に昇格。Decidable は `inferInstanceAs` で Bool 等価判定に委譲。
+    Lattice instance は overspec として保留 (LearningStage 5 element の意味論固定が
+    Week 4-5 まで未確定のため)。 -/
+
+/-- LE instance: LearningStage の forward 全順序。`s.le = true` を Prop に昇格。
+    FolgeID.instLE と同パターン (明示命名 + Bool 経由)。 -/
+instance instLE : LE LearningStage := ⟨fun a b => a.le b = true⟩
+
+/-- Decidable instance: Bool 等価判定に inferInstanceAs で委譲。
+    unfold の脆弱性 (anonymous instance 名依存) を回避。 -/
+instance (a b : LearningStage) : Decidable (a ≤ b) :=
+  inferInstanceAs (Decidable (a.le b = true))
+
+/-- LT instance: 厳密順序は le かつ ≠ で定義 (Mathlib LT/LE 標準パターン)。 -/
+instance instLT : LT LearningStage := ⟨fun a b => a ≤ b ∧ a ≠ b⟩
+
+/-- LT の Decidable instance: LE Decidable + DecidableEq の合成。 -/
+instance (a b : LearningStage) : Decidable (a < b) :=
+  inferInstanceAs (Decidable (a ≤ b ∧ a ≠ b))
+
 end LearningStage
 
 /-- P3 学習サイクル type class (G5-1 §3.4 ステップ 2)。
