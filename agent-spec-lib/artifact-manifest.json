@@ -1450,9 +1450,21 @@
       "date": "2026-04-18",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (102+121 jobs、MODIFY のみで jobs 変化なし)、Subagent 検証は本 commit 後の cycle step 1 (改訂 66 paper サーベイ評価サイクル) で実施予定 (Day 12-13 同パターン継続)",
+      "informational_count": 3,
+      "evaluator": "build PASS (102+121 jobs、MODIFY のみで jobs 変化なし) + Subagent 検証 PASS (改訂 66 paper サーベイ評価サイクルで実施、addressable 0 + informational 3)",
       "p2_complete_for": "day-14-provenance-retired-entity-linter-a-minimal",
-      "note": "Day 14 Provenance 層 RetiredEntity linter A-Minimal 実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C、Day 12-13 の structural detection + relation 完備を Lean 4 標準 @[deprecated] attribute で強制化)。4 deprecated fixture 追加 (refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated / withdrawnTrivialDeprecated、@[deprecated \"退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)\" (since := \"2026-04-18\")] 付与、test fixture のみ対象で production code backward compatible)。Build 102+121 jobs 維持 (MODIFY のみで jobs 変化なし)、example 346→354 (+8 RetiredEntityTest 内)。Pattern #7 hook は MODIFY path でも artifact-manifest 同 commit を確認 (Day 14 新分野パターン: 新規 file 追加なしでも linter 実装可能)。Day 11-14 で 4 Day 連続 rfl preference 維持 (cycle 内学習 transfer 3 度目適用)。Day 15+ で A-Compact (custom attribute @[retired]) / A-Standard (custom linter Lean.Elab.Command) / A-Maximal (elaborator 型レベル強制) へ段階的拡張パス"
+      "subagent_verification": {
+        "executed_in_commit": "改訂 66 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": [
+          "I1: Day 14 R1 evaluator が「本 commit 後の cycle step 1 で実施予定」プレースホルダのまま (Day 12 I1 / Day 13 I1 同パターン)、本 Subagent 検証結果で back-fill (本 commit で対処)",
+          "I2: @[deprecated] syntax `@[deprecated \"msg\" (since := \"date\")]` は Lean 4.29.0 (pinned) 互換確認、(since := ...) 名前付き引数は Lean v4.7.0+ で利用可能 (action 不要、監査記録)",
+          "I3: deprecated_api_usage: 0 は self-reported field、Day 15+ linter 拡張 (A-Compact / A-Standard / A-Maximal) で機械的検証可能化 (action 不要、Day 15+ design hint)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」6 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective / Day 12 I1+I2 / Day 13 I1 / Day 14 I1 即時対処の継続、cycle 内学習 transfer の構造的効果継続: Day 13-14 で Subagent 検出項目数 1 安定維持)"
+      },
+      "note": "Day 14 Provenance 層 RetiredEntity linter A-Minimal 実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C、Day 12-13 の structural detection + relation 完備を Lean 4 標準 @[deprecated] attribute で強制化)。4 deprecated fixture 追加 (refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated / withdrawnTrivialDeprecated、@[deprecated \"退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)\" (since := \"2026-04-18\")] 付与、test fixture のみ対象で production code backward compatible)。Build 102+121 jobs 維持 (MODIFY のみで jobs 変化なし)、example 346→354 (+8 RetiredEntityTest 内)。Pattern #7 hook は MODIFY path でも artifact-manifest 同 commit を確認 (Day 14 新分野パターン: 新規 file 追加なしでも linter 実装可能)。Day 11-14 で 4 Day 連続 rfl preference 維持 (cycle 内学習 transfer 3 度目適用)。Subagent VERDICT: PASS (addressable 0、informational 3: I1 即時対処、I2/I3 注記のみ、Day 13 同パターン継続で検出項目数 1 安定)。Day 15+ で A-Compact (custom attribute @[retired]) / A-Standard (custom linter Lean.Elab.Command) / A-Maximal (elaborator 型レベル強制) へ段階的拡張パス"
     }
   ]
 }
