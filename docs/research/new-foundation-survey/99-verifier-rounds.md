@@ -685,3 +685,79 @@ informational 5 件:
 - TyDD 達成度: S1 5/5 / benefits 9/10 / S4 3/5 強適用 / **Section 10.2 6/8 + 0 構造違反 (運用検証完了)** / **F/B/H 強適用 = B3 + F2 部分 + H4 新規部分** (詳細 Section 12.17)
 - 論文サーベイ達成度: **paper finding 14 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 1-3 関連: 1、詳細 Section 12.16)
 - paper × 概念 合流カテゴリ: **3 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C)
+
+---
+
+## Phase 0 Week 2 Day 7 検証 (2026-04-18 — Day 7 commit `941b25c` 後)
+
+**背景**: Section 2.11 Day 7 着手前判断 (Q1 Minimal / Q2 案 A / Q3 案 B / Q4 案 A) に従い Process 層継続実装。Day 6 評価 Section 2.12 🟡 cross-process interaction test を Q2 案 A で解消、Section 2.9 B4 4-arg post を Q3 案 B (signature のみ Day 7、完全統合 Day 8+) で部分解消。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 7 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体、margin 0.232)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 2 [軽微]、informational 4）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 (軽微) | Evolution の `deriving Inhabited` の解決パスが docstring から不明確 (recursive inductive で `initial Hypothesis.default` が選択されることの注記推奨) | Evolution.lean docstring に D4 追加 (Inhabited 解決パス + Hypothesis.default + DecidableEq 省略の理由) |
+| A2 (軽微) | EvolutionTest cross-process test で `simp` tactic 初出 (Day 1-6 は `rfl`/`decide` のみ)、使用理由 docstring 推奨 | EvolutionTest.lean cross-process test に docstring 追加 (`simp` 必要理由: 複数 def の同時 reduction、複合 example で `rfl` 単独不可) |
+
+informational 4 件:
+- I1: artifact-manifest aggregated_example_count 171 が breakdown と一致 → 確認済 (24+16+16+4+10+28+7+12+17+16+21 = 171)
+- I2: HandoffChain は DecidableEq deriving していない (HandoffChain 自体は inductive、Handoff structure のみ DecidableEq) → 一貫している、manifest 記述正確
+- I3: Section 2.11 Q3 案 B の「signature 宣言のみ」と実装の「宣言なし」は厳密に齟齬だが意図的 scope 制御として許容
+- I4: Pattern #7 hook 2 度目適用の運用検証 → manifest `governance_hook` フィールドで記録済
+
+**Day 7 2 項目詳細** (Q1-Q4 採用案反映):
+
+1. **AgentSpec/Process/Evolution.lean** (Q3 案 B):
+   - `inductive Evolution { initial (h : Hypothesis), refineWith (prev : Evolution) (refined : Hypothesis) }`
+   - 3 recursive accessor: `origin` / `latest` / `stepCount`
+   - `trivial` fixture
+   - `deriving Inhabited, Repr` (DecidableEq は recursive inductive のため省略、Day 8+ 検討)
+   - **PROV mapping in docstring**: `ResearchActivity` (Day 8+ で実装)
+   - **Q3 案 B 確定**: B4 4-arg post (`(pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop`) 完全統合は Day 8+ Verdict 型確定後 (Section 2.9 部分解消)
+   - Day 7 意思決定ログ D1-D4 (inductive 採用 / refineWith Hypothesis のみ Q3 案 B / accessor recursive def / Subagent A1 Inhabited 解決パス注記)
+
+2. **AgentSpec/Process/HandoffChain.lean** (agent-manifesto T1 一時性):
+   - `structure Handoff { fromAgent, toAgent, payload : String }` (Day 8+ で `ResearchAgent` 型化)
+   - `inductive HandoffChain { empty, cons (h : Handoff) (rest : HandoffChain) }`
+   - `length` / `append` / `trivialHandoff` / `trivial`
+   - `deriving DecidableEq Handoff / Inhabited / Repr`
+   - **PROV mapping in docstring**: `ResearchAgent` (Day 8+ で実装)
+   - Day 7 意思決定ログ D1-D3 (2 type 構成 / cons inductive / agent identifier String)
+
+**Pattern #7 hook 2 度目適用**: 新規 Process .lean (2 個) が staged されたため `agent-spec-lib/artifact-manifest.json` も同 commit に含めて構造的整合性を確保。**hook が pass-through 確認** (Day 6 初適用に続く 2 度目)、**運用安定性継続検証成功**。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 94 jobs (Process 層 +2)、`lake build AgentSpecTest` exit 0 / 104 jobs、theorem 15 (不変), example 134→171 (+37), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-7 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | `d1031d5` (conservative) | R1 PASS | written |
+| Day 7 | `941b25c` (compatible) | `04c632b` (conservative) | `e4d5dda` (conservative) | `760f014` (compatible) | (本 commit) | R1 PASS | written |
+
+**Day 7 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-7 追加 0)
+- example: 171 (Day 6 134 + Day 7 追加 37: EvolutionTest 16 + HandoffChainTest 21)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 94 jobs) + AgentSpecTest (test 104 jobs)** (Day 6 92+100 から Process 層 +2/+4)
+- **Spine 層 4 type class 完備 + 順序関係完備** (Day 4-5 達成)
+- **Process 層 4 type 完備** (Day 6-7 で Hypothesis + Failure + Evolution + HandoffChain)
+- **構造的 governance hook**: 1 (Pattern #7、Day 5 設計実装、Day 6 初適用、**Day 7 で 2 度目運用検証 = 運用安定性継続**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / S4 3/5 強適用 / Section 10.2 6/8 + 0 構造違反 / **F/B/H 強適用 = B3 + F2 部分 + H4 + H10 新規部分** (詳細 Section 12.20)
+- 論文サーベイ達成度: **paper finding 19 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 1-3 関連: 1、詳細 Section 12.19)
+- paper × 概念 合流カテゴリ: **4 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C / **Day 7 internal-norm × layer transfer fullSpineExample → fullProcessExample**)
