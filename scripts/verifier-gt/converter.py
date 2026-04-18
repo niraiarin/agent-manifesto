@@ -68,6 +68,70 @@ COMMIT_FAITHFULNESS_CRITERION = {
     ),
 }
 
+ULTRAFEEDBACK_CRITERION = {
+    "id": "gpt4_preference",
+    "name": "GPT-4 Preference",
+    "description": (
+        "Which response is better per high-quality judgment? Consider "
+        "correctness, helpfulness, and clarity. A high-quality response "
+        "scores HIGH; a response with factual errors, poor instruction "
+        "following, or weak reasoning scores LOW."
+    ),
+}
+
+ARENA_CRITERION = {
+    "id": "human_preference",
+    "name": "Human Preference",
+    "description": (
+        "Which response would a human prefer? Consider helpfulness, "
+        "correctness, naturalness, and completeness. A response humans "
+        "would rate as better scores HIGH; one they would reject scores LOW."
+    ),
+}
+
+MT_BENCH_CRITERION = {
+    "id": "response_quality",
+    "name": "Response Quality",
+    "description": (
+        "Which response better addresses the question? Consider correctness, "
+        "depth, structure, and adherence to instructions. A strong answer "
+        "scores HIGH; a weaker or incorrect answer scores LOW."
+    ),
+}
+
+HUMANEVAL_CRITERION = {
+    "id": "code_relevance",
+    "name": "Code Relevance",
+    "description": (
+        "Does this Python code correctly implement the described function? "
+        "Code whose logic matches the signature and docstring scores HIGH. "
+        "Code that implements a different function or contains obvious bugs "
+        "scores LOW."
+    ),
+}
+
+GSM8K_CRITERION = {
+    "id": "math_answer_relevance",
+    "name": "Math Answer Relevance",
+    "description": (
+        "Does this reasoning and answer address the given math word problem? "
+        "A step-by-step solution that matches the problem's quantities and "
+        "produces a consistent numeric answer scores HIGH. A solution that "
+        "uses unrelated numbers or targets a different problem scores LOW."
+    ),
+}
+
+FEVER_CRITERION = {
+    "id": "evidence_relevance",
+    "name": "Evidence Relevance",
+    "description": (
+        "Does this text provide evidence directly relevant to the claim? "
+        "Text that addresses the claim's subject and supports or refutes it "
+        "with specific facts scores HIGH. Text about a different topic or "
+        "unrelated evidence scores LOW."
+    ),
+}
+
 # Multi-criteria decomposition (for RQ2 — decomposition effect)
 REWARDBENCH_CRITERIA_DECOMPOSED = [
     {
@@ -138,6 +202,18 @@ def convert_pairwise(
             criteria = [COMMIT_FAITHFULNESS_CRITERION]
         elif source == "lean-proof-matching":
             criteria = [LEAN_PROOF_CRITERION]
+        elif source == "ultrafeedback":
+            criteria = [ULTRAFEEDBACK_CRITERION]
+        elif source == "chatbot-arena":
+            criteria = [ARENA_CRITERION]
+        elif source == "mt-bench":
+            criteria = [MT_BENCH_CRITERION]
+        elif source == "humaneval":
+            criteria = [HUMANEVAL_CRITERION]
+        elif source == "gsm8k":
+            criteria = [GSM8K_CRITERION]
+        elif source == "fever":
+            criteria = [FEVER_CRITERION]
         else:
             criteria = [REWARDBENCH_CRITERION]  # default
 

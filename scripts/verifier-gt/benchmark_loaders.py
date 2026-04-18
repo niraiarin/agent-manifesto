@@ -353,12 +353,395 @@ def load_lean_proof_matching(
             break
 
 
+def load_ultrafeedback(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """UltraFeedback (argilla/ultrafeedback-binarized-preferences, #625).
+
+    Uses chosen/rejected from GPT-4 preference (quasi-ground-truth).
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("argilla/ultrafeedback-binarized-preferences", split="train", cache_dir=cache_dir)
+
+    def convert(row, idx):
+        # Schema: source, instruction, chosen_response, rejected_response, chosen_rating, rejected_rating
+        prompt = row.get("instruction") or ""
+        chosen = row.get("chosen_response") or row.get("chosen", "")
+        rejected = row.get("rejected_response") or row.get("rejected", "")
+        return PairwiseExample(
+            example_id=str(idx),
+            prompt=prompt,
+            chosen=chosen,
+            rejected=rejected,
+            category=row.get("source"),
+            metadata={
+                "source": "ultrafeedback",
+                "chosen_rating": row.get("chosen_rating"),
+                "rejected_rating": row.get("rejected_rating"),
+            },
+        )
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_src = defaultdict(list)
+        for idx, row in enumerate(ds):
+            by_src[row.get("source") or "unknown"].append((idx, row))
+        n_src = len(by_src)
+        per_src = max(1, limit // n_src)
+        count = 0
+        for src, items in by_src.items():
+            for idx, row in items[:per_src]:
+                yield convert(row, idx)
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for idx, row in enumerate(ds):
+        yield convert(row, idx)
+        if limit is not None and idx + 1 >= limit:
+            break
+
+
+def load_chatbot_arena(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """Chatbot Arena Conversations (lmsys/chatbot_arena_conversations, #626).
+
+    Filters rows with clear winner vote. Uses single-turn prompts.
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("lmsys/chatbot_arena_conversations", split="train", cache_dir=cache_dir)
+
+    def _extract_first_turn(conv):
+        """conv is a list of dicts with role/content. Return first user prompt and assistant reply."""
+        if not conv:
+            return "", ""
+        user = ""
+        assistant = ""
+        for msg in conv:
+            role = msg.get("role", "")
+            if role == "user" and not user:
+                user = msg.get("content", "") or ""
+            elif role == "assistant" and user and not assistant:
+                assistant = msg.get("content", "") or ""
+                break
+        return user, assistant
+
+    def convert(row, idx):
+        winner = row.get("winner", "")
+        if winner not in ("model_a", "model_b"):
+            return None
+        conv_a = row.get("conversation_a") or []
+        conv_b = row.get("conversation_b") or []
+        prompt_a, resp_a = _extract_first_turn(conv_a)
+        prompt_b, resp_b = _extract_first_turn(conv_b)
+        prompt = prompt_a or prompt_b
+        if not prompt or not resp_a or not resp_b:
+            return None
+        if winner == "model_a":
+            chosen, rejected = resp_a, resp_b
+        else:
+            chosen, rejected = resp_b, resp_a
+        return PairwiseExample(
+            example_id=str(row.get("question_id", idx)),
+            prompt=prompt,
+            chosen=chosen,
+            rejected=rejected,
+            category=row.get("language") or row.get("turn"),
+            metadata={
+                "source": "chatbot-arena",
+                "model_a": row.get("model_a"),
+                "model_b": row.get("model_b"),
+                "winner": winner,
+            },
+        )
+
+    count = 0
+    all_rows = []
+    for idx, row in enumerate(ds):
+        ex = convert(row, idx)
+        if ex is None:
+            continue
+        all_rows.append(ex)
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_cat = defaultdict(list)
+        for ex in all_rows:
+            by_cat[ex.category or "unknown"].append(ex)
+        n_cats = len(by_cat)
+        per_cat = max(1, limit // n_cats)
+        for cat, items in by_cat.items():
+            for ex in items[:per_cat]:
+                yield ex
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for ex in all_rows:
+        yield ex
+        count += 1
+        if limit is not None and count >= limit:
+            break
+
+
+def load_mt_bench(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """MT-Bench human judgments (lmsys/mt_bench_human_judgments, #627).
+
+    Uses first-turn pairwise human-preference judgments.
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("lmsys/mt_bench_human_judgments", split="human", cache_dir=cache_dir)
+
+    def convert(row, idx):
+        winner = row.get("winner", "")
+        if winner not in ("model_a", "model_b"):
+            return None
+        conv_a = row.get("conversation_a") or []
+        conv_b = row.get("conversation_b") or []
+
+        def turns_to_text(conv):
+            if not conv:
+                return "", ""
+            user = ""
+            assistant = ""
+            for msg in conv:
+                r = msg.get("role")
+                c = msg.get("content") or ""
+                if r == "user" and not user:
+                    user = c
+                elif r == "assistant" and user and not assistant:
+                    assistant = c
+                    break
+            return user, assistant
+
+        prompt_a, resp_a = turns_to_text(conv_a)
+        prompt_b, resp_b = turns_to_text(conv_b)
+        prompt = prompt_a or prompt_b
+        if not prompt or not resp_a or not resp_b:
+            return None
+        if winner == "model_a":
+            chosen, rejected = resp_a, resp_b
+        else:
+            chosen, rejected = resp_b, resp_a
+        return PairwiseExample(
+            example_id=str(row.get("question_id", idx)),
+            prompt=prompt,
+            chosen=chosen,
+            rejected=rejected,
+            category=row.get("category") or row.get("turn"),
+            metadata={
+                "source": "mt-bench",
+                "model_a": row.get("model_a"),
+                "model_b": row.get("model_b"),
+                "turn": row.get("turn"),
+            },
+        )
+
+    all_rows = []
+    for idx, row in enumerate(ds):
+        ex = convert(row, idx)
+        if ex is not None:
+            all_rows.append(ex)
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_cat = defaultdict(list)
+        for ex in all_rows:
+            by_cat[ex.category or "unknown"].append(ex)
+        n_cats = len(by_cat)
+        per_cat = max(1, limit // n_cats)
+        count = 0
+        for cat, items in by_cat.items():
+            for ex in items[:per_cat]:
+                yield ex
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    count = 0
+    for ex in all_rows:
+        yield ex
+        count += 1
+        if limit is not None and count >= limit:
+            break
+
+
+def load_humaneval(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """HumanEval (openai_humaneval, #628).
+
+    Constructed pairwise: prompt = function signature + docstring;
+    chosen = canonical_solution (passes tests); rejected = another problem's solution (distractor).
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("openai_humaneval", split="test", cache_dir=cache_dir)
+    rows = list(ds)
+    n = len(rows)
+
+    def convert(row, d):
+        return PairwiseExample(
+            example_id=row["task_id"],
+            prompt=row["prompt"],
+            chosen=row["canonical_solution"],
+            rejected=d["canonical_solution"],
+            category=row["task_id"].split("/")[0],
+            metadata={"source": "humaneval", "distractor": d["task_id"]},
+        )
+
+    for i, row in enumerate(rows):
+        distractor = rows[(i + n // 2) % n]
+        yield convert(row, distractor)
+        if limit is not None and i + 1 >= limit:
+            break
+
+
+def load_gsm8k(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """GSM8K (gsm8k, #629).
+
+    Constructed pairwise: prompt = math word problem;
+    chosen = correct reasoning + answer; rejected = another problem's reasoning (distractor).
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("gsm8k", "main", split="test", cache_dir=cache_dir)
+    rows = list(ds)
+    n = len(rows)
+
+    def convert(row, d, idx):
+        return PairwiseExample(
+            example_id=str(idx),
+            prompt=row["question"],
+            chosen=row["answer"],
+            rejected=d["answer"],
+            category="gsm8k",
+            metadata={"source": "gsm8k"},
+        )
+
+    for i, row in enumerate(rows):
+        distractor = rows[(i + n // 2) % n]
+        yield convert(row, distractor, i)
+        if limit is not None and i + 1 >= limit:
+            break
+
+
+def load_fever(
+    limit: Optional[int] = None,
+    cache_dir: Optional[str] = None,
+    stratified: bool = False,
+) -> Iterator[PairwiseExample]:
+    """FEVER with gold evidence (copenlu/fever_gold_evidence, #630).
+
+    Substitutes for the original SciFact plan (HF-gated dataset scripts).
+    Constructed pairwise over claims + evidence:
+    chosen = this claim's own gold evidence (topically relevant);
+    rejected = another claim's evidence (topical distractor).
+    """
+    if load_dataset is None:
+        raise RuntimeError("datasets library not installed")
+
+    ds = load_dataset("copenlu/fever_gold_evidence", split="validation", cache_dir=cache_dir)
+    rows = []
+    for row in ds:
+        ev = row.get("evidence")
+        if not ev:
+            continue
+        # evidence is a stringified list-of-lists [[title, line_id, text], ...]
+        try:
+            import ast
+            parsed = ast.literal_eval(ev) if isinstance(ev, str) else ev
+            evidence_texts = []
+            for e in parsed:
+                if isinstance(e, list) and len(e) >= 3:
+                    evidence_texts.append(str(e[2]))
+            ev_joined = " ".join(evidence_texts)[:1500]
+        except Exception:
+            continue
+        if not ev_joined:
+            continue
+        rows.append({
+            "id": row.get("id"),
+            "claim": row.get("claim", ""),
+            "evidence": ev_joined,
+            "label": row.get("label", ""),
+        })
+
+    n = len(rows)
+    if n < 2:
+        return
+
+    def convert(r, d, i):
+        return PairwiseExample(
+            example_id=str(r["id"] or i),
+            prompt=f"Claim: {r['claim']}\n\nWhich text provides evidence directly relevant to this claim?",
+            chosen=r["evidence"],
+            rejected=d["evidence"],
+            category=r["label"],
+            metadata={"source": "fever", "distractor": d["id"]},
+        )
+
+    if stratified and limit:
+        from collections import defaultdict
+        by_label = defaultdict(list)
+        for r in rows:
+            by_label[r["label"]].append(r)
+        n_labels = len(by_label)
+        per_label = max(1, limit // n_labels)
+        count = 0
+        for label, items in by_label.items():
+            for idx, r in enumerate(items[:per_label]):
+                orig_idx = rows.index(r)
+                yield convert(r, rows[(orig_idx + n // 2) % n], orig_idx)
+                count += 1
+                if count >= limit:
+                    return
+        return
+
+    for i, r in enumerate(rows):
+        yield convert(r, rows[(i + n // 2) % n], i)
+        if limit is not None and i + 1 >= limit:
+            break
+
+
 LOADERS = {
     "rewardbench": load_rewardbench,
     "judgebench": load_judgebench,
     "swebench": load_swebench,
     "commit-faithfulness": load_git_commit_faithfulness,
     "lean-proof": load_lean_proof_matching,
+    "ultrafeedback": load_ultrafeedback,
+    "chatbot-arena": load_chatbot_arena,
+    "mt-bench": load_mt_bench,
+    "humaneval": load_humaneval,
+    "gsm8k": load_gsm8k,
+    "fever": load_fever,
 }
 
 
