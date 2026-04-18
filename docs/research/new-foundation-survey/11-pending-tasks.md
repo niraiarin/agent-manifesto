@@ -4764,6 +4764,27 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 17+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25/2.27/2.29 継続)
   - 実装修正なし (Day 9-15 同パターン継続): S4 P4 power-to-weight + A-Compact scope 制御遵守、Subagent 検証 PASS + I1 docstring 明文化 + I2 evaluator back-fill は paper サーベイ評価で対処済 (改訂 76)
   - Day 17 改善事項: transitionLegacy 完全削除 A-Standard main / A-Standard custom linter / ResearchActivity payload / DecidableEq
+- 2026-04-18 (**改訂 78**): Day 16 metadata 反映 (cycle step 5)
+  - README.md: Phase 0 Week 2 Day 16 完了セクション新設
+    - Day 16 1 項目詳細 (transitionLegacy @[deprecated] + TransitionReflexive/Transitive 4-arg 直接展開、Q3 案 A MODIFY のみ)
+    - Subagent I1 docstring 明文化 + I2 evaluator back-fill 対処明示
+    - Day 11 Subagent I3 教訓継続 (Day 11-16 = 6 Day 連続 rfl preference)
+    - Day 14 I1 version field 教訓継続適用 (Day 16 で day16 bump)
+    - 累計指標表 (Day 15 vs Day 16、103+123 jobs 維持、example 367、Provenance 5 type + 6 relation + 2 linter + Spine 層 deprecation 1)
+    - cycle 内学習 transfer 4 形態体系化完了を新規指標として追加
+    - Day 16 で達成した TyDD/paper 進展 10 項目:
+      - Section 2.15 Day 9+ 繰り延べ 6 セッション課題 A-Compact 半解消
+      - Day 14 モデル Spine 層別分野転用 (cycle 内学習 transfer 2 段階別分野転用実例)
+      - Day 8 D3 暫定方針撤回 + Section 2.9 完結
+      - TyDD-S4 P5 7 度目強適用 (since 指定で Day 17+ 完全削除予告 explicit)
+      - Pattern #7 hook 九段階発展完了
+      - paper × 実装 13 度目合流カテゴリ
+      - paper finding 64 件累計
+      - Subagent 検証 PASS + I1/I2 即時対処
+      - cycle 内学習 transfer 4 形態体系化完了
+      - cycle 内学習 transfer 形態選択使い分け実証
+      - 新規 deprecation_history field 構造化記録
+  - 注: artifact-manifest.json の Day 16 主要 metadata は Day 16 code commit `b678856` + 改訂 76 (Subagent I1/I2 即時対処) に既に含まれているため本改訂では README 追加のみ (Day 6-15 改訂 21/27/33/39/45/51/58/63/68/73 同パターン)
 
 ## マーク凡例
 
