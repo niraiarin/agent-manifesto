@@ -356,6 +356,24 @@ Day 10 TyDD 評価 (Section 12.29) で識別された改善余地を Day 11+ で
 
 **根拠**: Section 12.29 Day 10 TyDD 評価結果テーブル。Day 10 PROV-O 4 type 完備 + Pattern #7 hook v2 拡張後の次の改善余地を集約。Day 10 TyDD 評価では追加実装修正なし (Day 9 同パターン継続、全て Day 11+ で対処)。
 
+### 2.21 Day 11 評価から導出した改善余地 (Day 12+ 対処)
+
+Day 11 TyDD 評価 (Section 12.32) で識別された改善余地を Day 12+ で対処。
+
+| マーク | 項目 | 現状 (Day 11) | 後続計画 |
+|---|---|---|---|
+| 🟡 Day 12 | **02-data-provenance §4.4 RetiredEntity** (Day 12 メイン候補に格上げ) | Day 11 で PROV-O 3 main relation 完備、退役 entity の構造的検出は未着手 | Day 12 メイン候補、`RetiredEntity` structure + Lean linter / elaborator で退役済 entity 参照を warning/error 化 |
+| 🟢 Day 13+ | **PROV-O auxiliary relations** (`WasInformedBy: Activity → Activity` / `ActedOnBehalfOf: Agent → Agent`) | Day 11 で 3 main relation のみ | Day 13+ で PROV-O §4.1 auxiliary relation 完備 (3 main relation 完備の自然な拡張、Day 11 paper サーベイで新規識別) |
+| 🟢 Day 12+ | **ResearchEntity DecidableEq 手動実装** | Day 9-11 で省略 (Evolution recursive 制約継承) | Day 12+ で必要時に手動実装 (全 5 constructor + Evolution recursive equation) |
+| 🟢 Day 12+ | **ResearchActivity payload なし variants の payload 拡充** (investigate / decompose / refine / retire) | Day 9-11 で payload なし維持 | Day 12+ で payload 設計 (verify variant と同パターン) |
+| 🟢 Day 12+ | **transitionLegacy deprecated 削除** | Day 8 で derive、後方互換性のため残置 | Day 12+ で利用箇所 (TransitionReflexive/Transitive) を新 4-arg signature に移行後削除 |
+| 🟢 Week 4-5 | **EvolutionStep 完全 4 member 化** (G5-1 §3.4 step 1 完全形) | Day 8 で transition 4-arg post 統合のみ | Week 4-5 で `hypothesis : S → Option Hypothesis` + `observation : S → Observable` 追加 |
+| 🟢 Week 4-5 | **G5-1 §3.4 step 2 LearningM indexed monad** | Day 10 で transitionToActivity 連携 path 確立、indexed monad 本体は未実装 | Week 4-5 Tooling 層で `LearningM (s : LearningStage) (α : Type u)` 実装 (連携 path 完備で本格実装可能) |
+| 🟢 Day 13+ 設計判断 | **WasDerivedFrom DAG 制約** (Subagent I2 Day 11、self-derivation 禁止) | Day 11 trivial fixture で self-derivation 許容 (minimal scope) | Day 13+ で acyclic invariant 強化検討 (`source ≠ entity` proof 引数追加 vs separate `WasDerivedFromAcyclic` structure) |
+| 🟢 Day 12+ | **Test 内 simp tactic vs rfl preference** (Subagent I3 Day 11) | Day 11 ProvRelationTest L111-123 で simp tactic 利用 (test 内初の non-rfl) | Day 12+ で rfl 化検討 (PROV-O triple set 統合 example の冗長性低減) |
+
+**根拠**: Section 12.32 Day 11 TyDD 評価結果テーブル + Section 12.31 Day 11 paper サーベイ評価 Subagent 遡及検証 I2/I3。Day 11 PROV-O 3 relation 完備 + Pattern #7 hook v2 初運用検証後の次の改善余地を集約。Day 11 TyDD 評価では追加実装修正なし (Day 9-10 同パターン継続、Subagent 遡及検証は paper サーベイ評価で対処済 改訂 49)。
+
 ### 2.20 Day 11 着手前判断結果 (確定済、Day 10 完了後の議論結果)
 
 #### Day 11 全体方針 (Q1-Q4 採用案、確定済)
@@ -2195,6 +2213,72 @@ Day 11 は **PROV-O relation 3 structure 完備** + **PROV-O triple set 統合 e
 
 Day 1-11 累計で **paper finding 39 件顕在化** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 9: 5 / Day 10: 5 / Day 11: 5 / Day 1-3 関連: 1)。
 
+### 12.32 Day 11 TyDD / サーベイ視点評価結果（2026-04-18 実施）
+
+Day 11 (`11a32bd` Provenance 層 PROV-O 3 relation 追加) を TyDD Tag Index と Section 10.2 パターンに対して評価。
+
+#### 達成度サマリ (Day 4-11 推移)
+
+| 評価軸 | Day 4 | Day 5 | Day 6 | Day 7 | Day 8 | Day 9 | Day 10 | Day 11 | 変化 |
+|---|---|---|---|---|---|---|---|---|---|
+| S1 5 軸 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | **5/5** | 維持 |
+| S1 10 benefits | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | 9/10 | **9/10** | 維持 |
+| S4 5 principles 強適用 | 3/5 | 3/5 | 3/5 | 3/5 | 4/5 | 4/5 | 4/5 | **4/5** | 維持 |
+| F/B/H 強適用 | B3 | +F2 部分 | +H4 | +H10 部分 | +B4 | (5 強適用) | (5 強適用継続) | **5 強適用継続** | 維持 |
+| G1-G6 anti-pattern 回避 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 | 維持 |
+| Section 10.2 適合 | 5/8+1 構造違反 | 6/8+0 | 6/8+0 (運用検証) | 6/8+0 (2 度目) | 6/8+0 (3 度目) | 6/8+0 (4 度目) | 6/8+0 (5 度目、v2 拡張) | **6/8+0 (6 度目、v2 初運用検証)** | hook v2 初運用検証 |
+
+#### Day 11 で前進した項目
+
+1. **PROV-O 三項統合 relation 完備** (TyDD-S1 types-first を 3 separate structure で実証、案 B/C を退ける)
+2. **TyDD-S4 P5 explicit assumptions 強適用継続** (引数 type 厳格、Day 8 B4 → Day 11 PROV-O relation の 2 度目強適用)
+3. **PROV-O triple set 統合 example** (1 example で 3 relation 同時利用、内部規範 layer 横断 transfer 拡張 6 段階目)
+4. **Pattern #7 hook v2 初運用検証成功** (Day 10 拡張後の最初 commit、Provenance 配下新規 .lean 検出可能)
+
+#### Day 11 で paper finding と TyDD の合流
+
+Day 10 で確立した **PROV-O 4 type 完備 × layer architecture 完成形** を Day 11 で **PROV-O 3 relation 完備に拡張**:
+- 3 separate structure の選択 (案 A) は TyDD-S1 (types-first) + 02-data-provenance §4.1 (PROV-O 1:1 対応) の同時満足
+- 引数 type 厳格 (案 A) は TyDD-S4 P5 (explicit assumptions) + 02-data-provenance §4.1 (PROV-O semantic 厳守) の同時満足
+- 1 ファイル統合配置 (D3) は TyDD-S5 (cohesion 高い 3 relation) + import 簡素化を両立
+
+**Section 10.2 Pattern #7 hook の四段階発展**:
+- **Day 5**: hook 設計 + 構造的 closure
+- **Day 6/7/8/9**: 4 度連続運用検証 (運用安定性)
+- **Day 10**: v2 拡張 (governance evolution、layer architecture 完成形対応)
+- **Day 11**: v2 初運用検証 (Provenance 配下新規 .lean を hook が検出)
+
+#### 改善余地（優先度順、Section 2.21 で記録）
+
+| 優先度 | 項目 | 対処タイミング | 関連 Section |
+|---|---|---|---|
+| 🟡 中 | **02-data-provenance §4.4 RetiredEntity** (Day 12 メイン候補に格上げ) | Day 12 | Section 2.21 |
+| 🟢 低 | **PROV-O auxiliary relations** (WasInformedBy / ActedOnBehalfOf) | Day 13+ | Section 2.21 |
+| 🟢 低 | **ResearchEntity DecidableEq 手動実装** | Day 12+ | Section 2.21 |
+| 🟢 低 | **ResearchActivity payload なし variants の payload 拡充** | Day 12+ | Section 2.21 |
+| 🟢 低 | **transitionLegacy deprecated 削除** | Day 12+ | Section 2.21 |
+| 🟢 低 | **EvolutionStep 完全 4 member 化** | Week 4-5 | Section 2.21 |
+| 🟢 低 | **G5-1 §3.4 step 2 LearningM indexed monad** | Week 4-5 | Section 2.21 |
+| 🟢 低 | **WasDerivedFrom DAG 制約** (Subagent I2 で識別、self-derivation 禁止) | Day 13+ 設計判断 | Section 2.21 |
+| 🟢 低 | **Test 内 simp tactic vs rfl preference** (Subagent I3 で識別) | Day 12+ | Section 2.21 |
+
+#### Day 11 TyDD 評価で識別された実装修正 (即時対処なし)
+
+Day 11 TyDD 評価では **追加実装修正なし** (Day 9-10 同パターン継続):
+- WasDerivedFrom DAG 制約 → Day 13+ 設計判断 (self-derivation 禁止は acyclic invariant 強化、別 PR)
+- Test 内 simp tactic は ProvRelationTest 1 箇所のみで rfl preference 大枠維持、Day 12+ refactor 余地
+
+S4 P4 power-to-weight + Q2 A-Minimal scope 制御を遵守、全て Day 12+ で対処判断。Subagent 遡及検証は paper サーベイ評価で対処済 (改訂 49)。
+
+#### 結論
+
+Day 11 は TyDD 視点で **Day 10 の S4 4/5 + 5 強適用維持** + **PROV-O 3 relation 完備 (TyDD-S1 + S4 P5 同時実証)** + **Pattern #7 hook v2 初運用検証成功**:
+- PROV-O 三項統合完全実装 (Day 8-11 累計 4 type + 3 relation で §4.1 完全カバー)
+- Day 10 連携 path (transitionToActivity) を Day 11 で relation 統合 example として活用
+- Section 10.2 Pattern #7 hook の四段階発展完了 (設計→運用検証→拡張→拡張運用検証)
+
+Day 12 は RetiredEntity が main scope 候補。Day 1-11 累計で **S4 4/5 / F/B/H 5 強適用 / paper finding 39 件 / Section 10.2 6/8 + 0 構造違反 (6 度連続) / paper × 実装合流 8 種カテゴリ** 確立。
+
 ---
 
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
@@ -2929,6 +3013,23 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - I3 ProvRelationTest L111-123 で simp tactic 利用 (test 内初の non-rfl、Day 12+ で rfl preference 維持推奨)
     - I4 ResearchActivity.investigate rfl 等価性 verify
     - paper サーベイ評価サイクル「実装修正組込み」3 度目適用 (Day 9 I2 / Day 10 A1+I2 / Day 11 retrospective Subagent の継続)
+- 2026-04-18 (**改訂 50**): Day 11 TyDD 視点評価 + 改善提案 7 件追加 (実装修正なし)
+  - Section 12.32 (新規): Day 11 TyDD 達成度評価 (Day 4-11 推移表含む)
+    - S1 5 軸 5/5 維持、S1 benefits 9/10 維持
+    - S4 4/5 強適用維持 (P5 explicit assumptions 2 度目強適用 = Day 8 B4 → Day 11 PROV-O relation)
+    - F/B/H 5 強適用継続
+    - Section 10.2 適合 6/8+0 (6 度連続)、Pattern #7 hook v2 初運用検証成功
+  - 主要発見: PROV-O 三項統合完全実装 (Day 8-11 累計 4 type + 3 relation で §4.1 完全カバー)
+  - Section 10.2 Pattern #7 hook の四段階発展完了 (Day 5 設計 + Day 6/7/8/9 運用検証 + Day 10 v2 拡張 + Day 11 v2 初運用検証)
+  - Section 2.21 (新規): Day 11 評価から導出した改善余地 (Day 12+ 対処、9 項目)
+    - 🟡 Day 12 RetiredEntity (メイン候補に格上げ)
+    - 🟢 Day 13+ PROV-O auxiliary relations (WasInformedBy / ActedOnBehalfOf)
+    - 🟢 Day 12+ DecidableEq / payload 拡充 / transitionLegacy 削除
+    - 🟢 Week 4-5 EvolutionStep 4 member / LearningM
+    - 🟢 Day 13+ 設計判断 WasDerivedFrom DAG 制約 (Subagent I2)
+    - 🟢 Day 12+ Test 内 simp vs rfl preference (Subagent I3)
+  - 実装修正なし (Day 9-10 同パターン継続): S4 P4 power-to-weight + Q2 A-Minimal scope 制御遵守、Subagent 遡及検証は改訂 49 で対処済
+  - Day 12 改善事項: RetiredEntity main / auxiliary relations / DecidableEq / payload 拡充
 
 ## マーク凡例
 
