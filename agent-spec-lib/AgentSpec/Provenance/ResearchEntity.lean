@@ -1,11 +1,14 @@
--- Provenance 層: ResearchEntity (PROV-O 三項の主要要素、Day 9 で先行配置)
--- Q3 案 A: 4 constructor、既存 Process type を embed
--- Q4 案 A: Mapping は本ファイル内で namespace AgentSpec.Process 配下に定義 (循環依存回避)
+-- Provenance 層: ResearchEntity (PROV-O 三項の主要要素)
+-- Day 9: 4 constructor、既存 Process type を embed (Q3 案 A)
+-- Day 10 D2: 5 constructor 拡張 (ResearchAgent.Agent embed、Subagent I2 docstring 反映)
+-- Q4 案 A: Mapping は本ファイル内で namespace 配下に定義 (循環依存回避)
+-- Day 10 で Agent.toEntity Mapping を AgentSpec.Provenance.ResearchAgent namespace 配下に追加
 import Init.Core
 import AgentSpec.Process.Hypothesis
 import AgentSpec.Process.Failure
 import AgentSpec.Process.Evolution
 import AgentSpec.Process.HandoffChain
+import AgentSpec.Provenance.ResearchAgent
 
 /-!
 # AgentSpec.Provenance.ResearchEntity: PROV-O 三項の Entity 統合
@@ -14,17 +17,20 @@ Phase 0 Week 4-5 Provenance 層の Day 9 メイン成果。02-data-provenance §
 の `ResearchEntity` を Lean 化、既存 Process 層 4 type (Hypothesis / Failure /
 Evolution / Handoff) を embed する 4 constructor inductive で実装。
 
-## 設計 (Section 2.16 Q3 案 A 確定)
+## 設計 (Section 2.16 Q3 案 A 確定 + Day 10 D2 5 constructor 拡張、Subagent I2 反映)
 
     inductive ResearchEntity where
-      | Hypothesis (h : AgentSpec.Process.Hypothesis)
-      | Failure (f : AgentSpec.Process.Failure)
-      | Evolution (e : AgentSpec.Process.Evolution)
-      | Handoff (h : AgentSpec.Process.Handoff)
+      | Hypothesis (h : AgentSpec.Process.Hypothesis)  -- Day 9 既存
+      | Failure (f : AgentSpec.Process.Failure)        -- Day 9 既存
+      | Evolution (e : AgentSpec.Process.Evolution)    -- Day 9 既存
+      | Handoff (h : AgentSpec.Process.Handoff)        -- Day 9 既存
+      | Agent (a : ResearchAgent)                      -- Day 10 で追加 (5 constructor 拡張)
 
-各 constructor は既存 Process type を payload として持ち、TyDD-S1 types-first を遵守。
-案 B (opaque variant + lookup) や案 C (02-data-provenance §4.1 通り 7 variant) は
-将来拡張候補 (Day 10+ で検討、Section 2.16)。
+各 constructor は既存 Process type または Provenance.ResearchAgent を payload として持ち、
+TyDD-S1 types-first を遵守。Day 10 で Agent variant を追加し PROV-O 三項統合 4 type
+完備への path 確立。案 B (opaque variant + lookup) や案 C (02-data-provenance §4.1
+通り 7 variant: Survey / Gap / Decomposition / Spec / Implementation 追加) は
+将来拡張候補 (Day 11+ で検討、Section 2.16 / 2.18)。
 
 ## Mapping 関数 (Q4 案 A、本ファイル内に配置で循環依存回避)
 
@@ -93,6 +99,10 @@ inductive ResearchEntity where
   | Evolution (e : AgentSpec.Process.Evolution)
   /-- 引き継ぎ (Process 層 Handoff を embed、HandoffChain ではなく単一 Handoff)。 -/
   | Handoff (h : AgentSpec.Process.Handoff)
+  /-- 研究 agent (Day 10 で 5 constructor 拡張、Provenance 層 ResearchAgent を embed)。
+      PROV-O では Entity と Agent は別概念だが、Lean 統合的扱いで Mapping uniformity 維持。
+      PROV-O wasAttributedTo 関係は別 inductive (Day 11+) で表現予定。 -/
+  | Agent (a : ResearchAgent)
   deriving Inhabited, Repr
 
 namespace ResearchEntity
@@ -118,6 +128,11 @@ def isEvolution : ResearchEntity → Bool
 /-- ResearchEntity が Handoff variant かを判定。 -/
 def isHandoff : ResearchEntity → Bool
   | .Handoff _ => true
+  | _ => false
+
+/-- ResearchEntity が Agent variant かを判定 (Day 10 5 constructor 拡張)。 -/
+def isAgent : ResearchEntity → Bool
+  | .Agent _ => true
   | _ => false
 
 end ResearchEntity
@@ -148,3 +163,15 @@ def Handoff.toEntity (h : Handoff) : AgentSpec.Provenance.ResearchEntity :=
   .Handoff h
 
 end AgentSpec.Process
+
+/-! ### Agent.toEntity Mapping (Day 10 拡張、Day 9 同パターン)
+
+ResearchAgent も Process 4 type と同様に `.toEntity` dot notation で ResearchEntity に変換可能。 -/
+
+namespace AgentSpec.Provenance.ResearchAgent
+
+/-- `ResearchAgent.toEntity` (Day 10): ResearchAgent を ResearchEntity に変換。 -/
+def toEntity (a : ResearchAgent) : AgentSpec.Provenance.ResearchEntity :=
+  .Agent a
+
+end AgentSpec.Provenance.ResearchAgent

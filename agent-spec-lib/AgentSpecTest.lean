@@ -12,6 +12,8 @@ import AgentSpec.Test.Process.HandoffChainTest
 import AgentSpec.Test.Provenance.VerdictTest
 import AgentSpec.Test.Provenance.ResearchEntityTest
 import AgentSpec.Test.Provenance.ResearchActivityTest
+import AgentSpec.Test.Provenance.ResearchAgentTest
+import AgentSpec.Test.Provenance.EvolutionMappingTest
 import AgentSpec.Test.Cross.SpineProcessTest
 
 /-!

@@ -10,8 +10,10 @@ import AgentSpec.Process.Failure
 import AgentSpec.Process.Evolution
 import AgentSpec.Process.HandoffChain
 import AgentSpec.Provenance.Verdict
+import AgentSpec.Provenance.ResearchAgent
 import AgentSpec.Provenance.ResearchEntity
 import AgentSpec.Provenance.ResearchActivity
+import AgentSpec.Provenance.EvolutionMapping
 import AgentSpec.Proofs.RoundTrip
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)
