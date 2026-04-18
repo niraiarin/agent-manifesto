@@ -761,3 +761,86 @@ informational 4 件:
 - TyDD 達成度: S1 5/5 / benefits 9/10 / S4 3/5 強適用 / Section 10.2 6/8 + 0 構造違反 / **F/B/H 強適用 = B3 + F2 部分 + H4 + H10 新規部分** (詳細 Section 12.20)
 - 論文サーベイ達成度: **paper finding 19 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 1-3 関連: 1、詳細 Section 12.19)
 - paper × 概念 合流カテゴリ: **4 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C / **Day 7 internal-norm × layer transfer fullSpineExample → fullProcessExample**)
+
+---
+
+## Phase 0 Week 2 Day 8 検証 (2026-04-18 — Day 8 commit `0f78fa6` 後)
+
+**背景**: Section 2.14 Day 8 着手前判断 (Q1 B-Medium / Q3 案 A / Q4 案 A) に従い実装。**Section 2.9 (B4 4-arg post 残課題、Day 3 識別) を完全解消** (5 セッション累積改善 Day 3→Day 8)。multi-evaluator (logprob pairwise + Subagent) で /verify Round 1 実施、即 PASS。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 8 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (winner A 全体、margin 0.051、breaking change 影響で margin 小)
+- safety_preservation: A 優勢
+- test_alignment: A 優勢
+- compatibility_preservation: A 優勢
+
+**Subagent**: PASS（addressable = 1、informational 3）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| A1 | artifact-manifest EvolutionStep entry が Day 8 refactor 未反映 (provides_classes / dependencies / provides_definitions / week2_status) | manifest 更新 (Hypothesis + Verdict dependencies 追加、provides_classes を 4-arg signature に、provides_definitions に transitionLegacy 追加、week2_status を「Day 8 で完全統合済」に書換) |
+
+informational 3 件:
+- I1: EvolutionStepTest example_count 内訳コメント微差 (manifest day8_update 注記、実害なし)
+- I2: SpineProcessTest で `universe u` 利点薄 (Unit のみ使用、将来不要化候補、実害なし)
+- I3: VerdictTest で `Verdict.isRefuted .inconclusive = false` ケース欠 (対称性、Day 9+ で必要時追加可能)
+
+**Day 8 3 項目詳細** (Q1 B-Medium / Q3 案 A / Q4 案 A 採用案反映):
+
+1. **AgentSpec/Provenance/Verdict.lean** (新 namespace AgentSpec.Provenance、Q3 案 A):
+   - `inductive Verdict { proven, refuted, inconclusive }` (3 variant minimal)
+   - `isProven` / `isRefuted` / `isInconclusive` Bool helper
+   - `trivial` fixture (= inconclusive)
+   - `deriving DecidableEq, Inhabited, Repr`
+   - **PROV mapping in docstring**: `ResearchActivity.Verify` の output (Day 9+ 実装)
+   - Day 8 意思決定ログ D1-D2
+
+2. **AgentSpec/Spine/EvolutionStep.lean (REFACTOR、Q4 案 A、Section 2.9 完全解消)**:
+   - **transition signature**: `(pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop`
+   - **transitionLegacy** : `S → S → Prop` を existential で derive (∃ h v, transition pre h v post)、後方互換性
+   - TransitionReflexive / TransitionTransitive を transitionLegacy ベースに更新
+   - Unit instance + Decidable instance 4-arg signature 対応
+   - **layer architecture redefinition**: Spine → Process / Provenance import を意識的受容 (Q4 案 A D4)
+     Spine の役割を「下位層」→「core abstraction」に再定義
+   - Day 8 意思決定ログ D1-D4 (revised D1-D3 + 新 D2/D4)
+
+3. **AgentSpec/Test/Cross/SpineProcessTest.lean** (新 namespace AgentSpec.Test.Cross、Q2 B-Medium 副成果):
+   - `fullStackExample`: Spine 4 type class + Process 4 type 同時要求 (8 layer 要素)
+   - `evolveWithVerdict`: Spine EvolutionStep B4 + Process Hypothesis + Provenance Verdict 連携
+   - `fullProcessReuse`: Day 7 fullProcessExample 構造の継承
+   - **内部規範 layer 横断 transfer 拡張**: fullSpineExample (Day 4) → fullProcessExample (Day 7) → fullStackExample (Day 8) の 3 段階
+
+**Pattern #7 hook 3 度目適用**: 新規 Provenance/Verdict.lean (新 namespace) + Cross/SpineProcessTest.lean (新 namespace) が staged されたため `agent-spec-lib/artifact-manifest.json` も同 commit に含めて構造的整合性を確保。**hook が pass-through 確認** (Day 6 初→Day 7 2 度目→Day 8 3 度目)、**運用安定性継続検証成功**。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 95 jobs (Verdict +1)、`lake build AgentSpecTest` exit 0 / 107 jobs、theorem 15 (不変), example 171→197 (+26), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-8 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1 | `a43eef4` | — | (Day 1-2 共通 `743a0fc`) | `32b13fa` (compatible) | (Day 1-2 共通 `70f9080`) | R1 FAIL → R2 PASS | written |
+| Day 2 | `58b75a0` (compatible) | — | (Day 1-2 共通 `743a0fc`) | `24ad32c` (compatible) | (Day 1-2 共通 `70f9080`) | R1 PASS | written |
+| Day 3 | `0eb1b78` (conservative) | — | `d35c94b` (conservative) | `77bf94f` (compatible) | `b050258` (conservative) | R1 PASS | written |
+| Day 4 | `216cbbd` (compatible) | `428b06e` (conservative) | `195ba3d` (conservative) | `bc7ff50` (compatible) | `b2309d5` (conservative) | R1 PASS | written |
+| Day 5 | `f4d2c93` (compatible) | `008ba1d` (conservative) | `1d317c0` (conservative) | `17f48bf` (compatible) | `1781c93` (conservative) | R1 PASS | written |
+| Day 6 | `917c752` (compatible) | `29185f5` (conservative) | `65400df` (conservative) | `152eab8` (compatible) | `d1031d5` (conservative) | R1 PASS | written |
+| Day 7 | `941b25c` (compatible) | `04c632b` (conservative) | `e4d5dda` (conservative) | `760f014` (compatible) | `32baacf` (conservative) | R1 PASS | written |
+| Day 8 | `0f78fa6` (compatible) | `53db950` (conservative) | `168d369` (conservative) | `d35dd08` (compatible) | (本 commit) | R1 PASS | written |
+
+**Day 8 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-8 追加 0)
+- example: 197 (Day 7 171 + Day 8 追加 26: Verdict 17 + SpineProcess 4 + EvolutionStep modify +5)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 95 jobs) + AgentSpecTest (test 107 jobs)** (Day 7 94+104 から Verdict + 3 Test +1/+3)
+- **Spine 層 4 type class 完備 + 順序関係完備 + EvolutionStep B4 4-arg post 完全統合 (Day 8、Section 2.9 完全解消)**
+- **Process 層 4 type 完備** (Day 6-7 達成)
+- **Provenance 層着手** (Day 8 で Verdict 先行配置、Day 9+ で ResearchEntity/Activity/Agent 完成予定)
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8 で 3 度運用検証成功**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 新規、Day 8)** / Section 10.2 6/8 + 0 構造違反 / **F/B/H 強適用 = B3 + B4 + F2 部分 + H4 + H10 部分 (B4 新規、Day 8)** (詳細 Section 12.23)
+- 論文サーベイ達成度: **paper finding 24 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 7: 5 / Day 8: 5 / Day 1-3 関連: 1、詳細 Section 12.22)
+- paper × 概念 合流カテゴリ: **5 種** (Day 4 paper × pattern S4 × #5 / Day 5 paper × pattern G5-1 × #7 設計実装 / Day 6 principle × decision TyDD-S1 × Q3 Option C / Day 7 internal-norm × layer transfer / **Day 8 layer architecture redefinition Spine = core abstraction**)
+- **multi-session 累積改善実例**: Section 2.9 (B4 4-arg post) は Day 3 識別 → Day 4-7 部分対処 → Day 8 完全解消 (5 セッション)
