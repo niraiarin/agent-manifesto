@@ -247,6 +247,55 @@ Day 4 評価 Section 12.11 / 2.10 / 2.11 の改善余地を Day 5 で対処。
 - **paper × pattern 合流の 2 度目**: G5-1 §6.2.1 × Pattern #7 (Day 4 S4 × #5 に続く)
 - **S2 Lean-Auto 必要性顕在化**: bounded 8³ で `decide` heartbeat 限界 → Section 2.10 で Week 6 へ前倒し格上げ
 
+## 現状: Phase 0 Week 2 Day 6 完了（2026-04-18 追加）
+
+Section 2.11 確定方針 (Q1 Option C / Q2 Minimal / Q3 PROV vocab in docstring) に従い
+**Process 層 (Week 4-5 前倒し) を hole-driven Minimal scope で着手**。Pattern #7 hook の
+**設計→実装→運用 三段階 closure 達成** (Day 5 設計実装、Day 6 commit で初運用検証成功)。
+
+### Day 6 の 2 項目 (Minimal scope)
+
+- [x] **Hypothesis structure** (`AgentSpec/Process/Hypothesis.lean`)
+  - `structure Hypothesis { claim : String, rationale : Option String := none }`
+  - `mk'` smart constructor + `trivial` fixture
+  - DecidableEq / Inhabited / Repr (deriving)
+  - **PROV mapping in docstring** (Q3 Option C): `ResearchEntity.Hypothesis` (Day 8+ で実装)
+  - Day 6 意思決定ログ D1-D3 (claim String / structure 採用 / 関係は Edge graph)
+- [x] **Failure first-class entity** (`AgentSpec/Process/Failure.lean`、02-data-provenance §4.3 100% 忠実実装)
+  - `inductive FailureReason` 4 variant: HypothesisRefuted / ImplementationBlocked /
+    SpecInconsistent / Retired (各 payload は Day 6 hole-driven String、Day 8+ で型化)
+  - `structure Failure { failedHypothesis : String, reason : FailureReason }`
+  - `whyFailed` accessor + `refuted` / `retired` smart constructors + `trivial` fixture
+  - **PROV mapping in docstring** (Q3 Option C): `ResearchEntity.Failure` (Day 8+ で実装)
+  - Day 6 意思決定ログ D1-D3 (FailureReason inductive / payload String / failedHypothesis String 参照)
+- [x] `AgentSpec/Test/Process/HypothesisTest.lean` (**12 件の behavior assertion**)
+- [x] `AgentSpec/Test/Process/FailureTest.lean` (**17 件の behavior assertion**、4 variant 全て + 4 type 解決)
+- [x] `lake build AgentSpec` ✓ (exit 0, **92 jobs**、Process 層 +2)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **100 jobs**)
+- [x] /verify Round 1 PASS (logprob A 全体 margin 0.073 + Subagent PASS、addressable 0、informational I1 Inhabited Failure 対称性 +1 example で対処)
+- [x] **Pattern #7 hook 初の適用 commit** が pass-through 確認済 (artifact-manifest 同 commit に staged)
+
+### Week 2 Day 6 時点の累計指標
+
+| 指標 | Day 5 | Day 6 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 105 | +29 (HypothesisTest 12 + FailureTest 17) | **134** |
+| Spine 層 type class | 4 完備 + 順序関係完備 | 0 | **4 + 順序** |
+| Process 層 type | 0 | +2 (Hypothesis + Failure structure) | **2 inductive/structure** |
+| AgentSpec build jobs | 90 | +2 (Process .lean) | **92 jobs** |
+| AgentSpecTest build jobs | 96 | +4 (Process Test .lean) | **100 jobs** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 (Pattern #7) | 0 (運用検証成立) | **1 + 運用 closure** |
+
+### Day 6 で達成した TyDD / paper 進展 (Section 12.16 + 12.17)
+
+- **02-data-provenance §4.3 100% 忠実実装** — first-class Failure (FailureReason 4 variant)
+- **Pattern #7 hook 運用検証完了** — 設計→実装→運用 三段階 closure
+- **TyDD-S1 × Q3 Option C 合流** — 新カテゴリ「principle × decision」(Process 独立 type + docstring PROV)
+- **H4 新規部分達成** — PROV mapping in docstring は将来 LLM mapping 生成 hint
+- **paper finding 14 件累計** (Day 4: 4 / Day 5: 4 / Day 6: 5 / Day 1-3 関連: 1)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
