@@ -1379,3 +1379,77 @@ informational 3 件:
 - **cycle 内学習 transfer の 3 形態確立**: (1) 単純 transfer (Day 11 I3 → Day 12-15 rfl preference 継続)、(2) 先回り適用 (Day 12 I1 → Day 13-15 version field 先回り)、(3) **cross-verification (Day 15 I1 で Subagent 推奨を逆方向採用)**
 - **transitionLegacy 削除の最適 timing 到達**: Day 14 `@[deprecated]` + Day 15 `@[retired]` 両モデル確立、Section 2.15 Day 9+ からの繰り延べ課題を Day 16+ で 2 段階別分野転用実例として実施候補
 - **verifier_history**: Day 14 R1 (19 entries) + **Day 15 R1 追加 (20 entries)**
+
+---
+
+## Phase 0 Week 2 Day 16 検証 (2026-04-18 — Day 16 commit `b678856` 後)
+
+**背景**: Section 2.30 Day 16 着手前判断 (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案 A) に従い実装。**transitionLegacy deprecation A-Compact 実装** (Day 14 `@[deprecated]` モデルの Spine 層別分野転用、cycle 内学習 transfer 2 段階別分野転用実例) + **TransitionReflexive/Transitive 4-arg signature 直接展開 refactor** (Day 8 D3 暫定方針撤回、Section 2.9 完結) + **Section 2.15 Day 9+ 繰り延べ 6 セッション課題を A-Compact で半解消** (完全削除は Day 17+ A-Standard へ、`since := "2026-04-19"` = Day 17 指定日で signal)。Day 12-15 で確立した cycle pattern (Subagent 即時検証) を Day 16 でも継続適用、改訂 76 で Subagent 検証 PASS + I1 docstring 明文化 + I2 evaluator back-fill 対処。Day 11-16 で 6 Day 連続 rfl preference 維持の記録更新 (cycle 内学習 transfer 5 度目適用)。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 16 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (build PASS で代替検査、winner A 全体)
+
+**Subagent 検証** (改訂 76 で実施): VERDICT = PASS (addressable 0、informational 2、I1/I2 即時対処)
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 (informational、即時対処) | `@[deprecated]` since="2026-04-19" が Day 16 実装日 (2026-04-18) より 1 日後に設定されている理由が明文化不足 | **改訂 76 で即時対処済** (EvolutionStep.lean docstring に「since は Day 17 の予定日を設定、完全削除 timing の signal として機能」と明文化追加、paper サーベイ評価サイクル「実装修正組込み」8 度目適用、cycle 内学習 transfer 単純 transfer 形態適用、Day 15 cross-verification と対比実証) |
+| I2 (informational、自己参照) | evaluator プレースホルダ (Day 12-15 I1 同パターン) | **改訂 76 で back-fill 対処済** (subagent_verification field 追加、Day 12-15 同パターン継続) |
+
+**Day 16 1 項目詳細** (Q1 B 案 / Q2 A-Compact / Q3 案 A / Q4 案 A 採用案反映、MODIFY のみ):
+
+1. **AgentSpec/Spine/EvolutionStep.lean (MODIFY)** (Q3 案 A、Day 14 `@[deprecated]` モデル Spine 層別分野転用):
+   - `transitionLegacy` に `@[deprecated "Use new 4-arg transition" (since := "2026-04-19")]` 付与
+   - `TransitionReflexive` を 4-arg signature 直接展開に refactor (`∀ s, ∃ h v, transition s h v s`)
+   - `TransitionTransitive` を 4-arg signature 直接展開に refactor (existential 4-arg form)
+   - docstring に Day 16 D5-D6 意思決定ログ + since 1 日ずれ明文化 (Subagent I1 対処、改訂 76)
+   - Day 14 `@[deprecated]` モデルの Spine 層別分野転用 (cycle 内学習 transfer 2 段階別分野転用実例)
+
+2. **AgentSpec/Test/Spine/EvolutionStepTest.lean (MODIFY、9→13 example、+4)** (Q4 案 A):
+   - 既存 transitionLegacy 直接利用 example 2 件を `set_option linter.deprecated false in` で warning 抑制 (Day 14 パターン)
+   - Day 16 新規 4 example: deprecated 付与 transitionLegacy Inhabited 2 variant + 新 signature 直接展開 proof 2 variant
+   - **Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 5 度目、Day 11-16 = 6 Day 連続 rfl preference 維持の記録更新)**
+
+**Pattern #7 hook MODIFY path 2 度目運用検証 = 九段階発展完了**: Day 16 commit は既存 EvolutionStep.lean + EvolutionStepTest.lean MODIFY のみ (新規 file 追加なし)、Pattern #7 hook が MODIFY path でも artifact-manifest 同 commit を機能確認。Day 5 hook 設計 → Day 6/7/8/9 4 度連続運用検証 → Day 10 v2 拡張 → Day 11/12/13 v2 3 度連続運用検証 → Day 14 MODIFY path 対応 (1 度目) → Day 15 新規 file パターン復帰 → **Day 16 MODIFY path 2 度目運用検証 (両パターン運用 6 度目、九段階発展完了)**。
+
+**cycle 内学習 transfer 4 形態体系化完了**: Day 16 で cycle 内学習 transfer の 4 形態 (単純 transfer / 先回り適用 / cross-verification / 2 段階別分野転用) が体系化完了。**形態選択の使い分け実証**: Day 15 は Subagent 推奨の逆方向 (cross-verification、Lean 4 parser 仕様根拠) を採用、Day 16 は Subagent 推奨通り (単純 transfer、docstring 明文化) を採用、cycle pattern が critical evaluation 能力を持ちつつ推奨との 2 方向 dialogue が成立。
+
+**新規 `deprecation_history` field**: artifact-manifest の EvolutionStep entry に追加 (`transitionLegacy`: introduced Day 8 / deprecated Day 16 / removal_scheduled Day 17+ A-Standard / transfer_pattern: Day 14 PROV-O 特化 → Day 16 Spine 層別分野転用)。deprecation 変遷を artifact-manifest 上で構造化記録。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 103 jobs 維持 (MODIFY のみ)、`lake build AgentSpecTest` exit 0 / 123 jobs 維持、theorem 15 (不変), example 363→367 (+4), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-16 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性 / 後続 Docs) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1-14 | (省略、Section 12.42 Day 14 累計参照) | | | | | | |
+| Day 15 | `17db6ef` (compatible) | `d42d4c2` (conservative、Subagent 即時検証 PASS + I1 初 addressable 逆方向修正) | `1d5b6df` (conservative、実装修正なし) | `012f189` (compatible) | `0d41363` (conservative) | R1 PASS (Subagent 即時検証 PASS、初の逆方向修正実例) | written |
+| Day 16 | `b678856` (compatible) | `823d715` (conservative、Subagent 即時検証 PASS + I1/I2 即時対処) | `3004fc3` (conservative、実装修正なし) | `549e34e` (compatible) | (本 commit) | R1 PASS (Subagent 即時検証 PASS、形態選択使い分け実証) | written |
+
+**Day 16 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-16 追加 0)
+- example: 367 (Day 15 363 + Day 16 追加 4: EvolutionStepTest 内)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 103 jobs) + AgentSpecTest (test 123 jobs)** (Day 15 から jobs 変化なし、Day 16 MODIFY のみ)
+- **Provenance 層 5 type + 6 relation + 2 linter (A-Minimal + A-Compact) 完備** (Day 14-15、Day 16 は不変)
+- **Spine 層 deprecation 1 (transitionLegacy A-Compact)** (Day 16 新規、Day 17+ A-Standard 完全削除予定)
+- **段階的 Lean 機能習得 = 2/4 完了** (Day 14 A-Minimal + Day 15 A-Compact、Day 17+ A-Standard / Week 5-6 A-Maximal へ)
+- **PROV-O §4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合) + 強制化次元 A-Minimal + A-Compact + Spine 層別分野転用 A-Compact** (Day 11-16 累計)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6-13 8 度連続運用検証 + Day 10 v2 拡張 + Day 11/12/13 v2 3 度連続 + Day 14 MODIFY 1 度目 + Day 15 新規 file 復帰 + Day 16 MODIFY 2 度目 = 11 度連続検証、九段階発展完了**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 7 度目強適用、Day 8 → Day 11 → Day 12 → Day 13 → Day 14 → Day 15 → Day 16 transitionLegacy deprecation since 指定)** / Section 10.2 6/8 + 0 構造違反 (11 度連続) / **F/B/H 強適用 = 5 強適用継続** / **強制化次元 = 2 維持 (Day 17+ A-Standard 拡張予定)** (詳細 Section 12.47)
+- 論文サーベイ達成度: **paper finding 64 件累計** (Day 4-16 + Day 1-3 関連、詳細 Section 12.46)
+- paper × 概念 合流カテゴリ: **13 種** (Day 4-15 12 種 / **Day 16 cycle 内学習 transfer 2 段階別分野転用 × deprecation_history 構造化 × Section 2.15 6 セッション繰り延べ解消**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 16 14 セッション完全解消、Day 8 D3 暫定方針撤回 + TransitionReflexive/Transitive 4-arg 直接展開で完結)、**Pattern #7 hook (Day 5→Day 16 12 セッション governance 進化 = 九段階発展完了)**、**Section 2.15 (Day 8→Day 16 9 セッション繰り延べから A-Compact 半解消、Day 17 A-Standard 完全解消予定)**
+- **cycle 内学習 transfer 4 形態体系化完了**:
+  - **単純 transfer** (Day 11 I3 → Day 12-16 rfl preference、Day 11-16 = 6 Day 連続、長期持続性実証)
+  - **先回り適用** (Day 12 I1 version field → Day 13-16 で先回り bump、Subagent 検出項目数 4→1 減少)
+  - **cross-verification** (Day 15 I1 で Subagent 推奨を Lean 4 parser 仕様根拠で逆方向採用、critical evaluation)
+  - **2 段階別分野転用** (Day 14 `@[deprecated]` PROV-O 特化 → Day 16 Spine 層単純 deprecation 別分野適用、applications transfer across domains)
+- **cycle 内学習 transfer 形態選択使い分け実証**: Day 15 cross-verification / Day 16 単純 transfer、Subagent 推奨の評価基準 (parser 仕様根拠の有無 + semantic integrity) が確立
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-16 同パターン継続 (8 度連続)、Day 15 で質的発展 (逆方向修正)、Day 16 で形態選択使い分け実証
+- **verifier_history**: Day 15 R1 (20 entries) + **Day 16 R1 追加 (21 entries)**
