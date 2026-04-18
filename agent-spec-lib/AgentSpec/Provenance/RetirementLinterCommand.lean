@@ -119,16 +119,20 @@ elab "#check_retired " id:ident : command => do
 
 /-- Day 19 A-Standard-Lite: `#check_retired_in_namespace <namespace>` command。
 
-    指定 namespace 直下の全 constants を Environment 経由で enumerate、各 constant が
-    `@[deprecated]` 付きかを `Lean.Linter.isDeprecated` で実行時検査、retired な constant を
-    info output に列挙。
+    指定 namespace 配下 (any depth descendants) の全 constants を Environment 経由で
+    enumerate、各 constant が `@[deprecated]` 付きかを `Lean.Linter.isDeprecated` で
+    実行時検査、retired な constant を info output に列挙。
+
+    **実装注意** (Day 19 Subagent I2 対処、改訂 92): `Name.isPrefixOf` は nested namespace
+    も match するため、NS 配下 any depth descendants を列挙 (namespace 直下限定ではない)。
+    A-Minimal scope では nested / 直下区別なし (test 対象 namespaces に nested retired なし)、
+    Day 20+ A-Compact で nested namespace 再帰制御を明示的に追加予定。
 
     利用例:
     - `#check_retired_in_namespace AgentSpec.Provenance.RetiredEntity`
       → Day 14 deprecated fixture 4 variant が列挙される
 
     Day 18 A-Minimal (`#check_retired <identifier>` 単一検査) の自然な拡張 (Q1 A + Q2 A-Minimal)。
-    NS 直下 constants のみ列挙 (Day 20+ で nested namespace / summary 拡張候補)。
  -/
 elab "#check_retired_in_namespace " id:ident : command => do
   let env ← getEnv

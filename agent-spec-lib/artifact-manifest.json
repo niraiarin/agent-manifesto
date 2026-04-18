@@ -1237,8 +1237,8 @@
       "day19_update": "Day 19 で `#check_retired_in_namespace` command 3 invocations + 1 example 追加 (example 6→7、command invocations 5→8)。AgentSpec.Provenance.RetiredEntity 配下で 4 retired fixture 検出、AgentSpec.Process.Failure / AgentSpec.Spine.EvolutionStep 配下で no retired 判定 (Day 17 transitionLegacy 完全削除確認含む)",
       "sorry_count": 0,
       "axiom_count": 0,
-      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、Day 11-18 = **8 Day 連続 rfl preference 維持の記録更新**、quality loop 長期持続性 8 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認。set_option linter.deprecated false in で warning 抑制のみ",
-      "initial_build_error_pattern": "Day 18 は新分野 (Elab.Command) の初期 build error 即時修復実例: 初回は #check_retired command 連続 + set_option ... in example 混在で parser 状態競合発生、section 区切り明確分離 (rfl example 前段 + #check_retired 後段) で解決、Day 15 Lean 4 parser 仕様学習パターン継続 (initial build error 2 度目)"
+      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、**Day 11-19 = 9 Day 連続 rfl preference 維持の記録更新** (Day 19 改訂 92 で更新)、quality loop 長期持続性 9 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認。set_option linter.deprecated false in で warning 抑制のみ",
+      "initial_build_error_pattern": "Day 18 + Day 19 で新分野 (Elab.Command) の初期 build error 即時修復実例 2 + 3 度目: Day 18 `#check_retired` command 連続 + set_option ... in example 混在で parser 状態競合 → section 分離で解決、**Day 19 同パターン 3 度目**: `#check_retired_in_namespace` 連続 + set_option ... in example 混在で parser 状態競合 → section 分離で解決 (rfl example 前段 + command 後段)。Day 15 Lean 4 parser 仕様学習パターンの 3 度継続実例、新分野 Elab.Command での pattern 確立"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
@@ -1660,8 +1660,21 @@
       "date": "2026-04-19",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + #check_retired_in_namespace command 動作確認 (AgentSpec.Provenance.RetiredEntity → 4 retired / AgentSpec.Process.Failure → 0 / AgentSpec.Spine.EvolutionStep → 0 (Day 17 削除確認))、Subagent 検証は本 commit 後の cycle step 1 (改訂 92 paper サーベイ評価サイクル) で実施予定 (Day 12-18 同パターン継続)",
+      "informational_count": 3,
+      "evaluator": "build PASS (104+125 jobs、MODIFY のみ) + #check_retired_in_namespace 動作確認 (RetiredEntity 4/Failure 0/EvolutionStep 0) + Subagent 検証 PASS (改訂 92 paper サーベイ評価サイクルで実施、addressable 0 + informational 3)",
       "p2_complete_for": "day-19-provenance-retirement-linter-command-a-standard-lite",
+      "subagent_verification": {
+        "executed_in_commit": "改訂 92 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": 3,
+        "informational_items": [
+          "I1 (即時対処): rfl preference 記述が test 内 + artifact-manifest 両方で '8 Day 連続' のまま (Day 19 で 9 Day 連続に更新すべき) → 本 commit で '9 Day 連続' 記述更新",
+          "I2 (即時対処): #check_retired_in_namespace の docstring/artifact-manifest が 'NS 直下のみ' 表現で imprecise (実装は Name.isPrefixOf で any depth descendants) → 本 commit で 'NS 配下 (any depth descendants)' に訂正 + Day 20+ A-Compact で nested 再帰制御明示予定の注記追加",
+          "I3 (Day 20+ 継続繰り延べ): Day 18 I2 (Day 15 @[retired] macro fixture × Day 18 #check_retired 連携テスト未実施) は Day 19 scope 外で継続、Section 2.35 Day 20+ 候補"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」11 度目適用 (Day 9-18 継続 + Day 19 I1+I2 即時対処 + I3 Day 20+ 継続繰り延べ)、**Day 17=0 → Day 18=2 → Day 19=3 informational 推移**: 累積 design space richness 傾向、全て non-addressable で cycle 内学習 transfer 累積効果は addressable レベルで継続実証"
+      },
       "note": "Day 19 Provenance 層 A-Standard-Lite namespace 検出拡張実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A Day 18 同 module MODIFY / Q4 案 A Day 18 同 file test MODIFY、段階的 Lean 機能習得 3/4 段階目 + Lite 拡張到達)。`elab \"#check_retired_in_namespace \" ident : command` 追加で Environment.constants 経由 NS 直下 constants 列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output 列挙。Day 18 同 module MODIFY (command 系統 cohesion 維持)、RetirementLinterCommand.lean + Test MODIFY (+1 example = 6→7、+3 command invocations = 5→8)。Build 104+125 jobs 維持 (MODIFY のみ)、example 370→371 (+1)。Pattern #7 hook MODIFY path 4 度目運用検証 (Day 14/16/17 の MODIFY と Day 18 新規 file から今回 MODIFY 復帰、両パターン運用 7 度目、十二段階発展到達)。Day 18 と同 parser 状態競合 (3 度目、#check_retired_in_namespace 連続 + set_option example 混在) → section 分離で即時修復 (Day 15/18 パターン継続、initial_build_error_pattern 3 度目記録)。**Day 11-19 で 9 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用継続)。Day 19 namespace 検出で Day 17 transitionLegacy 完全削除確認 (AgentSpec.Spine.EvolutionStep 配下 0 retired = Day 17 成果の Day 19 linter 経由再確認)。Day 20+ で A-Standard-Full (elaborator hook) / A-Compact (nested namespace 再帰) / Week 5-6 A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続"
     }
   ]
