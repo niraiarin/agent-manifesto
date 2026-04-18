@@ -1,10 +1,14 @@
 {
   "id": "M-interp-020",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-020.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 114116,
-  "timestamp": "2026-04-17T11:52:00Z",
+  "output": "\n\nメトリクスデータを分析します。\n\n## 全体評価: **WARNING**\n\n形式検証基盤は健全だが、`sorry` 3件・テスト失敗2件という基本インジケータの悪化と、valueless_change ストリーク4で halt_recommended=true が警戒を要する。\n\n---\n\n## V1-V7 各指標の解釈\n\n| Metric | 値 | 判定 | コメント |\n|--------|-----|------|---------|\n| **V1 Skill Quality** | formal graduated | OK | theorem_delta_avg=6.3, test_delta_avg=8.9 で改善継続。non_triviality=score 0 は要注意（改善が trivial と判定されている可能性） |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | 安定。divergence_percent=15 は許容範囲 |\n| **V3 Output Quality** | hallucination errors: H=42, A=11, O=6 | WARNING | hypothesis_error が圧倒的多数（69件中61%）。品質ゲート導入後でも hypothesis_error_post_gate=19 で未解決 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | 安全境界は機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 人間承認品質は高い |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | retired_count=0 は陳腐化知識の退役が一度も実施されていないことを示す（P3違反リスク） |\n| **V7 Task Design** | completed=188, teamwork=0% | OK (設計通り) | suppressed_single_agent は設定通り |\n\n---\n\n## 改善提案（優先度順）\n\n### 1. `sorry` 3件とテスト失敗2件の解消（最優先）\nCLAUDE.md は \"462 core theorems, **0 sorry**\" を目指している。現在 54 axioms + 473 theorems + **3 sorry**。形式検証の信頼性を損なう根本原因を特定し、埋めるか classifying する。\n\n### 2. hypothesis_error 42件の根本原因分析\njudge rejections の61%が `H_wrong_premise` / `H_impl_specification`。Observer→Hypothesizer の遷移で前提検証が機能していない可能性。品質ゲート（Run 57導入）は有効だが、post_gate でまだ19件が流出。ゲートの閾値強化または Observer の観察精度向上が必要。\n\n### 3. Memory退役プロセスの開始\n`retired_count=0` は P3 学習統治ライフサイクル（観察→仮説化→検証→統合→**退役**）の最終段階が未実施。MEMORY.md のエントリをレビューし、陳腐化したものを退役させる。valueless_change ストリーク4件の解消にも寄与する可能性。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 161269,
+  "timestamp": "2026-04-18T03:16:05Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

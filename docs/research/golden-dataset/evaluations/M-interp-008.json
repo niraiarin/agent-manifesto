@@ -1,28 +1,28 @@
 {
   "run_id": "M-interp-008",
   "task_type": "M-interp",
-  "timestamp": "2026-04-17T12:04:24Z",
+  "timestamp": "2026-04-18T07:13:58Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-008.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-008.json",
   "judge_scoring": {
     "cloud": {
       "c1": 4,
-      "c2": 4,
-      "c3": 5,
+      "c2": 5,
+      "c3": 4,
       "c4": 5,
       "c5": 5,
       "overall": 4.6,
-      "rationale": "Accurate, well-structured, with concrete actionable proposals and strong domain grounding; minor unverified claims (sorry=1 vs total=0, V7 suppression) prevent perfect c1/c2."
+      "rationale": "網羅的かつドメイン概念（D9/P3/halt_recommended）を正確に運用し、優先度付きで実行可能な提案を提示。sorry=1 の分類漏れ指摘は鋭いが、具体的ファイル特定がなく実行可能性がわずかに減点。"
     },
     "local": {
       "c1": 4,
       "c2": 4,
       "c3": 4,
       "c4": 5,
-      "c5": 5,
-      "overall": 4.4,
-      "rationale": "Accurate metric citations with strong domain grounding (P3 retirement, D5 三層断裂); minor gap in V2/V7 depth and unverified specific counts."
+      "c5": 4,
+      "overall": 4.2,
+      "rationale": "構造化と数値引用は明確だが、V5とhypothesis_errorの整合性指摘に曖昧さ、V1のnon_triviality=0の深掘り不足"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 3,
-    "proposal_count_local": 8,
+    "proposal_count_local": 1,
     "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": false,
-    "key_insight_match": false,
-    "agreement_score": 0.5
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 0.75
   },
-  "delta": 0.2
+  "delta": 0.4
 }

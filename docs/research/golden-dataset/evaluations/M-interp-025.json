@@ -1,19 +1,19 @@
 {
   "run_id": "M-interp-025",
   "task_type": "M-interp",
-  "timestamp": "2026-04-17T12:05:48Z",
+  "timestamp": "2026-04-18T07:16:28Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-025.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-025.json",
   "judge_scoring": {
     "cloud": {
-      "c1": 5,
+      "c1": 4,
       "c2": 5,
-      "c3": 5,
+      "c3": 4,
       "c4": 5,
       "c5": 5,
-      "overall": 5.0,
-      "rationale": "Accurate metric citations, full V1-V7 coverage, actionable prioritized fixes, clean tabular structure, and correct grasp of halt_recommended/hypothesis_error/T6 semantics."
+      "overall": 4.6,
+      "rationale": "Comprehensive, well-structured analysis with strong domain grounding; minor deduction on C1/C3 for unverified raw metric values and somewhat generic action items."
     },
     "local": {
       "c1": 4,
@@ -22,7 +22,7 @@
       "c4": 5,
       "c5": 4,
       "overall": 4.4,
-      "rationale": "Accurate metric citations with clear V1-V7 coverage and actionable proposals; minor gaps in deeper domain concept linkage (e.g., explicit D4 phase ordering)."
+      "rationale": "構造化と網羅性は優秀。V1-V7全カバー、P3/V1非自明性等ドメイン概念も正確。ただし具体値の一部（trend等）が定性記述に留まり、提案③の具体手順がやや抽象的。"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 1,
-    "proposal_count_local": 9,
-    "proposal_count_similar": false,
+    "proposal_count_local": 1,
+    "proposal_count_similar": true,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": false,
-    "key_insight_match": false,
-    "agreement_score": 0.5
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 1.0
   },
-  "delta": 0.6
+  "delta": 0.2
 }

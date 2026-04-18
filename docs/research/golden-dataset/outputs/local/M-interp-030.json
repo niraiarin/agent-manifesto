@@ -1,10 +1,14 @@
 {
   "id": "M-interp-030",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-030.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 56482,
-  "timestamp": "2026-04-17T12:02:35Z",
+  "output": "メトリクスデータは全て揃っています。分析します。\n\n---\n\n## V1-V7 メトリクス分析 (Run 107, 2026-04-12)\n\n### 1. 全体評価: WARNING\n\n**理由**: 形式的検証（Lean 52 axioms, 424 theorems, 745 tests pass）は健全だが、**価値ある変更が6回連続で停止**（valueless_change streak=6）、FAIL ループバックの未解決が55件、stale files が4件存在。構造改善のモーメンタムが失われている。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 値 | 判定 | 解釈 |\n|--------|-----|------|------|\n| **V1 Skill Quality** | formal graduation済み | ✅ 良好 | theorem delta=0, test delta=0 は卒業後なので妥当。saturation チェック必要 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | ⚠️ 要注意 | recent が cumulative を上回り、divergence=15%。トークン消費が増加傾向 |\n| **V3 Output Quality** | hallucination 42件 | ⚠️ 要注意 | hypothesis_error=42 が最多。_post_gate=19 で Gate 効果はあるが半数残る |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | ✅ 良好 | 安全境界は堅牢 |\n| **V5 Proposal Accuracy** | 96% (162/168) | ✅ 良好 | 人間承認率は高い |\n| **V6 Knowledge Structure** | memory=12, retired=0 | ⚠️ 要注意 | 陳腐化した memory の退役がゼロ。MEMORY.md のクリーンアップ必要 |\n| **V7 Task Design** | completed=188 | ✅ 良好 | タスク遂行力は高い |\n\n**補足指標**:\n- **sorry**: 8件（前回の52→8へ改善済みだが、まだ0ではない）\n- **evolve cost**: mean $2.33/improvement は効率的\n- **stale files**: 4件（SKILL.md, V7Metrics.lean, p3-governed-learning.md）\n- **valueless_change streak**: 6（halt_recommended=true, max=8）\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### ① Stale files の退役処理（最高優先度）\n`.claude/skills/verify/SKILL.md`, `V7Metrics.lean`, `p3-governed-learning.md` が stale として検出されている。これらのファイルがまだ有効か確認し、無効化なら退役コミット（breaking change）、有効なら更新コミット（compatible change）。\n\n#### ② V2 トークン消費の増加傾向是正\nrecent_avg=46 vs cumulative_avg=40, divergence=15%。直近のセッションでツール呼び出しが増えている。Observer で具体的な過剰呼び出しパターンを特定し、Agent の並列化やキャッシュで効率化を図る。\n\n#### ③ hypothesis_error 42件の根本原因特定\n未解決 hypothesis_error の内訳（H_impl_specification=8, H_wrong_premise=6）を分析し、Hypothesizer AGENT.md の仮説設計基準を強化するか、品質ゲート（Run 57 で導入済み）の閾値を調整する。現在の_post_gate=19 はまだ半数が漏れている。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 499872,
+  "timestamp": "2026-04-18T06:58:13Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

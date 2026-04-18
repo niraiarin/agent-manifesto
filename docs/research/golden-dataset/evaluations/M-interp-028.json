@@ -1,7 +1,7 @@
 {
   "run_id": "M-interp-028",
   "task_type": "M-interp",
-  "timestamp": "2026-04-17T12:06:08Z",
+  "timestamp": "2026-04-18T07:17:02Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-028.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-028.json",
@@ -13,16 +13,16 @@
       "c4": 5,
       "c5": 5,
       "overall": 4.8,
-      "rationale": "正確な数値引用と構造化された提示、ドメイン用語（non_triviality, halt_recommended, hypothesis_error サブタイプ）を適切に運用。アクションは概ね具体的だが V7 の計測指標設計が抽象度やや高め。"
+      "rationale": "正確な数値引用と P3/V1-V7/non-triviality 等の固有概念を踏まえた分析だが、改善アクションは focus 切替の方向性提示にとどまり実装手順がやや抽象的"
     },
     "local": {
       "c1": 4,
       "c2": 4,
-      "c3": 4,
+      "c3": 5,
       "c4": 5,
       "c5": 4,
-      "overall": 4.2,
-      "rationale": "正確で網羅的かつ構造化された分析。提案も具体的だが、D4フェーズ順序やnon_trivialityなど固有概念の明示的言及は限定的"
+      "overall": 4.4,
+      "rationale": "構造化・実行可能性は高く数値も丁寧だが、non_triviality=0 の解釈やV2のdivergence閾値根拠が曖昧で精度減点。"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 6,
-    "proposal_count_local": 6,
-    "proposal_count_similar": true,
+    "proposal_count_local": 1,
+    "proposal_count_similar": false,
     "key_insight_nontriviality_cloud": true,
-    "key_insight_nontriviality_local": false,
-    "key_insight_match": false,
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
     "agreement_score": 0.75
   },
-  "delta": 0.6
+  "delta": 0.4
 }

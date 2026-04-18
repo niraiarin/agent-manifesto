@@ -1,10 +1,14 @@
 {
   "id": "M-interp-015",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-015.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 63500,
-  "timestamp": "2026-04-17T11:46:45Z",
+  "output": "\n\nメトリクスデータを分析して報告します。\n\n---\n\n## V1-V7 メトリクス分析レポート (Run 107)\n\n### 1. 全体評価: WARNING\n\n**理由**: 形式検証基盤は堅牢だが、`valueless_change` streak=4 で `halt_recommended=true`、未解決 FAIL が55件、テスト失敗29件が放置されている。改善ループが実質停止状態にある。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 備考 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | formal graduated | OK | theorem_delta_avg=6.3, test_delta_avg=8.9 は健全。ただし `non_triviality.score=0` — 直回が trivial と判定されている |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | trend=stable、divergence=15% は許容範囲 |\n| **V3 Output Quality** | test_pass_rate=100% (proxy) | WARNING | proxy classification が \"formal\" だが、実際のテスト失敗29件を反映していない。hallucination_proxy: hypothesis_error_active=36 が最大要因 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | ほぼ問題なし |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | schema_drift=false、健全 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | retired_count=0 — 陳腐化したメモリが退役していない。MEMORY のメンテナンスが必要 |\n| **V7 Task Design** | completed=188, unique=180 | OK | teamwork suppressed は意図的設定 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### (1) `/evolve` ループの一時停止 + 根本原因分析\n- **根拠**: `valueless_change.current_streak=4`, `halt_recommended=true`。過去最大 streak=4 と同じ閾値に到達\n- **アクション**: 改善を止めて、なぜ valueless change が連続しているかを Observer が分析。FAIL のうち hypothesis_error(36) が過半を占める — 仮説品質の根本改善が必要\n\n#### (2) テスト失敗 29件の原因特定と修正\n- **根拠**: `tests.failed=29` は V1/V3 の信頼性を損なう。V3 が \"formal\" classification でこれを隠蔽している可能性\n- **アクション**: `bash tests/test-all.sh` を再実行し、失敗パターンを分類。hypothesis_error(42件中36件未解決) との相関を確認\n\n#### (3) メモリ退役プロセスの導入\n- **根拠**: `retired_count=0`, `memory_retirement_candidates=[]`。P3 学習の統治において陳腐化知識が放置されている\n- **アクション**: V6 の proxy（entry_count + staleness）を実測ベースに変更。更新日数が経過した memory ファイルを review → retire のワークフローを /evolve で設計\n\n---\n\n**結論**: システムは構造的には健全だが、改善ループ自体が質の低下に陥っている（valueless streak）。まずはループ停止→観測→仮説品質の見直しという順序で、DEGRADED へ遷移しないよう介入すべき。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 144457,
+  "timestamp": "2026-04-18T03:06:27Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

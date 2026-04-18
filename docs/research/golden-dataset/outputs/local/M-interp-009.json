@@ -1,10 +1,14 @@
 {
   "id": "M-interp-009",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-009.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 778259,
-  "timestamp": "2026-04-17T12:46:18Z",
+  "output": "\n\n## メトリクス分析レポート（Run 107 時点）\n\n---\n\n### 1. 全体評価\n\n**健全だが停滞気味。** Lean 54 axioms / 470 theorems / 1 sorry、テスト758件全通は堅実。しかし `valueless_change.streak=4, halt_recommended=true` が警戒信号。V1 は formal graduation 済みで、改善の質が低下している可能性が高い。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| V1 | **Skill Quality** | Formal graduation 済み（theorem delta=0）。proxy classification `formal` で計測意味を失っている。**停滞中** |\n|---|---|---|\n| V2 | **Context Efficiency** | recent_avg=46, cumulative_avg=40。stable trendだが、divergence=15% は許容範囲内。**正常** |\n| V3 | **Output Quality** | hallucination errors: hypothesis_error_active=36 が最大。post_gate 効果あり（42→19）が未解決残る。**改善余地あり** |\n| V4 | **Gate Pass Rate** | 99% (28587/28693)。L1 安全境界は機能している。**良好** |\n| V5 | **Proposal Accuracy** | 96% (162/168)。Hypothesizer の精度は高い。schema_drift=false。**良好** |\n| V6 | **Knowledge Structure** | memory_entries=12, retired_count=0。Memory retirement が一度も発生していない。**問題** |\n| V7 | **Task Design** | completed=188, unique_subjects=180。teamwork_percent=0（single agent 抑制）。**正常だが制限あり** |\n\n---\n\n### 3. 改善提案（最大3件）\n\n**(1) Valueless change streak 4 → evolve の一時停止を推奨**\n`halt_recommended=true`、max_streak=5 に迫っている。既存の改善が陳腐化している可能性が高く、無制限な evolve ループはトークン消費のみ増大させる。T6（人間判断）での go/no-go が必須。\n\n**(2) Memory retirement の導入**\n`retired_count=0` は知識の陳腐化を示す。feedback/project/reference メモリの中で既に期限切れ・無効化したものを退役させるプロセスが必要。P3 学習統治ライフサイクルの「退役」が機能していない。\n\n**(3) Hypothesis error active=36 の根本原因対策**\nV3 hallucination proxy で最も多いのが `hypothesis_error` (36件)。特に `H_impl_specification`(8), `H_wrong_premise`(6) が集中。Observer の観察精度向上と、Hypothesizer の前提検証プロセス強化が有効だが、コスト対効果を考慮し、まずは V1 graduation 後の新しい計測指標設計を優先すべきか判断が必要。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 63643,
+  "timestamp": "2026-04-18T04:00:00Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

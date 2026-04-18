@@ -1,10 +1,14 @@
 {
   "id": "M-interp-018",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-018.json",
   "label": "local",
   "model": "unknown",
-  "error": "exit_code=1",
-  "latency_ms": 61381,
-  "timestamp": "2026-04-17T11:49:51Z",
+  "output": "## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: WARNING\n\nシステムは構造的に健全だが、**改善の質が劣化**しているシグナルが複数検出された。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | 備考 |\n|------|--------|------|------|\n| **V1 Skill Quality** | formal graduated | 良好 | verifier pass 77%、evolve success 98%。ただし **non_triviality=0**（改善が形式的証明のみ） |\n| **V2 Context Efficiency** | recent=46, cumulative=40 | 安定 | 傾向 `stable`。divergence=15% は許容範囲 |\n| **V3 Output Quality** | test pass 100% | 注意 | 形式的成果物は良いが、**hypothesis_error=42**（active=36）が蓄積。品質ゲートをすり抜けられる仮説がPersistent |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | 良好 | L1安全境界は機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | 良好 | 人間承認の精度は高い |\n| **V6 Knowledge Structure** | 12 entries, 0 orphan | 良好 | MEMORY の整合性は完璧。ただし retired=0（陳腐化知識の退役がない） |\n| **V7 Task Design** | 188 completed | 良好 | 単一エージェント制約あり（teamwork=0） |\n\n### 3. 改善提案（優先度順）\n\n**① valueless_change ストップ（最優先）**\n- 現在 streak=4、`halt_recommended=true`。過去10回中で最大 streak を更新\n- 改善案が既に構造に吸収され尽くし、追加変更が純粋な価値を持たない状態\n- 対応: 次回の `/evolve` で observer が「変化なし」を確認次第、フェーズを**再検証フェーズ**へ切り替え、改善提案の閾値を引き上げる\n\n**② hypothesis_error 36件の解決**\n- V3 で `hypothesis_error` が最大の種類（active=36, post_gate=19）\n- 品質ゲート導入後も 19件が通過→ゲート自体の検知能力不足\n- 対応: Observer がエラーパターンを分類し、Hypothesizer が根本原因（`H_impl_specification=8`, `H_wrong_premise=6`）へ対策を設計\n\n**③ stale files 3件の更新または退役**\n- `docs/design-development-foundation.md`, `evolve/SKILL.md`, `Ontology.lean` が stale\n- 特に Ontology.lean は公理系の正典。内容が最新か確認が必要\n- 対応: /evolve の Observer フェーズで stale 原因を特定し、更新または退役処理",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 412381,
+  "timestamp": "2026-04-18T06:10:57Z",
   "run_number": 1,
-  "exit_code": 1
+  "exit_code": 0
 }

@@ -1,28 +1,28 @@
 {
   "run_id": "M-interp-021",
   "task_type": "M-interp",
-  "timestamp": "2026-04-17T12:05:24Z",
+  "timestamp": "2026-04-18T07:15:56Z",
   "judge_model": "claude",
   "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-021.json",
   "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-021.json",
   "judge_scoring": {
     "cloud": {
-      "c1": 5,
-      "c2": 5,
-      "c3": 4,
-      "c4": 5,
-      "c5": 5,
-      "overall": 4.8,
-      "rationale": "数値引用・傾向解釈が正確でV1-V7を網羅、P3/D4準拠も適切に参照。提案3の'退役/更新判断'はやや抽象的だが全体として高品質。"
-    },
-    "local": {
       "c1": 4,
       "c2": 5,
       "c3": 4,
       "c4": 5,
+      "c5": 5,
+      "overall": 4.6,
+      "rationale": "数値引用は具体的で網羅的、ドメイン用語(P3/D4/non_triviality/halt_recommended)を正確に使用、提案も実行可能だが C1 で hypothesis_error 内訳の合計検証など僅かな曖昧さあり"
+    },
+    "local": {
+      "c1": 4,
+      "c2": 4,
+      "c3": 4,
+      "c4": 5,
       "c5": 4,
-      "overall": 4.4,
-      "rationale": "Accurate metric citations, comprehensive V1-V7 coverage, actionable halt recommendation; minor gaps in linking to specific manifesto axioms (D4/P3) explicitly."
+      "overall": 4.2,
+      "rationale": "構造化と実行可能性は高いが、Ontology.lean stale の根拠やhypothesis_error細分化の出典が未提示で正確性に若干の不確実性"
     }
   },
   "mechanical_agreement": {
@@ -33,12 +33,12 @@
     "v_coverage_local": 7,
     "v_coverage_match": true,
     "proposal_count_cloud": 1,
-    "proposal_count_local": 6,
-    "proposal_count_similar": false,
+    "proposal_count_local": 1,
+    "proposal_count_similar": true,
     "key_insight_nontriviality_cloud": true,
     "key_insight_nontriviality_local": true,
     "key_insight_match": true,
-    "agreement_score": 0.75
+    "agreement_score": 1.0
   },
   "delta": 0.4
 }
