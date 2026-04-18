@@ -675,6 +675,63 @@ Section 2.24 Day 13 着手前判断 (Q1 A-Minimal / Q3 案 B 別 file 配置 / Q
 - **Subagent 検証 PASS + I1 即時対処** (本評価サイクル内で即時実施、paper サーベイ評価サイクル「実装修正組込み」5 度目適用、改訂 61 で対処)
 - **cycle 内学習 transfer 構造的効果実証** (Day 12 I1 教訓 → Day 13 先回り適用、Subagent 検出項目数 4→1 減少)
 
+## 現状: Phase 0 Week 2 Day 14 完了（2026-04-18 追加）
+
+Section 2.26 Day 14 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C) に従い実装。
+**RetiredEntity linter A-Minimal 実装** (Lean 4 標準 `@[deprecated]` 4 fixture)、
+**Day 11-13 type/relation 軸と直交する新次元「強制化」追加**、
+**段階的拡張パス確立** (A-Minimal → A-Compact → A-Standard → A-Maximal)、
+**Pattern #7 hook MODIFY path 対応確認** (新規 file 追加なし commit でも機能確認、hook 七段階発展完了)、
+**Subagent 検証 PASS + I1 即時対処** (本評価サイクル内で即時実施、Day 12-13 同パターン継続、改訂 66 で対処)、
+**cycle 内学習 transfer 構造的効果継続** (Day 11-14 で 4 Day 連続 rfl preference 維持、Day 13-14 で Subagent 検出項目数 1 安定維持)。
+
+### Day 14 の 1 項目 (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **RetiredEntity 4 deprecated fixture 追加** (`AgentSpec/Provenance/RetiredEntity.lean` MODIFY、Q3 案 A + Q4 案 C、PROV-O §4.4 退役参照警告 1:1 対応)
+  - `@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]` 4 fixture 付与
+  - `refutedTrivialDeprecated` / `supersededTrivialDeprecated` / `obsoleteTrivialDeprecated` / `withdrawnTrivialDeprecated` (4 RetirementReason variant 各対応)
+  - test fixture のみ対象、production code structure / smart constructor 自体は変更なし (backward compatible)
+  - docstring に Day 14 意思決定ログ D1-D2 + `@[deprecated]` 使用例 (warning 発生 / 抑制の例) 追加
+- [x] `AgentSpec/Test/Provenance/RetiredEntityTest.lean` MODIFY (**22→30 件**、+8 example)
+  - 4 deprecated fixture の entity / reason / whyRetired accessor rfl 確認
+  - `set_option linter.deprecated false in` で warning 抑制 (build PASS 維持)
+  - 4 variant List 集約 (既存 4 variant List 集約との対称性)
+  - Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 3 度目、Day 11-14 = 4 Day 連続 rfl preference 維持)
+- [x] `lake build AgentSpec` ✓ (exit 0, **102 jobs 維持**、MODIFY のみで jobs 変化なし)
+- [x] `lake build AgentSpecTest` ✓ (exit 0, **121 jobs 維持**)
+- [x] /verify Round 1 PASS (build PASS + Subagent 即時検証 PASS、本評価サイクル内で即時実施、改訂 66 で対処)
+- [x] **Pattern #7 hook MODIFY path 対応確認** (新規 file 追加なし commit でも artifact-manifest 同 commit 機能、Day 11-13 新規 file パターンからの拡張)
+- [x] **Subagent I1 即時実装修正対処** (Day 14 R1 evaluator back-fill = Day 12-13 I1 同パターン)
+
+### Week 2 Day 14 時点の累計指標
+
+| 指標 | Day 13 | Day 14 追加 | 合計 |
+|---|---|---|---|
+| theorem 数 | 15 | 0 | **15** |
+| example 数 | 346 | +8 (RetiredEntityTest 内) | **354** |
+| Provenance 層 type | 5 | 0 | **5 type** |
+| Provenance 層 relation | 6 | 0 | **6 relation** |
+| Provenance 層 linter | 0 (structural detection のみ) | +1 (A-Minimal @[deprecated] 4 fixture) | **1 linter A-Minimal** |
+| AgentSpec build jobs | 102 | 0 (MODIFY のみ) | **102 jobs 維持** |
+| AgentSpecTest build jobs | 121 | 0 (MODIFY のみ) | **121 jobs 維持** |
+| sorry / axiom | 0 / 0 | 0 / 0 | **0 / 0** |
+| 構造的 governance hook | 1 + 8 度連続検証 + v2 3 度目運用検証 | 9 度目運用検証 (MODIFY path 対応確認) | **1 + 9 度連続検証 + v2 3 度目運用検証 + MODIFY path 対応 = 七段階発展完了** |
+| PROV-O 完全カバー | §4.1 main + auxiliary + §4.4 (6 relation 統合) | +linter 強制化層 | **§4.1 + §4.4 完全カバー + linter 強制化 A-Minimal** |
+
+### Day 14 で達成した TyDD / paper 進展 (Section 12.40 + 12.41)
+
+- **02-data-provenance §4.4 退役参照警告 構造的強制化** (Lean 4 標準 `@[deprecated]` 4 fixture、PROV-O §4.4 1:1 対応)
+- **TyDD-G3 linter integration** (Lean 4 標準機能活用、custom extension 不要で A-Minimal 完備)
+- **TyDD-S4 P5 explicit assumptions 5 度目強適用** (`@[deprecated]` attribute assumption の explicit 化、since + message で assumption を型レベル記録)
+- **新次元「強制化」追加** (Day 11-13 の type/relation 軸と直交する新評価軸)
+- **段階的拡張パス確立** (A-Minimal → A-Compact → A-Standard → A-Maximal、Day 15+ 3 段階プラン)
+- **Pattern #7 hook MODIFY path 対応確認 = 七段階発展完了** (Day 5 設計→Day 6/7/8/9 4 度運用→Day 10 v2 拡張→Day 11/12/13 v2 3 度連続→Day 14 MODIFY path 対応)
+- **paper × 実装 11 度目合流カテゴリ確立** (linter A-Minimal × 段階的拡張パス × 強制化次元追加)
+- **paper finding 54 件累計** (Day 4-14 + Day 1-3 関連)
+- **Subagent 検証 PASS + I1 即時対処** (本評価サイクル内で即時実施、paper サーベイ評価サイクル「実装修正組込み」6 度目適用、改訂 66 で対処)
+- **cycle 内学習 transfer 構造的効果継続** (Day 11-14 で 4 Day 連続 rfl preference 維持、Day 13-14 で Subagent 検出項目数 1 安定維持 = quality loop 持続的効果)
+- **transitionLegacy 削除パスの linter モデル転用** (Day 14 `@[deprecated]` パターンが既存 transitionLegacy (Section 2.15 Day 9+) にも転用可能、cycle 内学習 transfer の別分野拡張)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

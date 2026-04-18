@@ -4061,6 +4061,25 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
     - 🟢 Day 15+ 設計判断 WasDerivedFrom DAG 制約 (Section 2.21/2.23/2.25 継続)
   - 実装修正なし (Day 9-13 同パターン継続): S4 P4 power-to-weight + Q1 A-Minimal scope 制御遵守、Subagent 検証 PASS + I1 即時対処は paper サーベイ評価で対処済 (改訂 66)
   - Day 15 改善事項: A-Compact main / A-Standard / A-Maximal / ResearchActivity payload / transitionLegacy (linter パターン転用)
+- 2026-04-18 (**改訂 68**): Day 14 metadata 反映 (cycle step 5)
+  - README.md: Phase 0 Week 2 Day 14 完了セクション新設
+    - Day 14 1 項目詳細 (RetiredEntity 4 deprecated fixture 追加、Q3 案 A + Q4 案 C、MODIFY のみ)
+    - Day 11 Subagent I3 教訓継続適用 (rfl preference) を明示 (Day 11-14 = 4 Day 連続)
+    - 累計指標表 (Day 13 vs Day 14、102+121 jobs 維持、example 354、Provenance 5 type + 6 relation + 1 linter A-Minimal)
+    - PROV-O §4.1 + §4.4 完全カバー + linter 強制化 A-Minimal を新規累計指標として追加
+    - Day 14 で達成した TyDD/paper 進展 11 項目:
+      - PROV-O §4.4 退役参照警告 構造的強制化
+      - TyDD-G3 linter integration
+      - TyDD-S4 P5 5 度目強適用
+      - 新次元「強制化」追加
+      - 段階的拡張パス確立 (A-Minimal → A-Compact → A-Standard → A-Maximal)
+      - Pattern #7 hook 七段階発展完了 (新規 file + MODIFY path 両対応)
+      - paper × 実装 11 度目合流カテゴリ
+      - paper finding 54 件累計
+      - Subagent 検証 PASS + I1 即時対処
+      - cycle 内学習 transfer 構造的効果継続 (Day 13-14 検出 1 安定)
+      - transitionLegacy 削除パスの linter モデル転用 (cycle 内学習 transfer 別分野拡張)
+  - 注: artifact-manifest.json の Day 14 主要 metadata は Day 14 code commit `13c4e77` + 改訂 66 (Subagent I1 即時対処) に既に含まれているため本改訂では README 追加のみ (Day 6-13 改訂 21/27/33/39/45/51/58/63 同パターン)
 
 ## マーク凡例
 
