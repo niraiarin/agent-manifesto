@@ -51,6 +51,24 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 19 意思決定ログ (A-Standard-Lite namespace 検出拡張)
+
+### D4. `#check_retired_in_namespace` command 追加 (Day 19 Q1 A 案 + Q2 A-Minimal、Day 18 A-Minimal の自然な拡張)
+- **代案 A-Compact**: nested namespace 再帰対応 (`NS.*` 全階層列挙)
+- **代案 A-Maximal**: A-Compact + 退役 count + summary info (`N/M retired` 形式)
+- **採用 (Day 19)**: 案 A-Minimal (NS 直下 constants のみ enumerate + 各 Lean.Linter.isDeprecated 検査)
+- **理由**: Day 14-15-16-18 で確立した A-Minimal 段階的拡張パターン踏襲、1 日完結、
+  Day 20+ で A-Compact (nested) / A-Maximal (summary) へ段階的拡張パスを開ける。
+  `Environment.constants` 経由の enumeration + `Name.isPrefixOf` で NS 配下判定、
+  標準 Lean 4 API 活用 (TyDD-S4 P4 power-to-weight 継続適用)。
+
+### D5. Day 18 同 module に追加 (Q3 案 A、Day 18 + Day 19 同 command 系統)
+- **代案 B**: 新 module `RetirementLinterNamespace.lean` 分離
+- **採用**: 案 A Day 18 `RetirementLinterCommand.lean` MODIFY
+- **理由**: `#check_retired` (Day 18) + `#check_retired_in_namespace` (Day 19) は同 command 系統、
+  semantic 一貫性で統合が自然 (Day 15 macro 系 vs Day 18 command 系の semantic 分離とは異なる)、
+  file 数維持で cohesion 高い。
+
 ## Day 18 意思決定ログ
 
 ### D1. Lean.Elab.Command 拡張で #check_retired command (Q1 A + Q2 A-Minimal)
@@ -98,5 +116,35 @@ elab "#check_retired " id:ident : command => do
     logInfo m!"✓ '{name}' is retired (has @[deprecated] attribute)"
   else
     logInfo m!"✗ '{name}' is NOT retired (no @[deprecated] attribute)"
+
+/-- Day 19 A-Standard-Lite: `#check_retired_in_namespace <namespace>` command。
+
+    指定 namespace 直下の全 constants を Environment 経由で enumerate、各 constant が
+    `@[deprecated]` 付きかを `Lean.Linter.isDeprecated` で実行時検査、retired な constant を
+    info output に列挙。
+
+    利用例:
+    - `#check_retired_in_namespace AgentSpec.Provenance.RetiredEntity`
+      → Day 14 deprecated fixture 4 variant が列挙される
+
+    Day 18 A-Minimal (`#check_retired <identifier>` 単一検査) の自然な拡張 (Q1 A + Q2 A-Minimal)。
+    NS 直下 constants のみ列挙 (Day 20+ で nested namespace / summary 拡張候補)。
+ -/
+elab "#check_retired_in_namespace " id:ident : command => do
+  let env ← getEnv
+  let ns := id.getId
+  let mut retiredNames : List Name := []
+  for (name, _info) in env.constants.map₁.toList do
+    if ns.isPrefixOf name && name != ns then
+      if Lean.Linter.isDeprecated env name then
+        retiredNames := name :: retiredNames
+  if retiredNames.isEmpty then
+    logInfo m!"Namespace '{ns}': no retired declarations found"
+  else
+    let sorted := retiredNames.reverse
+    let mut msg := m!"Namespace '{ns}': {sorted.length} retired declaration(s)"
+    for name in sorted do
+      msg := msg ++ m!"\n  ✓ '{name}'"
+    logInfo msg
 
 end AgentSpec.Provenance

@@ -74,4 +74,33 @@ set_option linter.deprecated false in
 
 #check_retired RetiredEntity.trivial
 
+/-! ### Day 19 A-Standard-Lite 3/4 段階目進展記念: 段階的 Lean 機能習得 milestone 記録 (Q4 案 A rfl 前段) -/
+
+set_option linter.deprecated false in
+/-- Day 14 A-Minimal + Day 15 A-Compact + Day 18 A-Standard A-Minimal + Day 19 A-Standard-Lite
+    の 4 段階累積 (残り 1/4 = A-Maximal Week 5-6)、type-level milestone 確認 -/
+example :
+    -- 4 Day (14, 15, 18, 19) 累積で RetiredEntity を 4 fixture + 1 normal + 段階的拡張 linter で扱う
+    let fixture := RetiredEntity.obsoleteTrivialDeprecated
+    fixture.reason = .Obsolete := rfl
+
+/-! ### Day 19 新規: `#check_retired_in_namespace` command 動作確認 (A-Standard-Lite namespace 検出) -/
+
+-- Day 19 A-Standard-Lite: namespace 直下の retired declarations を enumerate。
+-- Day 18 parser 状態競合パターン回避 (3 度目、Day 15/Day 18 パターン継続):
+-- rfl example 前段 + command 後段で section 分離。
+
+-- AgentSpec.Provenance.RetiredEntity 配下: Day 14 deprecated fixture 4 variant を検出期待
+
+set_option linter.deprecated false in
+#check_retired_in_namespace AgentSpec.Provenance.RetiredEntity
+
+-- AgentSpec.Process.Failure 配下: 通常 fixture のみで @[deprecated] なし → 空期待
+
+#check_retired_in_namespace AgentSpec.Process.Failure
+
+-- AgentSpec.Spine.EvolutionStep 配下: Day 17 transitionLegacy 完全削除後なので空期待 (削除確認)
+
+#check_retired_in_namespace AgentSpec.Spine.EvolutionStep
+
 end AgentSpec.Test.Provenance.RetirementLinterCommand

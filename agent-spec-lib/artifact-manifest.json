@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.18.0-week2-day18",
+  "version": "0.19.0-week2-day19",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -306,7 +306,7 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 370,
+      "aggregated_example_count": 371,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -1075,7 +1075,7 @@
       "design_origin": "02-data-provenance §4.4 退役 entity の構造的検出を Lean 化 (Day 12 Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure / D3 1 ファイル統合配置、Day 11 ProvRelation パターン踏襲、ResearchEntity 拡張不要 backward compatible)。Day 14 で linter A-Minimal 実装 (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 C、Lean 4 標準 @[deprecated] attribute で退役済 entity 参照警告を実現、test fixture のみ対象、production code structure / smart constructor は backward compatible)",
       "tydd_alignment": "TyDD-S1 types-first (4 variant inductive で退役理由 semantic を型レベル区別) + S4 P2 Refinement (案 B String を退ける) + S4 P5 explicit assumptions 3 度目強適用 (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化、Refuted (failure : Failure) / Superseded (replacement : ResearchEntity))。Day 14 で TyDD-G3 linter integration (Lean 4 標準 @[deprecated] 活用、Day 15+ で custom attribute / linter / elaborator へ段階的拡張パス)",
       "decision_log": "RetiredEntity.lean docstring D1-D3 (Q3 案 A 4 variant 型化 / Q4 案 A separate / D3 1 ファイル統合配置)。Day 14 で D1-D2 追加 (Q3 案 A test fixture 対象 @[deprecated] / Q4 案 C rfl preference 維持、A-Minimal から A-Compact / A-Standard / A-Maximal への段階的拡張パス)",
-      "linter_status": "A-Minimal 完了 (Day 14、Lean 4 標準 @[deprecated] 4 fixture) + A-Compact 完了 (Day 15、Hybrid macro @[retired msg since] → @[deprecated msg (since := since)] 展開、新 module RetirementLinter.lean で隔離) + **A-Standard A-Minimal 完了 (Day 18、Lean.Elab.Command 拡張 #check_retired command、新 module RetirementLinterCommand.lean で隔離、Lean.Linter.isDeprecated API 利用)**。段階的 Lean 機能習得 3/4 段階目達成。Day 19+ で A-Standard-Lite (namespace 検出) / A-Standard-Full (elaborator hook)、Week 5-6 で A-Maximal (elaborator 型レベル強制、4/4 段階目) へ段階的拡張予定"
+      "linter_status": "A-Minimal 完了 (Day 14) + A-Compact 完了 (Day 15) + A-Standard A-Minimal 完了 (Day 18、#check_retired command) + **A-Standard-Lite 完了 (Day 19、#check_retired_in_namespace command、Environment.constants 経由 NS 直下 enumerate + Lean.Linter.isDeprecated 検査、Day 18 同 module MODIFY)**。段階的 Lean 機能習得 3/4 段階目 + Lite 拡張到達。Day 20+ で A-Standard-Full (elaborator hook) / A-Compact (nested namespace)、Week 5-6 で A-Maximal (elaborator 型レベル強制、4/4 段階目) へ段階的拡張予定"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
@@ -1209,12 +1209,13 @@
       ],
       "provides_types": [],
       "provides_definitions": [
-        "elab \"#check_retired \" ident : command (Day 18 A-Standard custom linter A-Minimal、Lean.Elab.Command 拡張、`#check_retired <identifier>` で identifier が @[deprecated] 付きかを Lean.Linter.isDeprecated で実行時検査、info output 発生)"
+        "elab \"#check_retired \" ident : command (Day 18 A-Standard custom linter A-Minimal、Lean.Elab.Command 拡張、`#check_retired <identifier>` で identifier が @[deprecated] 付きかを Lean.Linter.isDeprecated で実行時検査、info output 発生)",
+        "elab \"#check_retired_in_namespace \" ident : command (Day 19 A-Standard-Lite namespace 検出拡張、`#check_retired_in_namespace <namespace>` で NS 直下 constants 全列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output に列挙)"
       ],
       "provides_instances": [],
-      "design_origin": "Day 14 A-Minimal (@[deprecated] 4 fixture) → Day 15 A-Compact Hybrid macro (@[retired] → @[deprecated] 展開) → Day 18 A-Standard custom linter A-Minimal (#check_retired command) の段階的 Lean 機能習得パス **3/4 段階目達成**。Day 18 Q1 A 案 + Q2 A-Minimal + Q3 案 A 新 module 隔離 (Day 15 RetirementLinter.lean と並列、macro 系 vs command 系 semantic 分離)",
-      "tydd_alignment": "TyDD-G3 linter integration 拡張 (Day 14 標準機能 → Day 15 macro 機能 → Day 18 Elab.Command 拡張、段階的 Lean 機能習得 3/4 段階目、Week 5-6 A-Maximal elaborator で 4/4 段階目到達予定) + TyDD-S4 P4 power-to-weight (標準 Lean.Linter.isDeprecated API 利用で自前 implementation 回避、minimal 実装)",
-      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (D1 Q1 A + Q2 A-Minimal / D2 Q3 案 A 新 module 隔離 / D3 標準 Lean.Linter.isDeprecated API 利用)"
+      "design_origin": "Day 14 A-Minimal (@[deprecated] 4 fixture) → Day 15 A-Compact Hybrid macro (@[retired] → @[deprecated] 展開) → Day 18 A-Standard custom linter A-Minimal (#check_retired command) → **Day 19 A-Standard-Lite namespace 検出拡張 (#check_retired_in_namespace command)** の段階的 Lean 機能習得パス、残り 1/4 = Week 5-6 A-Maximal",
+      "tydd_alignment": "TyDD-G3 linter integration 拡張 (Day 14 標準機能 → Day 15 macro 機能 → Day 18 Elab.Command 拡張 → Day 19 Environment enumeration 拡張) + TyDD-S4 P4 power-to-weight (標準 Lean.Linter.isDeprecated + Environment.constants API 利用で自前 implementation 回避、minimal 実装継続)",
+      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (Day 18) + **D4-D5 added (Day 19 Q1 A + Q2 A-Minimal namespace enumerate / Q3 案 A Day 18 同 module MODIFY、command 系統 cohesion 維持)**"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterCommandTest",
@@ -1231,8 +1232,9 @@
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 6,
-      "command_invocations": 5,
+      "example_count": 7,
+      "command_invocations": 8,
+      "day19_update": "Day 19 で `#check_retired_in_namespace` command 3 invocations + 1 example 追加 (example 6→7、command invocations 5→8)。AgentSpec.Provenance.RetiredEntity 配下で 4 retired fixture 検出、AgentSpec.Process.Failure / AgentSpec.Spine.EvolutionStep 配下で no retired 判定 (Day 17 transitionLegacy 完全削除確認含む)",
       "sorry_count": 0,
       "axiom_count": 0,
       "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、Day 11-18 = **8 Day 連続 rfl preference 維持の記録更新**、quality loop 長期持続性 8 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認。set_option linter.deprecated false in で warning 抑制のみ",
@@ -1270,11 +1272,11 @@
     }
   ],
   "build_status": {
-    "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 18",
+    "last_verified": "2026-04-19",
+    "last_verified_phase": "Week 2 Day 19",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 18 で RetirementLinterCommand +1 で 103→104 (A-Standard custom linter A-Minimal 新 module)"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 18 で RetirementLinterCommandTest +2 で 123→125 (6 example + 5 #check_retired command invocation)"}
+      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 19 は RetirementLinterCommand MODIFY のみで jobs 変化なし (104 維持)、#check_retired_in_namespace command 追加"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 19 は RetirementLinterCommandTest MODIFY のみで jobs 変化なし (125 維持)、example 6→7 + command invocations 5→8"}
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1289,7 +1291,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 370,
+    "example_count": 371,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1335,7 +1337,7 @@
       "Provenance/RetirementLinter.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/RetirementLinterTest.lean": {"theorems": 0, "examples": 9},
       "Provenance/RetirementLinterCommand.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementLinterCommandTest.lean": {"theorems": 0, "examples": 6},
+      "Test/Provenance/RetirementLinterCommandTest.lean": {"theorems": 0, "examples": 7},
       "Provenance/ProvRelationAuxiliary.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ProvRelationAuxiliaryTest.lean": {"theorems": 0, "examples": 24},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
@@ -1652,6 +1654,15 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」10 度目適用 (Day 9-17 継続) だが Day 18 は I1 のみ即時対処 + I2 は Day 19+ improvement proposal (実装修正項目なし)、**Day 17 Subagent 指摘ゼロ持続性検証結果**: 新分野 (Elab.Command) で informational 2 件発生するも addressable ゼロ維持、cycle 内学習 transfer 累積効果は addressable レベルで継続実証"
       },
       "note": "Day 18 Provenance 層 A-Standard custom linter A-Minimal 実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A 新 module / Q4 案 A 新 file test、段階的 Lean 機能習得 **3/4 段階目達成**)。`elab \"#check_retired \" ident : command` 定義で Lean.Linter.isDeprecated API 経由に RetiredEntity 利用箇所の deprecated 判定機能を実装、Day 14 A-Minimal @[deprecated] + Day 15 A-Compact @[retired] macro 展開 fixture を実行時検査可能に。新 module RetirementLinterCommand.lean + RetirementLinterCommandTest.lean (新 file 6 example + 5 #check_retired command invocation)、production RetiredEntity.lean / RetirementLinter.lean は変更なし (backward compatible 完全維持)。Build 103+123 → 104+125 jobs、example 364→370 (+6)。Pattern #7 hook v2 5 度目運用検証 (新規 file パターン復帰、Day 17 MODIFY 3 度目から復帰で Day 18 十一段階発展到達)。**Day 11-18 で 8 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用、quality loop 長期持続性 8 Day 実証)。Day 18 初期 build error 即時修復実例 (2 度目、Day 15 macro syntax 同パターン): #check_retired command 連続 + set_option ... in example 混在で parser 状態競合 → section 区切り明確分離で解決。Day 19+ で A-Standard-Lite (namespace 検出) / A-Standard-Full (elaborator hook)、Week 5-6 で A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続。Day 17 Subagent 指摘ゼロの持続性は本 commit 後の Subagent 検証で検証 (新分野 Elab.Command で 2 Day 連続ゼロ維持できるか maturity 検証)"
+    },
+    {
+      "round": "Week 2 Day 19 Round 1",
+      "date": "2026-04-19",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + #check_retired_in_namespace command 動作確認 (AgentSpec.Provenance.RetiredEntity → 4 retired / AgentSpec.Process.Failure → 0 / AgentSpec.Spine.EvolutionStep → 0 (Day 17 削除確認))、Subagent 検証は本 commit 後の cycle step 1 (改訂 92 paper サーベイ評価サイクル) で実施予定 (Day 12-18 同パターン継続)",
+      "p2_complete_for": "day-19-provenance-retirement-linter-command-a-standard-lite",
+      "note": "Day 19 Provenance 層 A-Standard-Lite namespace 検出拡張実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A Day 18 同 module MODIFY / Q4 案 A Day 18 同 file test MODIFY、段階的 Lean 機能習得 3/4 段階目 + Lite 拡張到達)。`elab \"#check_retired_in_namespace \" ident : command` 追加で Environment.constants 経由 NS 直下 constants 列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output 列挙。Day 18 同 module MODIFY (command 系統 cohesion 維持)、RetirementLinterCommand.lean + Test MODIFY (+1 example = 6→7、+3 command invocations = 5→8)。Build 104+125 jobs 維持 (MODIFY のみ)、example 370→371 (+1)。Pattern #7 hook MODIFY path 4 度目運用検証 (Day 14/16/17 の MODIFY と Day 18 新規 file から今回 MODIFY 復帰、両パターン運用 7 度目、十二段階発展到達)。Day 18 と同 parser 状態競合 (3 度目、#check_retired_in_namespace 連続 + set_option example 混在) → section 分離で即時修復 (Day 15/18 パターン継続、initial_build_error_pattern 3 度目記録)。**Day 11-19 で 9 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用継続)。Day 19 namespace 検出で Day 17 transitionLegacy 完全削除確認 (AgentSpec.Spine.EvolutionStep 配下 0 retired = Day 17 成果の Day 19 linter 経由再確認)。Day 20+ で A-Standard-Full (elaborator hook) / A-Compact (nested namespace 再帰) / Week 5-6 A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続"
     }
   ]
 }
