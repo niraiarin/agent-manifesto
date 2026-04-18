@@ -35,6 +35,17 @@ JUDGEBENCH_CRITERION = {
     ),
 }
 
+SWEBENCH_CRITERION = {
+    "id": "patch_relevance",
+    "name": "Patch Relevance",
+    "description": (
+        "Does this code patch address the given problem? A patch that modifies "
+        "the correct files and implements the described fix scores HIGH. "
+        "A patch that touches unrelated files, addresses a different issue, "
+        "or is missing the core fix scores LOW."
+    ),
+}
+
 # Multi-criteria decomposition (for RQ2 — decomposition effect)
 REWARDBENCH_CRITERIA_DECOMPOSED = [
     {
@@ -99,6 +110,8 @@ def convert_pairwise(
             criteria = [REWARDBENCH_CRITERION]
         elif source == "judgebench":
             criteria = [JUDGEBENCH_CRITERION]
+        elif source == "swebench-verified":
+            criteria = [SWEBENCH_CRITERION]
         else:
             criteria = [REWARDBENCH_CRITERION]  # default
 
