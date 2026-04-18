@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# P3 Manifest-on-Commit (Section 6.2.1) — PreToolUse: Bash (git commit)
+# P3 Manifest-on-Commit (Section 6.2.1、Day 10 Subagent A1 対処で v2 拡張) — PreToolUse: Bash (git commit)
 #
-# Pattern #7 強制: agent-spec-lib/AgentSpec/{Spine,Proofs,Process}/ 配下の
+# Pattern #7 強制: agent-spec-lib/AgentSpec/{Spine,Proofs,Process,Provenance,Test/Cross}/ 配下の
 # 新規 .lean ファイル (`A` ステータス) が staged された場合、
 # agent-spec-lib/artifact-manifest.json も同 commit に staged されていることを要求。
+#
+# v2 拡張 (Day 10 Subagent A1 対処): regex に Provenance + Test/Cross を追加
 #
 # 設計判断 (11-pending-tasks Section 6.2.1):
 # - 検出範囲: A1 狭 (新規ファイルのみ、既存修正は対象外)
@@ -21,7 +23,7 @@ if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
   exit 0
 fi
 
-# Resolve git working directory for worktree support (p3-compatibility-check.sh と同パターン)
+# Resolve git working directory for worktree support
 GIT_DIR=""
 if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
   GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
@@ -32,7 +34,6 @@ if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
 fi
 
 # new-foundation worktree のみ対象 (D1)
-# agent-spec-lib/artifact-manifest.json の存在で判定
 if ! "${GIT_CMD[@]}" rev-parse --show-toplevel 2>/dev/null | xargs -I{} test -f "{}/agent-spec-lib/artifact-manifest.json"; then
   exit 0
 fi
@@ -42,12 +43,13 @@ if echo "$COMMAND" | grep -qE '\[no-manifest\]'; then
   exit 0
 fi
 
-# Spine/Proofs/Process 配下の新規 .lean ファイルを検出 (A1: A ステータスのみ)
+# 検出対象 layer (Day 10 v2 で Provenance + Test/Cross 追加)
+DETECTION_REGEX='^agent-spec-lib/AgentSpec/(Spine|Proofs|Process|Provenance|Test/Cross)/.*\.lean$'
+
 NEW_LEAN=$("${GIT_CMD[@]}" diff --cached --name-status 2>/dev/null \
-  | awk '$1 == "A" && $2 ~ /^agent-spec-lib\/AgentSpec\/(Spine|Proofs|Process)\/.*\.lean$/ {print $2}')
+  | awk -v re="$DETECTION_REGEX" '$1 == "A" && $2 ~ re {print $2}')
 
 if [ -z "$NEW_LEAN" ]; then
-  # 新規 .lean なし → pass
   exit 0
 fi
 
@@ -56,12 +58,11 @@ MANIFEST_STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null \
   | grep -E '^agent-spec-lib/artifact-manifest\.json$')
 
 if [ -n "$MANIFEST_STAGED" ]; then
-  # manifest 同 commit OK
   exit 0
 fi
 
 # B2: block
-echo "P3 Pattern #7 違反: 新規 Spine/Proofs/Process .lean ファイルが staged されていますが、" >&2
+echo "P3 Pattern #7 違反: 新規 Spine/Proofs/Process/Provenance/Test/Cross 配下の .lean ファイルが staged されていますが、" >&2
 echo "agent-spec-lib/artifact-manifest.json が同 commit に含まれていません。" >&2
 echo "" >&2
 echo "新規ファイル:" >&2
@@ -78,5 +79,6 @@ exit 2
 
 # Traceability:
 # Section 6.2.1: artifact-manifest 同 commit 反映の構造的強制
-# Pattern #7: Day 1, 2, 3, 4 で 4 連続違反 -> Day 5 で hook 化により構造的解決
+# Pattern #7: Day 1-4 で 4 連続違反 → Day 5 で hook 化により構造的解決
+# Day 10 v2: Subagent A1 対処、regex に Provenance + Test/Cross 追加
 # D1-D4 (Safety/Verification/Observability/Governance): 後続フェーズ依存性を保護
