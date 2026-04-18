@@ -74,7 +74,13 @@ ResearchActivity.verify : (input : Hypothesis) → (output : Verdict) → Resear
 
 Day 10+ で EvolutionStep の transition を ResearchActivity.verify として PROV mapping する path 確立。 -/
 
-/-- 同一 Hypothesis + Verdict から ResearchActivity.verify を構築できる -/
+/-- 同一 Hypothesis + Verdict から ResearchActivity.verify を構築できる
+    (parameter 形式 example: 注記 — Subagent I2 対処)。
+
+    本 example は通常の `example : <type>` と異なり parameter (`(h : Hypothesis) (v : Verdict)`)
+    を取る形式。これは「任意の Hypothesis/Verdict ペアで verify variant が構築可能」という
+    universal property を表現するため、Day 1-9 の閉式 example (`rfl` / `decide`) とは
+    異なる役割を持つ。example_count としては 1 件としてカウント (Day 10+ で集計方針統一検討)。 -/
 example (h : Hypothesis) (v : Verdict) : ResearchActivity := .verify h v
 
 end AgentSpec.Test.Provenance.ResearchActivity
