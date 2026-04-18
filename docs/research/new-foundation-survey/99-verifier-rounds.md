@@ -1241,3 +1241,72 @@ informational 3 件:
 - **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-13 同パターン継続 (5 度連続)、TyDD 評価サイクル「実装修正なし」(Day 9-13 で全て Day 14+ 繰り延べ)
 - **cycle 内学習 transfer**: Day 11 Subagent I3 教訓 (rfl preference) を Day 12/13 実装で継続適用、**Day 12 I1 教訓 (version field) を Day 13 で先回り適用 → Subagent 検出項目数 4→1 減少** (cycle pattern が quality loop として機能している構造的効果実証)
 - **verifier_history**: Day 9 Week 1-9 一括補完 (14 entries) + Day 10 R1 追加 (15 entries) + Day 11 R1 追加 (16 entries) + Day 12 R1 追加 (17 entries) + **Day 13 R1 追加 (18 entries)**
+
+---
+
+## Phase 0 Week 2 Day 14 検証 (2026-04-18 — Day 14 commit `13c4e77` 後)
+
+**背景**: Section 2.26 Day 14 着手前判断 (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C) に従い実装。**RetiredEntity linter A-Minimal 実装** (Lean 4 標準 `@[deprecated]` 4 fixture、PROV-O §4.4 退役参照警告の 1:1 対応) + **新次元「強制化」追加** (Day 11-13 type/relation 軸と直交) + **段階的拡張パス確立** (A-Minimal → A-Compact → A-Standard → A-Maximal)。Day 12-13 で確立した cycle pattern (Subagent 即時検証) を Day 14 でも継続適用、改訂 66 で Subagent 検証 PASS + I1 即時対処。Day 11-14 で 4 Day 連続 rfl preference 維持 (cycle 内学習 transfer 3 度目適用)、Day 13-14 で Subagent 検出項目数 1 安定維持 (構造的効果継続)。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 14 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (build PASS で代替検査、winner A 全体)
+
+**Subagent 検証** (改訂 66 で実施): VERDICT = PASS（addressable = 0、informational 3）
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 | Day 14 R1 evaluator が「本 commit 後の cycle step 1 で実施予定」プレースホルダのまま (Day 12 I1 / Day 13 I1 同パターン) | **改訂 66 で即時対処済** (evaluator 更新 + 新規 subagent_verification field 追加で back-fill、paper サーベイ評価サイクル「実装修正組込み」6 度目適用) |
+| I2 | `@[deprecated]` syntax `@[deprecated "msg" (since := "date")]` は Lean 4.29.0 (pinned) 互換確認、(since := ...) 名前付き引数は Lean v4.7.0+ で利用可能 | **対処不要** (informational 監査記録のみ) |
+| I3 | `deprecated_api_usage: 0` は self-reported field、Day 15+ linter 拡張 (A-Compact / A-Standard / A-Maximal) で機械的検証可能化 | **対処不要** (informational、Day 15+ design hint) |
+
+**Day 14 1 項目詳細** (Q1 A 案 / Q2 A-Minimal / Q3 案 A / Q4 案 C 採用案反映、MODIFY のみ):
+
+1. **AgentSpec/Provenance/RetiredEntity.lean (MODIFY)** (Q3 案 A test fixture 対象、Q4 案 C docstring 使用例注記):
+   - 4 deprecated fixture 追加: `refutedTrivialDeprecated` / `supersededTrivialDeprecated` / `obsoleteTrivialDeprecated` / `withdrawnTrivialDeprecated`
+   - `@[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]` 付与
+   - test fixture のみ対象、production code structure / smart constructor 自体は backward compatible
+   - docstring に Day 14 意思決定ログ D1-D2 + `@[deprecated]` 使用例 (warning 発生 / 抑制の例) 追加
+
+2. **AgentSpec/Test/Provenance/RetiredEntityTest.lean (MODIFY、22→30 example、+8)**:
+   - 4 deprecated fixture の entity / reason / whyRetired accessor rfl 確認 (各 variant)
+   - `set_option linter.deprecated false in` で warning 抑制 (build PASS 維持)
+   - 4 variant List 集約 (既存 4 variant List 集約との対称性)
+   - **Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 3 度目、Day 11-14 = 4 Day 連続 rfl preference 維持)**
+
+**Pattern #7 hook MODIFY path 対応確認 = 七段階発展完了**: Day 14 commit は新規 file 追加なし MODIFY のみだが、artifact-manifest 同 commit を遵守 (Pattern #7 hook が MODIFY path でも機能)。Day 5 hook 設計 → Day 6/7/8/9 4 度連続運用検証 → Day 10 v2 拡張 → Day 11 v2 初運用検証 → Day 12 v2 2 度目 → Day 13 v2 3 度目運用検証 = 運用定常化 → **Day 14 MODIFY path 対応確認** の七段階発展完了 (新規 file パターンと MODIFY path 両対応)。
+
+**cycle 内学習 transfer 構造的効果継続**: Day 13 で Day 12 I1 教訓 (version field) を先回り適用 → Subagent 検出項目数 4→1 減少、**Day 14 でも 1 安定維持** (Day 13-14 連続)。cycle pattern が quality loop として持続的効果を発揮している実証。Day 14 で新たに発見: transitionLegacy deprecated 削除 (Section 2.15 Day 9+ からの繰り延べ) は、Day 14 `@[deprecated]` モデルが Day 15+ で同パターン転用可能化 (linter パターンが別分野に転用される cycle 内学習 transfer の拡張)。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 102 jobs 維持 (MODIFY のみ)、`lake build AgentSpecTest` exit 0 / 121 jobs 維持、theorem 15 (不変), example 346→354 (+8), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-14 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性 / 後続 Docs) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1-12 | (省略、Section 12.36 Day 12 累計参照) | | | | | | |
+| Day 13 | `40ccd78` (compatible) | `786a9b6` (conservative、Subagent 即時検証 PASS + I1 実装修正対処) | `db5eb55` (conservative、実装修正なし) | `0e84725` (compatible) | `119e9a4` (conservative) | R1 PASS (Subagent 即時検証 PASS) | written |
+| Day 14 | `13c4e77` (compatible) | `a0c55fd` (conservative、Subagent 即時検証 PASS + I1 実装修正対処) | `69a190c` (conservative、実装修正なし) | `14e4775` (compatible) | (本 commit) | R1 PASS (Subagent 即時検証 PASS、検出項目数 1 Day 13-14 で安定維持) | written |
+
+**Day 14 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-14 追加 0)
+- example: 354 (Day 13 346 + Day 14 追加 8: RetiredEntityTest 内)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 102 jobs) + AgentSpecTest (test 121 jobs)** (Day 13 から jobs 変化なし、MODIFY のみ)
+- **Spine 層 4 type class 完備 + 順序関係完備 + EvolutionStep B4 4-arg post 完全統合 (Day 8、Section 2.9 完全解消)**
+- **Process 層 4 type 完備** (Day 6-7)
+- **Provenance 層 5 type + 6 relation + linter A-Minimal 完備** (Day 8-12 = 5 type + Day 11/13 = 6 relation + **Day 14 = linter A-Minimal `@[deprecated]` 4 fixture**)
+- **PROV-O §4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合) + 強制化次元 A-Minimal** (Day 11-14 累計)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8/9/10 5 度連続運用検証 + Day 10 v2 拡張 + Day 11/12/13 v2 3 度連続運用検証 + Day 14 MODIFY path 対応確認 = 9 度連続検証、七段階発展完了**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 5 度目強適用、Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload → Day 13 ProvRelationAuxiliary → Day 14 `@[deprecated]` attribute assumption explicit 化)** / Section 10.2 6/8 + 0 構造違反 (9 度連続) / **F/B/H 強適用 = B3 + B4 + F2 部分 + H4 + H10 部分 (5 強適用継続)** / **新評価軸「強制化次元」: 1 (Day 14 linter A-Minimal)** (詳細 Section 12.41)
+- 論文サーベイ達成度: **paper finding 54 件累計** (Day 4-14 + Day 1-3 関連、詳細 Section 12.40)
+- paper × 概念 合流カテゴリ: **11 種** (Day 4-13 10 種 / **Day 14 linter A-Minimal × 段階的拡張パス × 強制化次元追加**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5 設計→Day 6/7/8/9 4 度運用検証→Day 10 v2 拡張→Day 11/12/13 v2 3 度連続運用検証→Day 14 MODIFY path 対応確認、10 セッション governance 進化 = 七段階発展完了)**、**PROV-O 5 type + 6 relation + linter A-Minimal (Day 8→Day 14 7 セッション完全実装、§4.1 + §4.4 完全カバー + 強制化層追加)**
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-14 同パターン継続 (6 度連続)、TyDD 評価サイクル「実装修正なし」(Day 9-14 で全て Day 15+ 繰り延べ)
+- **cycle 内学習 transfer**: Day 11 Subagent I3 教訓 (rfl preference) を Day 12/13/14 実装で継続適用 (Day 11-14 = 4 Day 連続)、Day 12 I1 教訓 (version field) を Day 13/14 で先回り適用 → **Day 13-14 で Subagent 検出項目数 1 安定維持** (cycle pattern quality loop の構造的効果実証 + 持続性)、**Day 14 で新たに linter パターン別分野転用パスが発見** (transitionLegacy 削除に Day 14 `@[deprecated]` モデル適用可能、cycle 内学習 transfer の拡張)
+- **新次元「強制化」**: Day 11-13 type/relation 軸と直交する評価軸を Day 14 で導入 (linter A-Minimal が初実装)
+- **verifier_history**: Day 13 R1 (18 entries) + **Day 14 R1 追加 (19 entries)**
