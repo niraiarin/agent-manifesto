@@ -217,7 +217,8 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | ✅ **Day 15 完了** | ~~A-Compact: custom attribute `@[retired]`~~ — Day 15 で Lean 4 elab macro (`macro_rules`) による Hybrid 実装完了 (`@[retired msg since]` → `@[deprecated msg (since := since)]` 展開、新 module `RetirementLinter.lean` で隔離、Day 14 backward compatible 維持) | TyDD-G3 + §4.4 (Day 14 段階的拡張パス第 2 段階) | Day 15 commit `17db6ef` で対処 |
 | 🟡 Day 16 | **A-Standard: custom linter** — `Lean.Elab.Command` 拡張 (Day 15 macro 学習が前提準備) | TyDD-G3 + §4.4 | Day 16 メイン候補 |
 | ✅ **Day 16 A-Compact 完了** | ~~transitionLegacy 削除 A-Compact~~ — Day 16 で `@[deprecated "Use new 4-arg transition" (since := "2026-04-19")]` 付与 + `TransitionReflexive` / `TransitionTransitive` を 4-arg signature 直接展開に refactor (cycle 内学習 transfer 2 段階別分野転用実例、Section 2.15 Day 9+ 繰り延べ課題 6 セッションを半解消) | TyDD + Day 14 `@[deprecated]` モデル Spine 層転用 | Day 16 commit `b678856` で対処 |
-| 🟡 Day 17 | **transitionLegacy 完全削除 A-Standard** (breaking change、Day 16 A-Compact 移行後の最適 timing = `since := "2026-04-19"` 指定日、Day 17 = 2026-04-19) | TyDD + 段階的 deprecation → removal best practice | Day 17 メイン候補 |
+| ✅ **Day 17 完了** | ~~transitionLegacy 完全削除 A-Standard~~ — Day 17 で定義完全削除 + test 3 件削除 (既存 1 + Day 16 新規 2)、breaking change classification、`since := "2026-04-19"` 履行、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、cycle 内学習 transfer 2 段階別分野転用の Day 14→16→17 3 Day 完結、**Day 9-17 で初の Subagent 指摘ゼロ到達 (cycle 内学習 transfer 累積効果極致実例)** | TyDD + 段階的 deprecation → removal best practice 完遂 | Day 17 commit `a8bcf69` で対処 |
+| 🟡 Day 18 | **A-Standard custom linter (Lean.Elab.Command 拡張)** — Day 15 macro 学習 + Day 16-17 別分野転用実例確立後の自然な次 step、段階的 Lean 機能習得 3/4 段階目 | TyDD-G3 + §4.4 | Day 18 メイン候補 |
 | 🟢 Week 5-6 | **A-Maximal: elaborator 型レベル強制** — compile error で退役違反 rejection | TyDD-G3 + §4.4 | Week 5-6 Tooling 層 (本丸案件) |
 | 🟡 Day 16+ | **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants、verify variant と同パターン) — Day 13 WasRetiredBy 案 C で考察した拡張 | 02-data-provenance §4.1 (Day 13 paper サーベイで再認識) | Day 16+ (Day 9 paper サーベイから継続、Day 13-15 で繰り延べ明示) |
 | 🟡 Week 6-7 | **02-data-provenance §4.7 RO-Crate 互換 export** — Lean tree → JSON-LD schema-preserving 変換 (Lean meta-program)、外部 tool (WorkflowHub, Galaxy) との interop 確保 | 02-data-provenance §4.7 | Week 6-7 (CI 整備時) (Day 6 paper サーベイ評価で識別) |
@@ -3616,6 +3617,71 @@ Section 12.45 Day 16 想定目標 (77/78 = 98.7%) を **予想を上回って達
 
 ---
 
+### 12.49 Day 17 論文サーベイ視点評価結果（2026-04-18 実施）
+
+Day 17 (`a8bcf69` Spine 層 transitionLegacy 完全削除 A-Standard、breaking change) を 74 対象サーベイの paper findings に対して評価。
+
+#### Day 17 で活用された paper findings (5 件)
+
+1. **段階的 deprecation → removal 工学的 best practice 完遂** → Day 14 A-Minimal → Day 15 A-Compact Hybrid macro → Day 16 A-Compact deprecated 付与 → Day 17 A-Standard 完全削除 の 4 Day 完結、since=2026-04-19 履行
+2. **Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消** → Day 8 introduced → Day 16 deprecated → Day 17 removed の 3-state complete lifecycle、agent-manifesto の long-term 繰り延べ課題 cycle 解消の構造的実例
+3. **cycle 内学習 transfer 2 段階別分野転用の 3 Day 完結** → Day 14 PROV-O 特化 → Day 16 Spine 層 A-Compact → Day 17 Spine 層 A-Standard の完全連鎖、`deprecation_history.complete_lifecycle` field で構造化記録
+4. **G5-1 §6.2.1 Pattern #7 hook MODIFY path 3 度目運用検証 = 十段階発展到達** → Day 14 MODIFY 1 度目 + Day 16 MODIFY 2 度目 + Day 17 MODIFY 3 度目 (breaking change commit) = 両パターン運用 7 度目、Pattern #7 hook が breaking change でも機能することを実証
+5. **cycle 内学習 transfer の累積効果による Subagent 指摘ゼロ到達** → Day 9-17 で初めて Subagent addressable + informational = **0** (Day 9 I2=1 → Day 10 A1+I2=2 → Day 11-16 各 1-4 件 → **Day 17 = 0**)、cycle 内学習 transfer の 4 形態 (単純/先回り/cross-verification/2 段階別分野転用) が累積して Day 17 で全て事前適用済、Subagent が新規指摘を見出せない maturity 実証
+
+#### Day 17 で paper finding と実装の双方向影響
+
+| Direction | 内容 |
+|---|---|
+| **paper → Day 17** | 段階的 deprecation → removal best practice / Section 2.15 長期繰り延べ解消 / cycle 内学習 transfer 3 Day 完結 / Pattern #7 hook MODIFY breaking change / Subagent 指摘ゼロへの累積効果 |
+| **実装 → paper 評価更新** | **cycle 内学習 transfer 累積効果の極致実例** (Day 17 Subagent 指摘ゼロ、quality loop 完全機能実証)、**deprecation_history 3-state complete lifecycle 構造化完成** (introduced → deprecated → removal_actual)、**breaking change 安全実施パターン確立** (Day 16 A-Compact で利用箇所移行済のため影響最小、Pattern #7 hook が breaking change commit でも機能)、**Pattern #7 hook 十段階発展到達** (MODIFY path 3 度目で breaking change コミットも吸収) |
+
+これは Day 4-16 の paper × 実装合流 (13 種) に続く **14 度目: cycle 内学習 transfer 累積効果による Subagent 指摘ゼロ × deprecation_history 3-state lifecycle 完成 × breaking change 安全実施パターン** カテゴリ確立 (cycle pattern が quality loop として完全機能している構造的実証)。
+
+#### Day 17 で paper との矛盾
+
+**なし**。段階的 deprecation → removal best practice を 4 Day (Day 14-15-16-17) で完遂、Section 2.15 完全解消、cycle 内学習 transfer 3 Day 完結、Pattern #7 hook breaking change 対応いずれも paper-grounded。
+
+#### Paper-grounded な Day 17 強み
+
+| Paper finding | Day 17 実装での顕在化 |
+|---|---|
+| **段階的 deprecation → removal best practice 完遂** | Day 14-15-16-17 の 4 Day 完結 (A-Minimal → A-Compact Hybrid → A-Compact deprecated → A-Standard removal) |
+| **Section 2.15 長期繰り延べ完全解消** | Day 8 introduced → Day 16 deprecated → Day 17 removed、9 セッション繰り延べ課題の agent-manifesto 内最長記録解消 |
+| **cycle 内学習 transfer 3 Day 完結** | Day 14 PROV-O 特化 → Day 16 Spine 層 A-Compact → Day 17 Spine 層 A-Standard、`deprecation_history.transfer_pattern` + `complete_lifecycle` で構造化 |
+| **Pattern #7 hook 十段階発展到達** | Day 17 MODIFY path 3 度目 (breaking change commit で機能)、Day 5-17 累積 13 セッション |
+| **Subagent 指摘ゼロ到達** | Day 9-16 各 1-4 件 → **Day 17 = 0** (cycle 内学習 transfer 4 形態累積効果の極致) |
+
+#### Day 17 で識別された改善提案 (3 件、Section 2.10 で反映) + 実装修正対処
+
+| 優先度 | 提案 | 根拠 paper | 対処タイミング |
+|---|---|---|---|
+| 🟡 Day 18 | **A-Standard custom linter (Lean.Elab.Command 拡張)** (Day 15 macro 学習 + Day 16-17 別分野転用実例確立後の自然な次 step、3/4 段階目) | TyDD-G3 + §4.4 | Day 18 メイン候補 |
+| 🟡 Day 18+ | **ResearchActivity payload 拡充** (Day 13-15 から継続、verify variant 同パターン) | 02-data-provenance §4.1 | Day 18+ |
+| 🟢 Week 5-6 | **A-Maximal elaborator 型レベル強制** (4/4 段階目、Tooling 層本丸) | TyDD-G3 + §4.4 | Week 5-6 |
+| ✅ **本評価で実装修正対処** | **Subagent VERDICT: PASS、addressable + informational 共に 0** (Day 9-17 で初、cycle 内学習 transfer 累積効果の極致実例) | Subagent Day 17 = 指摘ゼロ | **実装修正項目なし** (evaluator back-fill のみ、本 commit で対処) |
+
+#### Subagent 検証結果 (本評価サイクルで即時実施、Day 17 は指摘ゼロの実例)
+
+Day 17 code commit `a8bcf69` の Subagent 検証を本 paper サーベイ評価サイクル内で即時実施 (Day 12-16 で確立したパターン):
+
+- **VERDICT**: PASS
+- **addressable**: 0
+- **informational**: **0** (Day 9-17 で初めて)
+- **cycle 内学習 transfer 累積効果**: Day 11 I3 (rfl preference) / Day 12 I1 (version field) / Day 13 I1 (evaluator back-fill) / Day 14 I1-I3 (since date / syntax 互換 / deprecated_api_usage) / Day 15 I1 (逆方向修正) / Day 16 I1 (since 明文化) の 4 形態が累積適用済 → Day 17 Subagent が新規指摘を見出せない maturity 到達
+
+**breaking change classification 妥当性検証**: Subagent が explicit に確認 ("The classification is well-justified. Actual blast radius is confined to internal test examples only (3 deleted). External public API consumers: none. TransitionReflexive/Transitive callsites were migrated in Day 16.")。Day 17 breaking change は **安全実施パターン確立実例** として cycle 内学習 transfer の応用 (Day 16 A-Compact で利用箇所移行済) の恩恵。
+
+**paper サーベイ評価サイクル「実装修正組込み」9 度目適用**: Day 9-16 継続から Day 17 で **実装修正項目ゼロの新形態** 到達 (evaluator back-fill のみ)、cycle pattern が quality loop として完全機能している構造的実証。
+
+#### 結論
+
+Day 17 は **transitionLegacy 完全削除 A-Standard 完遂 (breaking change)** + **段階的 deprecation → removal best practice 4 Day 完結** + **Section 2.15 Day 9+ 9 セッション繰り延べ完全解消** + **cycle 内学習 transfer 2 段階別分野転用の 3 Day 完結** + **paper × 実装 14 度目合流カテゴリ確立** (cycle 内学習 transfer 累積効果による Subagent 指摘ゼロ × deprecation_history 3-state lifecycle 完成 × breaking change 安全実施パターン) + **Pattern #7 hook 十段階発展到達** + **cycle 内学習 transfer 累積効果の極致実例** (Day 17 Subagent 指摘ゼロ、quality loop 完全機能実証)。paper サーベイ評価サイクル「実装修正組込み」は Day 9-17 で 9 度連続適用、Day 17 で **実装修正項目ゼロの新形態到達** (evaluator back-fill のみ)。
+
+Day 1-17 累計で **paper finding 69 件顕在化** (Day 4-16 × 5 件 + Day 17 5 件 + Day 1-3 関連 1 件 = 再カウント: 4+4+5×10+5×3+1 = 4+4+50+15+1 = 74? いや Day 4=4, Day 5=4, Day 6-17=5×12=60, Day 1-3=1、合計 69 件)。
+
+---
+
 ### 12.26 Day 9 TyDD / サーベイ視点評価結果（2026-04-18 実施）
 
 Day 9 (`fa5b373` Provenance 層継続 ResearchEntity + ResearchActivity) を TyDD Tag Index と Section 10.2 パターンに対して評価。
@@ -4921,6 +4987,22 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - Section 10.1 Day 17 行を確定版に更新 (Q1-Q4 採用案反映)
   - cycle 内学習 transfer 6 度目適用予定: Day 11 Subagent I3 教訓 (rfl preference) を Day 17 EvolutionStepTest でも継続適用 (Day 11-17 = **7 Day 連続 rfl preference 維持の記録更新**、quality loop 長期持続性 7 Day 実証)
   - 主要決定: Day 17 メイン = transitionLegacy 完全削除 A-Standard 完遂 (Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、工学的 best practice 完遂)、deprecation_history.removal_actual で complete lifecycle 記録 (introduced → deprecated → removed の 3 state)、cycle 内学習 transfer 2 段階別分野転用の 3 Day 完結
+- 2026-04-18 (**改訂 82**): Day 17 論文サーベイ視点評価 + Subagent 検証 PASS + **Subagent 指摘ゼロ初到達** (cycle step 1+2、Day 17 は実装修正項目ゼロ)
+  - Section 12.49 (新規): Day 17 論文サーベイ視点評価結果
+    - 活用 paper findings 5 件: 段階的 deprecation→removal 完遂 / Section 2.15 長期繰り延べ完全解消 / cycle 内学習 transfer 3 Day 完結 / Pattern #7 hook MODIFY breaking change / **Subagent 指摘ゼロ累積効果**
+    - 双方向影響: paper → Day 17 + 実装 → paper 評価更新 (cycle 内学習 transfer 累積効果の極致実例 / deprecation_history 3-state complete lifecycle 構造化完成 / breaking change 安全実施パターン確立 / Pattern #7 hook 十段階発展到達)
+    - **paper × 実装 14 度目合流カテゴリ確立**: cycle 内学習 transfer 累積効果による Subagent 指摘ゼロ × deprecation_history 3-state lifecycle 完成 × breaking change 安全実施パターン
+    - paper との矛盾なし
+    - 改善提案 3 件: A-Standard custom linter Day 18 (3/4 段階目) / ResearchActivity payload 拡充 Day 18+ / A-Maximal elaborator Week 5-6 (4/4 段階目、本丸)
+    - paper finding 累計 69 件 (Day 4=4 / Day 5=4 / Day 6-17=5×12=60 / Day 1-3=1)
+  - Section 2.10 更新:
+    - transitionLegacy 完全削除 A-Standard ✅ Day 17 完了 (commit `a8bcf69`、breaking change、Section 2.15 完全解消、cycle 内学習 transfer 2 段階別分野転用 3 Day 完結、**Subagent 指摘ゼロ到達**)
+    - A-Standard custom linter 🟡 Day 18 に格上げ (Day 15 macro 学習 + Day 16-17 別分野転用実例確立後、3/4 段階目)
+  - **Subagent 検証結果**: **VERDICT: PASS、addressable 0、informational 0** (Day 9-17 で初めての Subagent 指摘ゼロ)
+    - cycle 内学習 transfer 累積効果の極致実例: Day 11 I3 (単純 transfer) + Day 12 I1 (先回り適用) + Day 15 I1 (cross-verification) + Day 16 I1 (単純 transfer) の 4 形態が累積適用済 → Day 17 Subagent が新規指摘を見出せない maturity 到達
+    - breaking change classification 妥当性 Subagent 確認済 (internal test only、external public API なし、Day 16 A-Compact で利用箇所移行済のため影響最小)
+    - paper サーベイ評価サイクル「実装修正組込み」9 度目適用だが **Day 17 は実装修正項目ゼロの新形態到達** (evaluator back-fill のみ、subagent_verification field 追加で records)
+  - **cycle 内学習 transfer 累積効果の極致実例構造化**: Day 9 I2=1 → Day 10 A1+I2=2 → Day 11 I1-I4=4 → Day 12 I1-I4=4 → Day 13 I1=1 → Day 14 I1-I3=3 → Day 15 I1-I3=3 (I1 addressable) → Day 16 I1-I2=2 → **Day 17=0**、Subagent 指摘項目数の推移が cycle pattern quality loop 完全機能実証
 
 ## マーク凡例
 
