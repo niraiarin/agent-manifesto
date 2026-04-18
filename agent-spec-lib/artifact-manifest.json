@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.8.0-week2-day7",
+  "version": "0.9.0-week2-day8",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -292,10 +292,12 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest", "edge": "wasDerivedFrom"}
+        {"id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 171,
+      "aggregated_example_count": 197,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)"
@@ -308,21 +310,25 @@
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom", "added_in": "Day 8 (Q4 案 A: B4 4-arg post の input 型)"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom", "added_in": "Day 8 (Q4 案 A: B4 4-arg post の output 型)"}
       ],
       "provides_classes": [
-        "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : S → S → Prop"
+        "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : (pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop (Day 8 で B4 Hoare 4-arg post に refactor、Q4 案 A 確定、Section 2.9 完全解消)"
       ],
       "provides_definitions": [
-        "AgentSpec.Spine.EvolutionStep.TransitionReflexive",
-        "AgentSpec.Spine.EvolutionStep.TransitionTransitive"
+        "AgentSpec.Spine.EvolutionStep.transitionLegacy (Day 8 追加: 後方互換、∃ h v, transition pre h v post で derive)",
+        "AgentSpec.Spine.EvolutionStep.TransitionReflexive (Day 8 で transitionLegacy ベースに更新)",
+        "AgentSpec.Spine.EvolutionStep.TransitionTransitive (Day 8 で transitionLegacy ベースに更新)"
       ],
       "provides_instances": [
-        "instEvolutionStepUnit"
+        "instEvolutionStepUnit (Day 8 で 4-arg signature 対応に更新: transition _ _ _ _ := True)",
+        "Decidable (transition a h v b) for Unit (Day 8 で 4-arg signature 対応)"
       ],
-      "g5_1_section": "3.4 ステップ 1 (ResearchEvolutionStep type class)",
-      "week2_status": "Day 3 hole-driven: transition member のみ。Week 4-5 で B4 Hoare 4-arg post + hypothesis/verdict/observation 追加予定 (Section 12.6 / 2.9)",
-      "decision_log": "EvolutionStep.lean docstring D1-D3 (transition のみ / refl 分離 / Unit instance)"
+      "g5_1_section": "3.4 ステップ 1 (ResearchEvolutionStep type class)、Day 8 で B4 4-arg post 完全統合",
+      "week2_status": "Day 8 で B4 Hoare 4-arg post 完全統合済 (Q4 案 A、Section 2.9 完全解消)。layer 依存性は Spine → Process / Provenance を Q4 案 A D4 で受容 (Spine = core abstraction、Process/Provenance = 具体型)。transitionLegacy は後方互換性のため derive で残置 (Day 9+ で deprecated 削除候補)",
+      "decision_log": "EvolutionStep.lean docstring D1-D3 (Day 3) + D1-D4 revised (Day 8 Q4 案 A 反映: 4-arg post / transitionLegacy derive / properties を legacy ベース / 層依存性受容)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
@@ -370,9 +376,10 @@
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 4,
+      "example_count": 9,
       "sorry_count": 0,
-      "axiom_count": 0
+      "axiom_count": 0,
+      "day8_update": "Day 8 で EvolutionStep B4 4-arg post refactor 反映、example 4→9 (新 4-arg signature の test 4 件 + transitionLegacy + decide test 1 件)"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest",
@@ -719,25 +726,103 @@
       "example_count": 21,
       "sorry_count": 0,
       "axiom_count": 0,
-      "spine_integration_planned": "Day 8+ で別 test file (Q4 案 A、LearningCycle/Observable 統合)"
+      "spine_integration": "Day 8 で SpineProcessTest.lean (新 namespace AgentSpec.Test.Cross) で実装、Q4 案 A 別 file 確定方針通り"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+      "path": "AgentSpec/Provenance/Verdict.lean",
+      "scope": "formalization",
+      "refs": ["GA-S6", "GA-W4"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+      ],
+      "provides_types": [
+        "AgentSpec.Provenance.Verdict (3 variant inductive: proven / refuted / inconclusive、Day 8 Q3 案 A minimal)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Provenance.Verdict.trivial (= inconclusive、test fixture)",
+        "AgentSpec.Provenance.Verdict.isProven (Bool 判定)",
+        "AgentSpec.Provenance.Verdict.isRefuted (Bool 判定)",
+        "AgentSpec.Provenance.Verdict.isInconclusive (Bool 判定)"
+      ],
+      "provides_instances": [
+        "DecidableEq Verdict / Inhabited / Repr (deriving)"
+      ],
+      "namespace_role": "新 namespace AgentSpec.Provenance に先行配置 (Day 8、Section 2.14 D2 確定)。Day 9+ で ResearchEntity / ResearchActivity / ResearchAgent + Mapping 関数を追加して namespace 完成予定 (02-data-provenance §4.1)",
+      "prov_mapping_planned": "Day 9+ で AgentSpec.Provenance.ResearchActivity の output として使用 (02-data-provenance §4.1)",
+      "week2_status": "Day 8 hole-driven 着手 (Q3 案 A 3 variant minimal)。Day 9+ で payload 拡充検討 (refuted (evidence : Evidence) 等、Failure と同パターン)",
+      "decision_log": "Verdict.lean docstring D1-D2 (3 variant minimal Q3 案 A / 新 namespace AgentSpec.Provenance に配置 D2)"
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest",
+      "path": "AgentSpec/Test/Provenance/VerdictTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "Verdict 3 variant 構築 (proven / refuted / inconclusive)",
+        "isProven / isRefuted / isInconclusive 判定",
+        "trivial fixture (= inconclusive)",
+        "DecidableEq / Inhabited"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 17,
+      "sorry_count": 0,
+      "axiom_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
+      "path": "AgentSpec/Test/Cross/SpineProcessTest.lean",
+      "scope": "test",
+      "refs": ["GA-S6", "GA-I9"],
+      "test_targets": [
+        "Spine 4 type class + Process 4 type 同時要求 (8 layer 要素)",
+        "fullStackExample 関数 (LearningCycle.currentStage + Observable.snapshot + Hypothesis + Failure + Evolution + HandoffChain)",
+        "Spine EvolutionStep B4 4-arg post と Process Evolution の連携",
+        "evolveWithVerdict 関数 (Hypothesis/Verdict 引数で transition 呼出し)",
+        "Day 7 fullProcessExample 構造の継承 (fullProcessReuse)"
+      ],
+      "enforces": "structural",
+      "dependencies": [
+        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.LearningCycle", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"},
+        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+      ],
+      "example_count": 4,
+      "sorry_count": 0,
+      "axiom_count": 0,
+      "namespace_role": "新 namespace AgentSpec.Test.Cross (Day 8、Q4 案 A 別 file 確定)。Spine + Process layer cross-layer integration test 専用",
+      "design_origin": "Day 7 paper サーベイ Section 12.19 で識別された改善余地「内部規範 layer 横断 transfer」の継続発展、Q2 B-Medium で Day 8 副成果として実装"
     }
   ],
   "build_status": {
     "last_verified": "2026-04-18",
-    "last_verified_phase": "Week 2 Day 7",
+    "last_verified_phase": "Week 2 Day 8",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 94, "scope": "production-only", "note": "Day 5 で Mathlib 推移依存 11→90、Day 6 Process 層追加 90→92、Day 7 +2 (Evolution + HandoffChain) で 92→94"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 104, "scope": "test only"}
+      "AgentSpec": {"result": "exit 0", "job_count": 95, "scope": "production-only", "note": "Day 8 で Verdict (新 namespace AgentSpec.Provenance) +1、EvolutionStep refactor 反映で 94→95"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 107, "scope": "test only"}
     },
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
-    "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT)",
-    "process_layer_progress": "Day 6 Hypothesis + Failure 着手、Day 7 Evolution + HandoffChain 完了 (4 type 完備、Section 2.11 Q1-Q4 確定方針通り)。Day 8+ で Provenance 層 (PROV-O Lean 化) と Verdict 型 + B4 4-arg post 完全統合 (Section 2.9 完全解消)",
-    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、Day 6 で初の hook 適用 + pass-through 確認、Day 7 で 2 度目の hook 適用 (Process Evolution + HandoffChain) で運用安定性検証",
-    "cross_process_test": "Day 7 で Q2 案 A により実装 (Section 2.12 🟡 解消)、Hypothesis × Failure × Evolution × HandoffChain 4-tuple 同時利用",
+    "spine_layer_completeness": "Day 4 で 4 type class 完備 + Day 5 で順序関係完備 (LearningStage LE/LT + FolgeID PartialOrder/LT) + Day 8 で EvolutionStep B4 4-arg post 完全統合 (Section 2.9 完全解消)",
+    "process_layer_progress": "Day 6 Hypothesis + Failure 着手、Day 7 Evolution + HandoffChain 完了 (4 type 完備)。Day 8 で Process 層から Verdict 出力受領 (EvolutionStep 経由)",
+    "provenance_layer_started": "Day 8 で Verdict 先行配置 (Q3 案 A 3 variant minimal、Section 2.14 D2)。Day 9+ で ResearchEntity / ResearchActivity / ResearchAgent + Mapping 関数を追加して namespace 完成予定",
+    "governance_hook": "Day 5 で Pattern #7 hook 化完了 (Section 6.2.1)、Day 6 初適用 + Day 7 2 度目適用 + Day 8 3 度目適用 (Verdict + SpineProcessTest 新 namespace 配置)",
+    "cross_process_test": "Day 7 で Q2 案 A により実装 (Section 2.12 🟡 解消)、Day 8 で SpineProcessTest.lean (新 namespace AgentSpec.Test.Cross) で Q2 B-Medium 拡張 (Spine 4 type class + Process 4 type 同時要求の 8 layer 要素テスト)",
+    "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 171,
+    "example_count": 197,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -750,7 +835,7 @@
       "Spine/Edge.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
       "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 4},
+      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 9},
       "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
       "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 10},
       "Spine/LearningCycle.lean": {"theorems": 0, "examples": 0},
@@ -765,6 +850,9 @@
       "Test/Process/EvolutionTest.lean": {"theorems": 0, "examples": 16},
       "Process/HandoffChain.lean": {"theorems": 0, "examples": 0},
       "Test/Process/HandoffChainTest.lean": {"theorems": 0, "examples": 21},
+      "Provenance/Verdict.lean": {"theorems": 0, "examples": 0},
+      "Test/Provenance/VerdictTest.lean": {"theorems": 0, "examples": 17},
+      "Test/Cross/SpineProcessTest.lean": {"theorems": 0, "examples": 4},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
     }
   },

@@ -9,6 +9,8 @@ import AgentSpec.Test.Process.HypothesisTest
 import AgentSpec.Test.Process.FailureTest
 import AgentSpec.Test.Process.EvolutionTest
 import AgentSpec.Test.Process.HandoffChainTest
+import AgentSpec.Test.Provenance.VerdictTest
+import AgentSpec.Test.Cross.SpineProcessTest
 
 /-!
 # AgentSpecTest: agent-spec-lib の test 専用ルート
