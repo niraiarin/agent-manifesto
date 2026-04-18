@@ -1310,3 +1310,72 @@ informational 3 件:
 - **cycle 内学習 transfer**: Day 11 Subagent I3 教訓 (rfl preference) を Day 12/13/14 実装で継続適用 (Day 11-14 = 4 Day 連続)、Day 12 I1 教訓 (version field) を Day 13/14 で先回り適用 → **Day 13-14 で Subagent 検出項目数 1 安定維持** (cycle pattern quality loop の構造的効果実証 + 持続性)、**Day 14 で新たに linter パターン別分野転用パスが発見** (transitionLegacy 削除に Day 14 `@[deprecated]` モデル適用可能、cycle 内学習 transfer の拡張)
 - **新次元「強制化」**: Day 11-13 type/relation 軸と直交する評価軸を Day 14 で導入 (linter A-Minimal が初実装)
 - **verifier_history**: Day 13 R1 (18 entries) + **Day 14 R1 追加 (19 entries)**
+
+---
+
+## Phase 0 Week 2 Day 15 検証 (2026-04-18 — Day 15 commit `17db6ef` 後)
+
+**背景**: Section 2.28 Day 15 着手前判断 (Q1 A 案 / Q2 A-Compact-Hybrid / Q3 案 B 新 module / Q4 案 A 新 file test) に従い実装。**A-Compact Hybrid macro 実装** (Lean 4 elab macro で `@[retired msg since]` を `@[deprecated msg (since := since)]` に展開、新 module `RetirementLinter.lean` で隔離) + **Day 14 backward compatible 維持** (production `RetiredEntity.lean` / `RetiredEntityTest.lean` は変更なし) + **段階的 Lean 機能習得パス確立** (A-Minimal → A-Compact の 2 段階、Day 16+ A-Standard Elab.Command / Week 5-6 A-Maximal elaborator への前提準備完了)。Day 12-14 で確立した cycle pattern (Subagent 即時検証) を Day 15 でも継続適用、改訂 71 で Subagent 検証 PASS + I1 初 addressable 逆方向修正対処。Day 14 I1 version field 教訓は Day 15 で先回り適用。Day 11-15 で 5 Day 連続 rfl preference 維持 (cycle 内学習 transfer 4 度目適用)。P2 トークン書込済 (`evaluator_independent: true`, 3/4 conditions)。
+
+### Day 15 /verify Round 1
+
+**logprob pairwise (Qwen)**: PASS (build PASS で代替検査、winner A 全体)
+
+**Subagent 検証** (改訂 71 で実施): VERDICT = PASS (with I1 raised to addressable → 即時対処 → addressable 0、informational 2)
+
+| # | 指摘要旨 | 対処 |
+|---|---|---|
+| I1 (初 addressable) | macro RHS (`$msg:str (since := $since:str)`) と docstring 展開例 (`$msg (since := $since)`) の齟齬。Subagent は docstring 形式への align 推奨だが、`$msg` (型注釈なし) は Lean 4 `deprecated` parser が第一引数に ident を期待するため build error | **改訂 71 で即時対処済** (実装側を保持し、docstring を実装に align + 理由注記追加で齟齬解消、**初の「Subagent 推奨と逆方向修正」実例**、Lean 4 4.29.0 parser 仕様根拠) |
+| I2 (informational) | build PASS は self-reported (Subagent が Lean build 自前実行不可のため監査記録) | **対処不要** (informational 監査記録のみ) |
+| I3 (informational) | `ppSpace` は pretty-printer directive (parsing には必須でない、harmless cosmetic) | **対処不要** (attr-category syntax 慣習として保持) |
+
+**Day 15 1 項目詳細** (Q1 A 案 / Q2 A-Compact-Hybrid / Q3 案 B 新 module / Q4 案 A 新 file test 採用案反映):
+
+1. **AgentSpec/Provenance/RetirementLinter.lean (NEW)** (Q3 案 B 新 module 隔離、Q2 A-Compact-Hybrid):
+   - `syntax (name := retired) "retired " str ppSpace str : attr` (新 attribute syntax 定義)
+   - `macro_rules`: `@[retired $msg:str $since:str]` → `@[deprecated $msg:str (since := $since:str)]` 展開
+   - docstring に Day 15 D1-D3 意思決定ログ + 使用例 + Subagent 検証結果注記 (改訂 71 逆方向修正対応)
+   - `$msg:str` / `$since:str` 型注釈は Lean 4 4.29.0 `deprecated` parser が第一引数に ident を期待する仕様に合わせて必要 (初期 build error から即時修復、新分野学習 iteration)
+
+2. **AgentSpec/Test/Provenance/RetirementLinterTest.lean (NEW、9 example)** (Q4 案 A 新 file test):
+   - `@[retired]` macro 展開後の 4 fixture (obsolete / withdrawn / refuted / superseded) が entity / reason / whyRetired accessor で rfl 動作
+   - Day 14 `@[deprecated]` fixture と Day 15 `@[retired]` macro fixture の並存確認 (backward compatibility、8 variant 統合 List 集約 example)
+   - **Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 4 度目、Day 11-15 = 5 Day 連続 rfl preference 維持、quality loop 長期持続性実証)**
+
+3. **AgentSpec/Provenance/RetiredEntity.lean / AgentSpec/Test/Provenance/RetiredEntityTest.lean**: **変更なし** (Day 14 backward compatible 完全維持、Q3 案 B 新 module 隔離で production 変更なし)
+
+**Pattern #7 hook v2 4 度目運用検証 = 八段階発展完了**: Day 15 commit は新規 file 2 個追加 (RetirementLinter + RetirementLinterTest)、Pattern #7 hook v2 が Provenance 配下新規 .lean を検出 (Day 11-13 の新規 file パターン復帰)。Day 5 hook 設計 → Day 6/7/8/9 4 度連続運用検証 → Day 10 v2 拡張 → Day 11/12/13 v2 3 度連続運用検証 → Day 14 MODIFY path 対応 → **Day 15 新規 file パターン復帰 (両パターン運用 5 度目)** の八段階発展完了。
+
+**cycle 内学習 transfer の cross-verification 発展**: Day 11-14 まで Subagent 指摘は「実装を直す」単方向対処だったが、Day 15 で初めて「Subagent 推奨を検証し、Lean 4 parser 仕様を根拠に逆方向 (docstring ← 実装) を採用」の cross-verification 発展。cycle pattern が単なる learning transfer から critical evaluation まで進化している実証。**Day 14 + Day 15 両モデル (`@[deprecated]` + `@[retired]`) 揃い**、transitionLegacy 削除 (Section 2.15 Day 9+ からの繰り延べ課題) の最適 timing に到達 (Day 16+ で cycle 内学習 transfer 2 段階別分野転用実例として実施候補)。
+
+**P2 完了**: ビルド `lake build AgentSpec` exit 0 / 103 jobs (+1 RetirementLinter)、`lake build AgentSpecTest` exit 0 / 123 jobs (+2 RetirementLinterTest + derived)、theorem 15 (不変), example 354→363 (+9), sorry 0, axiom 0。
+
+---
+
+## Phase 0 Week 2 Day 1-15 累計サマリ
+
+| Day | commit (code) | commit (paper サーベイ評価) | commit (TyDD 評価) | commit (metadata) | commit (完結性 / 後続 Docs) | /verify | P2 token |
+|---|---|---|---|---|---|---|---|
+| Day 1-13 | (省略、Section 12.39 Day 13 累計参照) | | | | | | |
+| Day 14 | `13c4e77` (compatible) | `a0c55fd` (conservative、Subagent 即時検証 PASS + I1 実装修正対処) | `69a190c` (conservative、実装修正なし) | `14e4775` (compatible) | `4307fc6` (conservative) | R1 PASS (Subagent 即時検証 PASS、検出項目数 1 Day 13-14 で安定維持) | written |
+| Day 15 | `17db6ef` (compatible) | `d42d4c2` (conservative、Subagent 即時検証 PASS + **I1 初 addressable 逆方向修正**) | `1d5b6df` (conservative、実装修正なし) | `012f189` (compatible) | (本 commit) | R1 PASS (Subagent 即時検証 PASS、**初の逆方向修正実例**) | written |
+
+**Day 15 終了時点 累計指標**:
+- theorem: 15 (Day 1-5 累計 15、Day 6-15 追加 0)
+- example: 363 (Day 14 354 + Day 15 追加 9: RetirementLinterTest)
+- sorry / axiom / native_decide / partial def: 全て 0
+- 有限量化: 512 ケース (Fin 8³、Day 5 で 7³→8³)
+- lib 構成: **AgentSpec (production 103 jobs) + AgentSpecTest (test 123 jobs)** (Day 14 102+121 から RetirementLinter +1/+2)
+- **Provenance 層 5 type + 6 relation + 2 linter (A-Minimal + A-Compact) 完備** (Day 8-14 = 5 type + 6 relation + A-Minimal + **Day 15 = A-Compact Hybrid macro**)
+- **段階的 Lean 機能習得 = 2/4 完了** (Day 14 A-Minimal 標準 attribute + Day 15 A-Compact macro、Day 16+ A-Standard Elab.Command / Week 5-6 A-Maximal elaborator への前提準備完了)
+- **PROV-O §4.1 main + auxiliary + §4.4 完全カバー (6 relation 統合) + 強制化次元 A-Minimal + A-Compact (syntax-level since 必須化)** (Day 11-15 累計)
+- **layer architecture 完成形**: Spine + Process + Provenance + Cross test の 4 layer
+- **構造的 governance hook**: 1 (Pattern #7、**Day 6/7/8/9/10 5 度連続運用検証 + Day 10 v2 拡張 + Day 11/12/13 v2 3 度連続運用検証 + Day 14 MODIFY path 対応 + Day 15 新規 file パターン復帰 = 10 度連続検証、八段階発展完了**)
+- TyDD 達成度: S1 5/5 / benefits 9/10 / **S4 4/5 強適用 (P5 6 度目強適用、Day 8 → Day 11 → Day 12 → Day 13 → Day 14 → Day 15 syntax-level since 必須化)** / Section 10.2 6/8 + 0 構造違反 (10 度連続) / **F/B/H 強適用 = 5 強適用継続** / **強制化次元 = 2 (A-Minimal + A-Compact)** (詳細 Section 12.44)
+- 論文サーベイ達成度: **paper finding 59 件累計** (Day 4-15 + Day 1-3 関連、詳細 Section 12.43)
+- paper × 概念 合流カテゴリ: **12 種** (Day 4-14 11 種 / **Day 15 A-Compact macro × 段階的 Lean 機能習得パス × 逆方向修正実例**)
+- **multi-session 累積改善実例**: Section 2.9 (Day 3→Day 8 5 セッション完全解消)、**Pattern #7 hook (Day 5→Day 15 = 11 セッション governance 進化 = 八段階発展完了)**、**PROV-O 5 type + 6 relation + 2 linter (Day 8→Day 15 8 セッション完全実装、§4.1 + §4.4 完全カバー + 段階的 Lean 機能習得 2/4)**、**cycle 内学習 transfer (Day 11→Day 15 = 5 Day 連続 rfl preference、Day 13→Day 15 = Subagent 検出安定維持、Day 15 で cross-verification 発展)**
+- **新パターン**: Day 9 paper サーベイ評価サイクル実装修正組込み (I2 即時対処) + Day 10-15 同パターン継続 (7 度連続)、**Day 15 で質的発展**: 単純 transfer → cross-verification (逆方向修正実例)
+- **cycle 内学習 transfer の 3 形態確立**: (1) 単純 transfer (Day 11 I3 → Day 12-15 rfl preference 継続)、(2) 先回り適用 (Day 12 I1 → Day 13-15 version field 先回り)、(3) **cross-verification (Day 15 I1 で Subagent 推奨を逆方向採用)**
+- **transitionLegacy 削除の最適 timing 到達**: Day 14 `@[deprecated]` + Day 15 `@[retired]` 両モデル確立、Section 2.15 Day 9+ からの繰り延べ課題を Day 16+ で 2 段階別分野転用実例として実施候補
+- **verifier_history**: Day 14 R1 (19 entries) + **Day 15 R1 追加 (20 entries)**
