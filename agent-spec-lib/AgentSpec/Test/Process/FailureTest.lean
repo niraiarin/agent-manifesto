@@ -9,6 +9,7 @@ Day 6 hole-driven: 4 variant FailureReason + Failure structure + accessor + smar
 namespace AgentSpec.Test.Process.Failure
 
 open AgentSpec.Process
+open AgentSpec.Spine (Rationale)
 
 /-! ### FailureReason 4 variant の構築 -/
 
@@ -26,26 +27,31 @@ example : FailureReason := .Retired "successor-hypothesis-name"
 
 /-! ### Failure 構築と reason 抽出 -/
 
-/-- Failure を anonymous constructor で構築 -/
+/-- Failure を anonymous constructor で構築 (Day 46 rationale 必須) -/
 example : Failure :=
-  { failedHypothesis := "h1", reason := .HypothesisRefuted "evidence" }
+  { failedHypothesis := "h1", reason := .HypothesisRefuted "evidence",
+    rationale := Rationale.trivial }
 
 /-- whyFailed accessor で reason を取り出す -/
-example : Failure.whyFailed { failedHypothesis := "h1", reason := .HypothesisRefuted "ev" } =
-          .HypothesisRefuted "ev" := rfl
+example :
+    Failure.whyFailed { failedHypothesis := "h1", reason := .HypothesisRefuted "ev",
+                        rationale := Rationale.trivial } =
+    .HypothesisRefuted "ev" := rfl
 
 /-- whyFailed と reason field は等価 -/
 example : ∀ f : Failure, f.whyFailed = f.reason := fun _ => rfl
 
 /-! ### Smart constructor -/
 
-/-- refuted で HypothesisRefuted Failure を構築 -/
-example : Failure.refuted "h1" "evidence" =
-          { failedHypothesis := "h1", reason := .HypothesisRefuted "evidence" } := rfl
+/-- refuted で HypothesisRefuted Failure を構築 (Day 46 signature 更新) -/
+example : Failure.refuted "h1" "evidence" Rationale.trivial =
+          { failedHypothesis := "h1", reason := .HypothesisRefuted "evidence",
+            rationale := Rationale.trivial } := rfl
 
 /-- retired で Retired Failure を構築 -/
-example : Failure.retired "h-old" "h-new" =
-          { failedHypothesis := "h-old", reason := .Retired "h-new" } := rfl
+example : Failure.retired "h-old" "h-new" Rationale.trivial =
+          { failedHypothesis := "h-old", reason := .Retired "h-new",
+            rationale := Rationale.trivial } := rfl
 
 /-! ### trivial fixture -/
 
@@ -64,7 +70,14 @@ example : (FailureReason.HypothesisRefuted "a") = (FailureReason.HypothesisRefut
 example : (FailureReason.HypothesisRefuted "a") ≠ (FailureReason.Retired "a") := by decide
 
 /-- Failure DecidableEq -/
-example : (Failure.refuted "h" "e") = (Failure.refuted "h" "e") := by decide
+example :
+    (Failure.refuted "h" "e" Rationale.trivial) =
+    (Failure.refuted "h" "e" Rationale.trivial) := by decide
+
+/-- Day 46: 同 refuted でも rationale 違いは不等 (GA-S8 型強制の実証) -/
+example :
+    (Failure.refuted "h" "e" Rationale.trivial) ≠
+    (Failure.refuted "h" "e" (Rationale.ofText "blocker identified" 40)) := by decide
 
 /-- Failure DecidableEq instance 解決 -/
 example : DecidableEq Failure := inferInstance

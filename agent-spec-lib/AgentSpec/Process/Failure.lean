@@ -1,7 +1,9 @@
 -- Process 層: Failure (研究プロセスの「失敗」) - first-class entity
--- Day 6 hole-driven: 関連 hypothesis/evidence/blocker は String 参照、Day 7+ で型化
--- PROV mapping (02-data-provenance §4.1, §4.3): ResearchEntity.Failure に対応 (Day 8+ 実装)
+-- Day 6 hole-driven: 関連 hypothesis/evidence/blocker は String 参照
+-- Day 46 (2026-04-21): GA-S8 必須化 B-2 2/4、rationale : Rationale 必須化 (breaking change)
+-- PROV mapping (02-data-provenance §4.1, §4.3): ResearchEntity.Failure に対応
 import Init.Core
+import AgentSpec.Spine.Rationale
 
 /-!
 # AgentSpec.Process.Failure: 研究プロセスの「失敗」 (Process 層)
@@ -97,6 +99,9 @@ structure Failure where
   failedHypothesis : String
   /-- 失敗の根本原因 (4 variant のうち 1 つ)。 -/
   reason : FailureReason
+  /-- 失敗判断の根拠 (Day 46 で必須化、GA-S8 B-2 2/4)。
+      なぜこの failure reason を選んだかを Rationale で明示記録。 -/
+  rationale : AgentSpec.Spine.Rationale
   deriving DecidableEq, Inhabited, Repr
 
 namespace Failure
@@ -104,17 +109,25 @@ namespace Failure
 /-- 失敗の原因を抽出 (`reason` field の alias、明示的 accessor)。 -/
 def whyFailed (f : Failure) : FailureReason := f.reason
 
-/-- 自明な failure (test fixture / placeholder)。 -/
+/-- 自明な failure (test fixture / placeholder)、Day 46 で Rationale.trivial 付与。 -/
 def trivial : Failure :=
-  { failedHypothesis := "trivial-hypothesis", reason := .HypothesisRefuted "no evidence" }
+  { failedHypothesis := "trivial-hypothesis",
+    reason := .HypothesisRefuted "no evidence",
+    rationale := AgentSpec.Spine.Rationale.trivial }
 
-/-- HypothesisRefuted variant の smart constructor。 -/
-def refuted (hypothesisName : String) (evidence : String) : Failure :=
-  { failedHypothesis := hypothesisName, reason := .HypothesisRefuted evidence }
+/-- HypothesisRefuted variant の smart constructor (Day 46 signature 更新、Day 45 Hypothesis.mk' 同パターン)。 -/
+def refuted (hypothesisName : String) (evidence : String)
+    (rationale : AgentSpec.Spine.Rationale) : Failure :=
+  { failedHypothesis := hypothesisName,
+    reason := .HypothesisRefuted evidence,
+    rationale := rationale }
 
-/-- Retired variant の smart constructor。 -/
-def retired (hypothesisName : String) (successor : String) : Failure :=
-  { failedHypothesis := hypothesisName, reason := .Retired successor }
+/-- Retired variant の smart constructor (Day 46 signature 更新)。 -/
+def retired (hypothesisName : String) (successor : String)
+    (rationale : AgentSpec.Spine.Rationale) : Failure :=
+  { failedHypothesis := hypothesisName,
+    reason := .Retired successor,
+    rationale := rationale }
 
 end Failure
 

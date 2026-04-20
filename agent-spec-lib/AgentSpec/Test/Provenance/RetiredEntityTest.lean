@@ -102,7 +102,7 @@ example : (RetiredEntity.refuted ResearchEntity.trivial Failure.trivial).whyReti
 
 /-- Failure 経由退役の構築可能性 (案 C 利点吸収の確認) -/
 example :
-    let f := Failure.refuted "hyp-1" "no evidence"
+    let f := Failure.refuted "hyp-1" "no evidence" AgentSpec.Spine.Rationale.trivial
     let r := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) f
     r.reason = .Refuted f := rfl
 

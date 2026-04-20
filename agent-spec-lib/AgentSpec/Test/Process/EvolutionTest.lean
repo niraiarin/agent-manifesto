@@ -125,7 +125,7 @@ example : Hypothesis × Failure × Evolution × HandoffChain :=
     複数 type の同時 reduction が必要な複合 example で `simp` が natural。 -/
 example :
     let h := Hypothesis.trivial
-    let f := Failure.refuted h.claim "no evidence"
+    let f := Failure.refuted h.claim "no evidence" Rationale.trivial
     let e := Evolution.refineWith (.initial h) { claim := "refined", rationale := Rationale.trivial }
     let ch := HandoffChain.cons HandoffChain.trivialHandoff .empty
     (e.latest.claim = "refined") ∧
