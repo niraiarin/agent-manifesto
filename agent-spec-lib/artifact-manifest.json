@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.49.0-week2-day49",
+  "version": "0.50.0-week2-day50",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2585,6 +2585,19 @@
       "addressable_count": 0,
       "evaluator": "lake build 129 jobs + 12 new RationaleTest examples PASS、既存 4 type 必須化コード (Day 45-48) 全て無変更で動作確認 (conservative extension の検証)",
       "scope": "Rationale に author : Option String := none と timestamp : Option Nat := none を field default 付きで conservative 追加、withAuthor/withTimestamp/isAttributed helper 3 件、step 7 retroactive で登録した Day 49 pending_items (Rationale attribution 拡張) を解消",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 50 Empirical Revalidation (7-day cycle、Day 43+7)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "3 parallel subagents (median: GA-S7 State 着手手順 / edge: GA-S8 型強制実測検証 / negative: attribution skip 率)、全 15 [critical]+auxiliary 項目 PASS",
+      "scope": "Day 45-48 GA-S8 sprint の breaking + Day 49 attribution 拡張 を 3 角度で検証、Day 51 GA-S7 設計方針を確定",
+      "empirical_findings": [
+        "I1: GA-S7 Linear 6 categories の具体 variant 名を Day 51 で synthesis §4.1 #9 再読して確定する必要 (10-gap-analysis.md は categories 数のみ記載)",
+        "I2: attribution skip 率 100% (156/156 Rationale site で author 未指定) — Day 14 A-Minimal linter pattern (@[deprecated] と同構造) で Rationale lake lint warning を Day 52+ に追加推奨 (Option B)"
+      ],
       "compatibility": "conservative extension"
     }
   ],
