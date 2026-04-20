@@ -423,15 +423,17 @@
       "section": "2.10",
       "topic": "S5 QTT Multiplicity (Lean 4 対応待ち)",
       "mark": "🟢",
-      "status": "future_research",
-      "paper": "S5 Idris 2"
+      "status": "blocked_external",
+      "paper": "S5 Idris 2",
+      "detail": "Lean 4 QTT 対応待ち (upstream 制御外、Idris 2 Q0/Q1/Qω は Lean 4 で unsupported)、Day 66 G5 cleanup"
     },
     {
       "section": "2.10",
       "topic": "N2 Conatural Numbers (coinductive retirement、Lean 4 cubical 対応待ち)",
       "mark": "🟢",
-      "status": "future_research",
-      "paper": "N2 ELTE"
+      "status": "blocked_external",
+      "paper": "N2 ELTE",
+      "detail": "Lean 4 cubical 対応待ち (upstream 制御外)、pending_items 母数から分離、Day 66 G5 cleanup"
     },
     {
       "section": "2.10",
@@ -510,7 +512,7 @@
       "mark": "🟡",
       "status": "done",
       "timing": "Day 56+",
-      "detail": "40+ Day stale、Day 22 audit pattern に従い Day 56 以降の scope 候補",
+      "detail": "Day 56 で Core.lean Decidable inferInstanceAs が resolved (684f65a)、Day 65 で LearningStage.le Prop 形式併設が resolved (c370919)、2 件とも解消済。本 entry 自体は Day 66 で整理記録。",
       "resolved_day": 65
     },
     {
@@ -996,7 +998,13 @@
     {
       "day": 65,
       "status": "done",
-      "scope": "LearningStage.le Prop 形式併設 (G3 empirical 推奨、stale 58 Day 解消、conservative、PartialOrder 相当 5 theorem)"
+      "scope": "LearningStage.le Prop 形式併設 (G3 empirical 推奨、stale 58 Day 解消、conservative、PartialOrder 相当 5 theorem)",
+      "commit": "c370919"
+    },
+    {
+      "day": 66,
+      "status": "done",
+      "scope": "G5 cleanup (Day 54 Step 7 重複 resolved + S5/N2 blocked_external status 分離 + schema enum 拡張) + G4 reinterpretation (F1 scanner の 8 flag は design 通り、trivial fixture strict 化は semantic 矛盾)"
     }
   ],
   "gap_analysis": {

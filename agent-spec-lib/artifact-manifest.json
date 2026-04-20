@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.65.0-week2-day65",
+  "version": "0.66.0-week2-day66",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -3068,6 +3068,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 140 jobs PASS、6 new Prop theorem (le_refl / le_trans / le_antisymm / observation_le / le_retirement) + 7 new test example、既存 Bool le/LE/Decidable は不変 (conservative extension)",
       "scope": "Day 54 Step 7 / Day 55 / Day 64 empirical G3 で 3 度識別されながら 58 Day stale だった LearningStage.le Prop 形式併設を解消。既存 Bool le は変更なし、Prop 版は PartialOrder 相当の 5 theorem (refl/trans/antisymm/bottom/top) として追加、case analysis + simp_all で proof。downstream proof が Bool 離散経由なしで ≤ を使える。Day 64 G3 推奨通り最優先で実施。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 66 G5 cleanup + G4 reinterpretation",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Day 64 G4 recommendation (F1 prod site strict 化) を再評価、trivial fixture は意図的設計 (test-scope、strict 化は semantic 矛盾)、scanner の 8 flag は production consumer 出現時の future warning infrastructure として design 通りと確認。G5 cleanup 実施: Day 54 Step 7 重複 entry 2 件 (Day 56/65 で両方 resolved 済) を整理、future_research 2 件 (S5 QTT / N2 Conatural) を blocked_external に status 分離、11-pending-tasks.schema.json に blocked_external enum 値追加",
+      "scope": "Day 64 G5 maintenance + G4 interpretation 修正。pending_items の structural noise 削減 (重複 resolved + 外部依存 status 分離)。scanner の 8 flag が design 通りであることを explicit 記録、Day 67+ G1 semi-FP cleanup は scanner 側で Lean.Linter.isDeprecated 除外で解決予定。",
       "compatibility": "conservative extension"
     }
   ],
