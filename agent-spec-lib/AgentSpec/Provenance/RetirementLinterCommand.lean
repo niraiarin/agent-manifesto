@@ -51,6 +51,24 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 25 意思決定ログ (multi-source register / duplicate handling 観測、Day 22 Subagent informational I2 解消)
+
+### D15. multi-source register / duplicate handling の observe-first 方針 (Day 25 Q1 Day 22 Subagent informational I2 解消、Day 22-24 = 3 session 繰り延げ対処)
+- **背景**: Day 22 で `SimplePersistentEnvExtension` の `addEntryFn := fun arr name => arr.push name` を定義、Day 22 Subagent informational I2 で「multi-module duplicate handling は benign だが Day 23+ で挙動明示化推奨」と identified
+- **Day 22-24 繰り延げ**: Day 23 は Q1 が multi-module propagate test (independent source のみ)、Day 24 は Q1 が Role.toCtorIdx investigation、Day 22 informational I2 は Day 25 まで繰り延べ (3 session = Role.toCtorIdx と同パターンの long-deferred 化兆候、Day 25 で解消)
+- **Day 25 観測 approach**: 2 つ目の helper module `RetirementWatchedFixture2.lean` で (a) 独立 namespace register + (b) 既存 namespace duplicate register を実施、`#check_retired_auto` output で挙動を **実測**
+- **観測結果**:
+  - `addEntryFn := arr.push name` は dedup しない (push のみ)
+  - duplicate register で同 namespace が 2 回 watched list に appear
+  - retired count も iteration ごとに独立計算で重複 count (同 declaration が 2 回 count)
+  - 具体的実測: Day 25 import 追加後 `#check_retired_auto` で watched 7 件 / total 8 retired (4 + 0 + 0 + 1 + 1 + 1 + 1、helper1 dup が 1 件重複)
+- **採用方針**: **observe-first、Day 26+ で dedup 判断** (Day 22 audit「marked done ≠ actually done」教訓に従い、観測値を先に production docstring で persistent 化、実装判断は別 cycle で明示)
+- **dedup trade-off**:
+  - dedup 実装: `addEntryFn := fun arr name => if arr.contains name then arr else arr.push name` (O(N) per add、N=#watched namespaces で現状 ≤10 なので問題なし)
+  - observe-first: ユースケース不明 (複数 module から同 namespace register が意図的かミスか判断要)
+  - 判断保留の理由: multi-source register は agent-spec-lib 本体の register 箇所が 0 件、test でのみ artificial に発生 (Day 22 self / Day 23 helper1 / Day 25 helper2 独立 + dup)。production 用途では duplicate register は想定外、dedup は safety net として Day 26+ で追加検討
+- **Day 22 audit long-deferred 対応 3 例目**: Day 22 Subagent informational I2 (Day 22-24 = 3 session 繰り延げ) を Day 25 で解消、Day 21 改訂 100 I3 (4 セッション) / Day 24 Role.toCtorIdx (3 Day) に続く 3 例目、long-deferred 化防止 maturity 継続確立
+
 ## Day 24 意思決定ログ (Role.toCtorIdx long-deferred root cause investigation 解消)
 
 ### D14. Role.toCtorIdx が retired 判定される root cause (Day 20-22 長期繰り延べ、Day 22 audit で long-deferred 化識別、Day 24 で解消)

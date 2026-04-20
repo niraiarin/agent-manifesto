@@ -19,6 +19,7 @@ import AgentSpec.Test.Provenance.RetiredEntityTest
 import AgentSpec.Test.Provenance.ProvRelationAuxiliaryTest
 import AgentSpec.Test.Provenance.RetirementLinterTest
 import AgentSpec.Test.Provenance.RetirementWatchedFixture
+import AgentSpec.Test.Provenance.RetirementWatchedFixture2
 import AgentSpec.Test.Provenance.RetirementLinterCommandTest
 import AgentSpec.Test.Cross.SpineProcessTest
 
