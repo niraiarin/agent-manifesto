@@ -160,22 +160,22 @@ def compare (v₁ v₂ : SemVer) : Ordering :=
     | o => o
   | o => o
 
-instance : Ord SemVer := ⟨compare⟩
+instance instOrdSemVer : Ord SemVer := ⟨compare⟩
 
-/-- LE instance: `v₁ ≤ v₂ ↔ compare v₁ v₂ ≠ .gt` -/
-instance : LE SemVer := ⟨fun v₁ v₂ => compare v₁ v₂ ≠ .gt⟩
+/-- LE instance: `v₁ ≤ v₂ ↔ compare v₁ v₂ ≠ .gt`。Day 56 で明示命名 (instLE → instLESemVer)、
+    Pattern #3 anonymous instance 依存回避。 -/
+instance instLESemVer : LE SemVer := ⟨fun v₁ v₂ => compare v₁ v₂ ≠ .gt⟩
 
-/-- LT instance: `v₁ < v₂ ↔ compare v₁ v₂ = .lt` -/
-instance : LT SemVer := ⟨fun v₁ v₂ => compare v₁ v₂ = .lt⟩
+/-- LT instance: `v₁ < v₂ ↔ compare v₁ v₂ = .lt`。Day 56 で明示命名。 -/
+instance instLTSemVer : LT SemVer := ⟨fun v₁ v₂ => compare v₁ v₂ = .lt⟩
 
--- Decidable instances for convenience in tests
-instance (v₁ v₂ : SemVer) : Decidable (v₁ ≤ v₂) := by
-  unfold LE.le instLE
-  exact inferInstance
+/-- Decidable (≤) instance: Pattern #4 に従い `inferInstanceAs` で明示、`by unfold` 脆弱性を除去 (Day 56)。 -/
+instance decLESemVer (v₁ v₂ : SemVer) : Decidable (v₁ ≤ v₂) :=
+  inferInstanceAs (Decidable (compare v₁ v₂ ≠ .gt))
 
-instance (v₁ v₂ : SemVer) : Decidable (v₁ < v₂) := by
-  unfold LT.lt instLT
-  exact inferInstance
+/-- Decidable (<) instance: 同上、Day 56 refactor。 -/
+instance decLTSemVer (v₁ v₂ : SemVer) : Decidable (v₁ < v₂) :=
+  inferInstanceAs (Decidable (compare v₁ v₂ = .lt))
 
 end SemVer
 
