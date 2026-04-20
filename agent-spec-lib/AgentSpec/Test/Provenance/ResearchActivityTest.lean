@@ -107,4 +107,20 @@ example : ResearchActivity.trivial = .investigate := rfl
 example : ResearchActivity.isRetire .retire = true := rfl
 example : ResearchActivity.isRetire (.retireOf Hypothesis.trivial) = false := rfl  -- retireOf は retire と区別される
 
+/-! ### Day 27: decomposeOf / refineOf payload (5 variant 全 payload 対応 milestone) -/
+
+example : ResearchActivity := .decomposeOf Hypothesis.trivial Hypothesis.trivial
+example : ResearchActivity := .decomposeOf { claim := "parent" } { claim := "child" }
+example : ResearchActivity := .refineOf Hypothesis.trivial Hypothesis.trivial
+example : ResearchActivity := .refineOf { claim := "target" } { claim := "refined" }
+
+example : ResearchActivity.isDecomposeOf (.decomposeOf Hypothesis.trivial Hypothesis.trivial) = true := rfl
+example : ResearchActivity.isDecomposeOf .decompose = false := rfl
+example : ResearchActivity.isRefineOf (.refineOf Hypothesis.trivial Hypothesis.trivial) = true := rfl
+example : ResearchActivity.isRefineOf .refine = false := rfl
+
+-- backward compat: 新 variants は既存 payloadless と区別される
+example : ResearchActivity.isDecomposeOf .refine = false := rfl
+example : ResearchActivity.isRefineOf .decompose = false := rfl
+
 end AgentSpec.Test.Provenance.ResearchActivity

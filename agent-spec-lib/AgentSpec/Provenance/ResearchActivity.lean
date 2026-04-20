@@ -48,7 +48,13 @@ Verdict 出力)。これにより EvolutionStep の transition を `ResearchActi
 - **採用**: Day 9 minimal scope で payload なし
 - **理由**: Q2 A-Minimal 確定方針 (2 type per Day rhythm)、payload 拡充は Day 10+ Provenance 層完成時。
 
-## Day 26 意思決定ログ (ResearchActivity payload 拡充、Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処)
+## Day 27 意思決定ログ (ResearchActivity payload 完備)
+
+### D7. 残 variants (decompose / refine) payload 付き variant `decomposeOf` / `refineOf` を backward compatible 追加
+- **採用**: `decomposeOf (parent : Hypothesis) (child : Hypothesis)` / `refineOf (target : Hypothesis) (refined : Hypothesis)` (Day 26 D4-D6 pattern 踏襲、既存 payloadless variants と共存)
+- **理由**: 5 variant 全 payload 対応 milestone、Day 26 investigateOf/retireOf と同パターン
+
+## Day 26 意思決定ログ (ResearchActivity payload 拡充、Day 13-22 = 12 Day 連続繰り延べ解消、Day 24 audit 次 long-deferred candidate 対処)
 
 ### D4. payload 付き variants `investigateOf` / `retireOf` を backward compatible 追加 (Day 26 Q1 Day 24 audit 次 long-deferred candidate 解消)
 - **背景**: Day 9 D3 で「Day 10+ で payload 拡充検討」と記載したが Day 10-25 = 16 Day (Day 13-22 識別時点から 12 Day) 連続繰り延げ、Day 24 audit で次の long-deferred candidate 警告識別
@@ -95,6 +101,10 @@ inductive ResearchActivity where
       Day 27+ で RetiredEntity 拡張検討、Day 9 payload なし `retire` と共存、Day 22 audit 次
       long-deferred candidate 対処)。 -/
   | retireOf (entity : Hypothesis)
+  /-- Day 27 追加: 分解 activity with parent/child (Day 26 投資/退役 pattern 継続、5 variant 全 payload 対応 milestone)。 -/
+  | decomposeOf (parent : Hypothesis) (child : Hypothesis)
+  /-- Day 27 追加: 洗練 activity with target/refined (Day 26 投資/退役 pattern 継続、5 variant 全 payload 対応 milestone)。 -/
+  | refineOf (target : Hypothesis) (refined : Hypothesis)
   deriving DecidableEq, Inhabited, Repr
 
 namespace ResearchActivity
@@ -120,6 +130,16 @@ def isInvestigateOf : ResearchActivity → Bool
 /-- Day 26: ResearchActivity が retireOf variant かを判定。 -/
 def isRetireOf : ResearchActivity → Bool
   | .retireOf _ => true
+  | _ => false
+
+/-- Day 27: ResearchActivity が decomposeOf variant かを判定。 -/
+def isDecomposeOf : ResearchActivity → Bool
+  | .decomposeOf _ _ => true
+  | _ => false
+
+/-- Day 27: ResearchActivity が refineOf variant かを判定。 -/
+def isRefineOf : ResearchActivity → Bool
+  | .refineOf _ _ => true
   | _ => false
 
 end ResearchActivity

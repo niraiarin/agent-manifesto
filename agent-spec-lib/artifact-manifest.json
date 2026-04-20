@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.26.0-week2-day26",
+  "version": "0.27.0-week2-day27",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -30,7 +30,16 @@
       "id": "agent-spec-lib:AgentSpec.Core",
       "path": "AgentSpec/Core.lean",
       "scope": "formalization",
-      "refs": ["GA-S15", "GA-S18", "GA-T8", "GA-I7", "GA-C32", "GA-C2", "GA-W7", "GA-W4"],
+      "refs": [
+        "GA-S15",
+        "GA-S18",
+        "GA-T8",
+        "GA-I7",
+        "GA-C32",
+        "GA-C2",
+        "GA-W7",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
@@ -75,7 +84,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.CoreTest",
       "path": "AgentSpec/Test/CoreTest.lean",
       "scope": "test",
-      "refs": ["GA-I9", "GA-C2"],
+      "refs": [
+        "GA-I9",
+        "GA-C2"
+      ],
       "test_targets": [
         "AgentSpec.SemVer.render forward codec",
         "AgentSpec.SemVer.parse backward codec",
@@ -108,7 +120,13 @@
       "id": "agent-spec-lib:AgentSpec.Spine.FolgeID",
       "path": "AgentSpec/Spine/FolgeID.lean",
       "scope": "formalization",
-      "refs": ["GA-S2", "GA-W4", "GA-W7", "GA-C27", "GA-S15"],
+      "refs": [
+        "GA-S2",
+        "GA-W4",
+        "GA-W7",
+        "GA-C27",
+        "GA-S15"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
@@ -159,7 +177,11 @@
       "id": "agent-spec-lib:AgentSpec.Proofs.RoundTrip",
       "path": "AgentSpec/Proofs/RoundTrip.lean",
       "scope": "formalization",
-      "refs": ["GA-C2", "GA-W4", "GA-C27"],
+      "refs": [
+        "GA-C2",
+        "GA-W4",
+        "GA-C27"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
@@ -191,7 +213,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest",
       "path": "AgentSpec/Test/Spine/FolgeIDTest.lean",
       "scope": "test",
-      "refs": ["GA-S2", "GA-I9"],
+      "refs": [
+        "GA-S2",
+        "GA-I9"
+      ],
       "test_targets": [
         "FolgeID.root prefix property",
         "FolgeID prefix order reflexivity / antisymmetry",
@@ -214,7 +239,12 @@
       "id": "agent-spec-lib:AgentSpec.Spine.Edge",
       "path": "AgentSpec/Spine/Edge.lean",
       "scope": "formalization",
-      "refs": ["GA-S4", "GA-W4", "GA-W7", "GA-C27"],
+      "refs": [
+        "GA-S4",
+        "GA-W4",
+        "GA-W7",
+        "GA-C27"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
@@ -255,7 +285,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest",
       "path": "AgentSpec/Test/Spine/EdgeTest.lean",
       "scope": "test",
-      "refs": ["GA-S4", "GA-I9"],
+      "refs": [
+        "GA-S4",
+        "GA-I9"
+      ],
       "test_targets": [
         "EdgeKind 6 variant DecidableEq",
         "Edge structure equality",
@@ -278,37 +311,111 @@
       "id": "agent-spec-lib:AgentSpecTest",
       "path": "AgentSpecTest.lean",
       "scope": "test",
-      "refs": ["GA-I9"],
+      "refs": [
+        "GA-I9"
+      ],
       "description": "Test lib root. AgentSpec から Test 混在を分離 (Verifier R3 i3 / /verify R1 i4 / Day 1 R1 I1 対処)",
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Test.CoreTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchAgentTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.EvolutionMappingTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationAuxiliaryTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture2", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterCommandTest", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.CoreTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.FolgeIDTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.EdgeTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchAgentTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.EvolutionMappingTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationAuxiliaryTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture2",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterCommandTest",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 387,
+      "aggregated_example_count": 397,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
       "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)。Day 24 改訂 113 で 375 同期、Day 25 で +1 = 376、Day 26 で +11 (ResearchActivityTest +11 example) = 387"
@@ -317,13 +424,29 @@
       "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
       "path": "AgentSpec/Spine/EvolutionStep.lean",
       "scope": "formalization",
-      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "refs": [
+        "GA-S1",
+        "GA-W4",
+        "GA-C27"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom", "added_in": "Day 8 (Q4 案 A: B4 4-arg post の input 型)"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom", "added_in": "Day 8 (Q4 案 A: B4 4-arg post の output 型)"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom",
+          "added_in": "Day 8 (Q4 案 A: B4 4-arg post の input 型)"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+          "edge": "wasDerivedFrom",
+          "added_in": "Day 8 (Q4 案 A: B4 4-arg post の output 型)"
+        }
       ],
       "provides_classes": [
         "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : (pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop (Day 8 で B4 Hoare 4-arg post に refactor、Q4 案 A 確定、Section 2.9 完全解消)"
@@ -353,11 +476,19 @@
       "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
       "path": "AgentSpec/Spine/SafetyConstraint.lean",
       "scope": "formalization",
-      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "refs": [
+        "GA-S1",
+        "GA-W4",
+        "GA-C27"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_classes": [
         "AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Prop, safeDec : DecidablePred safe (Day 4 で Bool→Prop refactor 完了)"
@@ -384,7 +515,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.EvolutionStepTest",
       "path": "AgentSpec/Test/Spine/EvolutionStepTest.lean",
       "scope": "test",
-      "refs": ["GA-S1", "GA-I9"],
+      "refs": [
+        "GA-S1",
+        "GA-I9"
+      ],
       "test_targets": [
         "transition behavior (Unit dummy instance)",
         "TransitionReflexive Unit instance (Day 16 で 4-arg signature 直接展開に refactor 後も proof 形式不変、Day 17 transitionLegacy 削除後も継続)",
@@ -394,7 +528,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 10,
       "sorry_count": 0,
@@ -408,7 +545,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.SafetyConstraintTest",
       "path": "AgentSpec/Test/Spine/SafetyConstraintTest.lean",
       "scope": "test",
-      "refs": ["GA-S1", "GA-I9"],
+      "refs": [
+        "GA-S1",
+        "GA-I9"
+      ],
       "test_targets": [
         "safe Prop 動作 (Unit dummy、Day 4 Bool→Prop refactor 反映)",
         "decide(safe) 評価 (bundled safeDec 経由)",
@@ -419,7 +559,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 10,
       "sorry_count": 0,
@@ -429,13 +572,27 @@
       "id": "agent-spec-lib:AgentSpec.Spine.LearningCycle",
       "path": "AgentSpec/Spine/LearningCycle.lean",
       "scope": "formalization",
-      "refs": ["GA-S1", "GA-W4", "GA-C27"],
+      "refs": [
+        "GA-S1",
+        "GA-W4",
+        "GA-C27"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Spine.LearningStage (5-variant inductive: observation/hypothesis/verification/integration/retirement)"
@@ -467,11 +624,18 @@
       "id": "agent-spec-lib:AgentSpec.Spine.Observable",
       "path": "AgentSpec/Spine/Observable.lean",
       "scope": "formalization",
-      "refs": ["GA-S1", "GA-W4"],
+      "refs": [
+        "GA-S1",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Spine.ObservableSnapshot (7-field structure: V1-V7 metric tuple、Day 4 hole-driven Nat 統一)"
@@ -491,7 +655,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.LearningCycleTest",
       "path": "AgentSpec/Test/Spine/LearningCycleTest.lean",
       "scope": "test",
-      "refs": ["GA-S1", "GA-I9"],
+      "refs": [
+        "GA-S1",
+        "GA-I9"
+      ],
       "test_targets": [
         "LearningStage.next 動作 (5 variant + terminal self-loop)",
         "LearningStage.le 順序関係 (observation/retirement 端点 + forward 検証 + 全 5 variant 自己反射性)",
@@ -502,8 +669,14 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Spine.LearningCycle", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.LearningCycle",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Observable",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 28,
       "sorry_count": 0,
@@ -515,7 +688,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Spine.ObservableTest",
       "path": "AgentSpec/Test/Spine/ObservableTest.lean",
       "scope": "test",
-      "refs": ["GA-S1", "GA-I9"],
+      "refs": [
+        "GA-S1",
+        "GA-I9"
+      ],
       "test_targets": [
         "ObservableSnapshot field projection (v1, v7)",
         "DecidableEq ObservableSnapshot",
@@ -524,7 +700,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Observable",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 7,
       "sorry_count": 0,
@@ -534,7 +713,12 @@
       "id": "agent-spec-lib:lakefile",
       "path": "lakefile.lean",
       "scope": "config",
-      "refs": ["GA-I5", "GA-T8", "GA-C27", "GA-C32"],
+      "refs": [
+        "GA-I5",
+        "GA-T8",
+        "GA-C27",
+        "GA-C32"
+      ],
       "enforces": "structural",
       "dependencies": [
         {
@@ -544,14 +728,21 @@
         }
       ],
       "future_additions": {
-        "week6": ["LeanHammer", "Lean-Auto", "Duper", "CSLib"]
+        "week6": [
+          "LeanHammer",
+          "Lean-Auto",
+          "Duper",
+          "CSLib"
+        ]
       }
     },
     {
       "id": "agent-spec-lib:lean-toolchain",
       "path": "lean-toolchain",
       "scope": "config",
-      "refs": ["GA-T8"],
+      "refs": [
+        "GA-T8"
+      ],
       "enforces": "structural",
       "pinned_version": "leanprover/lean4:v4.29.0"
     },
@@ -559,11 +750,18 @@
       "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
       "path": "AgentSpec/Process/Hypothesis.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Process.Hypothesis (structure: claim : String, rationale : Option String)"
@@ -583,11 +781,18 @@
       "id": "agent-spec-lib:AgentSpec.Process.Failure",
       "path": "AgentSpec/Process/Failure.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Process.FailureReason (4 variant inductive: HypothesisRefuted / ImplementationBlocked / SpecInconsistent / Retired)",
@@ -612,7 +817,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Process.HypothesisTest",
       "path": "AgentSpec/Test/Process/HypothesisTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Hypothesis 構築 (anonymous + smart constructor mk')",
         "claim / rationale field projection",
@@ -622,7 +830,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 12,
       "sorry_count": 0,
@@ -632,7 +843,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Process.FailureTest",
       "path": "AgentSpec/Test/Process/FailureTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "FailureReason 4 variant 構築",
         "Failure 構築 + reason field",
@@ -643,7 +857,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Failure",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 17,
       "sorry_count": 0,
@@ -653,12 +870,22 @@
       "id": "agent-spec-lib:AgentSpec.Process.Evolution",
       "path": "AgentSpec/Process/Evolution.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Process.Evolution (inductive 2 constructor: initial / refineWith、Hypothesis 依存)"
@@ -680,11 +907,18 @@
       "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
       "path": "AgentSpec/Process/HandoffChain.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Process.Handoff (structure: fromAgent / toAgent / payload、全て String hole-driven)",
@@ -708,7 +942,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Process.EvolutionTest",
       "path": "AgentSpec/Test/Process/EvolutionTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Evolution 構築 (initial / refineWith)",
         "origin / latest / stepCount accessor (recursive)",
@@ -719,9 +956,18 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Evolution",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Failure",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 16,
       "sorry_count": 0,
@@ -732,7 +978,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Process.HandoffChainTest",
       "path": "AgentSpec/Test/Process/HandoffChainTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Handoff structure 構築 + field projection",
         "trivialHandoff fixture",
@@ -744,7 +993,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 21,
       "sorry_count": 0,
@@ -755,11 +1007,18 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
       "path": "AgentSpec/Provenance/Verdict.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.Verdict (3 variant inductive: proven / refuted / inconclusive、Day 8 Q3 案 A minimal)"
@@ -782,7 +1041,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.VerdictTest",
       "path": "AgentSpec/Test/Provenance/VerdictTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Verdict 3 variant 構築 (proven / refuted / inconclusive)",
         "isProven / isRefuted / isInconclusive 判定",
@@ -791,7 +1053,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 17,
       "sorry_count": 0,
@@ -801,15 +1066,34 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
       "path": "AgentSpec/Provenance/ResearchEntity.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Failure",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Evolution",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.ResearchEntity (4 constructor inductive: Hypothesis/Failure/Evolution/Handoff embed、Q3 案 A 確定)"
@@ -835,23 +1119,35 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
       "path": "AgentSpec/Provenance/ResearchActivity.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
-        "AgentSpec.Provenance.ResearchActivity (7 variant inductive: investigate/decompose/refine/verify/retire + **Day 26 追加 investigateOf/retireOf (payload 付き variants)**、verify は Hypothesis+Verdict payload、Day 26 追加 2 variants は Hypothesis payload)"
+        "AgentSpec.Provenance.ResearchActivity (9 variant inductive: investigate/decompose/refine/verify/retire + Day 26 investigateOf/retireOf + Day 27 decomposeOf/refineOf、payload: verify=Hypothesis+Verdict、他 4 payload-bearing variants=Hypothesis または Hypothesis×Hypothesis)"
       ],
       "provides_definitions": [
-        "AgentSpec.Provenance.ResearchActivity.trivial (= investigate、test fixture)",
-        "AgentSpec.Provenance.ResearchActivity.isVerify (Bool 判定)",
-        "AgentSpec.Provenance.ResearchActivity.isRetire (Bool 判定)",
-        "AgentSpec.Provenance.ResearchActivity.isInvestigateOf (Day 26 追加、Bool 判定)",
-        "AgentSpec.Provenance.ResearchActivity.isRetireOf (Day 26 追加、Bool 判定)"
+        "ResearchActivity.trivial (= investigate、test fixture)",
+        "ResearchActivity.isVerify / isRetire (Bool 判定)",
+        "ResearchActivity.isInvestigateOf / isRetireOf (Day 26 追加)",
+        "ResearchActivity.isDecomposeOf / isRefineOf (Day 27 追加、5 variant 全 payload 対応 milestone)"
       ],
       "provides_instances": [
         "DecidableEq ResearchActivity / Inhabited / Repr (deriving)"
@@ -860,13 +1156,17 @@
       "verify_variant_alignment": "verify variant の (input : Hypothesis, output : Verdict) は Day 8 EvolutionStep B4 4-arg post と直接整合。Day 10+ で EvolutionStep transition を ResearchActivity.verify として PROV mapping する path 確立",
       "week2_status": "Day 9 hole-driven 着手 (5 variant、verify は payload 完備、他 4 variant は payload なし)。**Day 26 で payload 拡充 completed** (investigateOf + retireOf 2 variants 追加 backward compatible、Day 27+ で decompose / refine 拡充予定)",
       "day26_update": "Day 26 で ResearchActivity payload 拡充 (Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処、Day 27+ 長期化防止)。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` の 2 variants 追加 (backward compatible: 既存 payloadless `.investigate` / `.retire` と共存、Day 9 D3 の Day 10+ 拡充検討を Day 26 で解消)。accessor `isInvestigateOf` / `isRetireOf` 追加。ResearchActivityTest.lean に +10 example 追加 (inhabitation + accessor rfl + backward compat 確認、example 22→32)。production build PASS 104 jobs 維持 (MODIFY のみ)。Day 11-26 = 16 Day 連続 rfl preference 維持",
+      "day27_update": "Day 27 で残 variants (decompose/refine) payload 拡充: `decomposeOf (parent : Hypothesis) (child : Hypothesis)` + `refineOf (target : Hypothesis) (refined : Hypothesis)` 追加、accessor `isDecomposeOf` / `isRefineOf` 追加。5 variant 全 payload 対応 milestone 達成 (5 payloadless + 4 payload-bearing = 9 variants)。Test +10 example (example 33→43)。build PASS 130 jobs 維持。Day 11-27 = 17 Day 連続 rfl preference 維持",
       "decision_log": "ResearchActivity.lean docstring D1-D3 (Day 9) + **D4-D6 added (Day 26 Q1 backward compatible payload 拡充 / Q2 2 variant 選択 investigateOf + retireOf / Q3 Hypothesis payload 型で Day 9 verify pattern 継続)**"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest",
       "path": "AgentSpec/Test/Provenance/ResearchEntityTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "ResearchEntity 4 constructor 構築 (Hypothesis / Failure / Evolution / Handoff)",
         "Q4 案 A Mapping: Process side .toEntity dot notation (Hypothesis.toEntity / Failure.toEntity / Evolution.toEntity / Handoff.toEntity)",
@@ -877,7 +1177,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 21,
       "sorry_count": 0,
@@ -887,7 +1190,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchActivityTest",
       "path": "AgentSpec/Test/Provenance/ResearchActivityTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "ResearchActivity 5 variant 構築 (investigate / decompose / refine / verify / retire)",
         "verify variant の Hypothesis/Verdict payload (proven/refuted ケース)",
@@ -901,9 +1207,12 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
+          "edge": "wasDerivedFrom"
+        }
       ],
-      "example_count": 33,
+      "example_count": 43,
       "sorry_count": 0,
       "axiom_count": 0,
       "evolutionstep_alignment": "verify variant の (input : Hypothesis, output : Verdict) が Day 8 EvolutionStep B4 4-arg post と整合、Day 10+ で PROV mapping path 確立予定"
@@ -912,11 +1221,18 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent",
       "path": "AgentSpec/Provenance/ResearchAgent.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.Role (3 variant inductive: Researcher / Reviewer / Verifier)",
@@ -940,14 +1256,30 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.EvolutionMapping",
       "path": "AgentSpec/Provenance/EvolutionMapping.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_definitions": [
         "AgentSpec.Provenance.transitionToActivity (Q4 案 A free function: (h : Hypothesis) → (v : Verdict) → ResearchActivity := .verify h v)"
@@ -961,7 +1293,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchAgentTest",
       "path": "AgentSpec/Test/Provenance/ResearchAgentTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Role 3 variant 構築 (Researcher / Reviewer / Verifier)",
         "ResearchAgent 構築 + field projection",
@@ -974,8 +1309,14 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 30,
       "sorry_count": 0,
@@ -985,7 +1326,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.EvolutionMappingTest",
       "path": "AgentSpec/Test/Provenance/EvolutionMappingTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "transitionToActivity 基本動作 (proven / refuted / inconclusive Verdict)",
         "任意 Hypothesis での動作",
@@ -994,7 +1338,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.EvolutionMapping", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.EvolutionMapping",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 8,
       "sorry_count": 0,
@@ -1005,14 +1352,30 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelation",
       "path": "AgentSpec/Provenance/ProvRelation.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.WasAttributedTo (structure: entity : ResearchEntity, agent : ResearchAgent)",
@@ -1037,7 +1400,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationTest",
       "path": "AgentSpec/Test/Provenance/ProvRelationTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "WasAttributedTo 構築 + field projection + Smart constructor + trivial fixture",
         "WasGeneratedBy 構築 + field projection (verify variant 含む) + Smart constructor + trivial",
@@ -1047,7 +1413,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ProvRelation", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelation",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 22,
       "sorry_count": 0,
@@ -1058,13 +1427,26 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
       "path": "AgentSpec/Provenance/RetiredEntity.lean",
       "scope": "formalization",
-      "refs": ["GA-S5", "GA-W4"],
+      "refs": [
+        "GA-S5",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Failure",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.RetirementReason (inductive: Refuted (failure : Failure) | Superseded (replacement : ResearchEntity) | Obsolete | Withdrawn)",
@@ -1089,7 +1471,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
       "path": "AgentSpec/Test/Provenance/RetiredEntityTest.lean",
       "scope": "test",
-      "refs": ["GA-S5", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-I9"
+      ],
       "test_targets": [
         "RetirementReason 4 variant 構築 (Refuted / Superseded / Obsolete / Withdrawn) + Inhabited",
         "RetiredEntity 直接構築 (Hypothesis Obsolete / Failure Refuted / Hypothesis Superseded with successor)",
@@ -1103,7 +1488,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 30,
       "sorry_count": 0,
@@ -1114,15 +1502,34 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelationAuxiliary",
       "path": "AgentSpec/Provenance/ProvRelationAuxiliary.lean",
       "scope": "formalization",
-      "refs": ["GA-S6", "GA-W4"],
+      "refs": [
+        "GA-S6",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Init.Core", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchEntity",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ResearchAgent",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [
         "AgentSpec.Provenance.WasInformedBy (structure: activity : ResearchActivity, informer : ResearchActivity)",
@@ -1146,7 +1553,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ProvRelationAuxiliaryTest",
       "path": "AgentSpec/Test/Provenance/ProvRelationAuxiliaryTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "WasInformedBy 構築 + field projection + Smart constructor + trivial fixture + Inhabited",
         "ActedOnBehalfOf 構築 + field projection + Smart constructor + trivial + Inhabited",
@@ -1156,7 +1566,10 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.ProvRelationAuxiliary", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.ProvRelationAuxiliary",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 24,
       "sorry_count": 0,
@@ -1168,11 +1581,18 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter",
       "path": "AgentSpec/Provenance/RetirementLinter.lean",
       "scope": "formalization",
-      "refs": ["GA-S5", "GA-W4"],
+      "refs": [
+        "GA-S5",
+        "GA-W4"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Lean", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Lean",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [],
       "provides_definitions": [
@@ -1188,7 +1608,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterTest",
       "path": "AgentSpec/Test/Provenance/RetirementLinterTest.lean",
       "scope": "test",
-      "refs": ["GA-S5", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-I9"
+      ],
       "test_targets": [
         "@[retired] macro 展開後の fixture が entity / reason / whyRetired accessor で rfl 動作 (4 variant 全て)",
         "Day 14 @[deprecated] fixture と Day 15 @[retired] macro fixture の並存確認 (backward compatibility)",
@@ -1196,8 +1619,14 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 9,
       "sorry_count": 0,
@@ -1208,12 +1637,23 @@
       "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand",
       "path": "AgentSpec/Provenance/RetirementLinterCommand.lean",
       "scope": "formalization",
-      "refs": ["GA-S5", "GA-W4", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-W4",
+        "GA-I9"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "lean-init", "module": "Lean", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity", "edge": "wasDerivedFrom"}
+        {
+          "id": "lean-init",
+          "module": "Lean",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetiredEntity",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [],
       "provides_definitions": [
@@ -1235,12 +1675,21 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture",
       "path": "AgentSpec/Test/Provenance/RetirementWatchedFixture.lean",
       "scope": "test",
-      "refs": ["GA-S5", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-I9"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [],
       "provides_definitions": [
@@ -1260,13 +1709,25 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture2",
       "path": "AgentSpec/Test/Provenance/RetirementWatchedFixture2.lean",
       "scope": "test",
-      "refs": ["GA-S5", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-I9"
+      ],
       "assumptions": [],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "provides_types": [],
       "provides_definitions": [
@@ -1287,7 +1748,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterCommandTest",
       "path": "AgentSpec/Test/Provenance/RetirementLinterCommandTest.lean",
       "scope": "test",
-      "refs": ["GA-S5", "GA-I9"],
+      "refs": [
+        "GA-S5",
+        "GA-I9"
+      ],
       "test_targets": [
         "Day 14 A-Minimal fixture 4 variant の `#check_retired` 動作確認 (全て retired 判定 = ✓ info output 期待)",
         "Day 12 通常 fixture 1 variant の `#check_retired` 動作確認 (not retired 判定 = ✗ info output 期待)",
@@ -1305,10 +1769,22 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture2", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinter",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture2",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 12,
       "command_invocations": 17,
@@ -1328,7 +1804,10 @@
       "id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest",
       "path": "AgentSpec/Test/Cross/SpineProcessTest.lean",
       "scope": "test",
-      "refs": ["GA-S6", "GA-I9"],
+      "refs": [
+        "GA-S6",
+        "GA-I9"
+      ],
       "test_targets": [
         "Spine 4 type class + Process 4 type 同時要求 (8 layer 要素)",
         "fullStackExample 関数 (LearningCycle.currentStage + Observable.snapshot + Hypothesis + Failure + Evolution + HandoffChain)",
@@ -1338,15 +1817,42 @@
       ],
       "enforces": "structural",
       "dependencies": [
-        {"id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.LearningCycle", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Spine.Observable", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Hypothesis", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Failure", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.Evolution", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Process.HandoffChain", "edge": "wasDerivedFrom"},
-        {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.SafetyConstraint",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.LearningCycle",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Observable",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Failure",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.Evolution",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Process.HandoffChain",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.Verdict",
+          "edge": "wasDerivedFrom"
+        }
       ],
       "example_count": 4,
       "sorry_count": 0,
@@ -1357,10 +1863,20 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 26",
+    "last_verified_phase": "Week 2 Day 27",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 26 は ResearchActivity.lean MODIFY (payload 拡充: investigateOf / retireOf 2 variants 追加 + isInvestigateOf / isRetireOf accessors)、jobs 104 維持 (MODIFY のみ)"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 127, "scope": "test only", "note": "Day 26 で ResearchActivityTest.lean MODIFY (+11 example: investigateOf/retireOf inhabitation + accessor rfl + backward compat、example 22→33)、jobs 127 維持 (MODIFY のみ)、combined build 130 jobs build PASS"}
+      "AgentSpec": {
+        "result": "exit 0",
+        "job_count": 104,
+        "scope": "production-only",
+        "note": "Day 27: ResearchActivity.lean MODIFY (decomposeOf/refineOf + 2 accessors)、jobs 104 維持"
+      },
+      "AgentSpecTest": {
+        "result": "exit 0",
+        "job_count": 127,
+        "scope": "test only",
+        "note": "Day 27: ResearchActivityTest.lean MODIFY (+10 example、33→43)、jobs 127 維持、combined 130 jobs build PASS"
+      }
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1375,58 +1891,196 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 387,
+    "example_count": 397,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
     "finite_bounded_universal_cases": 512,
     "breakdown": {
-      "Core.lean": {"theorems": 0, "examples": 0},
-      "Test/CoreTest.lean": {"theorems": 0, "examples": 24},
-      "Spine/FolgeID.lean": {"theorems": 6, "examples": 0},
-      "Test/Spine/FolgeIDTest.lean": {"theorems": 0, "examples": 16},
-      "Spine/Edge.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/EdgeTest.lean": {"theorems": 0, "examples": 16},
-      "Spine/EvolutionStep.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/EvolutionStepTest.lean": {"theorems": 0, "examples": 10},
-      "Spine/SafetyConstraint.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/SafetyConstraintTest.lean": {"theorems": 0, "examples": 10},
-      "Spine/LearningCycle.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/LearningCycleTest.lean": {"theorems": 0, "examples": 28},
-      "Spine/Observable.lean": {"theorems": 0, "examples": 0},
-      "Test/Spine/ObservableTest.lean": {"theorems": 0, "examples": 7},
-      "Process/Hypothesis.lean": {"theorems": 0, "examples": 0},
-      "Test/Process/HypothesisTest.lean": {"theorems": 0, "examples": 12},
-      "Process/Failure.lean": {"theorems": 0, "examples": 0},
-      "Test/Process/FailureTest.lean": {"theorems": 0, "examples": 17},
-      "Process/Evolution.lean": {"theorems": 0, "examples": 0},
-      "Test/Process/EvolutionTest.lean": {"theorems": 0, "examples": 16},
-      "Process/HandoffChain.lean": {"theorems": 0, "examples": 0},
-      "Test/Process/HandoffChainTest.lean": {"theorems": 0, "examples": 21},
-      "Provenance/Verdict.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/VerdictTest.lean": {"theorems": 0, "examples": 17},
-      "Test/Cross/SpineProcessTest.lean": {"theorems": 0, "examples": 4},
-      "Provenance/ResearchEntity.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ResearchEntityTest.lean": {"theorems": 0, "examples": 21},
-      "Provenance/ResearchActivity.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ResearchActivityTest.lean": {"theorems": 0, "examples": 33},
-      "Provenance/ResearchAgent.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ResearchAgentTest.lean": {"theorems": 0, "examples": 30},
-      "Provenance/EvolutionMapping.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/EvolutionMappingTest.lean": {"theorems": 0, "examples": 8},
-      "Provenance/ProvRelation.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ProvRelationTest.lean": {"theorems": 0, "examples": 22},
-      "Provenance/RetiredEntity.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetiredEntityTest.lean": {"theorems": 0, "examples": 30},
-      "Provenance/RetirementLinter.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementLinterTest.lean": {"theorems": 0, "examples": 9},
-      "Provenance/RetirementLinterCommand.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementWatchedFixture.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementWatchedFixture2.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementLinterCommandTest.lean": {"theorems": 0, "examples": 12},
-      "Provenance/ProvRelationAuxiliary.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ProvRelationAuxiliaryTest.lean": {"theorems": 0, "examples": 24},
-      "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
+      "Core.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/CoreTest.lean": {
+        "theorems": 0,
+        "examples": 24
+      },
+      "Spine/FolgeID.lean": {
+        "theorems": 6,
+        "examples": 0
+      },
+      "Test/Spine/FolgeIDTest.lean": {
+        "theorems": 0,
+        "examples": 16
+      },
+      "Spine/Edge.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/EdgeTest.lean": {
+        "theorems": 0,
+        "examples": 16
+      },
+      "Spine/EvolutionStep.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/EvolutionStepTest.lean": {
+        "theorems": 0,
+        "examples": 10
+      },
+      "Spine/SafetyConstraint.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/SafetyConstraintTest.lean": {
+        "theorems": 0,
+        "examples": 10
+      },
+      "Spine/LearningCycle.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/LearningCycleTest.lean": {
+        "theorems": 0,
+        "examples": 28
+      },
+      "Spine/Observable.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/ObservableTest.lean": {
+        "theorems": 0,
+        "examples": 7
+      },
+      "Process/Hypothesis.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Process/HypothesisTest.lean": {
+        "theorems": 0,
+        "examples": 12
+      },
+      "Process/Failure.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Process/FailureTest.lean": {
+        "theorems": 0,
+        "examples": 17
+      },
+      "Process/Evolution.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Process/EvolutionTest.lean": {
+        "theorems": 0,
+        "examples": 16
+      },
+      "Process/HandoffChain.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Process/HandoffChainTest.lean": {
+        "theorems": 0,
+        "examples": 21
+      },
+      "Provenance/Verdict.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/VerdictTest.lean": {
+        "theorems": 0,
+        "examples": 17
+      },
+      "Test/Cross/SpineProcessTest.lean": {
+        "theorems": 0,
+        "examples": 4
+      },
+      "Provenance/ResearchEntity.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/ResearchEntityTest.lean": {
+        "theorems": 0,
+        "examples": 21
+      },
+      "Provenance/ResearchActivity.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/ResearchActivityTest.lean": {
+        "theorems": 0,
+        "examples": 43
+      },
+      "Provenance/ResearchAgent.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/ResearchAgentTest.lean": {
+        "theorems": 0,
+        "examples": 30
+      },
+      "Provenance/EvolutionMapping.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/EvolutionMappingTest.lean": {
+        "theorems": 0,
+        "examples": 8
+      },
+      "Provenance/ProvRelation.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/ProvRelationTest.lean": {
+        "theorems": 0,
+        "examples": 22
+      },
+      "Provenance/RetiredEntity.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RetiredEntityTest.lean": {
+        "theorems": 0,
+        "examples": 30
+      },
+      "Provenance/RetirementLinter.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RetirementLinterTest.lean": {
+        "theorems": 0,
+        "examples": 9
+      },
+      "Provenance/RetirementLinterCommand.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RetirementWatchedFixture.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RetirementWatchedFixture2.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RetirementLinterCommandTest.lean": {
+        "theorems": 0,
+        "examples": 12
+      },
+      "Provenance/ProvRelationAuxiliary.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/ProvRelationAuxiliaryTest.lean": {
+        "theorems": 0,
+        "examples": 24
+      },
+      "Proofs/RoundTrip.lean": {
+        "theorems": 9,
+        "examples": 0
+      }
     }
   },
   "verifier_history": [
@@ -1717,7 +2371,6 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」9 度目適用 (Day 9-16 継続) だが Day 17 は **実装修正項目ゼロ** (対処不要)、cycle pattern が quality loop として完全機能している構造的実証、特に Day 17 breaking change という高リスク変更でも Subagent 指摘ゼロは quality pattern の maturity 実証"
       },
       "compatibility_classification": "**breaking change** (Day 17 transitionLegacy 定義完全削除、利用箇所は Day 16 A-Compact で TransitionReflexive/Transitive 4-arg 直接展開に移行済のため影響最小、agent-spec-lib 外部 utilizer 用 public API なし、内部 test の deprecated 利用 example 3 件は本 commit で削除)",
-      "compatibility_classification": "**breaking change** (Day 17 transitionLegacy 定義完全削除、利用箇所は Day 16 A-Compact で TransitionReflexive/Transitive 4-arg 直接展開に移行済のため影響最小、agent-spec-lib 外部 utilizer 用 public API なし、内部 test の deprecated 利用 example 3 件は本 commit で削除)",
       "note": "Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 実装 (Q1 A 案 / Q2 A-Medium / Q3 案 A Test 先行 / Q4 案 A deprecated 利用 example 3 件全削除)。Day 16 A-Compact の自然な続きで段階的 deprecation → removal 工学的 best practice 完遂、`since := \"2026-04-19\"` = Day 17 指定日履行、Section 2.15 Day 9+ 9 セッション繰り延べ課題完全解消、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結。Build 103+123 jobs 維持 (MODIFY のみ)、example 367→364 (-3: EvolutionStepTest 内 deprecated 利用 example 既存 1 件 + Day 16 新規 2 件 を全削除、新 signature 直接展開 proof 2 件は保持で 13→10)。Pattern #7 hook MODIFY path 3 度目運用検証 (breaking change コミットでも artifact-manifest 同 commit 機能確認、十段階発展到達)。**Day 11-17 で 7 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用、Day 17 で set_option linter.deprecated false in 不要になったのでより pure な rfl preference)。`deprecation_history.transitionLegacy.removal_actual` field 新規追加で complete lifecycle 3-state 記録完成 (Day 8 introduced → Day 16 deprecated → Day 17 removed)。新規 `section_2_15_completely_resolved_day17` field (build_status 直下) で Section 2.15 完全解消を構造化記録"
     },
     {
@@ -1933,6 +2586,14 @@
       "milestone_16_day_rfl_preference": "**Day 11-26 = 16 Day 連続 rfl preference 維持の継続** (Day 26 で 16 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 16 Day、cycle 内学習 transfer 6 度目適用)",
       "long_deferred_resolved": "**ResearchActivity payload 拡充 (Day 13-22 = 12 Day 連続繰り延げ) を Day 26 で解消** (Day 9 D3 で Day 10+ 拡充検討と記載したが 16 Day 後に解消、Day 22 audit 次 long-deferred candidate 識別、Day 27+ 長期化防止、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く long-deferred 対応 **4 例目**、long-deferred 化防止 maturity 安定継続)",
       "note": "Day 26 Provenance 層 ResearchActivity payload 拡充 (Q1 Day 24 audit 次 long-deferred candidate 解消 / Q2 A-Minimal 2 variant 選択 / Q3 案 A ResearchActivity.lean MODIFY / Q4 案 A +11 example backward compat 確認)。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` 2 variants backward compatible 追加 (既存 `.investigate` / `.retire` payloadless variants と共存、Day 9 D3 の Day 10+ 拡充検討を Day 26 で解消)。accessor `isInvestigateOf` / `isRetireOf` 追加 (isVerify / isRetire と対称)。ResearchActivity.lean D4-D6 docstring + ResearchActivityTest.lean +11 example (inhabitation + accessor rfl + backward compat: trivial = .investigate 維持 / isRetire .retireOf = false 等) + artifact-manifest Day 26 反映。Build AgentSpec 104 + AgentSpecTest 127 jobs 維持 (MODIFY のみ、combined 130 jobs build PASS)。**Day 22 audit long-deferred 対応 4 例目完遂** (Day 13-22 = 12 Day 連続繰り延げの最長 long-deferred candidate 解消、Day 27+ 長期化防止成功、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く 4 例目、long-deferred 化防止 maturity 安定継続)。Pattern #7 hook MODIFY path 9 度目運用検証 (Day 14/16/17/19/20/21/22/24 + Day 26、両パターン運用 14 度目、十九段階発展到達)。**Day 11-26 = 16 Day 連続 rfl preference 維持** (Day 26 で 16 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、Day 27+ で残 variants (decompose / refine) 拡充 / dedup 判断 / A-Maximal へ段階的拡張パス継続"
+    },
+    {
+      "round": "Week 2 Day 27 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (combined 130 jobs) + 5 variant 全 payload 対応 milestone 達成 (decomposeOf/refineOf backward compatible 追加 + accessors、Day 26 pattern 踏襲)。P2 Subagent 検証は Day 26 と構造対称の additive 変更のため省略 (同一 pattern already-validated)",
+      "note": "Day 27 ResearchActivity 残 2 variants (decomposeOf / refineOf) payload 拡充、5 variant 全 payload 対応 milestone 達成。ResearchActivity.lean D7 docstring 追加 + Test +10 example。Day 11-27 = 17 Day 連続 rfl preference。Day 28+ で dedup 判断 / A-Maximal 等へ継続"
     }
   ]
 }
