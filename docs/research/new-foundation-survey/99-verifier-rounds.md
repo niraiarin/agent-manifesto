@@ -1624,3 +1624,43 @@ Day 18 追加で:
 - rfl preference 連続記録: 8 Day → **9 Day 連続** 記録更新
 - initial build error pattern: 2 度 (Day 15/18) → **3 度 (Day 15/18/19)** maturity 到達
 - verifier_history: 23 entries → **24 entries** (Day 19 R1 追加)
+
+---
+
+## Phase 0 Week 2 Day 20 検証 (2026-04-20 — Day 20 commit `7fa8f51` 後)
+
+**背景**: Section 2.38 Q1-Q4 確定済 (Q1 A-Compact nested / Q2 A-Minimal explicit depth / Q3 案 A / Q4 案 A) に従い `#check_retired_in_namespace_with_depth NS N` command 追加。Day 19 backward compatible 完全維持、Day 18-19 同 module MODIFY、段階的 Lean 機能習得 4 拡張到達 (残り Week 5-6 A-Maximal)、**10 Day 連続 rfl preference milestone 達成**。
+
+### Day 20 /verify Round 1
+
+**Subagent 検証** (改訂 96): VERDICT = PASS (addressable 0、informational 3)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 | test docstring "9 Day" → "10 Day milestone" 更新 | **改訂 96 即時対処** |
+| I2 | Role.toCtorIdx auto-gen helper 顕在化の root cause investigation | **Day 21+ 投資** |
+| I3 | Day 15 @[retired] × Day 18/19/20 commands 連携テスト継続繰り延べ | **Day 21+** |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → **20=3 横ばい安定** (累積 design space richness 安定、addressable 0 streak 4 Day 継続)。
+
+**Day 20 特筆**:
+- **10 Day 連続 rfl preference milestone 達成** (Day 11-20、桁の到達)
+- **Pattern #7 hook 十三段階発展到達** (MODIFY 5 度目運用検証)
+- **段階的 Lean 機能習得 4 拡張到達** (A-Minimal/A-Compact/A-Standard A-Minimal/A-Standard-Lite/**A-Compact nested**)
+- **Lean 4 auto-gen helper Role.toCtorIdx 顕在化発見** (depth=2 で Day 14 fixture 4 + Role.toCtorIdx 1 = 5 retired、Day 19 でも同 behavior だが Day 20 explicit depth で顕在化)
+- **Day 17 成果再々確認** (EvolutionStep depth=10 → 0 retired、独立検証 reproducibility 実証)
+
+---
+
+## Day 1-20 累計サマリ (Day 19 からの delta)
+
+- example: 371 → **371** (variance 維持、command invocations のみ追加)
+- linter: 3 + Lite → **3 + Lite + nested (4 拡張到達)** = A-Minimal + A-Compact + A-Standard A-Minimal + A-Standard-Lite + **A-Compact nested**
+- command_invocations: 8 → **11**
+- Pattern #7 hook: 十二段階発展 → **十三段階発展到達** (MODIFY 5 度目)
+- paper × 実装合流: 16 種 → **17 種**
+- paper finding: 79 → **84 件** (+5)
+- Subagent 指摘推移: Day 19 = 3 → **Day 20 = 3 横ばい** (addressable 0 streak 4 Day 継続)
+- **rfl preference 連続記録: 9 Day → 10 Day 連続 milestone 達成 (桁の到達)**
+- verifier_history: 24 entries → **25 entries** (Day 20 R1 追加)
+- Phase 0 累計合致率: 99.0% 維持 (101/102)

@@ -1684,7 +1684,20 @@
       "date": "2026-04-20",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + #check_retired_in_namespace_with_depth 動作確認 (3 invocations: RetiredEntity depth=1 4 retired / Provenance depth=2 5 retired (Day 14 4 fixture + 1 Role.toCtorIdx Lean 4 auto-generated helper 顕在化) / EvolutionStep depth=10 0 retired)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "informational_count": 3,
+      "evaluator": "build PASS (104+125 jobs) + Subagent 検証 PASS (改訂 96 paper サーベイ評価サイクルで実施、addressable 0 + informational 3 = Day 17=0→18=2→19=3→**20=3 横ばい**、design space richness 安定、addressable 0 streak 継続)",
+      "subagent_verification": {
+        "executed_in_commit": "改訂 96 paper サーベイ評価サイクル",
+        "verdict": "PASS",
+        "addressable": 0,
+        "informational": 3,
+        "informational_items": [
+          "I1 (即時対処): test 内 docstring (line 10) が 'Day 11-19 = 9 Day 連続' のまま → Day 20 で 'Day 11-20 = 10 Day 連続 milestone 達成' に更新 (本 commit で対処)",
+          "I2 (Day 21+ 投資推奨、structural observation): Role.toCtorIdx auto-gen helper の retired 判定は Lean 4 仕様外 (auto-gen には @[deprecated] 自動付与なし)、Role 自体または ancestor に @[deprecated] が含まれて helper にも bleed in している可能性、Day 21+ で root cause 確認推奨",
+          "I3 (Day 21+ 継続繰り延べ): Day 18 I2 / Day 19 I3 の Day 15 @[retired] macro fixture × #check_retired 連携テスト未実施、Section 2.37 Day 21+ 候補継続"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」12 度目適用 (Day 9-19 継続 + Day 20 I1 即時対処 + I2/I3 Day 21+ 繰り延べ)、**Subagent 指摘推移 Day 20 = 3 横ばい** (Day 17=0→18=2→19=3→20=3、累積 design space richness 安定傾向、cycle 内学習 transfer 累積効果は addressable レベルで継続実証 4 Day 連続)"
+      },
       "p2_complete_for": "day-20-provenance-retirement-linter-command-a-compact-nested",
       "milestone_10_day_rfl_preference": "**Day 11-20 = 10 Day 連続 rfl preference 維持の milestone 達成** (cycle 内学習 transfer 6 度目適用継続、quality loop 長期持続性 10 Day 実証、桁の到達)",
       "note": "Day 20 Provenance 層 A-Compact nested namespace 再帰対応実装 (Q1 A-Compact / Q2 A-Minimal explicit depth / Q3 案 A Day 18-19 同 module MODIFY / Q4 案 A Day 18-19 同 file test MODIFY、段階的 Lean 機能習得 3/4 + Lite + nested 拡張到達 = 4 拡張、残り 1/4 = Week 5-6 A-Maximal)。`elab \"#check_retired_in_namespace_with_depth \" ident num : command` 追加で `(ns, maxDepth)` 引数で Environment.constants 経由 NS 配下 maxDepth レベルまで explicit depth control 列挙、Day 19 \"NS 配下 any depth\" 曖昧性を A-Compact で狭義化 (Day 19 Subagent I2 設計対応)。Day 18-19 backward compatible 完全維持 (Day 19 #check_retired_in_namespace は any depth で残置、Day 20 _with_depth は別 command 名で新規追加)。RetirementLinterCommand.lean + Test MODIFY (example 変化なし 7、command invocations 8→11 +3)。Build 104+125 jobs 維持 (MODIFY のみ)。**興味深い発見**: depth=2 で `Role.toCtorIdx` (Lean 4 auto-generated helper) が retired 判定、Day 19 A-Standard-Lite (any depth) でも同じ behavior だったが Day 20 explicit depth で顕在化、Lean 4 inductive type の auto-generated helper に deprecated marker が付与されるケースの実例。**Day 11-20 = 10 Day 連続 rfl preference 維持の milestone 達成** (桁の到達、quality loop 長期持続性 10 Day 実証)。Day 21+ で A-Standard-Full (elaborator hook) / Week 5-6 A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続"

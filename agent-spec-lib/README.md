@@ -1011,6 +1011,52 @@ Day 18 `RetirementLinterCommand.lean` + Test MODIFY (同 module + 同 file、com
 - initial build error pattern 3 度目継続実例 (Day 15/18/19 で確立)
 - cycle 内学習 transfer 6 度目適用継続 (Day 11-19 = 9 Day 連続記録更新)
 
+## 現状: Phase 0 Week 2 Day 20 完了（2026-04-20 追加、A-Compact nested 拡張 + 10 Day 連続 milestone 達成）
+
+Section 2.38 Day 20 着手前判断 (Q1 A-Compact / Q2 A-Minimal explicit depth / Q3 案 A / Q4 案 A) に従い実装。
+**A-Compact nested namespace 再帰対応** (`#check_retired_in_namespace_with_depth NS N` command、Environment.constants + Name.components.length 差分で algebraic depth 計算、Day 19 "any depth" 曖昧性を A-Compact で狭義化、Day 19 Subagent I2 設計対応)、
+Day 19 backward compatible 完全維持 (別 command 名で新規追加、Day 18-19 同 module MODIFY)、
+**Day 11-20 = 10 Day 連続 rfl preference 維持の milestone 達成** (桁の到達、cycle 内学習 transfer 6 度目)、
+**Pattern #7 hook 十三段階発展到達** (MODIFY path 5 度目運用検証、両パターン運用 8 度目)、
+**段階的 Lean 機能習得 4 拡張到達** (A-Minimal + A-Compact + A-Standard A-Minimal + A-Standard-Lite + **A-Compact nested**、残り 1/4 = Week 5-6 A-Maximal)、
+**Lean 4 auto-gen helper 顕在化発見** (depth=2 で Role.toCtorIdx が retired 判定、Day 21+ root cause 投資 candidate)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→**20=3 横ばい安定** (addressable 0 streak 4 Day 継続)。
+
+### Day 20 の 1 項目 (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **`#check_retired_in_namespace_with_depth` command 追加** (RetirementLinterCommand.lean MODIFY)
+- [x] RetirementLinterCommandTest.lean MODIFY (example 7 維持、command invocations 8→11、+3)
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (104 / 125 jobs、Day 19 変化なし)
+- [x] Subagent 検証 PASS (addressable 0、informational 3、I1 即時対処)
+- [x] 3 invocations 動作確認:
+  - RetiredEntity depth=1 → 4 retired ✓
+  - **Provenance depth=2 → 5 retired (Day 14 4 fixture + Role.toCtorIdx 1 = Lean 4 auto-gen helper 顕在化)**
+  - EvolutionStep depth=10 → 0 retired (Day 17 削除再々確認 ✓)
+
+### Week 2 Day 20 時点の累計指標
+
+| 指標 | Day 19 | Day 20 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 371 | 0 / 0 | **15 / 371** (variance 維持) |
+| Provenance 層 linter | 3 + Lite (A-Standard-Lite) | +A-Compact nested | **3 + Lite + nested (4 拡張到達)** |
+| Command invocations | 8 | +3 | **11** |
+| Pattern #7 hook | 十二段階発展 | 13 度目運用検証 (MODIFY 5 度目) | **十三段階発展到達** |
+| Subagent 指摘項目 | 3 informational | 3 informational (横ばい) | **4 Day 連続 addressable 0** |
+| **rfl preference 連続記録** | 9 Day | +1 | **10 Day 連続 milestone 達成 (桁の到達)** |
+
+### Day 20 で達成した TyDD / paper 進展 (Section 12.58 + 12.59 + 12.60)
+
+- A-Compact nested namespace 再帰対応完了 / 段階的 Lean 機能習得 4 拡張到達 (残り 1/4 = Week 5-6 A-Maximal)
+- Name.components.length 差分 algebraic depth 計算 (TyDD-S4 P4 power-to-weight 継続)
+- Pattern #7 hook 十三段階発展到達 (MODIFY 5 度目)
+- paper × 実装 17 度目合流カテゴリ (A-Compact nested × 10 Day milestone × Lean 4 auto-gen helper 顕在化)
+- paper finding 84 件累計
+- Day 17 成果再々確認 (depth=10 EvolutionStep 0 retired)
+- **10 Day 連続 rfl preference milestone 達成** (Day 11-20、桁の到達、quality loop 長期持続性 10 Day 実証)
+- **Lean 4 auto-gen helper Role.toCtorIdx 顕在化発見** (Day 21+ root cause investigation candidate)
+- Subagent 指摘 4 Day 連続 addressable 0 (累積 design space richness 安定)
+- Phase 0 累計合致率 99.0% 安定 (Day 19 99.0% から維持)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
