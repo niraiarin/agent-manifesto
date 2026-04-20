@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
+  "title": "agent-spec-lib artifact manifest schema",
+  "description": "Day 29.2 で導入された strict schema。thin catalog 原則 (per-Day narrative 禁止、jq 経由 CRUD、navigable structure) を structural に強制する。",
+  "type": "object",
+  "required": ["$schema", "schema_role", "version", "package", "description", "scopes", "navigation_index", "artifacts", "build_status", "verifier_history"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_role": { "type": "string", "minLength": 50 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" },
+    "package": { "type": "string" },
+    "description": { "type": "string" },
+    "scopes": {
+      "type": "array",
+      "items": { "enum": ["formalization", "test", "config"] },
+      "uniqueItems": true
+    },
+    "propositions_referenced": { "type": "array", "items": { "type": "string" } },
+    "navigation_index": {
+      "type": "object",
+      "required": ["by_layer", "by_scope", "last_compiled"],
+      "additionalProperties": false,
+      "properties": {
+        "by_layer": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "by_scope": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "test_pairs": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "last_compiled": { "type": "string", "format": "date" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "build_status": {
+      "type": "object",
+      "required": ["last_verified", "last_verified_phase", "lake_build_results"],
+      "properties": {
+        "last_verified": { "type": "string", "format": "date" },
+        "last_verified_phase": { "type": "string" },
+        "lake_build_results": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["result", "job_count", "scope"],
+            "properties": {
+              "result": { "type": "string" },
+              "job_count": { "type": "integer", "minimum": 0 },
+              "scope": { "type": "string" },
+              "note": { "type": "string", "maxLength": 300 }
+            }
+          }
+        },
+        "sorry_count": { "type": "integer", "minimum": 0 },
+        "axiom_count": { "type": "integer", "minimum": 0 },
+        "theorem_count": { "type": "integer", "minimum": 0 },
+        "example_count": { "type": "integer", "minimum": 0 },
+        "warning_count": { "type": "integer", "minimum": 0 },
+        "deprecated_api_usage": { "type": "integer", "minimum": 0 },
+        "native_decide_usage": { "type": "integer", "minimum": 0 },
+        "finite_bounded_universal_cases": { "type": "integer", "minimum": 0 },
+        "breakdown": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["theorems", "examples"],
+            "properties": {
+              "theorems": { "type": "integer", "minimum": 0 },
+              "examples": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "verifier_history": {
+      "type": "array",
+      "description": "Historical entries may contain legacy narrative fields; Day 29.2+ new entries should use compact form (round / date / result / addressable_count / evaluator ≤2000 chars).",
+      "items": {
+        "type": "object",
+        "required": ["round", "date", "result"],
+        "additionalProperties": true,
+        "properties": {
+          "round": { "type": "string" },
+          "date": { "type": "string" },
+          "result": { "enum": ["PASS", "FAIL"] },
+          "addressable_count": { "type": "integer", "minimum": 0 },
+          "informational_count": { "type": "integer", "minimum": 0 },
+          "addressed": { "type": "boolean" },
+          "evaluator": { "type": "string", "maxLength": 2000 },
+          "immediate_fix_details": { "type": "string", "maxLength": 400 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["id", "path", "scope"],
+      "additionalProperties": true,
+      "not": {
+        "anyOf": [
+          { "required": ["day14_update"] },
+          { "required": ["day15_update"] },
+          { "required": ["day16_update"] },
+          { "required": ["day17_update"] },
+          { "required": ["day18_update"] },
+          { "required": ["day19_update"] },
+          { "required": ["day20_update"] },
+          { "required": ["day21_update"] },
+          { "required": ["day22_update"] },
+          { "required": ["day23_update"] },
+          { "required": ["day24_update"] },
+          { "required": ["day25_update"] },
+          { "required": ["day26_update"] },
+          { "required": ["day27_update"] },
+          { "required": ["day28_update"] },
+          { "required": ["day29_update"] },
+          { "required": ["rfl_preference_pattern"] },
+          { "required": ["initial_build_error_pattern"] },
+          { "required": ["milestone_11_day_rfl_preference"] },
+          { "required": ["milestone_12_day_rfl_preference"] },
+          { "required": ["milestone_13_day_rfl_preference"] },
+          { "required": ["milestone_14_day_rfl_preference"] },
+          { "required": ["milestone_15_day_rfl_preference"] },
+          { "required": ["milestone_16_day_rfl_preference"] },
+          { "required": ["long_deferred_resolved"] },
+          { "required": ["subagent_verification"] },
+          { "required": ["week2_status"] }
+        ]
+      },
+      "properties": {
+        "id": { "type": "string", "pattern": "^agent-spec-lib:" },
+        "path": { "type": "string" },
+        "scope": { "enum": ["formalization", "test", "config"] },
+        "summary": { "type": "string", "maxLength": 200 },
+        "refs": { "type": "array", "items": { "type": "string" } },
+        "assumptions": { "type": "array" },
+        "enforces": { "type": "string" },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "edge"],
+            "properties": {
+              "id": { "type": "string" },
+              "module": { "type": "string" },
+              "edge": { "type": "string" }
+            }
+          }
+        },
+        "provides_types": { "type": "array", "items": { "type": "string" } },
+        "provides_definitions": { "type": "array", "items": { "type": "string" } },
+        "provides_instances": { "type": "array", "items": { "type": "string" } },
+        "design_origin": { "type": "string" },
+        "tydd_alignment": { "type": ["string", "object"] },
+        "decision_log": { "type": "string" },
+        "example_count": { "type": "integer", "minimum": 0 },
+        "command_invocations": { "type": "integer", "minimum": 0 },
+        "sorry_count": { "type": "integer", "minimum": 0 },
+        "axiom_count": { "type": "integer", "minimum": 0 },
+        "test_targets": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

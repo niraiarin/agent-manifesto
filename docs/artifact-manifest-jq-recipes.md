@@ -100,6 +100,32 @@ jq empty agent-spec-lib/artifact-manifest.json && echo OK
 jq '[.build_status.breakdown | to_entries[] | .value.examples] | add as $sum |
     if $sum == .build_status.example_count then "OK" else "MISMATCH: sum=\($sum) stated=\(.build_status.example_count)" end' \
    agent-spec-lib/artifact-manifest.json
+
+# JSON Schema 準拠 (Day 29.2 導入、thin catalog + narrative forbid 強制)
+UV_CACHE_DIR=/tmp/uv-cache UV_TOOL_DIR=/tmp/uv-tools UV_TOOL_BIN_DIR=/tmp/uv-bin \
+  uv tool run --from check-jsonschema check-jsonschema \
+    --schemafile agent-spec-lib/artifact-manifest.schema.json \
+    agent-spec-lib/artifact-manifest.json
+```
+
+## Navigation patterns (Day 29.2、arXiv:2604.14572 Corpus2Skill 示唆)
+
+```bash
+# Zoom-out: 層一覧で scope を把握 (最小 context、最初に読む)
+jq '.navigation_index.by_layer.Provenance' agent-spec-lib/artifact-manifest.json
+
+# Zoom-in: 層で絞った後、特定 module の詳細を取得
+jq '.artifacts[] | select(.id == "agent-spec-lib:AgentSpec.Provenance.ProvRelation")
+     | {provides_types, dependencies, refs}' \
+   agent-spec-lib/artifact-manifest.json
+
+# Test pair lookup: production → test
+jq '.navigation_index.test_pairs."AgentSpec.Provenance.ProvRelation"' \
+   agent-spec-lib/artifact-manifest.json
+
+# Concern-based search (navigation_index にない場合の fallback、regex で grep)
+jq '[.artifacts[] | select(.id | test("Retirement"; "i")) | .id]' \
+   agent-spec-lib/artifact-manifest.json
 ```
 
 ## 禁止事項 (Day 27 efficiency audit 教訓)
