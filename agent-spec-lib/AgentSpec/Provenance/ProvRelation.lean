@@ -173,4 +173,14 @@ def Acyclic (edges : List WasDerivedFrom) : Prop :=
 /-- 空 edge list は trivially acyclic。 -/
 theorem Acyclic.empty : Acyclic [] := fun _ => TransDerived.empty_false
 
+/-- Day 31: TransDerived は edge set の部分関係に対して monotone。
+    edges1 ⊆ edges2 なら TransDerived edges1 a b → TransDerived edges2 a b。 -/
+theorem TransDerived.subset {edges1 edges2 : List WasDerivedFrom}
+    (hsub : ∀ w ∈ edges1, w ∈ edges2)
+    {a b : ResearchEntity} (h : TransDerived edges1 a b) :
+    TransDerived edges2 a b := by
+  induction h with
+  | base hmem => exact .base (hsub _ hmem)
+  | trans _ _ ih1 ih2 => exact .trans ih1 ih2
+
 end AgentSpec.Provenance

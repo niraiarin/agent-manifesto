@@ -137,4 +137,10 @@ example : ¬ Acyclic [WasDerivedFrom.trivial] := by
   intro h
   exact h ResearchEntity.trivial (TransDerived.base (List.mem_singleton.mpr rfl))
 
+/-- Day 31: TransDerived.subset で大きな edge list に monotone 拡張。
+    空 list の derivation は vacuous だが、subset lemma の型整合性を確認。 -/
+example {a b : ResearchEntity} (h : TransDerived [] a b) :
+    TransDerived [WasDerivedFrom.trivial] a b :=
+  TransDerived.subset (fun _ hmem => absurd hmem (by simp)) h
+
 end AgentSpec.Test.Provenance.ProvRelation
