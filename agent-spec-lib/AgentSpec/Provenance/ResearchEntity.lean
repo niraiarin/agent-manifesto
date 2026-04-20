@@ -107,6 +107,10 @@ inductive ResearchEntity where
       PROV-O では Entity と Agent は別概念だが、Lean 統合的扱いで Mapping uniformity 維持。
       PROV-O wasAttributedTo 関係は別 inductive (Day 11+) で表現予定。 -/
   | Agent (a : ResearchAgent)
+  /-- 引き継ぎ列 (Day 41 6 constructor 拡張、Process 層 HandoffChain を embed)。
+      単一 Handoff (T1 個別 event) と区別し、一時性の連鎖全体を Entity として扱う。
+      T1 一時性の sequence-level trace を Provenance 関係の主語/目的語として利用可能。 -/
+  | HandoffChain (ch : AgentSpec.Process.HandoffChain)
   deriving DecidableEq, Inhabited, Repr
 
 namespace ResearchEntity
@@ -139,6 +143,11 @@ def isAgent : ResearchEntity → Bool
   | .Agent _ => true
   | _ => false
 
+/-- ResearchEntity が HandoffChain variant かを判定 (Day 41 6 constructor 拡張)。 -/
+def isHandoffChain : ResearchEntity → Bool
+  | .HandoffChain _ => true
+  | _ => false
+
 end ResearchEntity
 
 end AgentSpec.Provenance
@@ -165,6 +174,11 @@ def Evolution.toEntity (e : Evolution) : AgentSpec.Provenance.ResearchEntity :=
 /-- `Handoff.toEntity` (Q4 案 A): Handoff を ResearchEntity に変換 (HandoffChain ではなく単一)。 -/
 def Handoff.toEntity (h : Handoff) : AgentSpec.Provenance.ResearchEntity :=
   .Handoff h
+
+/-- `HandoffChain.toEntity` (Day 41): HandoffChain を ResearchEntity に変換。
+    単一 Handoff とは別の 6th constructor、sequence-level trace 用。 -/
+def HandoffChain.toEntity (ch : HandoffChain) : AgentSpec.Provenance.ResearchEntity :=
+  .HandoffChain ch
 
 end AgentSpec.Process
 

@@ -98,4 +98,40 @@ example : ([
   HandoffChain.trivialHandoff.toEntity
 ] : List ResearchEntity).length = 4 := rfl
 
+/-! ### Day 41: HandoffChain 6th constructor (sequence-level embed、single Handoff と区別) -/
+
+/-- HandoffChain variant 直接構築 -/
+example : ResearchEntity :=
+  .HandoffChain (.cons HandoffChain.trivialHandoff .empty)
+
+/-- HandoffChain.toEntity Mapping (dot notation) -/
+example : ResearchEntity :=
+  (HandoffChain.cons HandoffChain.trivialHandoff .empty).toEntity
+
+/-- HandoffChain variant を isHandoffChain で識別可能 -/
+example : (ResearchEntity.HandoffChain .empty).isHandoffChain = true := rfl
+
+/-- 他 variant に対しては isHandoffChain = false -/
+example : ResearchEntity.trivial.isHandoffChain = false := rfl
+example : (ResearchEntity.Handoff HandoffChain.trivialHandoff).isHandoffChain = false := rfl
+
+/-- HandoffChain variant は Handoff variant と区別される (DecidableEq 連鎖) -/
+example :
+    ResearchEntity.HandoffChain (.cons HandoffChain.trivialHandoff .empty) ≠
+    ResearchEntity.Handoff HandoffChain.trivialHandoff := by decide
+
+/-- 長さ違い HandoffChain は不等 -/
+example :
+    ResearchEntity.HandoffChain .empty ≠
+    ResearchEntity.HandoffChain (.cons HandoffChain.trivialHandoff .empty) := by decide
+
+/-- Process 5 type (HandoffChain 追加) 全てが ResearchEntity に embed 可能 -/
+example : List ResearchEntity := [
+  Hypothesis.trivial.toEntity,
+  Failure.trivial.toEntity,
+  Evolution.trivial.toEntity,
+  HandoffChain.trivialHandoff.toEntity,
+  (HandoffChain.cons HandoffChain.trivialHandoff .empty).toEntity
+]
+
 end AgentSpec.Test.Provenance.ResearchEntity

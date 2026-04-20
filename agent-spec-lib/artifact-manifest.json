@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.40.0-week2-day40",
+  "version": "0.41.0-week2-day41",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1082,7 +1082,7 @@
         }
       ],
       "provides_types": [
-        "AgentSpec.Provenance.ResearchEntity (4 constructor inductive: Hypothesis/Failure/Evolution/Handoff embed、Q3 案 A 確定)"
+        "AgentSpec.Provenance.ResearchEntity (inductive 6 constructor: Hypothesis/Failure/Evolution/Handoff/Agent/HandoffChain、Day 41 で HandoffChain 6th 拡張、Day 39 DecidableEq)"
       ],
       "provides_definitions": [
         "AgentSpec.Provenance.ResearchEntity.trivial (test fixture)",
@@ -1090,7 +1090,9 @@
         "AgentSpec.Process.Hypothesis.toEntity (Q4 案 A、namespace extension)",
         "AgentSpec.Process.Failure.toEntity (Q4 案 A)",
         "AgentSpec.Process.Evolution.toEntity (Q4 案 A)",
-        "AgentSpec.Process.Handoff.toEntity (Q4 案 A)"
+        "AgentSpec.Process.Handoff.toEntity (Q4 案 A)",
+        "AgentSpec.Provenance.ResearchEntity.isHandoffChain",
+        "AgentSpec.Process.HandoffChain.toEntity"
       ],
       "provides_instances": [
         "Inhabited ResearchEntity / Repr (deriving、DecidableEq は Evolution recursive のため省略)"
@@ -1164,7 +1166,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "example_count": 27,
+      "example_count": 35,
       "sorry_count": 0,
       "axiom_count": 0
     },
@@ -2416,6 +2418,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 127 jobs + 13 new DecidableEq examples PASS",
       "scope": "Day 39 ResearchEntity DecidableEq 連鎖で 5 structure + 1 inductive に DecidableEq derive 追加",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 41 HandoffChain 6 constructor 拡張",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 127 jobs + 8 new examples PASS",
+      "scope": "ResearchEntity に HandoffChain 6th constructor 追加 (sequence-level embed、HandoffChain.toEntity Mapping)",
       "compatibility": "conservative extension"
     }
   ],
