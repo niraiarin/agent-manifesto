@@ -51,6 +51,15 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 23 意思決定ログ (multi-module import propagate test、Day 22 D10 PersistentEnvExtension addImportedFn 動作実証)
+
+### D13. helper module 経由 multi-module import propagate test (Day 23 Q1 Day 22 Subagent informational I1 直接対処)
+- **背景**: Day 22 で `SimplePersistentEnvExtension` + `register_retirement_namespace` 導入、Day 22 Subagent informational I1 で「multi-module duplicate handling は benign だが Day 23+ multi-module import test 推奨」と identified
+- **代案 A**: production code に複数 `register_retirement_namespace` を散布 (実用的だが test 専用と production 用が混在)
+- **代案 B**: test file 内で複数 helper module を inline (test cohesion 低下)
+- **採用**: 新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture.lean` (test scope 専用) で `register_retirement_namespace` + `@[retired]` decorated `importPropagateFixture` を定義、`AgentSpec.Test.Provenance.RetirementLinterCommandTest` が import で経由 propagate 確認
+- **理由**: Day 22 D10 `addImportedFn := arrs.foldl (init := #[]) (· ++ ·)` の import 越境動作を実コードで実証、test cohesion 維持 (helper 専用 module + test 専用 fixture)、Day 22 backward compatible 完全維持 (本 helper module は test scope のみ、production code 変更なし)。本実証で Day 22 PersistentEnvExtension の implementation correctness を multi-module 構造で確認、Day 24+ で duplicate handling / multi-source register 等の進展に活用可能。
+
 ## Day 22 意思決定ログ (A-Standard-Full-Standard A-Minimal、PersistentEnvExtension callback)
 
 ### D10. PersistentEnvExtension で watched namespaces env-driven 化 (Day 22 Q1 A-Standard-Full-Standard)
