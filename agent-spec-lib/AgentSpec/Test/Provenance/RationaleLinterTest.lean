@@ -2,6 +2,7 @@ import AgentSpec.Provenance.RationaleLinter
 import AgentSpec.Process.Hypothesis
 import AgentSpec.Spine.ResearchGoal
 import AgentSpec.Spine.State
+import AgentSpec.Test.Provenance.RationaleWatchedFixture
 
 /-!
 # AgentSpec.Test.Provenance.RationaleLinterTest: #check_unattributed_rationale command の動作確認
@@ -69,6 +70,17 @@ register_rationale_watched_namespace AgentSpec.Test.Provenance.RationaleLinter
 #check_unattributed_rationale_in_namespace AgentSpec.Spine
 
 -- auto: default watched 3 namespaces + Day 61 register 分を一括 scan、total 集計
+#check_unattributed_rationale_auto
+
+/-! ### Day 63 (F1 sprint 4/4): integration - import 経由 register propagate 確認
+
+Day 22 RetirementWatchedFixture と同 pattern。helper module が register、
+consumer 側 (本 Test) が import 経由で watched list に appear することを auto で実証。
+-/
+
+-- Day 63: helper fixture の register は import 経由で propagate される
+-- auto 出力には 'AgentSpec.Test.Provenance.RationaleWatchedFixture' が watched に追加される
+-- 上の #check_unattributed_rationale_auto の出力と比較して、Day 63 で watched 数が増加することを確認
 #check_unattributed_rationale_auto
 
 end AgentSpec.Test.Provenance.RationaleLinter

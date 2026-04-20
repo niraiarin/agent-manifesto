@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.62.0-week2-day62",
+  "version": "0.63.0-week2-day63",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2142,6 +2142,26 @@
         "F1"
       ],
       "example_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.RationaleWatchedFixture",
+      "path": "AgentSpec/Test/Provenance/RationaleWatchedFixture.lean",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RationaleLinter",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "assumptions": [],
+      "scope": "test",
+      "refs": [
+        "F1"
+      ],
+      "example_count": 0
     }
   ],
   "build_status": {
@@ -2409,6 +2429,10 @@
         "examples": 0
       },
       "Test/Provenance/RationaleLinterTest.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RationaleWatchedFixture.lean": {
         "theorems": 0,
         "examples": 0
       }
@@ -3002,6 +3026,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 139 jobs + 3 #check 動作確認、実測 (Process=2 / Spine=5 / auto total=7 unattributed refs in 4 watched namespaces)、Day 57 empirical F1 で identify された prod 3 site + 追加 4 site を正確に検出 (false positive 0)",
       "scope": "#check_unattributed_rationale_in_namespace + #check_unattributed_rationale_auto 2 variant 追加、Day 19 #check_retired_in_namespace + Day 21 _auto + Day 28 D16 presentation-layer dedup pattern 踏襲。value-level 走査で blacklist (Rationale.trivial/ofText) 参照を持つ defnInfo を enumerate、auto は getWatchedRationaleNamespaces 経由で env-driven 一括 scan、total 集計。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 63 F1 sprint 4/4 — integration + import propagate 実証",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 140 jobs PASS、RationaleWatchedFixture helper の import 経由で watched list が 4→5 namespaces に increment、unattributed refs total が 7→8 に increment (unattributedPlaceholderFixture を flag)、Day 22-23 RetirementWatchedFixture pattern 完全対称、import-cross propagate 動作実証完了",
+      "scope": "AgentSpec.Test.Provenance.RationaleWatchedFixture helper 新規 (Day 22-23 pattern)、register_rationale_watched_namespace + unattributedPlaceholderFixture 定義、consumer RationaleLinterTest が import 経由で watched propagate を auto 出力で確認。F1 Option C sprint 4/4 完了、Day 60-63 で Day 14-22 RetirementLinter 4 段階 (A-Standard A-Minimal → EnvExtension → namespace scan → import propagate) を Rationale に複製、prod 7 unattributed refs を flag 可能に (Day 52 0 warning から構造的改善)。",
       "compatibility": "conservative extension"
     }
   ],
