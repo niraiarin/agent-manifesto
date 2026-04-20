@@ -127,6 +127,39 @@ instance instLE : LE LearningStage := ⟨fun a b => a.le b = true⟩
 instance (a b : LearningStage) : Decidable (a ≤ b) :=
   inferInstanceAs (Decidable (a.le b = true))
 
+/-! ### Day 65: Prop 形式 PartialOrder 相当の theorem 併設 (stale 58 Day 解消、G3 empirical recommendation)
+
+Day 4-5 で確立した Bool `LearningStage.le` + `LE` instance に、Prop 形式の refl/trans/antisymm
+を添える。既存 LE/Decidable 定義は不変、conservative extension (新 theorem 追加のみ)。
+
+downstream proofs で `a ≤ b` を natural に使える (Bool 離散経由不要)。
+
+Day 54 Step 7 / Day 55 / Day 64 empirical G3 で 3 度識別されながら未着手だった long-deferred
+(stale 58 Day、Day 5 timing) を解消。 -/
+
+/-- Day 65: reflexivity of ≤。case analysis で 5 variant 全て rfl。 -/
+theorem le_refl (a : LearningStage) : a ≤ a := by
+  cases a <;> rfl
+
+/-- Day 65: transitivity of ≤。case analysis 5×5×5 = 125 cases、
+    各 case では Bool `le` の定義に simp で reduce。 -/
+theorem le_trans {a b c : LearningStage} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
+  cases a <;> cases b <;> cases c <;>
+    first | rfl | simp_all [LE.le, LearningStage.le]
+
+/-- Day 65: antisymmetry of ≤。a ≤ b ∧ b ≤ a → a = b。 -/
+theorem le_antisymm {a b : LearningStage} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
+  cases a <;> cases b <;>
+    first | rfl | simp_all [LE.le, LearningStage.le]
+
+/-- Day 65: observation は全段階以前 (bottom)。 -/
+theorem observation_le (b : LearningStage) : LearningStage.observation ≤ b := by
+  cases b <;> rfl
+
+/-- Day 65: retirement は全段階以後 (top) — 逆方向の不等号。 -/
+theorem le_retirement (a : LearningStage) : a ≤ LearningStage.retirement := by
+  cases a <;> rfl
+
 /-- LT instance: 厳密順序は le かつ ≠ で定義 (Mathlib LT/LE 標準パターン)。 -/
 instance instLT : LT LearningStage := ⟨fun a b => a ≤ b ∧ a ≠ b⟩
 

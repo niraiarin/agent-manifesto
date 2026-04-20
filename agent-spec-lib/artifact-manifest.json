@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.64.0-week2-day64",
+  "version": "0.65.0-week2-day65",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -609,7 +609,14 @@
         "F2_lattice_partial": "LE/LT instance で順序関係完備、Lattice 完全形は Week 4-5"
       },
       "g5_1_section": "3.4 ステップ 2 (LearningM indexed monad の前段階)",
-      "decision_log": "LearningCycle.lean docstring D1-D3 (inductive enum / next total / le Bool 関数)"
+      "decision_log": "LearningCycle.lean docstring D1-D3 (inductive enum / next total / le Bool 関数)",
+      "provides_definitions": [
+        "AgentSpec.Spine.LearningStage.le_refl (Day 65、Prop PartialOrder)",
+        "AgentSpec.Spine.LearningStage.le_trans (Day 65)",
+        "AgentSpec.Spine.LearningStage.le_antisymm (Day 65)",
+        "AgentSpec.Spine.LearningStage.observation_le (bottom、Day 65)",
+        "AgentSpec.Spine.LearningStage.le_retirement (top、Day 65)"
+      ]
     },
     {
       "id": "agent-spec-lib:AgentSpec.Spine.Observable",
@@ -668,7 +675,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "example_count": 28,
+      "example_count": 34,
       "sorry_count": 0,
       "axiom_count": 0,
       "cross_class_test": "Day 3 /verify R1 A2 への対処、Day 4 /verify R1 I4 で Observable 含む 4-class 完全化",
@@ -2194,7 +2201,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 611,
+    "example_count": 617,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2246,7 +2253,7 @@
       },
       "Test/Spine/LearningCycleTest.lean": {
         "theorems": 0,
-        "examples": 28
+        "examples": 34
       },
       "Spine/Observable.lean": {
         "theorems": 0,
@@ -3052,6 +3059,15 @@
         "G5 [cleanup / 低優先]: Day 54 Step 7 重複 entry (1 件 Core.lean Decidable は Day 56 で resolved)、future_research 2 件を status 分離、pending_items size 削減で Check 4 noise 低減。Day 67+ メンテ。",
         "G6 [cycle-check Check 4 改善提案]: 未 resolved かつ Day N 形式のみに絞って aging check する roadmap (stale 閾値を設定)。Day 68+ cycle-check v2 候補。"
       ],
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 65 LearningStage.le Prop 形式併設 (G3 解消、stale 58 Day)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 140 jobs PASS、6 new Prop theorem (le_refl / le_trans / le_antisymm / observation_le / le_retirement) + 7 new test example、既存 Bool le/LE/Decidable は不変 (conservative extension)",
+      "scope": "Day 54 Step 7 / Day 55 / Day 64 empirical G3 で 3 度識別されながら 58 Day stale だった LearningStage.le Prop 形式併設を解消。既存 Bool le は変更なし、Prop 版は PartialOrder 相当の 5 theorem (refl/trans/antisymm/bottom/top) として追加、case analysis + simp_all で proof。downstream proof が Bool 離散経由なしで ≤ を使える。Day 64 G3 推奨通り最優先で実施。",
       "compatibility": "conservative extension"
     }
   ],

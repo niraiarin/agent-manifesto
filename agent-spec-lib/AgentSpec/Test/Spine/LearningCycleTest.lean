@@ -47,6 +47,32 @@ example : LearningStage.verification.le LearningStage.verification = true := rfl
 example : LearningStage.integration.le LearningStage.integration = true := rfl
 example : LearningStage.retirement.le LearningStage.retirement = true := rfl
 
+/-! ### Day 65: Prop 形式 PartialOrder 相当 theorem (Bool le と併存、stale 58 Day 解消) -/
+
+/-- reflexivity: 全 5 variant で a ≤ a (theorem ベース、Bool 非経由) -/
+example : LearningStage.observation ≤ LearningStage.observation := LearningStage.le_refl _
+example : LearningStage.retirement ≤ LearningStage.retirement := LearningStage.le_refl _
+
+/-- transitivity: hypothesis ≤ verification ≤ integration → hypothesis ≤ integration -/
+example
+    (h1 : LearningStage.hypothesis ≤ LearningStage.verification)
+    (h2 : LearningStage.verification ≤ LearningStage.integration) :
+    LearningStage.hypothesis ≤ LearningStage.integration := LearningStage.le_trans h1 h2
+
+/-- antisymm: a ≤ b ∧ b ≤ a → a = b -/
+example
+    (h1 : LearningStage.retirement ≤ LearningStage.retirement)
+    (h2 : LearningStage.retirement ≤ LearningStage.retirement) :
+    LearningStage.retirement = LearningStage.retirement := LearningStage.le_antisymm h1 h2
+
+/-- observation は全段階以前 (bottom) -/
+example : LearningStage.observation ≤ LearningStage.verification := LearningStage.observation_le _
+example : LearningStage.observation ≤ LearningStage.retirement := LearningStage.observation_le _
+
+/-- retirement は全段階以後 (top) -/
+example : LearningStage.hypothesis ≤ LearningStage.retirement := LearningStage.le_retirement _
+example : LearningStage.integration ≤ LearningStage.retirement := LearningStage.le_retirement _
+
 /-! ### Day 5: LE/LT instance (Section 12.11 Day 4 評価 🟡 F2 部分対処) -/
 
 /-- LE instance 経由: observation ≤ retirement (Bool 関数の Prop 昇格) -/
