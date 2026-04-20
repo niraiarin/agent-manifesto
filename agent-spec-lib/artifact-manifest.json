@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.19.0-week2-day19",
+  "version": "0.20.0-week2-day20",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1075,7 +1075,7 @@
       "design_origin": "02-data-provenance §4.4 退役 entity の構造的検出を Lean 化 (Day 12 Q1 A-Minimal / Q3 案 A 4 variant 型化 / Q4 案 A separate structure / D3 1 ファイル統合配置、Day 11 ProvRelation パターン踏襲、ResearchEntity 拡張不要 backward compatible)。Day 14 で linter A-Minimal 実装 (Q1 A / Q2 A-Minimal / Q3 案 A / Q4 案 C、Lean 4 標準 @[deprecated] attribute で退役済 entity 参照警告を実現、test fixture のみ対象、production code structure / smart constructor は backward compatible)",
       "tydd_alignment": "TyDD-S1 types-first (4 variant inductive で退役理由 semantic を型レベル区別) + S4 P2 Refinement (案 B String を退ける) + S4 P5 explicit assumptions 3 度目強適用 (Day 8 B4 → Day 11 PROV-O relation → Day 12 RetirementReason payload 型化、Refuted (failure : Failure) / Superseded (replacement : ResearchEntity))。Day 14 で TyDD-G3 linter integration (Lean 4 標準 @[deprecated] 活用、Day 15+ で custom attribute / linter / elaborator へ段階的拡張パス)",
       "decision_log": "RetiredEntity.lean docstring D1-D3 (Q3 案 A 4 variant 型化 / Q4 案 A separate / D3 1 ファイル統合配置)。Day 14 で D1-D2 追加 (Q3 案 A test fixture 対象 @[deprecated] / Q4 案 C rfl preference 維持、A-Minimal から A-Compact / A-Standard / A-Maximal への段階的拡張パス)",
-      "linter_status": "A-Minimal 完了 (Day 14) + A-Compact 完了 (Day 15) + A-Standard A-Minimal 完了 (Day 18、#check_retired command) + **A-Standard-Lite 完了 (Day 19、#check_retired_in_namespace command、Environment.constants 経由 NS 直下 enumerate + Lean.Linter.isDeprecated 検査、Day 18 同 module MODIFY)**。段階的 Lean 機能習得 3/4 段階目 + Lite 拡張到達。Day 20+ で A-Standard-Full (elaborator hook) / A-Compact (nested namespace)、Week 5-6 で A-Maximal (elaborator 型レベル強制、4/4 段階目) へ段階的拡張予定"
+      "linter_status": "A-Minimal 完了 (Day 14) + A-Compact (Hybrid macro) 完了 (Day 15) + A-Standard A-Minimal 完了 (Day 18) + A-Standard-Lite 完了 (Day 19) + **A-Compact (nested namespace 再帰対応) 完了 (Day 20、#check_retired_in_namespace_with_depth command、explicit depth control、Day 19 \"NS 配下 any depth\" 曖昧性を狭義化、Day 18-19 同 module MODIFY)**。段階的 Lean 機能習得 3/4 段階目 + Lite + nested 拡張到達 (4 拡張、残り A-Maximal Week 5-6 = 4/4 段階目)。Day 21+ で A-Standard-Full (elaborator hook) / Week 5-6 で A-Maximal (elaborator 型レベル強制、4/4) へ段階的拡張予定"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetiredEntityTest",
@@ -1210,12 +1210,13 @@
       "provides_types": [],
       "provides_definitions": [
         "elab \"#check_retired \" ident : command (Day 18 A-Standard custom linter A-Minimal、Lean.Elab.Command 拡張、`#check_retired <identifier>` で identifier が @[deprecated] 付きかを Lean.Linter.isDeprecated で実行時検査、info output 発生)",
-        "elab \"#check_retired_in_namespace \" ident : command (Day 19 A-Standard-Lite namespace 検出拡張、`#check_retired_in_namespace <namespace>` で NS 直下 constants 全列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output に列挙)"
+        "elab \"#check_retired_in_namespace \" ident : command (Day 19 A-Standard-Lite namespace 検出拡張、`#check_retired_in_namespace <namespace>` で NS 配下 any depth descendants 列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output に列挙)",
+        "elab \"#check_retired_in_namespace_with_depth \" ident num : command (Day 20 A-Compact nested namespace 再帰対応、`#check_retired_in_namespace_with_depth <namespace> <maxDepth>` で NS 配下を maxDepth レベルまで explicit depth control 列挙、Day 19 \"NS 配下 any depth\" 曖昧性を A-Compact で狭義化)"
       ],
       "provides_instances": [],
-      "design_origin": "Day 14 A-Minimal (@[deprecated] 4 fixture) → Day 15 A-Compact Hybrid macro (@[retired] → @[deprecated] 展開) → Day 18 A-Standard custom linter A-Minimal (#check_retired command) → **Day 19 A-Standard-Lite namespace 検出拡張 (#check_retired_in_namespace command)** の段階的 Lean 機能習得パス、残り 1/4 = Week 5-6 A-Maximal",
-      "tydd_alignment": "TyDD-G3 linter integration 拡張 (Day 14 標準機能 → Day 15 macro 機能 → Day 18 Elab.Command 拡張 → Day 19 Environment enumeration 拡張) + TyDD-S4 P4 power-to-weight (標準 Lean.Linter.isDeprecated + Environment.constants API 利用で自前 implementation 回避、minimal 実装継続)",
-      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (Day 18) + **D4-D5 added (Day 19 Q1 A + Q2 A-Minimal namespace enumerate / Q3 案 A Day 18 同 module MODIFY、command 系統 cohesion 維持)**"
+      "design_origin": "Day 14 A-Minimal (@[deprecated] 4 fixture) → Day 15 A-Compact Hybrid macro → Day 18 A-Standard A-Minimal (#check_retired) → Day 19 A-Standard-Lite (#check_retired_in_namespace、any depth) → **Day 20 A-Compact nested namespace 再帰対応 (#check_retired_in_namespace_with_depth、explicit depth control)** の段階的 Lean 機能習得パス、残り 1/4 = Week 5-6 A-Maximal elaborator",
+      "tydd_alignment": "TyDD-G3 linter integration 拡張 (Day 14-15-18-19-20) + TyDD-S4 P4 power-to-weight 継続強化 (Lean 4 core API 活用: Lean.Linter.isDeprecated + Environment.constants + Name.components.length、自前 implementation 回避)",
+      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (Day 18) + D4-D5 (Day 19) + **D6-D7 added (Day 20 Q1 A-Compact + Q2 A-Minimal explicit depth / D7 Name.components.length 差分で algebraic depth 計算)**"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementLinterCommandTest",
@@ -1233,8 +1234,9 @@
         {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"}
       ],
       "example_count": 7,
-      "command_invocations": 8,
+      "command_invocations": 11,
       "day19_update": "Day 19 で `#check_retired_in_namespace` command 3 invocations + 1 example 追加 (example 6→7、command invocations 5→8)。AgentSpec.Provenance.RetiredEntity 配下で 4 retired fixture 検出、AgentSpec.Process.Failure / AgentSpec.Spine.EvolutionStep 配下で no retired 判定 (Day 17 transitionLegacy 完全削除確認含む)",
+      "day20_update": "Day 20 で `#check_retired_in_namespace_with_depth` command 3 invocations 追加 (example 変化なし 7、command invocations 8→11)。AgentSpec.Provenance.RetiredEntity depth=1 で 4 retired、AgentSpec.Provenance depth=2 で 5 retired (Day 14 4 fixture + 1 unexpected `Role.toCtorIdx` = Lean 4 auto-generated helper の deprecated marker、Day 19 A-Standard-Lite では同じ behavior だったが Day 20 explicit depth で顕在化)、AgentSpec.Spine.EvolutionStep depth=10 で 0 retired (Day 17 削除再確認)",
       "sorry_count": 0,
       "axiom_count": 0,
       "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、**Day 11-19 = 9 Day 連続 rfl preference 維持の記録更新** (Day 19 改訂 92 で更新)、quality loop 長期持続性 9 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認。set_option linter.deprecated false in で warning 抑制のみ",
@@ -1272,11 +1274,11 @@
     }
   ],
   "build_status": {
-    "last_verified": "2026-04-19",
-    "last_verified_phase": "Week 2 Day 19",
+    "last_verified": "2026-04-20",
+    "last_verified_phase": "Week 2 Day 20",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 19 は RetirementLinterCommand MODIFY のみで jobs 変化なし (104 維持)、#check_retired_in_namespace command 追加"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 19 は RetirementLinterCommandTest MODIFY のみで jobs 変化なし (125 維持)、example 6→7 + command invocations 5→8"}
+      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 20 は RetirementLinterCommand MODIFY のみで jobs 変化なし (104 維持)、#check_retired_in_namespace_with_depth command 追加"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 20 は RetirementLinterCommandTest MODIFY のみで jobs 変化なし (125 維持)、example 変化なし 7、command invocations 8→11 (+3)"}
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1676,6 +1678,16 @@
         "pattern": "paper サーベイ評価サイクル「実装修正組込み」11 度目適用 (Day 9-18 継続 + Day 19 I1+I2 即時対処 + I3 Day 20+ 継続繰り延べ)、**Day 17=0 → Day 18=2 → Day 19=3 informational 推移**: 累積 design space richness 傾向、全て non-addressable で cycle 内学習 transfer 累積効果は addressable レベルで継続実証"
       },
       "note": "Day 19 Provenance 層 A-Standard-Lite namespace 検出拡張実装 (Q1 A 案 / Q2 A-Minimal / Q3 案 A Day 18 同 module MODIFY / Q4 案 A Day 18 同 file test MODIFY、段階的 Lean 機能習得 3/4 段階目 + Lite 拡張到達)。`elab \"#check_retired_in_namespace \" ident : command` 追加で Environment.constants 経由 NS 直下 constants 列挙 + 各 Lean.Linter.isDeprecated 検査、retired declarations を info output 列挙。Day 18 同 module MODIFY (command 系統 cohesion 維持)、RetirementLinterCommand.lean + Test MODIFY (+1 example = 6→7、+3 command invocations = 5→8)。Build 104+125 jobs 維持 (MODIFY のみ)、example 370→371 (+1)。Pattern #7 hook MODIFY path 4 度目運用検証 (Day 14/16/17 の MODIFY と Day 18 新規 file から今回 MODIFY 復帰、両パターン運用 7 度目、十二段階発展到達)。Day 18 と同 parser 状態競合 (3 度目、#check_retired_in_namespace 連続 + set_option example 混在) → section 分離で即時修復 (Day 15/18 パターン継続、initial_build_error_pattern 3 度目記録)。**Day 11-19 で 9 Day 連続 rfl preference 維持の記録更新** (cycle 内学習 transfer 6 度目適用継続)。Day 19 namespace 検出で Day 17 transitionLegacy 完全削除確認 (AgentSpec.Spine.EvolutionStep 配下 0 retired = Day 17 成果の Day 19 linter 経由再確認)。Day 20+ で A-Standard-Full (elaborator hook) / A-Compact (nested namespace 再帰) / Week 5-6 A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続"
+    },
+    {
+      "round": "Week 2 Day 20 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + #check_retired_in_namespace_with_depth 動作確認 (3 invocations: RetiredEntity depth=1 4 retired / Provenance depth=2 5 retired (Day 14 4 fixture + 1 Role.toCtorIdx Lean 4 auto-generated helper 顕在化) / EvolutionStep depth=10 0 retired)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "p2_complete_for": "day-20-provenance-retirement-linter-command-a-compact-nested",
+      "milestone_10_day_rfl_preference": "**Day 11-20 = 10 Day 連続 rfl preference 維持の milestone 達成** (cycle 内学習 transfer 6 度目適用継続、quality loop 長期持続性 10 Day 実証、桁の到達)",
+      "note": "Day 20 Provenance 層 A-Compact nested namespace 再帰対応実装 (Q1 A-Compact / Q2 A-Minimal explicit depth / Q3 案 A Day 18-19 同 module MODIFY / Q4 案 A Day 18-19 同 file test MODIFY、段階的 Lean 機能習得 3/4 + Lite + nested 拡張到達 = 4 拡張、残り 1/4 = Week 5-6 A-Maximal)。`elab \"#check_retired_in_namespace_with_depth \" ident num : command` 追加で `(ns, maxDepth)` 引数で Environment.constants 経由 NS 配下 maxDepth レベルまで explicit depth control 列挙、Day 19 \"NS 配下 any depth\" 曖昧性を A-Compact で狭義化 (Day 19 Subagent I2 設計対応)。Day 18-19 backward compatible 完全維持 (Day 19 #check_retired_in_namespace は any depth で残置、Day 20 _with_depth は別 command 名で新規追加)。RetirementLinterCommand.lean + Test MODIFY (example 変化なし 7、command invocations 8→11 +3)。Build 104+125 jobs 維持 (MODIFY のみ)。**興味深い発見**: depth=2 で `Role.toCtorIdx` (Lean 4 auto-generated helper) が retired 判定、Day 19 A-Standard-Lite (any depth) でも同じ behavior だったが Day 20 explicit depth で顕在化、Lean 4 inductive type の auto-generated helper に deprecated marker が付与されるケースの実例。**Day 11-20 = 10 Day 連続 rfl preference 維持の milestone 達成** (桁の到達、quality loop 長期持続性 10 Day 実証)。Day 21+ で A-Standard-Full (elaborator hook) / Week 5-6 A-Maximal elaborator (4/4 段階目) へ段階的拡張パス継続"
     }
   ]
 }

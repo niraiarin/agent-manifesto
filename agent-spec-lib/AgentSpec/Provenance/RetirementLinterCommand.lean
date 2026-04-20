@@ -51,6 +51,21 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 20 意思決定ログ (A-Compact nested namespace 再帰対応)
+
+### D6. `#check_retired_in_namespace_with_depth NS N` command 追加 (Day 20 Q1 A-Compact、Day 19 Subagent I2 設計対応)
+- **代案**: Day 19 syntax を変更して optional `(maxDepth := N)` 追加
+- **採用**: 別 command 名 `#check_retired_in_namespace_with_depth NS N` で新規追加 (Day 19 syntax は backward compatible 維持)
+- **理由**: Day 19 syntax の backward compatibility 完全維持、Day 20 で explicit depth-controlled 版を別 syntax で提供。
+  Day 19 Subagent I2 で指摘された "NS 配下 any depth" の曖昧性を A-Compact で **explicit depth parameter** により狭義化、
+  `(maxDepth := 1)` で NS 直下のみ、`(maxDepth := 2)` で NS.subNS まで等。
+  depth 計算は `name.components.length - ns.components.length` で algebraic に定義。
+
+### D7. depth 計算は components.length 差分 (Day 20)
+- **代案**: 文字列 `.` の出現回数で計算
+- **採用**: `Name.components.length` 差分 (algebraic、Lean 4 標準 API)
+- **理由**: Lean 4 `Name` の component 構造 (anonymous / num / str) を直接活用、文字列パース不要、TyDD-S4 P4 power-to-weight (標準 API)。
+
 ## Day 19 意思決定ログ (A-Standard-Lite namespace 検出拡張)
 
 ### D4. `#check_retired_in_namespace` command 追加 (Day 19 Q1 A 案 + Q2 A-Minimal、Day 18 A-Minimal の自然な拡張)
@@ -147,6 +162,47 @@ elab "#check_retired_in_namespace " id:ident : command => do
   else
     let sorted := retiredNames.reverse
     let mut msg := m!"Namespace '{ns}': {sorted.length} retired declaration(s)"
+    for name in sorted do
+      msg := msg ++ m!"\n  ✓ '{name}'"
+    logInfo msg
+
+/-- Day 20 A-Compact: `#check_retired_in_namespace_with_depth <namespace> <maxDepth>` command。
+
+    Day 19 A-Standard-Lite (`#check_retired_in_namespace`) の自然な拡張。
+    指定 namespace 配下の constants を **maxDepth レベルまで** enumerate (depth 制御)、
+    各 constant が `@[deprecated]` 付きかを検査、retired を info output。
+
+    depth 計算: `name.components.length - ns.components.length` (Lean 4 `Name.components` API、
+    Day 20 D7 判断、algebraic で文字列パース不要)。
+
+    利用例:
+    - `#check_retired_in_namespace_with_depth AgentSpec.Provenance.RetiredEntity 1`
+      → NS 直下のみ (depth=1) 検出
+    - `#check_retired_in_namespace_with_depth AgentSpec.Provenance 2`
+      → NS 配下 2 段階まで (NS.subNS まで) 検出
+
+    Day 19 Subagent I2 設計対応 (Q1 A-Compact、Day 19 "NS 配下 any depth" を explicit
+    depth parameter で狭義化)。Day 19 syntax (`#check_retired_in_namespace`) は backward
+    compatible 維持 (Day 20 D6 判断、別 command 名で新規追加)。
+ -/
+elab "#check_retired_in_namespace_with_depth " id:ident maxDepth:num : command => do
+  let env ← getEnv
+  let ns := id.getId
+  let max := maxDepth.getNat
+  let nsComponents := ns.components.length
+  let mut retiredNames : List Name := []
+  for (name, _info) in env.constants.map₁.toList do
+    if ns.isPrefixOf name && name != ns then
+      let nameComponents := name.components.length
+      let depthFromNs := nameComponents - nsComponents
+      if depthFromNs ≤ max then
+        if Lean.Linter.isDeprecated env name then
+          retiredNames := name :: retiredNames
+  if retiredNames.isEmpty then
+    logInfo m!"Namespace '{ns}' (depth ≤ {max}): no retired declarations found"
+  else
+    let sorted := retiredNames.reverse
+    let mut msg := m!"Namespace '{ns}' (depth ≤ {max}): {sorted.length} retired declaration(s)"
     for name in sorted do
       msg := msg ++ m!"\n  ✓ '{name}'"
     logInfo msg

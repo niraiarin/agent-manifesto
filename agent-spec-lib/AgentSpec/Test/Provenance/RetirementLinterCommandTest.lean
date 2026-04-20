@@ -104,4 +104,23 @@ set_option linter.deprecated false in
 
 #check_retired_in_namespace AgentSpec.Spine.EvolutionStep
 
+/-! ### Day 20 新規: `#check_retired_in_namespace_with_depth` command 動作確認 (A-Compact nested namespace 再帰対応) -/
+
+-- Day 20 A-Compact: explicit depth parameter で NS 配下を maxDepth レベルまで列挙。
+-- depth=1: NS 直下のみ、depth=2: NS.subNS まで、etc.
+
+-- AgentSpec.Provenance.RetiredEntity 配下 depth=1 (直下のみ): Day 14 fixture 4 variant 検出期待
+
+set_option linter.deprecated false in
+#check_retired_in_namespace_with_depth AgentSpec.Provenance.RetiredEntity 1
+
+-- AgentSpec.Provenance 配下 depth=2 (2 段階まで): RetiredEntity.* も含めて 4 variant + 0 = 4 期待
+
+set_option linter.deprecated false in
+#check_retired_in_namespace_with_depth AgentSpec.Provenance 2
+
+-- AgentSpec.Spine.EvolutionStep 配下 depth=10 (深く): Day 17 削除済で 0 期待 (再確認、explicit depth)
+
+#check_retired_in_namespace_with_depth AgentSpec.Spine.EvolutionStep 10
+
 end AgentSpec.Test.Provenance.RetirementLinterCommand
