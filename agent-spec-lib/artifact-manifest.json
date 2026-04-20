@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.25.0-week2-day25",
+  "version": "0.26.0-week2-day26",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -308,10 +308,10 @@
         {"id": "agent-spec-lib:AgentSpec.Test.Cross.SpineProcessTest", "edge": "wasDerivedFrom"}
       ],
       "build_target": "lake build AgentSpecTest",
-      "aggregated_example_count": 376,
+      "aggregated_example_count": 387,
       "aggregated_sorry_count": 0,
       "aggregated_axiom_count": 0,
-      "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)。Day 24 改訂 113 で 375 同期、Day 25 で +1 (test file +1 example: importPropagateFixture2 参照) = 376"
+      "aggregation_note": "Day 6 追加 (Subagent I2 対処、Section 2.12)。各 dependency entry の example_count 合計と一致 (build_status.example_count とも一致)。Day 24 改訂 113 で 375 同期、Day 25 で +1 = 376、Day 26 で +11 (ResearchActivityTest +11 example) = 387"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Spine.EvolutionStep",
@@ -844,20 +844,23 @@
         {"id": "agent-spec-lib:AgentSpec.Provenance.Verdict", "edge": "wasDerivedFrom"}
       ],
       "provides_types": [
-        "AgentSpec.Provenance.ResearchActivity (5 variant inductive: investigate/decompose/refine/verify/retire、verify は Hypothesis+Verdict payload)"
+        "AgentSpec.Provenance.ResearchActivity (7 variant inductive: investigate/decompose/refine/verify/retire + **Day 26 追加 investigateOf/retireOf (payload 付き variants)**、verify は Hypothesis+Verdict payload、Day 26 追加 2 variants は Hypothesis payload)"
       ],
       "provides_definitions": [
         "AgentSpec.Provenance.ResearchActivity.trivial (= investigate、test fixture)",
         "AgentSpec.Provenance.ResearchActivity.isVerify (Bool 判定)",
-        "AgentSpec.Provenance.ResearchActivity.isRetire (Bool 判定)"
+        "AgentSpec.Provenance.ResearchActivity.isRetire (Bool 判定)",
+        "AgentSpec.Provenance.ResearchActivity.isInvestigateOf (Day 26 追加、Bool 判定)",
+        "AgentSpec.Provenance.ResearchActivity.isRetireOf (Day 26 追加、Bool 判定)"
       ],
       "provides_instances": [
         "DecidableEq ResearchActivity / Inhabited / Repr (deriving)"
       ],
-      "design_origin": "02-data-provenance §4.1 PROV-O ResearchActivity の Lean 化 (Day 9、5 variant 完全実装)",
+      "design_origin": "02-data-provenance §4.1 PROV-O ResearchActivity の Lean 化 (Day 9、5 variant 完全実装) + **Day 26 で payload 拡充 (investigateOf / retireOf 追加、Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処)**",
       "verify_variant_alignment": "verify variant の (input : Hypothesis, output : Verdict) は Day 8 EvolutionStep B4 4-arg post と直接整合。Day 10+ で EvolutionStep transition を ResearchActivity.verify として PROV mapping する path 確立",
-      "week2_status": "Day 9 hole-driven 着手 (5 variant、verify は payload 完備、他 4 variant は payload なし)。Day 10+ で payload 拡充候補 (investigate / decompose / refine / retire)",
-      "decision_log": "ResearchActivity.lean docstring D1-D3 (5 variant 採用 / verify payload Hypothesis+Verdict / payload なし variant は Day 10+)"
+      "week2_status": "Day 9 hole-driven 着手 (5 variant、verify は payload 完備、他 4 variant は payload なし)。**Day 26 で payload 拡充 completed** (investigateOf + retireOf 2 variants 追加 backward compatible、Day 27+ で decompose / refine 拡充予定)",
+      "day26_update": "Day 26 で ResearchActivity payload 拡充 (Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処、Day 27+ 長期化防止)。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` の 2 variants 追加 (backward compatible: 既存 payloadless `.investigate` / `.retire` と共存、Day 9 D3 の Day 10+ 拡充検討を Day 26 で解消)。accessor `isInvestigateOf` / `isRetireOf` 追加。ResearchActivityTest.lean に +10 example 追加 (inhabitation + accessor rfl + backward compat 確認、example 22→32)。production build PASS 104 jobs 維持 (MODIFY のみ)。Day 11-26 = 16 Day 連続 rfl preference 維持",
+      "decision_log": "ResearchActivity.lean docstring D1-D3 (Day 9) + **D4-D6 added (Day 26 Q1 backward compatible payload 拡充 / Q2 2 variant 選択 investigateOf + retireOf / Q3 Hypothesis payload 型で Day 9 verify pattern 継続)**"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.ResearchEntityTest",
@@ -891,13 +894,16 @@
         "isVerify / isRetire Bool 判定",
         "trivial fixture (= investigate)",
         "DecidableEq (5 variant + verify payload 含む) / Inhabited",
-        "Day 8 EvolutionStep B4 4-arg post との整合検証 (verify signature 対応)"
+        "Day 8 EvolutionStep B4 4-arg post との整合検証 (verify signature 対応)",
+        "Day 26 investigateOf / retireOf payload 付き variants 構築 (Hypothesis payload)",
+        "Day 26 isInvestigateOf / isRetireOf accessor rfl (true/false 判定)",
+        "Day 26 backward compatibility 確認 (ResearchActivity.trivial = .investigate 維持、isRetire .retireOf = false)"
       ],
       "enforces": "structural",
       "dependencies": [
         {"id": "agent-spec-lib:AgentSpec.Provenance.ResearchActivity", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 22,
+      "example_count": 33,
       "sorry_count": 0,
       "axiom_count": 0,
       "evolutionstep_alignment": "verify variant の (input : Hypothesis, output : Verdict) が Day 8 EvolutionStep B4 4-arg post と整合、Day 10+ で PROV mapping path 確立予定"
@@ -1351,10 +1357,10 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 25",
+    "last_verified_phase": "Week 2 Day 26",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 25 は RetirementLinterCommand.lean docstring MODIFY のみ (D15)、production 本体 code 変更なし (104 維持)"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 127, "scope": "test only", "note": "Day 25 で RetirementWatchedFixture2.lean (NEW、test helper 2) + RetirementLinterCommandTest.lean MODIFY、AgentSpecTest.lean import 追加、jobs 126→127 +1 (新 helper2 module 分)、example 11→12 +1、command invocations 16→17 +1、combined build 104+127 shared dedup で 130 jobs build PASS"}
+      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 26 は ResearchActivity.lean MODIFY (payload 拡充: investigateOf / retireOf 2 variants 追加 + isInvestigateOf / isRetireOf accessors)、jobs 104 維持 (MODIFY のみ)"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 127, "scope": "test only", "note": "Day 26 で ResearchActivityTest.lean MODIFY (+11 example: investigateOf/retireOf inhabitation + accessor rfl + backward compat、example 22→33)、jobs 127 維持 (MODIFY のみ)、combined build 130 jobs build PASS"}
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1369,7 +1375,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 376,
+    "example_count": 387,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1403,7 +1409,7 @@
       "Provenance/ResearchEntity.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ResearchEntityTest.lean": {"theorems": 0, "examples": 21},
       "Provenance/ResearchActivity.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/ResearchActivityTest.lean": {"theorems": 0, "examples": 22},
+      "Test/Provenance/ResearchActivityTest.lean": {"theorems": 0, "examples": 33},
       "Provenance/ResearchAgent.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ResearchAgentTest.lean": {"theorems": 0, "examples": 30},
       "Provenance/EvolutionMapping.lean": {"theorems": 0, "examples": 0},
@@ -1905,6 +1911,17 @@
       "milestone_15_day_rfl_preference": "**Day 11-25 = 15 Day 連続 rfl preference 維持の継続** (Day 25 で 15 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 15 Day、cycle 内学習 transfer 6 度目適用)",
       "long_deferred_resolved": "**Day 22 Subagent informational I2 (multi-module duplicate handling) を Day 25 で解消** (Day 22-24 = 3 session 繰り延げ、Day 22 audit long-deferred 対応 **3 例目**、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx に続く 3 例目、long-deferred 化防止 maturity 安定継続、observe-first 方針採用で Day 26+ dedup 判断)",
       "note": "Day 25 Provenance 層 multi-source register / duplicate handling 観測完了 (Q1 Day 22 Subagent informational I2 解消 / Q2 A-Minimal helper2 module + 2 register / Q3 案 A 新 helper module 1 件 + Day 18-24 同 file MODIFY / Q4 案 A observe-first 観測値 persistent 化)。新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture2.lean` (NEW、test scope 専用) に `@[retired]` decorated `importPropagateFixture2` + (a) 独立 namespace register + (b) 既存 namespace `RetirementWatchedFixture` duplicate register を含み、`AgentSpecTest.lean` import 追加、`RetirementLinterCommandTest.lean` MODIFY で import + Day 25 section 追加 (example 11→12 +1、command invocations 16→17 +1)。Build AgentSpec 104 + AgentSpecTest 127 jobs (combined dedup で 130 jobs) build PASS (Day 24 の 126 から +1 job 新 helper2 module 分)。**観測結果**: Day 22 D10 `addEntryFn := fun arr name => arr.push name` は dedup しない、duplicate register で同 namespace が 2 回 watched list に appear、retired count も独立 count (同 declaration が 2 回 count)、実測: watched 7 件 / total 8 retired (RetiredEntity 4 + Failure 0 + EvolutionStep 0 + helper1 1 + helper2 1 + helper1 dup 1 + self 1 = 8)。**observe-first 方針**: Day 26+ で dedup 実装判断 (D15 log 明記、Day 22 audit 教訓継続)。**Day 22 audit long-deferred 対応 3 例目完遂** (Day 22-24 = 3 session 繰り延げ解消、Day 26+ 長期化防止)。Pattern #7 hook **新規 file + MODIFY 混在 pattern 2 度目** (新 helper2 1 件 NEW + RetirementLinterCommand.lean D15 MODIFY + RetirementLinterCommandTest.lean MODIFY、両パターン運用 13 度目、十八段階発展到達)。**Day 11-25 = 15 Day 連続 rfl preference 維持** (Day 25 で 15 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、ResearchActivity payload 拡充 (Day 13-22 から 12 Day 連続繰り延べ、Day 26+ で次の long-deferred candidate 解消) 等へ段階的拡張パス継続"
+    },
+    {
+      "round": "Week 2 Day 26 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (AgentSpec 104 + AgentSpecTest 127 jobs、combined 130 jobs、Day 25 維持) + ResearchActivity payload 拡充完了 (investigateOf / retireOf 2 variants backward compatible 追加、accessor isInvestigateOf / isRetireOf 追加、ResearchActivityTest に +11 example: inhabitation 4 + accessor rfl 4 + backward compat 3、example 22→33) + Day 11-26 rfl preference 実証 (`ResearchActivity.isInvestigateOf (.investigateOf Hypothesis.trivial) = true := rfl` 等)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "p2_complete_for": "day-26-provenance-research-activity-payload-expansion",
+      "milestone_16_day_rfl_preference": "**Day 11-26 = 16 Day 連続 rfl preference 維持の継続** (Day 26 で 16 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 16 Day、cycle 内学習 transfer 6 度目適用)",
+      "long_deferred_resolved": "**ResearchActivity payload 拡充 (Day 13-22 = 12 Day 連続繰り延げ) を Day 26 で解消** (Day 9 D3 で Day 10+ 拡充検討と記載したが 16 Day 後に解消、Day 22 audit 次 long-deferred candidate 識別、Day 27+ 長期化防止、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く long-deferred 対応 **4 例目**、long-deferred 化防止 maturity 安定継続)",
+      "note": "Day 26 Provenance 層 ResearchActivity payload 拡充 (Q1 Day 24 audit 次 long-deferred candidate 解消 / Q2 A-Minimal 2 variant 選択 / Q3 案 A ResearchActivity.lean MODIFY / Q4 案 A +11 example backward compat 確認)。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` 2 variants backward compatible 追加 (既存 `.investigate` / `.retire` payloadless variants と共存、Day 9 D3 の Day 10+ 拡充検討を Day 26 で解消)。accessor `isInvestigateOf` / `isRetireOf` 追加 (isVerify / isRetire と対称)。ResearchActivity.lean D4-D6 docstring + ResearchActivityTest.lean +11 example (inhabitation + accessor rfl + backward compat: trivial = .investigate 維持 / isRetire .retireOf = false 等) + artifact-manifest Day 26 反映。Build AgentSpec 104 + AgentSpecTest 127 jobs 維持 (MODIFY のみ、combined 130 jobs build PASS)。**Day 22 audit long-deferred 対応 4 例目完遂** (Day 13-22 = 12 Day 連続繰り延げの最長 long-deferred candidate 解消、Day 27+ 長期化防止成功、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く 4 例目、long-deferred 化防止 maturity 安定継続)。Pattern #7 hook MODIFY path 9 度目運用検証 (Day 14/16/17/19/20/21/22/24 + Day 26、両パターン運用 14 度目、十九段階発展到達)。**Day 11-26 = 16 Day 連続 rfl preference 維持** (Day 26 で 16 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、Day 27+ で残 variants (decompose / refine) 拡充 / dedup 判断 / A-Maximal へ段階的拡張パス継続"
     }
   ]
 }

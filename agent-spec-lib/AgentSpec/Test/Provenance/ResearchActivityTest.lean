@@ -83,4 +83,28 @@ Day 10+ で EvolutionStep の transition を ResearchActivity.verify として P
     異なる役割を持つ。example_count としては 1 件としてカウント (Day 10+ で集計方針統一検討)。 -/
 example (h : Hypothesis) (v : Verdict) : ResearchActivity := .verify h v
 
+/-! ### Day 26 新規: investigateOf / retireOf payload 付き variants (Day 24 audit 次 long-deferred candidate 解消、Day 13-22 = 12 Day 連続繰り延げ対処、Day 11-26 = 16 Day 連続 rfl preference) -/
+
+-- Day 26 investigateOf: 調査 activity with target hypothesis (02-data-provenance §4.1 PROV-O Activity
+-- optional payload、Day 9 `verify` pattern 継続)
+example : ResearchActivity := .investigateOf Hypothesis.trivial
+example : ResearchActivity := .investigateOf { claim := "Day 26 investigation target" }
+
+-- Day 26 retireOf: 退役 activity with target entity (Day 27+ で RetiredEntity 拡張検討 path、
+-- Day 12 RetiredEntity と semantic 整合)
+example : ResearchActivity := .retireOf Hypothesis.trivial
+example : ResearchActivity := .retireOf { claim := "Day 26 retirement target" }
+
+-- Day 26 accessor rfl 実証 (Day 11-26 = 16 Day 連続 rfl preference 維持)
+example : ResearchActivity.isInvestigateOf (.investigateOf Hypothesis.trivial) = true := rfl
+example : ResearchActivity.isInvestigateOf .investigate = false := rfl
+example : ResearchActivity.isRetireOf (.retireOf Hypothesis.trivial) = true := rfl
+example : ResearchActivity.isRetireOf .retire = false := rfl
+
+-- Day 26 backward compatibility 確認: 既存 payloadless `investigate` / `retire` 依存が不変
+-- (ResearchActivity.trivial = .investigate、isVerify / isRetire 等の既存 accessor 動作維持)
+example : ResearchActivity.trivial = .investigate := rfl
+example : ResearchActivity.isRetire .retire = true := rfl
+example : ResearchActivity.isRetire (.retireOf Hypothesis.trivial) = false := rfl  -- retireOf は retire と区別される
+
 end AgentSpec.Test.Provenance.ResearchActivity
