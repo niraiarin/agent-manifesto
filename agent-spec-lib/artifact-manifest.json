@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.44.0-week2-day44",
+  "version": "0.45.0-week2-day45-breaking",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -751,14 +751,20 @@
           "id": "lean-init",
           "module": "Init.Core",
           "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom",
+          "added_in": "Day 45"
         }
       ],
       "provides_types": [
-        "AgentSpec.Process.Hypothesis (structure: claim : String, rationale : Option String)"
+        "AgentSpec.Process.Hypothesis (structure: claim : String, rationale : AgentSpec.Spine.Rationale (Day 45 で必須化、breaking change))"
       ],
       "provides_definitions": [
-        "AgentSpec.Process.Hypothesis.trivial (test fixture)",
-        "AgentSpec.Process.Hypothesis.mk' (smart constructor)"
+        "AgentSpec.Process.Hypothesis.trivial (claim+Rationale.trivial fixture)",
+        "AgentSpec.Process.Hypothesis.mk (smart constructor、Rationale 必須)",
+        "AgentSpec.Process.Hypothesis.ofClaimWithText (Day 45 String 互換ヘルパー、非推奨)"
       ],
       "provides_instances": [
         "DecidableEq Hypothesis / Inhabited / Repr (deriving)"
@@ -823,7 +829,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "example_count": 12,
+      "example_count": 15,
       "sorry_count": 0,
       "axiom_count": 0
     },
@@ -2499,6 +2505,15 @@
       "evaluator": "lake build 129 jobs + 20 examples PASS",
       "scope": "AgentSpec.Spine.Rationale (structure text/references/confidence 3 field + 4 smart constructor + isTrivial) 新設、Day 43 median subagent 提案通り GA-S8 着手。Process/Provenance への attach は Day 45+ (breaking 回避のため分離)",
       "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 45 Hypothesis Rationale 必須化 (GA-S8 B-2 1/4)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 129 jobs PASS + HypothesisTest 15 examples PASS、Hypothesis constructor site ~46 全て migration 完了",
+      "scope": "Hypothesis.rationale : Option String → AgentSpec.Spine.Rationale 必須化、8 test file + Hypothesis.lean 本体の全構築箇所更新。Day 44 Rationale 型の第 1 号 client。B-2 スプリント 1/4。",
+      "compatibility": "breaking change"
     }
   ],
   "navigation_index": {

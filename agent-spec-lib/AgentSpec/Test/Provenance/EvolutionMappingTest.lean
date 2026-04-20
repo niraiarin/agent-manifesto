@@ -28,8 +28,8 @@ example : transitionToActivity Hypothesis.trivial Verdict.inconclusive =
 
 /-! ### 任意 Hypothesis でも動作 -/
 
-example : transitionToActivity { claim := "test", rationale := some "evidence" } Verdict.proven =
-          ResearchActivity.verify { claim := "test", rationale := some "evidence" } Verdict.proven := rfl
+example : transitionToActivity { claim := "test", rationale := AgentSpec.Spine.Rationale.ofText "evidence" 0 } Verdict.proven =
+          ResearchActivity.verify { claim := "test", rationale := AgentSpec.Spine.Rationale.ofText "evidence" 0 } Verdict.proven := rfl
 
 /-! ### isVerify が transitionToActivity の結果に対して true -/
 

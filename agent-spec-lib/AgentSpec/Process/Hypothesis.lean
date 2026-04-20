@@ -1,7 +1,9 @@
 -- Process 層: Hypothesis (研究プロセスの「主張」)
--- Day 6 hole-driven: claim を String で保持、Day 8+ で型安全な表現に refactor 候補
--- PROV mapping (02-data-provenance §4.1): ResearchEntity.Hypothesis に対応 (Day 8+ で実装)
+-- Day 6 hole-driven: claim を String で保持
+-- Day 45 (2026-04-21): GA-S8 必須化 Week スプリント B-2 第 1 弾、rationale : Rationale 必須化 (breaking change)
+-- PROV mapping (02-data-provenance §4.1): ResearchEntity.Hypothesis に対応
 import Init.Core
+import AgentSpec.Spine.Rationale
 
 /-!
 # AgentSpec.Process.Hypothesis: 研究プロセスの「主張」 (Process 層)
@@ -44,9 +46,17 @@ Day 8+ で `AgentSpec.Provenance` namespace に `ResearchEntity` + mapping
 
 ### D2. structure 採用 (vs inductive)
 - **代案 A**: `inductive Hypothesis` で variant ごとに claim/rationale 構造を変える
-- **採用**: `structure Hypothesis { claim : String, rationale : Option String }`
-- **理由**: Hypothesis 自体は単一形 (claim + 任意 rationale)。variant が必要な場合は
+- **採用**: `structure Hypothesis { claim : String, rationale : Rationale }` (Day 45 で必須化)
+- **理由**: Hypothesis 自体は単一形 (claim + rationale)。variant が必要な場合は
   Day 7+ で Evolution / Failure と組合わせて表現する方が cleaner。
+
+### D4. Day 45 GA-S8 必須化 (breaking change、B-2 スプリント第 1 弾)
+- **Day 6 D2 原案**: `rationale : Option String := none` (optional)
+- **Day 45 採用**: `rationale : AgentSpec.Spine.Rationale` (必須、default なし)
+- **理由**: GA-S8 原文「全 constructor で必須化」忠実遵守。Option + default none は型で
+  「判断根拠が必須」という規範を表現できず、Week 6+ 以降で再 breaking となる技術的負債化する。
+  Phase 0 Week 2 (Day 45) を breaking の最後のタイミングとして採用。Rationale.trivial は
+  test fixture placeholder として提供、production 使用には意味ある Rationale を要求。
 
 ### D3. refines/refutes/blocks を内部 field にしない
 - **代案 A**: `Hypothesis` に `refinesOf : Option Hypothesis` field 追加
@@ -67,18 +77,26 @@ namespace AgentSpec.Process
 structure Hypothesis where
   /-- 主張本体 (Day 6 hole-driven: String 表現)。 -/
   claim : String
-  /-- 主張の根拠 (任意)。Day 8+ で Evidence 型に refactor 候補。 -/
-  rationale : Option String := none
+  /-- 主張の根拠 (Day 45 で必須化、GA-S8 準拠)。test fixture では Rationale.trivial 許容、
+      production 利用では意味ある Rationale (text + references + confidence) を要求。 -/
+  rationale : AgentSpec.Spine.Rationale
   deriving DecidableEq, Inhabited, Repr
 
 namespace Hypothesis
 
-/-- 自明な hypothesis (test fixture / placeholder)。 -/
-def trivial : Hypothesis := { claim := "trivial" }
+/-- 自明な hypothesis (test fixture / placeholder)、空 Rationale 付き。 -/
+def trivial : Hypothesis :=
+  { claim := "trivial", rationale := AgentSpec.Spine.Rationale.trivial }
 
-/-- claim と rationale から構築 (smart constructor)。 -/
-def mk' (claim : String) (rationale : String) : Hypothesis :=
-  { claim := claim, rationale := some rationale }
+/-- claim と rationale から構築 (smart constructor、Day 45 で signature 更新)。 -/
+def mk' (claim : String) (rationale : AgentSpec.Spine.Rationale) : Hypothesis :=
+  { claim := claim, rationale := rationale }
+
+/-- Day 45: String ベースの旧 API 互換ヘルパー (text のみの rationale を内部で Rationale.ofText に包む)。
+    ただし confidence は 0 で固定、references 空のため production 利用は非推奨。 -/
+def ofClaimWithText (claim : String) (rationaleText : String) : Hypothesis :=
+  { claim := claim,
+    rationale := AgentSpec.Spine.Rationale.ofText rationaleText 0 }
 
 end Hypothesis
 

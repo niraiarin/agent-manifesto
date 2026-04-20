@@ -77,17 +77,17 @@ example : Inhabited WasGeneratedBy := inferInstance
 
 /-- 直接構築: refined hypothesis derived from original hypothesis -/
 example : WasDerivedFrom :=
-  { entity := .Hypothesis { claim := "refined" },
+  { entity := .Hypothesis { claim := "refined", rationale := AgentSpec.Spine.Rationale.trivial },
     source := .Hypothesis Hypothesis.trivial }
 
 /-- field projection: entity (derived) -/
-example : ({entity := .Hypothesis { claim := "derived" },
+example : ({entity := .Hypothesis { claim := "derived", rationale := AgentSpec.Spine.Rationale.trivial },
              source := .Hypothesis Hypothesis.trivial}
             : WasDerivedFrom).entity =
-          .Hypothesis { claim := "derived" } := rfl
+          .Hypothesis { claim := "derived", rationale := AgentSpec.Spine.Rationale.trivial } := rfl
 
 /-- field projection: source (original) -/
-example : ({entity := .Hypothesis { claim := "derived" },
+example : ({entity := .Hypothesis { claim := "derived", rationale := AgentSpec.Spine.Rationale.trivial },
              source := .Hypothesis Hypothesis.trivial}
             : WasDerivedFrom).source =
           .Hypothesis Hypothesis.trivial := rfl
@@ -111,7 +111,7 @@ example : Inhabited WasDerivedFrom := inferInstance
 example :
     let alice := ResearchAgent.mkResearcher "alice"
     let originalHyp := Hypothesis.trivial
-    let refinedHyp := { claim := "refined" }
+    let refinedHyp := { claim := "refined", rationale := AgentSpec.Spine.Rationale.trivial }
     let attribution : WasAttributedTo := .mk' (.Hypothesis refinedHyp) alice
     let generation : WasGeneratedBy := .mk' (.Hypothesis refinedHyp)
                        (.verify originalHyp Verdict.proven)
@@ -151,9 +151,9 @@ example {edges : List WasDerivedFrom} (h : Acyclic edges) : Acyclic [] :=
 /-- Day 34: concrete 2-edge TransDerived chain の非 vacuous 実例
     (h3 ← h2 ← h1 の 2 段 transitive closure)。 -/
 example :
-    let h1 : AgentSpec.Process.Hypothesis := { claim := "h1" }
-    let h2 : AgentSpec.Process.Hypothesis := { claim := "h2" }
-    let h3 : AgentSpec.Process.Hypothesis := { claim := "h3" }
+    let h1 : AgentSpec.Process.Hypothesis := { claim := "h1", rationale := AgentSpec.Spine.Rationale.trivial }
+    let h2 : AgentSpec.Process.Hypothesis := { claim := "h2", rationale := AgentSpec.Spine.Rationale.trivial }
+    let h3 : AgentSpec.Process.Hypothesis := { claim := "h3", rationale := AgentSpec.Spine.Rationale.trivial }
     let edge1 : WasDerivedFrom := .mk' (.Hypothesis h3) (.Hypothesis h2)
     let edge2 : WasDerivedFrom := .mk' (.Hypothesis h2) (.Hypothesis h1)
     TransDerived [edge1, edge2] (.Hypothesis h3) (.Hypothesis h1) :=
@@ -173,8 +173,8 @@ example :
 
 /-- 異なる WasDerivedFrom (source 違い) の不等号判定 -/
 example :
-    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "a" }} : WasDerivedFrom) ≠
-    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "b" }} : WasDerivedFrom) :=
+    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "a", rationale := AgentSpec.Spine.Rationale.trivial }} : WasDerivedFrom) ≠
+    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "b", rationale := AgentSpec.Spine.Rationale.trivial }} : WasDerivedFrom) :=
   by decide
 
 end AgentSpec.Test.Provenance.ProvRelation

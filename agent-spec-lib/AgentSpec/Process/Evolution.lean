@@ -68,7 +68,7 @@ Day 8+ で `AgentSpec.Provenance` namespace に `ResearchActivity` + mapping
 ### D4. `deriving Inhabited` の解決パス (Subagent A1 注記)
 - 自動 deriving は `initial Hypothesis.default` を選択 (最初の constructor)。
   `Hypothesis` が `Inhabited` (claim = "" 等のデフォルト) を deriving しているため
-  `Evolution` も `initial { claim := "" }` で解決される。
+  `Evolution` も `initial { claim := "", rationale := Rationale.trivial }` で解決される (Day 45 更新)。
 - Day 38 (2026-04-21): `DecidableEq` も recursive inductive に対して Lean 4 が
   自動 derive 可能と実証 (HandoffChain Day 35 と同パターン)。Day 36 empirical
   I2 (Evolution DecidableEq 要判定) を解消。

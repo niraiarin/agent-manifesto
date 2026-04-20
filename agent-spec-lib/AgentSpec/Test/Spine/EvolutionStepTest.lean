@@ -33,7 +33,7 @@ example : EvolutionStep.transition () Hypothesis.trivial Verdict.proven () := tr
 
 /-- refuted verdict + 任意 hypothesis でも成立 (Unit dummy) -/
 example : EvolutionStep.transition ()
-            { claim := "test" } Verdict.refuted () := trivial
+            { claim := "test", rationale := AgentSpec.Spine.Rationale.trivial } Verdict.refuted () := trivial
 
 /-! ### TransitionReflexive property (Day 16 で 4-arg signature 直接展開に refactor、Day 17 transitionLegacy 削除後も継続) -/
 
@@ -63,7 +63,7 @@ example : decide (EvolutionStep.transition () Hypothesis.trivial Verdict.trivial
 
 /-- Day 16 追加 → Day 17 保持: 新 signature 直接展開 TransitionReflexive で refuted witness -/
 example : TransitionReflexive Unit :=
-  fun _ => ⟨{ claim := "direct" }, Verdict.refuted, trivial⟩
+  fun _ => ⟨{ claim := "direct", rationale := AgentSpec.Spine.Rationale.trivial }, Verdict.refuted, trivial⟩
 
 /-- Day 16 追加 → Day 17 保持: 新 signature 直接展開 TransitionTransitive で proven chain witness -/
 example : TransitionTransitive Unit :=

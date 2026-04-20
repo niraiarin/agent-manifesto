@@ -12,6 +12,7 @@ namespace AgentSpec.Test.Provenance.ResearchActivity
 
 open AgentSpec.Provenance
 open AgentSpec.Process
+open AgentSpec.Spine (Rationale)
 
 /-! ### 5 variant 構築 -/
 
@@ -24,7 +25,7 @@ example : ResearchActivity := .retire
 example : ResearchActivity := .verify Hypothesis.trivial Verdict.trivial
 
 /-- verify variant: proven verdict のケース -/
-example : ResearchActivity := .verify { claim := "test" } Verdict.proven
+example : ResearchActivity := .verify { claim := "test", rationale := Rationale.trivial } Verdict.proven
 
 /-- verify variant: refuted verdict のケース -/
 example : ResearchActivity := .verify Hypothesis.trivial Verdict.refuted
@@ -88,12 +89,12 @@ example (h : Hypothesis) (v : Verdict) : ResearchActivity := .verify h v
 -- Day 26 investigateOf: 調査 activity with target hypothesis (02-data-provenance §4.1 PROV-O Activity
 -- optional payload、Day 9 `verify` pattern 継続)
 example : ResearchActivity := .investigateOf Hypothesis.trivial
-example : ResearchActivity := .investigateOf { claim := "Day 26 investigation target" }
+example : ResearchActivity := .investigateOf { claim := "Day 26 investigation target", rationale := Rationale.trivial }
 
 -- Day 26 retireOf: 退役 activity with target entity (Day 27+ で RetiredEntity 拡張検討 path、
 -- Day 12 RetiredEntity と semantic 整合)
 example : ResearchActivity := .retireOf Hypothesis.trivial
-example : ResearchActivity := .retireOf { claim := "Day 26 retirement target" }
+example : ResearchActivity := .retireOf { claim := "Day 26 retirement target", rationale := Rationale.trivial }
 
 -- Day 26 accessor rfl 実証 (Day 11-26 = 16 Day 連続 rfl preference 維持)
 example : ResearchActivity.isInvestigateOf (.investigateOf Hypothesis.trivial) = true := rfl
@@ -110,9 +111,9 @@ example : ResearchActivity.isRetire (.retireOf Hypothesis.trivial) = false := rf
 /-! ### Day 27: decomposeOf / refineOf payload (5 variant 全 payload 対応 milestone) -/
 
 example : ResearchActivity := .decomposeOf Hypothesis.trivial Hypothesis.trivial
-example : ResearchActivity := .decomposeOf { claim := "parent" } { claim := "child" }
+example : ResearchActivity := .decomposeOf { claim := "parent", rationale := Rationale.trivial } { claim := "child", rationale := Rationale.trivial }
 example : ResearchActivity := .refineOf Hypothesis.trivial Hypothesis.trivial
-example : ResearchActivity := .refineOf { claim := "target" } { claim := "refined" }
+example : ResearchActivity := .refineOf { claim := "target", rationale := Rationale.trivial } { claim := "refined", rationale := Rationale.trivial }
 
 example : ResearchActivity.isDecomposeOf (.decomposeOf Hypothesis.trivial Hypothesis.trivial) = true := rfl
 example : ResearchActivity.isDecomposeOf .decompose = false := rfl

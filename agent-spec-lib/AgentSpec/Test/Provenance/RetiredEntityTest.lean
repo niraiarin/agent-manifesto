@@ -45,7 +45,7 @@ example : RetiredEntity :=
 /-- 直接構築: Hypothesis entity の Superseded 退役 (後継 Hypothesis) -/
 example : RetiredEntity :=
   { entity := .Hypothesis Hypothesis.trivial,
-    reason := .Superseded (.Hypothesis { claim := "successor" }) }
+    reason := .Superseded (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) }
 
 /-- field projection: entity -/
 example : ({entity := .Hypothesis Hypothesis.trivial,
@@ -73,9 +73,9 @@ example : RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial
 
 /-- superseded smart constructor (後継参照) -/
 example : RetiredEntity.superseded (.Hypothesis Hypothesis.trivial)
-            (.Hypothesis { claim := "successor" }) =
+            (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) =
           { entity := .Hypothesis Hypothesis.trivial,
-            reason := .Superseded (.Hypothesis { claim := "successor" }) } := rfl
+            reason := .Superseded (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) } := rfl
 
 /-- obsolete smart constructor -/
 example : RetiredEntity.obsolete ResearchEntity.trivial =
@@ -113,7 +113,7 @@ example :
     let h := ResearchEntity.trivial
     let allRetired : List RetiredEntity :=
       [ RetiredEntity.refuted h Failure.trivial,
-        RetiredEntity.superseded h (.Hypothesis { claim := "next" }),
+        RetiredEntity.superseded h (.Hypothesis { claim := "next", rationale := AgentSpec.Spine.Rationale.trivial }),
         RetiredEntity.obsolete h,
         RetiredEntity.withdrawn h ]
     allRetired.length = 4 := rfl
