@@ -510,6 +510,30 @@
       "status": "pending",
       "timing": "Day 56+",
       "detail": "40+ Day stale、Day 22 audit pattern に従い Day 56 以降の scope 候補"
+    },
+    {
+      "section": "2.10",
+      "topic": "F1 Rationale lint 再設計 (watched-namespace scanner 化、#check_unattributed_rationale 等)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 58+",
+      "detail": "Day 57 empirical F1、Day 52 lint が prod 0 warning で skip 率 0pp 改善の構造的欠陥。Day 14 RetirementLinter pattern に寄せる。"
+    },
+    {
+      "section": "2.10",
+      "topic": "F1 Rationale prod site strict 化 (Hypothesis.lean L97-99 ofClaimWithText、L89 trivial、ResearchGoal.lean L96/100/115)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 58-59",
+      "detail": "Day 57 empirical F1 Option B 先行推奨、3 prod site で Rationale.strict 化"
+    },
+    {
+      "section": "6.4",
+      "topic": "F2 cycle-check.sh 5 drift gap 修正 (commit null/delete 区別、breakdown_sum=0 盲点、future-date、verifier_history entry 削除、day_plan entry 削除)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 58-60",
+      "detail": "Day 57 empirical F2、script iteration 改善候補"
     }
   ],
   "day_plan": [
@@ -876,7 +900,18 @@
     {
       "day": 56,
       "status": "done",
-      "scope": "Core.lean Decidable inferInstanceAs 統一 + LE/LT instance 明示命名 (Pattern #3/#4 適用、50+ Day stale 解消、conservative refactor)"
+      "scope": "Core.lean Decidable inferInstanceAs 統一 + LE/LT instance 明示命名 (Pattern #3/#4 適用、50+ Day stale 解消、conservative refactor)",
+      "commit": "684f65a"
+    },
+    {
+      "day": 57,
+      "status": "done",
+      "scope": "7-day empirical revalidation (Day 50+7)、14/15 [critical] PASS、F1 Rationale lint 実効性不在 + F2 cycle-check 5 drift gap を検出"
+    },
+    {
+      "day": 64,
+      "status": "scheduled",
+      "scope": "次回 7-day empirical revalidation (Day 57 + 7)"
     }
   ],
   "gap_analysis": {

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.56.0-week2-day56",
+  "version": "0.57.0-week2-day57",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2888,6 +2888,19 @@
       "addressable_count": 0,
       "evaluator": "lake build 137 jobs PASS、既存 CoreTest 全 example 無変更で通過、by unfold 脆弱性を除去、anonymous instance 名 (instLE/instLT) を明示命名 (instLESemVer/instLTSemVer) に refactor",
       "scope": "SemVer の LE/LT/Decidable instance を Pattern #3 (明示命名) + Pattern #4 (inferInstanceAs) に refactor、Ord は既存維持。Day 5 or Week 3 timing の long-deferred 項目解消 (50+ Day stale)。既存 example は不変、conservative refactor。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 57 Empirical Revalidation (7-day cycle、Day 50+7)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "3 parallel subagents (median: sprint 成果物完全性 / edge: cycle-check 実効性 drift 4 種 / negative: Rationale lint 活用率)、14/15 [critical] PASS (1 件は prompt 記述誤り由来 false-negative、Core.lean は Spine 配下でなく /AgentSpec 直下が正)",
+      "scope": "Day 50-56 sprint 成果物 (GA-S1/S7/S8/S10/S11 done + cycle-check.sh 導入 + Core refactor) の drift 検証。cycle-check.sh は 4 drift type 全て検出成功、exit code 1/2 差分正確。しかし Rationale lint は実質機能せず (prod 0 warning、skip 率 0pp 改善)。",
+      "empirical_findings": [
+        "F1 [高]: Day 52 Rationale lint 実効性不在。trivialDeprecated/ofTextUnauthoredDeprecated fixture は prod 0 参照、意図した warning 化が発火せず。Day 14 RetirementLinter の watched-namespace scanner 方式への再設計 (A-Standard 風 #check_unattributed_rationale 等) + Day 58+ で Hypothesis.lean L97-99 / L89 / ResearchGoal.lean L96,100,115 の 3 prod site を strict 化 (Option C + B 先行)",
+        "F2 [中]: cycle-check.sh に 5 drift gap: (1) .commit // null で null値と missing field 同一視、(2) breakdown_sum=0 で 0=0 OK 誤報告、(3) future-date で負 days_since が WARN 出ない、(4) verifier_history entry 削除 undetected、(5) day_plan entry 削除 undetected。Day 54.1 script の iteration 改善候補"
+      ],
       "compatibility": "conservative extension"
     }
   ],
