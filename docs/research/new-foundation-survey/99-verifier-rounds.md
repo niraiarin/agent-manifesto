@@ -1793,3 +1793,43 @@ Day 18 追加で:
 - verifier_history: 27 entries → **28 entries** (Day 23 R1 追加)
 - **Phase 0 累計合致率: 99.1% 維持** (116/117、Day 22 99.1% から維持、Phase 0 99.1% 安定継続)
 - **Day 22 Subagent informational I1 直接対処完了**: 1 session 短 cycle 解消 (Day 21 I3 = 4 セッション long-deferred 繰り延べ化を防止)
+
+---
+
+## Phase 0 Week 2 Day 24 検証 (2026-04-20 — Day 24 commit `b3be98d` 後)
+
+**背景**: Section 2.46 Q1-Q4 確定済 (Q1 Role.toCtorIdx investigation 主 scope / Q2 A-Minimal probe + docstring / Q3 案 A docstring MODIFY / Q4 案 A type-level rfl example) に従い **Role.toCtorIdx long-deferred root cause investigation 解消** 実装。temporary probe module で `Lean.Linter.deprecatedAttr.getParam?` 直接検査、**root cause 特定**: Lean 4 4.29.0 upstream (since 2025-08-25) で `toCtorIdx` → `ctorIdx` rename、backward compat で旧名が `@[deprecated newName := Role.ctorIdx]` として保持、agent-spec-lib 側問題なし。**Day 22 audit long-deferred 累積警告 (Role.toCtorIdx Day 20-22 = 3 Day 連続繰り延げ) を Day 24 で解消** (Day 25+ 長期化防止、Day 21 改訂 100 I3 = 4 セッション繰り延べ到達前に対処完遂、long-deferred 対応 2 例目)、Day 23 backward compatible 完全維持 (production 本体 code 変更なし、deriving 副産物のみ)、Pattern #7 hook 十七段階発展 (MODIFY path 8 度目)、**14 Day 連続 rfl preference**。
+
+### Day 24 /verify Round 1
+
+**Subagent 検証** (改訂 113): VERDICT = **PASS** (0 addressable + 1 informational、**即時対処で 0 informational 残**)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 (informational) | artifact-manifest.json AgentSpecTest.aggregated_example_count = 371 stale (Day 6 baseline、build_status.example_count 375 と齟齬、aggregation_note の「build_status.example_count と一致」主張と不一致)、Day 24 introduce ではない既存 issue | **改訂 113 即時対処** (371 → 375 更新、aggregation_note に Day 24 改訂 113 同期履歴追記、Day 22 user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用で既存 stale issue も即時対処、deferred 蓄積防止パターン新形態) → 0 informational 残 |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → 21 初 FAIL→PASS+4 informational → 22 PASS+1 addressable 即時 0+2 informational → 23 PASS+0 addressable+4 informational 全件即時対処→0 残 → **Day 24 PASS+0 addressable+1 informational 即時対処→0 残** (7 Day 連続 cycle 内即時修復実例継続、**既存 stale issue 対応パターン新形態**、Day 23 新形態「全件 informational 即時対処」を既存 issue まで拡張適用)。
+
+**Day 24 特筆**:
+- **14 Day 連続 rfl preference (桁到達後 14 Day 継続実証)** (Day 11-24、quality loop 長期持続性)
+- **Pattern #7 hook 十七段階発展到達** (MODIFY path 8 度目運用検証)
+- **Role.toCtorIdx long-deferred 解消 (Day 22 audit 対応 2 例目)** (Day 20-22 = 3 Day 連続繰り延げ → Day 24 で解消、Day 21 改訂 100 I3 解消パターンの 2 例目、long-deferred 化防止 maturity 拡張実例)
+- **Lean 4 deprecated alias alpha-equivalence を rfl で実証** (Lean 4 仕様理解深化、Day 11-24 rfl preference 強化)
+- **Subagent 既存 stale issue も即時対処で 0 残** (Day 24 新形態、deferred 蓄積防止パターン)
+- **paper サーベイ評価サイクル「実装修正組込み」16 度目適用** (Day 22 feedback 継続適用 7 Day 連続)
+- **Phase 0 累計合致率 99.2% 到達** (Day 23 99.1% から +0.1pt 改善、Phase 0 99.2% 新高水準)
+
+---
+
+## Day 1-24 累計サマリ (Day 23 からの delta)
+
+- example: 373 → **375** (+2、Day 24 で test +2 example、breakdown 9→11)
+- linter: 6 拡張 + multi-module propagate → **6 拡張 + multi-module propagate + long-deferred 対応 2 例目解消** (Role.toCtorIdx investigation 完了)
+- Pattern #7 hook: 十六段階発展 → **十七段階発展到達** (MODIFY path 8 度目)
+- paper × 実装合流: 20 種 → **21 種** (Role.toCtorIdx long-deferred 解消カテゴリ追加)
+- paper finding: 99 → **104 件** (+5)
+- Subagent 指摘推移: Day 23 = PASS+0 addressable+4 informational 全件即時対処→0 残 → **Day 24 = PASS+0 addressable+1 informational 即時対処→0 残** (7 Day 連続 cycle 内即時修復、既存 stale issue 対応パターン新形態)
+- **rfl preference 連続記録: 13 Day → 14 Day 連続 (桁到達後 14 Day 継続実証)**
+- verifier_history: 28 entries → **29 entries** (Day 24 R1 追加)
+- **Phase 0 累計合致率: 99.1% → 99.2% 到達** (121/122、Day 23 99.1% から +0.1pt 改善、Phase 0 99.2% 新高水準)
+- **Day 22 audit long-deferred 対応 2 例目完遂**: Role.toCtorIdx investigation (3 Day 連続繰り延げ) 解消、Day 21 改訂 100 I3 解消パターン継続適用、long-deferred 化防止 maturity 拡張
