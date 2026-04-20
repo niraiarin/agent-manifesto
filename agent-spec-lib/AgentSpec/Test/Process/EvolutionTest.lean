@@ -18,53 +18,53 @@ open AgentSpec.Spine (Rationale)
 /-! ### Evolution 構築 (initial / refineWith) -/
 
 /-- initial constructor で開始 -/
-example : Evolution := .initial Hypothesis.trivial
+example : Evolution := .initial Hypothesis.trivial Rationale.trivial
 
 /-- refineWith で 1 step 進める -/
 example : Evolution :=
-  .refineWith (.initial Hypothesis.trivial) { claim := "refined", rationale := Rationale.trivial }
+  .refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "refined", rationale := Rationale.trivial } Rationale.trivial
 
 /-- 2 step の chain -/
 example : Evolution :=
   .refineWith
-    (.refineWith (.initial Hypothesis.trivial) { claim := "step 1", rationale := Rationale.trivial })
-    { claim := "step 2", rationale := Rationale.trivial }
+    (.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "step 1", rationale := Rationale.trivial } Rationale.trivial)
+    { claim := "step 2", rationale := Rationale.trivial } Rationale.trivial
 
 /-! ### Accessor: origin / latest / stepCount -/
 
 /-- initial の origin -/
-example : Evolution.origin (.initial Hypothesis.trivial) = Hypothesis.trivial := rfl
+example : Evolution.origin (.initial Hypothesis.trivial Rationale.trivial) = Hypothesis.trivial := rfl
 
 /-- refineWith の origin (元の Hypothesis を返す) -/
 example : Evolution.origin
-    (.refineWith (.initial { claim := "first", rationale := Rationale.trivial }) { claim := "second", rationale := Rationale.trivial }) =
+    (.refineWith (.initial { claim := "first", rationale := Rationale.trivial } Rationale.trivial) { claim := "second", rationale := Rationale.trivial } Rationale.trivial) =
     { claim := "first", rationale := Rationale.trivial } := rfl
 
 /-- initial の latest = origin -/
-example : Evolution.latest (.initial Hypothesis.trivial) = Hypothesis.trivial := rfl
+example : Evolution.latest (.initial Hypothesis.trivial Rationale.trivial) = Hypothesis.trivial := rfl
 
 /-- refineWith の latest (refined hypothesis を返す) -/
 example : Evolution.latest
-    (.refineWith (.initial { claim := "first", rationale := Rationale.trivial }) { claim := "second", rationale := Rationale.trivial }) =
+    (.refineWith (.initial { claim := "first", rationale := Rationale.trivial } Rationale.trivial) { claim := "second", rationale := Rationale.trivial } Rationale.trivial) =
     { claim := "second", rationale := Rationale.trivial } := rfl
 
 /-- initial の stepCount = 0 -/
-example : Evolution.stepCount (.initial Hypothesis.trivial) = 0 := rfl
+example : Evolution.stepCount (.initial Hypothesis.trivial Rationale.trivial) = 0 := rfl
 
 /-- 1 refineWith で stepCount = 1 -/
 example : Evolution.stepCount
-    (.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := Rationale.trivial }) = 1 := rfl
+    (.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "x", rationale := Rationale.trivial } Rationale.trivial) = 1 := rfl
 
 /-- 2 refineWith で stepCount = 2 -/
 example : Evolution.stepCount
     (.refineWith
-      (.refineWith (.initial Hypothesis.trivial) { claim := "a", rationale := Rationale.trivial })
-      { claim := "b", rationale := Rationale.trivial }) = 2 := rfl
+      (.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "a", rationale := Rationale.trivial } Rationale.trivial)
+      { claim := "b", rationale := Rationale.trivial } Rationale.trivial) = 2 := rfl
 
 /-! ### trivial fixture -/
 
 /-- trivial evolution は initial Hypothesis.trivial -/
-example : Evolution.trivial = .initial Hypothesis.trivial := rfl
+example : Evolution.trivial = .initial Hypothesis.trivial Rationale.trivial := rfl
 
 example : Evolution.trivial.origin = Hypothesis.trivial := rfl
 example : Evolution.trivial.stepCount = 0 := rfl
@@ -81,23 +81,23 @@ example : DecidableEq Evolution := inferInstance
 
 /-- 同一 initial の等号判定 -/
 example :
-    (Evolution.initial Hypothesis.trivial) =
-    (Evolution.initial Hypothesis.trivial) := by decide
+    (Evolution.initial Hypothesis.trivial Rationale.trivial) =
+    (Evolution.initial Hypothesis.trivial Rationale.trivial) := by decide
 
 /-- 異なる initial の不等号判定 -/
 example :
-    (Evolution.initial { claim := "a", rationale := Rationale.trivial }) ≠
-    (Evolution.initial { claim := "b", rationale := Rationale.trivial }) := by decide
+    (Evolution.initial { claim := "a", rationale := Rationale.trivial } Rationale.trivial) ≠
+    (Evolution.initial { claim := "b", rationale := Rationale.trivial } Rationale.trivial) := by decide
 
 /-- refineWith と initial の不等号判定 -/
 example :
-    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := Rationale.trivial } ≠
-    Evolution.initial Hypothesis.trivial := by decide
+    Evolution.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "x", rationale := Rationale.trivial } Rationale.trivial ≠
+    Evolution.initial Hypothesis.trivial Rationale.trivial := by decide
 
 /-- 同一 refineWith chain の等号判定 -/
 example :
-    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := Rationale.trivial } =
-    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := Rationale.trivial } := by decide
+    Evolution.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "x", rationale := Rationale.trivial } Rationale.trivial =
+    Evolution.refineWith (.initial Hypothesis.trivial Rationale.trivial) { claim := "x", rationale := Rationale.trivial } Rationale.trivial := by decide
 
 /-! ### Q2 案 A: cross-process test (Hypothesis × Failure × Evolution × HandoffChain)
 
@@ -126,7 +126,7 @@ example : Hypothesis × Failure × Evolution × HandoffChain :=
 example :
     let h := Hypothesis.trivial
     let f := Failure.refuted h.claim "no evidence" Rationale.trivial
-    let e := Evolution.refineWith (.initial h) { claim := "refined", rationale := Rationale.trivial }
+    let e := Evolution.refineWith (.initial h Rationale.trivial) { claim := "refined", rationale := Rationale.trivial } Rationale.trivial
     let ch := HandoffChain.cons HandoffChain.trivialHandoff .empty
     (e.latest.claim = "refined") ∧
     (f.failedHypothesis = h.claim) ∧

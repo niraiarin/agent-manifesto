@@ -1,9 +1,11 @@
 -- Process 層: Evolution (研究プロセスの「進化ステップ」)
 -- Day 7 hole-driven (Q3 案 B): inductive + Hypothesis 依存
 -- B4 4-arg post の完全統合は Day 8+ Verdict 型確定後 (Section 2.9 部分解消)
--- PROV mapping (02-data-provenance §4.1): ResearchActivity (Day 8+ で実装)
+-- Day 47 (2026-04-21): GA-S8 必須化 B-2 3/4、各 constructor に transition rationale 必須化 (breaking change)
+-- PROV mapping (02-data-provenance §4.1): ResearchActivity
 import Init.Core
 import AgentSpec.Process.Hypothesis
+import AgentSpec.Spine.Rationale
 
 /-!
 # AgentSpec.Process.Evolution: 研究プロセスの「進化ステップ」 (Process 層)
@@ -82,32 +84,42 @@ namespace AgentSpec.Process
     Day 7 hole-driven (Q3 案 B): Hypothesis 依存 inductive 2 constructor。
     Day 8+ で Verdict 型を追加して B4 Hoare 4-arg post に refactor 予定。 -/
 inductive Evolution where
-  /-- Hypothesis を出発点とする evolution の開始 (initial step)。 -/
-  | initial (hypothesis : Hypothesis)
-  /-- 既存 evolution に新しい Hypothesis を加えて継続 (Day 7 hole-driven、
-      Day 8+ で Verdict 型を加えて B4 Hoare 4-arg post に refactor 予定)。 -/
+  /-- Hypothesis を出発点とする evolution の開始 (initial step)。
+      Day 47: transition rationale 必須化 (なぜこの Hypothesis から開始するか)。
+      Hypothesis 自身も rationale (Day 45) を持つが、transition rationale はそれと別で
+      「この step としての意思決定根拠」を保持。 -/
+  | initial (hypothesis : Hypothesis) (rationale : AgentSpec.Spine.Rationale)
+  /-- 既存 evolution に新しい Hypothesis を加えて継続 (Day 7 hole-driven)。
+      Day 47: transition rationale 必須化 (なぜ prev から refined に移行するか)。 -/
   | refineWith (prev : Evolution) (refined : Hypothesis)
+      (rationale : AgentSpec.Spine.Rationale)
   deriving DecidableEq, Inhabited, Repr
 
 namespace Evolution
 
 /-- evolution の origin (最初の Hypothesis) を抽出。 -/
 def origin : Evolution → Hypothesis
-  | .initial h => h
-  | .refineWith prev _ => origin prev
+  | .initial h _ => h
+  | .refineWith prev _ _ => origin prev
 
 /-- evolution の latest (最新 Hypothesis) を抽出。 -/
 def latest : Evolution → Hypothesis
-  | .initial h => h
-  | .refineWith _ refined => refined
+  | .initial h _ => h
+  | .refineWith _ refined _ => refined
 
 /-- evolution の step 数 (initial = 0、refineWith ごと +1)。 -/
 def stepCount : Evolution → Nat
-  | .initial _ => 0
-  | .refineWith prev _ => prev.stepCount + 1
+  | .initial _ _ => 0
+  | .refineWith prev _ _ => prev.stepCount + 1
 
-/-- 自明な evolution (test fixture)、trivial Hypothesis から initial 開始。 -/
-def trivial : Evolution := .initial Hypothesis.trivial
+/-- Day 47: 直近 step の transition rationale を抽出。 -/
+def latestRationale : Evolution → AgentSpec.Spine.Rationale
+  | .initial _ r => r
+  | .refineWith _ _ r => r
+
+/-- 自明な evolution (test fixture)、trivial Hypothesis から initial 開始、Rationale.trivial 付与。 -/
+def trivial : Evolution :=
+  .initial Hypothesis.trivial AgentSpec.Spine.Rationale.trivial
 
 end Evolution
 

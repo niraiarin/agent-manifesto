@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.46.0-week2-day46-breaking",
+  "version": "0.47.0-week2-day47-breaking",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -884,16 +884,22 @@
         {
           "id": "agent-spec-lib:AgentSpec.Process.Hypothesis",
           "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom",
+          "added_in": "Day 47"
         }
       ],
       "provides_types": [
-        "AgentSpec.Process.Evolution (inductive 2 constructor: initial / refineWith、Hypothesis 依存、Day 38 で DecidableEq derive 追加)"
+        "AgentSpec.Process.Evolution (inductive 2 constructor: initial (Hyp, Rat) / refineWith (prev, Hyp, Rat)、Day 47 で rationale 必須化、GA-S8 B-2 3/4)"
       ],
       "provides_definitions": [
-        "AgentSpec.Process.Evolution.origin (recursive accessor)",
-        "AgentSpec.Process.Evolution.latest (recursive accessor)",
-        "AgentSpec.Process.Evolution.stepCount (recursive accessor)",
-        "AgentSpec.Process.Evolution.trivial (test fixture)"
+        "AgentSpec.Process.Evolution.origin",
+        "AgentSpec.Process.Evolution.latest",
+        "AgentSpec.Process.Evolution.stepCount",
+        "AgentSpec.Process.Evolution.latestRationale (Day 47 追加)",
+        "AgentSpec.Process.Evolution.trivial"
       ],
       "provides_instances": [
         "Inhabited Evolution / Repr Evolution (deriving)"
@@ -2527,6 +2533,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 129 jobs PASS、FailureTest + EvolutionTest + RetiredEntityTest の Failure.refuted/retired call-site 全て migration 完了",
       "scope": "Failure に rationale : Rationale 必須 field 追加、trivial/refuted/retired smart constructor 更新、~4 call-site を新 signature (rationale 引数追加) に migration。B-2 スプリント 2/4。",
+      "compatibility": "breaking change"
+    },
+    {
+      "round": "Week 2 Day 47 Evolution Rationale 必須化 (GA-S8 B-2 3/4、recursive)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 129 jobs PASS、EvolutionTest と ResearchEntityTest の Evolution constructor sites (計 ~18 箇所) を migration、recursive inductive の 2 variant (initial/refineWith) 両方に rationale 必須 arg 追加",
+      "scope": "Evolution inductive の各 constructor (initial / refineWith) に transition rationale 必須引数追加、latestRationale accessor 新設、EvolutionTest 21 example と ResearchEntityTest の Evolution 参照を全て 3-arg signature に migration。Hypothesis 自身の rationale (Day 45) と transition rationale (Day 47) は別概念として分離保持。B-2 スプリント 3/4、残 1 Day (RetirementReason)。",
       "compatibility": "breaking change"
     }
   ],

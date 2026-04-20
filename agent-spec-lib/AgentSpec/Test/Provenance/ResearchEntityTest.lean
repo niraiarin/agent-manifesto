@@ -71,14 +71,14 @@ example :
 
 /-- 同一 Evolution variant の等号判定 (recursive payload DecidableEq の連鎖確認) -/
 example :
-    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := AgentSpec.Spine.Rationale.trivial }) =
-    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial) { claim := "x", rationale := AgentSpec.Spine.Rationale.trivial }) :=
+    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial AgentSpec.Spine.Rationale.trivial) { claim := "x", rationale := AgentSpec.Spine.Rationale.trivial } AgentSpec.Spine.Rationale.trivial) =
+    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial AgentSpec.Spine.Rationale.trivial) { claim := "x", rationale := AgentSpec.Spine.Rationale.trivial } AgentSpec.Spine.Rationale.trivial) :=
   by decide
 
 /-- 異なる Evolution chain の不等号判定 -/
 example :
-    ResearchEntity.Evolution (.initial { claim := "a", rationale := AgentSpec.Spine.Rationale.trivial }) ≠
-    ResearchEntity.Evolution (.initial { claim := "b", rationale := AgentSpec.Spine.Rationale.trivial }) := by decide
+    ResearchEntity.Evolution (.initial { claim := "a", rationale := AgentSpec.Spine.Rationale.trivial } AgentSpec.Spine.Rationale.trivial) ≠
+    ResearchEntity.Evolution (.initial { claim := "b", rationale := AgentSpec.Spine.Rationale.trivial } AgentSpec.Spine.Rationale.trivial) := by decide
 
 /-! ### Cross-process embed: Process 4 type 全てが ResearchEntity に embed 可能 -/
 
