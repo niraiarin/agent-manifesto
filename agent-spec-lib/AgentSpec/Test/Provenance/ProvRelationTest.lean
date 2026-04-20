@@ -148,4 +148,15 @@ example {a b : ResearchEntity} (h : TransDerived [] a b) :
 example {edges : List WasDerivedFrom} (h : Acyclic edges) : Acyclic [] :=
   Acyclic.subset (fun _ hmem => absurd hmem (by simp)) h
 
+/-- Day 34: concrete 2-edge TransDerived chain の非 vacuous 実例
+    (h3 ← h2 ← h1 の 2 段 transitive closure)。 -/
+example :
+    let h1 : AgentSpec.Process.Hypothesis := { claim := "h1" }
+    let h2 : AgentSpec.Process.Hypothesis := { claim := "h2" }
+    let h3 : AgentSpec.Process.Hypothesis := { claim := "h3" }
+    let edge1 : WasDerivedFrom := .mk' (.Hypothesis h3) (.Hypothesis h2)
+    let edge2 : WasDerivedFrom := .mk' (.Hypothesis h2) (.Hypothesis h1)
+    TransDerived [edge1, edge2] (.Hypothesis h3) (.Hypothesis h1) :=
+  .trans (.base (List.Mem.head _)) (.base (List.Mem.tail _ (List.Mem.head _)))
+
 end AgentSpec.Test.Provenance.ProvRelation
