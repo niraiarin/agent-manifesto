@@ -1928,7 +1928,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 405,
+    "example_count": 464,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1996,7 +1996,7 @@
       },
       "Test/Process/HypothesisTest.lean": {
         "theorems": 0,
-        "examples": 12
+        "examples": 14
       },
       "Process/Failure.lean": {
         "theorems": 0,
@@ -2004,7 +2004,7 @@
       },
       "Test/Process/FailureTest.lean": {
         "theorems": 0,
-        "examples": 17
+        "examples": 18
       },
       "Process/Evolution.lean": {
         "theorems": 0,
@@ -2012,7 +2012,7 @@
       },
       "Test/Process/EvolutionTest.lean": {
         "theorems": 0,
-        "examples": 16
+        "examples": 21
       },
       "Process/HandoffChain.lean": {
         "theorems": 0,
@@ -2040,7 +2040,7 @@
       },
       "Test/Provenance/ResearchEntityTest.lean": {
         "theorems": 0,
-        "examples": 21
+        "examples": 34
       },
       "Provenance/ResearchActivity.lean": {
         "theorems": 0,
@@ -2072,7 +2072,7 @@
       },
       "Test/Provenance/ProvRelationTest.lean": {
         "theorems": 0,
-        "examples": 28
+        "examples": 33
       },
       "Provenance/RetiredEntity.lean": {
         "theorems": 0,
@@ -2080,7 +2080,7 @@
       },
       "Test/Provenance/RetiredEntityTest.lean": {
         "theorems": 0,
-        "examples": 30
+        "examples": 38
       },
       "Provenance/RetirementLinter.lean": {
         "theorems": 0,
@@ -2112,11 +2112,19 @@
       },
       "Test/Provenance/ProvRelationAuxiliaryTest.lean": {
         "theorems": 0,
-        "examples": 24
+        "examples": 29
       },
       "Proofs/RoundTrip.lean": {
         "theorems": 9,
         "examples": 0
+      },
+      "Spine/Rationale.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/RationaleTest.lean": {
+        "theorems": 0,
+        "examples": 20
       }
     }
   },
@@ -2557,6 +2565,15 @@
       "evaluator": "lake build 129 jobs PASS、RetiredEntity 全 smart constructor (mk/refuted/superseded/obsolete/withdrawn) signature 更新、4 deprecated fixture + test file 3 件 migration 完了",
       "scope": "RetiredEntity structure に rationale 必須 field 追加 (per-RetirementReason ではなく event 単位で配置、GA-S8 原文「Retired」粒度と整合)、全 smart constructor に rationale 引数追加。ProvRelationAuxiliaryTest / RetirementLinterTest の call-site migration。GA-S8 B-2 sprint 4/4 完了、Rationale 必須化が全 4 type (Hypothesis/Failure/Evolution/RetiredEntity) に貫徹。",
       "compatibility": "breaking change"
+    },
+    {
+      "round": "Retroactive Step 7 (Day 37-48 drift remediation)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 6,
+      "evaluator": "manual step 7 mandatory checklist 実施、breakdown 8 件 / GA-S8 status / Day 48 commit hash / Rationale attribution pending_items / Day 44 attribution deferred 明示化 / Spine/Rationale production+test breakdown 追加",
+      "scope": "Day 22-28 audit で mandatory 化された step 7 を Day 37-48 で 12 Day 連続 skip した長期ドリフトの retroactive 解消",
+      "compatibility": "compatible change"
     }
   ],
   "navigation_index": {
