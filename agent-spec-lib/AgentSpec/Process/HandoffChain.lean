@@ -78,7 +78,7 @@ inductive HandoffChain where
   | empty
   /-- 先頭に handoff を追加 (List 風 cons)。 -/
   | cons (handoff : Handoff) (rest : HandoffChain)
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace HandoffChain
 

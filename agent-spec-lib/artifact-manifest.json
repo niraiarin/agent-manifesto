@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.34.0-week2-day34",
+  "version": "0.35.0-week2-day35",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -919,7 +919,8 @@
       ],
       "provides_instances": [
         "DecidableEq Handoff / Inhabited Handoff / Repr Handoff (deriving)",
-        "Inhabited HandoffChain / Repr HandoffChain (deriving)"
+        "Inhabited HandoffChain / Repr HandoffChain (deriving)",
+        "DecidableEq HandoffChain (Day 35、recursive inductive 向けに derive 追加)"
       ],
       "manifesto_link": "T1 一時性 (セッション間 handoff の連鎖)、Day 8+ で fromAgent/toAgent を ResearchAgent 型 (02-data-provenance §4.1) に refactor 予定",
       "decision_log": "HandoffChain.lean docstring D1-D3 (Handoff structure + HandoffChain inductive の 2 type / cons inductive 採用 / agent identifier は String hole-driven)"
@@ -1832,7 +1833,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 34",
+    "last_verified_phase": "Week 2 Day 35",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -1860,7 +1861,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 403,
+    "example_count": 405,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1952,7 +1953,7 @@
       },
       "Test/Process/HandoffChainTest.lean": {
         "theorems": 0,
-        "examples": 21
+        "examples": 23
       },
       "Provenance/Verdict.lean": {
         "theorems": 0,
@@ -2365,6 +2366,13 @@
       "result": "PASS",
       "addressable_count": 0,
       "evaluator": "build PASS (130 jobs) + concrete 2-edge TransDerived chain 実例追加 (h3 ← h2 ← h1、非 vacuous、抽象 predicate の実動作確認)、Test +1 example。production 変更なし。P2 省略 (test-only additive)"
+    },
+    {
+      "round": "Week 2 Day 35 Round 1",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (130 jobs) + HandoffChain に DecidableEq derive 追加 (recursive inductive、Lean 4 が auto-derive 対応)、Test +2 example (inferInstance + ≠ decide)。Process 層 DecidableEq coverage 完備に一歩前進。P2 省略 (derive 追加のみ、additive)"
     }
   ],
   "navigation_index": {

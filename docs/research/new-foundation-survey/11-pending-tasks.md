@@ -251,7 +251,8 @@ Day 4 論文サーベイ評価 (Section 12.10) で識別された未活用 paper
 | ✅ **Day 32 完了** | ~~DAG 双対基盤~~ — `Acyclic.subset` (edge set 縮小時 acyclicity 保存、TransDerived.subset 双対) + Test +1 example。build 130 jobs | Day 32 | commit |
 | ✅ **Day 33 完了** | ~~schema pattern forbid~~ — JSON Schema に `patternProperties` 追加 (future `dayN_update` / `milestone_*` を自動 reject)、見逃し `day8_update` 発見+削除 | Day 28 Subagent C | commit |
 | ✅ **Day 34 完了** | ~~concrete DAG 実例~~ — 2-edge TransDerived chain (h3 ← h2 ← h1) 非 vacuous example | Day 34 | commit |
-| 🟡 Day 35 | DecidableEq 手動実装 or Acyclic decidable 版 or 別 DAG 定理 | 残候補 | Day 35 |
+| ✅ **Day 35 完了** | ~~HandoffChain DecidableEq~~ — recursive inductive に `deriving DecidableEq` 追加、Test +2 example (inferInstance + ≠ decide)。Process 層 DecidableEq coverage 前進 | Day 35 | commit |
+| 🟡 Day 36 | **定期 empirical revalidation** (必須、7 Day 周期) + DecidableEq / DAG 定理 選択 | 規律 + 残候補 | Day 36 |
 | 🔄 Day 36 | **定期 empirical revalidation** (7 Day 周期、Day 29.2 基点) | 規律 | Day 36 |
 | 🟡 Day 19+ | **Day 15 `@[retired]` macro fixture × Day 18 `#check_retired` 連携テスト追加** (Subagent I2 Day 18、A-Standard ← A-Compact 連携完全実証) | TyDD-G3 + Subagent I2 Day 18 | Day 19+ (Day 18 paper サーベイで新規識別) |
 | 🟢 Week 5-6 | **A-Maximal: elaborator 型レベル強制** — compile error で退役違反 rejection | TyDD-G3 + §4.4 | Week 5-6 Tooling 層 (本丸案件) |

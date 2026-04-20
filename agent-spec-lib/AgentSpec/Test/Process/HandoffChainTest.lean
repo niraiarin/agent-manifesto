@@ -86,4 +86,12 @@ example : ({fromAgent := "a", toAgent := "b", payload := "p"} : Handoff) ≠
 example : Inhabited Handoff := inferInstance
 example : Inhabited HandoffChain := inferInstance
 
+/-- Day 35: HandoffChain DecidableEq (recursive inductive 向けに derive 追加) -/
+example : DecidableEq HandoffChain := inferInstance
+
+/-- Day 35: 異なる HandoffChain 同士が decidable に区別できる -/
+example :
+    HandoffChain.cons { fromAgent := "a", toAgent := "b", payload := "p" } .empty ≠
+    HandoffChain.empty := by decide
+
 end AgentSpec.Test.Process.HandoffChain
