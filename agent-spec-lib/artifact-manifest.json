@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.35.0-week2-day35",
+  "version": "0.36.0-week2-day36",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1833,7 +1833,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 35",
+    "last_verified_phase": "Week 2 Day 36",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2373,6 +2373,14 @@
       "result": "PASS",
       "addressable_count": 0,
       "evaluator": "build PASS (130 jobs) + HandoffChain に DecidableEq derive 追加 (recursive inductive、Lean 4 が auto-derive 対応)、Test +2 example (inferInstance + ≠ decide)。Process 層 DecidableEq coverage 完備に一歩前進。P2 省略 (derive 追加のみ、additive)"
+    },
+    {
+      "round": "Week 2 Day 36 Empirical Revalidation",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "informational_count": 2,
+      "evaluator": "7-day 周期 empirical validation 実施。3 subagents parallel: (A) DAG API navigation → 3○/2 部分的、lemma が provides_definitions にあるが field 名誤認 risk、tool_uses 7 (target 5 超過); (B) Process DecidableEq coverage → 4○、Evolution 未対応発見、tool_uses 3; (C) Day 33 pattern forbid → 4○、tool_uses 1。informational: I1 schema に provides_definitions 粒度明記 (Day 37+ 候補)、I2 Process.Evolution DecidableEq 要判定 (Day 37 候補)"
     }
   ],
   "navigation_index": {
