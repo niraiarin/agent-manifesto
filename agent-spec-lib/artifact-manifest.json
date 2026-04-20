@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.31.0-week2-day31",
+  "version": "0.32.0-week2-day32",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1369,7 +1369,8 @@
         "WasDerivedFrom.mk' / WasDerivedFrom.trivial",
         "theorem TransDerived.empty_false (Day 30、空 edge list で TransDerived は inhabited でない)",
         "theorem Acyclic.empty (Day 30、[] は trivially acyclic)",
-        "theorem TransDerived.subset (Day 31、edge set 部分関係に対して TransDerived が monotone)"
+        "theorem TransDerived.subset (Day 31、edge set 部分関係に対して TransDerived が monotone)",
+        "theorem Acyclic.subset (Day 32、edge set 縮小時の acyclicity 保存、TransDerived.subset の双対)"
       ],
       "provides_instances": [
         "Inhabited / Repr (3 relation 全て、deriving)",
@@ -1832,7 +1833,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 31",
+    "last_verified_phase": "Week 2 Day 32",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -1860,7 +1861,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 401,
+    "example_count": 402,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2004,7 +2005,7 @@
       },
       "Test/Provenance/ProvRelationTest.lean": {
         "theorems": 0,
-        "examples": 26
+        "examples": 27
       },
       "Provenance/RetiredEntity.lean": {
         "theorems": 0,
@@ -2344,6 +2345,13 @@
       "result": "PASS",
       "addressable_count": 0,
       "evaluator": "build PASS (combined 130 jobs) + TransDerived.subset monotonicity lemma 追加 (edges1 ⊆ edges2 ⇒ TransDerived 保存)、test +1 example (空 → singleton への vacuous monotone 拡張で型整合性確認)。P2 Subagent 省略 (単一 Prop lemma、induction proof、Day 30 DAG 延長で pattern-symmetric)"
+    },
+    {
+      "round": "Week 2 Day 32 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (combined 130 jobs) + Acyclic.subset monotonicity lemma 追加 (edges1 ⊆ edges2 ⇒ Acyclic edges2 → Acyclic edges1)、test +1 example。P2 Subagent 省略 (Day 31 subset pattern の双対、additive Prop)"
     }
   ],
   "navigation_index": {

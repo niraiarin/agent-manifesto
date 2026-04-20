@@ -183,4 +183,11 @@ theorem TransDerived.subset {edges1 edges2 : List WasDerivedFrom}
   | base hmem => exact .base (hsub _ hmem)
   | trans _ _ ih1 ih2 => exact .trans ih1 ih2
 
+/-- Day 32: Acyclic は edge set の縮小に対して保存される (TransDerived.subset の双対)。
+    edges1 ⊆ edges2 で Acyclic edges2 なら Acyclic edges1。 -/
+theorem Acyclic.subset {edges1 edges2 : List WasDerivedFrom}
+    (hsub : ∀ w ∈ edges1, w ∈ edges2)
+    (h : Acyclic edges2) : Acyclic edges1 :=
+  fun e hcycle => h e (TransDerived.subset hsub hcycle)
+
 end AgentSpec.Provenance

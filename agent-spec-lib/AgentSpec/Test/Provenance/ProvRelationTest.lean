@@ -143,4 +143,9 @@ example {a b : ResearchEntity} (h : TransDerived [] a b) :
     TransDerived [WasDerivedFrom.trivial] a b :=
   TransDerived.subset (fun _ hmem => absurd hmem (by simp)) h
 
+/-- Day 32: Acyclic.subset で edge set 縮小時の acyclicity 保存確認
+    (任意 acyclic edges から空 list への縮小は trivially 成立)。 -/
+example {edges : List WasDerivedFrom} (h : Acyclic edges) : Acyclic [] :=
+  Acyclic.subset (fun _ hmem => absurd hmem (by simp)) h
+
 end AgentSpec.Test.Provenance.ProvRelation
