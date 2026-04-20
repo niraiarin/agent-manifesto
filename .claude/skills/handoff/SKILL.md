@@ -146,6 +146,7 @@ git_sha: <current HEAD>
 branch: <current branch or null>
 skill: <running skill>
 phase: <current phase>
+structured_log: `.claude/handoffs/handoff-<timestamp>.jsonl` (対応 JSONL へのポインタ。本 resume.md と同 state の typed checkpoint、audit / scripting / 別エージェント統合時に参照)
 intent: <what the user originally asked for>
 
 ## Progress
@@ -165,6 +166,12 @@ intent: <what the user originally asked for>
 ## Key Decisions
 - <decision with rationale>
 ```
+
+**設計根拠 (`structured_log` cross-reference フィールド)**:
+- resume.md は human/LLM-readable、JSONL は machine-readable typed state
+- 2 つの artifact が parallel に書かれるが、resume.md から JSONL への参照がないと次セッションは JSONL の存在を認識できない
+- `structured_log` フィールドで両者を明示的に link、audit 時や別エージェント統合時に JSONL を findable にする
+- Added 2026-04-20 (Day 26 handoff 実施時にユーザー指摘で identify)
 
 ### 次セッション起動（handoff-resume-loader.sh）
 
@@ -205,12 +212,13 @@ SessionStart hook が以下を実行:
    - next_steps: 具体的な次のアクション
    - files_modified: 変更したファイル
    - decisions: 重要な設計判断（オプション）
-3. **JSONL 書き込み** — `.claude/handoffs/handoff-<timestamp>.jsonl` に永続記録
+3. **JSONL 書き込み** — `.claude/handoffs/handoff-<timestamp>.jsonl` に永続記録。タイムスタンプは `date -u +%Y-%m-%dT%H%M%SZ` 等で UTC 生成
 4. **resume.md 生成** — 上記フォーマットで書き込み。
    - ファイル名: `BRANCH=$(git branch --show-current)` を取得し、
      ブランチがあれば `handoff-resume-$(echo "$BRANCH" | sed 's|/|-|g').md`、
      なければ `handoff-resume.md`（detached HEAD フォールバック）
    - `branch` フィールド: `${BRANCH:-null}` の出力を使用
+   - **`structured_log` フィールド必須**: step 3 で書いた JSONL の path を記録 (resume.md と JSONL の cross-reference、次セッションが JSONL を findable にする)
 5. **確認** — 生成した resume.md の内容をユーザーに表示
 6. **resumption prompt 出力** — 次セッションでユーザーがそのまま貼り付けられる prompt を出力する。
    フォーマット:
