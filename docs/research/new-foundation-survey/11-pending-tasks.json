@@ -515,9 +515,9 @@
       "section": "2.10",
       "topic": "F1 Rationale lint 再設計 (watched-namespace scanner 化、#check_unattributed_rationale 等)",
       "mark": "🔴",
-      "status": "pending",
+      "status": "in_progress",
       "timing": "Day 58+",
-      "detail": "Day 57 empirical F1、Day 52 lint が prod 0 warning で skip 率 0pp 改善の構造的欠陥。Day 14 RetirementLinter pattern に寄せる。"
+      "detail": "Day 60-63 sprint で A-Standard scanner 実装、Day 14 RetirementLinter の A-Minimal → A-Compact → A-Standard-Full → register EnvExtension lineage を Rationale に複製。Day 64 empirical で検証。"
     },
     {
       "section": "2.10",
@@ -914,7 +914,7 @@
     {
       "day": 64,
       "status": "scheduled",
-      "scope": "次回 7-day empirical revalidation (Day 57 + 7)"
+      "scope": "7-day empirical revalidation (Day 57+7)、scope: Day 60-63 scanner sprint の実効性検証 (prod 21 unattributed site を flag するか、false positive 0、Day 14-22 RetirementLinter と pattern-symmetric 構築できたか)"
     },
     {
       "day": 58,
@@ -925,7 +925,28 @@
     {
       "day": 59,
       "status": "done",
-      "scope": "F2 cycle-check.sh 5 drift gap 修正 (Day 57 empirical F2 対応、monotonic check 追加、null/missing 区別)"
+      "scope": "F2 cycle-check.sh 5 drift gap 修正 (Day 57 empirical F2 対応、monotonic check 追加、null/missing 区別)",
+      "commit": "bef381f"
+    },
+    {
+      "day": 60,
+      "status": "done",
+      "scope": "Rationale scanner A-Standard: #check_unattributed_rationale command + RationaleLinter module (F1 Option C sprint 1/4、Day 18 RetirementLinterCommand pattern)"
+    },
+    {
+      "day": 61,
+      "status": "pending",
+      "scope": "Rationale watched-namespace register + SimplePersistentEnvExtension (F1 Option C sprint 2/4、Day 22 pattern)"
+    },
+    {
+      "day": 62,
+      "status": "pending",
+      "scope": "#check_unattributed_rationale_in_namespace + _auto 変種 (F1 Option C sprint 3/4、Day 19/21 pattern)"
+    },
+    {
+      "day": 63,
+      "status": "pending",
+      "scope": "F1 Option C sprint integration test + watched-namespace 実運用 register + buffer (sprint 4/4)"
     }
   ],
   "gap_analysis": {

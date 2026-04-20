@@ -1,0 +1,105 @@
+-- Provenance 層: RationaleLinter (Day 60、A-Standard A-Minimal 版、Day 14-18 RetirementLinter pattern 踏襲)
+-- F1 Option C sprint 1/4: #check_unattributed_rationale command
+-- Day 50/57 empirical で検出された attribution 欠損 (欠損率 100%、prod 23 sites) の構造的可視化機構
+import Lean
+import AgentSpec.Spine.Rationale
+
+/-!
+# AgentSpec.Provenance.RationaleLinter: `#check_unattributed_rationale` command (Day 60、F1 Option C sprint 1/4)
+
+Phase 0 Week 4-5 Provenance 層の Day 60 構成要素。F1 Option C sprint 1 日目、
+Day 14-22 RetirementLinter lineage を Rationale attribution に複製。
+
+段階的成熟パス:
+- Day 52 A-Minimal: `@[deprecated]` fixture (trivialDeprecated / ofTextUnauthoredDeprecated)
+- **Day 60 A-Standard A-Minimal**: `#check_unattributed_rationale <ident>` command (本 module)
+- Day 61: register_rationale_watched_namespace + SimplePersistentEnvExtension
+- Day 62: `#check_unattributed_rationale_in_namespace` + `_auto` 変種
+- Day 63: integration + 運用 register
+- Week 5-6 A-Maximal: elaborator 型レベル強制
+
+## 設計 (Day 18 RetirementLinterCommand pattern 踏襲)
+
+    elab "#check_unattributed_rationale " id:ident : command => do
+      let env ← getEnv
+      let name ← ... realizeGlobalConstNoOverloadWithInfo
+      -- 指定 decl の value body を取得、Rationale.trivial / ofText を refs から検出
+      let unattributed : List Lean.Name :=
+        [`AgentSpec.Spine.Rationale.trivial, `AgentSpec.Spine.Rationale.ofText]
+      -- match on defnInfo.value の used constants
+      ...
+
+これにより:
+- `#check_unattributed_rationale AgentSpec.Process.Hypothesis.trivial` → ⚠ uses Rationale.trivial
+- `#check_unattributed_rationale AgentSpec.Provenance.RetiredEntity.trivial` → ⚠ uses Rationale.trivial
+- `#check_unattributed_rationale <strict 化済 decl>` → ✓ no unattributed
+
+## Day 14-18 RetirementLinter との関係
+
+- Day 18 RetirementLinter: `@[deprecated]` **attribute** を `Lean.Linter.isDeprecated` で検査
+- Day 60 RationaleLinter: **value body** を `getUsedConstants` で検査、blacklist 定数を検出
+
+後者は value-level 検査のため、@[deprecated] pre-marking 不要 (既存全 decl を scan 可能)。
+Day 52 fixture deprecated 路線の限界 (Day 57 empirical F1 で 0 warning) を根本解決。
+
+## TyDD 原則 (Day 1-59 確立パターン適用)
+
+- **Pattern #5**: elab command 定義、先行宣言
+- **Pattern #6** (sorry 0): Elab API + Expr traversal のみで完結
+- **Pattern #7**: artifact-manifest 同 commit
+- **Pattern #8**: `#check_unattributed_rationale` は user-facing command、予約語ではない
+
+## Day 60 意思決定ログ
+
+### D1. value-level scanner (vs attribute-level、Day 52 fixture deprecated 路線の限界)
+- **Day 52 路線**: `@[deprecated]` trivialDeprecated / ofTextUnauthoredDeprecated fixture
+- **Day 57 empirical F1 finding**: prod 23 sites は既存 API (`Rationale.trivial` / `ofText`) を
+  そのまま使用、warning 0 (fixture を呼ばないため)
+- **Day 60 採用**: value-level scanner で decl body の Expr を traverse、blacklist
+  定数 (Rationale.trivial / Rationale.ofText) 参照を検出
+- **理由**: F1 structural 解決 (existing 23 sites を flag 可能)、Day 14 RetirementLinter の
+  attribute-level より power 1 段上、Day 61-62 で namespace scan に拡張予定。
+
+### D2. blacklist 2 定数のみで Day 60 minimal
+- **採用**: `Rationale.trivial` / `Rationale.ofText` の 2 constant のみ blacklist
+- **理由**: Day 50 empirical I2 で "attributed" 判定は `isProperlyAttributed = true` (text
+  non-empty + references non-empty + confidence > 0 + author some + timestamp some)。
+  逆の unattributed 候補 = (a) trivial (全 0) + (b) ofText (author/timestamp 未指定)。
+  `mk'` / `withAuthor` / `withTimestamp` は caller が attribute を付与するので OK。
+  `strict` は必須化 API なので OK。残 2 constant (trivial / ofText) のみ危険、blacklist。
+-/
+
+namespace AgentSpec.Provenance
+
+open Lean Elab Command
+
+/-- Day 60 A-Standard A-Minimal: `#check_unattributed_rationale <ident>` command。
+
+    指定 declaration の value body を traverse し、`Rationale.trivial` / `Rationale.ofText`
+    (attribution 欠損定数) への参照を検出、warning/info output を発生。
+
+    利用例:
+    - `#check_unattributed_rationale AgentSpec.Process.Hypothesis.trivial`
+      → ⚠ uses Rationale.trivial (unattributed)
+    - `#check_unattributed_rationale AgentSpec.Spine.Rationale.strict`
+      → ✓ no unattributed Rationale refs
+-/
+elab "#check_unattributed_rationale " id:ident : command => do
+  let env ← getEnv
+  let name ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo id
+  match env.find? name with
+    | some (.defnInfo info) =>
+      let used := info.value.getUsedConstants
+      let blacklist : Array Lean.Name :=
+        #[`AgentSpec.Spine.Rationale.trivial, `AgentSpec.Spine.Rationale.ofText]
+      let hits := blacklist.filter (fun n => used.contains n)
+      if hits.isEmpty then
+        logInfo m!"✓ '{name}' has no unattributed Rationale refs"
+      else
+        logInfo m!"⚠ '{name}' uses unattributed: {hits}"
+    | some _ =>
+      logInfo m!"○ '{name}' is not a definition with body (axiom/opaque/inductive)"
+    | none =>
+      logInfo m!"? '{name}' declaration not found"
+
+end AgentSpec.Provenance

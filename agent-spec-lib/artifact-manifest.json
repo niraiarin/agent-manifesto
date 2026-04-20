@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.59.0-week2-day59",
+  "version": "0.60.0-week2-day60",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2094,6 +2094,47 @@
         "GA-S10"
       ],
       "example_count": 31
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Provenance.RationaleLinter",
+      "path": "AgentSpec/Provenance/RationaleLinter.lean",
+      "dependencies": [
+        {
+          "id": "lean-core",
+          "module": "Lean",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_types": [
+        "#check_unattributed_rationale command (A-Standard A-Minimal value-level scanner、Day 60 F1 Option C sprint 1/4)"
+      ],
+      "provides_definitions": [],
+      "assumptions": [],
+      "scope": "formalization",
+      "refs": [
+        "GA-S8",
+        "F1"
+      ]
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Provenance.RationaleLinterTest",
+      "path": "AgentSpec/Test/Provenance/RationaleLinterTest.lean",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Provenance.RationaleLinter",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "assumptions": [],
+      "scope": "test",
+      "refs": [
+        "F1"
+      ],
+      "example_count": 0
     }
   ],
   "build_status": {
@@ -2355,6 +2396,14 @@
       "Test/Spine/ResearchGoalTest.lean": {
         "theorems": 0,
         "examples": 31
+      },
+      "Provenance/RationaleLinter.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Provenance/RationaleLinterTest.lean": {
+        "theorems": 0,
+        "examples": 0
       }
     }
   },
@@ -2920,6 +2969,15 @@
       "evaluator": "bash scripts/cycle-check.sh 7 check 全動作確認 (1/2/3/4/5a/5b/6a/6b)、F2 5 件の未検出 drift pattern 解消",
       "scope": "Day 54.1 導入の cycle-check.sh の script 改善、Day 57 empirical F2 5 gap 全解消 (breakdown sum=0 regression / has commit null-missing 区別 / future-date -2 threshold / verifier_history monotonic / day_plan monotonic)。副次修正: Japanese comma 変数 unbound 修正、macOS BSD date -ju (UTC parse) 導入。",
       "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 2 Day 60 RationaleLinter #check_unattributed_rationale (F1 sprint 1/4)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 139 jobs + 8 #check 動作確認、value-level scanner で 3 existing unattributed 使用 decl (Hypothesis.trivial / ResearchGoal.trivial / ofClaimWithText) を正確に flag、attributed API (strict/mk prime) は ✓、inductive/structure は ○。false positive 0。",
+      "scope": "AgentSpec.Provenance.RationaleLinter 新 module (Day 18 RetirementLinterCommand pattern 踏襲)、#check_unattributed_rationale <ident> command で decl value body を Expr.getUsedConstants で走査、blacklist (Rationale.trivial / ofText) 定数参照を検出。Day 52 fixture deprecated 路線 (0 warning) を根本解決、F1 Option C sprint 1/4。",
+      "compatibility": "conservative extension"
     }
   ],
   "navigation_index": {
