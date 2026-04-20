@@ -1,0 +1,50 @@
+# paperize.yaml — /paperize 外部設定
+# Source: [S1 §3] bfts_config.yaml / [S3 §4] config.arc.yaml
+# Doc: docs/research/autonomous-research-pipelines/04-integrated-design.md §5
+
+# ---- 入力指定 ----
+input:
+  jsonl_path: .claude/metrics/p2-verified.jsonl
+  git_range: HEAD~20..HEAD
+  issue_labels: [research, verifier]
+  pr_merged_since: 7d
+
+# ---- 論文設定 ----
+paper:
+  template: internal-report         # [P] or neurips / iclr
+  max_pages: 8                      # [S1 §2.3] page length constraint
+  slug_format: "{date}-{primary-topic}"
+
+# ---- Agent 設定 ----
+agents:
+  outline:
+    model: claude-opus-4-7
+    max_tokens: 8000
+  section_writing:
+    model: claude-opus-4-7
+    extended_thinking: true         # [S1 §2.3] reflection 相当
+  refinement:
+    verifier: logprob/qwen          # [P] PR #637
+    k_rounds: 3                     # [P] PR #636
+    bidirectional: true             # [P] PR #617
+    halt_on_margin_below: 0.0       # [S2 §2.5] winner=B で halt
+    max_iterations: 7               # [S2] "5-7 calls"
+
+# ---- Follow-up 管理 ----
+follow_up:
+  todos_file: todos.md              # [S3 §3]
+  categories:                       # [S3 §3] 6 cat
+    - decisions
+    - experiments
+    - findings
+    - literature
+    - questions
+    - reviews
+  decay_days: 30                    # [S3 §3]
+
+# ---- 強制 ----
+enforcement:
+  mode: warn                        # [P] T6: warn / block / skip
+  jsonl_flush_on_complete: true     # [P] G3
+  git_commit_on_complete: true      # [P] 成果物を追跡
+  require_evaluator_independent: true  # [P] P2
