@@ -7,6 +7,7 @@ import AgentSpec.Test.Spine.LearningCycleTest
 import AgentSpec.Test.Spine.ObservableTest
 import AgentSpec.Test.Spine.RationaleTest
 import AgentSpec.Test.Spine.StateTest
+import AgentSpec.Test.Spine.ResearchSpecTest
 import AgentSpec.Test.Process.HypothesisTest
 import AgentSpec.Test.Process.FailureTest
 import AgentSpec.Test.Process.EvolutionTest
