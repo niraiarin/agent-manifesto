@@ -233,7 +233,9 @@ elab "#check_retired_in_namespace_with_depth " id:ident maxDepth:num : command =
 
     利用例:
     - `#check_retired_auto` → 全 watched namespaces の retired summary
-      期待 output: RetiredEntity 5 + Failure 0 + EvolutionStep 0 = total 5
+      期待 output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4
+      (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため、Role.toCtorIdx
+      Lean 4 auto-gen helper は対象外、Day 14 fixture 4 のみ counted)
 
     Day 18-19-20 の `#check_retired*` (手動 namespace 指定) を Day 21 で auto-target に拡張、
     Day 22+ で PersistentEnvExtension で declaration 追加時 callback (Standard-Standard) 検討。

@@ -1664,3 +1664,46 @@ Day 18 追加で:
 - **rfl preference 連続記録: 9 Day → 10 Day 連続 milestone 達成 (桁の到達)**
 - verifier_history: 24 entries → **25 entries** (Day 20 R1 追加)
 - Phase 0 累計合致率: 99.0% 維持 (101/102)
+
+---
+
+## Phase 0 Week 2 Day 21 検証 (2026-04-20 — Day 21 commit `18c5e94` + 改訂 100 後)
+
+**背景**: Section 2.40 Q1-Q4 確定済 (Q1 A-Standard-Full elaborator hook / Q2 A-Minimal pre-defined watched namespaces auto-target / Q3 案 A / Q4 案 A) に従い `#check_retired_auto` command 追加 (pre-defined hardcode list watched namespaces 一括 check)。Day 18-20 backward compatible 完全維持、Day 18-20 同 module MODIFY 6 度目、段階的 Lean 機能習得 5 拡張到達 (残り Week 5-6 A-Maximal)、**11 Day 連続 rfl preference (桁到達後の継続実証)**。**Day 18-20 long-deferred Subagent I3 (4 セッション繰り延べ) を Day 21 改訂 100 で同時解消** (Day 15 `@[retired]` × Day 18 `#check_retired` 連携テスト追加、A-Compact ← A-Standard A-Minimal 連携完全実証成功、ユーザーフィードバック「論文サーベイ検証の後に実装修正・追加を必ず実施してね」直接反映)。
+
+### Day 21 /verify Round 1
+
+**Subagent 検証** (改訂 100): VERDICT_initial = **FAIL** (addressable 1) → 即時対処後 **PASS** (addressable 0、informational 4)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 (addressable) | production docstring "total 5" が test/manifest "total 4" と齟齬 | **改訂 100 即時対処** (docstring "5"→"4" 訂正、Role.toCtorIdx watched 直下対象外説明追加) → **PASS** |
+| I2 | test docstring "Day 11-20" → "Day 11-21" 更新 | **改訂 100 即時対処** |
+| I3 (long-deferred 4 セッション) | Day 15 @[retired] × Day 18 #check_retired 連携テスト追加 | **改訂 100 即時実装追加で解消** (`import AgentSpec.Provenance.RetirementLinter` + `@[retired]` decorated `day21LinkageFixture` + `#check_retired` invocation、build PASS で「✓ '...day21LinkageFixture' is retired」確認、A-Compact ← A-Standard A-Minimal 連携完全実証成功) |
+| I4 | Role.toCtorIdx auto-gen helper root cause investigation 継続 | **Day 22+ 投資** |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → **Day 21 初 FAIL→PASS + I2/I3 実装追加 + I4 繰り延べ** (cycle 内学習 transfer の質的発展フェーズ突入、cycle 内即時修復 maturity)。
+
+**Day 21 特筆**:
+- **11 Day 連続 rfl preference (桁到達後の継続実証)** (Day 11-21、quality loop 長期持続性)
+- **Pattern #7 hook 十四段階発展到達** (MODIFY 6 度目運用検証)
+- **段階的 Lean 機能習得 5 拡張到達** (A-Minimal/A-Compact/A-Standard A-Minimal/A-Standard-Lite/A-Compact nested/**A-Standard-Full A-Minimal**)
+- **Subagent VERDICT 初の FAIL→PASS pattern 確立** (cycle 内即時修復 maturity の質的発展)
+- **Day 18-20 long-deferred Subagent I3 (4 セッション繰り延べ) を Day 21 改訂 100 で解消** (Day 15 macro × Day 18 command 連携完全実証、ユーザーフィードバック直接反映)
+- **paper サーベイ評価サイクル「実装修正組込み」13 度目適用** (long-deferred 解消フェーズ突入)
+
+---
+
+## Day 1-21 累計サマリ (Day 20 からの delta)
+
+- example: 371 → **372** (+1、Day 21 連携テスト fixture 追加)
+- linter: 3 + Lite + nested (4 拡張) → **5 拡張到達** = A-Minimal + A-Compact + A-Standard A-Minimal + A-Standard-Lite + A-Compact nested + **A-Standard-Full A-Minimal**
+- command_invocations: 11 → **13** (+2、`#check_retired_auto` 1 + 連携 `#check_retired` 1)
+- Pattern #7 hook: 十三段階発展 → **十四段階発展到達** (MODIFY 6 度目)
+- paper × 実装合流: 17 種 → **18 種** (long-deferred I3 解消カテゴリ追加)
+- paper finding: 84 → **89 件** (+5)
+- Subagent 指摘推移: Day 20 = 3 → **Day 21 初 FAIL→PASS + I2/I3 実装追加 + I4 繰り延べ** (新パターン: addressable 即時対処サイクル + long-deferred 解消)
+- **rfl preference 連続記録: 10 Day → 11 Day 連続 (桁到達後の継続実証)**
+- verifier_history: 25 entries → **26 entries** (Day 21 R1 追加、initial FAIL→PASS 記録含む)
+- **Phase 0 累計合致率: 99.0% → 99.1% 到達** (106/107、Day 20 +0.1pt 改善、Phase 0 99.1% 新高水準)
+- **long-deferred 解消**: Day 18-20 Subagent I3 (4 セッション繰り延べ) を Day 21 改訂 100 で同時解消 (cycle 内即時修復 maturity 質的発展)

@@ -1057,6 +1057,51 @@ Day 19 backward compatible 完全維持 (別 command 名で新規追加、Day 18
 - Subagent 指摘 4 Day 連続 addressable 0 (累積 design space richness 安定)
 - Phase 0 累計合致率 99.0% 安定 (Day 19 99.0% から維持)
 
+## 現状: Phase 0 Week 2 Day 21 完了（2026-04-20 追加、A-Standard-Full A-Minimal 拡張 + 11 Day 連続 milestone + long-deferred I3 解消）
+
+Section 2.40 Day 21 着手前判断 (Q1 A-Standard-Full elaborator hook / Q2 A-Minimal pre-defined watched namespaces auto-target / Q3 案 A / Q4 案 A) に従い実装。
+**A-Standard-Full A-Minimal: `#check_retired_auto` command 追加** (pre-defined hardcode list 経由 watched namespaces を一括 check、Day 22+ env-driven 拡張前提の段階的設計、Day 21 paper サーベイ 5 拡張到達)、
+Day 18-20 backward compatible 完全維持 (別 command 名で新規追加、Day 18-20 同 module MODIFY、6 度目)、
+**Day 11-21 = 11 Day 連続 rfl preference 維持** (cycle 内学習 transfer 6 度目、桁到達後の継続実証)、
+**Pattern #7 hook 十四段階発展到達** (MODIFY path 6 度目運用検証、両パターン運用 9 度目)、
+**段階的 Lean 機能習得 5 拡張到達** (A-Minimal + A-Compact + A-Standard A-Minimal + A-Standard-Lite + A-Compact nested + **A-Standard-Full A-Minimal**、残り 1/4 = Week 5-6 A-Maximal)、
+**Subagent VERDICT 初の FAIL→PASS pattern 確立** (I1 docstring "5"→"4" 即時対処後 PASS、cycle 内即時修復 maturity の質的発展)、
+**Day 18-20 long-deferred Subagent I3 (4 セッション繰り延べ) を Day 21 改訂 100 で解消** (Day 15 `@[retired]` macro × Day 18 `#check_retired` command 連携テスト追加、A-Compact ← A-Standard A-Minimal 連携完全実証成功、ユーザーフィードバック「論文サーベイ検証の後に実装修正・追加を必ず実施してね」反映)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→20=3→**21 初 FAIL→PASS + I2/I3 実装追加 + I4 繰り延べ** (cycle 内学習 transfer の質的発展フェーズ突入)。
+
+### Day 21 の 1 項目 + long-deferred 解消 (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **`#check_retired_auto` command 追加** (RetirementLinterCommand.lean MODIFY、Day 18-20 同 module、watched namespaces hardcode list)
+- [x] RetirementLinterCommandTest.lean MODIFY (example 7→8、command invocations 11→12、+1 example + 1 invocation)
+- [x] **改訂 100 long-deferred I3 解消**: `import AgentSpec.Provenance.RetirementLinter` 追加 + `@[retired "..." "2026-04-20"] def day21LinkageFixture` + `#check_retired ... .day21LinkageFixture` invocation 追加 → build PASS で「✓ '...day21LinkageFixture' is retired」確認、A-Compact ← A-Standard A-Minimal 連携完全実証
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (Day 20 jobs 数維持)
+- [x] **Subagent 検証 初の FAIL→PASS** (initial: I1 addressable=1 docstring "5"→"4" 訂正で PASS、I2 即時対処 + I3 実装追加 + I4 Day 22+ 繰り延べ)
+- [x] `#check_retired_auto` 動作確認: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 ✓ (Role.toCtorIdx は watched namespaces 直下対象外で counted 除外)
+
+### Week 2 Day 21 時点の累計指標
+
+| 指標 | Day 20 | Day 21 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 371 | 0 / +1 | **15 / 372** |
+| Provenance 層 linter | 4 拡張 (A-Compact nested まで) | +A-Standard-Full A-Minimal | **5 拡張到達 (A-Standard-Full A-Minimal 完了)** |
+| Command invocations | 11 | +1 hardcode auto + 1 連携 | **13** |
+| Pattern #7 hook | 十三段階発展 | 14 度目運用検証 (MODIFY 6 度目) | **十四段階発展到達** |
+| Subagent 指摘項目 | 3 informational (addressable 0) | initial FAIL→PASS pattern 初確立 | **新パターン: addressable 即時対処サイクル** |
+| **rfl preference 連続記録** | 10 Day | +1 | **11 Day 連続 (桁到達後の継続実証)** |
+
+### Day 21 で達成した TyDD / paper 進展 (Section 12.61 + 12.62 + 12.63)
+
+- A-Standard-Full A-Minimal 完備 / 段階的 Lean 機能習得 5 拡張到達 (残り 1/4 = Week 5-6 A-Maximal)
+- pre-defined hardcode list + Day 22+ env-driven 拡張前提の段階的設計 (TyDD-D9 design judgement)
+- Pattern #7 hook 十四段階発展到達 (MODIFY 6 度目)
+- paper × 実装 18 度目合流カテゴリ (A-Standard-Full A-Minimal × long-deferred I3 解消 × 11 Day 連続 rfl preference)
+- paper finding 89 件累計 (+5)
+- **Day 18-20 long-deferred I3 (4 セッション繰り延べ) を Day 21 改訂 100 で解消** (Day 15 macro × Day 18 command 連携完全実証)
+- **11 Day 連続 rfl preference (桁到達後の継続実証、quality loop 長期持続性)** 
+- **Subagent VERDICT 初の FAIL→PASS pattern 確立** (cycle 内即時修復 maturity)
+- Phase 0 累計合致率 **99.1% 到達** (Day 20 99.0% から +0.1pt 改善、Phase 0 99.1% 新高水準)
+- ユーザーフィードバック直接反映 (「論文サーベイ検証の後に実装修正・追加を必ず実施してね」→ I3 long-deferred 解消の動機)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
