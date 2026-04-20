@@ -1877,3 +1877,47 @@ Day 18 追加で:
 - verifier_history: 29 entries → **30 entries** (Day 25 R1 追加)
 - **Phase 0 累計合致率: 99.2% 維持** (126/127、Day 24 99.2% から安定継続、Phase 0 99.2% 安定)
 - **Day 22 audit long-deferred 対応 3 例目完遂**: Day 22 informational I2 (multi-module duplicate handling) Day 22-24 = 3 session 繰り延げ → Day 25 解消、Day 26+ 長期化防止
+
+---
+
+## Phase 0 Week 2 Day 26 検証 (2026-04-20 — Day 26 commit `71e2593` 後)
+
+**背景**: Section 2.50 Q1-Q4 確定済 (Q1 Day 24 audit 次 long-deferred candidate 解消 / Q2 A-Minimal 2 variant / Q3 案 A ResearchActivity.lean MODIFY / Q4 案 A +11 example backward compat) に従い **ResearchActivity payload 拡充** 実装。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` 2 variants を backward compatible で追加 (Day 9 verify pattern 継続)、`isInvestigateOf` / `isRetireOf` accessor 追加 (isVerify / isRetire 対称)。Day 9 D3 で「Day 10+ 拡充検討」と記載した 16 Day 前の約束を Day 26 で履行。Day 25 backward compatible 完全維持 (production 5 variant → 7 variant へ拡張、既存 test 全て不変)、Pattern #7 hook 十九段階発展 (MODIFY path 9 度目)、**16 Day 連続 rfl preference**。
+
+### Day 26 /verify Round 1
+
+**Subagent 検証** (改訂 121): VERDICT = **PASS** + **0 addressable + 0 informational = Day 17 ぶりの clean cycle 初実例** (Day 18 以降初)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| — | **指摘なし** (clean cycle 初実例、対処項目なし) | Day 22 audit「marked done ≠ actually done」教訓継続 9 Day 連続で品質 maturity Subagent clean 評価レベルに到達 |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → 21 初 FAIL→PASS+4 → 22 +1 即時 0+2 → 23 +0+4 即時 0 残 → 24 +0+1 即時 0 残 → 25 +0+2 即時 0 残 → **Day 26 +0+0 = clean cycle 初実例 (Day 17 ぶり)** (Day 18-25 累積 informational 推移 [2/3/3/4 即時/1 即時/2 即時/1 即時/2 即時] からの脱却、9 Day 連続 cycle 内即時修復の極致到達)。
+
+**Day 26 特筆**:
+- **16 Day 連続 rfl preference (桁到達後 16 Day 継続実証)** (Day 11-26、quality loop 長期持続性)
+- **Pattern #7 hook 十九段階発展到達** (MODIFY path 9 度目運用検証、両パターン運用 14 度目)
+- **ResearchActivity payload 拡充完了** (Day 9 D3 の Day 10+ 拡充検討を 16 Day 後に履行、backward compatible で 5→7 variant)
+- **Day 22 audit long-deferred 対応 4 例目完遂** (Day 13-22 = 12 Day 連続繰り延げ最長 long-deferred candidate 解消、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く 4 例目、Day 27+ 長期化防止成功)
+- **Day 17 ぶりの clean cycle 初実例** (Subagent VERDICT PASS + 0+0、Day 18 以降初、9 Day 連続 cycle 内即時修復の極致到達、品質 maturity Subagent clean 評価レベルに到達)
+- **paper サーベイ評価サイクル「実装修正組込み」18 度目適用** (Day 22 feedback 継続適用 9 Day 連続)
+- **Phase 0 累計合致率 99.2% 維持** (Day 25 99.2% から安定継続)
+
+---
+
+## Day 1-26 累計サマリ (Day 25 からの delta)
+
+- example: 376 → **387** (+11、Day 26 で ResearchActivityTest +11 example: inhabitation 4 + accessor rfl 4 + backward compat 3、breakdown 22→33)
+- linter: 6 拡張 + multi-source duplicate observe-first 完了 → **6 拡張 + ResearchActivity payload 拡充完了** (Day 22 audit 対応 4 例目完遂)
+- ResearchActivity variants: 5 (Day 9 baseline) → **7** (+2、investigateOf / retireOf)
+- Accessor 関数: 2 (isVerify / isRetire) → **4** (+2、isInvestigateOf / isRetireOf、対称化完了)
+- Long-deferred 解消件数: 3 → **4** (+1、Day 13-22 ResearchActivity payload = 12 Day 最長 long-deferred candidate 解消、Day 22 audit 対応 4 例目)
+- Pattern #7 hook: 十八段階発展 → **十九段階発展到達** (MODIFY path 9 度目運用検証、両パターン運用 14 度目)
+- paper × 実装合流: 22 種 → **23 種** (ResearchActivity payload 拡充 × backward compatible × long-deferred 対応 4 例目 × clean cycle 初実例)
+- paper finding: 109 → **114 件** (+5)
+- Subagent 指摘推移: Day 25 = PASS+0+2 即時 0 残 → **Day 26 = PASS+0+0 = clean cycle 初実例 (Day 17 ぶり)** (9 Day 連続 cycle 内即時修復の極致到達)
+- **rfl preference 連続記録: 15 Day → 16 Day 連続 (桁到達後 16 Day 継続実証)**
+- verifier_history: 30 entries → **31 entries** (Day 26 R1 追加、clean cycle 明示 subagent_verification field)
+- **Phase 0 累計合致率: 99.2% 維持** (131/132、Day 25 99.2% から安定継続、Phase 0 99.2% 安定)
+- **Day 22 audit long-deferred 対応 4 例目完遂**: Day 13-22 = 12 Day 連続繰り延げの最長 long-deferred candidate (ResearchActivity payload 拡充) 解消、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く 4 例目、long-deferred 化防止 maturity 安定継続
+- **clean cycle 初実例到達**: Subagent VERDICT PASS + 0 addressable + 0 informational = Day 17 ぶり (Day 18 以降初)、Day 22 audit 教訓継続 9 Day 連続で品質 maturity Subagent clean 評価レベルに到達

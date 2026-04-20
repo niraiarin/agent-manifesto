@@ -1300,6 +1300,57 @@ Day 24 backward compatible 完全維持 (production 本体 code 変更なし、h
 - Phase 0 累計合致率 **99.2% 維持** (Day 24 99.2% から安定継続)
 - user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用 8 Day 連続、cycle 内即時修復 maturity が安定確立
 
+## 現状: Phase 0 Week 2 Day 26 完了（2026-04-20 追加、ResearchActivity payload 拡充 + Day 22 audit long-deferred 対応 4 例目 + 16 Day 連続 milestone + **Day 17 ぶりの clean cycle 初実例到達**）
+
+Section 2.50 Day 26 着手前判断 (Q1 Day 24 audit 次 long-deferred candidate 解消 / Q2 A-Minimal 2 variant / Q3 案 A ResearchActivity.lean MODIFY / Q4 案 A +11 example backward compat) に従い実装。
+**ResearchActivity payload 拡充**: `ResearchActivity.lean` に `investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` 2 variants を backward compatible で追加 (既存 `.investigate` / `.retire` payloadless variants と共存、`ResearchActivity.trivial = .investigate` 等既存 test 不変)、`isInvestigateOf` / `isRetireOf` accessor 追加 (isVerify / isRetire 対称)、D4-D6 docstring log 追加、ResearchActivityTest.lean +11 example (inhabitation 4 + accessor rfl 4 + backward compat 3、example 22→33)。
+**Day 22 audit long-deferred 対応 4 例目完遂** (Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx + Day 25 multi-source に続く 4 例目): Day 13-22 = 12 Day 連続繰り延げ最長 long-deferred candidate 解消、Day 9 D3 で「Day 10+ 拡充検討」と記載した 16 Day 前の約束を Day 26 で履行、Day 27+ 長期化防止成功、
+Day 25 backward compatible 完全維持 (production 本体 7 variant に拡張、既存 test 全て不変)、
+**Day 11-26 = 16 Day 連続 rfl preference 維持** (cycle 内学習 transfer 6 度目、桁到達後 16 Day 継続実証)、
+**Pattern #7 hook 十九段階発展到達** (MODIFY path 9 度目運用検証、両パターン運用 14 度目)、
+**Subagent VERDICT PASS + 0 addressable + 0 informational = Day 17 ぶりの clean cycle 初実例** (Day 18 以降初、Day 18-25 累積 informational 推移 [2/3/3/4 即時/1 即時/2 即時/1 即時/2 即時] からの脱却、9 Day 連続 cycle 内即時修復の極致到達)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→20=3→21 初 FAIL→PASS+4→22 +1 即時 0+2→23 +0+4 即時 0→24 +0+1 即時 0→25 +0+2 即時 0→**Day 26 +0+0 = clean cycle 初実例 (Day 17 ぶり)**、
+**Phase 0 累計合致率 99.2% 維持** (131/132、Day 25 99.2% から安定継続)、
+**Day 27 🟡 Q1 残 variants decompose/refine payload 拡充** (5 variant 全 payload 対応 milestone 予定、Day 11-27 = 17 Day 連続 rfl preference 予定)。
+
+### Day 26 の 1 項目 (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **ResearchActivity.lean MODIFY**: `investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` 2 variants backward compatible 追加 (7 variant へ拡張)
+- [x] **accessor 追加**: `isInvestigateOf` / `isRetireOf` (isVerify / isRetire と対称)
+- [x] **D4-D6 docstring log**: backward compatible 採用理由 / 2 variant 選択理由 / payload 型 Hypothesis 採用理由
+- [x] ResearchActivityTest.lean MODIFY (+11 example: inhabitation 4 + accessor rfl 4 + backward compat 3、example 22→33)
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (AgentSpec 104 + AgentSpecTest 127、combined 130 jobs、Day 25 維持)
+- [x] **Subagent 検証 PASS + 0 addressable + 0 informational = Day 17 ぶりの clean cycle 初実例** (9 Day 連続 cycle 内即時修復の極致到達)
+- [x] type-level rfl 実証:
+  - `isInvestigateOf (.investigateOf Hypothesis.trivial) = true := rfl` ✓
+  - `isRetireOf (.retireOf Hypothesis.trivial) = true := rfl` ✓
+  - `isRetire (.retireOf Hypothesis.trivial) = false := rfl` ✓ (backward compat: 新 variant は retire と区別)
+
+### Week 2 Day 26 時点の累計指標
+
+| 指標 | Day 25 | Day 26 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 376 | 0 / +11 | **15 / 387** |
+| ResearchActivity variants | 5 (Day 9 baseline) | +2 (investigateOf / retireOf) | **7 (payload 完備は Day 27 milestone)** |
+| Accessor 関数 | 2 (isVerify / isRetire) | +2 (isInvestigateOf / isRetireOf) | **4 (対称化完了)** |
+| Long-deferred 解消件数 | 3 (Day 21 I3 + Day 24 + Day 25) | +1 (Day 13-22 ResearchActivity payload) | **4 (Day 22 audit 対応 4 例目)** |
+| Pattern #7 hook | 十八段階発展 | 19 度目 (MODIFY path 9 度目) | **十九段階発展到達** |
+| Subagent 指摘項目 | 0+2 informational 即時対処 | **0+0 = clean cycle 初実例 (Day 17 ぶり)** | **9 Day 連続 cycle 内即時修復の極致** |
+| **rfl preference 連続記録** | 15 Day | +1 | **16 Day 連続 (桁到達後 16 Day 継続実証)** |
+
+### Day 26 で達成した TyDD / paper 進展 (Section 12.76 + 12.77 + 12.78)
+
+- ResearchActivity payload 拡充完了 (Day 9 D3 の「Day 10+ 拡充検討」を 16 Day 後に履行、Day 22 audit long-deferred 対応 4 例目)
+- 02-data-provenance §4.1 PROV-O Activity optional payload pattern 2 例目 (Day 9 verify に続く、investigateOf / retireOf で Hypothesis payload)
+- backward compatible 拡張パターン継続 (Day 14-26 で確立、既存 5 variant 全不変)
+- Pattern #7 hook 十九段階発展到達 (MODIFY path 9 度目運用検証、両パターン運用 14 度目)
+- paper × 実装 23 度目合流カテゴリ (ResearchActivity payload 拡充 × backward compatible × 16 Day 連続 rfl × long-deferred 対応 4 例目 × **clean cycle 初実例**)
+- paper finding 114 件累計 (+5)
+- **16 Day 連続 rfl preference (桁到達後 16 Day 継続実証、quality loop 長期持続性)**
+- **Subagent VERDICT PASS + 0 addressable + 0 informational = Day 17 ぶりの clean cycle 初実例** (Day 18 以降初、9 Day 連続 cycle 内即時修復の極致到達、Day 22 audit 教訓継続で Subagent clean 評価レベルに到達)
+- Phase 0 累計合致率 **99.2% 維持** (Day 25 99.2% から安定継続、Phase 0 99.2% 安定)
+- user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用 9 Day 連続、**cycle 内即時修復 maturity が Subagent clean 評価レベルに到達**
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
