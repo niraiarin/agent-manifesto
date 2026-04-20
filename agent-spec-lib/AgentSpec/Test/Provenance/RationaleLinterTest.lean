@@ -54,4 +54,9 @@ set_option linter.deprecated false in
 -- LifeCyclePhase (inductive) も defnInfo ではない
 #check_unattributed_rationale AgentSpec.Spine.LifeCyclePhase
 
+/-! ### Day 61 (F1 sprint 2/4): register_rationale_watched_namespace 動作確認 -/
+
+-- Day 61 で追加された register command が動作 (env mutation)
+register_rationale_watched_namespace AgentSpec.Test.Provenance.RationaleLinter
+
 end AgentSpec.Test.Provenance.RationaleLinter

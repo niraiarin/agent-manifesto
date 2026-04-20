@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.60.0-week2-day60",
+  "version": "0.61.0-week2-day61",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2110,9 +2110,14 @@
         }
       ],
       "provides_types": [
-        "#check_unattributed_rationale command (A-Standard A-Minimal value-level scanner、Day 60 F1 Option C sprint 1/4)"
+        "#check_unattributed_rationale command (A-Standard A-Minimal value-level scanner、Day 60 F1 Option C sprint 1/4)",
+        "defaultWatchedRationaleNamespaces",
+        "watchedRationaleNamespacesExt (SimplePersistentEnvExtension、Day 22 pattern)",
+        "register_rationale_watched_namespace command (Day 61 F1 sprint 2/4)"
       ],
-      "provides_definitions": [],
+      "provides_definitions": [
+        "getWatchedRationaleNamespaces (env → List Name)"
+      ],
       "assumptions": [],
       "scope": "formalization",
       "refs": [
@@ -2977,6 +2982,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 139 jobs + 8 #check 動作確認、value-level scanner で 3 existing unattributed 使用 decl (Hypothesis.trivial / ResearchGoal.trivial / ofClaimWithText) を正確に flag、attributed API (strict/mk prime) は ✓、inductive/structure は ○。false positive 0。",
       "scope": "AgentSpec.Provenance.RationaleLinter 新 module (Day 18 RetirementLinterCommand pattern 踏襲)、#check_unattributed_rationale <ident> command で decl value body を Expr.getUsedConstants で走査、blacklist (Rationale.trivial / ofText) 定数参照を検出。Day 52 fixture deprecated 路線 (0 warning) を根本解決、F1 Option C sprint 1/4。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 61 register_rationale_watched_namespace + EnvExtension (F1 sprint 2/4)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 139 jobs PASS、Test で register command 動作確認 (Registered rationale watched namespace info output)、Day 22 RetirementLinter pattern 忠実複製 (SimplePersistentEnvExtension + addEntryFn/addImportedFn + default+registered additive 連結)",
+      "scope": "Day 60 value-level scanner に続き Day 22 watched-namespace env-driven 拡張を Rationale 側に複製。defaultWatchedRationaleNamespaces (Process/Spine/Provenance 3 件) + watchedRationaleNamespacesExt (SimplePersistentEnvExtension) + getWatchedRationaleNamespaces + register_rationale_watched_namespace command。Day 62 で namespace scan 変種 2 種が本 infrastructure を消費。",
       "compatibility": "conservative extension"
     }
   ],

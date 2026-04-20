@@ -102,4 +102,49 @@ elab "#check_unattributed_rationale " id:ident : command => do
     | none =>
       logInfo m!"? '{name}' declaration not found"
 
+/-! ### Day 61 (F1 sprint 2/4): watched-namespace register + EnvExtension
+
+Day 22 RetirementLinter の SimplePersistentEnvExtension pattern を Rationale に複製。
+Day 61 では infrastructure 追加のみ、Day 62 で `#check_unattributed_rationale_in_namespace`
++ `_auto` 変種がこれを消費。
+-/
+
+/-- Day 61 F1 sprint 2/4: watched-namespace hardcode default。
+    register で追加される前の initial list、agent-spec-lib の主要 namespace を網羅。 -/
+def defaultWatchedRationaleNamespaces : List Name := [
+  `AgentSpec.Process,
+  `AgentSpec.Spine,
+  `AgentSpec.Provenance
+]
+
+/-- Day 61 F1 sprint 2/4: env-driven watched-namespace extension
+    (Day 22 watchedRetirementNamespacesExt pattern)。 -/
+initialize watchedRationaleNamespacesExt :
+    SimplePersistentEnvExtension Name (Array Name) ←
+  registerSimplePersistentEnvExtension {
+    addEntryFn := fun arr name => arr.push name
+    addImportedFn := fun arrs => arrs.foldl (init := #[]) (· ++ ·)
+  }
+
+/-- Day 61 F1 sprint 2/4: env state から watched namespaces を取得。
+    default hardcode ++ register 経由分の additive 連結。backward compatible。 -/
+def getWatchedRationaleNamespaces (env : Environment) : List Name :=
+  defaultWatchedRationaleNamespaces ++
+    (watchedRationaleNamespacesExt.getState env).toList
+
+/-- Day 61 F1 sprint 2/4: `register_rationale_watched_namespace <namespace>` command。
+    指定 namespace を watched list に追加、Day 62 以降の `_in_namespace` / `_auto` で
+    auto-target となる。
+
+    利用例:
+    - `register_rationale_watched_namespace AgentSpec.Test.MyModule`
+      → 以降の `#check_unattributed_rationale_auto` で本 namespace も検査対象に追加
+
+    Day 22 `register_retirement_namespace` と同 pattern (no `#`-prefix、declarative
+    side-effect、query commands と semantic 区別)。 -/
+elab "register_rationale_watched_namespace " id:ident : command => do
+  let ns := id.getId
+  modifyEnv fun env => watchedRationaleNamespacesExt.addEntry env ns
+  logInfo m!"Registered rationale watched namespace: '{ns}'"
+
 end AgentSpec.Provenance
