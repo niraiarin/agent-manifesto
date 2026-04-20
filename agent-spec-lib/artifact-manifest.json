@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.54.0-week2-day54",
+  "version": "0.54.1-week2-day54-1",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2800,6 +2800,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 135 jobs + 40 ResearchNodeTest examples PASS、7 kind 全て Rationale 必須化、kind/rationale/isTerminal/isGenerative accessor 完備、umbrella List 集約で完全性確認",
       "scope": "AgentSpec.Spine.ResearchNode inductive 7 constructor (Survey/Gap/Hypothesis/Decomposition/Implementation/Failure/Retired)、Day 45-48 pattern で rationale 必須化、String payload hole-driven (Spine layer 隔離)。Provenance.ResearchEntity (PROV-O entity) / Spine.LifeCyclePhase (phase state) と直交 3 軸の ontological 分離。GA-S1 in_progress → done。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Day 54.1 Structural recurrence prevention (cycle-check.sh 導入)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "scripts/cycle-check.sh を現状に対し実行、5 項目 (breakdown/day_plan commit/7-day empirical/long-deferred/schema) 全件動作確認。Day 49-54 の Step 7 部分省略 6 Day 連続違反の構造的再発防止。",
+      "scope": "scripts/cycle-check.sh 新規 (5 check、mode=full/quick)、docs/artifact-manifest-jq-recipes.md に使用法追記、memory project_day_cycle_pattern.md に script reference 追加。",
       "compatibility": "conservative extension"
     }
   ],

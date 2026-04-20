@@ -182,3 +182,27 @@ jq --arg d "$(date -u +%Y-%m-%d)" '.last_updated = $d' $PT \
 - `^day[0-9]+_update$` / `^week[0-9]+_update$` / `^milestone_[0-9]+_day_rfl_preference$` / `^section_[0-9]+(_[0-9]+)?_narrative$` は top-level 追加不可 (patternProperties: false)
 - `additionalProperties: false` につき new top-level field は schema 同 commit
 - `pending_items[].status` は enum 固定 (pending/in_progress/deferred/done/... 等)、任意文字列は schema reject
+
+## Day cycle compliance check (Day 54.1 追加、再発防止 script)
+
+Day 49-54 の Step 7 mandatory checklist 部分省略 違反の構造的再発防止。commit 前 / Day 完了時に実行推奨。
+
+```bash
+# 全 check (breakdown / day_plan commit / 7-day empirical / long-deferred / schema 5 項目)
+bash scripts/cycle-check.sh
+
+# quick mode (breakdown + schema のみ、CI 向け高速版)
+bash scripts/cycle-check.sh --quick
+```
+
+Exit コード:
+- 0 = 全 PASS
+- 1 = addressable (commit 前に対処)
+- 2 = informational (確認推奨、block せず)
+
+検出項目:
+1. `build_status.example_count` vs `breakdown_sum` 整合 (Day 37-48 で 59 drift 蓄積の再発防止)
+2. `day_plan` 直近 done entry の commit 欄 null 検出 (Day 48/50 で一時放置の再発防止)
+3. 7-day empirical cycle 経過日数 (rule I 7 Day 周期、最終 empirical を verifier_history から逆算)
+4. long-deferred pending_items (Day N timing の未解消 item、40+ Day stale 検出)
+5. JSON Schema 準拠 (artifact-manifest + 11-pending-tasks 両方)
