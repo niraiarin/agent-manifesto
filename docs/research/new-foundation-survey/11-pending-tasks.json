@@ -1,0 +1,350 @@
+{
+  "$schema": "https://agent-manifesto.internal/schemas/11-pending-tasks.json",
+  "schema_role": "forward-looking pending items + roadmap (machine-readable DB)。Day 37 (2026-04-21) で markdown から migrate。過去 narrative (Day 6-29 per-Day entries / Section 12.6+ per-Day TyDD / Section 13 改訂 log) は 11-pending-tasks-archive.md に退役。本 file は jq で CRUD、検索、更新。新規記録は machine-readable のみ、人間可読性は二次。",
+  "last_updated": "2026-04-21",
+  "archive_pointer": "11-pending-tasks-archive.md",
+  "references": [
+    "10-gap-analysis.md: 104 Gap + 10 Warning 根拠",
+    "99-verifier-rounds.md: Verifier 全検証履歴",
+    "agent-spec-lib/artifact-manifest.json: thin catalog",
+    "agent-spec-lib/artifact-manifest.schema.json: JSON Schema 制約"
+  ],
+
+  "roadmap": [
+    {
+      "week": "2-3",
+      "scope": "Spine 層",
+      "files": ["AgentSpec/Spine/EvolutionStep.lean", "AgentSpec/Spine/SafetyConstraint.lean", "AgentSpec/Spine/LearningCycle.lean", "AgentSpec/Spine/Observable.lean"],
+      "completion_criteria": "4 type class + dummy instance",
+      "notes": "G5-1 当初計画は Cslib.LTS 再利用だが GA-I5 により CSLib 依存は Week 6 延期。Week 2-3 では Mathlib 既存型または独自定義で代替。",
+      "status": "done"
+    },
+    {
+      "week": "3-4",
+      "scope": "Manifest 移植",
+      "files": ["lean-formalization/Manifest/ → AgentSpec/Manifest/"],
+      "completion_criteria": "既存 55 axioms 全て import 可",
+      "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)",
+      "status": "pending"
+    },
+    {
+      "week": "4-5",
+      "scope": "Process 層",
+      "files_day6_onwards": ["AgentSpec/Process/Hypothesis.lean", "AgentSpec/Process/Failure.lean", "AgentSpec/Process/Evolution.lean", "AgentSpec/Process/HandoffChain.lean"],
+      "files_day8_plus": ["ResearchNode.lean (GA-S1)", "Provenance.lean (GA-S3)", "Retirement.lean (GA-S5)", "State.lean (GA-S7)", "Rationale.lean (GA-S8)"],
+      "completion_criteria": ".claude/skills/handoff state machine が型として表現 + Hypothesis/Failure/Evolution/HandoffChain inductive 完備",
+      "notes": "FolgeID (GA-S2) と Edge (GA-S4) は Day 1-2 で Spine 層へ移動済",
+      "status": "in_progress (Day 6-35 で大部分完了、残: ResearchNode/Provenance umbrella/State/Rationale)"
+    },
+    {
+      "week": "5-6",
+      "scope": "Tooling 層",
+      "items": ["agent_verify tactic (GA-C26)", "VcForSkill VCG (GA-C26)", "SMT hammer bridge (GA-C7): LeanHammer/Duper/Lean-Auto/Boole", "EnvExtension Auto-Register (GA-C9)", "Call-site obligation generation (GA-C22)"],
+      "completion_criteria": "少なくとも 5 定理を hammer で自動証明",
+      "status": "pending"
+    },
+    {
+      "week": "6-7",
+      "scope": "CI 整備",
+      "items": ["lake test target (GA-I9, GA-I11)", "lake lint target (GA-I11)", "lake exe checkInitImports", "GitHub Actions 統合", ".claude/hooks/ の新基盤対応 (GA-I12)", "CSLib/LeanHammer/LeanDojo 依存追加 (GA-I5)", "Python 依存管理 uv (GA-T7)", "LeanDojo Python API (GA-I6)", "Pantograph (GA-I13)"],
+      "completion_criteria": "GitHub Actions green",
+      "status": "pending"
+    },
+    {
+      "week": "7-8",
+      "scope": "Verification",
+      "items": ["既存 1670 theorems の代表 100+ を新構造下で再証明", "CLEVER 風自己評価 10-20 サンプル (GA-M1)", "既存 GitHub Issue → Lean canonical の migration 戦略 (GA-T3)", "MEMORY.md Lean 化 migration (GA-T6)", "Self-benchmark (manifesto を 24 番目 repo、GA-E1)", "外部 benchmark (FLTEval/miniF2F/DafnyBench/CLEVER/VeriBench、GA-E7)", "3-level Verify strategy L1/L2 (GA-M12, GA-M13)"],
+      "completion_criteria": "再証明率 > 80%, 自己評価 > 60%",
+      "status": "pending"
+    }
+  ],
+
+  "pending_items": [
+    {"section": "2.1", "topic": "lakefile.lean: LeanHammer/Lean-Auto/Duper/CSLib require", "status": "deferred", "timing": "Week 6", "gaps": ["GA-C7", "GA-I5"]},
+    {"section": "2.1", "topic": "lakefile.lean: weak.linter.unreachableTactic の termination 保護", "status": "deferred", "timing": "Week 5-6", "gaps": ["GA-C31"]},
+    {"section": "2.1", "topic": "lakefile.lean: $schema URI 非解決", "status": "deferred", "timing": "Week 6-7"},
+    {"section": "2.1", "topic": "lakefile.lean: lake exe test/lint target", "status": "deferred", "timing": "Week 6"},
+    {"section": "2.2", "topic": "Core.lean: 普遍 round-trip 定理 universal proof", "mark": "⚠", "status": "partial_day5", "detail": "bounded 7³→8³ 証明済、universal proof は Day 6/Week 3 へ繰り延げ", "timing": "Week 6 Lean-Auto 統合"},
+    {"section": "2.2", "topic": "Core.lean: Ord SemVer → ResearchSpec Lattice 拡張", "mark": "⏳", "status": "pending", "timing": "Week 4-5", "gaps": ["GA-S15"]},
+    {"section": "2.2", "topic": "Core.lean: Hoare-style 4-arg post / Multiplicity Grading", "mark": "⏳", "status": "pending", "timing": "Week 4-5", "gaps": ["GA-S11", "GA-S16", "TyDD-B4", "TyDD-F3"]},
+    {"section": "2.2", "topic": "Core.lean: Decidable 実装を inferInstanceAs に統一", "mark": "⏳", "status": "pending", "timing": "Day 5 or Week 3"},
+    {"section": "2.3", "topic": "CoreTest: Property-based test (Hypothesis 風)", "mark": "⏳", "status": "pending", "timing": "Week 6-7", "gaps": ["GA-M4"]},
+    {"section": "2.4", "topic": "artifact-manifest: $schema URI 実在 URL", "mark": "⏳", "status": "pending", "timing": "Week 6-7"},
+    {"section": "2.4", "topic": "artifact-manifest: JSON → Lean 型化 (TyDD-J5)", "mark": "⏳", "status": "pending", "timing": "Week 4", "gaps": ["TyDD-J5"]},
+    {"section": "2.4", "topic": "artifact-manifest: assumption refs layer 充填", "mark": "⏳", "status": "pending", "timing": "Week 4", "gaps": ["GA-I1"]},
+    {"section": "2.4", "topic": "artifact-manifest: 本体 schema との divergence 解消", "mark": "⏳", "status": "pending", "timing": "Week 6-7"},
+    {"section": "2.5", "topic": "README: Week 1 完了基準の縮小定義", "status": "pending", "timing": "Week 6 CSLib 追加時"},
+    {"section": "2.5", "topic": "README: TyDD-H7 L1/L2 実装", "status": "pending", "timing": "Week 6-7"},
+    {"section": "2.6", "topic": "Top-down/hole-driven development 運用", "mark": "🔄", "status": "ongoing", "detail": "Week 2 Day 1-36 で実践中", "gaps": ["TyDD-S1 benefit #7"]},
+    {"section": "2.8", "topic": "Edge: S4 P2 Refinement で no-self-loop 型強制", "mark": "🔴", "status": "pending", "timing": "Week 4-5"},
+    {"section": "2.8", "topic": "Edge: F8 FiberedTypeSpec で EdgeKind fiber 化", "mark": "🟡", "status": "pending", "timing": "Week 4-5"},
+    {"section": "2.8", "topic": "Edge: Recipe 11 BiTrSpec codec", "mark": "🟢", "status": "pending", "timing": "Week 6 以降"},
+    {"section": "2.8", "topic": "Edge: PROV-strict vs research-mode 語彙分離", "mark": "🟢", "status": "pending", "timing": "Week 6-7"},
+    {"section": "2.10", "topic": "LearningStage.le Prop 形式併設", "mark": "🟡", "status": "deferred", "timing": "Day 5 (未対処)", "paper": "S4"},
+    {"section": "2.10", "topic": "Recipe 10 (Opaque TypeSpec) SafetyConstraint.safe opaque 化", "mark": "🟡", "status": "pending", "timing": "Week 4-5", "paper": "N4"},
+    {"section": "2.10", "topic": "PROV-O 三項統合 LearningCycle → WasGeneratedBy", "mark": "🟡", "status": "pending", "timing": "Week 4-5", "paper": "02-data-provenance §4.1"},
+    {"section": "2.10", "topic": "S6 Paper 1 BST/AVL invariants (LearningStage order)", "mark": "🟡", "status": "pending", "timing": "Week 4-5", "paper": "S6 Paper 1"},
+    {"section": "2.10", "topic": "VBS tactic chain / Lean-Auto 統合 (universal round-trip proof)", "mark": "🔴", "status": "pending", "timing": "Week 6 前倒し", "paper": "S2 Recipe 4-6"},
+    {"section": "2.10", "topic": "S7 Schedule combinators (LearningStage.next retry/budget)", "mark": "🟢", "status": "pending", "timing": "Week 6-7", "paper": "S7 Effect-TS"},
+    {"section": "2.10", "topic": "Cedar DRT pattern (LearningStage 5×5 transition)", "mark": "🟢", "status": "pending", "timing": "Week 6-7", "paper": "G1 Cedar VGD", "gaps": ["GA-M4"]},
+    {"section": "2.10", "topic": "S3 Lean4Lean TrSpec correspondence", "mark": "🟢", "status": "pending", "timing": "Week 7-8", "paper": "S3"},
+    {"section": "2.10", "topic": "02-data-provenance §4.6 Nextflow resume / Galaxy job cache (WasReusedBy edge)", "mark": "🟡", "status": "pending", "timing": "Week 5-6 Tooling 層", "paper": "02-data-provenance §4.6"},
+    {"section": "2.10", "topic": "02-data-provenance §4.2 二層分離 (Lean tree + content-addressed manifest)", "mark": "🟢", "status": "pending", "timing": "Week 6-7 CI", "paper": "02-data-provenance §4.2"},
+    {"section": "2.10", "topic": "02-data-provenance §4.7 RO-Crate 互換 export", "mark": "🟡", "status": "pending", "timing": "Week 6-7", "paper": "02-data-provenance §4.7"},
+    {"section": "2.10", "topic": "02-data-provenance §4.5 Pipeline 段階表現 (DSL ≤ AST ≤ LeanSpec ≤ SMTSpec ≤ Tests ≤ Code)", "mark": "🟢", "status": "pending", "timing": "Week 5-6 Tooling 層", "paper": "02-data-provenance §4.5"},
+    {"section": "2.10", "topic": "G5-1 §3.4 step 2 LearningM indexed monad", "mark": "🟡", "status": "pending", "timing": "Week 4-5 Tooling 層", "paper": "G5-1 §3.4 step 2"},
+    {"section": "2.10", "topic": "EvolutionStep hypothesis/observation accessor (G5-1 §3.4 step 1 完全 4 member)", "mark": "🟡", "status": "pending", "timing": "Week 4-5"},
+    {"section": "2.10", "topic": "Verdict payload 拡充 (refuted evidence 等)", "mark": "🟢", "status": "pending", "timing": "Day 38+"},
+    {"section": "2.10", "topic": "A-Maximal: elaborator 型レベル強制 (退役違反 compile error rejection)", "mark": "🟢", "status": "pending", "timing": "Week 5-6 Tooling 層 (本丸)"},
+    {"section": "2.10", "topic": "ResearchActivity payload investigate/decompose/refine/retire variants", "mark": "✅", "status": "done", "resolved_day": 26},
+    {"section": "2.10", "topic": "HandoffChain 全体 embed 用 constructor (ResearchEntity.HandoffChain)", "mark": "🟢", "status": "pending", "timing": "Day 38+"},
+    {"section": "2.10", "topic": "G3 CSLib spine bisimulation", "mark": "🟢", "status": "pending", "timing": "Week 6 CSLib 移行時"},
+    {"section": "2.10", "topic": "S5 QTT Multiplicity (Lean 4 対応待ち)", "mark": "🟢", "status": "future_research", "paper": "S5 Idris 2"},
+    {"section": "2.10", "topic": "N2 Conatural Numbers (coinductive retirement、Lean 4 cubical 対応待ち)", "mark": "🟢", "status": "future_research", "paper": "N2 ELTE"},
+    {"section": "2.10", "topic": "Spine + Process cross-layer integration test", "mark": "✅", "status": "done", "resolved_day": 8},
+    {"section": "2.10", "topic": "WasDerivedFrom DAG 制約 (Subagent I2 Day 11、Section 2.21+)", "mark": "✅", "status": "done", "resolved_day": 30, "detail": "TransDerived + Acyclic + subset 双対 (Day 30-32)"}
+  ],
+
+  "day_plan": [
+    {"day": 1, "status": "done", "scope": "Core.lean import + FolgeID signature + round-trip proof", "commit": "a43eef4"},
+    {"day": 2, "status": "done", "scope": "lean_lib AgentSpecTest 分離 + Edge inductive", "commit": "58b75a0"},
+    {"day": 3, "status": "done", "scope": "EvolutionStep + SafetyConstraint type class"},
+    {"day": 4, "status": "done", "scope": "LearningCycle + Observable type class"},
+    {"day": 5, "status": "done", "scope": "FolgeID PartialOrder/Ord"},
+    {"day": 6, "status": "done", "scope": "Process 層 Hypothesis + Failure", "commit": "917c752"},
+    {"day": 7, "status": "done", "scope": "Process 層 Evolution + HandoffChain", "commit": "941b25c"},
+    {"day": 8, "status": "done", "scope": "Verdict + EvolutionStep B4 4-arg post (Section 2.9 解消)", "commit": "0f78fa6"},
+    {"day": 9, "status": "done", "scope": "ResearchEntity + ResearchActivity", "commit": "fa5b373"},
+    {"day": 10, "status": "done", "scope": "ResearchAgent + EvolutionMapping", "commit": "b652347"},
+    {"day": 11, "status": "done", "scope": "ProvRelation 3 structure (WasAttributedTo/GeneratedBy/DerivedFrom)", "commit": "11a32bd"},
+    {"day": 12, "status": "done", "scope": "RetiredEntity + RetirementReason 4 variant", "commit": "49510c6"},
+    {"day": 13, "status": "done", "scope": "ProvRelationAuxiliary (WasInformedBy/ActedOnBehalfOf/WasRetiredBy)", "commit": "40ccd78"},
+    {"day": 14, "status": "done", "scope": "RetiredEntity linter A-Minimal (@[deprecated] 4 fixture)", "commit": "13c4e77"},
+    {"day": 15, "status": "done", "scope": "RetirementLinter A-Compact (@[retired] macro)", "commit": "17db6ef"},
+    {"day": 16, "status": "done", "scope": "transitionLegacy @[deprecated] + 4-arg refactor", "commit": "b678856"},
+    {"day": 17, "status": "done", "scope": "transitionLegacy 完全削除 (breaking change)", "commit": "a8bcf69"},
+    {"day": 18, "status": "done", "scope": "RetirementLinterCommand #check_retired (A-Standard A-Minimal)", "commit": "f127774"},
+    {"day": 19, "status": "done", "scope": "#check_retired_in_namespace (A-Standard-Lite)", "commit": "682364d"},
+    {"day": 20, "status": "done", "scope": "#check_retired_in_namespace_with_depth (A-Compact nested)", "commit": "7fa8f51"},
+    {"day": 21, "status": "done", "scope": "#check_retired_auto (A-Standard-Full hardcode)", "commit": "18c5e94"},
+    {"day": 22, "status": "done", "scope": "SimplePersistentEnvExtension + register_retirement_namespace", "commit": "e6d9b1f"},
+    {"day": 23, "status": "done", "scope": "multi-module import propagate test (helper module)", "commit": "7b95180"},
+    {"day": 24, "status": "done", "scope": "Role.toCtorIdx investigation (Lean 4 4.29.0 rename)", "commit": "b3be98d"},
+    {"day": 25, "status": "done", "scope": "multi-source register / duplicate handling observe-first", "commit": "b9d0dd8"},
+    {"day": 26, "status": "done", "scope": "ResearchActivity investigateOf + retireOf (payload 拡充 2 例目)", "commit": "71e2593"},
+    {"day": 27, "status": "done", "scope": "decomposeOf + refineOf (5 variant 全 payload milestone)", "commit": "60e9aee"},
+    {"day": 28, "status": "done", "scope": "D16 presentation-layer dedup (#check_retired_auto .eraseDups)", "commit": "118fd28"},
+    {"day": 29, "status": "done", "scope": "Test section comment refactor (Day 25 Subagent I2 解消)", "commit": "7d30831"},
+    {"day": "29.1", "status": "done", "scope": "両 file role reset + DB 化 + archive 分離 (thin catalog + navigation_index)", "commit": "998607b", "breaking_change": true},
+    {"day": "29.2", "status": "done", "scope": "navigation_index + JSON Schema + empirical validation (3 subagents)", "commit": "c00b794"},
+    {"day": 30, "status": "done", "scope": "WasDerivedFrom DAG: TransDerived + Acyclic + empty_false + Acyclic.empty", "commit": "3880ea1"},
+    {"day": 31, "status": "done", "scope": "TransDerived.subset monotonicity", "commit": "fb41d78"},
+    {"day": 32, "status": "done", "scope": "Acyclic.subset 双対", "commit": "b068420"},
+    {"day": 33, "status": "done", "scope": "schema pattern-based forbid (^day[0-9]+_update$ / ^milestone_*) + 7-day empirical cycle codify", "commit": "50182c2"},
+    {"day": 34, "status": "done", "scope": "concrete 2-edge TransDerived chain example", "commit": "da46227"},
+    {"day": 35, "status": "done", "scope": "HandoffChain DecidableEq derive", "commit": "672a9f1"},
+    {"day": 36, "status": "done", "scope": "7-day empirical revalidation (3 subagents PASS + 2 informational)", "commit": "d9cc970", "empirical_findings": ["I1: schema に provides_definitions 粒度明記 (Day 37+)", "I2: Process.Evolution DecidableEq 要判定 (Day 37+)"]},
+    {"day": 37, "status": "in_progress", "scope": "11-pending-tasks JSON migration (Option A、全 JSON 化 + .md 削除)", "breaking_change": true},
+    {"day": 38, "status": "pending", "scope": "Evolution DecidableEq 判定 or schema field enum 明記 (Day 36 I1/I2)"},
+    {"day": 43, "status": "scheduled", "scope": "7-day 周期 empirical revalidation (Day 29.2 + 14 days)"}
+  ],
+
+  "gap_analysis": {
+    "high_risk": [
+      {"tag": "GA-S1", "topic": "ResearchNode umbrella", "week": "2", "status": "in_progress"},
+      {"tag": "GA-S2", "topic": "FolgeID + 半順序", "week": "2", "status": "done_day_1"},
+      {"tag": "GA-S3", "topic": "Provenance Triple", "week": "3", "status": "done_day_11"},
+      {"tag": "GA-S4", "topic": "Edge Type Inductive", "week": "2", "status": "done_day_2"},
+      {"tag": "GA-S5", "topic": "Retirement first-class", "week": "4", "status": "done_day_12"},
+      {"tag": "GA-S6", "topic": "Failure first-class", "week": "4", "status": "done_day_6"},
+      {"tag": "GA-S8", "topic": "Rationale 型", "week": "4", "status": "pending"},
+      {"tag": "GA-C1", "topic": "agent-spec-lib umbrella", "status": "ongoing"},
+      {"tag": "GA-C2", "topic": "Bidirectional Codec (round-trip 証明付)", "status": "done_day_1"},
+      {"tag": "GA-C7", "topic": "SMT ハンマー統合", "week": "6", "status": "pending"},
+      {"tag": "GA-C9", "topic": "EnvExtension Auto-Register", "week": "5-6", "status": "pending"},
+      {"tag": "GA-C12", "topic": "Perspective Generation", "week": "5-6", "status": "pending"},
+      {"tag": "GA-C13", "topic": "Iterative Search Loop", "week": "5-6", "status": "pending"},
+      {"tag": "GA-C14", "topic": "Saturation Detection", "week": "5-6", "status": "pending"},
+      {"tag": "GA-C15", "topic": "Schema-Driven Extraction", "week": "5-6", "status": "pending"},
+      {"tag": "GA-M1", "topic": "CLEVER 風自己評価", "week": "7-8", "status": "pending"},
+      {"tag": "GA-M2", "topic": "Atlas augment 戦略 (X3DH IDE)", "week": "6-7", "status": "pending"},
+      {"tag": "GA-E5", "topic": "仕様等価性自動検証", "week": "7-8", "status": "pending", "notes": "CLEVER 0.621% の現実を踏まえ限定的"},
+      {"tag": "GA-E6", "topic": "中間段階可観測性", "week": "6-7", "status": "pending"}
+    ],
+    "medium_risk_count": 60,
+    "medium_risk_summary": "GA-S15-S20 型基盤 Week 2-5、GA-C3-C6/C10-C11/C16-C20/C22-C26/C28-C32/C34/C35/C37 能力層 Week 3-6、GA-M3-M4/M7-M15 手法層 Week 3-7、GA-E1-E4/E7/E9 評価層 Week 5-8、GA-I1/I4/I7/I9-I12 統合層 Week 2-7、GA-T1-T2/T5-T6 移行層 Week 7-8",
+    "low_risk_count": 22,
+    "low_risk_summary": "GA-S14/S19、GA-C8/C21/C27/C33/C36、GA-E8/E10、GA-I2-I3/I5-I6/I8/I13-I14、GA-T3-T4/T7-T8。MVP 後または必要時に対応"
+  },
+
+  "scope_out": [
+    {"item": "GA-E11 (Human-in-the-loop metrics)", "reason": "GA-M2 augment で実質カバー、運用フェーズ課題", "reconsider_condition": "運用開始後、メトリクス不足が顕在化したとき"},
+    {"item": "GA-T9 (CSLib upstream 貢献戦略)", "reason": "Phase 5 以降の発展課題、MVP 不要", "reconsider_condition": "Phase 5 完了 + コミュニティフィードバック"},
+    {"item": "Implementation2Spec (Atlas 未実現 #1)", "reason": "新基盤 MVP スコープ外", "reconsider_condition": "将来の研究貢献候補"},
+    {"item": "InputOutput2Spec (Atlas 未実現 #2)", "reason": "同上", "reconsider_condition": "同上"},
+    {"item": "InterFramework (Atlas 未実現 #3)", "reason": "同上", "reconsider_condition": "同上"},
+    {"item": "TyDD-D1-D5 (Types=Compression quotes)", "reason": "哲学的根拠、Gap 直結せず"},
+    {"item": "TyDD-S1-S8 (Source summaries)", "reason": "Recipe 参照元、個別 Gap 不要"},
+    {"item": "TyDD-N1-N4 (TyDe 2025 deep dives)", "reason": "G1-G5 で間接参照済"},
+    {"item": "TyDD-L8-L10 (Combinatorics/Conatural/mutual recursion)", "reason": "agent-manifesto スコープ外"},
+    {"item": "CompressedTerm (TyDD-H5)", "reason": "high-tokenizer 固有の研究課題"},
+    {"item": "ユーザーの事前知識への適応 (Co-STORM)", "reason": "deep-research-survey Gap Analysis でスコープ外", "reconsider_condition": "別研究機会"},
+    {"item": "モデル非依存ルーティング", "reason": "project_local_llm_routing.md 別研究"},
+    {"item": "外部 Deep Research API 委譲 (OpenAI/Perplexity)", "reason": "自プロジェクトの能力獲得目的に反する"}
+  ],
+
+  "qa_tasks": [
+    {"aspect": "独立検証の 4 条件", "current": "2/4 (contextSeparated + framingIndependent)", "plan": "CI + 別モデル族で evaluatorIndependent 達成 (Week 6-7)"},
+    {"aspect": "Behavior test", "current": "24 example + 125 ケース有限量化", "plan": "Property-based test (Hypothesis 風) 導入 (Week 6-7)"},
+    {"aspect": "Differential Random Testing", "current": "なし", "plan": "Cedar VGD パターン (21 bug 検出実績) Week 7-8 適用 (GA-M4)"},
+    {"aspect": "CI", "current": "なし", "plan": "Week 6-7 で GitHub Actions 統合 (GA-I11)"},
+    {"aspect": "Self-benchmarking", "current": "なし", "plan": "Week 7-8 VeriSoftBench 形式の再帰評価 (GA-E1)"},
+    {"aspect": "外部 benchmark 比較", "current": "なし", "plan": "Week 7-8 FLTEval/miniF2F/CLEVER 等と照合 (GA-E7)"},
+    {"aspect": "Time-to-proof metrics", "current": "なし", "plan": "Week 6-7 metrics skill 拡張 (GA-E8)"},
+    {"aspect": "仕様等価性の自動検証", "current": "なし (CLEVER 0.621% の根本困難)", "plan": "Atlas augment 戦略で人間介入必須 (GA-E5, GA-M2)"}
+  ],
+
+  "linter_hooks_settings": [
+    {"id": "6.1", "topic": "Lean 文書 linter (数式と英語のみ許可、ユーザー要望)", "status": "user_pending_decision", "design_proposal": {"scope_options": ["A: agent-spec-lib/", "B: + lean-formalization/", "C: 全 .lean"], "layer_options": ["X: hook IDE-time", "Y: lake exe build-time", "Z: 両方"], "allowed_unicode_ranges": ["ASCII U+0000-007F", "Latin Extended U+0080-024F", "Greek U+0370-03FF", "General Punctuation U+2000-206F", "Letterlike U+2100-214F", "Arrows U+2190-21FF", "Math Operators U+2200-22FF, U+2A00-2AFF", "Math Alphanumeric U+1D400-1D7FF"], "forbidden_unicode_ranges": ["Hiragana U+3040-309F", "Katakana U+30A0-30FF", "CJK U+4E00-9FFF", "Hangul U+AC00-D7AF", "Halfwidth Katakana U+FF65-FF9F"]}},
+    {"id": "6.2", "topic": ".claude/hooks/ の新基盤対応 (GA-I12)", "status": "pending", "timing": "Week 6-7"},
+    {"id": "6.2.1", "topic": "Pattern #7 構造的強制 hook (pre-commit で artifact-manifest 同 commit を要求)", "mark": "🟡", "status": "partial_done", "detail": "hook .claude/hooks/p3-manifest-on-commit.sh 稼働中、Day 5-35 で運用検証", "origin": "Day 2 TyDD 評価"},
+    {"id": "6.3", "topic": "Claude Code settings.json (新基盤固有 permissions/env vars)", "status": "pending", "timing": "Week 6-7 CI"},
+    {"id": "6.4", "topic": "Git commit 互換性分類 hook (conservative/compatible/breaking)", "status": "active", "detail": ".claude/hooks/ で P3 互換性分類を強制運用中"}
+  ],
+
+  "verifier_informational_residual": {
+    "survey_r1": [
+      {"item": "SurveyG ablation の指標名明示 (Coverage -5.9 vs Critical Analysis -5.9)"},
+      {"item": "Phase 別 Gate 基準 (Parent Issue 時点の記載は要件外)"}
+    ],
+    "g5_supplement_r1": [
+      {"item": "「22 リンク」の根拠 (実測 19 ユニーク)"},
+      {"item": "CLEVER 0.6% vs 0.621% の表記揺れ (対処済)"}
+    ],
+    "gap_analysis_r1": [
+      {"item": "theorem カウント 1670 vs Meta.lean 1588 の齟齬 (測定範囲の差)"},
+      {"item": "CLAUDE.md 「53 axioms」旧値は agent-manifesto 本体の問題"}
+    ],
+    "week1_r3": [
+      {"item": "Test コードが本番ライブラリに直接 import", "mark": "✅", "status": "done_day_2"},
+      {"item": "example 8 (DecidableEq テスト) のコメント/証明手段の不整合", "mark": "✅", "status": "done (decide 使用 + コメント整合)"},
+      {"item": "$schema URL 非解決可能 (agent-manifesto.internal)", "mark": "⏳", "status": "pending", "timing": "Week 6-7"}
+    ],
+    "verify_r1_2026_04_17": [
+      {"item": "$schema URI 非解決可能", "mark": "⏳", "timing": "Week 6-7 (重複)"},
+      {"item": "AgentSpec.lean のテスト混在", "mark": "✅", "status": "done_day_2"},
+      {"item": "README TyDD 表 (13 行) と Section 12.2 (12 項目) の分類軸乖離", "mark": "⏳", "timing": "Week 2 以降のドキュメント整理"},
+      {"item": "Section 2.3 旧状態記述", "mark": "✅", "status": "done_revision_2"},
+      {"item": "Core.lean 明示的 import なし", "mark": "✅", "status": "done_day_1"},
+      {"item": "artifact-manifest schema divergence (本体 vs 新基盤)", "mark": "⏳", "timing": "Week 6-7"}
+    ]
+  },
+
+  "cross_references": {
+    "GA-S": {
+      "done": ["S1 umbrella (部分)", "S2 (Day 1 FolgeID)", "S3 (Day 11 ProvRelation)", "S4 (Day 2 Edge)", "S5 (Day 12 RetiredEntity)", "S6 (Day 6 Failure)", "S15 (Ord instance 基盤)", "S18 (Gradual Refinement SemVer 版)"],
+      "pending": ["S7 State", "S8 Rationale", "S9 Assumption", "S10 ResearchGoal", "S11 Hoare 4-arg", "S12 PropositionId 拡張", "S13 SelfGoverning", "S14 EnforcementLayer", "S16 Multiplicity", "S17 FiberedTypeSpec", "S19 Phantom scope", "S20 Dynamic dependency"]
+    },
+    "GA-C": {
+      "done": ["C1 umbrella (部分)", "C2 Bidirectional Codec", "C32 Capability-separated import", "C27 Trusted code 最小化"],
+      "pending": ["C3 Reverse Deps Index", "C4 Semantic Hash", "C5 Content-addressed storage", "C6 Event Log", "C7 SMT hammer", "C8 ProofWidget", "C9 EnvExt Auto-Register", "C10 Typed Holes", "C11 Coverage Verification", "C12-C21", "C22-C26 TyDD Recipe", "C28-C31 G1/G5", "C33-C37"]
+    },
+    "GA-M": {"status": "全 15 件未着手 (Week 2-8)"},
+    "GA-E": {"status": "全 10 件未着手 (Week 5-8)"},
+    "GA-I": {
+      "done": ["I1 artifact-manifest 基本構造 + Day 29.1/29.2/33 schema reset", "I7 high-tokenizer 再定義方針"],
+      "pending": ["I2-I6", "I8-I14"]
+    },
+    "GA-T": {
+      "status": "T1 #599 再起動は新基盤完成後、T2 Phase 0 消化中、T3-T8 Week 6-8"
+    },
+    "GA-W": {
+      "status": "W1-W10 全 Week で意識、Week 1 時点で W4 (sorry 回避) / W7 (termination) / native_decide 回避 遵守"
+    }
+  },
+
+  "priority_matrix": [
+    {"priority": "P0", "criteria": "新基盤根幹、後回し不可", "gaps": ["GA-S1", "GA-S2", "GA-S4", "GA-S5", "GA-S6", "GA-S8", "GA-C1", "GA-C2 普遍定理"], "week": "2-4"},
+    {"priority": "P1", "criteria": "高リスク Gap、deterministic 負荷撤廃に必須", "gaps": ["GA-C7", "GA-C9", "GA-M1", "GA-M2", "GA-E5", "GA-E6"], "week": "5-7"},
+    {"priority": "P2", "criteria": "中リスク Gap、完成度向上", "gaps_summary": "GA-S3/S7/S10-S20, GA-C3-C6/C10-C37, GA-M3-M15, GA-E1-E9, GA-I1-I12 の medium 群, GA-T1-T2/T5-T6", "week": "3-8"},
+    {"priority": "P3", "criteria": "低リスク Gap、将来対応", "gaps_summary": "GA-S14/S19, GA-C8/C21/C27/C33/C36, GA-E8/E10, GA-I2-I6/I8/I13-I14, GA-T3-T4/T7-T8", "week": "MVP 後"},
+    {"priority": "保留", "criteria": "スコープ外確定、再検討条件付", "gaps": ["GA-E11", "GA-T9", "Atlas 未実現 3 projects"], "week": "条件達成時"},
+    {"priority": "未定", "criteria": "ユーザー判断待ち", "gaps": ["Lean 文書 linter (日本語禁止)"], "week": "指示待ち"}
+  ],
+
+  "patterns": [
+    {"id": 1, "pattern": "abbrev Segment := X ⊕ Y で segment 型を先行宣言", "rationale": "TyDD-S1 Types first", "violation_symptom": "structure 直書きは abstraction 欠如"},
+    {"id": 2, "pattern": "def f_list : List X → ... を先に書き、structure 経由呼び出しで def f := f_list t.path", "rationale": "decide の structure pattern reduction stuck 回避 (Day 1 発生)", "violation_symptom": "by decide が reduction stuck で失敗"},
+    {"id": 3, "pattern": "instance instLE : LE T := ⟨...⟩ と明示命名", "rationale": "unfold の anonymous instance 名依存を回避", "violation_symptom": "/verify Round 1 A1 指摘 (anonymous instance の名前推定は脆弱)"},
+    {"id": 4, "pattern": "instance (a b : T) : Decidable (a ≤ b) := inferInstanceAs (...)", "rationale": "by unfold の脆弱性除去", "violation_symptom": "Round 1 A1 と同根本原因"},
+    {"id": 5, "pattern": "Prop signature は def で宣言 (abbrev 禁止)", "rationale": "hole-driven opaque identity 保持", "violation_symptom": "/verify Round 1 A2 指摘 (後続 proof 時の型チェック identity)"},
+    {"id": 6, "pattern": "sorry / axiom / native_decide / partial def 使用禁止", "rationale": "GA-W4 / GA-C27 / GA-W7", "violation_symptom": "Verifier による build 拒否"},
+    {"id": 7, "pattern": "新 module 追加時は artifact-manifest.json に同 commit で反映 (id, path, refs, provides_*, weekN_status)", "rationale": "P3 /trace 構造整合性", "violation_symptom": "artifact-manifest と実コードの乖離"},
+    {"id": 8, "pattern": "Lean 4 予約語 (from/to/match/let/do/where/then/else/fun 等) を field 名・variable 名・identifier に使用しない (Day 2 確立)", "rationale": "Lean 4 parser エラー", "violation_symptom": "unexpected token 'from'; expected identifier or term 等"}
+  ],
+
+  "related_docs": [
+    {"path": "10-gap-analysis.md", "description": "104 Gap + 10 Warning の詳細、GA- タグ Index、umbrella Gap、クロスリファレンス"},
+    {"path": "99-verifier-rounds.md", "description": "Verifier 全検証履歴 (サーベイ 3 + 補遺 2 + Gap Analysis 3 + Week 1 × 4)"},
+    {"path": "00-synthesis.md", "description": "15 グループ統合まとめ (Section 7 Atlas 12 projects 対応表、G5 補遺)"},
+    {"path": "07-lean4-applications/G5-1-cslib-boole.md", "description": "8 週ロードマップ根拠、CSLib/Boole 分析"},
+    {"path": "07-lean4-applications/G5-2-atlas-dafny.md", "description": "Dafny 成功要因 (Z3 空証明 44.7%)、Lean 転用戦略"},
+    {"path": "07-lean4-applications/G1-cedar-aws.md", "description": "VGD パターン、Differential Random Testing"},
+    {"path": "../../../agent-spec-lib/README.md", "description": "Phase 0 Week 1 進捗 + 8 週ロードマップ"},
+    {"path": "../../../agent-spec-lib/artifact-manifest.json", "description": "依存 edge + TyDD 合致度マトリクス (thin catalog、Day 29.1 reset)"},
+    {"path": "../../../agent-spec-lib/artifact-manifest.schema.json", "description": "JSON Schema 制約 (Day 29.2 導入、Day 33 pattern forbid)"},
+    {"path": "../../../../research/survey_type_driven_development_2025.md", "description": "TyDD 12 Recipes + Tag Index"},
+    {"path": "../../../../research/lean4-handoff.md", "description": "Atlas 12 projects 提案書"},
+    {"path": "../../../.claude/handoffs/handoff-599-pending-rebase.md", "description": "#599 新基盤待機状態、16 Gap の持ち越し"}
+  ],
+
+  "tydd_review_history": [
+    {"round": 1, "date": "2026-04-17", "scope": "Week 1 最小プレースホルダ", "rate": "~30% (推定)", "verdict": "TyDD/TDD 原則から外れている → re-do へ"},
+    {"round": 2, "date": "2026-04-17", "scope": "Week 1 re-do (SemVer + parse + example)", "rate": "61.5% (8/13)", "verdict": "F6 完全化、Recipe 11 達成、F2 未実装"},
+    {"round": 3, "date": "2026-04-17", "scope": "Week 1 TyDD 完全合致版 (α+β+γ)", "rate": "92.3% (12/13)", "verdict": "実質的完全合致達成"},
+    {"round": "4 (/verify)", "date": "2026-04-17", "scope": "/verify Round 1 (logprob + Subagent multi-evaluator)", "rate": "92.3% 維持", "verdict": "logprob pairwise PASS (A margin 0.623) + Subagent R1 FAIL (addressable 2) → R2 PASS 修正後、P2 検証トークン書込済"}
+  ],
+
+  "tydd_week1_closure": {
+    "full_match_count": 12,
+    "full_match_items": ["S1", "S4", "D1-D5", "F2 (予備)", "F6", "G1-G6", "H3", "H7", "J4", "J7", "Recipe 11", "Recipe 12"],
+    "partial_match_count": 1,
+    "partial_match_items": [{"item": "TyDD-J5 Self-hosting recursion", "detail": "artifact-manifest.json JSON のまま、Lean 型化は Week 4 予定"}],
+    "match_rate": "12/13 = 92.3%",
+    "out_of_scope": ["B1/B3-B6 (Pipeline 必要)", "C1-C3 (LLM 統合必要)", "E1-E5 (Lean-Auto / SMT 必要)", "F1/F3-F5/F7-F8 (Pipeline / Process 層必要)", "H1-H11 scope 外多数", "I1-I7 scope 外多数", "J1-J3/J6 (N=1 で適用不可 / Python 層必要)", "Recipe 1-10 (SMT / pytest / LLM 必要)"],
+    "benefits_achieved": 8,
+    "benefits_total": 10,
+    "benefits_detail": [
+      {"n": 1, "name": "Deeper understanding of problem domain", "status": "✓"},
+      {"n": 2, "name": "More thoughtful design", "status": "✓"},
+      {"n": 3, "name": "Easier mental models", "status": "✓"},
+      {"n": 4, "name": "Better collaboration through contracts/APIs", "status": "✓"},
+      {"n": 5, "name": "Maintainability", "status": "✓"},
+      {"n": 6, "name": "Clearer path towards implementation", "status": "✓"},
+      {"n": 7, "name": "Top-down / hole-driven development", "status": "⚠ Week 2+ で意識"},
+      {"n": 8, "name": "Higher confidence in correctness", "status": "✓"},
+      {"n": 9, "name": "Less scary refactoring", "status": "✓"},
+      {"n": 10, "name": "Pleasure when programming", "status": "N/A (個人的感情)"}
+    ],
+    "week_targets": [
+      {"week": "2-3", "target": "14/13 以上 (scope 拡大)", "notes": "F1 Pipeline 予備、B4 Hoare 4-arg"},
+      {"week": "3-4", "target": "継続的改善", "notes": "F5 TypeSpec.toFuncSpec、J5 完全版 (preview)"},
+      {"week": "4-5", "target": "high-scope 項目ほぼ全達成", "notes": "B4、F2 lattice、F8 FiberedTypeSpec、H1 multiplicity"},
+      {"week": "5-6", "target": "C1-C3/E1-E5/H2-H4/H7 L2/Recipe 1-10 達成", "notes": "SMT/LLM 統合で大幅拡大"},
+      {"week": "6-7", "target": "H7 L1 達成、G4 CI 化", "notes": "PBT/DRT/benchmark"},
+      {"week": "7-8", "target": "全 scope 項目達成", "notes": "J1 descriptive coding、J3 two-layer"}
+    ]
+  },
+
+  "mark_legend": {
+    "✅": "解消済 — 既に実装/記述で反映済み、または実態確認で解消を確認",
+    "🔄": "Week 2 着手予定 — Week 2 開始時に優先対処する項目",
+    "⏳": "後続 Week 対処予定 — Week 3 以降の計画済みタスク",
+    "❓": "判断待ち — ユーザー判断が必要な項目",
+    "🔴": "高優先 — 前倒しまたは即時対処",
+    "🟡": "中優先 — 計画 Week 内で対処",
+    "🟢": "低優先 — Week 後半または将来",
+    "⚠": "部分達成 — 仕様の一部のみ達成、残部分は後続 Day/Week",
+    "❗": "breaking change — 互換性分類 breaking change に相当"
+  }
+}

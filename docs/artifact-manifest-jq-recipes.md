@@ -133,3 +133,52 @@ jq '[.artifacts[] | select(.id | test("Retirement"; "i")) | .id]' \
 - **python `json.dump` 禁止**: 全体 reformat で noise commit を生む (Day 27 で 1095 行 noise 実例)
 - **narrative field 追加禁止**: `dayN_update` / `milestone_*` / `long_deferred_resolved` 等は git log/ docstring へ
 - **ceremonial token 禁止**: 「N 度目」「N 段階発展」等の装飾 status は記録しない
+
+## 11-pending-tasks.json recipes (Day 37、markdown → JSON 完全移行)
+
+`docs/research/new-foundation-survey/11-pending-tasks.json` は同じ thin-catalog / jq-first 原則で運用。Schema: `11-pending-tasks.schema.json` (同ディレクトリ)。人間可読性は二次、narrative は `11-pending-tasks-archive.md` に退役。
+
+```bash
+# 全 pending_items の topic + status
+PT=docs/research/new-foundation-survey/11-pending-tasks.json
+jq '.pending_items[] | {section, topic, status}' $PT
+
+# 特定 section の pending_items
+jq '.pending_items[] | select(.section == "2.10")' $PT
+
+# 全 day_plan の scope (done のみ)
+jq '.day_plan[] | select(.status == "done") | {day, commit, scope}' $PT
+
+# 次に着手する day (in_progress / pending の先頭)
+jq '[.day_plan[] | select(.status == "in_progress" or .status == "pending")] | .[0]' $PT
+
+# 新 day_plan entry 追加 (Day 38 example)
+jq '.day_plan += [{"day": 38, "status": "pending", "scope": "Evolution DecidableEq 判定 (Day 36 I2)"}]' \
+   $PT > /tmp/pt.json && mv /tmp/pt.json $PT
+
+# day_plan status 更新 (day 指定)
+jq '(.day_plan[] | select(.day == 37) | .status) = "done"' $PT \
+   > /tmp/pt.json && mv /tmp/pt.json $PT
+
+# 特定 Gap (GA-*) を指す pending_items 列挙
+jq '.pending_items[] | select(.gaps[]? == "GA-S11") | .topic' $PT
+
+# roadmap の status を week で参照
+jq '.roadmap[] | select(.week == "4-5") | {scope, status}' $PT
+
+# Schema 検証 (artifact-manifest と同パターン)
+UV_CACHE_DIR=/tmp/uv-cache UV_TOOL_DIR=/tmp/uv-tools UV_TOOL_BIN_DIR=/tmp/uv-bin \
+  uv tool run --from check-jsonschema check-jsonschema \
+    --schemafile docs/research/new-foundation-survey/11-pending-tasks.schema.json \
+    $PT
+
+# last_updated を date 文字列で更新 (今日の日付)
+jq --arg d "$(date -u +%Y-%m-%d)" '.last_updated = $d' $PT \
+   > /tmp/pt.json && mv /tmp/pt.json $PT
+```
+
+### 11-pending-tasks 禁止 pattern (schema 強制)
+
+- `^day[0-9]+_update$` / `^week[0-9]+_update$` / `^milestone_[0-9]+_day_rfl_preference$` / `^section_[0-9]+(_[0-9]+)?_narrative$` は top-level 追加不可 (patternProperties: false)
+- `additionalProperties: false` につき new top-level field は schema 同 commit
+- `pending_items[].status` は enum 固定 (pending/in_progress/deferred/done/... 等)、任意文字列は schema reject

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.36.0-week2-day36",
+  "version": "0.37.0-week2-day37-breaking",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2381,6 +2381,15 @@
       "addressable_count": 0,
       "informational_count": 2,
       "evaluator": "7-day 周期 empirical validation 実施。3 subagents parallel: (A) DAG API navigation → 3○/2 部分的、lemma が provides_definitions にあるが field 名誤認 risk、tool_uses 7 (target 5 超過); (B) Process DecidableEq coverage → 4○、Evolution 未対応発見、tool_uses 3; (C) Day 33 pattern forbid → 4○、tool_uses 1。informational: I1 schema に provides_definitions 粒度明記 (Day 37+ 候補)、I2 Process.Evolution DecidableEq 要判定 (Day 37 候補)"
+    },
+    {
+      "round": "Week 2 Day 37 JSON migration (Option A)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "schema_validation (check-jsonschema)",
+      "scope": "11-pending-tasks.md → 11-pending-tasks.json 完全置換 + 11-pending-tasks.schema.json 新設 + jq-recipes 拡張",
+      "compatibility": "breaking change"
     }
   ],
   "navigation_index": {
