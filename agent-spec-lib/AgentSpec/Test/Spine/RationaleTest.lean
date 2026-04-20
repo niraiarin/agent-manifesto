@@ -75,4 +75,57 @@ example :
 example :
     (Rationale.mk' "x" ["a"] 10) ≠ (Rationale.mk' "x" ["b"] 10) := by decide
 
+/-! ### Day 49: attribution 拡張 (author / timestamp、Day 44 D2 deferred 解消) -/
+
+/-- author / timestamp を明示指定で構築 -/
+example : Rationale :=
+  { text := "verified by peer review", references := ["arXiv:2604.14572"],
+    confidence := 90, author := some "alice", timestamp := some 1714000000 }
+
+/-- field default 維持 (author / timestamp 未指定で既存 Day 44 API 互換) -/
+example :
+    ({text := "", references := [], confidence := 0} : Rationale).author = none := rfl
+example :
+    ({text := "", references := [], confidence := 0} : Rationale).timestamp = none := rfl
+
+/-- Rationale.trivial も author/timestamp はデフォルト none -/
+example : Rationale.trivial.author = none := rfl
+example : Rationale.trivial.timestamp = none := rfl
+
+/-- withAuthor helper -/
+example :
+    (Rationale.ofText "t" 10).withAuthor "alice" =
+    { text := "t", references := [], confidence := 10,
+      author := some "alice", timestamp := none } := rfl
+
+/-- withTimestamp helper -/
+example :
+    (Rationale.ofText "t" 10).withTimestamp 1234567890 =
+    { text := "t", references := [], confidence := 10,
+      author := none, timestamp := some 1234567890 } := rfl
+
+/-- withAuthor / withTimestamp chain -/
+example :
+    ((Rationale.ofText "t" 50).withAuthor "bob").withTimestamp 1000 =
+    { text := "t", references := [], confidence := 50,
+      author := some "bob", timestamp := some 1000 } := rfl
+
+/-- isAttributed: author 指定時 true -/
+example : ((Rationale.ofText "t" 0).withAuthor "alice").isAttributed = true := rfl
+
+/-- isAttributed: author 未指定時 false -/
+example : (Rationale.ofText "t" 50).isAttributed = false := rfl
+
+example : Rationale.trivial.isAttributed = false := rfl
+
+/-- 異なる author の不等号判定 (GA-S8 attribution 型強制) -/
+example :
+    ((Rationale.ofText "t" 0).withAuthor "alice") ≠
+    ((Rationale.ofText "t" 0).withAuthor "bob") := by decide
+
+/-- 異なる timestamp の不等号判定 -/
+example :
+    ((Rationale.ofText "t" 0).withTimestamp 100) ≠
+    ((Rationale.ofText "t" 0).withTimestamp 200) := by decide
+
 end AgentSpec.Test.Spine.Rationale
