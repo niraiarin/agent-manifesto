@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paperize Todos (Knowledge Base)",
+  "description": "Follow-up tracking in 6 categories. [S3 §3]",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "entries"],
+  "properties": {
+    "schema_version": { "const": "1" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source_manifest": { "type": "string" },
+    "decay_days": { "type": "integer", "minimum": 1, "default": 30 },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "recorded_at", "text"],
+        "properties": {
+          "category": {
+            "enum": ["decisions", "experiments", "findings", "literature", "questions", "reviews"]
+          },
+          "recorded_at": { "type": "string", "format": "date" },
+          "text": { "type": "string" },
+          "source": {
+            "type": "object",
+            "properties": {
+              "commit": { "type": "string", "pattern": "^[0-9a-f]{8,40}$" },
+              "pr": { "type": "integer" },
+              "issue": { "type": "integer" },
+              "file": { "type": "string" }
+            }
+          },
+          "compatibility": { "enum": ["conservative extension", "compatible change", "breaking change"] },
+          "decay_at": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  }
+}

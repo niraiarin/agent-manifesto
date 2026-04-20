@@ -1,0 +1,59 @@
+% Internal Research Report template for /paperize
+% Source: [P] internal convention, inspired by [S1 §2.3] single-pass format
+% Variables to replace (section-writing agent):
+%   {{TITLE}}, {{AUTHORS}}, {{DATE}}, {{ABSTRACT}},
+%   {{MOTIVATION}}, {{METHOD}}, {{EXPERIMENTS}}, {{FINDINGS}}, {{LIMITATIONS}},
+%   {{APPENDIX_EVIDENCE}}
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{gray!40}
+}
+
+\title{ {{TITLE}} }
+\author{ {{AUTHORS}} }
+\date{ {{DATE}} }
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+{{ABSTRACT}}
+\end{abstract}
+
+\section{Motivation}
+{{MOTIVATION}}
+
+\section{Method}
+{{METHOD}}
+
+\section{Experiments}
+{{EXPERIMENTS}}
+
+\section{Findings}
+{{FINDINGS}}
+
+\section{Limitations and Follow-up}
+{{LIMITATIONS}}
+
+\appendix
+\section{Evidence Index}
+{{APPENDIX_EVIDENCE}}
+
+\end{document}
