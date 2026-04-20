@@ -25,19 +25,19 @@ open AgentSpec.Process
 /-- Day 15 D1 macro 展開確認: `@[retired]` 付与 fixture が正常に構築可能 -/
 @[retired "退役済 - 確認 (Day 15 macro test)" "2026-04-19"]
 def retiredFixtureObsolete : RetiredEntity :=
-  RetiredEntity.obsolete ResearchEntity.trivial
+  RetiredEntity.obsolete ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
 @[retired "退役済 - 確認 (Day 15 macro test)" "2026-04-19"]
 def retiredFixtureWithdrawn : RetiredEntity :=
-  RetiredEntity.withdrawn ResearchEntity.trivial
+  RetiredEntity.withdrawn ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
 @[retired "退役済 - Failure 経由 (Day 15 macro test)" "2026-04-19"]
 def retiredFixtureRefuted : RetiredEntity :=
-  RetiredEntity.refuted ResearchEntity.trivial Failure.trivial
+  RetiredEntity.refuted ResearchEntity.trivial Failure.trivial AgentSpec.Spine.Rationale.trivial
 
 @[retired "退役済 - 後継参照 (Day 15 macro test)" "2026-04-19"]
 def retiredFixtureSuperseded : RetiredEntity :=
-  RetiredEntity.superseded ResearchEntity.trivial ResearchEntity.trivial
+  RetiredEntity.superseded ResearchEntity.trivial ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
 /-! ### Day 15 `@[retired]` fixture rfl 動作確認 (set_option で warning 抑制、rfl preference 維持) -/
 

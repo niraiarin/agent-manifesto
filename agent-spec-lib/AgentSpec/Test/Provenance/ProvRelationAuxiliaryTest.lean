@@ -80,7 +80,7 @@ example : Inhabited ActedOnBehalfOf := inferInstance
 /-- 直接構築: Hypothesis entity が Failure 経由で退役された関係 -/
 example : WasRetiredBy :=
   { entity := .Hypothesis Hypothesis.trivial,
-    retired := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial }
+    retired := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial AgentSpec.Spine.Rationale.trivial }
 
 /-- 直接構築: trivial entity が Obsolete 退役された関係 (trivial fixture と同等) -/
 example : WasRetiredBy :=
@@ -98,9 +98,9 @@ example : ({entity := ResearchEntity.trivial,
 
 /-- Smart constructor mk' -/
 example : WasRetiredBy.mk' (.Hypothesis Hypothesis.trivial)
-            (RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial) =
+            (RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial AgentSpec.Spine.Rationale.trivial) =
           { entity := .Hypothesis Hypothesis.trivial,
-            retired := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial } := rfl
+            retired := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial AgentSpec.Spine.Rationale.trivial } := rfl
 
 /-- trivial fixture -/
 example : WasRetiredBy.trivial.entity = ResearchEntity.trivial := rfl
@@ -115,7 +115,7 @@ example : Inhabited WasRetiredBy := inferInstance
     場合 (典型的な使用パターン)、両者の参照が一致することを確認。 -/
 example :
     let h := ResearchEntity.trivial
-    let r := WasRetiredBy.mk' h (RetiredEntity.obsolete h)
+    let r := WasRetiredBy.mk' h (RetiredEntity.obsolete h AgentSpec.Spine.Rationale.trivial)
     r.entity = r.retired.entity := rfl
 
 /-! ### Day 11 + Day 13 PROV-O 6 relation 統合 example (内部規範 layer 横断 transfer 8 段階目) -/
@@ -129,7 +129,7 @@ example :
     -- Day 13 auxiliary + retirement relation 3 種を構築
     let informedBy := WasInformedBy.mk' (.verify Hypothesis.trivial Verdict.proven) .investigate
     let onBehalf := ActedOnBehalfOf.mk' bob alice
-    let retiredBy := WasRetiredBy.mk' h (RetiredEntity.obsolete h)
+    let retiredBy := WasRetiredBy.mk' h (RetiredEntity.obsolete h AgentSpec.Spine.Rationale.trivial)
     -- 3 relation の field projection が想定通り動作
     (informedBy.informer = .investigate) ∧
     (onBehalf.on_behalf_of = alice) ∧
@@ -150,9 +150,9 @@ example :
 /-- 異なる WasRetiredBy (retired reason 違い) の不等号判定 -/
 example :
     ({entity := ResearchEntity.trivial,
-      retired := { entity := ResearchEntity.trivial, reason := .Obsolete }} : WasRetiredBy) ≠
+      retired := { entity := ResearchEntity.trivial, reason := .Obsolete, rationale := AgentSpec.Spine.Rationale.trivial }} : WasRetiredBy) ≠
     ({entity := ResearchEntity.trivial,
-      retired := { entity := ResearchEntity.trivial, reason := .Withdrawn }} : WasRetiredBy) :=
+      retired := { entity := ResearchEntity.trivial, reason := .Withdrawn, rationale := AgentSpec.Spine.Rationale.trivial }} : WasRetiredBy) :=
   by decide
 
 end AgentSpec.Test.Provenance.ProvRelationAuxiliary

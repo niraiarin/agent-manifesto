@@ -5,6 +5,7 @@ import AgentSpec.Provenance.RetiredEntity
 
 Day 12 Q1 A-Minimal + Q3 案 A + Q4 案 A: RetiredEntity (separate structure) +
 RetirementReason (4 variant inductive、Refuted/Superseded/Obsolete/Withdrawn) の検証。
+Day 48 (2026-04-21) breaking: rationale : Rationale 必須化 (GA-S8 B-2 4/4 完了)。
 
 Day 11 Subagent I3 教訓を反映: rfl preference 維持 (simp tactic は最小限)。
 -/
@@ -13,152 +14,128 @@ namespace AgentSpec.Test.Provenance.RetiredEntity
 
 open AgentSpec.Provenance
 open AgentSpec.Process
+open AgentSpec.Spine (Rationale)
 
 /-! ### `RetirementReason` 4 variant 構築 -/
 
-/-- Refuted variant: Failure 経由退役 -/
 example : RetirementReason := .Refuted Failure.trivial
-
-/-- Superseded variant: 後継 entity 参照 -/
 example : RetirementReason := .Superseded ResearchEntity.trivial
-
-/-- Obsolete variant: payload なし -/
 example : RetirementReason := .Obsolete
-
-/-- Withdrawn variant: payload なし -/
 example : RetirementReason := .Withdrawn
 
-/-- Inhabited instance 解決 -/
 example : Inhabited RetirementReason := inferInstance
 
-/-! ### `RetiredEntity` 直接構築 -/
+/-! ### `RetiredEntity` 直接構築 (Day 48: rationale 必須) -/
 
-/-- 直接構築: Hypothesis entity の Obsolete 退役 -/
 example : RetiredEntity :=
-  { entity := .Hypothesis Hypothesis.trivial, reason := .Obsolete }
+  { entity := .Hypothesis Hypothesis.trivial, reason := .Obsolete,
+    rationale := Rationale.trivial }
 
-/-- 直接構築: Failure entity の Refuted 退役 (Failure 経由パターン) -/
 example : RetiredEntity :=
   { entity := .Failure Failure.trivial,
-    reason := .Refuted Failure.trivial }
+    reason := .Refuted Failure.trivial,
+    rationale := Rationale.trivial }
 
-/-- 直接構築: Hypothesis entity の Superseded 退役 (後継 Hypothesis) -/
 example : RetiredEntity :=
   { entity := .Hypothesis Hypothesis.trivial,
-    reason := .Superseded (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) }
+    reason := .Superseded (.Hypothesis { claim := "successor", rationale := Rationale.trivial }),
+    rationale := Rationale.trivial }
 
 /-- field projection: entity -/
 example : ({entity := .Hypothesis Hypothesis.trivial,
-             reason := .Obsolete} : RetiredEntity).entity =
+             reason := .Obsolete,
+             rationale := Rationale.trivial} : RetiredEntity).entity =
           .Hypothesis Hypothesis.trivial := rfl
 
 /-- field projection: reason -/
 example : ({entity := ResearchEntity.trivial,
-             reason := .Withdrawn} : RetiredEntity).reason =
+             reason := .Withdrawn,
+             rationale := Rationale.trivial} : RetiredEntity).reason =
           .Withdrawn := rfl
 
-/-- Inhabited instance 解決 -/
 example : Inhabited RetiredEntity := inferInstance
 
-/-! ### Smart constructor (5 種) -/
+/-! ### Smart constructor (Day 48 signature 更新: rationale 引数必須) -/
 
-/-- mk' 汎用 smart constructor -/
-example : RetiredEntity.mk' ResearchEntity.trivial .Obsolete =
-          { entity := ResearchEntity.trivial, reason := .Obsolete } := rfl
+example : RetiredEntity.mk' ResearchEntity.trivial .Obsolete Rationale.trivial =
+          { entity := ResearchEntity.trivial, reason := .Obsolete,
+            rationale := Rationale.trivial } := rfl
 
-/-- refuted smart constructor (Failure 経由) -/
-example : RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial =
+example : RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) Failure.trivial Rationale.trivial =
           { entity := .Hypothesis Hypothesis.trivial,
-            reason := .Refuted Failure.trivial } := rfl
+            reason := .Refuted Failure.trivial,
+            rationale := Rationale.trivial } := rfl
 
-/-- superseded smart constructor (後継参照) -/
 example : RetiredEntity.superseded (.Hypothesis Hypothesis.trivial)
-            (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) =
+            (.Hypothesis { claim := "successor", rationale := Rationale.trivial })
+            Rationale.trivial =
           { entity := .Hypothesis Hypothesis.trivial,
-            reason := .Superseded (.Hypothesis { claim := "successor", rationale := AgentSpec.Spine.Rationale.trivial }) } := rfl
+            reason := .Superseded (.Hypothesis { claim := "successor", rationale := Rationale.trivial }),
+            rationale := Rationale.trivial } := rfl
 
-/-- obsolete smart constructor -/
-example : RetiredEntity.obsolete ResearchEntity.trivial =
-          { entity := ResearchEntity.trivial, reason := .Obsolete } := rfl
+example : RetiredEntity.obsolete ResearchEntity.trivial Rationale.trivial =
+          { entity := ResearchEntity.trivial, reason := .Obsolete,
+            rationale := Rationale.trivial } := rfl
 
-/-- withdrawn smart constructor -/
-example : RetiredEntity.withdrawn ResearchEntity.trivial =
-          { entity := ResearchEntity.trivial, reason := .Withdrawn } := rfl
+example : RetiredEntity.withdrawn ResearchEntity.trivial Rationale.trivial =
+          { entity := ResearchEntity.trivial, reason := .Withdrawn,
+            rationale := Rationale.trivial } := rfl
 
 /-! ### `trivial` fixture + `whyRetired` accessor -/
 
-/-- trivial fixture: trivial Hypothesis entity の Obsolete 退役 -/
 example : RetiredEntity.trivial.entity = ResearchEntity.trivial := rfl
 example : RetiredEntity.trivial.reason = .Obsolete := rfl
+example : RetiredEntity.trivial.rationale = Rationale.trivial := rfl
 
-/-- whyRetired accessor: reason 抽出 (alias) -/
 example : RetiredEntity.trivial.whyRetired = .Obsolete := rfl
 
-/-- whyRetired smart constructor 後の reason 抽出 -/
-example : (RetiredEntity.refuted ResearchEntity.trivial Failure.trivial).whyRetired =
+example : (RetiredEntity.refuted ResearchEntity.trivial Failure.trivial Rationale.trivial).whyRetired =
           .Refuted Failure.trivial := rfl
 
 /-! ### Day 6 Failure 経由パターンと Day 12 Refuted variant の整合性 -/
 
-/-- Failure 経由退役の構築可能性 (案 C 利点吸収の確認) -/
 example :
-    let f := Failure.refuted "hyp-1" "no evidence" AgentSpec.Spine.Rationale.trivial
-    let r := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) f
+    let f := Failure.refuted "hyp-1" "no evidence" Rationale.trivial
+    let r := RetiredEntity.refuted (.Hypothesis Hypothesis.trivial) f Rationale.trivial
     r.reason = .Refuted f := rfl
 
-/-! ### 4 variant 全種類の RetiredEntity を List で集約 (内部規範 layer 横断 transfer 7 段階目) -/
+/-! ### 4 variant 全種類の RetiredEntity を List で集約 (Day 48 rationale 必須引数反映) -/
 
-/-- 4 variant 全種類を List で同時保持 (Day 11 PROV-O triple set 統合パターンの拡張) -/
 example :
     let h := ResearchEntity.trivial
+    let r := Rationale.trivial
     let allRetired : List RetiredEntity :=
-      [ RetiredEntity.refuted h Failure.trivial,
-        RetiredEntity.superseded h (.Hypothesis { claim := "next", rationale := AgentSpec.Spine.Rationale.trivial }),
-        RetiredEntity.obsolete h,
-        RetiredEntity.withdrawn h ]
+      [ RetiredEntity.refuted h Failure.trivial r,
+        RetiredEntity.superseded h (.Hypothesis { claim := "next", rationale := r }) r,
+        RetiredEntity.obsolete h r,
+        RetiredEntity.withdrawn h r ]
     allRetired.length = 4 := rfl
 
-/-! ### Day 14 deprecated fixture 動作確認 (linter A-Minimal、Q4 案 C rfl preference 維持)
-
-Day 14 D1 linter A-Minimal 実装で追加された `@[deprecated]` 付き fixture
-(refutedTrivialDeprecated / supersededTrivialDeprecated / obsoleteTrivialDeprecated /
-withdrawnTrivialDeprecated) が Inhabited / mk' / accessor で引き続き rfl 動作することを確認。
-
-`set_option linter.deprecated false in` で warning を抑制 (test 用途、build PASS 維持)。
-Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 3 度目、Day 11-14 = 4 Day 連続
-rfl preference 維持)。 -/
+/-! ### Day 14 deprecated fixture 動作確認 (linter A-Minimal、Day 48 rationale 反映) -/
 
 set_option linter.deprecated false in
-/-- Refuted deprecated fixture: entity が trivial -/
 example : RetiredEntity.refutedTrivialDeprecated.entity = ResearchEntity.trivial := rfl
 
 set_option linter.deprecated false in
-/-- Refuted deprecated fixture: reason が Refuted Failure.trivial -/
 example : RetiredEntity.refutedTrivialDeprecated.reason = .Refuted Failure.trivial := rfl
 
 set_option linter.deprecated false in
-/-- Superseded deprecated fixture: entity が trivial -/
 example : RetiredEntity.supersededTrivialDeprecated.entity = ResearchEntity.trivial := rfl
 
 set_option linter.deprecated false in
-/-- Superseded deprecated fixture: reason が Superseded trivial -/
 example : RetiredEntity.supersededTrivialDeprecated.reason =
           .Superseded ResearchEntity.trivial := rfl
 
 set_option linter.deprecated false in
-/-- Obsolete deprecated fixture: reason が Obsolete -/
 example : RetiredEntity.obsoleteTrivialDeprecated.reason = .Obsolete := rfl
 
 set_option linter.deprecated false in
-/-- Withdrawn deprecated fixture: reason が Withdrawn -/
 example : RetiredEntity.withdrawnTrivialDeprecated.reason = .Withdrawn := rfl
 
 set_option linter.deprecated false in
-/-- whyRetired accessor on deprecated fixture -/
 example : RetiredEntity.refutedTrivialDeprecated.whyRetired = .Refuted Failure.trivial := rfl
 
 set_option linter.deprecated false in
-/-- Day 14 deprecated fixture 4 variant を List 集約 (既存 4 variant List 集約との対称性) -/
 example :
     let allDeprecated : List RetiredEntity :=
       [ RetiredEntity.refutedTrivialDeprecated,
@@ -172,22 +149,29 @@ example :
 example : DecidableEq RetirementReason := inferInstance
 example : DecidableEq RetiredEntity := inferInstance
 
-/-- 同一 Obsolete RetirementReason の等号判定 -/
 example : (RetirementReason.Obsolete) = (RetirementReason.Obsolete) := by decide
-
-/-- Obsolete と Withdrawn の不等号判定 -/
 example : RetirementReason.Obsolete ≠ RetirementReason.Withdrawn := by decide
 
-/-- 同一 RetiredEntity の等号判定 -/
 example :
-    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) =
-    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) :=
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete,
+      rationale := Rationale.trivial} : RetiredEntity) =
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete,
+      rationale := Rationale.trivial} : RetiredEntity) :=
   by decide
 
-/-- reason 違いの不等号判定 -/
 example :
-    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) ≠
-    ({entity := ResearchEntity.trivial, reason := RetirementReason.Withdrawn} : RetiredEntity) :=
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete,
+      rationale := Rationale.trivial} : RetiredEntity) ≠
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Withdrawn,
+      rationale := Rationale.trivial} : RetiredEntity) :=
+  by decide
+
+/-- Day 48: 同 entity / reason でも rationale 違いは不等 (GA-S8 型強制の実証) -/
+example :
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete,
+      rationale := Rationale.trivial} : RetiredEntity) ≠
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete,
+      rationale := Rationale.ofText "legal compliance" 90} : RetiredEntity) :=
   by decide
 
 end AgentSpec.Test.Provenance.RetiredEntity

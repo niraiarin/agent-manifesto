@@ -5,6 +5,7 @@
 import Init.Core
 import AgentSpec.Provenance.ResearchEntity
 import AgentSpec.Process.Failure
+import AgentSpec.Spine.Rationale
 
 /-!
 # AgentSpec.Provenance.RetiredEntity: 退役 entity の構造的検出 (Day 12、A-Minimal)
@@ -162,33 +163,42 @@ structure RetiredEntity where
   entity : ResearchEntity
   /-- 退役理由 (4 variant のうち 1 つ)。 -/
   reason : RetirementReason
+  /-- 退役判断の根拠 (Day 48 で必須化、GA-S8 B-2 4/4)。
+      なぜこの entity を retire するのか、なぜこの reason を選んだかを Rationale で明示記録。 -/
+  rationale : AgentSpec.Spine.Rationale
   deriving DecidableEq, Inhabited, Repr
 
 namespace RetiredEntity
 
-/-- Smart constructor: entity と reason を直接指定。 -/
-def mk' (entity : ResearchEntity) (reason : RetirementReason) : RetiredEntity :=
-  { entity := entity, reason := reason }
+/-- Smart constructor: entity と reason と rationale を直接指定 (Day 48 で signature 更新)。 -/
+def mk' (entity : ResearchEntity) (reason : RetirementReason)
+    (rationale : AgentSpec.Spine.Rationale) : RetiredEntity :=
+  { entity := entity, reason := reason, rationale := rationale }
 
-/-- Smart constructor: Refuted variant (Failure 経由退役)。 -/
-def refuted (entity : ResearchEntity) (failure : AgentSpec.Process.Failure) : RetiredEntity :=
-  { entity := entity, reason := .Refuted failure }
+/-- Smart constructor: Refuted variant (Failure 経由退役、Day 48 rationale 引数追加)。 -/
+def refuted (entity : ResearchEntity) (failure : AgentSpec.Process.Failure)
+    (rationale : AgentSpec.Spine.Rationale) : RetiredEntity :=
+  { entity := entity, reason := .Refuted failure, rationale := rationale }
 
-/-- Smart constructor: Superseded variant (後継退役)。 -/
-def superseded (entity : ResearchEntity) (replacement : ResearchEntity) : RetiredEntity :=
-  { entity := entity, reason := .Superseded replacement }
+/-- Smart constructor: Superseded variant (後継退役、Day 48 rationale 引数追加)。 -/
+def superseded (entity : ResearchEntity) (replacement : ResearchEntity)
+    (rationale : AgentSpec.Spine.Rationale) : RetiredEntity :=
+  { entity := entity, reason := .Superseded replacement, rationale := rationale }
 
-/-- Smart constructor: Obsolete variant (陳腐化退役)。 -/
-def obsolete (entity : ResearchEntity) : RetiredEntity :=
-  { entity := entity, reason := .Obsolete }
+/-- Smart constructor: Obsolete variant (陳腐化退役、Day 48 rationale 引数追加)。 -/
+def obsolete (entity : ResearchEntity)
+    (rationale : AgentSpec.Spine.Rationale) : RetiredEntity :=
+  { entity := entity, reason := .Obsolete, rationale := rationale }
 
-/-- Smart constructor: Withdrawn variant (自発撤回退役)。 -/
-def withdrawn (entity : ResearchEntity) : RetiredEntity :=
-  { entity := entity, reason := .Withdrawn }
+/-- Smart constructor: Withdrawn variant (自発撤回退役、Day 48 rationale 引数追加)。 -/
+def withdrawn (entity : ResearchEntity)
+    (rationale : AgentSpec.Spine.Rationale) : RetiredEntity :=
+  { entity := entity, reason := .Withdrawn, rationale := rationale }
 
-/-- 自明な fixture: trivial Hypothesis Entity の Obsolete 退役。 -/
+/-- 自明な fixture: trivial Hypothesis Entity の Obsolete 退役 (Day 48 で Rationale.trivial 付与)。 -/
 def trivial : RetiredEntity :=
-  { entity := ResearchEntity.trivial, reason := .Obsolete }
+  { entity := ResearchEntity.trivial, reason := .Obsolete,
+    rationale := AgentSpec.Spine.Rationale.trivial }
 
 /-- `reason` accessor の alias (Day 6 Failure.whyFailed と同パターン)。 -/
 def whyRetired (r : RetiredEntity) : RetirementReason := r.reason
@@ -202,25 +212,25 @@ def whyRetired (r : RetiredEntity) : RetirementReason := r.reason
 production code (RetiredEntity structure / smart constructor 自体) は backward compatible
 で変更なし。Day 15+ で custom attribute / linter / elaborator に段階的拡張予定。 -/
 
-/-- Refuted variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+/-- Refuted variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装、Day 48 で Rationale 追加)。 -/
 @[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
 def refutedTrivialDeprecated : RetiredEntity :=
-  refuted ResearchEntity.trivial AgentSpec.Process.Failure.trivial
+  refuted ResearchEntity.trivial AgentSpec.Process.Failure.trivial AgentSpec.Spine.Rationale.trivial
 
-/-- Superseded variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+/-- Superseded variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装、Day 48 で Rationale 追加)。 -/
 @[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
 def supersededTrivialDeprecated : RetiredEntity :=
-  superseded ResearchEntity.trivial ResearchEntity.trivial
+  superseded ResearchEntity.trivial ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
-/-- Obsolete variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+/-- Obsolete variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装、Day 48 で Rationale 追加)。 -/
 @[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
 def obsoleteTrivialDeprecated : RetiredEntity :=
-  obsolete ResearchEntity.trivial
+  obsolete ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
-/-- Withdrawn variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装)。 -/
+/-- Withdrawn variant の deprecated fixture (Day 14 D1 linter A-Minimal 実装、Day 48 で Rationale 追加)。 -/
 @[deprecated "退役済 entity - RetirementReason を確認 (Day 14 linter A-Minimal)" (since := "2026-04-18")]
 def withdrawnTrivialDeprecated : RetiredEntity :=
-  withdrawn ResearchEntity.trivial
+  withdrawn ResearchEntity.trivial AgentSpec.Spine.Rationale.trivial
 
 end RetiredEntity
 
