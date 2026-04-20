@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.53.0-week2-day53",
+  "version": "0.54.0-week2-day54",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1992,6 +1992,55 @@
         "GA-S11"
       ],
       "example_count": 13
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.ResearchNode",
+      "path": "AgentSpec/Spine/ResearchNode.lean",
+      "dependencies": [
+        {
+          "id": "lean-init",
+          "module": "Init.Core, Init.Data.List.Basic",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.ResearchNode (inductive 7 constructor umbrella: Survey/Gap/Hypothesis/Decomposition/Implementation/Failure/Retired、各 rationale 必須)",
+        "AgentSpec.Spine.ResearchNodeKind (enum tag for kind accessor)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Spine.ResearchNode.trivial",
+        "AgentSpec.Spine.ResearchNode.kind (enum tag 抽出)",
+        "AgentSpec.Spine.ResearchNode.rationale (total accessor)",
+        "AgentSpec.Spine.ResearchNode.isTerminal (Failure/Retired 判定)",
+        "AgentSpec.Spine.ResearchNode.isGenerative (Survey/Gap/Hypothesis/Decomposition/Implementation 判定)",
+        "AgentSpec.Spine.ResearchNodeKind (Bool 判定用 enum 7 variant)"
+      ],
+      "assumptions": [],
+      "scope": "formalization",
+      "refs": [
+        "GA-S1",
+        "GA-S8"
+      ]
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.ResearchNodeTest",
+      "path": "AgentSpec/Test/Spine/ResearchNodeTest.lean",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.ResearchNode",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "assumptions": [],
+      "scope": "test",
+      "refs": [
+        "GA-S1"
+      ],
+      "example_count": 40
     }
   ],
   "build_status": {
@@ -2024,7 +2073,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 540,
+    "example_count": 580,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2237,6 +2286,14 @@
       "Test/Spine/ResearchSpecTest.lean": {
         "theorems": 0,
         "examples": 13
+      },
+      "Spine/ResearchNode.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/ResearchNodeTest.lean": {
+        "theorems": 0,
+        "examples": 40
       }
     }
   },
@@ -2734,6 +2791,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 133 jobs + 13 ResearchSpecTest examples PASS、polymorphic (State Input Output : Type) で Spine 層配置、Process/Provenance 逆依存回避、Day 51 LifeCyclePhase との instantiation で実用性確認",
       "scope": "AgentSpec.Spine.ResearchSpec 新 module、pre : State → Input → Prop と post : State → Input → Output → State → Prop の 4-arg Hoare spec、Satisfies/strengthenPre/weakenPost helper。TyDD-B4 Liquid Haskell pattern 準拠。Day 8 EvolutionStep 4-arg transition と構造同型、polymorphic 化で layer 整合。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 54 GA-S1 ResearchNode umbrella 完成化 (7 constructor)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 135 jobs + 40 ResearchNodeTest examples PASS、7 kind 全て Rationale 必須化、kind/rationale/isTerminal/isGenerative accessor 完備、umbrella List 集約で完全性確認",
+      "scope": "AgentSpec.Spine.ResearchNode inductive 7 constructor (Survey/Gap/Hypothesis/Decomposition/Implementation/Failure/Retired)、Day 45-48 pattern で rationale 必須化、String payload hole-driven (Spine layer 隔離)。Provenance.ResearchEntity (PROV-O entity) / Spine.LifeCyclePhase (phase state) と直交 3 軸の ontological 分離。GA-S1 in_progress → done。",
       "compatibility": "conservative extension"
     }
   ],
