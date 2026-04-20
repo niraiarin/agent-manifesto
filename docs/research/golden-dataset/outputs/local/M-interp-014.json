@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-014",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-014.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "十分なデータがあります。分析します。\n\n## 1. 全体評価\n\n**WARNING**\n\nシステムは機能しているが、複数の構造的要因が改善を阻害している。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | 解釈 |\n|------|--------|------|------|\n| **V1 Skill Quality** | pass_rate=77%, evolve_success=98% | **WARNING** | 検証77%は許容域だが、non_triviality=score 0 は「直近実行がtrivial」と判定。saturationも2回連続ゼロデルタで限界接近中。 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | **OK** | 安定。divergence=15% は許容範囲。 |\n| **V3 Output Quality** | hallucination: hypothesis_error=42 が最多 | **WARNING** | 仮説エラー42件、未解決55件の半分を占める。仮説化段階の品質基盤が脆弱。 |\n| **V4 Gate Pass Rate** | 99% | **OK** | 非常に良好。 |\n| **V5 Proposal Accuracy** | 96% (162/168) | **OK** | 高い適合率。 |\n| **V6 Knowledge Structure** | memory=12, retired=0, stale=3 | **WARNING** | 陳腐化ファイル(V7Metrics.lean, design-development-foundation.md, Ontology.lean)が放置。退役0は知識の新鮮性を損なう。 |\n| **V7 Task Design** | completed=188 | **OK** | 十分な実施実績。 |\n\n**追加警戒信号:**\n- **valueless_change**: 現在ストリーク4 (max 8), `halt_recommended=true` — 直近4回の実行が価値なし。最大8回に達すれば改善作業を停止すべき\n- **stale_files**: 3件の構造ファイルが陳腐化\n- **evolve halt recommended**: 前回 Run 107 で既に HALT が推奨されている\n\n---\n\n## 3. 改善提案（優先度順）\n\n### (1) valueless_change ストリーク解消 — evolve HALT\n**現在ストリーク4。max 8 に近づいている。** 価値のない変更を積み重ねるより、一旦 evolve を停止し、観測データを再評価すべき。\n- **アクション**: 次回の evolve 実行をスキップし、observer だけで状態再診断。hypothesis_error 42件の根本原因分析を先行する\n- **互換性**: conservative extension\n\n### (2) 陳腐化ファイルの退役処理\n3件の stale ファイル（V7Metrics.lean, design-development-foundation.md, Ontology.lean）を調査し、不要なら退役、必要なら更新する。\n- **アクション**: 各ファイルの内容を確認し、現在のシステム状態と乖離があれば退役候補としてマーク\n- **互換性**: compatible change\n\n### (3) hypothesis_error の根本原因分析\n仮説エラー42件（未解決36件）が最多数。特に `H_impl_specification`(8件), `H_wrong_premise`(6件) が集中。\n- **アクション**: /evolve の Hypothesizer フェーズで、仮説立案プロセスに事前検証チェックリストを導入。wrong_premise の発生パターンを特定し、前提検証ステップを追加\n- **互換性**: compatible change",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 343002,
+  "timestamp": "2026-04-18T05:51:17Z",
+  "run_number": 1,
+  "exit_code": 0
+}

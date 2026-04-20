@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-026",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-026.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "提供されたメトリクスデータに基づく分析レポートです。\n\n---\n\n## 1. 全体評価: WARNING\n\n**理由**: V1/V3 正式卒業済み・Lean 0 sorry・テスト全通という基盤は堅牢だが、`valueless_change.current_streak=4` かつ `halt_recommended=true`。連続4回の改善なし。FAIL ルーピング（hypothesis_error 36件未解決）が続いており、構造的な学習停止の兆候。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | 解釈 |\n|--------|--------|------|------|\n| **V1 Skill Quality** | formal graduate | GOOD | 卒業済み。theorem delta 0（最新run）、saturation検知は動作中（2回連続0） |\n| **V2 Context Efficiency** | recent_avg 46, cumulative 40 | OK | 安定。divergence 15% は許容範囲 |\n| **V3 Output Quality** | test pass 100%, formal graduate | GOOD | 卒業済み。hallucination: hypothesis_error 36件が未解決アクティブ。品質ゲート（Run57以降）で19件がポストゲート通過 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | GOOD | 異常なし |\n| **V5 Proposal Accuracy** | 96% (162/168) | GOOD | 高い承認率 |\n| **V6 Knowledge Structure** | 12 entries, 0 orphan, 0 retired | WARNING | **retired_count=0**。陳腐化した知識が1件も退役していない。MEMORY 肥大化のリスク |\n| **V7 Task Design** | 188 completed, teamwork 0% | OK | シングルエージェント正常動作 |\n\n**補足指標**:\n- `evolve_cost_efficiency`: mean $2.33/improvement — コスト効率は悪くない\n- `stale_files`: `.claude/skills/verify/SKILL.md` が stale として検出\n- `hypothesis_error` 36件未解決: `H_impl_specification`(8), `H_wrong_premise`(6) が最多。同じ失敗がループしている\n\n---\n\n## 3. 改善提案（優先度順）\n\n### (1) [breaking change] valueless_change ハルト + evolve パウチング\n- **現在**: 連続4回 valueless、halt recommended=true\n- **アクション**: 当面 evolve を停止し、hypothesis_error 36件の根本原因分析に集中する。同じ `H_impl_specification` / `H_wrong_premise` がループしているのは学習失敗シグナル\n- **理由**: 改善なしの継続はトークンコスト（cumulative 62K calls）のみを増やし、構造に寄与しない\n\n### (2) [compatible change] MEMORY 退役プロセスの導入\n- **現在**: retired_count=0, stale_files=1件(verify/SKILL.md)\n- **アクション**: stale なスキルファイルを退役対象として明確化し、MEMORY エントリの定期レビュー（6ヶ月周期）を導入する。`priority_bias_review` の trigger も「20 runs elapsed」だが Run 107 現在未発火（次 117）\n- **理由**: 知識が古くなっても退役しないのは V6 違反\n\n### (3) [compatible change] hypothesis_error ループブレイカー\n- **現在**: 36件の hypothesis_error 未解決（全体の65%）\n- **アクション**: `H_impl_specification`(8件) と `H_wrong_premise`(6件) のパターンを特定し、Hypothesizer エージェントの提案生成ロジックに事前チェックを追加する。品質ゲート導入（Run 57）の効果は出ている（ポストゲート通過 19件）が、根本原因の除去には至っていない\n- **理由**: この2つのサブタイプを削減すれば、V3 hallucination proxy が改善し、evolve の仮説品質が向上する可能性が高い",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 498461,
+  "timestamp": "2026-04-18T06:38:24Z",
+  "run_number": 1,
+  "exit_code": 0
+}

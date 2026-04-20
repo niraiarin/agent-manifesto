@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-028",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-028.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "メトリクスを分析する。\n\n## 全体評価\n\n**WARNING** — システムは構造的には健全だが、改善の質が枯渇しはじめている。\n\n---\n\n## V1-V7 各指標の解釈\n\n| V | 指標 | 現在値 | 判定 |\n|---|------|--------|------|\n| **V1** | Skill Quality | pass_rate=77%, evolve_success=98%, non_triviality=0 | ⚠️ **飽和** — 継続率は高いが theorem_delta/test_delta 両とも直10回平均でも微増(6.3/8.9)、non_triviality=0 は改良が形式的に非自明でなくなりつつ |\n| **V2** | Context Efficiency | tool_calls=62K, sessions=1699, recent_avg=46, cumulative_avg=40, divergence=15% | ⚠️ **要注意** — recent_avg(46) が cumulative_avg(40) を上回り、コンテキスト消費が増加傾向。divergence=15% は閾値に近い |\n| **V3** | Output Quality | test_pass=100%, hypothesis_error=42(active), loopback=19 | ⚠️ **要注意** — hypothesis_error が 42件と最多的。loopback=19 は設計→検証→再設計の無駄ループを示す |\n| **V4** | Gate Pass Rate | 99% (28587/28693) | ✅ **良好** |\n| **V5** | Proposal Accuracy | 96% (162/168) | ✅ **良好** |\n| **V6** | Knowledge Structure | entries=12, orphan=0, retired=0 | ⚠️ **要注意** — retired=0 は陳腐化した知識が退役していない。メモリが肥大化するリスク |\n| **V7** | Task Design | completed=188, unique=180, teamwork=0% | ✅ **許容** — シングルエージェント運用は設定通り |\n\n---\n\n## 改善提案（優先度順）\n\n### 1. Valueless Change Streak 4 → 改善方針の転換が必要（最優先）\n\n`valueless_change.current_streak: 4`, `halt_recommended: true` が既に出力されている。直近4回の evolve 変更が構造的価値を持たない状態が継続中。\n\n**アクション**: /evolve を一時停止し、Observer が「どの種の改善がもはや価値を生まないか」を分析してから再開する。無条件の evolve 継続は token 浪費になる。\n\n### 2. Hypothesis Error 42件の根本原因特定\n\nhypothesis_error (active: 36) は失敗パターンの over half を占める。subtype 別では `H_impl_specification`(8件) と `H_wrong_premise`(6件) がトップ。\n\n**アクション**: Observer が past 107 evolve runs から hypothesis_error を発生させた具体提案を抽出し、「どのタイプの仮説が最も失敗しやすいか」を特定。仮説化フェーズのチェックリストを強化するか、仮説生成の制約を厳格化する。\n\n### 3. Memory Retirement — 退役なしの打破\n\n`retired_count: 0` は5ヶ月以上の運用でゼロ。陳腐化した memory entry が放置されている可能性が高い。\n\n**アクション**: MEMORY.md の全 entry をレビューし、プロジェクト文脈から外れたものを退役させる。retired_count を 0 から増やすことがまず最初の改善ステップになる。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 280608,
+  "timestamp": "2026-04-18T06:46:42Z",
+  "run_number": 1,
+  "exit_code": 0
+}

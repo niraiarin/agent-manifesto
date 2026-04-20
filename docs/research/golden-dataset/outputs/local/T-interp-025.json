@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-025",
+  "task_type": "T-interp",
+  "input_file": "trace-input-025.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "manifest-trace レポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバー済み | 43 (100%) |\n| アート総数 | 591 |\n| 未カバー命題 | なし |\n\n**内訳（カテゴリ別）:**\n- T (constraints): 8/8 完全\n- E (empirical postulates): 2/2 完全\n- P (principles): 6/6 完全\n- L (boundaries): 6/6 完全\n- D (design theorems): 14/14 完全\n- V (observables): 7/7 完全\n\n---\n\n## 2. ギャップ分析\n\n### 重大度順ギャップ\n\n**(A) 証拠なし命題 24 件（56%）— 最も重要なギャップ**\n\n| 命題 | カテゴリ | 影響波及（D13 観点） |\n|---|---|---|\n| **P2** | principle | → D2 → D17。検証独立性の根拠欠如 |\n| **P3** | principle | → D9, D13, D17。学習統治の根拠欠如 |\n| **P6** | principle | → D5, D12, D14。タスク設計の根拠欠如 |\n| **L1-L6** | boundaries | 全6 boundary が証拠なし。設計定理の基礎が不安定 |\n| **D1-D14** | design theorems | 全14設計定理が証拠なし。派生はあっても実装証拠が欠如 |\n\n**(B) 導出なし命題 4 件**\n\nT4, T5, T6, T7 — すべて T0 制約（環境要請、自然法則、契約由来）。型定義から導出不可能なので**正当な状態**。問題なし。\n\n**(C) D13 影響波及の観点**\n\nD13（仮説 expiation の影響範囲）自体は 36 個のアートファクトを持ち、導出あり・実装あり。ただし**証拠なし**。D13 の定理 `d13_assumption_impact_monotone` と `d13_assumption_subsumes_proposition` は形式的に導出されているが、実環境での実証証拠がない。\n\n**P2→D2→D17** と **P3→D9/D13→D17** のチェーンが両方とも証拠ギャップを抱えており、D17（生成プラグイン）の信頼性が間接的に低下している。\n\n---\n\n## 3. 改善提案\n\n| 優先度 | アクション | 影響範囲 | 期待効果 |\n|---|---|---|---|\n| **P0** | **P2 (verification independence) の証拠追加** | P2→D2→D17 チェーン | 独立検証のEmpirical根拠(E1)を実証データで補強。P3の`self_sufficiency_check` memory も参照 |\n| **P1** | **P3 (governed learning) の証拠追加** | P3→D9/D13→D17 チェーン | evolve-history.jsonl や decision-log.jsonl から学習サイクルの実証証拠を抽出 |\n| **P2** | **L1-L6 boundary の証拠補完** | D1-D14 全設計定理 | 各boundaryが実際に機能していることのhooks/testsデータによる実証。L1が特に重要（安全境界） |\n\n---\n\n**総括:** カバレッジ自体は 100% だが、**evidence gap が 56%** と大幅。形式的導出（derivation）は 39/43 で健全だが、実証証拠（evidence）が不足している。P2 と P3 の principle レベルでの証拠追加が最も効果的（下流の D17 まで波及する）。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 1115396,
+  "timestamp": "2026-04-18T14:37:22Z",
+  "run_number": 1,
+  "exit_code": 0
+}

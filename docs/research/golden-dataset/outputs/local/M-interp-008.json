@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-008",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-008.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: WARNING\n\nLeanビルドは健全（0 failing tests, sorry=1 は既知）だが、`valueless_change` の連続 streak=4 で `halt_recommended=true`。改善が構造的に停滞しているシグナル。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 判定 |\n|------|-----|------|\n| **V1 Skill Quality** | verifier_pass=77%, evolve_success=98%, graduation済み | **OK** — 安定稼働。non_triviality=0 は注意 |\n| **V2 Context Efficiency** | sessions=1699, raw_cumulative_avg=36, trend=stable | **OK** — 文脈効率に悪化なし |\n| **V3 Output Quality** | test_pass_rate=100%, hallucination: hyp_err=36(active) | **WARNING** — hypothesis_error が36件アクティブ。品質ゲート導入後も19件残存 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | **OK** — 非常に高い |\n| **V5 Proposal Accuracy** | 96% (162/168) | **OK** — 高いが、42件のhypothesis_errorが矛盾 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | **WARNING** — 陳腐化したmemoryの退役が1件もなし。stale_skillsも指摘済み |\n| **V7 Task Design** | completed=188, teamwork=0% | **OK** — シングルエージェント運用は意図的 |\n\n---\n\n### 3. 改善提案（優先度順）\n\n**① [緊急] evolve ハルト実行**\n`valueless_change.current_streak=4, halt_recommended=true`。当面の進化を停止し、現状の品質固定とメトリクス洗浄に注力すべき。無意味な構造変更の連鎖を断つ。\n\n**② [高] hypothesis_error 36件の根本解消**\nV3の最も大きな汚点。`H_impl_specification`(8) と `H_wrong_premise`(6) が上位。Observerの観察精度とHypothesizerの前提検証プロセスの改善が最高ROI。\n\n**③ [中] Memory 退役プロセスの確立**\n`retired_count=0` は問題。stale_files (research/evolve SKILL.md) が既に指摘されているのに放置。Memory retirement の仕組みとT6による承認フローが必要。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 255945,
+  "timestamp": "2026-04-18T05:31:46Z",
+  "run_number": 1,
+  "exit_code": 0
+}

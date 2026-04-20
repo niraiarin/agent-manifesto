@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-011",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-011.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "提供されたメトリクスを分析します。\n\n## 1. 全体評価: WARNING\n\nシステムは機能しているが、**valueless_change streak=4, halt_recommended=true** が警戒信号。107回のevolveで累積466件の提案→360件passだが、FAIL 105件（23%）と未解決failure 55件が蓄積している。\n\n## 2. V1-V7 各指標の解釈\n\n| V指标 | 状態 | 解釈 |\n|---|---|---|\n| **V1 Skill Quality** | OK | formal graduation済。10回平均 theorem+6.3/test+8.9。ただしnon_triviality=0（trivial）が懸念 |\n| **V2 Context Efficiency** | OK | 62,028 tool calls / 1,699 sessions。recent_avg=46, cumulative_avg=40。stable trend |\n| **V3 Output Quality** | OK | test pass rate 100%。hallucination proxy: hypothesis_error=42が最多。post_gateで19→36に増加 |\n| **V4 Gate Pass Rate** | OK | 99% (28,587/28,693)。健全 |\n| **V5 Proposal Accuracy** | OK | 96% (162/168)。schema_drift=false |\n| **V6 Knowledge Structure** | OK | memory_entries=12, retired=0。退職ゼロは陳腐化リスク |\n| **V7 Task Design** | OK | completed=188, unique=180。teamwork=0（single_agent指定） |\n\n**懸念点:**\n- `sorry: 2` — Lean に2件のsorry残留\n- `tests: failed: 4` — 4件のテスト失敗\n- `valueless_change.current_streak: 4, halt_recommended: true` — 直近4回の変更が価値なし\n- `hypothesis_error: 36` 未解決 — 仮説の前提ミスが最大の問題\n\n## 3. 改善提案（優先度高→低）\n\n1. **FAILループブレイク: hypothesis_error 36件の根本原因特定**\n   — `H_impl_specification`(8) と `H_wrong_premise`(6) が最多。Hypothesizer AGENT.md に前提検証チェックリストを追加し、誤った前提での提案を阻止\n\n2. **valueless_change halt 対応: evolve の閾値調整**\n   — streak=4 で halt 推奨中。Observer が「価値ある変更」の判定基準を明確化（theorem_delta > 0 AND test_delta > 0 の双方必須など）\n\n3. **memory retirement: retired_count=0 の是正**\n   — 12件全active。陳腐化した project memory を退役させ、V6 knowledge quality の実測値を意味あるものにする",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 355251,
+  "timestamp": "2026-04-18T05:36:02Z",
+  "run_number": 1,
+  "exit_code": 0
+}

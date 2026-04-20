@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-017",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-017.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — 形式検証基盤は堅牢だが、`/evolve` ループに価値創出の停滞兆候。\n\n---\n\n## 2. V1-V7 指標の解釈\n\n| 指標 | 現在値 | 評価 | 備考 |\n|---|---|---|---|\n| **V1 スキル品質** | formal, non_triviality=trivial (0) | ⚠️ 注意 | 直近 run で theorem/test delta=0。saturation=ok だが trivial ラベル |\n| **V2 コンテキスト効率** | recent_avg=46, divergence 15% | ✅ 良好 | stable トレンド、閾値内 |\n| **V3 出力品質** | test_pass_rate 100%, hypothesis_error 42 (active 36) | ⚠️ 注意 | post_gate でも hypothesis_error 19 残存。H_impl_specification=8 顕著 |\n| **V4 ゲート通過率** | 99% (28587/28693) | ✅ 良好 | |\n| **V5 提案精度** | 96% (162/168) | ✅ 良好 | schema_drift なし |\n| **V6 知識構造** | 12 entries, orphan=0 | ✅ 良好 | 退役候補なし、整合性維持 |\n| **V7 タスク設計** | completed=188, teamwork suppressed | — | 単一エージェント運用のため計測抑制中 |\n\n**構造側の赤信号**:\n- `valueless_change.halt_recommended=true` (streak=4/max=4) — **/evolve の価値創出が 4 連続で停滞**\n- テスト失敗 1 件（`tests.failed=1`、詳細 `failed_test_details` 空のため原因特定要）\n- `sorry=2` だが `sorry_classification.total=0` — 分類漏れ\n- stale files 2 件（`design-development-foundation.md`, `evolve/SKILL.md`）\n\n---\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: /evolve の halt 推奨への対応\n`valueless_change.current_streak=4` かつ `halt_recommended=true`。盲目的な次 run 実行は V1 trivial を連鎖させる。human_feedback 2026-03-24 の「Observer 分析＋ccusage 観測＋エージェント統合検討」タスクが未消化の可能性。**次回 /evolve は新規提案より human_feedback の消化を優先**。\n\n### 🟡 P2: hypothesis_error の根本対策\npost_gate 後も `hypothesis_error=19` が残存し、うち `H_impl_specification=8`, `H_wrong_premise=6`。品質ゲートが特定サブタイプを素通しさせている。Hypothesizer の pre-verification（Lean 対応表の逆引きチェック、#290 半順序公理）を Run 57 以降も定着させる必要。\n\n### 🟡 P3: sorry 2 件の分類と失敗テスト 1 件の原因特定\n- `sorry_classification` が空なのは分類漏れ。2 件を placeholder/dangling/deferred/exploratory に分類。\n- `tests.failed=1` の詳細が空。`test-all.sh` 実行ログから失敗テストを特定し、L1（テスト改竄禁止）の下で修復。",
+  "tokens_in": 6,
+  "tokens_out": 1532,
+  "latency_ms": 27571,
+  "timestamp": "2026-04-17T01:48:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

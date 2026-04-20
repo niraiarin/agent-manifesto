@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-025",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-025.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\nコア基盤（Lean 55 axioms / 490 theorems / 0 sorry, tests 755/755 pass, V4=99%, V5=96%）は健全。ただし **`valueless_change.halt_recommended=true`（連続 4 回の無価値変更）** と **V1 non_triviality=trivial** が同時発生しており、/evolve が飽和局面に入っている。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 評価 | 備考 |\n|---|---|---|---|\n| **V1** スキル品質 | trivial (score=0) | ⚠️ 注意 | 直近の theorem/test delta=0、連続 2 回ゼロ差分。飽和の兆候 |\n| **V2** コンテキスト効率 | recent 46 / cum 40 | ⚠️ 注意 | divergence 15%、直近セッションが肥大化傾向 |\n| **V3** 出力品質 | test pass 100% | ✅ 良好 | ただし hallucination_proxy 未解決 55 件（hypothesis_error 36 が支配的） |\n| **V4** ゲート通過率 | 99% | ✅ 良好 | blocked 106 / 28693 |\n| **V5** 提案精度 | 96% | ✅ 良好 | schema_drift なし |\n| **V6** 知識構造 | 12 entries, 孤児 0 | ✅ 良好 | 退役候補なし、インデックス整合 |\n| **V7** タスク設計 | teamwork 0% | ⚠️ 計測抑制 | single-agent 運用で suppressed。実質評価不能 |\n\n**他の警告シグナル**:\n- `evolve_history.valueless_change.current_streak=4` → **halt 推奨**\n- `hypothesis_errors=54`、未解決 hypothesis_error 36 件（`H_impl_specification` 8, `H_wrong_premise` 6）\n- `scope_balance`: meta_runs 8 / substance_runs 7（直近 10 回、やや meta 偏重）\n\n## 3. 改善提案（優先度順）\n\n### 🔴 優先度 1: /evolve 一時停止と根本原因調査\n`halt_recommended=true` を尊重し、自動的な /evolve 継続を停止。直近 4 回の valueless_change が何を観察対象としていたか、Observer のフィルタ基準が過度に網羅的になっていないかをレビュー（human feedback 2026-03-24 の Phase 1 A/B 指示に合致）。\n\n### 🟡 優先度 2: hypothesis_error の構造的対処\n未解決 55 件のうち 36 件（65%）が hypothesis_error。特に `H_impl_specification`（仕様と実装の取り違え）と `H_wrong_premise`（誤前提）が頻発。Hypothesizer の事前検証ステップ（pre-verification）を強化し、`H_no_pre_verification` サブタイプの再発を防止。\n\n### 🟡 優先度 3: V2 コンテキスト効率の点検\nrecent/cumulative divergence 15%（trend=stable だが上昇方向）。直近セッションで tool_calls が膨らんでいないか、特に Observer の走査範囲を点検。human feedback の「observe.sh 軽量化」提案が未着手。\n\n---\n\n**補足**: `priority_bias_review` は次回 Run 117（残 10 回）でトリガー予定。halt_recommended を受けて bias 再評価を前倒しする選択肢もあるが、T6（人間決定権）の範疇。",
+  "tokens_in": 6,
+  "tokens_out": 1800,
+  "latency_ms": 34269,
+  "timestamp": "2026-04-17T01:51:57Z",
+  "run_number": 1,
+  "exit_code": 0
+}

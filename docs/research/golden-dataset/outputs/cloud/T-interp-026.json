@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-026",
+  "task_type": "T-interp",
+  "input_file": "trace-input-026.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティ分析レポート\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: **100%** (43/43 命題)\n- **未カバー命題**: なし\n- **弱カバー命題**: なし\n- **総アーティファクト数**: 557\n\nただし、「カバー済み」は成果物の有無のみ。**根拠（evidence）/ 導出（derivation）の充足度には偏在がある**。\n\n## 2. ギャップ分析\n\n### 2a. Evidence 欠落 (24/43)\n\n| カテゴリ | 欠落命題 | 影響度 |\n|---|---|---|\n| 境界 (L) | **L1, L3, L4, L5, L6** (L2 のみ有) | **高** — V1〜V7 の上流 |\n| 原則 (P) | **P2, P3, P6** (P1/P4/P5 は有) | **高** — 広範に波及 |\n| 設計定理 (D) | D1〜D14 (ほぼ全) | 中 — derivation で代替 |\n| 観測量 | V6 | 低 |\n\n### 2b. Derivation 欠落 (4/43)\n\n- **T4, T5, T6, T7** — T 系制約。Evidence は全て有。T₀ 環境制約なので derivation 不要（axiom 保持が正当）。\n\n### 2c. D13 影響波及の観点\n\n**最大のリスクは L1, L3, L4, L5, L6 の evidence 欠落**:\n- L 系境界は V1〜V7 全観測量の上流\n- 上流 axiom（T6, T7, P1, P3 等）が AGM contraction 対象になれば、L 系経由で V 系全体に波及\n- Evidence 不在は降格可否判定の根拠が無いことを意味し、波及時の制御不能リスクを生む\n\n## 3. 改善提案（優先度順）\n\n### 提案 1: 境界 L1/L3/L4/L6 への Evidence 付与【高優先】\n- **対象**: L1, L3, L4, L6 (L5 はプラットフォーム固有で除外可)\n- **理由**: V 観測量全体の基盤。D13 波及経路の遮断点として必須\n- **方法**: 各境界に紐づく axiom (T6, T7 等) の refutation 条件を Evidence として明文化\n\n### 提案 2: 原則 P2/P3/P6 への Evidence 強化【中優先】\n- **対象**: P2 (検証独立性), P3 (学習統治), P6 (制約充足)\n- **理由**: 設計定理 D1〜D14 の大半が P 系に依存。Evidence 欠落は演繹チェーン全体の根拠希薄化\n- **方法**: 既存 derivation に対応する empirical basis を EmpiricalPostulates.lean に追加\n\n### 提案 3: V6 (知識構造品質) への Evidence 補完【低優先】\n- **対象**: V6 のみ（他 V は evidence 有）\n- **理由**: 観測量間の一貫性確保\n- **方法**: traceability coverage や sorry カウントを定量的根拠として記録\n\n---\n\n**総評**: 形式的カバレッジは完全だが、**Evidence 層の偏在により D13 影響波及時の降格可否判定が困難**。境界層の Evidence 整備を最優先とすべき。",
+  "tokens_in": 6,
+  "tokens_out": 1839,
+  "latency_ms": 31630,
+  "timestamp": "2026-04-17T02:03:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

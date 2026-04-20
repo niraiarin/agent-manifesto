@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-012",
+  "task_type": "T-interp",
+  "input_file": "trace-input-012.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "トレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|------|-----|\n| 総命題数 | 43 |\n| カバード | 43 (100%) |\n| 未カバー | 0 |\n| 証拠付き | 19/43 (44%) |\n| 証拠なし | 24/43 (56%) |\n| 導出付き | 38/43 (88%) |\n| 導出なし | 4/43 (12%) |\n\n**未カバー命題**: なし（全命題が少なくとも1つのアーティファクトでカバーされている）\n\n## 2. ギャップ分析\n\n### Critical: 証拠なし命題 24件中、原則(P)レベルの空洞化\n\n| ID | 種類 | 影響を受ける命題数 | 主な依存先 |\n|----|------|-------------------|-----------|\n| **P2** | principle | 1 | D2 |\n| **P3** | principle | 5 | D4, D9, D13, D17 |\n| **P6** | principle | 4 | D5, D12, D14, D15 |\n\n**P3 が最も深刻**。P3（学習の統治）は `evolve-history.jsonl`、hooks、skills、Lean 定理など42件のアーティファクトで「構造的には」支えられているが、**根拠（evidence）がゼロ**。これは「P3の手順が実行されていることは記録されるが、P3が本当に学習を統制しているという証拠がない」状態。\n\n**D13（トレーサビリティ）の観点から**: P3 が根拠なしで下位層(D4, D9, D13, D17)を支えているため、P3 が崩れた場合、D13 の `assumptionImpactMonotone` や `d13_propagation` といった導出定理の土台自体が空洞化する。D13 自身が P3 に依存しているという再帰的な脆弱性。\n\n### Secondary: 導出なし命題 4件（T4-T7）\n\nT4〜T7 は環境制約（T₀）として.axiom 扱いされており、導出不可能なことは意図的な設計。ただし T8 は導出ありながら証拠なし。\n\n## 3. 改善提案（優先度順）\n\n### ① P3 の証拠補強（highest）\n**P3 仮説化→検証サイクルの実績証拠を `evidence` として記録する**\n- evolve-history.jsonl の過去のイテレーションから「互換性分類が実際に破綻を防いだ事例」を抽出し、P3 の evidence セクションに追加\n- 具体的には: `breaking change` 分類が正しく機能したコミット事例、`conservative extension` 分類が不要な変更を安全に統合した事例を3-5件収集\n- **影響**: P3 → D4, D9, D13, D17 の全依存先に信頼性波及\n\n### ② P2/P6 の証拠補強（medium）\n**P2（検証の独立性）と P6（制約充足タスク設計）の事例証拠を追加**\n- P2: verifier エージェントが実際に発見したバグ/誤りを p2-verified.jsonl から抽出\n- P6: タスク設計が制約(T3/T7/T8)を満たすために計画を調整した事例を design-implementation-plan の履歴から収集\n- **影響**: P2→D2, P6→D5/D12/D14/D15\n\n### ③ T8 の証拠追加（low）\n**T8（task_has_precision）の自然言語根拠を manifesto.md または証拠ファイルに追加**\n- T8 は唯一 `evidence: []` かつ `depends_on: []` の T-layer 命題。他の T1-T7 はすべて manifesto.md の引用や Lean axiom による裏付けがある\n- T8 の根拠（タスクの精度レベル定義が実装されていること）を evidence として明示化\n- **影響**: T8→D5/D8/D12/D14/D15/D16 の基盤強化",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 1986852,
+  "timestamp": "2026-04-18T08:54:54Z",
+  "run_number": 1,
+  "exit_code": 0
+}

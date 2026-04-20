@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-017",
+  "task_type": "T-interp",
+  "input_file": "trace-input-017.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ**: 43/43 命題 = **100%**（`summary.covered`）\n- **未カバー命題**: **なし**（`uncovered: []`, `weak: []`）\n- **総アーティファクト数**: 482\n- **ルート命題**: T1-T8, E2, L5（10 個）\n- **葉命題**: D4, D6, D7, D10, D11, D14, V1-V7（13 個）\n\n## 2. ギャップ分析（D13 影響波及観点）\n\n構造カバレッジは完全だが、**命題証拠（evidence）と導出（derivation）の偏り**が存在する。\n\n### 証拠（evidence）欠落: 24 命題\n最重要ギャップ:\n- **T8 (task_has_precision)**: 根拠・反証条件の記載なし。D5/D12/D14/D15/D16/P6 の基盤で、波及範囲が広い\n- **P2/P3**: 原則レベル（strength=3）で evidence 欠落。P3 は 5 命題に依存され、**breaking change の判定基盤**\n- **L1-L6, D1-D14**: 境界・設計定理は derivation のみで、経験的証拠なし\n\n### 導出（derivation）欠落: 4 命題\n- **T4, T5, T6, T7**: T₀ 環境制約のため型からの導出不可（axiom 維持が正当化済み）— これは理論的に許容される\n\n### D13 影響波及リスク\nT8 の evidence 欠落は、依存鎖 T8 → P6 → D5/D12/D14 に沿って、**「精度要件の根拠が不明」という不確実性を波及させる**。\n\n## 3. 改善提案（優先度順）\n\n### [優先度 高] T8 に evidence を付与\n- **理由**: P6 経由で D5/D12/D14/D15/D16 へ波及。現状「derivation あり・evidence なし」は導出チェーンの起点が弱い\n- **アクション**: T8 Axiom Card に basis/source/refutation を追記（Γ \\ T₀ 分類想定）\n- **互換性**: conservative extension\n\n### [優先度 中] P2/P3 に empirical evidence を追加\n- **理由**: Principle (strength=3) は原則レベルで、運用実績（`p2-verified.jsonl`, `evolve-history.jsonl`）を evidence として構造化可能\n- **アクション**: EmpiricalPostulates.lean または Principles.lean に evidence フィールド追加\n- **互換性**: compatible change\n\n### [優先度 低] 葉命題 D6/D7/D10/D11/D14 の実装カバレッジ確認\n- **理由**: D6/D11 は `has_implementation: false`。設計定理が文書のみで実装されていない状態\n- **アクション**: 該当設計定理を実装する hook/script/test の追加、または「文書のみで十分」の根拠を明記\n- **互換性**: conservative extension",
+  "tokens_in": 6,
+  "tokens_out": 1024,
+  "latency_ms": 22973,
+  "timestamp": "2026-04-17T01:58:49Z",
+  "run_number": 1,
+  "exit_code": 0
+}

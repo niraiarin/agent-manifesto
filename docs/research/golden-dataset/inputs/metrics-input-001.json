@@ -1,0 +1,464 @@
+{
+  "meta": {
+    "id": "metrics-input-001",
+    "type": "metrics",
+    "timestamp": "2026-04-16T07:56:35Z",
+    "git_rev": "1af5b4f",
+    "source": "observe.sh"
+  },
+  "data": {
+    "lean": {
+      "axioms": 55,
+      "theorems": 488,
+      "sorry": 0,
+      "modules": 34,
+      "warnings": 0,
+      "compression_ratio": 887,
+      "de_bruijn_factor": 740,
+      "foundation_theorems": 17
+    },
+    "tests": {
+      "passed": 769,
+      "failed": 0
+    },
+    "stale_files": [],
+    "evolve_history": {
+      "latest_run_number": 107,
+      "total_entries": 113,
+      "last_run": "2026-04-12T06:28:01Z",
+      "phases_totals": {
+        "observer_findings": 740,
+        "hypothesizer_proposals": 466,
+        "verifier_pass": 360,
+        "verifier_fail": 105,
+        "null_entries_count": 12
+      }
+    },
+    "decision_log": {
+      "total": 1,
+      "active": 1,
+      "rejected_alternatives": 1,
+      "assumptions_tracked": 1,
+      "recent_30d": 1
+    },
+    "assumption_tracker": {
+      "total": 5,
+      "active": 5,
+      "review_overdue": 0,
+      "invalidated": 0
+    },
+    "judge_patterns": {
+      "total_rejections": 69,
+      "resolved": 14,
+      "unresolved": 55,
+      "by_type": {
+        "hypothesis_error": 42,
+        "assumption_error": 11,
+        "observation_error": 6,
+        "precondition_error": 6
+      }
+    },
+    "metrics": {
+      "tool_calls": 62028
+    },
+    "v1_v7": {
+      "v1_skill_quality": {
+        "gqm_version": "0.1.0",
+        "q1_structural_contribution": {
+          "theorem_delta_last_run": 0,
+          "test_delta_last_run": 0,
+          "theorem_delta_avg_10r": 6.3,
+          "test_delta_avg_10r": 8.9,
+          "test_delta_outlier_in_window": true
+        },
+        "q2_verification_quality": {
+          "verifier_pass_total": 360,
+          "verifier_fail_total": 105,
+          "verifier_pass_rate": 77,
+          "rejected_last_run": 0,
+          "rejected_avg_10r": 0.5
+        },
+        "q3_operational_stability": {
+          "evolve_success_rate": 98,
+          "lean_health": 1,
+          "skill_count": 14
+        },
+        "non_triviality": {
+          "score": 0,
+          "label": "trivial",
+          "c1_theorem_growth": 0,
+          "c2_test_growth": 0,
+          "c3_axiom_change": 0,
+          "c4_multi_verification": 0
+        },
+        "saturation": {
+          "test_consecutive_zero_delta": 2,
+          "status": "ok"
+        },
+        "proxy_classification": "formal",
+        "graduation_date": "2026-03-27",
+        "graduation_source": "#77 G1-G4"
+      },
+      "v2_context_efficiency": {
+        "tool_calls": 62028,
+        "sessions": 1699,
+        "recent_avg": 46,
+        "cumulative_avg": 40,
+        "raw_cumulative_avg": 36,
+        "trend_direction": "stable",
+        "divergence_percent": 15,
+        "primary_metric": "recent_median",
+        "raw_delta_count": 10,
+        "filtered_delta_count": 10,
+        "min_session_delta": 3
+      },
+      "v3_output_quality": {
+        "total_commits": 573,
+        "test_pass_rate": 100,
+        "proxy_classification": "formal",
+        "graduation_date": "2026-03-27",
+        "graduation_source": "#77 G1-G4",
+        "hallucination_proxy": {
+          "observation_error": 6,
+          "hypothesis_error": 42,
+          "assumption_error": 11,
+          "precondition_error": 6,
+          "loopback_total": 19,
+          "typed_rejected_total": 69,
+          "observation_error_active": 3,
+          "hypothesis_error_active": 36,
+          "assumption_error_active": 7,
+          "precondition_error_active": 5,
+          "observation_error_post_gate": 0,
+          "hypothesis_error_post_gate": 19,
+          "assumption_error_post_gate": 4,
+          "precondition_error_post_gate": 2,
+          "subtype_post_gate": {
+            "H_wrong_premise": 6,
+            "H_impl_specification": 8,
+            "H_trivially_true": 0,
+            "none": 9
+          },
+          "quality_gate_run": 57,
+          "note": "failure_type \u6a19\u6e96\u5316\u306f Run 54 \u304b\u3089\u3002_post_gate \u306f Run 57 \u54c1\u8cea\u30b2\u30fc\u30c8\u5c0e\u5165\u5f8c\u306e\u307f"
+        }
+      },
+      "v4_gate_pass_rate": {
+        "passed": 28587,
+        "blocked": 106,
+        "blocked_excluded": 10620,
+        "total": 28693,
+        "rate_percent": 99
+      },
+      "v5_proposal_accuracy": {
+        "approved": 162,
+        "total": 168,
+        "rate_percent": 96,
+        "grep_crosscheck": 162,
+        "schema_drift": false
+      },
+      "v6_knowledge_structure": {
+        "memory_entries": 12,
+        "memory_files": 12,
+        "last_update_days_ago": 0,
+        "retired_count": 0,
+        "type_distribution": {
+          "feedback": 5,
+          "project": 4,
+          "reference": 3,
+          "other": 0
+        },
+        "index_consistency": {
+          "orphan_files": 0,
+          "missing_files": 0
+        },
+        "note": "proxy: entry_count + staleness"
+      },
+      "v7_task_design": {
+        "completed": 188,
+        "unique_subjects": 180,
+        "teamwork_percent": 0,
+        "teamwork_status": "suppressed_single_agent"
+      }
+    },
+    "ccusage": {},
+    "backfill_result": {
+      "backfilled": 0,
+      "note": "no ccusage session data with UUID"
+    },
+    "evolve_cost_efficiency": {
+      "data_points": 38,
+      "mean_session_cost_usd": 8.34,
+      "mean_cost_per_improvement_usd": 2.33,
+      "total_improvements": 409
+    },
+    "deferred_open": [],
+    "hypothesis_table_stats": {
+      "header": {
+        "max_run": 107,
+        "total_entries": 113
+      },
+      "h1_verifier": {
+        "pass": 360,
+        "fail": 105,
+        "total": 465,
+        "pass_rate_percent": 77
+      },
+      "h4_compatibility": {
+        "conservative_extension": 229,
+        "compatible_change": 177,
+        "breaking_change": 1,
+        "other": 2,
+        "total": 409
+      },
+      "h5_valid_uuids": 39
+    },
+    "priority_bias_review": {
+      "current_run": 107,
+      "run_at_decision": 97,
+      "runs_since_decision": 10,
+      "triggers_fired": [
+        {
+          "trigger": "V1/V3 formal graduation",
+          "fired": false,
+          "detail": ""
+        },
+        {
+          "trigger": "20 runs elapsed",
+          "fired": false,
+          "next": 117
+        }
+      ],
+      "review_needed": false,
+      "authority": "T6 (human decision required)"
+    },
+    "manifest_trace": {
+      "version": "0.3.0",
+      "coverage": {
+        "covered": 43,
+        "uncovered": 0,
+        "weak": 0,
+        "total": 43
+      },
+      "artifacts": 185,
+      "evidence_coverage": {
+        "with": 9,
+        "total": 9
+      },
+      "derivation_completeness": {
+        "with": 34,
+        "total": 34
+      },
+      "by_strength": {
+        "s5": "8/8",
+        "s4": "2/2",
+        "s3": "6/6",
+        "s2": "6/6",
+        "s1": "14/14",
+        "s0": "7/7"
+      },
+      "priority_repairs": []
+    },
+    "task_classification": {
+      "table_rows": 25,
+      "checklist_rows": 25,
+      "valid": true
+    },
+    "sorry_classification": {
+      "total": 0,
+      "classified": 0,
+      "unclassified": 0,
+      "by_class": {
+        "placeholder": 0,
+        "dangling": 0,
+        "deferred": 0,
+        "exploratory": 0
+      },
+      "items": []
+    },
+    "human_feedback_recent": [
+      {
+        "run": null,
+        "timestamp": "2026-03-24T11:15:00Z",
+        "notes": "\u3010\u6b21\u56de evolve \u306e\u6700\u512a\u5148\u8ab2\u984c\u3011T7 ResourceBound \u306e Claude Code \u74b0\u5883\u3078\u306e\u5177\u4f53\u5316\u304c /evolve \u8a2d\u8a08\u6642\u306b\u6b20\u843d\u3002/evolve \u81ea\u4f53\u306e\u30b3\u30b9\u30c8\u52b9\u7387\u306e\u6700\u9069\u5316\u30eb\u30fc\u30d7\u3082\u4e0d\u5728\u3002\u4ee5\u4e0b\u3092\u6b21\u56de evolve \u3067\u5b9f\u65bd\u3059\u308b\u3053\u3068\u3002--- [Phase 1 Observer] (A) \u904e\u53bb evolve \u5404\u56de\u306e\u6539\u5584\u306e\u8cea\u30fb\u6570\u30fb\u7a2e\u985e\u3092\u5206\u6790\u3057\u3001\u5404\u30a8\u30fc\u30b8\u30a7\u30f3\u30c8\uff08Observer/Hypothesizer/Verifier/Integrator\uff09\u306e\u72ec\u7acb\u3057\u305f\u5bc4\u4e0e\u3092\u8a55\u4fa1\u3059\u308b\u3002Verifier \u306e FAIL \u6551\u6e08\u56de\u6570\u3001Observer \u56fa\u6709\u306e\u767a\u898b\u6570\u306a\u3069\u3002(B) \u3053\u306e\u5206\u6790\u306b\u5fc5\u8981\u306a\u53ef\u89b3\u6e2c\u6027\u304c\u73fe\u72b6\u306e\u8a18\u9332\u30fb\u8a2d\u8a08\u306b\u5341\u5206\u304b\u8a55\u4fa1\u3057\u3001\u4e0d\u8db3\u3057\u3066\u3044\u308c\u3070\u305d\u308c\u81ea\u4f53\u3092\u6539\u5584\u5019\u88dc\u306b\u3059\u308b\u3002(C) T\u2192L\u2192\u74b0\u5883\u30de\u30c3\u30d4\u30f3\u30b0\u3067\u4ed6\u306b\u540c\u69d8\u306e\u6f0f\u308c\u304c\u306a\u3044\u304b\u4f53\u7cfb\u7684\u306b\u8abf\u67fb\u3002(D) ccusage (https://github.com/ryoppippi/ccusage) \u3092 Claude Code \u30ea\u30bd\u30fc\u30b9\u6d88\u8cbb\u306e\u89b3\u6e2c\u30c4\u30fc\u30eb\u3068\u3057\u3066\u8abf\u67fb\uff08Step 0b prior art\uff09\u3002--- [Phase 2 Hypothesizer] \u4e0a\u8a18\u306e\u8a08\u6e2c\u7d50\u679c\u306b\u57fa\u3065\u304d /evolve \u306e\u8a2d\u8a08\u898b\u76f4\u3057\u3092\u6539\u5584\u6848\u3068\u3057\u3066\u8a2d\u8a08\u3059\u308b\u3002\u691c\u8a0e\u6e08\u307f\u306e\u9078\u629e\u80a2: (i) \u30a8\u30fc\u30b8\u30a7\u30f3\u30c8\u7d71\u5408 4\u21922\uff08Observer+Hypothesizer, Verifier+Integrator\uff09\u3001(ii) \u6bb5\u968e\u7684\u5b9f\u884c\uff08observe.sh \u8efd\u91cf\u5316\u3001\u30c6\u30b9\u30c8\u306f\u7d71\u5408\u6642\u306e\u307f\uff09\u3001(iii) \u30b3\u30b9\u30c8\u4e88\u7b97\u306e\u5c0e\u5165\u3002\u305f\u3060\u3057\u30b3\u30b9\u30c8\u524a\u6e1b\u3067\u30d1\u30d5\u30a9\u30fc\u30de\u30f3\u30b9\u3092\u72a0\u7272\u306b\u3057\u306a\u3044\u3053\u3068\u3002\u69cb\u9020\u5909\u66f4\u306f\u8a08\u6e2c\u306a\u3057\u306b\u5224\u65ad\u3057\u306a\u3044\uff08D4\uff09\u3002"
+      },
+      {
+        "run": null,
+        "timestamp": "2026-03-24T17:00:00Z",
+        "notes": "\u3010\u6b21\u56de evolve \u306e\u6700\u512a\u5148\u8ab2\u984c\u3011FAIL \u30eb\u30fc\u30d7\u30d0\u30c3\u30af\u5b9f\u88c5\u5f8c\u306e\u4eba\u9593\u30ec\u30d3\u30e5\u30fc\u3067\u3001\u8a2d\u8a08\u6f0f\u308c\u306e\u6839\u672c\u539f\u56e0\u304c\u6d3e\u751f\u30b9\u30ad\u30eb\u306e\u69cb\u9020\u7684\u6b20\u9665\u306b\u3042\u308b\u3053\u3068\u304c\u5224\u660e\u3002--- [\u767a\u898b1: D5 \u4e09\u5c64\u65ad\u88c2] Workflow.lean L63-64 \u3067 validPhaseTransition .verification .hypothesizing => True\uff08\u30eb\u30fc\u30d7\u30d0\u30c3\u30af\uff09\u304c\u5f62\u5f0f\u4ed5\u69d8\u3068\u3057\u3066\u5b9a\u7fa9\u6e08\u307f\u3060\u3063\u305f\u304c\u3001\u30c6\u30b9\u30c8\uff08\u5c642\uff09\u3082 SKILL.md \u5b9f\u88c5\uff08\u5c643\uff09\u3082\u5b58\u5728\u3057\u306a\u304b\u3063\u305f\u3002D5 violation\u3002--- [\u767a\u898b2: D3 \u53ef\u89b3\u6e2c\u6027\u6b20\u5982] FAIL \u306e\u5931\u6557\u30d1\u30bf\u30fc\u30f3\u306b\u3064\u3044\u3066 degradationDetectable=false, improvementVerifiable=false \u3060\u3063\u305f\u3002d3_partial_observability_insufficient \u306b\u3088\u308a\u540d\u76ee\u4e0a\u306e\u6700\u9069\u5316\u5bfe\u8c61\u306b\u904e\u304e\u306a\u304b\u3063\u305f\u3002D3 violation\u3002--- [\u767a\u898b3: \u6d3e\u751f\u30b9\u30ad\u30eb\u306e\u8cac\u52d9\u9699\u9593] 3\u3064\u306e\u6d3e\u751f\u30b9\u30ad\u30eb\u306b\u69cb\u9020\u7684\u6b20\u9665: (A) /evolve SKILL.md \u306e Lean \u5bfe\u5fdc\u8868\u304c\u540d\u524d\u53c2\u7167\u306e\u307f\u3067\u3001validPhaseTransition \u306e\u5168\u30b1\u30fc\u30b9\uff08\u7279\u306b verification\u2192hypothesizing\uff09\u304c\u5b9f\u884c\u624b\u9806\u306b\u5c55\u958b\u3055\u308c\u3066\u3044\u306a\u3044\u3002\u9006\u5f15\u304d\u30c1\u30a7\u30c3\u30af\u304c\u306a\u3044\u3002(B) /design-implementation-plan \u306e D5 \u54c1\u8cea\u30c1\u30a7\u30c3\u30af\u30ea\u30b9\u30c8\u304c\u5404\u5c64\u306e\u300c\u5b58\u5728\u300d\u306e\u307f\u78ba\u8a8d\u3057\u3001Lean\u5f62\u5f0f\u4ed5\u69d8\u2192\u30c6\u30b9\u30c8\u2192\u5b9f\u88c5\u306e\u4e09\u8005\u9593\u30c8\u30ec\u30fc\u30b5\u30d3\u30ea\u30c6\u30a3\u3092\u78ba\u8a8d\u3057\u3066\u3044\u306a\u3044\u3002(C) /formal-derivation \u306f\u5b9f\u88c5\u2192Lean\u65b9\u5411\u306e\u30b9\u30ad\u30eb\u3060\u304c\u3001\u9006\u65b9\u5411\uff08Lean\u2192\u5b9f\u88c5\u306e\u7db2\u7f85\u6027\u691c\u8a3c\uff09\u306e\u8cac\u52d9\u304c\u3069\u306e\u30b9\u30ad\u30eb\u306b\u3082\u5272\u308a\u5f53\u3066\u3089\u308c\u3066\u3044\u306a\u3044\u3002--- [\u6b21\u56de evolve \u3067\u5b9f\u65bd\u3059\u3079\u304d\u3053\u3068] (1) Lean\u5b9a\u7fa9\u2192\u30c6\u30b9\u30c8\u2192\u5b9f\u88c5\u306e\u4e09\u8005\u9593\u30c8\u30ec\u30fc\u30b5\u30d3\u30ea\u30c6\u30a3\u3092\u4f53\u7cfb\u7684\u306b\u691c\u8a3c\u3059\u308b\u6a5f\u69cb\u306e\u8a2d\u8a08\u3002\u3069\u306e\u30b9\u30ad\u30eb\u304c\u62c5\u3046\u304b\u3001\u307e\u305f\u306f\u65b0\u898f\u30b9\u30ad\u30eb\u304c\u5fc5\u8981\u304b\u3002(2) /evolve SKILL.md \u306e Lean \u5bfe\u5fdc\u8868\u3092\u300c\u53c2\u7167\u30ea\u30b9\u30c8\u300d\u304b\u3089\u300c\u9006\u5f15\u304d\u30c1\u30a7\u30c3\u30af\u30ea\u30b9\u30c8\u300d\u306b\u62e1\u5f35\uff08\u5404 Lean \u5b9a\u7fa9\u306e\u30b1\u30fc\u30b9\u3054\u3068\u306b\u5bfe\u5fdc\u3059\u308b\u30c6\u30b9\u30c8ID\u30fbSKILL.md\u884c\u756a\u53f7\u3092\u8a18\u8f09\uff09\u3002(3) /design-implementation-plan \u306e D5 \u54c1\u8cea\u57fa\u6e96\u306b Lean\u2192\u30c6\u30b9\u30c8\u2192\u5b9f\u88c5\u306e\u7db2\u7f85\u6027\u30c1\u30a7\u30c3\u30af\u3092\u8ffd\u52a0\u3002(4) \u5931\u6557\u30d1\u30bf\u30fc\u30f3\u306e Lean \u5f62\u5f0f\u5316\u3092\u691c\u8a0e\uff08failure_feedback_is_improvement_prerequisite \u7b49\uff09\u3002"
+      },
+      {
+        "run": null,
+        "timestamp": "2026-03-24T17:30:00Z",
+        "notes": "\u3010\u6b21\u56de evolve: \u65b0\u516c\u7406\u306e\u8ffd\u52a0\u63d0\u6848\u3011\u4eba\u9593\u304b\u3089\u65b0\u516c\u7406\u306e\u8ffd\u52a0\u63d0\u6848\u3042\u308a\u3002\u4eca\u56de\u306e FAIL \u30eb\u30fc\u30d7\u30d0\u30c3\u30af\u8b70\u8ad6\u3068\u6d3e\u751f\u30b9\u30ad\u30eb\u306e D5/D3 \u9055\u53cd\u5206\u6790\u304b\u3089\u5c0e\u51fa\u3055\u308c\u305f\u3002--- [\u63d0\u6848\u516c\u7406] \u300c\u516c\u7406\u306e\u4f53\u7cfb\u3001\u53ca\u3073\u305d\u308c\u3089\u306b\u6e96\u62e0\u3057\u305f\u6210\u679c\u7269\u306f\u534a\u9806\u5e8f\u95a2\u4fc2\u306b\u3042\u308b\u3002\u300d--- [\u516c\u7406\u304c\u8981\u6c42\u3059\u308b3\u3064\u306e\u6027\u8cea] (1) \u534a\u9806\u5e8f\u306e\u5b58\u5728: \u53cd\u5c04\u5f8b\u30fb\u53cd\u5bfe\u79f0\u5f8b\u30fb\u63a8\u79fb\u5f8b\u3002\u4f9d\u5b58\u95a2\u4fc2\u306e DAG \u69cb\u9020\u3092\u5f37\u5236\u3002\u5faa\u74b0\u4f9d\u5b58\u306e\u7981\u6b62\u3002D5\uff08\u4ed5\u69d8\u2192\u30c6\u30b9\u30c8\u2192\u5b9f\u88c5\uff09\u3001D6\uff08\u5883\u754c\u2192\u7de9\u548c\u7b56\u2192\u5909\u6570\uff09\u3001D4\uff08\u30d5\u30a7\u30fc\u30ba\u9806\u5e8f\uff09\u306f\u5168\u3066\u3053\u306e\u534a\u9806\u5e8f\u306e\u500b\u5225\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u3067\u3042\u308a\u3001\u7d71\u4e00\u7684\u306a\u516c\u7406\u3068\u3057\u3066\u660e\u793a\u3055\u308c\u3066\u3044\u306a\u304b\u3063\u305f\u3002(2) \u9806\u5e8f\u60c5\u5831\u306e\u81ea\u5df1\u5185\u5305: \u5404\u8981\u7d20\u304c\u300c\u81ea\u5206\u306f\u3069\u306e\u8981\u7d20\u306b\u4f9d\u5b58\u3057\u3066\u3044\u308b\u304b\u300d\u3092\u69cb\u9020\u7684\u306b\u4fdd\u6301\u3057\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\u3002/evolve SKILL.md \u306e Lean \u5bfe\u5fdc\u8868\u304c\u300c\u540d\u524d\u53c2\u7167\u306e\u307f\u300d\u3067\u4f9d\u5b58\u5143\u306e\u5404\u30b1\u30fc\u30b9\u3068\u306e\u5bfe\u5fdc\u3092\u5185\u5305\u3057\u3066\u3044\u306a\u304b\u3063\u305f\u306e\u306f\u3053\u306e\u9055\u53cd\u3002(3) \u672b\u7aef\u30a8\u30e9\u30fc\u304b\u3089\u306e\u9061\u53ca\u691c\u8a3c: \u672b\u7aef\u3067\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u305f\u5834\u5408\u3001\u534a\u9806\u5e8f\u3092\u9061\u3063\u3066\u5168\u3066\u306e\u4f9d\u5b58\u5143\u3092\u691c\u8a3c\u3059\u308b\u80fd\u529b\u304c\u30b7\u30b9\u30c6\u30e0\u306b\u5099\u308f\u3063\u3066\u3044\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\u3002\u4eca\u56de\u306e FAIL\u2192\u6839\u672c\u539f\u56e0\u5206\u6790\u2192Workflow.lean \u306e\u4ed5\u69d8\u6f0f\u308c\u767a\u898b\u2192\u6d3e\u751f\u30b9\u30ad\u30eb\u306e\u8cac\u52d9\u9699\u9593\u767a\u898b\u3001\u3068\u3044\u3046\u9061\u53ca\u3092\u69cb\u9020\u7684\u306b\u5b9f\u884c\u3067\u304d\u306a\u304b\u3063\u305f\u3002--- [\u914d\u7f6e\u5834\u6240\u306e\u691c\u8a0e] T1-T8\uff08\u30a8\u30fc\u30b8\u30a7\u30f3\u30c8\u306e\u5b58\u5728\u8ad6\u7684\u6027\u8cea\uff09\u3067\u306f\u306a\u304f\u3001\u516c\u7406\u7cfb\u81ea\u4f53\u306e\u30e1\u30bf\u6027\u8cea\u3002Section 7\uff08\u81ea\u5df1\u9069\u7528\uff09\u306e\u62e1\u5f35\u304b\u3001\u65b0 Section 8\uff08\u69cb\u9020\u7684\u6574\u5408\u6027\uff09\u3068\u3057\u3066\u914d\u7f6e\u304c\u9069\u5207\u3002D9 \u81ea\u5df1\u9069\u7528\u306b\u3088\u308a\u3001\u3053\u306e\u516c\u7406\u81ea\u8eab\u306b\u3082\u9069\u7528\u3055\u308c\u308b\uff08\u81ea\u5206\u306e\u4f9d\u5b58\u5148\u3092\u660e\u793a\u3057\u3001\u30c6\u30b9\u30c8\u30fb\u5b9f\u88c5\u3078\u306e\u5c55\u958b\u304c\u691c\u8a3c\u53ef\u80fd\u3067\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\uff09\u3002--- [\u6839\u62e0: \u4eca\u56de\u306e\u7d4c\u9a13] T5\u2192Workflow.lean(verification\u2192hypothesizing)\u2192\u30c6\u30b9\u30c8(\u4e0d\u5728)\u2192SKILL.md\u5b9f\u88c5(\u4e0d\u5728) \u306e\u4f9d\u5b58\u30c1\u30a7\u30fc\u30f3\u3067\u672b\u7aef\u30a8\u30e9\u30fc\u767a\u751f\u3002\u9061\u53ca\u306b\u4eba\u9593\u4ecb\u5165\u304c\u5fc5\u8981\u3060\u3063\u305f\u3002\u6027\u8cea2\uff08\u81ea\u5df1\u5185\u5305\uff09\u3068\u6027\u8cea3\uff08\u9061\u53ca\u691c\u8a3c\u80fd\u529b\uff09\u304c\u6b20\u5982\u3057\u3066\u3044\u305f\u305f\u3081\u3001\u69cb\u9020\u81ea\u8eab\u304c\u65ad\u88c2\u3092\u691c\u51fa\u3067\u304d\u306a\u304b\u3063\u305f\u3002--- [\u5b9f\u88c5\u3078\u306e\u542b\u610f] (a) \u5168\u8981\u7d20\u306b\u30c8\u30ec\u30fc\u30b5\u30d3\u30ea\u30c6\u30a3\u60c5\u5831\u3092\u4ed8\u4e0e\u3059\u308b\u4ed5\u7d44\u307f\uff08Lean\u5bfe\u5fdc\u8868\u306e\u53cc\u65b9\u5411\u5316\uff09\u3002(b) \u672b\u7aef\u30a8\u30e9\u30fc\u304b\u3089\u306e\u9061\u53ca\u3092\u81ea\u52d5\u5b9f\u884c\u3059\u308b\u30b9\u30ad\u30eb\u307e\u305f\u306f\u6a5f\u69cb\u3002(c) \u534a\u9806\u5e8f\u306e\u5faa\u74b0\u304c\u306a\u3044\u3053\u3068\u306e Lean \u5f62\u5f0f\u691c\u8a3c\u3002(d) D4/D5/D6 \u304c\u3053\u306e\u516c\u7406\u306e\u500b\u5225\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u3067\u3042\u308b\u3053\u3068\u306e Lean \u4e0a\u3067\u306e\u8a3c\u660e\u3002--- [\u6b21\u56de evolve \u3067\u306e\u5b9f\u65bd] Phase 1: Observer \u306f manifesto.md \u3068 Lean \u5f62\u5f0f\u5316\u306e\u73fe\u72b6\u3092\u78ba\u8a8d\u3057\u3001\u3053\u306e\u516c\u7406\u306e\u8ffd\u52a0\u4f4d\u7f6e\u3092\u7279\u5b9a\u3002Phase 2: Hypothesizer \u306f (a) manifesto.md \u3078\u306e\u516c\u7406\u8ffd\u52a0\u3001(b) Lean \u5f62\u5f0f\u5316\uff08PartialOrder \u578b\u30af\u30e9\u30b9\u306e\u9069\u7528\u3001\u534a\u9806\u5e8f\u306e3\u6027\u8cea\u306e\u5b9a\u7406\uff09\u3001(c) \u30c6\u30b9\u30c8\u8ffd\u52a0\u3001(d) \u6d3e\u751f\u30b9\u30ad\u30eb\u3078\u306e\u6ce2\u53ca\uff08/evolve, /design-implementation-plan, /formal-derivation \u306e\u30c8\u30ec\u30fc\u30b5\u30d3\u30ea\u30c6\u30a3\u6a5f\u69cb\uff09\u3092\u8a2d\u8a08\u3002\u4e92\u63db\u6027\u5206\u985e\u306f breaking change\uff08\u65b0\u516c\u7406\u306e\u8ffd\u52a0\u306f\u516c\u7406\u7cfb\u306e\u69cb\u9020\u5909\u66f4\uff09\u3002"
+      }
+    ],
+    "t6_issues": {
+      "items": [
+        {
+          "number": 291,
+          "title": "[T6] \u7b2c3\u30e2\u30c7\u30eb\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u306e\u65b9\u5411\u6027\uff08ForgeCode \u5b8c\u6210\u5f8c\uff09",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 290,
+          "title": "[T6] \u534a\u9806\u5e8f\u516c\u7406\u306e\u8ffd\u52a0\uff08human feedback 2026-03-24\uff09",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 3
+        },
+        {
+          "number": 250,
+          "title": "[T6] V1-V7 priority bias \u30ec\u30d3\u30e5\u30fc (Run 96, 20 runs elapsed)",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 217,
+          "title": "[T6] H6 \u4eee\u8aac\u306e\u9000\u5f79\u307e\u305f\u306f\u518d\u5b9a\u7fa9",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 215,
+          "title": "[T6] manifest-trace evidence \u5b9a\u7fa9\u306e derived propositions \u9069\u7528\u7bc4\u56f2",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 196,
+          "title": "[T6] Lean \u30bd\u30fc\u30b9\u30d5\u30a1\u30a4\u30eb24\u4ef6\u306e artifact-manifest \u767b\u9332\u65b9\u91dd",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 146,
+          "title": "[T6] V1-V7 priority_bias \u30ec\u30d3\u30e5\u30fc\uff08Run 63 \u4ee5\u964d\u672a\u66f4\u65b0\uff09",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 145,
+          "title": "\u6539\u5584\u306e\u512a\u5148\u9806\u4f4d\u306e\u898b\u76f4\u3057 \u2014 \u5f53\u521d\u306e\u76ee\u6a19\u9054\u6210\u5f8c\u3001\u6b21\u306b\u4f55\u3092\u91cd\u8996\u3059\u308b\u304b",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        }
+      ],
+      "open_count": 0,
+      "open_with_response": 0
+    },
+    "failure_patterns": {
+      "unresolved_total": 55,
+      "by_type": [
+        {
+          "type": "hypothesis_error",
+          "count": 36
+        },
+        {
+          "type": "assumption_error",
+          "count": 7
+        },
+        {
+          "type": "precondition_error",
+          "count": 5
+        },
+        {
+          "type": "observation_error",
+          "count": 3
+        },
+        {
+          "type": "scope_deferred",
+          "count": 2
+        },
+        {
+          "type": "invariant_violation",
+          "count": 1
+        },
+        {
+          "type": "no_implementation",
+          "count": 1
+        }
+      ],
+      "by_subtype": [
+        {
+          "subtype": "H_impl_specification",
+          "type": "hypothesis_error",
+          "count": 8
+        },
+        {
+          "subtype": "H_wrong_premise",
+          "type": "hypothesis_error",
+          "count": 6
+        },
+        {
+          "subtype": "H_no_pre_verification",
+          "type": "hypothesis_error",
+          "count": 1
+        },
+        {
+          "subtype": "H_repeated_failure",
+          "type": "assumption_error",
+          "count": 1
+        },
+        {
+          "subtype": "H_technical_validation",
+          "type": "hypothesis_error",
+          "count": 1
+        },
+        {
+          "subtype": "design_analysis_only",
+          "type": "no_implementation",
+          "count": 1
+        }
+      ]
+    },
+    "memory_retirement_candidates": [],
+    "structure_file_currency": [
+      {
+        "file": ".claude/skills/evolve/SKILL.md",
+        "last_commit": "2026-04-16 11:58:24 +0900"
+      },
+      {
+        "file": ".claude/agents/observer/AGENT.md",
+        "last_commit": "2026-04-12 03:05:23 +0900"
+      },
+      {
+        "file": ".claude/agents/hypothesizer/AGENT.md",
+        "last_commit": "2026-04-12 16:11:36 +0900"
+      },
+      {
+        "file": ".claude/agents/integrator/AGENT.md",
+        "last_commit": "2026-04-12 16:11:36 +0900"
+      },
+      {
+        "file": ".claude/agents/verifier.md",
+        "last_commit": "2026-04-16 11:58:24 +0900"
+      },
+      {
+        "file": ".claude/agents/judge.md",
+        "last_commit": "2026-04-16 12:38:31 +0900"
+      }
+    ],
+    "scope_balance": {
+      "recent_runs_analyzed": 10,
+      "meta_runs": 8,
+      "substance_runs": 7,
+      "meta_only_runs": 1,
+      "bias_warning": false
+    },
+    "valueless_change": {
+      "current_streak": 4,
+      "max_streak_in_last_10": 4,
+      "halt_recommended": true
+    },
+    "failed_test_details": []
+  }
+}

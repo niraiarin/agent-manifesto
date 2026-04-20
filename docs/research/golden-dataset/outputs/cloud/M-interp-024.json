@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-024",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-024.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# システム健全性レポート\n\n## 1. 全体評価\n\n**WARNING** — 形式構造（Lean/テスト）は堅牢だが、学習ループに停滞兆候あり。\n\n- ポジティブ: Lean 473 定理 / 0 sorry、テスト 751 pass、V4=99%、V5=96%、manifest-trace カバレッジ 43/43\n- ネガティブ: valueless_change が **4 連続**で `halt_recommended: true`、V1 non-triviality=trivial、未解決仮説エラー 55 件（うち hypothesis_error 36）\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 状態 | 解釈 |\n|---|---|---|---|\n| **V1 Skill Quality** | trivial, verifier 77% | ⚠️ | theorem/test delta 0、飽和傾向。verifier pass 率 77% は低め |\n| **V2 Context Efficiency** | recent 46 / cumulative 40 | ⚠️ | 直近平均が累積より +15% 増。わずかに非効率化 |\n| **V3 Output Quality** | test 100%、failure 69件 | ⚠️ | テスト品質は良いが、hypothesis_error post_gate 19 件が残留 |\n| **V4 Gate Pass Rate** | 99% | ✅ | ゲートは健全に機能 |\n| **V5 Proposal Accuracy** | 96% (162/168) | ✅ | 提案採択率高水準 |\n| **V6 Knowledge Structure** | 12 entries、陳腐化 0 | ✅ | 退役候補 0 件で健全 |\n| **V7 Task Design** | 188 完了、teamwork 0% | ➖ | single-agent 運用のため抑制表示 |\n\n**追加注意点**: `.claude/skills/evolve/SKILL.md` が stale file として検出、evolve_history の meta_runs 8/10 はメタタスク偏重。\n\n---\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: valueless_change ストリーク打破\n- **状況**: 4 連続 valueless、`halt_recommended: true`、V1 trivial\n- **アクション**: 次回 evolve は **substance task** を強制選択。human_feedback（2026-03-24）で指示済みの「T7 ResourceBound 具体化」「半順序公理の Lean 形式化」を実施\n\n### 🟡 P2: Hypothesis Error の構造的対策\n- **状況**: unresolved 55 件中 hypothesis_error 36、特に `H_impl_specification` 8 / `H_wrong_premise` 6\n- **アクション**: Hypothesizer プロンプトに「仕様参照の事前チェック」を追加（#290 半順序公理の「性質3: 末端エラーからの遡及検証」の適用）\n\n### 🟡 P3: evolve skill 自体の更新\n- **状況**: `.claude/skills/evolve/SKILL.md` が stale、meta 偏重 8/10\n- **アクション**: human_feedback 2026-03-24 の (1)(2)(3) — Lean 対応表の逆引きチェック化、D5 三者間トレーサビリティ検証を evolve SKILL.md に反映（breaking change として分類）",
+  "tokens_in": 6,
+  "tokens_out": 1185,
+  "latency_ms": 22951,
+  "timestamp": "2026-04-17T01:51:34Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-016",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-016.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# Agent Manifesto メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — Lean 形式検証は健全（テスト 737/0、coverage 43/43）だが、**valueless_change streak=4（halt_recommended=true）** と **stale_files 2件**（verify, research SKILL.md）が同時発生。改善ループが価値を生まずに継続している兆候。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 備考 |\n|---|---|---|---|\n| **V1 skill_quality** | non_triviality=0 (trivial), saturation=ok | ⚠️ 注意 | theorem/test delta last_run=0、直近 10 回の伸びも頭打ち気味 |\n| **V2 context_efficiency** | recent=46, cumulative=40, divergence 15% | ⚠️ 注意 | recent が cumulative を 15% 上回る。session 効率がやや劣化傾向 |\n| **V3 output_quality** | test_pass=100%, hypothesis_error=42 (active 36) | ⚠️ 注意 | post_gate でも hypothesis_error 19件が残存。仮説品質の構造的課題 |\n| **V4 gate_pass_rate** | 99% (28587/28693) | ✅ 良好 | Hook による安全境界が機能 |\n| **V5 proposal_accuracy** | 96% (162/168) | ✅ 良好 | grep crosscheck 一致、schema_drift なし |\n| **V6 knowledge_structure** | 12 entries, orphan/missing=0 | ✅ 良好 | index 整合性 OK |\n| **V7 task_design** | 188 完了, teamwork=suppressed | — | 単一エージェント運用のため抑制中（妥当） |\n\n**重要警告**: `valueless_change.current_streak=4, halt_recommended=true` — D8（均衡探索）として **/evolve の一時停止判断が必要**。\n\n## 3. 改善提案（優先度順）\n\n### P0: valueless_change halt の遵守と原因分析\n- **根拠**: streak=4 で halt_recommended=true。直近 10 回中 8 回が meta_runs（scope_balance）で、構造改善が自己言及に偏っている可能性。\n- **アクション**: 次回 /evolve 起動前に、Run 104-107 の hypothesis_error 内訳（特に H_impl_specification=8, H_wrong_premise=6）を Observer に分析させ、substance（公理・定理拡張）への scope 切替を検討。\n\n### P1: stale skill ドキュメントの解消\n- **対象**: `.claude/skills/verify/SKILL.md`, `.claude/skills/research/SKILL.md`\n- **根拠**: verifier/judge AGENT.md は 2026-04-16 更新、対応スキルが追従していない。P3 学習統治の退役プロセスを適用。\n\n### P2: hypothesis_error の再発防止\n- **根拠**: unresolved 55 件中 36 件が hypothesis_error。post_gate でも 19 件残存し、Run 57 の品質ゲートでも完全には抑制できていない。\n- **アクション**: H_impl_specification（実装を仕様と取り違える）と H_wrong_premise の subtype に対し、Hypothesizer の検証チェックリストに「仕様⇄実装の半順序確認」を追加（半順序公理 #290 の運用展開）。",
+  "tokens_in": 6,
+  "tokens_out": 1244,
+  "latency_ms": 25661,
+  "timestamp": "2026-04-17T01:47:45Z",
+  "run_number": 1,
+  "exit_code": 0
+}

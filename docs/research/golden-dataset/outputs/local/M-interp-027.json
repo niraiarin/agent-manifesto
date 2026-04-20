@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-027",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-027.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n# V1-V7 メトリクス分析レポート (Run 107)\n\n## 1. 全体評価: WARNING\n\n**理由**: 形式検証基盤は健全だが、`valueless_change streak=4` で `halt_recommended=true`。Evolve が価値ある変更をしなくなっている。55件の未解決 judge rejection も蓄積している。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | コメント |\n|--------|--------|------|----------|\n| **V1 Skill Quality** | formal graduated | OK | theorem_delta_avg=6.3, test_delta_avg=8.9 は健闘。ただし `non_triviality.score=0` — 変更が形式的には正しくても「非自明性」が計測できていない |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | 安定。divergence=15% は許容範囲。トレンド横ばい |\n| **V3 Output Quality** | test_pass_rate=100%, hallucination_post_gate低減中 | OK | observation_error: 0→良好。hypothesis_error_post_gate=19 が残り課題。品質ゲート導入後のみ計測可能 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | 良好 | L1 safety gate は正常稼働。blocked=106 は適切に機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | 良好 | Hypothesizer の提案品質は高い。schema_drift=false も健全 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | **注意** | 退役件数 0 は問題。陳腐化した知識が蓄積し続けている。retirement mechanism が機能していない |\n| **V7 Task Design** | completed=188, unique=180 | 良好 | teamwork_percent=0 は single agent モードの意図的な設定通り |\n\n---\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: Evolve の Halt + スコープ再定義\n- **現状**: `valueless_change streak=4`, max_streak=5, `halt_recommended=true`。過去 4回分以上の変更が価値なし\n- **アクション**: `/evolve` を一時停止し、Observer が「何が valueless か」を分析してから再開する。盲目的な改善ループはコストのみを増やす（mean_cost_per_improvement=$2.33）\n\n### Priority 2: Memory Retirement Mechanism の導入\n- **現状**: `retired_count=0`。12件の memory が全て active で、5件が feedback、4件が project、3件が reference\n- **アクション**: MEMORY.md のエントリに有効期限または無効化条件を付与するスキルの設計。project メモリは特に陳腐化が早い（最大 90日以上前の情報が残っている可能性）\n\n### Priority 3: Hypothesis Error (36件) の根本原因分析\n- **現状**: 未解決 hypothesis_error が 36件で failure_patterns の過半を占める。subtype は `H_impl_specification`(8), `H_wrong_premise`(6) が上位\n- **アクション**: Judge patterns の未解決 55件の内訳を分析し、どの仮説タイプが繰り返し失敗しているかを特定。Hypothesizer AGENT.md に事前検証チェックリストを追加する",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 180165,
+  "timestamp": "2026-04-18T04:16:32Z",
+  "run_number": 1,
+  "exit_code": 0
+}

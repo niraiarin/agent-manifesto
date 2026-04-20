@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-024",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-024.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## メトリクス分析レポート（Run 107）\n\n---\n\n### 1. 全体評価: WARNING\n\nLean 正典は健全（axiom 54, theorem 473, sorry 0）、テストも 751/752 pass、V4/V5 は高水準。しかし **valueless_change streak=4 で halt_recommended=true** が最大懸念。連続 4回の改善が構造に価値をもたらしていない。V1 non_triviality=0（trivial）のままで、Graduation の妥当性も再検討が必要。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | コメント |\n|--------|--------|------|---------|\n| **V1 Skill Quality** | Graduated (formal) | WARNING | non_triviality=0。theorem_delta_avg_6.3, test_delta_avg_8.9 は良いが、直近 run で delta=0。**飽和判定: test_consecutive_zero_delta=2** |\n| **V2 Context Efficiency** | recent_avg=46, cum_avg=40 | OK | 横ばい（trend=stable）。divergence=15% は許容範囲。トークン消費は制御下 |\n| **V3 Output Quality** | hallucination errors | WARNING | hypothesis_error_active=36 が最多。assumption_error_active=7, precondition_error_active=5。quality_gate_run=57 のみでカバー不足 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | HEALTHY | L1 安全境界は堅牢。blocked=106 は正常作動 |\n| **V5 Proposal Accuracy** | 96% (162/168) | HEALTHY | human approval rate 高い。schema_drift=false |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | memory_retirement_candidates が空。**知識の退役が 1 件も存在しない**。陳腐化リスク |\n| **V7 Task Design** | completed=188, unique=180 | OK | teamwork_percent=0 は single_agent 設定によるもの（正常） |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### (1) [緊急] evolve の一時停止 — valueless_change streak=4\n- **理由**: 直近 4回の evolve エントリがすべて valueless。max_streak=4 で既に halt_recommended=true\n- **アクション**: `/evolve` を停止し、Observer が「なぜ価値がない改善が続くか」を分析してから再開。無理に回数を重ねるとトークンコストのみの浪費になる\n\n#### (2) [重要] V1 non_triviality の再評価 — 飽和状態の判定\n- **理由**: test_consecutive_zero_delta=2、theorem/test delta が直近 run で 0。Graduation（#77 G1-G4）は達成済みだが、**もはや改善余地がない可能性**\n- **アクション**: V1/V3 の priority_bias レビューを促進（次トリガー: Run 117）。飽和が確認されれば、リソースを他の未成熟な指標へ再配分\n\n#### (3) [中重要] hypothesis_error_active=36 の根本解消 + memory退役\n- **理由**: V3 hallucination proxy で最多エラータイプ。H_impl_specification(8), H_wrong_premise(6) が主要因。Observer の見落としが 36件も蓄積\n- **アクション**: Observer の観察品質改善（観測ツールの精度向上）と、陳腐化した memory entries の退役プロセス導入（retired_count=0 は異常）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 413912,
+  "timestamp": "2026-04-18T03:24:37Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-022",
+  "task_type": "T-interp",
+  "input_file": "trace-input-022.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "manifest-trace レポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 全命題数 | 43 |\n| カバレッジ率 | **100%** (43/43 未カバーゼロ) |\n| 証拠あり | 19/43 (44%) |\n| 導出あり | 39/43 (91%) |\n\n**実質的なカバレッジは不完全。** 形式的な接続は存在するが、証拠（evidence）が欠落している命題が半数近くを占める。\n\n## 2. ギャップ分析\n\n### 重大度トップ: T4-T7（基底理論の導出欠如）\n\n```\nwithout_derivation: T4, T5, T6, T7\n```\n\nこれらは **Γ \\ T₀ の根** であり、上位層（P2-P6, L1-L6, D1-D14）が依存する基盤。特に:\n\n| 命題 | 内容 | 影響を受ける上位層 |\n|---|---|---|\n| **T4** (output_nondeterministic) | LLMの非決定性 | E1→P2→D2→D17, P5→D5→D17 |\n| **T5** (no_improvement_without_feedback) | 改善には観測が必要 | P4→D3→D6/D11/D17, D13 |\n| **T6** (human_resource_authority) | 人間の最終決定権 | L1→D1→D11, L4→D1, L6→D1 |\n| **T7** (resource_finite) | リソースの有限性 | P6→D12/D14→D18, L3→V2/V7 |\n\nT4 が未導出なのは特に深刻。P2（検証の独立性）の全連鎖が T4 上に乗っており、**P2 が 17 個のアーティファクトで実装されているにもかかわらず、その根幹が証拠なし**となっている。\n\n### 証拠ギャップ: D1-D14 の大部分\n\n```\nwithout_evidence: D1..D14 のうち 12 個 (D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D13)\n```\n\n設計定理は実装（artifacts）で豊富にカバーされているが、**なぜその設計が正しいかの証拠**がない。P3（学習の統治）の観点からは「構造は存在するが正当性は不透明」という状態。\n\n## 3. 改善提案（優先度順）\n\n### 優先度 1: T4 の証拠強化（breaking change リスク）\n\n**現状:** T4 は Lean  axiom として `Axioms.lean` に存在するが、trace レポートの `derivations` が空。\n\n**アクション:** T4 の証拠チェーンを `derivations` フィールドに記録する。\n- 既存の根拠（Kolmogorov, softmax_full_support, categorical sampling）を `derivations[].theorem` として正式に接続\n- `Foundation/Probability.lean` 内の対応する theorem を `derivations[].file` として参照\n\n**互換性:** conservative extension — 既存構造変更なし\n\n### 優先度 2: D1-D14 の証拠欠落への対応（compatible change）\n\n**戦略:** 全 12 個を一度に処理するのではなく、**依存関係が最も深いものから優先**：\n\n1. **D1**（enforcement layering）— 18 個の依存先（L1,L2,L3,L4,L5,L6→D1）\n2. **D3**（observability precedes improvement）— 7 個の依存先（D6,D11,D17→D3）\n3. **D13**（assumption expiration）— 8 個の依存先（D17→D13）\n\n各命題に対して `evidence[]` に証拠を追加するか、`derivations[]` に導出チェーンを記録。\n\n**互換性:** compatible change — 証拠追加のみ\n\n### 優先度 3: T8 の導出追加（conservative extension）\n\n**現状:** T8（task_has_precision）は唯一 `derivations` に空エントリのみを持つ。\n\n**アクション:** `Axioms.lean` の `task_has_precision` theorem を `derivations[].theorem` として正式に接続し、`proof_strategy` と `content` を埋める。\n\n**互換性:** conservative extension",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 887554,
+  "timestamp": "2026-04-18T13:59:14Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-017",
+  "task_type": "T-interp",
+  "input_file": "trace-input-017.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "manifest-trace レポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバード | 43 (100%) |\n| アンカバード | 0 |\n| 弱 | 0 |\n\n**ルート命題**: T1-T8, E2, L5（9件）\n**リーフ命題**: D4, D6, D7, D10, D11, D14, V1-V7（13件）\n\n### 内部状態\n\n| 分類 | 件数 | 命題リスト |\n|---|---|---|\n| **evidence あり** | 19 | T1-T7, E1, E2, P1, P4, P5, L2, V1-V5, V7 |\n| **evidence なし** | **24** | T8, P2, P3, P6, L1, L3, L4, L5, L6, D1-D14, V6 |\n| **derivation あり** | 38 | T1-T3, T8, E1-E2, P1-P6, L1-L6, D1-D14, V1-V7 |\n| **derivation なし** | **5** | T4, T5, T6, T7（環境公理 T₀ 層） |\n\n**判定**: 全命題は構造的にカバーされているが、**56% (24/43) が evidence なし**。design theorems (D1-D14) が皆無で、上層の正当性が実証データを欠く状態。\n\n---\n\n## 2. ギャップ分析\n\n### 重大度順ギャップ\n\n#### Gap A: P2 (Verification Independence) — evidence なし、27 artifacts\n- **依存**: T4, E1 ← 両方 evidence あり（下支えは健全）\n- **影響下**: D2 → D17（設計正当性の連鎖）\n- **問題**: 検証の独立性という中核原則に実証データなし。27 artifacts（hooks, skills, tests, lean）が実装されているが、axiom/card による根拠提示が欠如\n- **D13 波及**: P3 → D4, D9, D13, D17。P2 は D2 経由で D17 に影響。D13 の assumption _EXPIRATION が D2 → D17 の連鎖を削るリスク\n\n#### Gap B: L1 (Safety Boundary) — evidence なし、18 artifacts\n- **依存**: P1, T6 ← 両方 evidence あり\n- **影響下**: D1 (enforcement layering) → V3（安全境界の直接的実装）\n- **問題**: L1 が manifesto の最上位安全制約。evidence なままだと D1 の structural enforcement 主張が根拠不全に\n\n#### Gap C: D1-D14 一括 — evidence 全件なし、38 artifacts あり\n- **依存チェーン**: P1→D7, P2→D2, P3→D4/D9/D13, P4→D3/D5, P6→D12/D14 と健全\n- **問題**: design theorems は「導出可能」(derivation あり)だが「実証不可」。形式的導出はあるが実環境での効果検証データがない\n- **D13 波及**: D13 は 36 artifacts で最大規模。traceability / refs-integrity / skill-depgraph の検証基盤があるが、self-evidence が欠如\n\n---\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: L1 への evidence 付与（30分）\n**理由**: safety boundary の正当性は最優先。P1 + T6 は evidence 済みで下支え健全。\n**アクション**:\n- `ObservableDesign.lean` に `l1_safety_boundary_validated` axiom を追加\n- hook `l1-file-guard` / `l1-safety-check` の動作実績を証拠としてカード化\n- **互換性**: conservative extension（axiom 追加のみ）\n\n### Priority 2: P2 の evidence 付与（1時間）\n**理由**: D2→D17 連鎖の根幹。verification independence の実効性を証明。\n**アクション**:\n- `p2-verified.jsonl` の実績データ（既存 artifact あり）を axiom card に昇格\n- `EmpiricalPostulates.lean` に `p2_independence_empirically_validated` を追加\n- verifier agent の独立実行実績を証拠として formalize\n- **互換性**: conservative extension\n\n### Priority 3: D1-D14 の evidence 層構築（2-3時間）\n**理由**: design theorems の実証データ欠如が全体の信頼性を牽制。D13 は 36 artifacts で基盤規模大。\n**アクション**:\n- D13 から始める（最大 impact、既存 artifact が最も豊富: 36件）\n- `manifest-trace` スクリプトの実行結果自体を evidence として昇格\n- D1 (50 artifacts) → D3 (38 artifacts) → D13 (36 artifacts) の順で evidence 化\n- **互換性**: compatible change（既存 derivation を補完する evidence 層の追加）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 751450,
+  "timestamp": "2026-04-18T10:57:16Z",
+  "run_number": 1,
+  "exit_code": 0
+}

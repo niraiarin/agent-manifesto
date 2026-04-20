@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-025",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-025.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価\n\n**WARNING** — 基盤は堅実だが、改善サイクルの停滞（valueless streak=4, halt推奨）と未解決エラー55件が懸念材料。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| V | 指標 | 現在値 | 判定 | 備考 |\n|---|------|--------|------|------|\n| **V1** | Skill Quality | 要注視 | | 非自明性スコア=0 (trivial)。テスト連続ゼロデルタ=2。進化成功率98%は良いが、theorem/test delta_avgが頭打ち傾向 |\n| **V2** | Context Efficiency | 正常 | | session avg 46、cumulative 40、trend stable。発散15%は許容範囲 |\n| **V3** | Output Quality | WARNING | | 未解決エラー55件（hypothesis 36, assumption 7）。loopback 19件。出力は安定したが誤りの蓄積が進行中 |\n| **V4** | Gate Pass Rate | 良好 | | 99% (28587/28693)。ゲート機能は正常稼働 |\n| **V5** | Proposal Accuracy | 良好 | | 96% (162/168)。人間承認の質は高い |\n| **V6** | Knowledge Structure | 正常 | | エントリ12件、orphan=0。ただし retired=0（陳腐化退役の仕組みが未稼働？） |\n| **V7** | Task Design | 正常 | | 188件完了、unique 180。シングルエージェント抑制済み |\n\n**基盤指標:** Lean 0 sorry, テスト100%合格(755/755) — 形式検証基盤は健全。\n\n---\n\n### 3. 改善提案（優先度順）\n\n**① valueless change streak 4 の打破**\n`halt_recommended=true`。現在の改善案は4件連続で実質的価値なし。evolve ハルトメカニズムの発動を検討するか、Observer の発見品質を上げる必要がある。ヒアリング後に判断。\n\n**② hypothesis_error 36件の根本解消**\n未解決エラーの65%を占める最大カテゴリ。H_impl_specification(8) と H_wrong_premise(6) が上位。Verifier の仮説検証精度向上、または仮説生成段階での事前チェック強化が有効そう。\n\n**③ 非自明性スコア回復 (V1: trivial)**\ntheorem/test デルタが低下傾向。改善が「既存の微調整」に留まっている兆候。新たな公理追加や未実装の性質（人フィードバックで提案された半順序公理など）の導入により、デルタを再起動する必要がある。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 316026,
+  "timestamp": "2026-04-18T06:33:07Z",
+  "run_number": 1,
+  "exit_code": 0
+}

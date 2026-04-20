@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-016",
+  "task_type": "T-interp",
+  "input_file": "trace-input-016.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n**全体カバレッジ率: 100% (43/43)**\n\n- 全 43 命題に何らかの artifact が紐付いており、未カバー（uncovered）・弱カバー（weak）は 0 件\n- ただし形式的カバレッジと実質的カバレッジに乖離がある:\n  - **evidence 欠損: 24 件** — T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14 の大半, V6\n  - **derivation 欠損: 4 件** — T4, T5, T6, T7（根拠命題のため許容可）\n- roots: 10 件（T1–T8, E2, L5）/ leaves: 13 件（D4, D6, D7, D10, D11, D14, V1–V7）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n最重要ギャップは **evidence 欠損の空間的偏在**:\n\n| ギャップ | 影響波及 | 深刻度 |\n|---|---|---|\n| **P3（学習の統治）evidence 欠損** | P3 は T1/T2 に依存し L6, D4, D9, D13, D17 に波及。P3 の経験的裏付け不在は、**学習ライフサイクル全体の仮説的地位**を意味する（42 artifacts 紐付きに対し axiom 証拠ゼロ） | 高 |\n| **L1–L6 全境界で evidence 欠損** | 6 境界のすべてが E1/E2 からの経験的根拠を持たず derivation のみ。L1→V3, L2→V1/V2/V6, L4→V3/V4/V5 のように境界は観測量の制約源なので、**V1–V7 の解釈的妥当性が弱まる** | 高 |\n| **D2–D14 設計定理の大半で evidence 欠損** | 設計定理は derivation（T/E/P からの導出）は豊富だが、**実装で経験的に検証されたエビデンス**が不足。設計判断の一部が未検証仮説のまま | 中 |\n\nD13（影響波及）の観点では、特に **P3 の evidence 欠損が leaves (D4, D9) まで波及**する点がクリティカル。根が経験的に未裏付けのまま葉の設計が蓄積している。\n\n## 3. 改善提案（優先度順）\n\n### 【優先度 高】P3 に evidence 追加\n- **対象**: `lean-formalization/Manifest/Principles.lean`（もしくは EmpiricalPostulates.lean）\n- **内容**: `.claude/metrics/evolve-history.jsonl` の実績（観察→仮説化→検証→統合の成立例）を axiom evidence として形式化\n- **期待効果**: D4, D9, D13, D17 の derivation chain に経験的基盤を与える（波及 5 命題）\n\n### 【優先度 高】L1–L6 境界に evidence 追加\n- **対象**: `lean-formalization/Manifest/Ontology.lean` 系\n- **内容**: 既存の `Foundation/*.lean`（ControlTheory, InformationTheory, StatisticalTesting）を境界命題の evidence として参照づけ\n- **期待効果**: V1–V7 すべての観測量に対し、境界経由の経験的根拠チェーンが成立\n\n### 【優先度 中】D2–D14 の evidence 補強（段階的）\n- **対象**: `DesignFoundation.lean`, `InstructionDesign.lean` の設計定理\n- **内容**: 各設計定理に対応する実装アーティファクト（hook, script, test の動作実績）を axiom evidence として紐付け\n- **期待効果**: 設計判断の「仮説→検証済み」昇格により V6（知識構造品質）が向上",
+  "tokens_in": 6,
+  "tokens_out": 1530,
+  "latency_ms": 26983,
+  "timestamp": "2026-04-17T01:58:22Z",
+  "run_number": 1,
+  "exit_code": 0
+}

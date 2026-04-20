@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-005",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-005.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\n## メトリクス分析レポート (Run 107, 2026-04-17)\n\n---\n\n### 1. 全体評価: WARNING\n\n**理由**: Lean 検証（0 sorry, 475 theorems）とテスト（760/760 pass）は健全だが、**V1 non_triviality = trivial** で改善が実質停止しており、`valueless_change.streak = 4`, `halt_recommended = true`。直近の evolve は価値ある変更を生んでいない。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| Metric | 値 | 判定 | 備考 |\n|--------|-----|------|------|\n| **V1 Skill Quality** | trivial | **要注意** | theorem_delta_last_run=0, test_delta=0。直近10回avgはtheorem=6.3, test=8.9だが、最新2回はゼロ。graduation済みだが非自明性喪失 |\n| **V2 Context Efficiency** | stable | 正常 | recent_avg=46 vs cumulative_avg=40。tool_calls=62kで増加傾向だが許容範囲内(divergence=15%) |\n| **V3 Output Quality** | warning | **要注意** | hallucination proxy: hypothesis_error_active=36が支配的。post_gateでも19残存。観測/仮説の品質が課題 |\n| **V4 Gate Pass Rate** | 99% | 良好 | blocked=106/28693。L1安全境界は機能している |\n| **V5 Proposal Accuracy** | 96% | 良好 | approved=162/168。schema_drift=false |\n| **V6 Knowledge Structure** | healthy | 良好 | memory_entries=12, orphan=0, retired=0。ただし退役メカニズム未稼働 |\n| **V7 Task Design** | single | 正常 | completed=188, teamwork=0 (suppressed_single_agent は意図的) |\n\n---\n\n### 3. 改善提案（優先度順）\n\n#### ① [緊急] Evolve の一時停止 + 根本原因分析\n`valueless_change.streak = 4`, `halt_recommended = true`。V1 non_triviality が trivial を脱していない。**直近4回の evolve エントリが何を変更し、なぜ価値がなかったか**を Observer が分析し、停止継続か方向転換かを判断すべき。\n\n#### ② [高] Hypothesis Error の削減 (active=36 → 目標 <15)\nV3 で最も大きな劣化要因。`H_impl_specification`(8件), `H_wrong_premise`(6件) がサブタイプ上位。Verifier の FAIL ループバックで同じ仮説類型が繰り返されている = Hypothesizer の前提検証に穴がある。**仮説の事前チェックリスト**（premise validation step）を /evolve の Phase 2 に組み込む。\n\n#### ③ [中] Memory Retirement メカニズムの有効化\n`retired_count = 0`。V6 knowledge_structure は陳腐化した知識を退役させていない。assumption_tracker の `review_overdue = 0` は表面上良いが、**5 active assumptions を実際にレビューし、不要なら退役させる**プロセスが必要。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 723790,
+  "timestamp": "2026-04-17T14:24:37Z",
+  "run_number": 1,
+  "exit_code": 0
+}

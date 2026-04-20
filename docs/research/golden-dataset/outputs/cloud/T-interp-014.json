@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-014",
+  "task_type": "T-interp",
+  "input_file": "trace-input-014.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 100%（43/43 命題、未カバー 0 件、weak 0 件）\n- **総成果物数**: 219\n- **根命題（depends_on 空）**: 10 件（T1–T8, E2, L5）\n- **葉命題（depended_by 空）**: 13 件（D4, D6, D7, D10, D11, D14, V1–V7）\n\nただし「カバレッジ 100%」は **artifact が紐付いている** という意味のみで、以下の質的ギャップが存在する。\n\n| 観点 | 充足 | 欠落 |\n|---|---|---|\n| has_evidence | 19 | **24**（T8, P2, P3, P6, L1, L3–L6, D1–D14, V6） |\n| has_derivation | 39 | **4**（T4, T5, T6, T7） |\n| has_implementation | 39 | **4**（T3, T4, T8, L3, D6, D11） |\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### G1: 根制約 T4–T7 に derivation 欠落（最重大）\n- T4（出力非決定性）, T5（フィードバック必要性）, T6（人間最終決定権）, T7（資源有限性）は **根命題かつ derivation 不在**。\n- 影響波及範囲は最大: T4 → E1, P2, P5, L2, D15 / T5 → P4, D3, D13, D15, D17 / T6 → L1, L3, L4, L6, D15, D17 / T7 → P4, P6, L3, D12, D14, D15, D16, D18。\n- D13 観点: これら 4 つの根が揺らぐと **依存する 24 命題以上が連鎖的に再評価対象**。assumption_impact_monotone により、根レベルの仮定変更は最大の波及を持つ。\n\n### G2: design theorem 群 D1–D14 が evidence 不在（13 件）\n- 設計定理は derivation で導出される論理的構造物だが、**実運用で機能しているかの empirical evidence が記録されていない**。\n- 特に D1（fixed-requires-structural）, D13（影響波及）自身に evidence なし → P3 学習統治の根拠が薄い。\n\n### G3: 実装欠落の根命題 T3, T4, T8\n- T3（コンテキスト有限）, T4（出力非決定性）, T8（タスク精度要求）は has_implementation=false。\n- 自然科学制約のため hook 化困難だが、**測定指標（V1, V2, V7）との橋渡しが弱い**。\n\n## 3. 改善提案（優先度順）\n\n### P1: T4–T7 の derivation を Foundation/ で形式化\n- **対象**: T4 → InformationTheory, T5 → ControlTheory（既存）, T6 → 意思決定理論, T7 → 計算量理論\n- **理由**: 波及範囲最大の根命題に formal grounding を与えれば、依存する 24+ 命題の信頼性が一括で向上。\n- **互換性分類**: conservative extension（既存 axiom はそのまま、theorem を追加）\n\n### P2: D1, D13 への evidence 追加（自己適用 D9）\n- **対象**: `.claude/metrics/` の実運用ログから D1（structural enforcement の発動例）, D13（assumption 退役の波及例）の事例を Axiom Card に追記。\n- **理由**: 設計定理の経験的妥当性を確立し、P3 学習統治を強化。`evolve-history.jsonl` から自動抽出可能。\n\n### P3: T3/T8 と V1–V7 の橋渡し命題を追加\n- **対象**: T3 → V2（context efficiency）, T8 → V7（task precision）の derivation を Observable.lean に追加。\n- **理由**: 自然科学制約と運用指標の連結が現状 evidence のみで弱い。形式化すれば V2/V7 の measurement validity が向上。",
+  "tokens_in": 6,
+  "tokens_out": 1367,
+  "latency_ms": 28659,
+  "timestamp": "2026-04-17T01:57:20Z",
+  "run_number": 1,
+  "exit_code": 0
+}

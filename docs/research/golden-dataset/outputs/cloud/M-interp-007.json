@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-007",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-007.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# システム健全性レポート\n\n## 1. 全体評価\n\n**WARNING** — 基盤は堅牢だが、学習ループの価値創出が停滞\n\n主要指標（Lean ビルド・テスト・カバレッジ）は全て健全。ただし `valueless_change.current_streak=4` で `halt_recommended=true`、直近 run で theorem/test delta=0、V1 non_triviality が `trivial` となっており、/evolve の実効価値が出ていない。\n\n---\n\n## 2. V1–V7 各指標の解釈\n\n| 指標 | 現在値 | 評価 | 所見 |\n|---|---|---|---|\n| **V1 スキル品質** | non_triviality=trivial, saturation=ok | ⚠️ 注意 | 直近 run で theorem/test 増分ゼロ。Verifier pass rate 77% は要改善 |\n| **V2 コンテキスト効率** | recent_avg=46, trend=stable | ✅ 良好 | divergence 15%、安定傾向 |\n| **V3 出力品質** | test_pass_rate=100%, hypothesis_error_active=36 | ⚠️ 注意 | テストは全通過だが未解決 hypothesis_error が支配的（55件中36件） |\n| **V4 Gate 通過率** | 99% (28587/28693) | ✅ 良好 | Gate 機能は健全 |\n| **V5 提案精度** | 96% (162/168) | ✅ 良好 | schema_drift なし |\n| **V6 知識構造** | 12 entries, orphan=0, retired=0 | ✅ 良好 | 整合性維持、ただし退役実績ゼロは将来の陳腐化リスク |\n| **V7 タスク設計** | completed=188, teamwork=0% | ℹ️ 参考 | single_agent 運用により抑制中 |\n\n---\n\n## 3. 最優先改善アクション（3件）\n\n### 【優先度 最高】価値なき変更ストリーク 4 連続の診断と停止判断\n- `valueless_change.halt_recommended=true` が発火中。直近 run の theorem/test delta=0 が継続\n- **アクション**: 次回 /evolve 前に Observer が「なぜ 4 連続で構造的貢献が出ないか」を診断。Phase 1 で仮説化前に停止判断する\n- 根拠: D4（フェーズ順序）— 観察なき仮説化は禁止\n\n### 【優先度 高】hypothesis_error の体系的削減（36件 active）\n- 未解決失敗の 65% が hypothesis_error（H_impl_specification 8件、H_wrong_premise 6件）\n- **アクション**: Hypothesizer プロンプトに「前提の検証手順」と「実装を仕様と混同しない境界」を明示。_post_gate で 19件→削減目標\n- 根拠: failure_patterns が示す再発性\n\n### 【優先度 中】stale files 4件の更新または退役判断\n- `Ontology.lean`, `evolve/SKILL.md`, `verify/SKILL.md`, `test-refs-integrity.sh`\n- **アクション**: 各ファイルが現状と整合するか /trace で確認し、齟齬あれば更新、不要なら退役\n- 根拠: V6 の `retired_count=0` — 陳腐化検知の習慣化が必要",
+  "tokens_in": 6,
+  "tokens_out": 1196,
+  "latency_ms": 23364,
+  "timestamp": "2026-04-17T01:43:24Z",
+  "run_number": 1,
+  "exit_code": 0
+}

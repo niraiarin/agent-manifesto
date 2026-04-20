@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-018",
+  "task_type": "T-interp",
+  "input_file": "trace-input-018.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティ分析レポート\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ**: 43/43 命題 = **100%** (uncovered: 0, weak: 0)\n- **総成果物数**: 699\n- **Evidence 保有**: 19/43 (44%)\n- **Derivation 保有**: 39/43 (91%)\n- **Without Evidence**: 24 命題（T8, P2, P3, P6, L1, L3-L6, D1-D14, V6）\n- **Without Derivation**: 4 命題（T4, T5, T6, T7）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### Gap-1: 高依存命題の Evidence 欠落（最重要）\n- **P3**（depended_by: L6, D4, D9, D13, D17）が Evidence なし。子孫 5 命題すべての設計根拠が経験的裏付けを欠く。\n- **L1**（depended_by: D1, V3）も Evidence なし。安全境界の経験的命題が未文書化 → D1「強制手段レイヤリング」の根拠が脆弱。\n- **波及影響**: P3 の Assumption 失効時、D13 の assumptionImpactRaw により 42 成果物が再検証対象となる。\n\n### Gap-2: T4-T7 の Derivation 欠落\n- 4 つの T 層公理（T4 解釈非決定性、T5 フィードバック、T6 人間権威、T7 資源有限）に `derivations` なし。\n- T 層は「T₀ 環境制約」として axiom 維持が妥当だが、**Foundation/*.lean に合成性定理が部分的にしか存在しない**（T4, T6 は未整備）。\n- **波及影響**: T4 依存の E1/P2/P5/L2/D15、T6 依存の L1/L3/L4/L6 の形式的裏付けが間接的のみ。\n\n### Gap-3: Design Theorem 層の Evidence 空白\n- D1-D14 の全てが Evidence なし。`derivations` のみで正当化されている。\n- Manifesto 原理からの論理的導出は存在するが、**設計選択の経験的検証記録が不在** → 「その設計で本当に効くのか」の実証データが追跡不能。\n\n## 3. 改善提案（優先度順）\n\n### Priority 1: P3 への Evidence 追加【compatible change】\n- `Manifest/Principles.lean` の P3 関連 axiom に Axiom Card (evidence 節) を付与\n- `/ground-axiom` スキルで学習統治の経験的命題を 1-2 件抽出\n- **根拠**: 依存度最大（5 子孫）の命題で、D13 波及リスクが最大\n\n### Priority 2: T4, T6 の Foundation 定理整備【conservative extension】\n- `Foundation/ProcessModel.lean` or 新規 `Foundation/Nondeterminism.lean` に T4 合成性定理を追加\n- T6（人間権威）は `Framework/LLMRejection.lean` に既にあるため、trace レポートへの derivation 記録を追加\n- **根拠**: T5, T7 は Foundation 定理が存在するため、4 公理を対称化して整合性を高める\n\n### Priority 3: Design Theorem の Evidence 記録運用化【compatible change】\n- `/evolve` の P4 観察フェーズで D1-D14 検証データを `.claude/metrics/design-evidence.jsonl` に蓄積\n- 定期的に 1 Design Theorem ごとに Evidence を manifest-trace の出力スキーマへ追加\n- **根拠**: Gap-3 は長期課題。構造的にデータ蓄積経路を作ることが先決",
+  "tokens_in": 6,
+  "tokens_out": 1274,
+  "latency_ms": 26605,
+  "timestamp": "2026-04-17T01:59:12Z",
+  "run_number": 1,
+  "exit_code": 0
+}

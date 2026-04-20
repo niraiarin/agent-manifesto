@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-003",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-003.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: HEALTHY (但し改善余地あり)\n\nLean 形式検証は健全 (sorry=2 のみ)、テスト成功率 100%、evolve ループは回っており継続的に構造が改善されている。ただし**未解決 failure が 55 件**、**valueless_change streak=4** で halt が推奨されている点が懸念。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 判定 | 備考 |\n|------|--------|------|------|\n| **V1 Skill Quality** | formal graduation済み | PASS | 過去10回のtheorem delta avg=6.3, test delta avg=8.9。ただし `non_triviality.score=0` (trivial) — 直近runで定理/テスト増加なし。saturation: test consecutive zero delta=2 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | 安定。divergence=15% は許容範囲。トークン消費は62,028回 |\n| **V3 Output Quality** | test_pass_rate=100%, formal | PASS | だが hallucination proxy: hypothesis_error_active=36 が最大要因。品質ゲート導入後(post-gate)でも hypothesis_error=19 が残る |\n| **V4 Gate Pass Rate** | 99% (28,587/28,693) | PASS | 優れた数値。blocked=106 は意図的な遮断 |\n| **V5 Proposal Accuracy** | 96% (162/168) | PASS | 人間の承認率が極めて高い。schema_drift=false |\n| **V6 Knowledge Structure** | 12 entries, 0 orphan | OK | retired_count=0 — 陳腐化した知識が退役されていない。MEMORY の健全性チェックが必要 |\n| **V7 Task Design** | 188 completed, 180 subjects | OK | teamwork=0% (意図的抑制) |\n\n**重要な補正指標:**\n- **valueless_change**: current_streak=4, halt_recommended=true — 直近4回の変更が価値なし。中断が推奨\n- **scope_balance**: meta_runs=8, substance_runs=7 — ほぼ均衡。bias_warning=false\n- **sorry_classification**: total=0 (run 107 で再計算された結果) — 但し lean.sorry=2 と矛盾。分類パイプラインの整合性確認が必要\n- **failed_test_details**: 空配列 — tests.failed=2 が何を示すか不明。テスト結果とメトリクスの不一致\n\n---\n\n### 3. 改善提案（優先度順）\n\n**① valueless_change streak の解消（最優先）**\n- 直近4回の evolve run が構造に価値のある変更をもたらしていない\n- 原因分析: observer の発見が既存の変更の重複、または hypothesizer が既に実装済みの改善を提案\n- 対応: observer の発見フィルターを強化し、`valueless_change` streak をリセットする substantive な改善課題に焦点を当てる\n\n**② 未解決 failure 55 件の整理（hypothesis_error 36 件が大半）**\n- `hypothesis_error` が未解決の 36 件中最大。特に `H_impl_specification`(8), `H_wrong_premise`(6) が集中\n- 対応: これらの failure を batch で review し、either (a) 解決実装、(b) assumption tracker への移行、(c) 明示的退役のいずれかに分類\n\n**③ メトリクス整合性の修正**\n- `lean.sorry=2` と `sorry_classification.total=0` の不一致\n- `tests.failed=2` だが `failed_test_details=[]` （詳細が記録されていない）\n- 対応: sorry の分類パイプラインとテスト詳細記録のバグ修正。これらの不整合は V1/V3 の graduation 判定の信頼性を損なう",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 436059,
+  "timestamp": "2026-04-18T05:17:58Z",
+  "run_number": 1,
+  "exit_code": 0
+}
