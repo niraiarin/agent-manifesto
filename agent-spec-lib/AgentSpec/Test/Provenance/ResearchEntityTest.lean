@@ -52,9 +52,33 @@ example : ResearchEntity.isHandoff (.Hypothesis Hypothesis.trivial) = false := r
 example : ResearchEntity.trivial = ResearchEntity.Hypothesis Hypothesis.trivial := rfl
 example : ResearchEntity.trivial.isHypothesis = true := rfl
 
-/-! ### Inhabited / Repr (DecidableEq は recursive Evolution のため省略、Day 10+ 検討) -/
+/-! ### Inhabited / Repr / DecidableEq (Day 39 で Evolution DecidableEq 後の連鎖解消) -/
 
 example : Inhabited ResearchEntity := inferInstance
+
+/-- Day 39: Evolution DecidableEq (Day 38) 後、ResearchEntity も DecidableEq derive 可能 -/
+example : DecidableEq ResearchEntity := inferInstance
+
+/-- 同一 Hypothesis variant の等号判定 -/
+example :
+    (ResearchEntity.Hypothesis Hypothesis.trivial) =
+    (ResearchEntity.Hypothesis Hypothesis.trivial) := by decide
+
+/-- 異なる variant の不等号判定 (Hypothesis vs Failure) -/
+example :
+    ResearchEntity.Hypothesis Hypothesis.trivial ≠
+    ResearchEntity.Failure Failure.trivial := by decide
+
+/-- 同一 Evolution variant の等号判定 (recursive payload DecidableEq の連鎖確認) -/
+example :
+    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial) { claim := "x" }) =
+    ResearchEntity.Evolution (.refineWith (.initial Hypothesis.trivial) { claim := "x" }) :=
+  by decide
+
+/-- 異なる Evolution chain の不等号判定 -/
+example :
+    ResearchEntity.Evolution (.initial { claim := "a" }) ≠
+    ResearchEntity.Evolution (.initial { claim := "b" }) := by decide
 
 /-! ### Cross-process embed: Process 4 type 全てが ResearchEntity に embed 可能 -/
 

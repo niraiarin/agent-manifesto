@@ -76,11 +76,15 @@ TyDD-S1 types-first を遵守。Day 10 で Agent variant を追加し PROV-O 三
   を import + ResearchEntity が Process types を import)。本ファイル内配置で Process 層は
   Provenance に非依存のまま、Lean 4 namespace extension で dot notation も維持。
 
-### D3. DecidableEq 派生せず (Evolution の recursive inductive 制約)
+### D3. DecidableEq 派生せず (Evolution の recursive inductive 制約) → Day 39 で解消
 - **代案**: 手動で DecidableEq 実装
-- **採用**: Inhabited / Repr のみ deriving、DecidableEq は省略
-- **理由**: Evolution は recursive inductive で `deriving DecidableEq` 不可 (Day 7 D3 同問題)。
-  ResearchEntity も含む field のため deriving 失敗。手動実装は Day 10+ で必要時検討。
+- **Day 9 採用**: Inhabited / Repr のみ deriving、DecidableEq は省略
+- **Day 9 理由**: Evolution は recursive inductive で `deriving DecidableEq` 不可と
+  (当時) 判断。ResearchEntity も含む field のため deriving 失敗。手動実装は Day 10+ で
+  必要時検討。
+- **Day 39 (2026-04-21) 解消**: Day 35 HandoffChain / Day 38 Evolution で
+  recursive inductive も Lean 4 4.29.0 なら自動 derive 可能と実証。本 Day 39 で
+  ResearchEntity にも `DecidableEq` 追加 (5 constructor 全 payload の DecidableEq 依存を利用)。
 -/
 
 namespace AgentSpec.Provenance
@@ -103,7 +107,7 @@ inductive ResearchEntity where
       PROV-O では Entity と Agent は別概念だが、Lean 統合的扱いで Mapping uniformity 維持。
       PROV-O wasAttributedTo 関係は別 inductive (Day 11+) で表現予定。 -/
   | Agent (a : ResearchAgent)
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace ResearchEntity
 
