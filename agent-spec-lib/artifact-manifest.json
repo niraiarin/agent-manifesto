@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.50.0-week2-day50",
+  "version": "0.51.0-week2-day51",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1899,6 +1899,48 @@
         "GA-S8"
       ],
       "example_count": 32
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.State",
+      "path": "AgentSpec/Spine/State.lean",
+      "dependencies": [
+        {
+          "id": "lean-init",
+          "module": "Init.Core",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.LifeCyclePhase (inductive 8 variant: Proposed/Investigating/Specifying/Implementing/Reviewing/Verified/Retired/Cancelled)",
+        "AgentSpec.Spine.AllowedTransition (inductive Prop、8 遷移: 主経路 5 + rework 1 + retire 1 + universal cancel 1)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Spine.LifeCyclePhase.initial (= Proposed)",
+        "AgentSpec.Spine.LifeCyclePhase.isTerminal (Bool)",
+        "AgentSpec.Spine.LifeCyclePhase.isActive (Bool)",
+        "AgentSpec.Spine.transition (型 safe transition、proof 要求)"
+      ],
+      "assumptions": [],
+      "scope": "formalization",
+      "refs": [
+        "GA-S7"
+      ]
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.StateTest",
+      "path": "AgentSpec/Test/Spine/StateTest.lean",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.State",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "assumptions": [],
+      "scope": "test",
+      "refs": [
+        "GA-S7"
+      ],
+      "example_count": 42
     }
   ],
   "build_status": {
@@ -1931,7 +1973,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 476,
+    "example_count": 518,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2128,6 +2170,14 @@
       "Test/Spine/RationaleTest.lean": {
         "theorems": 0,
         "examples": 32
+      },
+      "Spine/State.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/StateTest.lean": {
+        "theorems": 0,
+        "examples": 42
       }
     }
   },
@@ -2598,6 +2648,15 @@
         "I1: GA-S7 Linear 6 categories の具体 variant 名を Day 51 で synthesis §4.1 #9 再読して確定する必要 (10-gap-analysis.md は categories 数のみ記載)",
         "I2: attribution skip 率 100% (156/156 Rationale site で author 未指定) — Day 14 A-Minimal linter pattern (@[deprecated] と同構造) で Rationale lake lint warning を Day 52+ に追加推奨 (Option B)"
       ],
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 51 GA-S7 State 型追加 (LifeCyclePhase 8 variant + AllowedTransition Prop)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 131 jobs + StateTest 42 examples PASS、Day 50 I1 informational 解消 (Linear 6 → 研究拡張 8 variant、05-plaintext-issue-tracker.md §4.1/§4.3 仕様準拠)",
+      "scope": "AgentSpec.Spine.State 新 module (Day 44 Rationale と同パターン)、不正遷移を型で compile-time error 化。各 type への attach は Day 52+。GA-S7 は medium_risk 分類 (gap-analysis.md 「リスク: medium」) だが Day 51 で Spine 層実装として解消、medium_risk 残件は GA-S10/S11 等",
       "compatibility": "conservative extension"
     }
   ],
