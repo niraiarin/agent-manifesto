@@ -69,7 +69,9 @@ Day 8+ で `AgentSpec.Provenance` namespace に `ResearchActivity` + mapping
 - 自動 deriving は `initial Hypothesis.default` を選択 (最初の constructor)。
   `Hypothesis` が `Inhabited` (claim = "" 等のデフォルト) を deriving しているため
   `Evolution` も `initial { claim := "" }` で解決される。
-- `DecidableEq` は recursive inductive のため deriving 省略、Day 8+ で必要時に追加検討。
+- Day 38 (2026-04-21): `DecidableEq` も recursive inductive に対して Lean 4 が
+  自動 derive 可能と実証 (HandoffChain Day 35 と同パターン)。Day 36 empirical
+  I2 (Evolution DecidableEq 要判定) を解消。
 -/
 
 namespace AgentSpec.Process
@@ -83,9 +85,9 @@ inductive Evolution where
   /-- Hypothesis を出発点とする evolution の開始 (initial step)。 -/
   | initial (hypothesis : Hypothesis)
   /-- 既存 evolution に新しい Hypothesis を加えて継続 (Day 7 hole-driven、
-      Day 8+ で Verdict 型を加えて B4 4-arg post に refactor 予定)。 -/
+      Day 8+ で Verdict 型を加えて B4 Hoare 4-arg post に refactor 予定)。 -/
   | refineWith (prev : Evolution) (refined : Hypothesis)
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace Evolution
 

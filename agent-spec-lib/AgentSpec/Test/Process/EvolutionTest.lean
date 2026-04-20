@@ -73,6 +73,31 @@ example : Evolution.trivial.stepCount = 0 := rfl
 /-- Evolution Inhabited (deriving 経由) -/
 example : Inhabited Evolution := inferInstance
 
+/-! ### Day 38: DecidableEq (recursive inductive derive、Day 7 D4 deferred を解消) -/
+
+/-- Evolution DecidableEq instance 解決 -/
+example : DecidableEq Evolution := inferInstance
+
+/-- 同一 initial の等号判定 -/
+example :
+    (Evolution.initial Hypothesis.trivial) =
+    (Evolution.initial Hypothesis.trivial) := by decide
+
+/-- 異なる initial の不等号判定 -/
+example :
+    (Evolution.initial { claim := "a" }) ≠
+    (Evolution.initial { claim := "b" }) := by decide
+
+/-- refineWith と initial の不等号判定 -/
+example :
+    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x" } ≠
+    Evolution.initial Hypothesis.trivial := by decide
+
+/-- 同一 refineWith chain の等号判定 -/
+example :
+    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x" } =
+    Evolution.refineWith (.initial Hypothesis.trivial) { claim := "x" } := by decide
+
 /-! ### Q2 案 A: cross-process test (Hypothesis × Failure × Evolution × HandoffChain)
 
     Day 4 fullSpineExample パターン踏襲。Spine 層と異なり Process 層は
