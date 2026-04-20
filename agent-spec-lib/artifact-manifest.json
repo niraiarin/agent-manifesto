@@ -1886,7 +1886,21 @@
       "date": "2026-04-20",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (AgentSpec 104 + AgentSpecTest 127 jobs、+1 job 新 helper2 module 分、combined 130 jobs) + multi-source register / duplicate handling 観測完了 (helper2 で 独立 namespace register + 既存 namespace duplicate register、#check_retired_auto で watched 7 件 / total 8 retired 実測、helper1 dup で 1 件重複 count、addEntryFn = arr.push name dedup-less 仕様実測確認)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "informational_count": 2,
+      "evaluator": "build PASS (AgentSpec 104 + AgentSpecTest 127 jobs、+1 job 新 helper2 module 分、combined 130 jobs) + multi-source register / duplicate handling 観測完了 (helper2 で 独立 namespace register + 既存 namespace duplicate register、#check_retired_auto で watched 7 件 / total 8 retired 実測、helper1 dup で 1 件重複 count、addEntryFn = arr.push name dedup-less 仕様実測確認) + Subagent 検証 (改訂 117 paper サーベイ評価サイクル: VERDICT PASS + 0 addressable + 2 informational 即時対処 [I1 verifier_history pre-assumption pattern 明示化 / I2 Day 21 section comment 埋め込みは既存 pattern で defect なし再確認])",
+      "subagent_verification": {
+        "executed_in_commit": "改訂 117 paper サーベイ評価サイクル",
+        "verdict_initial": "PASS (0 addressable + 2 informational)",
+        "verdict_after_fix": "PASS (即時対処後 0 addressable + 0 informational 残)",
+        "addressable_initially": 0,
+        "addressable_after_fix": 0,
+        "informational": 2,
+        "informational_items": [
+          "I1 (即時対処): verifier_history Day 25 R1 entry の pre-populated result: PASS 前提 pattern を明示化、本改訂 117 で subagent_verification field に actual Subagent 結果 (PASS + 2 informational 対処) を record",
+          "I2 (再確認): Day 25 #check_retired_auto に関連する comment (line 131-138) は Day 21 section header 内に Day 25 状態を記述 (Day 23 で確立された既存 pattern、defect ではない)、Day 26+ で section 組織 refactor を検討 (long-deferred 化防止のため 3 session 以内 optional)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」17 度目適用、**Day 25 = 0 addressable + 2 informational 即時対処 → 0 残** (8 Day 連続 cycle 内即時修復実例、Day 23 新形態「全件 informational 即時対処」継続適用、Day 24 既存 stale issue 対応パターンも継承)"
+      },
       "p2_complete_for": "day-25-provenance-retirement-linter-command-multi-source-register-duplicate-handling-observe-first",
       "milestone_15_day_rfl_preference": "**Day 11-25 = 15 Day 連続 rfl preference 維持の継続** (Day 25 で 15 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 15 Day、cycle 内学習 transfer 6 度目適用)",
       "long_deferred_resolved": "**Day 22 Subagent informational I2 (multi-module duplicate handling) を Day 25 で解消** (Day 22-24 = 3 session 繰り延げ、Day 22 audit long-deferred 対応 **3 例目**、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx に続く 3 例目、long-deferred 化防止 maturity 安定継続、observe-first 方針採用で Day 26+ dedup 判断)",

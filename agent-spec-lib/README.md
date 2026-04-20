@@ -1246,6 +1246,60 @@ Day 23 backward compatible 完全維持 (production 本体 code 変更なし、d
 - **Phase 0 累計合致率 99.2% 到達** (Day 23 99.1% から +0.1pt 改善、Day 22 audit 反省を 2 例目で体現、Phase 0 99.2% 新高水準)
 - user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用 7 Day 連続、cycle 内即時修復 maturity の long-deferred 対応への拡張実例
 
+## 現状: Phase 0 Week 2 Day 25 完了（2026-04-20 追加、multi-source register / duplicate handling 観測 + Day 22 audit long-deferred 対応 3 例目 + 15 Day 連続 milestone + observe-first 設計方針確立）
+
+Section 2.48 Day 25 着手前判断 (Q1 Day 22 Subagent informational I2 解消 / Q2 A-Minimal helper2 + 2 register / Q3 案 A 新 helper + 同 file MODIFY / Q4 案 A observe-first 観測値 persistent 化) に従い実装。
+**multi-source register / duplicate handling 観測**: 新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture2.lean` (test scope 専用) に `@[retired]` decorated `importPropagateFixture2` + 独立 namespace register + 既存 `RetirementWatchedFixture` duplicate register を含み、`#check_retired_auto` output で挙動実測。
+**観測結果 (Day 22 D10 addEntryFn 実測)**: `addEntryFn = arr.push name` は dedup しない、duplicate register で同 namespace が 2 回 listed、retired count も独立 count、実測 watched 7 件 / total 8 retired (RetiredEntity 4 + helper1 1 + helper2 1 + helper1 dup 1 + self 1 = 8)、
+**observe-first 設計方針確立**: Day 26+ で dedup 実装判断 (D15 log 明記、Day 22 audit「observe first, decide later」教訓継続)、
+**Day 22 audit long-deferred 対応 3 例目完遂** (Day 22-24 = 3 session 繰り延げ解消、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx に続く 3 例目、long-deferred 化防止 maturity 安定継続)、
+Day 24 backward compatible 完全維持 (production 本体 code 変更なし、helper は test scope)、
+**Day 11-25 = 15 Day 連続 rfl preference 維持** (cycle 内学習 transfer 6 度目、桁到達後 15 Day 継続実証)、
+**Pattern #7 hook 十八段階発展到達** (新規 file + MODIFY 混在 pattern 2 度目、両パターン運用 13 度目)、
+**Subagent VERDICT PASS + 0 addressable + 2 informational 即時対処** (I1 verifier_history pre-populated pattern 明示化 / I2 Day 21 section comment 埋め込み既存 pattern 再確認、8 Day 連続 cycle 内即時修復実例)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→20=3→21 初 FAIL→PASS+4→22 +1 addressable 即時 0+2→23 +0+4 即時 0 残→24 +0+1 即時 0 残→**Day 25 +0+2 即時 0 残** (8 Day 連続 cycle 内即時修復)、
+**Phase 0 累計合致率 99.2% 維持** (Day 24 99.2% から安定継続)、
+**Day 26 🔴 Q1 ResearchActivity payload 拡充** (Day 13-22 = 12 Day 連続繰り延げ、Day 24 audit 次 long-deferred candidate 解消予定、Day 27+ 長期化防止優先)。
+
+### Day 25 の 1 項目 (Q2 A-Minimal scope、新規 file + MODIFY 混在)
+
+- [x] **新 helper2 module `AgentSpec/Test/Provenance/RetirementWatchedFixture2.lean` 作成** (NEW、test scope、`@[retired]` decorated `importPropagateFixture2` + 独立 namespace register + duplicate register)
+- [x] RetirementLinterCommand.lean docstring D15 追加 (observe-first 方針、Day 22 audit 対応 3 例目)
+- [x] RetirementLinterCommandTest.lean MODIFY (Day 25 section +1 example + 1 #check_retired_auto invocation、example 11→12、command invocations 16→17)
+- [x] AgentSpecTest.lean import 追加
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (AgentSpec 104 + AgentSpecTest 127 jobs、+1 job 新 helper2 分、combined 130 jobs)
+- [x] **Subagent 検証 PASS + 0 addressable + 2 informational 即時対処** (8 Day 連続 cycle 内即時修復)
+- [x] multi-source register / duplicate handling 観測:
+  - addEntryFn = arr.push name dedup なし実測確認
+  - duplicate register で同 namespace 2 回 listed / retired count 重複 count
+  - watched 7 件 / total 8 retired 実測値記録
+
+### Week 2 Day 25 時点の累計指標
+
+| 指標 | Day 24 | Day 25 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 375 | 0 / +1 | **15 / 376** |
+| Test scope 専用 helper module | 1 (RetirementWatchedFixture) | +1 (RetirementWatchedFixture2) | **2 (multi-source 対応)** |
+| Provenance 層 linter | 6 拡張 + multi-module propagate + long-deferred 2 例目解消 | multi-source duplicate 観測 | **6 拡張 + multi-source duplicate observe-first 完了** |
+| Long-deferred 解消件数 | 2 (Day 21 I3 + Day 24 Role.toCtorIdx) | +1 (Day 22 informational I2) | **3 (Day 22 audit 対応 3 例目)** |
+| Command invocations | 16 | +1 (#check_retired_auto 2 回目) | **17** |
+| Pattern #7 hook | 十七段階発展 | 18 度目 (新規 file + MODIFY 混在 2 度目) | **十八段階発展到達** |
+| Subagent 指摘項目 | 0 addressable + 1 informational 即時対処 | 0 addressable + 2 informational 即時対処 | **8 Day 連続 cycle 内即時修復** |
+| **rfl preference 連続記録** | 14 Day | +1 | **15 Day 連続 (桁到達後 15 Day 継続実証)** |
+
+### Day 25 で達成した TyDD / paper 進展 (Section 12.73 + 12.74 + 12.75)
+
+- multi-source register / duplicate handling 観測完了 (Day 22 D10 addEntryFn = arr.push name dedup-less 実測)
+- observe-first 設計方針確立 (Day 22 audit「observe first, decide later」教訓継続、Day 26+ dedup 判断)
+- **Day 22 audit long-deferred 対応 3 例目完遂** (Day 22-24 = 3 session 繰り延べ解消、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx に続く 3 例目)
+- Pattern #7 hook 十八段階発展到達 (新規 file + MODIFY 混在 pattern 2 度目、両パターン運用 13 度目)
+- paper × 実装 22 度目合流カテゴリ (multi-source × observe-first × 15 Day rfl × long-deferred 対応 3 例目)
+- paper finding 109 件累計 (+5)
+- **15 Day 連続 rfl preference (桁到達後 15 Day 継続実証、quality loop 長期持続性)**
+- **Subagent VERDICT PASS + 0 addressable + 2 informational 即時対処 → 0 残** (8 Day 連続 cycle 内即時修復実例)
+- Phase 0 累計合致率 **99.2% 維持** (Day 24 99.2% から安定継続)
+- user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用 8 Day 連続、cycle 内即時修復 maturity が安定確立
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

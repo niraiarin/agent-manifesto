@@ -1833,3 +1833,47 @@ Day 18 追加で:
 - verifier_history: 28 entries → **29 entries** (Day 24 R1 追加)
 - **Phase 0 累計合致率: 99.1% → 99.2% 到達** (121/122、Day 23 99.1% から +0.1pt 改善、Phase 0 99.2% 新高水準)
 - **Day 22 audit long-deferred 対応 2 例目完遂**: Role.toCtorIdx investigation (3 Day 連続繰り延げ) 解消、Day 21 改訂 100 I3 解消パターン継続適用、long-deferred 化防止 maturity 拡張
+
+---
+
+## Phase 0 Week 2 Day 25 検証 (2026-04-20 — Day 25 commit `b9d0dd8` 後)
+
+**背景**: Section 2.48 Q1-Q4 確定済 (Q1 Day 22 Subagent informational I2 解消 / Q2 A-Minimal helper2 + 2 register / Q3 案 A 新 helper module + 同 file MODIFY / Q4 案 A observe-first 観測値 persistent 化) に従い **multi-source register / duplicate handling 観測** 実装。新 helper module `RetirementWatchedFixture2.lean` (test scope 専用) で (a) 独立 namespace register + (b) 既存 namespace duplicate register、`#check_retired_auto` で挙動実測 (watched 7 / total 8 retired、helper1 dup 1 件重複)。**観測結果**: Day 22 D10 `addEntryFn = arr.push name` は dedup しない、duplicate register で同 namespace が 2 回 listed、retired count も独立 count。**observe-first 設計方針確立**: Day 26+ で dedup 判断。**Day 22 audit long-deferred 対応 3 例目完遂** (Day 22-24 = 3 session 繰り延げ解消)、Day 24 backward compatible 完全維持、Pattern #7 hook 十八段階発展 (新規 file + MODIFY 混在 pattern 2 度目)、**15 Day 連続 rfl preference**。
+
+### Day 25 /verify Round 1
+
+**Subagent 検証** (改訂 117): VERDICT = **PASS** (0 addressable + 2 informational、**全件即時対処で 0 informational 残**)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 (informational) | verifier_history Day 25 R1 entry の pre-populated `result: PASS` 前提 pattern (改訂 ordering で commit 後 cycle step 1 で actual Subagent 実施) | **改訂 117 即時対処** (subagent_verification field に actual Subagent 結果 record、verdict_initial / verdict_after_fix / informational_items を明示) |
+| I2 (informational) | Day 25 #check_retired_auto に関連する comment が Day 21 section header 内に Day 25 状態を記述 (Day 23 既存 pattern、defect ではない) | **改訂 117 再確認** (Day 26+ section 組織 refactor は optional、Day 25 main scope 影響なし) |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → 21 初 FAIL→PASS+4 → 22 +1 addressable 即時 0+2 → 23 +0 addressable+4 informational 全件即時対処→0 残 → 24 +0 addressable+1 informational 即時対処→0 残 → **Day 25 +0 addressable+2 informational 即時対処→0 残** (8 Day 連続 cycle 内即時修復実例)。
+
+**Day 25 特筆**:
+- **15 Day 連続 rfl preference (桁到達後 15 Day 継続実証)** (Day 11-25、quality loop 長期持続性)
+- **Pattern #7 hook 十八段階発展到達** (新規 file + MODIFY 混在 pattern 2 度目、両パターン運用 13 度目)
+- **multi-source register / duplicate handling 観測完了** (Day 22 D10 addEntryFn = arr.push name dedup-less 実測)
+- **Day 22 audit long-deferred 対応 3 例目完遂** (Day 22-24 = 3 session 繰り延げ解消、Day 21 改訂 100 I3 + Day 24 Role.toCtorIdx に続く 3 例目)
+- **observe-first 設計方針確立** (Day 22 audit「observe first, decide later」教訓継続、Day 26+ dedup 判断)
+- **paper サーベイ評価サイクル「実装修正組込み」17 度目適用** (Day 22 feedback 継続適用 8 Day 連続)
+- **Phase 0 累計合致率 99.2% 維持** (Day 24 99.2% から安定継続)
+
+---
+
+## Day 1-25 累計サマリ (Day 24 からの delta)
+
+- example: 375 → **376** (+1、Day 25 で test +1 example: importPropagateFixture2 参照、breakdown 11→12)
+- linter: 6 拡張 + multi-module propagate + long-deferred 2 例目解消 → **6 拡張 + multi-source duplicate observe-first 完了** (Day 22 audit 対応 3 例目完遂)
+- Test scope 専用 helper module: 1 → **2** (+1、RetirementWatchedFixture2、multi-source 対応)
+- Long-deferred 解消件数: 2 → **3** (+1、Day 22 informational I2、Day 22 audit 対応 3 例目)
+- command_invocations: 16 → **17** (+1、#check_retired_auto Day 25 section)
+- Pattern #7 hook: 十七段階発展 → **十八段階発展到達** (新規 file + MODIFY 混在 pattern 2 度目、両パターン運用 13 度目)
+- paper × 実装合流: 21 種 → **22 種** (multi-source × observe-first カテゴリ追加)
+- paper finding: 104 → **109 件** (+5)
+- Subagent 指摘推移: Day 24 = PASS+0 addressable+1 informational 即時対処→0 残 → **Day 25 = PASS+0 addressable+2 informational 即時対処→0 残** (8 Day 連続 cycle 内即時修復)
+- **rfl preference 連続記録: 14 Day → 15 Day 連続 (桁到達後 15 Day 継続実証)**
+- verifier_history: 29 entries → **30 entries** (Day 25 R1 追加)
+- **Phase 0 累計合致率: 99.2% 維持** (126/127、Day 24 99.2% から安定継続、Phase 0 99.2% 安定)
+- **Day 22 audit long-deferred 対応 3 例目完遂**: Day 22 informational I2 (multi-module duplicate handling) Day 22-24 = 3 session 繰り延げ → Day 25 解消、Day 26+ 長期化防止
