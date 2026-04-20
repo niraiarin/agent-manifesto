@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.42.0-week2-day42",
+  "version": "0.43.0-week2-day43",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2437,6 +2437,16 @@
       "addressable_count": 0,
       "evaluator": "lake build 127 jobs + 15 new examples PASS",
       "scope": "Verdict に provenWith/refutedWith/inconclusiveDueTo 3 変種 (evidence/reason String) + payload accessor を追加、isProven/isRefuted/isInconclusive は family 判定に更新",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 43 Empirical Revalidation (7-day cycle)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "3 parallel subagents (median + edge + negative)、[critical] 9 項目 + auxiliary 5 項目 全て PASS",
+      "scope": "Day 37-42 成果物 (11-pending-tasks JSON migration / DecidableEq cascade / HandoffChain 6th constructor / Verdict payload 拡張) を schema + jq recipe + 強制拒否 の 3 角度で検証",
+      "empirical_findings": "none (14/14 PASS)、Test 3 で top-level additionalProperties:false が patternProperties より優先 firing する schema draft 2020-12 の解決順序を観察 (informational)",
       "compatibility": "conservative extension"
     }
   ],
