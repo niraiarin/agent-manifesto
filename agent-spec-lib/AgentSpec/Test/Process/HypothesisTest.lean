@@ -43,7 +43,8 @@ example :
 example : Hypothesis.mk' "claim" (Rationale.ofText "rationale" 40) =
           { claim := "claim", rationale := Rationale.ofText "rationale" 40 } := rfl
 
-/-- ofClaimWithText で旧 API 風に構築 (confidence 0 固定、非推奨) -/
+-- ofClaimWithText で旧 API 風に構築 (confidence 0 固定、Day 58 で @[deprecated] 付与済、非推奨)
+set_option linter.deprecated false in
 example : Hypothesis.ofClaimWithText "c" "r" =
           { claim := "c", rationale := Rationale.ofText "r" 0 } := rfl
 

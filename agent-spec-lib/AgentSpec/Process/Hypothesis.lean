@@ -93,7 +93,10 @@ def mk' (claim : String) (rationale : AgentSpec.Spine.Rationale) : Hypothesis :=
   { claim := claim, rationale := rationale }
 
 /-- Day 45: String ベースの旧 API 互換ヘルパー (text のみの rationale を内部で Rationale.ofText に包む)。
-    ただし confidence は 0 で固定、references 空のため production 利用は非推奨。 -/
+    ただし confidence は 0 で固定、references 空、author/timestamp 未指定のため production 利用は非推奨。
+    Day 58 (2026-04-21): @[deprecated] 付与、Day 57 empirical F1 Option B 先行 strict 化 prod site 1 件目。
+    実利用では `Hypothesis.mk' claim (Rationale.strict ...)` を推奨。 -/
+@[deprecated "ofClaimWithText は attribution 欠損 — Hypothesis.mk' + Rationale.strict を使用推奨 (Day 58 A-Minimal linter)" (since := "2026-04-21")]
 def ofClaimWithText (claim : String) (rationaleText : String) : Hypothesis :=
   { claim := claim,
     rationale := AgentSpec.Spine.Rationale.ofText rationaleText 0 }
