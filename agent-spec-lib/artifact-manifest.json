@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.54.1-week2-day54-1",
+  "version": "0.55.0-week2-day55",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2041,6 +2041,59 @@
         "GA-S1"
       ],
       "example_count": 40
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Spine.ResearchGoal",
+      "path": "AgentSpec/Spine/ResearchGoal.lean",
+      "dependencies": [
+        {
+          "id": "lean-init",
+          "module": "Init.Core, Init.Data.List.Basic",
+          "edge": "wasDerivedFrom"
+        },
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.Rationale",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "provides_types": [
+        "AgentSpec.Spine.ResearchGoal (structure: title/description/rationale、Day 45-48 pattern で rationale 必須)",
+        "AgentSpec.Spine.ResearchContext (structure: parentGoalId/assumptions/constraints/rationale、Sub-Issue 間伝搬用)"
+      ],
+      "provides_definitions": [
+        "AgentSpec.Spine.ResearchGoal.trivial",
+        "AgentSpec.Spine.ResearchGoal.ofTitle",
+        "AgentSpec.Spine.ResearchGoal.mk'",
+        "AgentSpec.Spine.ResearchContext.trivial",
+        "AgentSpec.Spine.ResearchContext.root",
+        "AgentSpec.Spine.ResearchContext.child",
+        "AgentSpec.Spine.ResearchContext.inheritFrom (Sub-Issue 伝搬 helper)",
+        "AgentSpec.Spine.ResearchContext.isRoot",
+        "AgentSpec.Spine.ResearchContext.addAssumption",
+        "AgentSpec.Spine.ResearchContext.addConstraint"
+      ],
+      "assumptions": [],
+      "scope": "formalization",
+      "refs": [
+        "GA-S10",
+        "GA-S8"
+      ]
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Test.Spine.ResearchGoalTest",
+      "path": "AgentSpec/Test/Spine/ResearchGoalTest.lean",
+      "dependencies": [
+        {
+          "id": "agent-spec-lib:AgentSpec.Spine.ResearchGoal",
+          "edge": "wasDerivedFrom"
+        }
+      ],
+      "assumptions": [],
+      "scope": "test",
+      "refs": [
+        "GA-S10"
+      ],
+      "example_count": 31
     }
   ],
   "build_status": {
@@ -2073,7 +2126,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 580,
+    "example_count": 611,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2294,6 +2347,14 @@
       "Test/Spine/ResearchNodeTest.lean": {
         "theorems": 0,
         "examples": 40
+      },
+      "Spine/ResearchGoal.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Test/Spine/ResearchGoalTest.lean": {
+        "theorems": 0,
+        "examples": 31
       }
     }
   },
@@ -2809,6 +2870,15 @@
       "addressable_count": 0,
       "evaluator": "scripts/cycle-check.sh を現状に対し実行、5 項目 (breakdown/day_plan commit/7-day empirical/long-deferred/schema) 全件動作確認。Day 49-54 の Step 7 部分省略 6 Day 連続違反の構造的再発防止。",
       "scope": "scripts/cycle-check.sh 新規 (5 check、mode=full/quick)、docs/artifact-manifest-jq-recipes.md に使用法追記、memory project_day_cycle_pattern.md に script reference 追加。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 55 GA-S10 ResearchGoal + ResearchContext (Sub-Issue 伝搬)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 137 jobs + 31 ResearchGoalTest examples PASS、inheritFrom helper で parent.assumptions/constraints 継承 + rationale 上書きを test 4 件で実証、GA-S8 Rationale 必須化 2 structure 拡張",
+      "scope": "AgentSpec.Spine.ResearchGoal (title/description/rationale) と ResearchContext (parentGoalId/assumptions/constraints/rationale) の 2 structure 追加、inheritFrom / isRoot / addAssumption / addConstraint helper。Sub-Issue 間 context 伝搬問題を解消。sprint Day 49-55 (7 Day) で Rationale attribution + GA-S7 State + Rationale lint + GA-S11 Hoare + GA-S1 ResearchNode + cycle-check + GA-S10 = 7 件完了、Spine 層 high/medium risk Gap の大部分を解消。",
       "compatibility": "conservative extension"
     }
   ],
