@@ -936,7 +936,7 @@ RetirementLinterCommand.lean は Lean 4 標準 `Lean` library (Lean.Elab.Command
 
 **Day 22 特筆**: 12 Day 連続 rfl preference 維持 (cycle 内学習 transfer 6 度目継続) / 段階的 Lean 機能習得 6 拡張到達 (A-Standard-Full-Standard A-Minimal、残り 1/4 = Week 5-6 A-Maximal) / Pattern #7 hook 十五段階発展 / **env iteration map₁→toList correctness fix** (Day 18-21 同 module の 3 commands を同時改善、output Day 21 までと変化なし＝対象が imported のみだったため、bug fix + 0 behavior 退行) / Subagent 1 addressable 即時対処 → 0 達成 (Day 17/22 で 2 度目の即時対処サイクル完遂、5 Day 連続 cycle 内即時修復実例)。
 
-### 2.44 Day 23 着手前判断結果 (推奨案で仮確定、Day 22 完了後の議論)
+### 2.44 Day 23 着手前判断結果 (推奨案で仮確定、Day 22 完了後の議論 + Day 22 step 7 actual investigation 反映)
 
 | Q | 推奨案 (暫定) | 理由 |
 |---|---|---|
@@ -945,9 +945,13 @@ RetirementLinterCommand.lean は Lean 4 標準 `Lean` library (Lean.Elab.Command
 | **Q3 実装方法** | 新 helper module 1 件 (production 配置) + Day 18-22 同 file MODIFY (RetirementLinterCommandTest.lean、Day 11-23 = 13 Day 連続 rfl preference 予定) | Day 22 までは register が test 内 self-reference のみ、Day 23 で external register sources を構造化 |
 | **Q4 Test 設計** | helper module で register、Test 側で import + auto check で propagate 検証、example +1-2 + command invocation +1-2 想定 (Day 11-23 = 13 Day 連続 rfl preference 予定、cycle 内学習 transfer 6 度目適用 13 Day) | Day 22 D10 `addImportedFn := arrs.foldl (init := #[]) (· ++ ·)` の動作 paper 評価で identified |
 
-**Day 23 deliverables**: 新 helper module (NEW、production) + RetirementLinterCommandTest.lean MODIFY + linter_status import propagate test 完了 + version day23 + Day 11-23 = 13 Day 連続 rfl preference (milestone 継続)。
+**Day 22 step 7 やり残し調査で identify された long-deferred 累積警告 (Day 23 議論で sub-priority として明示)**:
+- **Role.toCtorIdx auto-gen helper root cause investigation**: Day 20 Subagent I2 で identified → Day 21 I4 繰り延べ → Day 22 Section 2.43 繰り延べ = **3 Day 連続繰り延べ** (Day 21 改訂 100 で解消した I3 = 4 セッション繰り延べと同じ long-deferred 化兆候)。**Day 23 副 scope として併走** または **Day 24 主 scope** の選択を Day 22-23 議論で判断、Day 25+ には必ず解消 (long-deferred 化防止、ユーザーフィードバック「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用)
+- **ResearchActivity payload 拡充** (investigate / decompose / refine / retire variants): Day 13 から繰り延べ継続 = **9 Day 連続繰り延べ** (Day 13/14/15/16/17/18/19/20/21/22 = 10 Day 識別 + 9 Day 未対処)。最長 long-deferred 候補だが scope 大 (Provenance 層構造変更)、Week 4-5 で計画化 vs 即時着手の判断が Day 23+ で必要
 
-**主要決定**: 確認次第 Day 23 着手。
+**Day 23 deliverables**: 新 helper module (NEW、production) + RetirementLinterCommandTest.lean MODIFY + linter_status import propagate test 完了 + version day23 + Day 11-23 = 13 Day 連続 rfl preference (milestone 継続) + (副 scope optional) Role.toCtorIdx investigation 着手。
+
+**主要決定**: 確認次第 Day 23 着手。Role.toCtorIdx investigation の Day 23 副 scope 化 / Day 24 主 scope 化 / Week 5-6 まで繰り延べ容認 のいずれかをユーザー判断で確定。
 
 ---
 
@@ -5926,6 +5930,13 @@ Section 12.24 Day 9 想定目標 (46/47 = 97.9%) を **予想通り達成**。
   - 改訂 106 (cycle step 5+6): Day 22 metadata + 後続 Docs (README + 99-verifier-rounds + Section 1 + Section 12.66 累計 111/112 = **99.1% Phase 0 99.1% 維持**)
   - 改訂 107 (cycle step 8+9): Section 2.44 (新規) Day 23 着手前判断推奨案仮確定 (Q1 multi-module import propagate test)
   - cycle step 7 (やり残し調査): 空ぶり (manifest 整合、Subagent I1 即時対処済)
+- 2026-04-20 (**改訂 108 step 7 audit**: Day 22 cycle step 7 やり残し調査の actual investigation 反映、ユーザー監査 audit 起因)
+  - **背景**: ユーザーから「論文サーベイ → 実装修正 → ... → やり残し調査 → Day N+1 議論 → 最終後続 は実施した？」という cycle 9 step 完遂監査の質問あり、step 7 が「空ぶり」marked のみで actual investigation 未実施を識別、ユーザーフィードバック「論文サーベイ検証の後に実装修正・追加を必ず実施してね」(Day 21 起因) の cycle 全 step 適用を継続検証
+  - **actual investigation 結果**: long-deferred 累積中の候補 2 件を identify
+    - Role.toCtorIdx investigation: Day 20-22 = 3 Day 連続繰り延べ (Day 21 改訂 100 で解消した I3 = 4 セッション繰り延べと同じ long-deferred 化兆候)
+    - ResearchActivity payload 拡充: Day 13-22 = 10 Day 識別 + 9 Day 連続繰り延べ (最長 long-deferred 候補、Week 4-5 vs 即時着手 判断要)
+  - **Section 2.44 更新**: Day 23 議論に「Day 22 step 7 やり残し調査で identify された long-deferred 累積警告」を追加、Role.toCtorIdx investigation を Day 23 副 scope / Day 24 主 scope / Week 5-6 繰り延べ容認の選択肢として明示、Day 25+ には必ず解消 (Day 21 改訂 100 と同パターンの long-deferred 化防止)
+  - **教訓**: cycle 9 step の各 step を「実施 marked」だけでなく actual execution と検証の両方で完遂すること、step 7 やり残し調査は「空ぶり」と marked する前に minimum でも 5-10 件の latent 繰り延べ累積を機械的にスキャン、ユーザー audit 起因の improvement loop を内部化
 
 ## マーク凡例
 
