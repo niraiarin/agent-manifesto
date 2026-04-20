@@ -1289,7 +1289,7 @@
     "last_verified_phase": "Week 2 Day 22",
     "lake_build_results": {
       "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 22 は RetirementLinterCommand MODIFY のみで jobs 変化なし (104 維持)、SimplePersistentEnvExtension + register_retirement_namespace command 追加 + env iteration map₁→toList correctness fix"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 22 は RetirementLinterCommandTest MODIFY のみで jobs 変化なし (125 維持、Day 21 改訂 100 + Day 22 反映合算で 128 jobs build PASS)、example 8→9 +1、command invocations 13→14 +1"}
+      "AgentSpecTest": {"result": "exit 0", "job_count": 125, "scope": "test only", "note": "Day 22 は RetirementLinterCommandTest MODIFY のみで jobs 変化なし (125 維持、Day 21 改訂 100 + Day 22 反映合算で 128 jobs build PASS)、example 7→8 +1、command invocations 13→15 +2"}
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1744,9 +1744,24 @@
       "date": "2026-04-20",
       "result": "PASS",
       "addressable_count": 0,
-      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + register_retirement_namespace 動作確認 (本 test namespace 自己参照 register、env mutation logInfo 出力) + env-driven #check_retired_auto 動作確認 (register 0 件: total 4 in 3 NS = Day 21 backward compatible / register 1 件: total 5 in 4 NS = day21LinkageFixture 1 retired 検出) + env iteration map₁→toList correctness fix 効果確認 (Day 18-21 commands も同時改善、output Day 21 までと変化なし＝対象が imported のみだったため)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "informational_count": 2,
+      "evaluator": "build PASS (104+125 jobs、MODIFY のみで jobs 変化なし) + register_retirement_namespace 動作確認 (本 test namespace 自己参照 register、env mutation logInfo 出力) + env-driven #check_retired_auto 動作確認 (register 0 件: total 4 in 3 NS = Day 21 backward compatible / register 1 件: total 5 in 4 NS = day21LinkageFixture 1 retired 検出) + env iteration map₁→toList correctness fix 効果確認 (Day 18-21 commands も同時改善、output Day 21 までと変化なし＝対象が imported のみだったため) + Subagent 検証 (改訂 104 paper サーベイ評価サイクル: VERDICT PASS + 1 addressable 即時対処 [build_status.note 数値齟齬訂正] → 0 + 2 informational [Day 23+ multi-module import test / verifier_history 充実化])",
       "p2_complete_for": "day-22-provenance-retirement-linter-command-a-standard-full-standard-a-minimal-persistentenvextension",
       "milestone_12_day_rfl_preference": "**Day 11-22 = 12 Day 連続 rfl preference 維持の継続** (Day 22 で 12 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 12 Day、cycle 内学習 transfer 6 度目適用)",
+      "subagent_verification": {
+        "executed_in_commit": "改訂 104 paper サーベイ評価サイクル",
+        "verdict_initial": "PASS (1 addressable: build_status.note 数値齟齬)",
+        "verdict_after_fix": "PASS (即時対処後 0 addressable)",
+        "addressable_initially": 1,
+        "addressable_after_fix": 0,
+        "informational": 2,
+        "informational_items": [
+          "I1 (addressable → 改訂 104 で即時対処): build_status.lake_build_results.AgentSpecTest.note の数値齟齬 (\"example 8→9 +1、command invocations 13→14 +1\" は誤、実態 example 7→8 +1 / command 13→15 +2) を訂正",
+          "I2 (Day 23+ メイン候補): PersistentEnvExtension addImportedFn の multi-module duplicate handling は benign (redundant 蓄積のみ)、Day 23+ multi-module import test で挙動明示化推奨 → Section 2.43/2.44 で計画化",
+          "I3 (改訂 104 verifier_history 充実化): subagent_verification field で initial → after_fix を明示記録 (Day 17/22 で 2 度目の即時対処サイクル完遂)"
+        ],
+        "pattern": "paper サーベイ評価サイクル「実装修正組込み」14 度目適用 (Day 9-21 継続 + Day 22 I1 addressable 即時対処 + I2 Day 23 計画化 + I3 verifier_history 充実化)、**Subagent 推移 Day 22 = 1 addressable 即時 0 + 2 informational** (Day 17/22 で 2 度目の即時対処サイクル完遂、Day 21 initial FAIL→PASS から正常 cycle 復帰、5 Day 連続 cycle 内即時修復実例)"
+      },
       "note": "Day 22 Provenance 層 A-Standard-Full-Standard A-Minimal PersistentEnvExtension callback 実装 (Q1 A-Standard-Full-Standard / Q2 A-Minimal env-driven watched namespaces + register API / Q3 案 A Day 18-21 同 module MODIFY / Q4 案 A Day 18-21 同 file test MODIFY、段階的 Lean 機能習得 6 拡張到達)。`SimplePersistentEnvExtension Name (Array Name)` で watched namespaces env-driven 化 + `register_retirement_namespace` command 追加 + `defaultWatchedRetirementNamespaces` で Day 21 hardcode list を保持し additive 連結で backward compatible 完全維持。`#check_retired_auto` を `getWatchedRetirementNamespaces env` 経由に rewire (register 0 件で Day 21 同 output)。**env iteration map₁→toList correctness fix** (Day 18-21 同 module の 3 commands も同時改善、SMap.toList = map₂.toList ++ map₁.toList で current-module declarations も検出可能化)。RetirementLinterCommand.lean + Test MODIFY (example 7→8 +1、command invocations 13→15 +2)。Build 104+125 jobs 維持 (MODIFY のみ、Day 21 改訂 100 + Day 22 反映合算で 128 jobs build PASS)。Pattern #7 hook MODIFY path 7 度目運用検証 (Day 14/16/17/19/20/21 + Day 22、両パターン運用 10 度目、十五段階発展到達)。**Day 11-22 = 12 Day 連続 rfl preference 維持** (Day 22 で 12 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、import 越境 propagate test (Day 23+) / Role.toCtorIdx investigation (Day 22+ から継続) などへ段階的拡張パス継続"
     }
   ]

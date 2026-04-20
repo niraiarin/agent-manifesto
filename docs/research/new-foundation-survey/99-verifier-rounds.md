@@ -1707,3 +1707,45 @@ Day 18 追加で:
 - verifier_history: 25 entries → **26 entries** (Day 21 R1 追加、initial FAIL→PASS 記録含む)
 - **Phase 0 累計合致率: 99.0% → 99.1% 到達** (106/107、Day 20 +0.1pt 改善、Phase 0 99.1% 新高水準)
 - **long-deferred 解消**: Day 18-20 Subagent I3 (4 セッション繰り延べ) を Day 21 改訂 100 で同時解消 (cycle 内即時修復 maturity 質的発展)
+
+---
+
+## Phase 0 Week 2 Day 22 検証 (2026-04-20 — Day 22 commit `e6d9b1f` 後)
+
+**背景**: Section 2.42 Q1-Q4 確定済 (Q1 A-Standard-Full-Standard PersistentEnvExtension callback / Q2 A-Minimal env-driven + register / Q3 案 A 同 module MODIFY / Q4 案 A 同 file test MODIFY) に従い `SimplePersistentEnvExtension` + `register_retirement_namespace` command + `defaultWatchedRetirementNamespaces` で Day 21 hardcode list を additive 連結保持し backward compat 完全維持。`#check_retired_auto` を `getWatchedRetirementNamespaces env` 経由に rewire。**env iteration map₁→toList correctness fix** (Day 18-21 同 module 3 commands も同時改善、output 変化なし＝対象が imported のみだったため)。Day 18-21 backward compatible 完全維持、Day 18-21 同 module MODIFY 7 度目、段階的 Lean 機能習得 6 拡張到達 (残り Week 5-6 A-Maximal)、**12 Day 連続 rfl preference (桁到達後 12 Day 継続実証)**。
+
+### Day 22 /verify Round 1
+
+**Subagent 検証** (改訂 104): VERDICT = **PASS** (initial: 1 addressable + 2 informational → 即時対処後 0 addressable + 2 informational)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 (addressable) | `build_status.lake_build_results.AgentSpecTest.note` の数値齟齬 ("example 8→9 +1、command invocations 13→14 +1" は誤、実態は example 7→8 +1、command invocations 13→15 +2) | **改訂 104 即時対処** (artifact-manifest.json の note 訂正) → addressable 0 |
+| I2 (informational) | PersistentEnvExtension `addImportedFn` の multi-module duplicate handling は benign (redundant 蓄積のみ)、Day 23+ multi-module import test で挙動明示化推奨 | **Day 23 メイン候補**: Section 2.43/2.44 で multi-module import propagate test として計画化 |
+| I3 (informational) | verifier_history Day 22 R1 の `addressable_count: 0` は I1 即時対処後の値であり、initial では 1 addressable だった (Day 17/22 で 2 度目の即時対処サイクル完遂) | **改訂 104 verifier_history 充実化**: subagent_verification field で initial → after_fix を明示記録 |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → 21 初 FAIL→PASS+4 informational → **Day 22 PASS+1 addressable 即時 0+2 informational** (Day 21 から正常 cycle 復帰、Day 17/22 で 2 度目の即時対処サイクル完遂、5 Day 連続 cycle 内即時修復実例)。
+
+**Day 22 特筆**:
+- **12 Day 連続 rfl preference (桁到達後 12 Day 継続実証)** (Day 11-22、quality loop 長期持続性)
+- **Pattern #7 hook 十五段階発展到達** (MODIFY 7 度目運用検証)
+- **段階的 Lean 機能習得 6 拡張到達** (A-Minimal/A-Compact/A-Standard A-Minimal/A-Standard-Lite/A-Compact nested/A-Standard-Full A-Minimal/**A-Standard-Full-Standard A-Minimal**)
+- **env iteration map₁→toList correctness fix** (Day 18-21 同 module 3 commands 同時改善、SMap.toList = map₂.toList ++ map₁.toList、bug fix + 0 behavior 退行＝対象が imported のみ)
+- **Subagent 1 addressable 即時対処 → 0 達成** (Day 17/22 で 2 度目の即時対処サイクル完遂)
+- **paper サーベイ評価サイクル「実装修正組込み」14 度目適用** (正常 cycle 復帰)
+
+---
+
+## Day 1-22 累計サマリ (Day 21 からの delta)
+
+- example: 372 → **372** (Day 21 改訂 100 で test 1 example 増、Day 22 で test 1 example 増、breakdown 7→8)
+- linter: 5 拡張 (A-Standard-Full A-Minimal まで) → **6 拡張到達** = + **A-Standard-Full-Standard A-Minimal**
+- command_invocations: 13 → **15** (+2、register + second auto check)
+- Pattern #7 hook: 十四段階発展 → **十五段階発展到達** (MODIFY 7 度目)
+- paper × 実装合流: 18 種 → **19 種** (env-driven 化 + correctness fix カテゴリ追加)
+- paper finding: 89 → **94 件** (+5)
+- Subagent 指摘推移: Day 21 = initial FAIL→PASS+4 informational → **Day 22 = PASS+1 addressable 即時 0+2 informational** (正常 cycle 復帰、Day 17/22 で 2 度目即時対処)
+- **rfl preference 連続記録: 11 Day → 12 Day 連続 (桁到達後 12 Day 継続実証)**
+- verifier_history: 26 entries → **27 entries** (Day 22 R1 追加)
+- **Phase 0 累計合致率: 99.1% 維持** (111/112、Day 21 99.1% から維持、Phase 0 99.1% 安定継続)
+- **bug fix + 0 behavior 退行**: env iteration map₁→toList correctness fix (Day 18-21 同 module 3 commands 同時改善、output Day 21 までと変化なし＝対象が imported のみ)

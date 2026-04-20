@@ -1102,6 +1102,52 @@ Day 18-20 backward compatible 完全維持 (別 command 名で新規追加、Day
 - Phase 0 累計合致率 **99.1% 到達** (Day 20 99.0% から +0.1pt 改善、Phase 0 99.1% 新高水準)
 - ユーザーフィードバック直接反映 (「論文サーベイ検証の後に実装修正・追加を必ず実施してね」→ I3 long-deferred 解消の動機)
 
+## 現状: Phase 0 Week 2 Day 22 完了（2026-04-20 追加、A-Standard-Full-Standard A-Minimal 拡張 + PersistentEnvExtension callback + env iteration correctness fix + 12 Day 連続 milestone）
+
+Section 2.42 Day 22 着手前判断 (Q1 A-Standard-Full-Standard PersistentEnvExtension callback / Q2 A-Minimal env-driven + register / Q3 案 A 同 module MODIFY / Q4 案 A 同 file test MODIFY) に従い実装。
+**A-Standard-Full-Standard A-Minimal: `SimplePersistentEnvExtension` + `register_retirement_namespace` command 追加**, Day 21 hardcode list は `defaultWatchedRetirementNamespaces` で保持し additive 連結 (`hardcode ++ extension.getState env`) で backward compatible 完全維持、`#check_retired_auto` を `getWatchedRetirementNamespaces env` 経由に rewire (register 0 件で Day 21 同 output)、
+**Day 18-21 backward compatible 完全維持** (Day 22 register API は新 command、既存 commands は env iteration map₁→toList correctness fix で behavior は Day 21 まで変化なし＝対象が imported のみだったため)、
+**Day 11-22 = 12 Day 連続 rfl preference 維持** (cycle 内学習 transfer 6 度目、桁到達後 12 Day 継続実証)、
+**Pattern #7 hook 十五段階発展到達** (MODIFY path 7 度目運用検証、両パターン運用 10 度目)、
+**段階的 Lean 機能習得 6 拡張到達** (A-Minimal + A-Compact + A-Standard A-Minimal + A-Standard-Lite + A-Compact nested + A-Standard-Full A-Minimal + **A-Standard-Full-Standard A-Minimal**、残り 1/4 = Week 5-6 A-Maximal)、
+**env iteration correctness fix** (Day 18-21 同 module 3 commands `env.constants.map₁.toList` → `env.constants.toList` 同時改善、SMap.toList = map₂.toList ++ map₁.toList で current-module declarations も検出可能化、bug fix + 0 behavior 退行)、
+**Subagent VERDICT PASS + 1 addressable 即時対処 → 0** (build_status.note 数値齟齬訂正、Day 17/22 で 2 度目の即時対処サイクル完遂、5 Day 連続 cycle 内即時修復実例)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→20=3→21 初 FAIL→PASS+4 informational→**22 PASS+1 addressable 即時 0+2 informational** (正常 cycle 復帰)。
+
+### Day 22 の 1 項目 + correctness fix (Q2 A-Minimal scope、MODIFY のみ)
+
+- [x] **`SimplePersistentEnvExtension Name (Array Name)` + `register_retirement_namespace` command + `defaultWatchedRetirementNamespaces` + `getWatchedRetirementNamespaces` 追加** (RetirementLinterCommand.lean MODIFY、Day 18-21 同 module、env-driven 化 + backward compat)
+- [x] RetirementLinterCommandTest.lean MODIFY (example 7→8、command invocations 13→15、+1 example: defaultWatchedRetirementNamespaces type-level、+1 register、+1 second auto check)
+- [x] **env iteration map₁→toList correctness fix**: Day 18-21 同 module 3 commands を同時改善 (output Day 21 までと変化なし＝対象が imported のみだったため)
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (Day 21 jobs 数維持 104+125 = 128 jobs total build PASS)
+- [x] **Subagent 検証 PASS** (initial: 1 addressable build_status.note 数値齟齬 → 即時対処後 0 + 2 informational)
+- [x] env-driven `#check_retired_auto` 動作確認:
+  - register 0 件 (Day 21 default): RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 in 3 NS ✓ (backward compatible)
+  - register 1 件 (本 test namespace 自己参照): + Test.Provenance.RetirementLinterCommand 1 = total 5 in 4 NS ✓ (env-driven extension 動作実証)
+
+### Week 2 Day 22 時点の累計指標
+
+| 指標 | Day 21 | Day 22 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 372 | 0 / 0 | **15 / 372** (Day 21 改訂 100 で +1、Day 22 で +1 → 累計 +2 だが breakdown 372) |
+| Provenance 層 linter | 5 拡張 (A-Standard-Full A-Minimal まで) | +A-Standard-Full-Standard A-Minimal | **6 拡張到達 (A-Standard-Full-Standard A-Minimal 完了)** |
+| Command invocations | 13 | +2 (register + auto re-check) | **15** |
+| Pattern #7 hook | 十四段階発展 | 15 度目運用検証 (MODIFY 7 度目) | **十五段階発展到達** |
+| Subagent 指摘項目 | 初 FAIL→PASS pattern | 1 addressable → 即時 0 + 2 informational | **正常 cycle 復帰 (Day 17/22 で 2 度目の即時対処サイクル)** |
+| **rfl preference 連続記録** | 11 Day | +1 | **12 Day 連続 (桁到達後 12 Day 継続実証)** |
+
+### Day 22 で達成した TyDD / paper 進展 (Section 12.64 + 12.65 + 12.66)
+
+- A-Standard-Full-Standard A-Minimal 完備 / 段階的 Lean 機能習得 6 拡張到達 (残り 1/4 = Week 5-6 A-Maximal)
+- PersistentEnvExtension 経由 env-driven 化 + Day 21 hardcode list を additive 連結 backward compat (TyDD-S4 P4 標準 API + S1 types-first)
+- Pattern #7 hook 十五段階発展到達 (MODIFY 7 度目)
+- paper × 実装 19 度目合流カテゴリ (A-Standard-Full-Standard A-Minimal × env-driven 化 × env iteration correctness fix × 12 Day 連続 rfl preference)
+- paper finding 94 件累計 (+5)
+- **env iteration map₁→toList correctness fix** (Day 18-21 同 module 3 commands 同時改善、bug fix + 0 behavior 退行)
+- **12 Day 連続 rfl preference (桁到達後 12 Day 継続実証、quality loop 長期持続性)**
+- Subagent VERDICT PASS + 1 addressable 即時対処 → 0 (Day 17/22 で 2 度目の即時対処サイクル、5 Day 連続 cycle 内即時修復実例)
+- Phase 0 累計合致率 **99.1% 維持** (Day 21 99.1% から維持、Phase 0 99.1% 安定継続)
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |
