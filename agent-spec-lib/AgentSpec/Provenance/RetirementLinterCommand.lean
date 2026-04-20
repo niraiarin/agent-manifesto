@@ -51,6 +51,12 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 28 意思決定ログ (dedup 判断、Day 25 observe-first 3 session 後)
+
+### D16. presentation-layer dedup 採用 (`#check_retired_auto` 出力側で `.eraseDups`、storage は維持)
+- **採用**: auto check の watched 列挙時に `List.eraseDups` 適用。`addEntryFn` は `arr.push name` のまま
+- **理由**: storage invariant 不変で multi-source 観測機会を保持、presentation だけ一意化、既存 API strictly better
+
 ## Day 25 意思決定ログ (multi-source register / duplicate handling 観測、Day 22 Subagent informational I2 解消)
 
 ### D15. multi-source register / duplicate handling の observe-first 方針 (Day 25 Q1 Day 22 Subagent informational I2 解消、Day 22-24 = 3 session 繰り延げ対処)
@@ -361,7 +367,9 @@ elab "register_retirement_namespace " id:ident : command => do
  -/
 elab "#check_retired_auto" : command => do
   let env ← getEnv
-  let watchedNamespaces := getWatchedRetirementNamespaces env
+  -- Day 28 D16: presentation-layer dedup。storage (extension state) は duplicate を許容したまま、
+  -- 出力だけ eraseDups で一意化する。storage invariant 不変で観測機会を保持しつつ UX を改善。
+  let watchedNamespaces := (getWatchedRetirementNamespaces env).eraseDups
   let mut totalRetired := 0
   let mut summary := m!"#check_retired_auto: agent-spec-lib watched namespaces auto-check"
   for ns in watchedNamespaces do

@@ -129,13 +129,11 @@ set_option linter.deprecated false in
 /-! ### Day 21 新規: `#check_retired_auto` command 動作確認 (A-Standard-Full A-Minimal、auto-target) -/
 
 -- Day 21 A-Standard-Full A-Minimal: pre-defined watched namespaces を auto-target で一括 check。
--- **Day 21 baseline 期待 (Day 23/25 import 前)**: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 in 3 watched namespaces
--- **Day 25 import 追加後 (現 state)**: Day 23 helper1 + Day 25 helper2 (独立 + duplicate register)
--- の合算 import 経由、watched NS 6 件 (Day 21 hardcode 3 + helper1 1st + helper2 + helper1 dup)、
--- total 7 retired (RetiredEntity 4 + Failure 0 + EvolutionStep 0 + helper1 1 + helper2 1 + helper1 dup 1)
--- (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため、Role.toCtorIdx (Day 20 で
--- AgentSpec.Provenance 配下 depth=2 で顕在化) は対象外、Day 14 fixture 4 のみ counted)
--- **Day 25 実測結論**: addEntryFn = arr.push name は dedup なし、helper1 が 2 回 listed + retired count 重複
+-- Day 21 baseline (import 前): RetiredEntity 4 = total 4 in 3 NS
+-- Day 28 D16 presentation dedup 後 (現 state): helper1 + helper2 import propagate、
+-- watched 5 件 (Day 21 hardcode 3 + helper1 + helper2、helper2 の duplicate helper1 は eraseDups で除去)、
+-- total 6 retired (RetiredEntity 4 + helper1 1 + helper2 1)
+-- Role.toCtorIdx は watched 直下対象外で counted 除外
 
 set_option linter.deprecated false in
 #check_retired_auto
@@ -178,14 +176,10 @@ example : List Lean.Name :=
 -- Day 22 register 経由で新 namespace 追加 (本 test file の namespace を登録、自己参照テスト)
 register_retirement_namespace AgentSpec.Test.Provenance.RetirementLinterCommand
 
--- Day 22 env-driven + Day 23 multi-module import propagate + Day 25 multi-source duplicate 確認:
--- register 後 `#check_retired_auto` (現 state、Day 25 import 追加後):
--- watched NS 7 件 (Day 21 hardcode 3 + helper1 + helper2 + helper1 dup + self)
--- total 8 retired (RetiredEntity 4 + Failure 0 + EvolutionStep 0 + helper1 1 + helper2 1 +
--- helper1 dup 1 + self 1 = 8、duplicate で重複 count、Day 22 D10 addEntryFn 実測)
--- **Day 23 D13 設計**: 本 #check_retired_auto は **Day 22 self-register + Day 23 helper
--- import propagate + Day 25 multi-source duplicate の合算** を検証 (Day 22/23 単独テストは
--- Day 25 import 追加で更新、Day 25 観測結論: addEntryFn は dedup しない)
+-- Day 22 env-driven + Day 23 multi-module import propagate + Day 28 D16 presentation dedup 後:
+-- watched NS 6 件 (Day 21 hardcode 3 + helper1 + helper2 + self、helper1 dup は eraseDups で除去)
+-- total 7 retired (RetiredEntity 4 + helper1 1 + helper2 1 + self 1)
+-- Day 25 までの duplicate 観測結果は Day 28 D16 で presentation-layer dedup、storage は維持
 
 set_option linter.deprecated false in
 #check_retired_auto
@@ -260,17 +254,14 @@ example : Bool :=
 
 set_option linter.deprecated false in
 #check_retired_auto
--- 実測 output (dedup なし Day 22 D10 addEntryFn 仕様実証):
+-- 実測 output (Day 28 D16 presentation-layer dedup 後、storage は duplicate 保持):
 -- 'AgentSpec.Provenance.RetiredEntity': 4 retired
 -- 'AgentSpec.Process.Failure': 0 retired
 -- 'AgentSpec.Spine.EvolutionStep': 0 retired
--- 'AgentSpec.Test.Provenance.RetirementWatchedFixture': 1 retired (Day 23 import propagate 1 回目)
--- 'AgentSpec.Test.Provenance.RetirementWatchedFixture2': 1 retired (Day 25 独立 source)
--- 'AgentSpec.Test.Provenance.RetirementWatchedFixture': 1 retired (Day 25 duplicate register、重複 entry)
+-- 'AgentSpec.Test.Provenance.RetirementWatchedFixture': 1 retired (Day 23 import propagate、Day 25 duplicate は dedup で除去)
+-- 'AgentSpec.Test.Provenance.RetirementWatchedFixture2': 1 retired
 -- 'AgentSpec.Test.Provenance.RetirementLinterCommand': 1 retired (Day 22 self-register)
--- Total: 8 retired declaration(s) in 7 watched namespaces
--- **Day 25 観測結論**: addEntryFn = arr.push name は dedup しない、duplicate register で同
--- namespace が 2 回 listed、retired count も独立 count (同 declaration が 2 回 count)。Day 26+ で
--- dedup 実装判断 (現在は observe-first 方針、Day 22 audit 教訓継続)。
+-- Total: 7 retired declaration(s) in 6 watched namespaces
+-- Day 28 D16: storage は duplicate 許容、auto 出力のみ eraseDups で一意化。
 
 end AgentSpec.Test.Provenance.RetirementLinterCommand
