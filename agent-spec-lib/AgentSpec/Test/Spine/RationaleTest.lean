@@ -128,4 +128,47 @@ example :
     ((Rationale.ofText "t" 0).withTimestamp 100) ≠
     ((Rationale.ofText "t" 0).withTimestamp 200) := by decide
 
+/-! ### Day 52: strict constructor + isProperlyAttributed + A-Minimal deprecated fixtures -/
+
+/-- Rationale.strict 全 5 field 必須構築 -/
+example : Rationale :=
+  Rationale.strict "induction proof n≥0" ["arXiv:2604.14572", "Lean4 Prelude"]
+                   85 "alice" 1714000000
+
+/-- strict 構築結果の field 確認 -/
+example :
+    (Rationale.strict "t" ["r"] 50 "alice" 100).author = some "alice" := rfl
+example :
+    (Rationale.strict "t" ["r"] 50 "alice" 100).timestamp = some 100 := rfl
+
+/-- isProperlyAttributed: strict 構築は true -/
+example :
+    (Rationale.strict "evidence" ["paper:X"] 80 "bob" 200).isProperlyAttributed = true := rfl
+
+/-- isProperlyAttributed: trivial は false (全 field 空) -/
+example : Rationale.trivial.isProperlyAttributed = false := rfl
+
+/-- isProperlyAttributed: ofText は false (author 欠損) -/
+example : (Rationale.ofText "some claim" 70).isProperlyAttributed = false := rfl
+
+/-- isProperlyAttributed: withAuthor/withTimestamp 付きでも references 空なら false -/
+example :
+    (((Rationale.ofText "t" 50).withAuthor "alice").withTimestamp 100).isProperlyAttributed = false := rfl
+
+/-- isProperlyAttributed: confidence = 0 でも false (境界値) -/
+example :
+    (Rationale.strict "t" ["r"] 0 "alice" 100).isProperlyAttributed = false := rfl
+
+-- Day 52 deprecated fixture: trivialDeprecated は trivial と等価 (挙動は同じ、警告のみ)
+set_option linter.deprecated false in
+example : Rationale.trivialDeprecated = Rationale.trivial := rfl
+
+-- Day 52 deprecated fixture: ofTextUnauthoredDeprecated も ofText と等価
+set_option linter.deprecated false in
+example : Rationale.ofTextUnauthoredDeprecated "t" 50 = Rationale.ofText "t" 50 := rfl
+
+-- deprecated fixture も Inhabited/DecidableEq を維持
+set_option linter.deprecated false in
+example : Rationale.trivialDeprecated.isProperlyAttributed = false := rfl
+
 end AgentSpec.Test.Spine.Rationale

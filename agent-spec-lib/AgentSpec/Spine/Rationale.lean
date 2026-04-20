@@ -134,6 +134,43 @@ def withTimestamp (r : Rationale) (ts : Nat) : Rationale :=
 def isAttributed (r : Rationale) : Bool :=
   r.author.isSome
 
+/-- Day 52: 全 5 field 必須の strict smart constructor (production 利用推奨)。
+    Day 50 empirical I2 (attribution 欠損率 100% 実測) 対応。
+    text / references / confidence / author / timestamp 全指定。 -/
+def strict (text : String) (references : List String) (confidence : Nat)
+    (author : String) (timestamp : Nat) : Rationale :=
+  { text := text,
+    references := references,
+    confidence := confidence,
+    author := some author,
+    timestamp := some timestamp }
+
+/-- Day 52: properly attributed 判定 (5 field 全て意味ある値、production 利用の目安)。
+    text non-empty + references non-empty + confidence > 0 + author some + timestamp some。 -/
+def isProperlyAttributed (r : Rationale) : Bool :=
+  !r.text.isEmpty && !r.references.isEmpty && r.confidence > 0 &&
+    r.author.isSome && r.timestamp.isSome
+
+/-! ### Day 52 A-Minimal linter fixture (Day 14 RetirementLinter と同 pattern)
+
+Rationale の production 利用で不完全な attribution を構造的に可視化するため、placeholder
+fixture を `@[deprecated]` 付きで提供する。Day 50 empirical I2 起因、attribution 欠損率
+100% (156/156 site) の構造的可視化。実利用時は `Rationale.strict` を推奨、
+trivial/ofText は test fixture 向け。
+
+`set_option linter.deprecated false in` で warning 抑制可能 (test 用途)。 -/
+
+/-- Day 52 A-Minimal: unattributed rationale fixture (deprecated、production 非推奨)。
+    Day 14 RetiredEntity.refutedTrivialDeprecated と同 pattern、
+    実利用は `Rationale.strict` or attribution 明示版を使う。 -/
+@[deprecated "Unattributed rationale - use Rationale.strict for production (Day 52 A-Minimal linter)" (since := "2026-04-21")]
+def trivialDeprecated : Rationale := trivial
+
+/-- Day 52 A-Minimal: unauthored ofText fixture (deprecated、production 非推奨)。 -/
+@[deprecated "Unauthored ofText rationale - use Rationale.strict for production (Day 52 A-Minimal linter)" (since := "2026-04-21")]
+def ofTextUnauthoredDeprecated (text : String) (confidence : Nat) : Rationale :=
+  ofText text confidence
+
 /-- 信頼度が 0 の rationale 判定 (trivial/placeholder 検出)。 -/
 def isTrivial (r : Rationale) : Bool :=
   r.text == "" && r.references.isEmpty && r.confidence == 0

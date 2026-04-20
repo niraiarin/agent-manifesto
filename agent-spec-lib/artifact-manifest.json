@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.51.0-week2-day51",
+  "version": "0.52.0-week2-day52",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1876,7 +1876,11 @@
         "AgentSpec.Spine.Rationale.isTrivial",
         "AgentSpec.Spine.Rationale.withAuthor (Day 49)",
         "AgentSpec.Spine.Rationale.withTimestamp (Day 49)",
-        "AgentSpec.Spine.Rationale.isAttributed (Day 49)"
+        "AgentSpec.Spine.Rationale.isAttributed (Day 49)",
+        "AgentSpec.Spine.Rationale.strict (Day 52、5-field 必須 smart constructor)",
+        "AgentSpec.Spine.Rationale.isProperlyAttributed (Day 52、全 field 意味ある値判定)",
+        "AgentSpec.Spine.Rationale.trivialDeprecated (Day 52 A-Minimal @[deprecated] fixture)",
+        "AgentSpec.Spine.Rationale.ofTextUnauthoredDeprecated (Day 52 A-Minimal @[deprecated] fixture)"
       ],
       "assumptions": [],
       "scope": "formalization",
@@ -1898,7 +1902,7 @@
       "refs": [
         "GA-S8"
       ],
-      "example_count": 32
+      "example_count": 41
     },
     {
       "id": "agent-spec-lib:AgentSpec.Spine.State",
@@ -1973,7 +1977,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 518,
+    "example_count": 527,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2169,7 +2173,7 @@
       },
       "Test/Spine/RationaleTest.lean": {
         "theorems": 0,
-        "examples": 32
+        "examples": 41
       },
       "Spine/State.lean": {
         "theorems": 0,
@@ -2657,6 +2661,15 @@
       "addressable_count": 0,
       "evaluator": "lake build 131 jobs + StateTest 42 examples PASS、Day 50 I1 informational 解消 (Linear 6 → 研究拡張 8 variant、05-plaintext-issue-tracker.md §4.1/§4.3 仕様準拠)",
       "scope": "AgentSpec.Spine.State 新 module (Day 44 Rationale と同パターン)、不正遷移を型で compile-time error 化。各 type への attach は Day 52+。GA-S7 は medium_risk 分類 (gap-analysis.md 「リスク: medium」) だが Day 51 で Spine 層実装として解消、medium_risk 残件は GA-S10/S11 等",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 52 Rationale strict + A-Minimal linter (Day 50 I2 解消)",
+      "date": "2026-04-21",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 131 jobs + 9 new RationaleTest examples PASS、Day 14 RetirementLinter と同 A-Minimal pattern で @[deprecated] 付き fixture 2 件追加、既存 production API (trivial/ofText/mk/withAuthor/withTimestamp) 全 backward compat",
+      "scope": "AgentSpec.Spine.Rationale に strict 5-field smart constructor、isProperlyAttributed predicate、trivialDeprecated/ofTextUnauthoredDeprecated 2 fixture 追加。Day 50 empirical I2 起因、attribution 欠損率 100% の構造的可視化機構 (A-Minimal linter) を提供。Day 51 State の当初 Day 52 scope (GA-S10) は Day 55 に後送り。",
       "compatibility": "conservative extension"
     }
   ],
