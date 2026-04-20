@@ -25,11 +25,16 @@ WARN=0
 
 echo "=== agent-spec-lib cycle-check (mode=$MODE) ==="
 
-# ----- Check 1: breakdown 整合 -----
+# ----- Check 1: breakdown 整合 (Day 59 F2 fix: sum=0 regression 検出 追加) -----
 ec=$(jq '.build_status.example_count' "$MANIFEST")
 bs=$(jq '[.build_status.breakdown | to_entries[] | .value.examples] | add' "$MANIFEST")
 if [ "$ec" = "$bs" ]; then
-  echo "[1] OK  breakdown 整合: example_count=$ec = breakdown_sum=$bs"
+  if [ "$ec" = "0" ]; then
+    echo "[1] NG  breakdown sum=0 regression: example_count=0 で整合するが空の build_status は regression 兆候"
+    EXIT=1
+  else
+    echo "[1] OK  breakdown 整合: example_count=$ec = breakdown_sum=$bs"
+  fi
 else
   echo "[1] NG  breakdown 不整合: example_count=$ec / breakdown_sum=$bs"
   EXIT=1
@@ -37,12 +42,16 @@ fi
 
 if [ "$MODE" = "--quick" ]; then exit $EXIT; fi
 
-# ----- Check 2: day_plan 直近 entry の commit 欄 -----
+# ----- Check 2: day_plan 直近 entry の commit 欄 (Day 59 F2 fix: null/missing 区別) -----
 last_done=$(jq -r '[.day_plan[] | select(.status == "done")] | sort_by(.day | if type == "number" then . else (split(".") | .[0] | tonumber) end) | .[-1]' "$PENDING")
 last_day=$(echo "$last_done" | jq -r '.day')
-last_commit=$(echo "$last_done" | jq -r '.commit // "null"')
-if [ "$last_commit" = "null" ]; then
-  echo "[2] WARN  Day $last_day の commit 欄が null、次 commit で埋める予定"
+has_commit=$(echo "$last_done" | jq -r 'has("commit")')
+last_commit=$(echo "$last_done" | jq -r '.commit // "__null__"')
+if [ "$has_commit" != "true" ]; then
+  echo "[2] WARN  Day $last_day に commit field が missing (構造欠損、意図的削除の可能性)"
+  WARN=1
+elif [ "$last_commit" = "__null__" ] || [ "$last_commit" = "null" ]; then
+  echo "[2] WARN  Day $last_day の commit 値が null (未入力、次 commit で埋める予定)"
   WARN=1
 else
   echo "[2] OK  Day $last_day commit=$last_commit"
@@ -54,16 +63,21 @@ last_emp_date=$(echo "$last_emp" | jq -r '.date')
 last_emp_round=$(echo "$last_emp" | jq -r '.round')
 
 today=$(date -u +%Y-%m-%d)
-if date -j -f "%Y-%m-%d" "$last_emp_date" "+%s" >/dev/null 2>&1; then
-  epoch_last=$(date -j -f "%Y-%m-%d" "$last_emp_date" "+%s")
-  epoch_today=$(date -j -f "%Y-%m-%d" "$today" "+%s")
+# macOS BSD date は -ju で UTC parse、GNU date は -u で UTC
+if date -ju -f "%Y-%m-%d" "$last_emp_date" "+%s" >/dev/null 2>&1; then
+  epoch_last=$(date -ju -f "%Y-%m-%d" "$last_emp_date" "+%s")
+  epoch_today=$(date -ju -f "%Y-%m-%d" "$today" "+%s")
 else
-  epoch_last=$(date -d "$last_emp_date" "+%s")
-  epoch_today=$(date -d "$today" "+%s")
+  epoch_last=$(date -u -d "$last_emp_date" "+%s")
+  epoch_today=$(date -u -d "$today" "+%s")
 fi
 days_since=$(( (epoch_today - epoch_last) / 86400 ))
 
-if [ "$days_since" -ge 7 ]; then
+if [ "$days_since" -lt -1 ]; then
+  # -1 以下は clock skew 許容範囲、-2 以下は明らかな future-date
+  echo "[3] WARN  7-day empirical future-date detected: last=${last_emp_date} (days_since=${days_since}、clock skew / typo 疑い)"
+  WARN=1
+elif [ "$days_since" -ge 7 ]; then
   echo "[3] WARN  7-day empirical overdue: last=$last_emp_date ($days_since days ago)"
   echo "          last round: $last_emp_round"
   echo "          必要アクション: /empirical-prompt-tuning を実行 (rule I)"
@@ -107,6 +121,39 @@ if command -v uv >/dev/null 2>&1; then
 else
   echo "[5] WARN  uv not found、schema validation 未実行 (install uv or bypass)"
   WARN=1
+fi
+
+# ----- Check 6: verifier_history + day_plan entry 数の monotonic check (Day 59 F2 fix) -----
+# .claude/metrics/ に前回 count を記録し、減少していたら WARN
+COUNT_FILE="$REPO_ROOT/.claude/metrics/cycle-check-counts.json"
+mkdir -p "$(dirname "$COUNT_FILE")" 2>/dev/null
+
+current_vh=$(jq '.verifier_history | length' "$MANIFEST")
+current_dp=$(jq '.day_plan | length' "$PENDING")
+
+if [ -f "$COUNT_FILE" ]; then
+  prev_vh=$(jq -r '.verifier_history_count // 0' "$COUNT_FILE")
+  prev_dp=$(jq -r '.day_plan_count // 0' "$COUNT_FILE")
+  if [ "$current_vh" -lt "$prev_vh" ]; then
+    echo "[6a] NG  verifier_history entry 数が減少: $prev_vh → $current_vh (意図的削除? 監査必要)"
+    EXIT=1
+  else
+    echo "[6a] OK  verifier_history monotonic: $prev_vh → $current_vh"
+  fi
+  if [ "$current_dp" -lt "$prev_dp" ]; then
+    echo "[6b] NG  day_plan entry 数が減少: $prev_dp → $current_dp (意図的削除? 監査必要)"
+    EXIT=1
+  else
+    echo "[6b] OK  day_plan monotonic: $prev_dp → $current_dp"
+  fi
+else
+  echo "[6] ---  monotonic check baseline 記録 (次回以降比較): vh=$current_vh dp=$current_dp"
+fi
+
+# baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
+if [ "$EXIT" -eq 0 ]; then
+  printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \
+    "$current_vh" "$current_dp" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$COUNT_FILE"
 fi
 
 # ----- 結果 -----
