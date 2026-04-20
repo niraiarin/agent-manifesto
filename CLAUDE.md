@@ -47,6 +47,7 @@
   conservative extension / compatible change / breaking change
 - MEMORY に書く前に、観察→仮説化→検証のプロセスを経る
 - 陳腐化した知識は退役する
+- **marked done ≠ actually done**: cycle/checklist の各 step を「実施 marked」だけでなく「actual execution + 検証」の両方で完遂する。「空ぶり」「N/A」「skip」と判定する前に必ず根拠を grep / read で実証 (例: long-deferred 累積スキャン、manifest 整合確認)。過去に「空ぶり」が連続したパターンを virtue として内部化すると盲点化する (Day 22 audit 教訓)。
 
 ### P4: 可観測性
 
