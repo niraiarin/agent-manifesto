@@ -4,20 +4,17 @@ import AgentSpec.Test.Provenance.RetirementWatchedFixture  -- Day 23: multi-modu
 import AgentSpec.Test.Provenance.RetirementWatchedFixture2  -- Day 25: multi-source register / duplicate handling 観測用 helper module 2
 
 /-!
-# AgentSpec.Test.Provenance.RetirementLinterCommandTest: `#check_retired` command の動作確認
+# AgentSpec.Test.Provenance.RetirementLinterCommandTest: `#check_retired` command family の動作確認
 
-Day 18 Q1 A 案 + Q2 A-Minimal + Q3 案 A + Q4 案 A: Lean.Elab.Command 拡張の `#check_retired`
-command が Day 14 A-Minimal deprecated fixture / 通常 (non-deprecated) definition を正しく
-判定するかの動作確認。
+Day 18 の Lean.Elab.Command 拡張 `#check_retired` を起点に、Day 19 NS 検出 / Day 20 depth 付き /
+Day 21 hardcode auto / Day 22 env-driven (register API) / Day 23 import propagate / Day 25
+multi-source duplicate 観測 / Day 28 presentation-layer dedup までを順次テスト。
 
-Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、**Day 11-25 = 15 Day 連続**
-rfl preference 維持 (Day 11-20 milestone 桁到達後の継続実証、Day 25 で 15 Day 連続到達)、Day 19-25 linter 拡張 + investigation + multi-source register でも rfl 維持):
-全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は
-type check / inhabitation / 既存 fixture 参照の rfl 確認。
+rfl preference: 全 example で rfl/decide、command invocation は info output のみ。
 
-Day 18 初期 build error からの即時修復: `#check_retired` command 連続と `set_option ... in example`
-混在で parser 状態競合が発生したため、section 区切りを明確に分離 (#check_retired 前段 +
-rfl example 後段) で解決。
+**各 Day section の comment 方針** (Day 29 refactor): 当該 Day 実装時の baseline 期待値のみ記述、
+現在の実測値 (import / register / dedup の累積影響後) は各 `#check_retired_auto` 呼び出し直後の
+インラインコメントに別記する。
 -/
 
 namespace AgentSpec.Test.Provenance.RetirementLinterCommand
@@ -128,15 +125,13 @@ set_option linter.deprecated false in
 
 /-! ### Day 21 新規: `#check_retired_auto` command 動作確認 (A-Standard-Full A-Minimal、auto-target) -/
 
--- Day 21 A-Standard-Full A-Minimal: pre-defined watched namespaces を auto-target で一括 check。
--- Day 21 baseline (import 前): RetiredEntity 4 = total 4 in 3 NS
--- Day 28 D16 presentation dedup 後 (現 state): helper1 + helper2 import propagate、
--- watched 5 件 (Day 21 hardcode 3 + helper1 + helper2、helper2 の duplicate helper1 は eraseDups で除去)、
--- total 6 retired (RetiredEntity 4 + helper1 1 + helper2 1)
--- Role.toCtorIdx は watched 直下対象外で counted 除外
+-- Day 21 baseline (import / register 前): 3 hardcode NS (RetiredEntity/Failure/EvolutionStep)、
+-- total 4 retired (RetiredEntity の Day 14 fixture 4 のみ)。
 
 set_option linter.deprecated false in
 #check_retired_auto
+-- 現 state (Day 23 helper1 / Day 25 helper2 import + Day 28 eraseDups 後):
+-- watched 5 (hardcode 3 + helper1 + helper2)、total 6 retired (+helper1 1 +helper2 1)
 
 /-! ### Day 21 改訂 100 追加: Day 15 `@[retired]` macro × Day 18 `#check_retired` 連携テスト
      (Subagent I3 Day 18-20 long-deferred、A-Compact ← A-Standard A-Minimal 連携完全実証) -/
@@ -176,25 +171,19 @@ example : List Lean.Name :=
 -- Day 22 register 経由で新 namespace 追加 (本 test file の namespace を登録、自己参照テスト)
 register_retirement_namespace AgentSpec.Test.Provenance.RetirementLinterCommand
 
--- Day 22 env-driven + Day 23 multi-module import propagate + Day 28 D16 presentation dedup 後:
--- watched NS 6 件 (Day 21 hardcode 3 + helper1 + helper2 + self、helper1 dup は eraseDups で除去)
--- total 7 retired (RetiredEntity 4 + helper1 1 + helper2 1 + self 1)
--- Day 25 までの duplicate 観測結果は Day 28 D16 で presentation-layer dedup、storage は維持
+-- Day 22 baseline (import なし、self-register のみ): watched 4 (hardcode 3 + self)、
+-- total 5 retired (hardcode RetiredEntity 4 + self の day21LinkageFixture 1)。
 
 set_option linter.deprecated false in
 #check_retired_auto
+-- 現 state (Day 23/25 helpers import + Day 28 eraseDups 後、self-register 済):
+-- watched 6 (hardcode 3 + helper1 + helper2 + self)、total 7 retired (baseline 5 + helpers 2)
 
-/-! ### Day 23 新規: multi-module import propagate test 専用検証
-     (A-Standard-Full-Standard A-Minimal、PersistentEnvExtension addImportedFn 動作実証、Day 11-23 = 13 Day 連続 rfl preference) -/
+/-! ### Day 23 新規: multi-module import propagate test 専用検証 (PersistentEnvExtension addImportedFn) -/
 
--- Day 23 A-Standard-Full-Standard A-Minimal: helper module
--- (AgentSpec/Test/Provenance/RetirementWatchedFixture.lean) で `register_retirement_namespace`
--- + `@[retired]` decorated `importPropagateFixture` 定義済。本 test file が helper module を
--- import すると、Day 22 D10 PersistentEnvExtension `addImportedFn := arrs.foldl (init := #[])
--- (· ++ ·)` 経由で extension state が import 越境 propagate される。
--- 期待: helper module で register された `AgentSpec.Test.Provenance.RetirementWatchedFixture`
--- が import 先 test の `#check_retired_auto` 出力に reflect され、本 namespace 配下の
--- `importPropagateFixture` (Day 23 helper @[retired] decorated) が retired として count される。
+-- helper1 module (RetirementWatchedFixture.lean) 側で `register_retirement_namespace` と
+-- `@[retired] importPropagateFixture` を定義。本 file が import すると Day 22 D10 の
+-- `addImportedFn` 経由で extension state が propagate、helper namespace 配下が検出される。
 
 set_option linter.deprecated false in
 /-- Day 23 multi-module import propagate type-level 確認: helper module で定義した

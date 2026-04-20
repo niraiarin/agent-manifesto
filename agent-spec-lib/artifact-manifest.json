@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.28.0-week2-day28",
+  "version": "0.29.0-week2-day29",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1158,6 +1158,7 @@
       "day26_update": "Day 26 で ResearchActivity payload 拡充 (Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処、Day 27+ 長期化防止)。`investigateOf (target : Hypothesis)` + `retireOf (entity : Hypothesis)` の 2 variants 追加 (backward compatible: 既存 payloadless `.investigate` / `.retire` と共存、Day 9 D3 の Day 10+ 拡充検討を Day 26 で解消)。accessor `isInvestigateOf` / `isRetireOf` 追加。ResearchActivityTest.lean に +10 example 追加 (inhabitation + accessor rfl + backward compat 確認、example 22→32)。production build PASS 104 jobs 維持 (MODIFY のみ)。Day 11-26 = 16 Day 連続 rfl preference 維持",
       "day27_update": "Day 27 で残 variants (decompose/refine) payload 拡充: `decomposeOf (parent : Hypothesis) (child : Hypothesis)` + `refineOf (target : Hypothesis) (refined : Hypothesis)` 追加、accessor `isDecomposeOf` / `isRefineOf` 追加。5 variant 全 payload 対応 milestone 達成 (5 payloadless + 4 payload-bearing = 9 variants)。Test +10 example (example 33→43)。build PASS 130 jobs 維持。Day 11-27 = 17 Day 連続 rfl preference 維持",
       "day28_update": "Day 28: RetirementLinterCommand.lean `#check_retired_auto` に presentation-layer dedup (`.eraseDups`) を適用。storage は duplicate 許容のまま、出力のみ一意化。Day 25 test 期待値 total 8→7 / watched 7→6 NS に更新",
+      "day29_update": "Day 29: RetirementLinterCommandTest.lean の section comment 構造を refactor (Day 25 Subagent I2 解消、3 session 繰り延べ対処)。各 Day section は当該 Day baseline 期待値のみ記述、現状値は `#check_retired_auto` 直後のインラインコメントに分離。header も簡潔化。code/example 不変、behavior 不変、build 130 jobs 維持",
       "decision_log": "ResearchActivity.lean docstring D1-D3 (Day 9) + **D4-D6 added (Day 26 Q1 backward compatible payload 拡充 / Q2 2 variant 選択 investigateOf + retireOf / Q3 Hypothesis payload 型で Day 9 verify pattern 継続)**"
     },
     {
@@ -1864,19 +1865,19 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 28",
+    "last_verified_phase": "Week 2 Day 29",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
         "job_count": 104,
         "scope": "production-only",
-        "note": "Day 28: RetirementLinterCommand.lean MODIFY (#check_retired_auto に .eraseDups 適用、D16)、jobs 104 維持"
+        "note": "Day 29: production 変更なし、jobs 104 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
         "job_count": 127,
         "scope": "test only",
-        "note": "Day 28: RetirementLinterCommandTest.lean 期待値 comment 更新 (dedup 反映 total 8→7 / watched 7→6)、example 43 維持、combined 130 jobs build PASS"
+        "note": "Day 29: RetirementLinterCommandTest.lean section comment refactor (Day 25 Subagent I2 解消)、example 12 不変、combined 130 jobs build PASS"
       }
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
@@ -2603,6 +2604,14 @@
       "addressable_count": 0,
       "evaluator": "build PASS (combined 130 jobs) + dedup 挙動実測 (total 8→7 / watched 7→6 NS、helper1 duplicate 除去)。P2 Subagent 省略 (storage 不変 / presentation だけ List.eraseDups の設計判断型変更、pattern-symmetric to Day 25 observe-first)",
       "note": "Day 28 D16: #check_retired_auto に presentation-layer dedup。storage は duplicate 許容維持、出力のみ eraseDups。Day 25 test 実測値を同期更新"
+    },
+    {
+      "round": "Week 2 Day 29 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (combined 130 jobs、code/example 不変)。P2 Subagent 省略理由: comment-only refactor で behavior 不変、example/assertion 不変、pattern-symmetric to prior docstring update",
+      "note": "Day 29 RetirementLinterCommandTest.lean section comment refactor。Day 25 Subagent I2 (3 session 繰り延べ) 解消、各 Day section は baseline のみ記述し現状値はインラインに分離"
     }
   ]
 }
