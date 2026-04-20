@@ -1148,6 +1148,55 @@ Section 2.42 Day 22 着手前判断 (Q1 A-Standard-Full-Standard PersistentEnvEx
 - Subagent VERDICT PASS + 1 addressable 即時対処 → 0 (Day 17/22 で 2 度目の即時対処サイクル、5 Day 連続 cycle 内即時修復実例)
 - Phase 0 累計合致率 **99.1% 維持** (Day 21 99.1% から維持、Phase 0 99.1% 安定継続)
 
+## 現状: Phase 0 Week 2 Day 23 完了（2026-04-20 追加、multi-module import propagate test + 13 Day 連続 milestone + Pattern #7 hook 十六段階発展）
+
+Section 2.44 Day 23 着手前判断 (Q1 Day 22 Subagent informational I1 直接対処 / Q2 A-Minimal helper module + register / Q3 新 helper module + 同 file MODIFY / Q4 helper で register + Test 側 import + auto check) に従い実装。
+**multi-module import propagate test**: 新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture.lean` (test scope 専用) に `@[retired]` decorated `importPropagateFixture` + `register_retirement_namespace` を含み、`AgentSpecTest.lean` と `RetirementLinterCommandTest.lean` で helper import することで Day 22 D10 `addImportedFn := fun arrs => arrs.foldl (init := #[]) (· ++ ·)` の import 越境 propagate 動作を実コード実証、
+**Day 22 Subagent informational I1 直接対処完了** (1 session 短 cycle 解消、Day 21 I3 = 4 セッション long-deferred 繰り延べを防止)、
+Day 22 backward compatible 完全維持 (production code 変更なし、helper は test scope のみ、Day 21 hardcode + Day 22 register + Day 23 helper propagate の additive 連結で検証)、
+**Day 11-23 = 13 Day 連続 rfl preference 維持** (cycle 内学習 transfer 6 度目、桁到達後 13 Day 継続実証)、
+**Pattern #7 hook 十六段階発展到達** (新規 file + MODIFY 混在 pattern 初適用、両パターン運用 11 度目)、
+**Subagent VERDICT PASS + 0 addressable + 4 informational 全件即時対処** (I1 Day 21 section comment 更新 / I2 Day 22 docstring 現状反映 / I3 command_invocations 17→16 訂正 / I4 I1 統合対処、6 Day 連続 cycle 内即時修復実例)、
+**Subagent 指摘推移**: Day 17=0→18=2→19=3→20=3→21 初 FAIL→PASS+4 informational→22 PASS+1 addressable 即時 0+2 informational→**Day 23 PASS+0 addressable+4 informational 全件即時対処→0 informational 残** (Day 22 feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用、新形態: 全件 informational 即時対処で次 Day に残課題を繰越さない)。
+
+### Day 23 の 1 項目 + 全件即時対処 (Q2 A-Minimal scope、新規 file + MODIFY 混在)
+
+- [x] **新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture.lean` 作成** (NEW、test scope 専用、`@[retired]` decorated `importPropagateFixture` + `register_retirement_namespace AgentSpec.Test.Provenance.RetirementWatchedFixture`)
+- [x] RetirementLinterCommand.lean MODIFY (D13 docstring 追加のみ、production 変更なし)
+- [x] RetirementLinterCommandTest.lean MODIFY (example 8→9、command invocations 15→16、+1 example: importPropagateFixture 参照、+1 #check_retired invocation)
+- [x] AgentSpecTest.lean import 追加
+- [x] `lake build AgentSpec / AgentSpecTest` ✓ (AgentSpec 104 + AgentSpecTest 126 jobs、+1 job 新 helper module 分、combined 129 jobs)
+- [x] **Subagent 検証 PASS + 0 addressable + 4 informational 全件即時対処** (I1-I4 全件 cosmetic doc fix、6 Day 連続 cycle 内即時修復実例)
+- [x] multi-module import propagate 動作確認:
+  - 1st `#check_retired_auto` (Day 23 import 追加後): 4 watched (Day 21 hardcode 3 + Day 23 helper 1) → total 5 (+ helper importPropagateFixture 1) ✓
+  - 2nd `#check_retired_auto` (Day 22 self-register 後): 5 watched (+ self 1) → total 6 (+ day21LinkageFixture 1) ✓
+  - `#check_retired ...importPropagateFixture` 個別: ✓ (import 越境 deprecated marker propagate 確認)
+
+### Week 2 Day 23 時点の累計指標
+
+| 指標 | Day 22 | Day 23 追加 | 合計 |
+|---|---|---|---|
+| theorem / example | 15 / 372 | 0 / +1 | **15 / 373** |
+| Provenance 層 linter | 6 拡張 (A-Standard-Full-Standard A-Minimal まで) | multi-module propagate 実証 | **6 拡張 + multi-module propagate 完備 (残り 1/4 = Week 5-6 A-Maximal)** |
+| Test scope 専用 helper module | 0 | +1 (RetirementWatchedFixture) | **1 helper (Day 23 初実装)** |
+| Command invocations | 15 | +1 (#check_retired importPropagateFixture) | **16** |
+| Pattern #7 hook | 十五段階発展 | 16 度目 (新規 file + MODIFY 混在 pattern 初適用) | **十六段階発展到達** |
+| Subagent 指摘項目 | 1 addressable → 即時 0 + 2 informational | 0 addressable + 4 informational 全件即時対処 | **Day 23 新形態: 全件 informational 即時対処で 0 残** |
+| **rfl preference 連続記録** | 12 Day | +1 | **13 Day 連続 (桁到達後 13 Day 継続実証)** |
+
+### Day 23 で達成した TyDD / paper 進展 (Section 12.67 + 12.68 + 12.69)
+
+- multi-module import propagate test 完備 / Day 22 D10 PersistentEnvExtension `addImportedFn` の import 越境動作を実コード実証
+- test scope 専用 helper module パターン確立 (production 変更なし、test cohesion 維持、Day 22 backward compatible 完全維持)
+- Pattern #7 hook 十六段階発展到達 (新規 file + MODIFY 混在 pattern 初適用、両パターン運用 11 度目)
+- paper × 実装 20 度目合流カテゴリ (multi-module import propagate × helper module パターン × 13 Day 連続 rfl preference × Day 22 informational 短 cycle 解消)
+- paper finding 99 件累計 (+5)
+- **Day 22 Subagent informational I1 直接対処完了** (1 session 短 cycle 解消、Day 21 I3 = 4 セッション long-deferred の防止)
+- **13 Day 連続 rfl preference (桁到達後 13 Day 継続実証、quality loop 長期持続性)**
+- **Subagent VERDICT PASS + 0 addressable + 4 informational 全件即時対処** (6 Day 連続 cycle 内即時修復、Day 23 新形態: 全件 informational 即時対処で 0 残)
+- Phase 0 累計合致率 **99.1% 維持** (Day 22 99.1% から維持、Phase 0 99.1% 安定継続)
+- user feedback「論文サーベイ検証の後に実装修正・追加を必ず実施してね」継続適用 6 Day 連続、cycle 内即時修復 maturity が安定 pattern 化
+
 ## Phase 0 ロードマップ（G5-1 Section 3.5 参照）
 
 | Week | 作業 | 主 Gap | 完了基準 |

@@ -128,7 +128,10 @@ set_option linter.deprecated false in
 /-! ### Day 21 新規: `#check_retired_auto` command 動作確認 (A-Standard-Full A-Minimal、auto-target) -/
 
 -- Day 21 A-Standard-Full A-Minimal: pre-defined watched namespaces を auto-target で一括 check。
--- 期待 output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4
+-- **Day 21 baseline 期待 (Day 23 import 前)**: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 in 3 watched namespaces
+-- **Day 23 import 追加後 (現 state)**: Day 23 helper (RetirementWatchedFixture) が import 経由で
+-- addImportedFn 伝播 → 4 watched namespaces (Day 21 hardcode 3 + Day 23 helper 1)、
+-- helper の importPropagateFixture が 1 retired 追加されて total 5 (Day 23 Subagent I1/I4 対処)
 -- (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため、Role.toCtorIdx (Day 20 で
 -- AgentSpec.Provenance 配下 depth=2 で顕在化) は対象外、Day 14 fixture 4 のみ counted)
 
@@ -159,9 +162,14 @@ set_option linter.deprecated false in
 -- compatible 完全維持 (additive 連結)、register API で動的追加可能。
 
 set_option linter.deprecated false in
-/-- Day 22 backward compatible 確認: register 0 件で `#check_retired_auto` は Day 21 同 output
-    (RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 in 3 watched namespaces) を期待。
-    本 example は env state inhabitation の type-level 確認 (Day 11-22 rfl preference 維持)。 -/
+/-- Day 22 backward compatible 確認 (Day 23 Subagent I2 即時対処で docstring 現状反映):
+    本 example は `defaultWatchedRetirementNamespaces` (Day 21 hardcode 3 件) の type-level
+    inhabitation 確認 (Day 11-23 rfl preference 維持)。
+    **Day 22 baseline 設計 (register 0 件かつ import なし)**: `#check_retired_auto` は
+    RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 in 3 watched namespaces (Day 21 同 output)
+    で backward compatible であることが設計保証。
+    **現 state (Day 23 import 追加後)**: helper module import で 4 watched (+1)、self-register で
+    5 watched (+1)、total 6 retired (+2: helper + self) が実測、下記 `#check_retired_auto` 参照。 -/
 example : List Lean.Name :=
   AgentSpec.Provenance.defaultWatchedRetirementNamespaces
 

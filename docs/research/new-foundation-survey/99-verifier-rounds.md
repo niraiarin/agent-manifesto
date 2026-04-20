@@ -1749,3 +1749,47 @@ Day 18 追加で:
 - verifier_history: 26 entries → **27 entries** (Day 22 R1 追加)
 - **Phase 0 累計合致率: 99.1% 維持** (111/112、Day 21 99.1% から維持、Phase 0 99.1% 安定継続)
 - **bug fix + 0 behavior 退行**: env iteration map₁→toList correctness fix (Day 18-21 同 module 3 commands 同時改善、output Day 21 までと変化なし＝対象が imported のみ)
+
+---
+
+## Phase 0 Week 2 Day 23 検証 (2026-04-20 — Day 23 commit `7b95180` 後)
+
+**背景**: Section 2.44 Q1-Q4 確定済 (Q1 Day 22 Subagent informational I1 直接対処 / Q2 A-Minimal helper module + register / Q3 新 helper module + 同 file MODIFY / Q4 helper で register + Test 側 import + auto check) に従い **multi-module import propagate test** 実装。新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture.lean` (test scope 専用) に `@[retired]` decorated `importPropagateFixture` + `register_retirement_namespace` を含み、`AgentSpecTest.lean` + `RetirementLinterCommandTest.lean` で helper import することで Day 22 D10 `addImportedFn := fun arrs => arrs.foldl (init := #[]) (· ++ ·)` の import 越境 propagate 動作を実コード実証。Day 22 backward compatible 完全維持、Pattern #7 hook 十六段階発展 (新規 file + MODIFY 混在 pattern 初適用)、**13 Day 連続 rfl preference**。
+
+### Day 23 /verify Round 1
+
+**Subagent 検証** (改訂 109): VERDICT = **PASS** (0 addressable + 4 informational、**全件即時対処で 0 informational 残**)
+
+| # | 指摘 | 対処 |
+|---|---|---|
+| I1 (informational) | RetirementLinterCommandTest.lean line 131 の Day 21 section comment が Day 23 import 追加後の期待 output (4 watched → 5 total) を反映していない | **改訂 109 即時対処** (Day 21 baseline + Day 23 現 state 両方明記、Day 23 Subagent I1/I4 対処) |
+| I2 (informational) | line 162-163 の Day 22 docstring が stale ("total 4 in 3 watched namespaces" だが現状 import 追加後で変化) | **改訂 109 即時対処** (docstring に baseline 設計 + 現 state 両方を記述) |
+| I3 (informational) | artifact-manifest command_invocations: 17 だが実態 grep 16 (+1 off) | **改訂 109 即時対処** (17 → 16 訂正) |
+| I4 (informational) | Day 21 section が Day 23 import 影響を明示していない | **改訂 109 即時対処** (I1 と統合対処) |
+
+**Subagent 指摘推移**: Day 17=0 → 18=2 → 19=3 → 20=3 → 21 初 FAIL→PASS+4 informational → 22 PASS+1 addressable 即時 0+2 informational → **Day 23 PASS+0 addressable+4 informational 全件即時対処→0 informational 残** (Day 22 feedback 継続適用、Day 22 I1 の 1 session 短 cycle 解消パターン継続、6 Day 連続 cycle 内即時修復実例、**Day 23 新形態: 全件 informational 即時対処で次 Day に残課題を繰越さない**)。
+
+**Day 23 特筆**:
+- **13 Day 連続 rfl preference (桁到達後 13 Day 継続実証)** (Day 11-23、quality loop 長期持続性)
+- **Pattern #7 hook 十六段階発展到達** (新規 file + MODIFY 混在 pattern 初適用、両パターン運用 11 度目)
+- **multi-module import propagate 実証完了** (Day 22 D10 PersistentEnvExtension `addImportedFn` が実コードで動作確認)
+- **Day 22 Subagent informational I1 直接対処完了** (1 session 短 cycle 解消、Day 21 I3 = 4 セッション long-deferred 繰り延べ化を防止)
+- **Subagent 全件 informational 即時対処で 0 残** (Day 23 新形態)
+- **paper サーベイ評価サイクル「実装修正組込み」15 度目適用** (Day 22 feedback 継続適用 6 Day 連続)
+
+---
+
+## Day 1-23 累計サマリ (Day 22 からの delta)
+
+- example: 372 → **373** (+1、Day 23 で test 1 example 増、breakdown 8→9)
+- linter: 6 拡張 (A-Standard-Full-Standard A-Minimal まで) → **6 拡張 + multi-module propagate 実証完備** (残り 1/4 = Week 5-6 A-Maximal)
+- test scope 専用 helper module: 0 → **1** (+1、RetirementWatchedFixture.lean 初実装)
+- command_invocations: 15 → **16** (+1、#check_retired importPropagateFixture)
+- Pattern #7 hook: 十五段階発展 → **十六段階発展到達** (新規 file + MODIFY 混在 pattern 初適用、両パターン運用 11 度目)
+- paper × 実装合流: 19 種 → **20 種** (multi-module import propagate カテゴリ追加)
+- paper finding: 94 → **99 件** (+5)
+- Subagent 指摘推移: Day 22 = PASS+1 addressable 即時 0+2 informational → **Day 23 = PASS+0 addressable+4 informational 全件即時対処→0 informational 残** (6 Day 連続 cycle 内即時修復、Day 23 新形態)
+- **rfl preference 連続記録: 12 Day → 13 Day 連続 (桁到達後 13 Day 継続実証)**
+- verifier_history: 27 entries → **28 entries** (Day 23 R1 追加)
+- **Phase 0 累計合致率: 99.1% 維持** (116/117、Day 22 99.1% から維持、Phase 0 99.1% 安定継続)
+- **Day 22 Subagent informational I1 直接対処完了**: 1 session 短 cycle 解消 (Day 21 I3 = 4 セッション long-deferred 繰り延べ化を防止)
