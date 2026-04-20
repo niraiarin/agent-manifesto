@@ -123,4 +123,14 @@ set_option linter.deprecated false in
 
 #check_retired_in_namespace_with_depth AgentSpec.Spine.EvolutionStep 10
 
+/-! ### Day 21 新規: `#check_retired_auto` command 動作確認 (A-Standard-Full A-Minimal、auto-target) -/
+
+-- Day 21 A-Standard-Full A-Minimal: pre-defined watched namespaces を auto-target で一括 check。
+-- 期待 output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4
+-- (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため、Role.toCtorIdx (Day 20 で
+-- AgentSpec.Provenance 配下 depth=2 で顕在化) は対象外、Day 14 fixture 4 のみ counted)
+
+set_option linter.deprecated false in
+#check_retired_auto
+
 end AgentSpec.Test.Provenance.RetirementLinterCommand

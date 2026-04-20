@@ -51,6 +51,20 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 21 意思決定ログ (A-Standard-Full A-Minimal、pre-defined namespace auto-target)
+
+### D8. `#check_retired_auto` command 追加 (Day 21 Q1 A-Standard-Full A-Minimal、auto-target)
+- **代案 A-Maximal**: `@[deprecated]` attribute 自体に callback 登録 (declaration 追加時 auto info)、Lean core 改造相当
+- **代案 A-Standard-Full-Standard**: PersistentEnvExtension で declaration tracking + post-elaboration callback
+- **採用 (Day 21 minimal)**: pre-defined namespace list (`agentSpecRetirementWatchedNamespaces`) を hardcode で auto-target する `#check_retired_auto` command 提供
+- **理由**: Day 14-15-18-19-20 で確立した A-Minimal 段階的拡張パターン継続、Lean core 改造回避、Day 22+ で A-Standard-Full-Standard (PersistentEnvExtension) / Week 5-6 A-Maximal (elaborator 型レベル強制) へ段階的拡張パスを開ける。
+  Day 18-20 の `#check_retired` / `#check_retired_in_namespace` / `#check_retired_in_namespace_with_depth` は手動 namespace 指定だったが、Day 21 `#check_retired_auto` は agent-spec-lib 内 watched namespaces (RetiredEntity / Failure / EvolutionStep) を auto-target する higher-order command。
+
+### D9. watched namespaces を hardcode list で定義 (Day 21、A-Minimal scope)
+- **代案**: Lean Environment 全体で `@[deprecated]` 付き declaration を全 enumerate
+- **採用**: pre-defined hardcode list (`AgentSpec.Provenance.RetiredEntity` / `AgentSpec.Process.Failure` / `AgentSpec.Spine.EvolutionStep` の 3 namespaces)
+- **理由**: A-Minimal scope (Day 21 1 day 完結)、agent-spec-lib 用途では本 3 namespaces で十分、Day 22+ で env-driven 拡張検討。
+
 ## Day 20 意思決定ログ (A-Compact nested namespace 再帰対応)
 
 ### D6. `#check_retired_in_namespace_with_depth NS N` command 追加 (Day 20 Q1 A-Compact、Day 19 Subagent I2 設計対応)
@@ -206,5 +220,42 @@ elab "#check_retired_in_namespace_with_depth " id:ident maxDepth:num : command =
     for name in sorted do
       msg := msg ++ m!"\n  ✓ '{name}'"
     logInfo msg
+
+/-- Day 21 A-Standard-Full A-Minimal (auto-target): `#check_retired_auto` command。
+
+    pre-defined watched namespaces (agent-spec-lib 内主要 3 namespaces) を auto-target で
+    一括 check し、各 namespace の retired declaration count + total を summary 出力。
+
+    watched namespaces (Day 21 D9 hardcode):
+    - `AgentSpec.Provenance.RetiredEntity` (Day 14 4 deprecated fixture)
+    - `AgentSpec.Process.Failure` (Day 6 通常 fixture、retired なし期待)
+    - `AgentSpec.Spine.EvolutionStep` (Day 17 transitionLegacy 完全削除後、retired なし期待)
+
+    利用例:
+    - `#check_retired_auto` → 全 watched namespaces の retired summary
+      期待 output: RetiredEntity 5 + Failure 0 + EvolutionStep 0 = total 5
+
+    Day 18-19-20 の `#check_retired*` (手動 namespace 指定) を Day 21 で auto-target に拡張、
+    Day 22+ で PersistentEnvExtension で declaration 追加時 callback (Standard-Standard) 検討。
+ -/
+elab "#check_retired_auto" : command => do
+  let env ← getEnv
+  let watchedNamespaces : List Name := [
+    `AgentSpec.Provenance.RetiredEntity,
+    `AgentSpec.Process.Failure,
+    `AgentSpec.Spine.EvolutionStep
+  ]
+  let mut totalRetired := 0
+  let mut summary := m!"#check_retired_auto: agent-spec-lib watched namespaces auto-check"
+  for ns in watchedNamespaces do
+    let mut count := 0
+    for (name, _info) in env.constants.map₁.toList do
+      if ns.isPrefixOf name && name != ns then
+        if Lean.Linter.isDeprecated env name then
+          count := count + 1
+    totalRetired := totalRetired + count
+    summary := summary ++ m!"\n  '{ns}': {count} retired"
+  summary := summary ++ m!"\n  Total: {totalRetired} retired declaration(s) in {watchedNamespaces.length} watched namespaces"
+  logInfo summary
 
 end AgentSpec.Provenance
