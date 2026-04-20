@@ -147,4 +147,73 @@ elab "register_rationale_watched_namespace " id:ident : command => do
   modifyEnv fun env => watchedRationaleNamespacesExt.addEntry env ns
   logInfo m!"Registered rationale watched namespace: '{ns}'"
 
+/-! ### Day 62 (F1 sprint 3/4): namespace scan + auto 変種 -/
+
+/-- Day 62 F1 sprint 3/4: `#check_unattributed_rationale_in_namespace <namespace>` command。
+
+    指定 namespace 配下の全 definitions を enumerate、各 decl の value body を scan し、
+    blacklist (Rationale.trivial / ofText) 参照を持つものを列挙。
+
+    Day 19 `#check_retired_in_namespace` pattern 踏襲、但し Day 60 RationaleLinter は
+    value-level 検査 (Day 18 attribute-level とは異なる)。
+
+    利用例:
+    - `#check_unattributed_rationale_in_namespace AgentSpec.Process`
+      → Process 層配下で Rationale.trivial / ofText を使う decl を全列挙
+-/
+elab "#check_unattributed_rationale_in_namespace " id:ident : command => do
+  let env ← getEnv
+  let ns := id.getId
+  let blacklist : Array Lean.Name :=
+    #[`AgentSpec.Spine.Rationale.trivial, `AgentSpec.Spine.Rationale.ofText]
+  let mut unattributedNames : List (Name × Array Name) := []
+  for (name, info) in env.constants.toList do
+    if ns.isPrefixOf name && name != ns then
+      match info with
+        | .defnInfo defn =>
+          let used := defn.value.getUsedConstants
+          let hits := blacklist.filter (fun n => used.contains n)
+          if !hits.isEmpty then
+            unattributedNames := (name, hits) :: unattributedNames
+        | _ => pure ()
+  if unattributedNames.isEmpty then
+    logInfo m!"Namespace '{ns}': no unattributed Rationale refs found"
+  else
+    let sorted := unattributedNames.reverse
+    let mut msg := m!"Namespace '{ns}': {sorted.length} unattributed Rationale ref(s)"
+    for (name, hits) in sorted do
+      msg := msg ++ m!"\n  ⚠ '{name}' uses {hits}"
+    logInfo msg
+
+/-- Day 62 F1 sprint 3/4: `#check_unattributed_rationale_auto` command。
+
+    Day 61 `getWatchedRationaleNamespaces` (default + registered) を auto-target として
+    一括 scan、各 namespace の unattributed refs を info output。
+
+    Day 21 `#check_retired_auto` pattern 踏襲、但し Rationale は value-level 検査。 -/
+elab "#check_unattributed_rationale_auto" : command => do
+  let env ← getEnv
+  let watched := getWatchedRationaleNamespaces env
+  let blacklist : Array Lean.Name :=
+    #[`AgentSpec.Spine.Rationale.trivial, `AgentSpec.Spine.Rationale.ofText]
+  -- Day 28 D16 pattern: presentation-layer dedup
+  let watchedDedup := watched.eraseDups
+  let mut totalCount : Nat := 0
+  let mut msg := m!"#check_unattributed_rationale_auto: agent-spec-lib watched namespaces auto-check"
+  for ns in watchedDedup do
+    let mut unattributedInNs : List (Name × Array Name) := []
+    for (name, info) in env.constants.toList do
+      if ns.isPrefixOf name && name != ns then
+        match info with
+          | .defnInfo defn =>
+            let used := defn.value.getUsedConstants
+            let hits := blacklist.filter (fun n => used.contains n)
+            if !hits.isEmpty then
+              unattributedInNs := (name, hits) :: unattributedInNs
+          | _ => pure ()
+    msg := msg ++ m!"\n  '{ns}': {unattributedInNs.length} unattributed"
+    totalCount := totalCount + unattributedInNs.length
+  msg := msg ++ m!"\n  Total: {totalCount} unattributed Rationale ref(s) in {watchedDedup.length} watched namespaces"
+  logInfo msg
+
 end AgentSpec.Provenance

@@ -59,4 +59,16 @@ set_option linter.deprecated false in
 -- Day 61 で追加された register command が動作 (env mutation)
 register_rationale_watched_namespace AgentSpec.Test.Provenance.RationaleLinter
 
+/-! ### Day 62 (F1 sprint 3/4): namespace scan + auto 変種 -/
+
+-- Day 62 in_namespace: Process 層配下の unattributed refs を列挙
+-- 期待: Hypothesis.trivial, ofClaimWithText + Failure.trivial, Evolution.trivial 等が flag
+#check_unattributed_rationale_in_namespace AgentSpec.Process
+
+-- Spine 層配下も scan (ResearchGoal.trivial 等の flag 期待)
+#check_unattributed_rationale_in_namespace AgentSpec.Spine
+
+-- auto: default watched 3 namespaces + Day 61 register 分を一括 scan、total 集計
+#check_unattributed_rationale_auto
+
 end AgentSpec.Test.Provenance.RationaleLinter
