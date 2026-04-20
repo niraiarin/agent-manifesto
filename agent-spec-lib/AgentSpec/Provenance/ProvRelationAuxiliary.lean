@@ -108,7 +108,7 @@ structure WasInformedBy where
   activity : ResearchActivity
   /-- 通知元 activity (informer)。 -/
   informer : ResearchActivity
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace WasInformedBy
 
@@ -133,7 +133,7 @@ structure ActedOnBehalfOf where
   agent : ResearchAgent
   /-- 代理元 agent (delegator)。 -/
   on_behalf_of : ResearchAgent
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace ActedOnBehalfOf
 
@@ -161,7 +161,7 @@ structure WasRetiredBy where
   entity : ResearchEntity
   /-- 退役 record (Day 12 RetiredEntity = entity + reason)。 -/
   retired : RetiredEntity
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace WasRetiredBy
 

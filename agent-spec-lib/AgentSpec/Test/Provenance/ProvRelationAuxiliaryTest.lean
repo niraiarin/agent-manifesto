@@ -137,4 +137,22 @@ example :
   refine ⟨rfl, rfl, ?_⟩
   rfl
 
+/-! ### Day 40: DecidableEq cascade (Day 39 ResearchEntity + RetiredEntity 連鎖) -/
+
+example : DecidableEq WasInformedBy := inferInstance
+example : DecidableEq ActedOnBehalfOf := inferInstance
+example : DecidableEq WasRetiredBy := inferInstance
+
+/-- 同一 WasInformedBy の等号判定 -/
+example :
+    WasInformedBy.trivial = WasInformedBy.trivial := by decide
+
+/-- 異なる WasRetiredBy (retired reason 違い) の不等号判定 -/
+example :
+    ({entity := ResearchEntity.trivial,
+      retired := { entity := ResearchEntity.trivial, reason := .Obsolete }} : WasRetiredBy) ≠
+    ({entity := ResearchEntity.trivial,
+      retired := { entity := ResearchEntity.trivial, reason := .Withdrawn }} : WasRetiredBy) :=
+  by decide
+
 end AgentSpec.Test.Provenance.ProvRelationAuxiliary

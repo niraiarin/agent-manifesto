@@ -167,4 +167,27 @@ example :
         RetiredEntity.withdrawnTrivialDeprecated ]
     allDeprecated.length = 4 := rfl
 
+/-! ### Day 40: DecidableEq cascade (Day 39 ResearchEntity 連鎖解消) -/
+
+example : DecidableEq RetirementReason := inferInstance
+example : DecidableEq RetiredEntity := inferInstance
+
+/-- 同一 Obsolete RetirementReason の等号判定 -/
+example : (RetirementReason.Obsolete) = (RetirementReason.Obsolete) := by decide
+
+/-- Obsolete と Withdrawn の不等号判定 -/
+example : RetirementReason.Obsolete ≠ RetirementReason.Withdrawn := by decide
+
+/-- 同一 RetiredEntity の等号判定 -/
+example :
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) =
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) :=
+  by decide
+
+/-- reason 違いの不等号判定 -/
+example :
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Obsolete} : RetiredEntity) ≠
+    ({entity := ResearchEntity.trivial, reason := RetirementReason.Withdrawn} : RetiredEntity) :=
+  by decide
+
 end AgentSpec.Test.Provenance.RetiredEntity

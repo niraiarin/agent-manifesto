@@ -136,7 +136,7 @@ namespace AgentSpec.Provenance
 
     Day 6 Failure の `FailureReason.Retired` (String successor) と異なり、
     `Superseded` は ResearchEntity 直接参照で Provenance 層 entity 整合性を強制。
-    DecidableEq 省略 (Superseded payload の ResearchEntity recursive 制約継承)。 -/
+    Day 40 (2026-04-21): Day 39 ResearchEntity DecidableEq 成立により DecidableEq 追加可能に。 -/
 inductive RetirementReason where
   /-- 反証退役: Failure (4 variant のうち HypothesisRefuted ほか) を経由した退役。 -/
   | Refuted (failure : AgentSpec.Process.Failure)
@@ -146,7 +146,7 @@ inductive RetirementReason where
   | Obsolete
   /-- 自発撤回退役: errata / 判断変更による退役、payload なし。 -/
   | Withdrawn
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 /-! ### `RetiredEntity`: 退役 entity の structural record -/
 
@@ -162,7 +162,7 @@ structure RetiredEntity where
   entity : ResearchEntity
   /-- 退役理由 (4 variant のうち 1 つ)。 -/
   reason : RetirementReason
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace RetiredEntity
 

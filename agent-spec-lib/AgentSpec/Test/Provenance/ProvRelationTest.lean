@@ -159,4 +159,22 @@ example :
     TransDerived [edge1, edge2] (.Hypothesis h3) (.Hypothesis h1) :=
   .trans (.base (List.Mem.head _)) (.base (List.Mem.tail _ (List.Mem.head _)))
 
+/-! ### Day 40: DecidableEq cascade (Day 39 ResearchEntity DecidableEq 連鎖) -/
+
+example : DecidableEq WasAttributedTo := inferInstance
+example : DecidableEq WasGeneratedBy := inferInstance
+example : DecidableEq WasDerivedFrom := inferInstance
+
+/-- 同一 WasAttributedTo は decide で等号判定可能 -/
+example :
+    ({entity := ResearchEntity.trivial, agent := ResearchAgent.trivial} : WasAttributedTo) =
+    ({entity := ResearchEntity.trivial, agent := ResearchAgent.trivial} : WasAttributedTo) :=
+  by decide
+
+/-- 異なる WasDerivedFrom (source 違い) の不等号判定 -/
+example :
+    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "a" }} : WasDerivedFrom) ≠
+    ({entity := ResearchEntity.trivial, source := .Hypothesis { claim := "b" }} : WasDerivedFrom) :=
+  by decide
+
 end AgentSpec.Test.Provenance.ProvRelation

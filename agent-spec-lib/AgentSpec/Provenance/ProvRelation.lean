@@ -81,7 +81,7 @@ namespace AgentSpec.Provenance
 structure WasAttributedTo where
   entity : ResearchEntity
   agent : ResearchAgent
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace WasAttributedTo
 
@@ -104,7 +104,7 @@ end WasAttributedTo
 structure WasGeneratedBy where
   entity : ResearchEntity
   activity : ResearchActivity
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace WasGeneratedBy
 
@@ -127,7 +127,7 @@ end WasGeneratedBy
 structure WasDerivedFrom where
   entity : ResearchEntity
   source : ResearchEntity
-  deriving Inhabited, Repr
+  deriving DecidableEq, Inhabited, Repr
 
 namespace WasDerivedFrom
 
