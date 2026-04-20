@@ -237,14 +237,12 @@ example : AgentSpec.Provenance.Role.toCtorIdx AgentSpec.Provenance.Role.Research
 /-! ### Day 25 新規: multi-source register / duplicate handling 観測
      (Day 22 Subagent informational I2 解消 3 session 繰り延げ、Day 11-25 = 15 Day 連続 rfl preference) -/
 
--- Day 25 multi-source register / duplicate handling:
+-- Day 25 multi-source register / duplicate handling (Day 28 D16 適用後):
 -- helper2 (RetirementWatchedFixture2.lean) で import 時に 2 つの register が実行される:
--- (a) 独立 namespace `RetirementWatchedFixture2` register (新 source 追加)
--- (b) 既存 `RetirementWatchedFixture` の duplicate register (重複 entry 観測)
--- Day 22 D10 addEntryFn = `arr.push name` は dedup しないため、duplicate は許容される。
--- 期待: #check_retired_auto output で watched namespaces が 7 件に増加
--- (Day 21 hardcode 3 + Day 23 helper1 1 + Day 25 helper2 独立 1 + Day 25 helper2 duplicate
--- of helper1 1 + Day 22 self 1 = 7、ただし helper1 が 2 回 appear、retired count も重複)
+-- (a) 独立 namespace `RetirementWatchedFixture2` register
+-- (b) 既存 `RetirementWatchedFixture` の duplicate register (storage は保持、出力は eraseDups)
+-- Day 22 D10 addEntryFn = `arr.push name` は storage レベル dedup しない (Day 25 観測)。
+-- Day 28 D16 で presentation-layer dedup を追加 → #check_retired_auto 出力は 6 件 (self-register 後)
 
 set_option linter.deprecated false in
 /-- Day 25 multi-source register 型レベル確認: helper2 の importPropagateFixture2 が import 経由
