@@ -122,4 +122,19 @@ example :
     (derivation.source = .Hypothesis originalHyp) := by
   simp [WasAttributedTo.mk', WasGeneratedBy.mk', WasDerivedFrom.mk']
 
+/-! ### Day 30: WasDerivedFrom DAG 制約 (TransDerived / Acyclic) -/
+
+/-- 空 edge list は trivially acyclic -/
+example : Acyclic [] := Acyclic.empty
+
+/-- 空 edge list では transitive 派生が存在しない -/
+example : ¬ TransDerived [] ResearchEntity.trivial ResearchEntity.trivial :=
+  TransDerived.empty_false
+
+/-- 自明な self-loop edge (WasDerivedFrom.trivial) は acyclic でない
+    (entity = source = ResearchEntity.trivial) -/
+example : ¬ Acyclic [WasDerivedFrom.trivial] := by
+  intro h
+  exact h ResearchEntity.trivial (TransDerived.base (List.mem_singleton.mpr rfl))
+
 end AgentSpec.Test.Provenance.ProvRelation

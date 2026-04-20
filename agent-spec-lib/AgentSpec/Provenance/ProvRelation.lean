@@ -141,4 +141,36 @@ def trivial : WasDerivedFrom :=
 
 end WasDerivedFrom
 
+/-! ### Day 30: WasDerivedFrom DAG 制約 (acyclicity predicate)
+
+    WasDerivedFrom edges の transitive closure と acyclicity を型レベルで導入。
+    採用: `Prop` 述語 (既存 DecidableEq 省略方針と整合、Bool 版は別途必要になれば)
+    理由: PROV-O 派生関係は時間順で DAG、cycle は temporal paradox を意味
+-/
+
+/-- `TransDerived edges a b`: edges (WasDerivedFrom list) の transitive closure。
+    (a, b) 成立 ⇔ a ← ... ← b の派生 chain が edges 内に存在。 -/
+inductive TransDerived (edges : List WasDerivedFrom) :
+    ResearchEntity → ResearchEntity → Prop where
+  | base {w : WasDerivedFrom} (hmem : w ∈ edges) :
+    TransDerived edges w.entity w.source
+  | trans {a b c : ResearchEntity}
+    (hab : TransDerived edges a b) (hbc : TransDerived edges b c) :
+    TransDerived edges a c
+
+/-- 空 edge list では TransDerived は inhabited でない。 -/
+theorem TransDerived.empty_false {a b : ResearchEntity} :
+    ¬ TransDerived [] a b := by
+  intro h
+  induction h with
+  | base hmem => nomatch hmem
+  | trans _ _ ih₁ _ => exact ih₁
+
+/-- `Acyclic edges`: どの entity も自分自身に transitive に derive しない。 -/
+def Acyclic (edges : List WasDerivedFrom) : Prop :=
+  ∀ e, ¬ TransDerived edges e e
+
+/-- 空 edge list は trivially acyclic。 -/
+theorem Acyclic.empty : Acyclic [] := fun _ => TransDerived.empty_false
+
 end AgentSpec.Provenance
