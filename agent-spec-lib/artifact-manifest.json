@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
-  "version": "0.23.0-week2-day23",
+  "version": "0.24.0-week2-day24",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -1222,7 +1222,7 @@
       "provides_instances": [],
       "design_origin": "Day 14 A-Minimal → Day 15 A-Compact → Day 18 A-Standard A-Minimal → Day 19 A-Standard-Lite → Day 20 A-Compact nested → Day 21 A-Standard-Full A-Minimal auto-target → **Day 22 A-Standard-Full-Standard A-Minimal (PersistentEnvExtension callback、env-driven watched namespaces + register API、backward compatible 完全維持、env iteration map₁→toList correctness fix)** の段階的 Lean 機能習得パス 6 拡張到達 (残り A-Maximal Week 5-6 で 4/4 段階目)",
       "tydd_alignment": "TyDD-G3 linter integration 拡張 (Day 14-15-18-19-20-21-22) + TyDD-S4 P4 power-to-weight 継続強化 (Lean 4 core API 活用継続、Day 22 で SimplePersistentEnvExtension API 標準活用 + SMap.toList 正用)",
-      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (Day 18) + D4-D5 (Day 19) + D6-D7 (Day 20) + D8-D9 (Day 21) + D10-D12 (Day 22 Q1 PersistentEnvExtension env-driven 化 + D11 register_retirement_namespace command + D12 env.constants.toList correctness fix) + **D13 added (Day 23 helper module 経由 multi-module import propagate test、Day 22 Subagent informational I1 直接対処、Day 22 backward compatible 完全維持)**"
+      "decision_log": "RetirementLinterCommand.lean docstring D1-D3 (Day 18) + D4-D5 (Day 19) + D6-D7 (Day 20) + D8-D9 (Day 21) + D10-D12 (Day 22) + D13 (Day 23 multi-module import propagate test) + **D14 added (Day 24 Role.toCtorIdx long-deferred root cause investigation 解消: Lean 4 4.29.0 upstream 2025-08-25 で toCtorIdx → ctorIdx rename、backward compat deprecated alias が原因、agent-spec-lib 側問題なし、Day 22 audit long-deferred 累積警告 3 Day 連続繰り延べを Day 24 で解消)**"
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture",
@@ -1263,7 +1263,9 @@
         "Day 22 register_retirement_namespace 動作確認 (本 test namespace の自己参照 register、env mutation logInfo 出力)",
         "Day 22 env-driven #check_retired_auto 動作確認 (register 後 Day 23 import 追加で 5 watched namespaces、day21LinkageFixture + importPropagateFixture 検出 = total 6)",
         "Day 23 multi-module import propagate type-level 確認 (helper module の importPropagateFixture が import 経由で参照可能、Day 11-23 rfl preference 維持)",
-        "Day 23 #check_retired で helper fixture が retired 判定可能 (import 越境後の deprecated marker propagate 確認)"
+        "Day 23 #check_retired で helper fixture が retired 判定可能 (import 越境後の deprecated marker propagate 確認)",
+        "Day 24 Role.ctorIdx (Lean 4 4.29.0 新名) rfl 実証 (Role.Researcher → 0、Day 11-24 rfl preference 維持)",
+        "Day 24 toCtorIdx = ctorIdx rfl 実証 (Lean 4 deprecated alias の alpha-equivalence、rename backward compat 確認)"
       ],
       "enforces": "structural",
       "dependencies": [
@@ -1271,16 +1273,17 @@
         {"id": "agent-spec-lib:AgentSpec.Provenance.RetirementLinterCommand", "edge": "wasDerivedFrom"},
         {"id": "agent-spec-lib:AgentSpec.Test.Provenance.RetirementWatchedFixture", "edge": "wasDerivedFrom"}
       ],
-      "example_count": 9,
+      "example_count": 11,
       "command_invocations": 16,
       "day19_update": "Day 19 で `#check_retired_in_namespace` command 3 invocations + 1 example 追加 (example 6→7、command invocations 5→8)。AgentSpec.Provenance.RetiredEntity 配下で 4 retired fixture 検出、AgentSpec.Process.Failure / AgentSpec.Spine.EvolutionStep 配下で no retired 判定 (Day 17 transitionLegacy 完全削除確認含む)",
       "day20_update": "Day 20 で `#check_retired_in_namespace_with_depth` command 3 invocations 追加 (example 変化なし 7、command invocations 8→11)。AgentSpec.Provenance.RetiredEntity depth=1 で 4 retired、AgentSpec.Provenance depth=2 で 5 retired (Day 14 4 fixture + 1 unexpected `Role.toCtorIdx` = Lean 4 auto-generated helper の deprecated marker、Day 19 A-Standard-Lite では同じ behavior だったが Day 20 explicit depth で顕在化)、AgentSpec.Spine.EvolutionStep depth=10 で 0 retired (Day 17 削除再確認)",
       "day21_update": "Day 21 で `#check_retired_auto` command 1 invocation 追加 (改訂 100 で +1 連携テスト @[retired] def + #check_retired invocation 追加、example 変化なし 7、command invocations 11→13 +2)。pre-defined watched namespaces (RetiredEntity / Failure / EvolutionStep) を auto-target で一括 check、output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4 (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため Day 20 で顕在化した Role.toCtorIdx は対象外、Day 14 fixture 4 のみ counted)。**改訂 100 で Day 18-20 long-deferred I3 解消**: `import AgentSpec.Provenance.RetirementLinter` 追加 + `@[retired]` decorated `day21LinkageFixture` + `#check_retired ...day21LinkageFixture` invocation 追加、build PASS で「✓ '...day21LinkageFixture' is retired」確認、A-Compact (Day 15 macro) ← A-Standard A-Minimal (Day 18 #check_retired) 連携完全実証成功 (4 セッション繰り延べ解消)",
       "day22_update": "Day 22 で `register_retirement_namespace` + env-driven `#check_retired_auto` 動作確認 +1 example + 1 register invocation + 1 #check_retired_auto invocation (example 7→8 +1: defaultWatchedRetirementNamespaces type-level、command invocations 13→15 +2: register + second auto check)。register 0 件 (Day 21 default) では total 4 in 3 NS 維持 (backward compatible)、register 1 件 (本 test namespace 自己参照) 後は total 5 in 4 NS = Day 22 day21LinkageFixture 1 retired 検出。**env iteration map₁→toList correctness fix で Day 18-21 commands も同時改善** (output 変化なし＝Day 21 までの対象は imported のみ)。Day 11-22 = 12 Day 連続 rfl preference 維持",
       "day23_update": "Day 23 で `import AgentSpec.Test.Provenance.RetirementWatchedFixture` + Day 23 section (+1 example: importPropagateFixture 参照、+1 #check_retired invocation、example 8→9 +1、command invocations 15→16 +1)。helper module (RetirementWatchedFixture.lean) が import されると addImportedFn 経由で extension state propagate、Day 22 self-register と合算で 5 watched NS = total 6 retired (RetiredEntity 4 + Failure 0 + EvolutionStep 0 + RetirementWatchedFixture 1 + RetirementLinterCommand 1)。Day 22 本 file section は Day 23 import 追加で state 変化 (4→5 watched / 5→6 total)、comment 更新で反映 (Day 23 Subagent I1/I2/I4 即時対処)。helper fixture (importPropagateFixture) の #check_retired 個別判定も ✓ (import 越境 deprecated marker 伝播確認)。Day 11-23 = 13 Day 連続 rfl preference 維持",
+      "day24_update": "Day 24 で Role.toCtorIdx long-deferred root cause investigation 解消 (Day 20-22 = 3 Day 連続繰り延げの Day 22 audit long-deferred 警告を解消、Day 25+ 長期化防止)。temporary probe module で `Lean.Linter.deprecatedAttr.getParam?` による直接検査で root cause 特定: Lean 4 4.29.0 upstream (since 2025-08-25) で `toCtorIdx` → `ctorIdx` rename、backward compat のため旧名が `@[deprecated newName := Role.ctorIdx]` として残っている、agent-spec-lib 側の問題ではなく Lean 4 core の auto-gen helper naming change。Day 24 section 追加 (+2 example: Role.ctorIdx = 0 rfl + toCtorIdx = ctorIdx rfl 実証、example 9→11 +2、command invocations 16→16 変化なし)。RetirementLinterCommand.lean + ResearchAgent.lean docstring MODIFY (D14 + Day 24 追記、production 本体 code 変更なし＝deriving 副産物のため)。Day 11-24 = 14 Day 連続 rfl preference 維持",
       "sorry_count": 0,
       "axiom_count": 0,
-      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、**Day 11-23 = 13 Day 連続 rfl preference 維持の記録更新** (Day 23 で 13 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証)、quality loop 長期持続性 13 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認。set_option linter.deprecated false in で warning 抑制のみ",
+      "rfl_preference_pattern": "Day 11 Subagent I3 教訓継続適用 (cycle 内学習 transfer 6 度目、**Day 11-24 = 14 Day 連続 rfl preference 維持の記録更新** (Day 24 で 14 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証)、quality loop 長期持続性 14 Day 実証): 全 example で rfl preference 維持、command 実行は info output 発生のみで test assertion は type check / inhabitation / fixture 参照の rfl 確認 + **Day 24 で Role.ctorIdx / toCtorIdx = ctorIdx の rfl による type-level investigation 実証**。set_option linter.deprecated false in で warning 抑制のみ",
       "initial_build_error_pattern": "Day 18 + Day 19 で新分野 (Elab.Command) の初期 build error 即時修復実例 2 + 3 度目: Day 18 `#check_retired` command 連続 + set_option ... in example 混在で parser 状態競合 → section 分離で解決、**Day 19 同パターン 3 度目**: `#check_retired_in_namespace` 連続 + set_option ... in example 混在で parser 状態競合 → section 分離で解決 (rfl example 前段 + command 後段)。Day 15 Lean 4 parser 仕様学習パターンの 3 度継続実例、新分野 Elab.Command での pattern 確立"
     },
     {
@@ -1316,10 +1319,10 @@
   ],
   "build_status": {
     "last_verified": "2026-04-20",
-    "last_verified_phase": "Week 2 Day 23",
+    "last_verified_phase": "Week 2 Day 24",
     "lake_build_results": {
-      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 23 は production 変更なし (104 維持)、helper module は test scope のみ"},
-      "AgentSpecTest": {"result": "exit 0", "job_count": 126, "scope": "test only", "note": "Day 23 で RetirementWatchedFixture.lean (NEW、test helper) + RetirementLinterCommandTest.lean MODIFY、AgentSpecTest.lean import 追加、jobs 125→126 +1 (新 helper module 分)、example 8→9 +1、command invocations 15→17 +2、combined build 104+126 shared dedup で 129 jobs build PASS"}
+      "AgentSpec": {"result": "exit 0", "job_count": 104, "scope": "production-only", "note": "Day 24 は ResearchAgent.lean + RetirementLinterCommand.lean docstring MODIFY のみ (D14 + Day 24 追記)、production 本体 code 変更なし (104 維持)"},
+      "AgentSpecTest": {"result": "exit 0", "job_count": 126, "scope": "test only", "note": "Day 24 は RetirementLinterCommandTest.lean MODIFY (+2 example: Role.ctorIdx rfl + toCtorIdx = ctorIdx rfl)、jobs 126 維持 (MODIFY のみ)、example 9→11 +2、command invocations 16 維持、combined build 129 jobs build PASS"}
     },
     "section_2_15_completely_resolved_day17": "**Day 17 で Section 2.15 Day 9+ 9 セッション繰り延べ課題 transitionLegacy 完全削除 A-Standard 完遂** (Day 8 introduced → Day 16 deprecated (A-Compact) → Day 17 removed (A-Standard)、breaking change compatibility classification、`since := \"2026-04-19\"` 指定日履行、段階的 deprecation → removal 工学的 best practice 完遂、cycle 内学習 transfer 2 段階別分野転用の Day 14→Day 16→Day 17 3 Day 完結、deprecation_history complete lifecycle 3-state 記録完成)",
     "lib_separation": "Test を AgentSpec から AgentSpecTest に分離 (Day 2)",
@@ -1334,7 +1337,7 @@
     "sorry_count": 0,
     "axiom_count": 0,
     "theorem_count": 15,
-    "example_count": 373,
+    "example_count": 375,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -1381,7 +1384,7 @@
       "Test/Provenance/RetirementLinterTest.lean": {"theorems": 0, "examples": 9},
       "Provenance/RetirementLinterCommand.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/RetirementWatchedFixture.lean": {"theorems": 0, "examples": 0},
-      "Test/Provenance/RetirementLinterCommandTest.lean": {"theorems": 0, "examples": 9},
+      "Test/Provenance/RetirementLinterCommandTest.lean": {"theorems": 0, "examples": 11},
       "Provenance/ProvRelationAuxiliary.lean": {"theorems": 0, "examples": 0},
       "Test/Provenance/ProvRelationAuxiliaryTest.lean": {"theorems": 0, "examples": 24},
       "Proofs/RoundTrip.lean": {"theorems": 9, "examples": 0}
@@ -1820,6 +1823,17 @@
       "p2_complete_for": "day-23-provenance-retirement-linter-command-multi-module-import-propagate-test",
       "milestone_13_day_rfl_preference": "**Day 11-23 = 13 Day 連続 rfl preference 維持の継続** (Day 23 で 13 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 13 Day、cycle 内学習 transfer 6 度目適用)",
       "note": "Day 23 Provenance 層 multi-module import propagate test 実装 (Q1 Day 22 Subagent informational I1 直接対処 / Q2 A-Minimal helper module + register / Q3 案 A 新 helper module 1 件 (test scope) + Day 18-22 同 file MODIFY / Q4 案 A helper で register + Test 側 import + auto check)。新 helper module `AgentSpec/Test/Provenance/RetirementWatchedFixture.lean` (NEW、test scope 専用) に `@[retired]` decorated `importPropagateFixture` + `register_retirement_namespace AgentSpec.Test.Provenance.RetirementWatchedFixture` を含み、`AgentSpecTest.lean` import 追加、`RetirementLinterCommandTest.lean` MODIFY で import + Day 23 section 追加 (example 8→9 +1、command invocations 15→17 +2)。Build AgentSpec 104 + AgentSpecTest 126 jobs (combined dedup で 129 jobs) build PASS (Day 22 の 125 から +1 job 新 helper module 分)。**Day 22 D10 PersistentEnvExtension addImportedFn `arrs.foldl (init := #[]) (· ++ ·)` の import 越境 propagate 動作を実コードで実証**、Day 24+ で multi-source register / duplicate handling 等の進展に活用可能。Pattern #7 hook **新規 file + MODIFY 混在 pattern 初適用** (新 helper module 1 件 NEW + RetirementLinterCommand.lean Day 23 D13 MODIFY + RetirementLinterCommandTest.lean MODIFY、両パターン運用 11 度目、十六段階発展到達予定)。**Day 11-23 = 13 Day 連続 rfl preference 維持** (Day 23 で 13 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、Role.toCtorIdx investigation (Day 20-22 長期繰り延べ、Day 24+ で解消予定) / multi-source register / duplicate handling 等へ段階的拡張パス継続"
+    },
+    {
+      "round": "Week 2 Day 24 Round 1",
+      "date": "2026-04-20",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "build PASS (AgentSpec 104 + AgentSpecTest 126 jobs、combined 129 jobs、Day 23 維持) + Role.toCtorIdx investigation type-level 実証 (Role.ctorIdx Role.Researcher = 0 rfl ✓ / Role.toCtorIdx = Role.ctorIdx rfl ✓、Lean 4 deprecated alias alpha-equivalence 確認) + root cause 特定完了 (Lean 4 4.29.0 upstream 2025-08-25 rename)、Subagent 検証は本 commit 後の cycle step 1 で実施予定",
+      "p2_complete_for": "day-24-provenance-role-toctoridx-long-deferred-root-cause-investigation-resolved",
+      "milestone_14_day_rfl_preference": "**Day 11-24 = 14 Day 連続 rfl preference 維持の継続** (Day 24 で 14 Day 連続到達、Day 11-20 milestone 桁到達後の継続実証 14 Day、cycle 内学習 transfer 6 度目適用)",
+      "long_deferred_resolved": "**Role.toCtorIdx investigation (Day 20-22 = 3 Day 連続繰り延べ) を Day 24 で解消** (Day 22 audit long-deferred 累積警告、Day 25+ 長期化防止成功、Day 21 改訂 100 I3 = 4 セッション繰り延べ到達前に対処完遂、cycle 内即時修復 maturity の long-deferred 対応への拡張実例)",
+      "note": "Day 24 Provenance 層 Role.toCtorIdx long-deferred root cause investigation 解消 (Q1 investigation 主 scope / Q2 A-Minimal probe + docstring 反映 / Q3 案 A docstring MODIFY のみ / Q4 案 A Day 11-24 rfl preference 維持 type-level example)。temporary probe module で Lean.Linter.deprecatedAttr.getParam? による直接検査で root cause 特定: **Lean 4 4.29.0 upstream (since 2025-08-25) で `toCtorIdx` → `ctorIdx` rename**、backward compat のため旧名 `Role.toCtorIdx` が `@[deprecated newName := Role.ctorIdx]` として残っている、agent-spec-lib 側の問題ではなく Lean 4 core の auto-gen helper naming change。RetirementLinterCommand.lean docstring D14 + ResearchAgent.lean Day 24 追記 + RetirementLinterCommandTest.lean Day 24 section 追加 (+2 example: Role.ctorIdx Role.Researcher = 0 rfl + Role.toCtorIdx = Role.ctorIdx rfl、example 9→11 +2、command invocations 16 維持)。production 本体 code 変更なし (deriving 副産物のみで誰も直接参照していない)。**Day 22 audit long-deferred 累積警告 (Role.toCtorIdx 3 Day 連続繰り延げ) を Day 24 で解消** (Day 25+ 長期化防止、Day 21 改訂 100 I3 解消パターンの long-deferred 対応 2 例目、cycle 内即時修復 maturity の拡張実例)。Pattern #7 hook MODIFY path 8 度目運用検証 (Day 14/16/17/19/20/21/22 + Day 24、両パターン運用 12 度目、十七段階発展到達)。**Day 11-24 = 14 Day 連続 rfl preference 維持** (Day 24 で 14 Day 連続到達)。Week 5-6 A-Maximal elaborator (4/4 段階目) で残り 1/4、duplicate handling / ResearchActivity payload 等へ段階的拡張パス継続"
     }
   ]
 }

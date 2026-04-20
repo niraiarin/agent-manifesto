@@ -58,6 +58,19 @@ PROV-O `wasAttributedTo` 関係は別 inductive で Day 11+ で表現予定 (Sec
 ### D3. identity を String で hole-driven (Day 11+ で型化検討)
 - **採用**: `String`
 - **理由**: Hypothesis (Day 6) / Failure (Day 6) と同パターン、Day 10 minimal scope。
+
+## Day 24 追記 (Role.toCtorIdx long-deferred investigation 解消、RetirementLinterCommand.lean D14 参照)
+
+`Role` inductive に `deriving DecidableEq, Inhabited, Repr` が付与されているため Lean 4 が auto-gen
+helpers (rec / casesOn / noConfusion / toCtorIdx 等) を生成する。**Lean 4 4.29.0 upstream (since 2025-08-25)
+で `toCtorIdx` は `ctorIdx` に rename され、backward compat のため旧名 `Role.toCtorIdx` が
+`@[deprecated newName := Role.ctorIdx]` として残っている**。この結果 Day 18-22 の
+`#check_retired_in_namespace_with_depth AgentSpec.Provenance 2` で `Role.toCtorIdx` が retired 判定
+されていた (Day 20-22 で長期繰り延べだった Role.toCtorIdx 現象の root cause)。
+
+agent-spec-lib 本体は `Role.toCtorIdx` を直接参照していない (deriving の副産物のみ) ため、本 file
+に code 変更は不要。Lean 4 upgrade 時に他 auto-gen helper (sizeOf 等) も同 rename パターンに
+従う可能性あり (backward-compat 付き deprecated alias として残る)。
 -/
 
 namespace AgentSpec.Provenance

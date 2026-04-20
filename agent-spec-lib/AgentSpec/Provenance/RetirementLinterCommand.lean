@@ -51,6 +51,25 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 24 意思決定ログ (Role.toCtorIdx long-deferred root cause investigation 解消)
+
+### D14. Role.toCtorIdx が retired 判定される root cause (Day 20-22 長期繰り延べ、Day 22 audit で long-deferred 化識別、Day 24 で解消)
+- **背景**: Day 20 で `#check_retired_in_namespace_with_depth AgentSpec.Provenance 2` 実行時に `Role.toCtorIdx` が retired として検出、agent-spec-lib 側で `Role` (ResearchAgent.lean inductive) も auto-gen helpers も `@[deprecated]` を付けていないため謎現象として Day 20-22 繰り延げ (3 Day 連続)
+- **investigation 方法**: temporary probe module (`RoleProbe.lean`、Day 24 で削除済) で `Lean.Linter.deprecatedAttr.getParam?` を各 auto-gen helper に適用、deprecation entry を direct 検査
+- **investigation 結果**:
+  1. `Role` 自身: isDeprecated = false ✓ (期待通り)
+  2. `Role.rec` / `Role.casesOn` / `Role.noConfusion`: isDeprecated = false ✓
+  3. `Role.toCtorIdx`: isDeprecated = **true** ❗ (deprecation entry: `since = "2025-08-25"`, `newName = Role.ctorIdx`)
+  4. `Role.ctorIdx`: inEnv = true + isDeprecated = false ✓ (新名、deprecated ではない)
+- **root cause 確定**: **Lean 4 4.29.0 upstream で `toCtorIdx` → `ctorIdx` rename** (2025-08-25)、backward compat のため旧名 `toCtorIdx` が `@[deprecated newName := ctorIdx]` として保持されている。agent-spec-lib 側の問題ではなく Lean 4 core の auto-gen helper naming change が原因。
+- **対処**:
+  1. 本 D14 docstring 追加で investigation 結果を production 化 (TyDD-S4 P5 explicit assumptions、Day 22 audit long-deferred 解消の記録)
+  2. `ResearchAgent.lean` docstring に D3 (toCtorIdx rename 注記) 追加
+  3. Test で `Role.ctorIdx` (新名) の type-level example 追加 (Role.toCtorIdx → Role.ctorIdx 移行パス実例)
+  4. agent-spec-lib 本体 code は `Role.toCtorIdx` / `Role.ctorIdx` を直接参照していない (deriving DecidableEq の副産物のみ) ため、本質的 code 変更は不要
+- **Day 22 audit long-deferred 累積警告の解消**: Day 20-22 = 3 Day 連続繰り延べだった「Role.toCtorIdx investigation」が Day 24 で解消 (Day 21 改訂 100 で解消した I3 = 4 セッション繰り延げ到達前に対処、long-deferred 化防止成功)
+- **教訓**: Lean 4 core library の rename は backward-compat 付き deprecated alias として残るため、`Lean.Linter.isDeprecated` を使った scan は **Lean 4 upstream の rename も全て拾う** ことを明示化。将来 (Lean 4 upgrade 時) に他 auto-gen helper (`sizeOf` 等) が同パターンで rename されても同現象が発生し得ることを想定しておく。
+
 ## Day 23 意思決定ログ (multi-module import propagate test、Day 22 D10 PersistentEnvExtension addImportedFn 動作実証)
 
 ### D13. helper module 経由 multi-module import propagate test (Day 23 Q1 Day 22 Subagent informational I1 直接対処)
