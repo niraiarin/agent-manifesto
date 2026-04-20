@@ -51,6 +51,26 @@ Day 14 `@[deprecated]` / Day 15 `@[retired]` で付与された declaration を 
 - **Pattern #7** (artifact-manifest 同 commit): Day 5 hook 化 + Day 10 v2 拡張 + Day 17 十段階発展到達
 - **Pattern #8** (Lean 4 予約語回避): `#check_retired` は user-facing command で予約語ではない
 
+## Day 22 意思決定ログ (A-Standard-Full-Standard A-Minimal、PersistentEnvExtension callback)
+
+### D10. PersistentEnvExtension で watched namespaces env-driven 化 (Day 22 Q1 A-Standard-Full-Standard)
+- **代案**: Day 21 hardcode list を直接置換 (旧 list 削除 → breaking change)
+- **代案 EnvExtension**: 非 persistent (module 越境せず、import 後消失)
+- **採用**: `SimplePersistentEnvExtension Name (Array Name)` で env-driven 化、Day 21 hardcode list は `defaultWatchedRetirementNamespaces` として保持し additive 連結 (`hardcode ++ registered` で順序確定)
+- **理由**: backward compatible 完全維持 (`#check_retired_auto` は register 不要で Day 21 同様に動作)、Lean 4 標準 API (Persistent...) で TyDD-S4 P4 power-to-weight、import 越境で extension 状態 propagate (Day 22+ で multi-module env-driven 連携基盤)。Day 22 minimal scope では `addEntryFn` / `addImportedFn` のみ実装、`statsFn` 等は省略 (Simple variant)。
+
+### D11. `register_retirement_namespace <namespace>` command 提供 (Day 22 Q2 A-Minimal)
+- **代案**: `#register_retirement_namespace` (`#`-prefix 慣習)
+- **採用**: `register_retirement_namespace NS` (no `#` prefix、attribute 風 declarative DSL、`#`-prefix の query 用 commands と semantic 区別)
+- **理由**: Day 18-21 `#check_retired*` は query (info output 専用)、Day 22 `register_retirement_namespace` は env mutation (declarative side-effect)、`#`-prefix なしで semantic 区別を明示。`elab "register_retirement_namespace " id:ident : command` で modifyEnv 経由 extension entry 追加。
+
+### D12. env iteration を `env.constants.toList` (map₁ + map₂) に修正 (Day 22 同時改善、correctness fix)
+- **背景**: Day 18-21 では `env.constants.map₁.toList` でイテレーションしていたが、これは imported declarations (`map₁`) のみで current-module declarations (`map₂`) を漏らしていた
+- **影響**: Day 18-21 では imported namespaces (`AgentSpec.Provenance.RetiredEntity` 等) が対象だったため正常動作 (test fixture が imported 側にあった)
+- **顕在化**: Day 22 register API テストで local namespace `AgentSpec.Test.Provenance.RetirementLinterCommand` を register し `day21LinkageFixture` (local @[retired]) を検出しようとした際、map₁ のみ iteration では検出できず判明
+- **採用**: `env.constants.toList` (`SMap.toList = map₂.toList ++ map₁.toList` で両方 iterate)、Day 18-21 の 3 commands も同時修正 (correctness fix、output は Day 21 までと変化なし＝対象が imported のみだったため)
+- **理由**: env-driven 拡張で local namespace を扱うために必須、TyDD-S4 P4 標準 API (`SMap.toList`)、performance は test scale で問題なし
+
 ## Day 21 意思決定ログ (A-Standard-Full A-Minimal、pre-defined namespace auto-target)
 
 ### D8. `#check_retired_auto` command 追加 (Day 21 Q1 A-Standard-Full A-Minimal、auto-target)
@@ -167,7 +187,7 @@ elab "#check_retired_in_namespace " id:ident : command => do
   let env ← getEnv
   let ns := id.getId
   let mut retiredNames : List Name := []
-  for (name, _info) in env.constants.map₁.toList do
+  for (name, _info) in env.constants.toList do
     if ns.isPrefixOf name && name != ns then
       if Lean.Linter.isDeprecated env name then
         retiredNames := name :: retiredNames
@@ -205,7 +225,7 @@ elab "#check_retired_in_namespace_with_depth " id:ident maxDepth:num : command =
   let max := maxDepth.getNat
   let nsComponents := ns.components.length
   let mut retiredNames : List Name := []
-  for (name, _info) in env.constants.map₁.toList do
+  for (name, _info) in env.constants.toList do
     if ns.isPrefixOf name && name != ns then
       let nameComponents := name.components.length
       let depthFromNs := nameComponents - nsComponents
@@ -221,37 +241,86 @@ elab "#check_retired_in_namespace_with_depth " id:ident maxDepth:num : command =
       msg := msg ++ m!"\n  ✓ '{name}'"
     logInfo msg
 
-/-- Day 21 A-Standard-Full A-Minimal (auto-target): `#check_retired_auto` command。
+/-- Day 21 A-Standard-Full A-Minimal (auto-target、Day 22 で env-driven 化): pre-defined
+    watched namespaces hardcode list (Day 22 PersistentEnvExtension の initial / fallback seed)。
 
-    pre-defined watched namespaces (agent-spec-lib 内主要 3 namespaces) を auto-target で
-    一括 check し、各 namespace の retired declaration count + total を summary 出力。
+    `#check_retired_auto` (Day 21) と `getWatchedRetirementNamespaces` (Day 22) で利用。
+    Day 22 register API 経由で追加された namespaces は本 list に additive 連結される。
+ -/
+def defaultWatchedRetirementNamespaces : List Name := [
+  `AgentSpec.Provenance.RetiredEntity,
+  `AgentSpec.Process.Failure,
+  `AgentSpec.Spine.EvolutionStep
+]
 
-    watched namespaces (Day 21 D9 hardcode):
+/-- Day 22 A-Standard-Full-Standard A-Minimal: watched retirement namespaces env-driven
+    extension。`SimplePersistentEnvExtension Name (Array Name)` で declaration 追加時に
+    `register_retirement_namespace` 経由で env 状態に追加、import 越境で propagate。
+
+    Day 21 hardcode list (`defaultWatchedRetirementNamespaces`) は `getWatchedRetirementNamespaces`
+    で additive 連結されるため backward compatible 完全維持 (Day 22 D10 判断)。
+ -/
+initialize watchedRetirementNamespacesExt :
+    SimplePersistentEnvExtension Name (Array Name) ←
+  registerSimplePersistentEnvExtension {
+    addEntryFn := fun arr name => arr.push name
+    addImportedFn := fun arrs => arrs.foldl (init := #[]) (· ++ ·)
+  }
+
+/-- Day 22 A-Standard-Full-Standard A-Minimal: env state から watched namespaces を取得。
+    Day 21 hardcode (`defaultWatchedRetirementNamespaces`) ++ Day 22 register 経由分。
+    backward compatible: register なしの場合 Day 21 動作と同一。
+ -/
+def getWatchedRetirementNamespaces (env : Environment) : List Name :=
+  defaultWatchedRetirementNamespaces ++ (watchedRetirementNamespacesExt.getState env).toList
+
+/-- Day 22 A-Standard-Full-Standard A-Minimal: `register_retirement_namespace <namespace>`
+    command。指定 namespace を `watchedRetirementNamespacesExt` に追加 (env mutation)、
+    以降の `#check_retired_auto` で本 namespace も auto-target される。
+
+    利用例:
+    - `register_retirement_namespace AgentSpec.Provenance.RetirementLinter`
+      → 以降 `#check_retired_auto` で本 namespace 配下も検査対象に追加
+
+    Day 22 D11 判断: `#`-prefix なし (declarative side-effect、`#check_retired*` query と semantic 区別)。
+    Day 21 hardcode list との additive 関係 (D10、backward compatible 完全維持)。
+ -/
+elab "register_retirement_namespace " id:ident : command => do
+  let ns := id.getId
+  modifyEnv fun env => watchedRetirementNamespacesExt.addEntry env ns
+  logInfo m!"Registered retirement watched namespace: '{ns}'"
+
+/-- Day 21 A-Standard-Full A-Minimal (auto-target、Day 22 で env-driven 化): `#check_retired_auto` command。
+
+    Day 22 で `getWatchedRetirementNamespaces env` 経由で env-driven 化、Day 21 hardcode list
+    (`defaultWatchedRetirementNamespaces`) + Day 22 `register_retirement_namespace` 登録分の
+    additive 連結 watched namespaces を auto-target で一括 check し、各 namespace の retired
+    declaration count + total を summary 出力。
+
+    Day 22 backward compatible: register 0 件の場合は Day 21 動作と同一 output。
+
+    watched namespaces default (Day 21 D9 hardcode、Day 22 で defaultWatchedRetirementNamespaces 経由):
     - `AgentSpec.Provenance.RetiredEntity` (Day 14 4 deprecated fixture)
     - `AgentSpec.Process.Failure` (Day 6 通常 fixture、retired なし期待)
     - `AgentSpec.Spine.EvolutionStep` (Day 17 transitionLegacy 完全削除後、retired なし期待)
 
     利用例:
     - `#check_retired_auto` → 全 watched namespaces の retired summary
-      期待 output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4
+      Day 21 default 期待 output: RetiredEntity 4 + Failure 0 + EvolutionStep 0 = total 4
       (watched NS は AgentSpec.Provenance.RetiredEntity 直下のため、Role.toCtorIdx
       Lean 4 auto-gen helper は対象外、Day 14 fixture 4 のみ counted)
 
-    Day 18-19-20 の `#check_retired*` (手動 namespace 指定) を Day 21 で auto-target に拡張、
-    Day 22+ で PersistentEnvExtension で declaration 追加時 callback (Standard-Standard) 検討。
+    Day 18-19-20-21 の `#check_retired*` (手動 namespace 指定 + Day 21 hardcode auto) を
+    Day 22 で env-driven 拡張、Week 5-6 A-Maximal elaborator で declaration 追加時 callback 検討。
  -/
 elab "#check_retired_auto" : command => do
   let env ← getEnv
-  let watchedNamespaces : List Name := [
-    `AgentSpec.Provenance.RetiredEntity,
-    `AgentSpec.Process.Failure,
-    `AgentSpec.Spine.EvolutionStep
-  ]
+  let watchedNamespaces := getWatchedRetirementNamespaces env
   let mut totalRetired := 0
   let mut summary := m!"#check_retired_auto: agent-spec-lib watched namespaces auto-check"
   for ns in watchedNamespaces do
     let mut count := 0
-    for (name, _info) in env.constants.map₁.toList do
+    for (name, _info) in env.constants.toList do
       if ns.isPrefixOf name && name != ns then
         if Lean.Linter.isDeprecated env name then
           count := count + 1
