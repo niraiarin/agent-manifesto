@@ -150,6 +150,100 @@ else
   echo "[6] ---  monotonic check baseline 記録 (次回以降比較): vh=$current_vh dp=$current_dp"
 fi
 
+# ----- Check 7: verifier_history date monotonic (Day 68 G2 F3-1 fix) -----
+# date 後戻りは history rewrite or typo の兆候、informational
+non_monotonic_dates=$(jq -r '
+  .verifier_history
+  | [.[] | .date]
+  | . as $d
+  | [range(0; length-1) | select($d[.] > $d[.+1]) | "index \(.): \($d[.]) > \($d[.+1])"]
+  | .[]
+' "$MANIFEST" 2>/dev/null | head -3)
+if [ -n "$non_monotonic_dates" ]; then
+  echo "[7] WARN  verifier_history date non-monotonic detected:"
+  echo "$non_monotonic_dates" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[7] OK  verifier_history date monotonic"
+fi
+
+# ----- Check 8: day_plan commit hash format (Day 68 G2 F3-2 fix) -----
+# commit field が valid hex (7+ char) でなければ typo 兆候
+invalid_commits=$(jq -r '
+  .day_plan
+  | map(select(has("commit")) | select(.commit != null))
+  | map(select(.commit | test("^[a-f0-9]{7,40}$") | not))
+  | map("Day \(.day): commit=\"\(.commit)\"")
+  | .[]
+' "$PENDING" 2>/dev/null | head -3)
+if [ -n "$invalid_commits" ]; then
+  echo "[8] WARN  day_plan commit hash format invalid:"
+  echo "$invalid_commits" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[8] OK  day_plan commit hash format"
+fi
+
+# ----- Check 9: day_plan day duplicate (status=done) (Day 68 G2 F3-3 fix) -----
+# 同じ Day N が複数 done entry を持つのは整理不足、informational
+done_dups=$(jq -r '
+  [.day_plan[] | select(.status == "done") | .day]
+  | group_by(.) | map(select(length > 1))
+  | map("day \(.[0]) appears \(length) times")
+  | .[]
+' "$PENDING" 2>/dev/null | head -3)
+if [ -n "$done_dups" ]; then
+  echo "[9] WARN  day_plan duplicate days (status=done):"
+  echo "$done_dups" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[9] OK  day_plan day uniqueness (status=done)"
+fi
+
+# ----- Check 10: breakdown keys 存在 (Day 68 G2 F3-4 fix) -----
+# breakdown は AgentSpec/ 配下の relative path、対応 file が消えていれば stale entry
+missing_files=""
+while IFS= read -r key; do
+  if [ ! -f "$REPO_ROOT/agent-spec-lib/AgentSpec/$key" ]; then
+    missing_files+="$key"$'\n'
+  fi
+done < <(jq -r '.build_status.breakdown | keys[]' "$MANIFEST" 2>/dev/null)
+missing_files=$(echo "$missing_files" | sed '/^$/d' | head -3)
+if [ -n "$missing_files" ]; then
+  echo "[10] WARN  breakdown keys に対応 file が存在しない:"
+  echo "$missing_files" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[10] OK  breakdown keys 全て対応 file 存在"
+fi
+
+# ----- Check 11: long-deferred aging (Day 68 G2 F3-5 fix) -----
+# pending/deferred entry の timing="Day NN+" 抽出、最新 done day と比較し
+# AGING_THRESHOLD Day 以上経過していれば escalate prompt
+# day field は number と string ("54.1" 等) 混在のため整数部で正規化 (Check 2 と同パターン)
+last_done_day=$(jq -r '
+  [.day_plan[] | select(.status == "done") | .day
+   | if type == "number" then . else (split(".") | .[0] | tonumber) end]
+  | sort | .[-1] // 0
+' "$PENDING")
+AGING_THRESHOLD=14
+aging_items=$(jq -r --argjson last "$last_done_day" --argjson th "$AGING_THRESHOLD" '
+  .pending_items[]
+  | select((.status == "pending" or .status == "deferred") and (.resolved_day == null))
+  | select(.timing != null and (.timing | type) == "string")
+  | select(.timing | test("Day [0-9]+"))
+  | (.timing | capture("Day (?<n>[0-9]+)") | .n | tonumber) as $tday
+  | select($last - $tday >= $th)
+  | "[\(.section)] \(.topic) (timing: \(.timing)、age: \($last - $tday) Day)"
+' "$PENDING" 2>/dev/null | head -3)
+if [ -n "$aging_items" ]; then
+  echo "[11] WARN  long-deferred aging $AGING_THRESHOLD+ Day (escalate prompt):"
+  echo "$aging_items" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[11] OK  long-deferred aging 範囲内 (< $AGING_THRESHOLD Day)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \
