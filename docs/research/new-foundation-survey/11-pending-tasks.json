@@ -545,9 +545,9 @@
       "section": "2.10",
       "topic": "G1 Day 52 fixture semi-FP cleanup (scanner で Linter.isDeprecated decl を除外 or Test 層移動)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 67+",
-      "detail": "Day 64 empirical G1、Day 52 退役進行で自然消滅予想、低優先"
+      "detail": "Day 67 で 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) に Lean.Linter.isDeprecated early filter 追加、conservative extension。Day 52 fixture flag noise 解消"
     },
     {
       "section": "6.4",
@@ -1004,7 +1004,13 @@
     {
       "day": 66,
       "status": "done",
-      "scope": "G5 cleanup (Day 54 Step 7 重複 resolved + S5/N2 blocked_external status 分離 + schema enum 拡張) + G4 reinterpretation (F1 scanner の 8 flag は design 通り、trivial fixture strict 化は semantic 矛盾)"
+      "scope": "G5 cleanup (Day 54 Step 7 重複 resolved + S5/N2 blocked_external status 分離 + schema enum 拡張) + G4 reinterpretation (F1 scanner の 8 flag は design 通り、trivial fixture strict 化は semantic 矛盾)",
+      "commit": "938cca6"
+    },
+    {
+      "day": 67,
+      "status": "done",
+      "scope": "G1 scanner filter — 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) で Lean.Linter.isDeprecated decl を blacklist 検査前に除外。Day 52 fixture (trivialDeprecated / ofTextUnauthoredDeprecated) semi-FP noise 解消、conservative extension"
     }
   ],
   "gap_analysis": {
