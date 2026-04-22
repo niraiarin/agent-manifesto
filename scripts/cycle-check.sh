@@ -311,6 +311,28 @@ else
   echo "[14] ---  check-doc-length.sh not executable (Day 88 P1 integration が未配備)"
 fi
 
+# ----- Check 15: 9-step cycle coverage (Day 102 audit fix) -----
+# 各 Day entry の steps_completed ∪ map(.step) steps_skipped が ≥ 8 step を cover
+# (Step 4 は通常空ぶり許容、∴ 8 step 以上で OK)
+# 不完全カバレッジ entry は WARN
+INCOMPLETE_DAYS=$(jq -r '
+  .day_plan
+  | map(select(.status == "done"))
+  | map(select((.day | tostring | tonumber? // 0) >= 90))
+  | map({day: .day, covered: ((.steps_completed // []) + ((.steps_skipped // []) | map(.step)) | unique)})
+  | map(select((.covered | length) < 8))
+  | map("Day \(.day): covered \(.covered | length)/9 (\(.covered))")
+  | .[]
+' "$PENDING" 2>/dev/null | head -3)
+
+if [ -n "$INCOMPLETE_DAYS" ]; then
+  echo "[15] WARN  9-step cycle coverage 不完全 (steps_completed ∪ steps_skipped < 8、Day 90+):"
+  echo "$INCOMPLETE_DAYS" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[15] OK  9-step cycle coverage (Day 90+ 全 entry ≥ 8 step coverage)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \
