@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.70.0-week2-day70",
+  "version": "0.71.0-week2-day71",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -3113,6 +3113,23 @@
       "addressable_count": 0,
       "evaluator": "F1 prod site 8 件精査: ofClaimWithText は Day 58 @[deprecated] 済、trivial/ofTitle は test fixture or test-only (prod consumer 0)、Day 66 G4 reinterpretation 追認。G5 done 化で Check 4 noise 5→2 件に削減。残 2 件 (Fin 101 age 22 / references structured age 23) は breaking で人間判断要。cycle-check 12 check 全 PASS (Check 12 = 9/9)。",
       "scope": "Day 71 empirical 前の cleanup。F1/G5 done 化で pending_items の active count 削減、Check 4 noise を informational minimum (2 件) に到達。Day 71 empirical で aging 2 件の人間判断を議題化予定。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 71 Empirical Revalidation #5 (7-day cycle、Day 64+7)",
+      "date": "2026-04-22",
+      "result": "PASS",
+      "addressable_count": 3,
+      "evaluator": "3 parallel subagents (median: Day 67-70 [critical] 6/6 PASS / edge: Check 7-12 境界 3 BUG + 4 EDGE / negative: 9-step 再発防止 PASS with 2 gaps)。BUG 3 件即時修正: Check 7 null date guard (.date // empty)、Check 8 uppercase hex ([a-fA-F0-9]) + type guard、Check 12 duplicate steps (unique | length)。修正後 cycle-check ALL PASS (初の 12 check 全 OK、WARN 0 件到達)。",
+      "scope": "Day 67-70 成果物 (G1 scanner filter + G2/G6 cycle-check Check 7-11 + Day 69 cycle 違反監査 + Day 70 F1/G5 cleanup + Rationale 人間判断) を 3 角度で検証。edge agent が cycle-check.sh の defensive programming gap を構造的に識別、negative agent が handoff root cause 未修正 (Gap A) を指摘。",
+      "empirical_findings": [
+        "H1 [BUG fixed]: Check 7 null date guard — verifier_history entry に date field 欠損時の null string 比較で false positive。.date // empty で null entry を除外",
+        "H2 [BUG fixed]: Check 8 uppercase hex — regex [a-f0-9] が uppercase hex を reject。[a-fA-F0-9] に拡張 + type guard 追加",
+        "H3 [BUG fixed]: Check 12 duplicate steps — jq length が重複を含めてカウント。unique | length で一意化",
+        "H4 [Gap A, 高優先]: handoff resume.md に cycle step context 未記載 — Day 69 root cause 識別済だが修正未適用。次回 handoff 時に対処",
+        "H5 [Gap B, 中優先]: Check 12 は WARN-only (exit 2)。blocking (exit 1) 化は future consideration",
+        "H6 [EDGE informational]: Check 8 non-string commit type / Check 9 integer vs string day / Check 11 last_done_day=0 fallback — 現データでは発火しない defensive gap"
+      ],
       "compatibility": "conservative extension"
     }
   ],

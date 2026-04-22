@@ -154,7 +154,7 @@ fi
 # date 後戻りは history rewrite or typo の兆候、informational
 non_monotonic_dates=$(jq -r '
   .verifier_history
-  | [.[] | .date]
+  | [.[] | .date // empty]
   | . as $d
   | [range(0; length-1) | select($d[.] > $d[.+1]) | "index \(.): \($d[.]) > \($d[.+1])"]
   | .[]
@@ -172,7 +172,8 @@ fi
 invalid_commits=$(jq -r '
   .day_plan
   | map(select(has("commit")) | select(.commit != null))
-  | map(select(.commit | test("^[a-f0-9]{7,40}$") | not))
+  | map(select(.commit | type == "string"))
+  | map(select(.commit | test("^[a-fA-F0-9]{7,40}$") | not))
   | map("Day \(.day): commit=\"\(.commit)\"")
   | .[]
 ' "$PENDING" 2>/dev/null | head -3)
@@ -257,7 +258,7 @@ last_day_for_steps=$(echo "$last_done_entry" | jq -r '.day | if type == "number"
 
 if [ "$last_day_for_steps" -ge "$STEP_TRACK_SINCE" ] 2>/dev/null; then
   steps_json=$(echo "$last_done_entry" | jq '.steps_completed // []')
-  steps_count=$(echo "$steps_json" | jq 'length')
+  steps_count=$(echo "$steps_json" | jq 'unique | length')
   if [ "$steps_count" -eq 0 ]; then
     echo "[12] WARN  Day $last_day_for_steps: steps_completed field なし (9-step cycle tracking 未実施)"
     WARN=1
