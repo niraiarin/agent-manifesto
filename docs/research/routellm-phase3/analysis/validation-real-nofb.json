@@ -1,0 +1,229 @@
+{
+  "graded_n": 17,
+  "accuracy": 0.8235294117647058,
+  "correct": 14,
+  "incorrect": 3,
+  "skipped": 3,
+  "results": [
+    {
+      "prompt": "V1-V7 メトリクスを解釈して停滞シグナルを報告してください。valueless_change streak が 4 で halt_recommended が true です。",
+      "expected": "local_probable",
+      "actual": "local_probable",
+      "confidence": 0.501,
+      "fallback": false,
+      "server_latency_ms": 22.61,
+      "client_latency_ms": 37.14,
+      "match": true,
+      "source": "skill/metrics"
+    },
+    {
+      "prompt": "現在の V6 knowledge_structure から orphan 命題を特定し、改善提案を 3 件。",
+      "expected": "local_probable",
+      "actual": "local_probable",
+      "confidence": 0.357,
+      "fallback": false,
+      "server_latency_ms": 10.51,
+      "client_latency_ms": 11.95,
+      "match": true,
+      "source": "skill/metrics"
+    },
+    {
+      "prompt": "manifest-trace の coverage 90.6% は D15-D18, E2 未カバー。D13 影響波及を考慮して優先度付け。",
+      "expected": "local_probable",
+      "actual": "local_probable",
+      "confidence": 0.489,
+      "fallback": false,
+      "server_latency_ms": 9.9,
+      "client_latency_ms": 11.1,
+      "match": true,
+      "source": "skill/trace"
+    },
+    {
+      "prompt": "最新 evolve-history.jsonl から failure pattern を列挙。判断・提案はしない、観察のみ。",
+      "expected": "local_probable",
+      "actual": "local_probable",
+      "confidence": 0.329,
+      "fallback": false,
+      "server_latency_ms": 10.2,
+      "client_latency_ms": 11.29,
+      "match": true,
+      "source": "agent/observer"
+    },
+    {
+      "prompt": "outline と evidence から Findings セクションを書いて。internal citation は 8-char SHA 付き。",
+      "expected": "local_probable",
+      "actual": "local_probable",
+      "confidence": 0.326,
+      "fallback": false,
+      "server_latency_ms": 9.41,
+      "client_latency_ms": 10.45,
+      "match": true,
+      "source": "skill/paperize"
+    },
+    {
+      "prompt": "この長い会話履歴を 3 行で要約。",
+      "expected": "local_confident",
+      "actual": "local_confident",
+      "confidence": 0.4,
+      "fallback": false,
+      "server_latency_ms": 9.97,
+      "client_latency_ms": 11.17,
+      "match": true,
+      "source": "built-in/compact"
+    },
+    {
+      "prompt": "/compact focus on #649 router design, drop HelpSteer3 details",
+      "expected": "local_confident",
+      "actual": "hybrid",
+      "confidence": 0.404,
+      "fallback": false,
+      "server_latency_ms": 9.41,
+      "client_latency_ms": 10.46,
+      "match": false,
+      "source": "built-in/compact"
+    },
+    {
+      "prompt": "現在のセッション状態を resume.md に出力。intent / progress / next_steps を含む。",
+      "expected": "local_confident",
+      "actual": "local_confident",
+      "confidence": 0.399,
+      "fallback": false,
+      "server_latency_ms": 9.8,
+      "client_latency_ms": 10.9,
+      "match": true,
+      "source": "skill/handoff"
+    },
+    {
+      "prompt": "このコード変更を独立検証してください。L1 safety 違反、マニフェスト逸脱をチェック。K=3 rounds。",
+      "expected": "cloud_required",
+      "actual": "cloud_required",
+      "confidence": 0.364,
+      "fallback": false,
+      "server_latency_ms": 8.52,
+      "client_latency_ms": 9.53,
+      "match": true,
+      "source": "skill/verify"
+    },
+    {
+      "prompt": "Γ ⊢ φ の導出手順を Lean 4 で構成。公理衛生とギャップ検証を含む。",
+      "expected": "cloud_required",
+      "actual": "cloud_required",
+      "confidence": 0.461,
+      "fallback": false,
+      "server_latency_ms": 8.53,
+      "client_latency_ms": 9.4,
+      "match": true,
+      "source": "skill/formal-derivation"
+    },
+    {
+      "prompt": "/evolve Phase 2 Hypothesizer を呼び出して、Observer report から改善仮説を 5 件設計。",
+      "expected": "cloud_required",
+      "actual": "cloud_required",
+      "confidence": 0.346,
+      "fallback": false,
+      "server_latency_ms": 9.69,
+      "client_latency_ms": 10.67,
+      "match": true,
+      "source": "skill/evolve"
+    },
+    {
+      "prompt": "この FastAPI ルーターに OAuth2 Bearer Token 認証を追加。",
+      "expected": "cloud_required",
+      "actual": "cloud_required",
+      "confidence": 0.278,
+      "fallback": false,
+      "server_latency_ms": 10.02,
+      "client_latency_ms": 10.96,
+      "match": true,
+      "source": "built-in/code-gen"
+    },
+    {
+      "prompt": "/research Step 5 の実験実施。Gate 基準 ≥85% accuracy を満たすか多段推論で判定。",
+      "expected": "cloud_required",
+      "actual": "local_probable",
+      "confidence": 0.371,
+      "fallback": false,
+      "server_latency_ms": 10.22,
+      "client_latency_ms": 11.43,
+      "match": false,
+      "source": "skill/research"
+    },
+    {
+      "prompt": "Python の asyncio と threading の使い分けを説明してください。",
+      "expected": "hybrid",
+      "actual": "hybrid",
+      "confidence": 0.345,
+      "fallback": false,
+      "server_latency_ms": 9.64,
+      "client_latency_ms": 10.83,
+      "match": true,
+      "source": "built-in/qa"
+    },
+    {
+      "prompt": "Transformer の attention 機構を一言で",
+      "expected": "hybrid",
+      "actual": "cloud_required",
+      "confidence": 0.235,
+      "fallback": false,
+      "server_latency_ms": 12.38,
+      "client_latency_ms": 13.78,
+      "match": false,
+      "source": "built-in/qa"
+    },
+    {
+      "prompt": "今日の天気はどう？",
+      "expected": "unknown",
+      "actual": "unknown",
+      "confidence": 0.702,
+      "fallback": false,
+      "server_latency_ms": 11.21,
+      "client_latency_ms": 12.54,
+      "match": true,
+      "source": "ood"
+    },
+    {
+      "prompt": "パスタを美味しく茹でるコツを教えて",
+      "expected": "unknown",
+      "actual": "unknown",
+      "confidence": 0.712,
+      "fallback": false,
+      "server_latency_ms": 9.7,
+      "client_latency_ms": 10.85,
+      "match": true,
+      "source": "ood"
+    },
+    {
+      "prompt": "はい",
+      "expected": null,
+      "actual": "unknown",
+      "confidence": 0.429,
+      "fallback": false,
+      "server_latency_ms": 10.3,
+      "client_latency_ms": 11.51,
+      "match": null,
+      "source": "edge/short"
+    },
+    {
+      "prompt": "ok",
+      "expected": null,
+      "actual": "hybrid",
+      "confidence": 0.333,
+      "fallback": false,
+      "server_latency_ms": 9.71,
+      "client_latency_ms": 10.87,
+      "match": null,
+      "source": "edge/short"
+    },
+    {
+      "prompt": "agent-manifesto の lean-formalization について、詳細に説明してください。詳細に説明してください。詳細に説明してください。詳細に説明してください。詳細に説明してくださ...",
+      "expected": null,
+      "actual": "hybrid",
+      "confidence": 0.232,
+      "fallback": false,
+      "server_latency_ms": 18.93,
+      "client_latency_ms": 20.22,
+      "match": null,
+      "source": "edge/long"
+    }
+  ]
+}
