@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.91.0-week3-day91-p1b-p2",
+  "version": "0.92.0-week3-day92-finding-fix",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -52,9 +52,7 @@
           "source": "lake-manifest.json"
         }
       ],
-      "provides_types": [
-        "AgentSpec.SemVer"
-      ],
+      "provides_types": ["AgentSpec.SemVer"],
       "provides_functions": [
         "AgentSpec.SemVer.render",
         "AgentSpec.SemVer.parse",
@@ -309,9 +307,7 @@
       "id": "agent-spec-lib:AgentSpecTest",
       "path": "AgentSpecTest.lean",
       "scope": "test",
-      "refs": [
-        "GA-I9"
-      ],
+      "refs": ["GA-I9"],
       "description": "Test lib root. AgentSpec から Test 混在を分離 (Verifier R3 i3 / /verify R1 i4 / Day 1 R1 I1 対処)",
       "enforces": "structural",
       "dependencies": [
@@ -446,9 +442,7 @@
           "added_in": "Day 8 (Q4 案 A: B4 4-arg post の output 型)"
         }
       ],
-      "provides_classes": [
-        "AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : (pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop (Day 8 で B4 Hoare 4-arg post に refactor、Q4 案 A 確定、Section 2.9 完全解消)"
-      ],
+      "provides_classes": ["AgentSpec.Spine.EvolutionStep (S : Type u) — class with transition : (pre : S) → (input : Hypothesis) → (output : Verdict) → (post : S) → Prop (Day 8 で B4 Hoare 4-arg post に refactor、Q4 案 A 確定、Section 2.9 完全解消)"],
       "provides_definitions": [
         "AgentSpec.Spine.EvolutionStep.TransitionReflexive (Day 8 で transitionLegacy ベースに更新 → Day 16 で 4-arg signature 直接展開に refactor、**Day 17 で transitionLegacy 完全削除後も 4-arg 直接展開のまま継続**)",
         "AgentSpec.Spine.EvolutionStep.TransitionTransitive (Day 8 で transitionLegacy ベースに更新 → Day 16 で 4-arg signature 直接展開に refactor、**Day 17 で transitionLegacy 完全削除後も 4-arg 直接展開のまま継続**)"
@@ -487,18 +481,10 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_classes": [
-        "AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Prop, safeDec : DecidablePred safe (Day 4 で Bool→Prop refactor 完了)"
-      ],
-      "provides_types": [
-        "AgentSpec.Spine.SafetyConstraint.SafeState (S : Type u) [SafetyConstraint S] — subtype refinement { s // safe s } (S4 P2 application)"
-      ],
-      "provides_definitions": [
-        "AgentSpec.Spine.SafetyConstraint.SafeState.mk — smart constructor (Day 4 追加、Section 2.9 🟡 対処)"
-      ],
-      "provides_instances": [
-        "instSafetyConstraintUnit (safe = True, safeDec = isTrue True.intro)"
-      ],
+      "provides_classes": ["AgentSpec.Spine.SafetyConstraint (S : Type u) — class with safe : S → Prop, safeDec : DecidablePred safe (Day 4 で Bool→Prop refactor 完了)"],
+      "provides_types": ["AgentSpec.Spine.SafetyConstraint.SafeState (S : Type u) [SafetyConstraint S] — subtype refinement { s // safe s } (S4 P2 application)"],
+      "provides_definitions": ["AgentSpec.Spine.SafetyConstraint.SafeState.mk — smart constructor (Day 4 追加、Section 2.9 🟡 対処)"],
+      "provides_instances": ["instSafetyConstraintUnit (safe = True, safeDec = isTrue True.intro)"],
       "g5_1_section": "3.4 + L1 manifesto",
       "tydd_alignment": {
         "S4_P1_prove_vs_smt": "強適用 (Day 4) — bundled safeDec で decide 自動化と手動 proof の両立",
@@ -586,17 +572,13 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Spine.LearningStage (5-variant inductive: observation/hypothesis/verification/integration/retirement)"
-      ],
+      "provides_types": ["AgentSpec.Spine.LearningStage (5-variant inductive: observation/hypothesis/verification/integration/retirement)"],
       "provides_functions": [
         "AgentSpec.Spine.LearningStage.next (forward-only, terminal self-loop)",
         "AgentSpec.Spine.LearningStage.le (forward 全順序)",
         "AgentSpec.Spine.LearningStage.isTerminal"
       ],
-      "provides_classes": [
-        "AgentSpec.Spine.LearningCycle (S : Type u) — class with currentStage : S → LearningStage"
-      ],
+      "provides_classes": ["AgentSpec.Spine.LearningCycle (S : Type u) — class with currentStage : S → LearningStage"],
       "provides_instances": [
         "instLearningCycleUnit (currentStage = observation)",
         "DecidableEq LearningStage / Inhabited / Repr (deriving)",
@@ -635,12 +617,8 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Spine.ObservableSnapshot (7-field structure: V1-V7 metric tuple、Day 4 hole-driven Nat 統一)"
-      ],
-      "provides_classes": [
-        "AgentSpec.Spine.Observable (S : Type u) — class with snapshot : S → ObservableSnapshot"
-      ],
+      "provides_types": ["AgentSpec.Spine.ObservableSnapshot (7-field structure: V1-V7 metric tuple、Day 4 hole-driven Nat 統一)"],
+      "provides_classes": ["AgentSpec.Spine.Observable (S : Type u) — class with snapshot : S → ObservableSnapshot"],
       "provides_instances": [
         "instObservableUnit (全 metric 0 snapshot)",
         "DecidableEq ObservableSnapshot / Inhabited / Repr (deriving)"
@@ -737,9 +715,7 @@
       "id": "agent-spec-lib:lean-toolchain",
       "path": "lean-toolchain",
       "scope": "config",
-      "refs": [
-        "GA-T8"
-      ],
+      "refs": ["GA-T8"],
       "enforces": "structural",
       "pinned_version": "leanprover/lean4:v4.29.0"
     },
@@ -765,17 +741,13 @@
           "added_in": "Day 45"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Process.Hypothesis (structure: claim : String, rationale : AgentSpec.Spine.Rationale (Day 45 で必須化、breaking change))"
-      ],
+      "provides_types": ["AgentSpec.Process.Hypothesis (structure: claim : String, rationale : AgentSpec.Spine.Rationale (Day 45 で必須化、breaking change))"],
       "provides_definitions": [
         "AgentSpec.Process.Hypothesis.trivial (claim+Rationale.trivial fixture)",
         "AgentSpec.Process.Hypothesis.mk (smart constructor、Rationale 必須)",
         "AgentSpec.Process.Hypothesis.ofClaimWithText (Day 45、Day 58 で @[deprecated] 付与、strict 化推奨)"
       ],
-      "provides_instances": [
-        "DecidableEq Hypothesis / Inhabited / Repr (deriving)"
-      ],
+      "provides_instances": ["DecidableEq Hypothesis / Inhabited / Repr (deriving)"],
       "prov_mapping_planned": "Day 8+ で AgentSpec.Provenance.ResearchEntity.Hypothesis に mapping (02-data-provenance §4.1 設計、Section 2.11 Q3 Option C: docstring 注記レベルで先行記録)",
       "decision_log": "Hypothesis.lean docstring D1-D3 (claim String / structure 採用 / 関係は Edge graph)"
     },
@@ -898,9 +870,7 @@
           "added_in": "Day 47"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Process.Evolution (inductive 2 constructor: initial (Hyp, Rat) / refineWith (prev, Hyp, Rat)、Day 47 で rationale 必須化、GA-S8 B-2 3/4)"
-      ],
+      "provides_types": ["AgentSpec.Process.Evolution (inductive 2 constructor: initial (Hyp, Rat) / refineWith (prev, Hyp, Rat)、Day 47 で rationale 必須化、GA-S8 B-2 3/4)"],
       "provides_definitions": [
         "AgentSpec.Process.Evolution.origin",
         "AgentSpec.Process.Evolution.latest",
@@ -908,9 +878,7 @@
         "AgentSpec.Process.Evolution.latestRationale (Day 47 追加)",
         "AgentSpec.Process.Evolution.trivial"
       ],
-      "provides_instances": [
-        "Inhabited Evolution / Repr Evolution (deriving)"
-      ],
+      "provides_instances": ["Inhabited Evolution / Repr Evolution (deriving)"],
       "prov_mapping_planned": "Day 8+ で AgentSpec.Provenance.ResearchActivity に mapping (02-data-provenance §4.1)",
       "decision_log": "Evolution.lean docstring D1-D3 (inductive 採用 / refineWith payload は Hypothesis のみ Q3 案 B / accessor は recursive def)"
     },
@@ -1031,9 +999,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Provenance.Verdict (6 variant inductive: nullary 3 + payload 3、Day 42 で Day 8 minimal 3 variant から conservative 拡張)"
-      ],
+      "provides_types": ["AgentSpec.Provenance.Verdict (6 variant inductive: nullary 3 + payload 3、Day 42 で Day 8 minimal 3 variant から conservative 拡張)"],
       "provides_definitions": [
         "AgentSpec.Provenance.Verdict.trivial (= inconclusive、test fixture)",
         "AgentSpec.Provenance.Verdict.isProven (Bool 判定)",
@@ -1041,9 +1007,7 @@
         "AgentSpec.Provenance.Verdict.isInconclusive (Bool 判定)",
         "AgentSpec.Provenance.Verdict.payload (Option String、Day 42 追加)"
       ],
-      "provides_instances": [
-        "DecidableEq Verdict / Inhabited / Repr (deriving)"
-      ],
+      "provides_instances": ["DecidableEq Verdict / Inhabited / Repr (deriving)"],
       "namespace_role": "新 namespace AgentSpec.Provenance に先行配置 (Day 8、Section 2.14 D2 確定)。Day 9+ で ResearchEntity / ResearchActivity / ResearchAgent + Mapping 関数を追加して namespace 完成予定 (02-data-provenance §4.1)",
       "prov_mapping_planned": "Day 9+ で AgentSpec.Provenance.ResearchActivity の output として使用 (02-data-provenance §4.1)",
       "decision_log": "Verdict.lean docstring D1-D2 (3 variant minimal Q3 案 A / 新 namespace AgentSpec.Provenance に配置 D2)"
@@ -1106,9 +1070,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Provenance.ResearchEntity (inductive 6 constructor: Hypothesis/Failure/Evolution/Handoff/Agent/HandoffChain、Day 41 で HandoffChain 6th 拡張、Day 39 DecidableEq)"
-      ],
+      "provides_types": ["AgentSpec.Provenance.ResearchEntity (inductive 6 constructor: Hypothesis/Failure/Evolution/Handoff/Agent/HandoffChain、Day 41 で HandoffChain 6th 拡張、Day 39 DecidableEq)"],
       "provides_definitions": [
         "AgentSpec.Provenance.ResearchEntity.trivial (test fixture)",
         "AgentSpec.Provenance.ResearchEntity.isHypothesis / isFailure / isEvolution / isHandoff (Bool 判定)",
@@ -1119,9 +1081,7 @@
         "AgentSpec.Provenance.ResearchEntity.isHandoffChain",
         "AgentSpec.Process.HandoffChain.toEntity"
       ],
-      "provides_instances": [
-        "Inhabited ResearchEntity / Repr (deriving、DecidableEq は Evolution recursive のため省略)"
-      ],
+      "provides_instances": ["Inhabited ResearchEntity / Repr (deriving、DecidableEq は Evolution recursive のため省略)"],
       "design_origin": "02-data-provenance §4.1 PROV-O ResearchEntity の Lean 化 (Day 9 Q3 案 A 4 constructor minimal、Day 10+ で 7 variant 拡充検討)",
       "namespace_role": "Provenance 層の Day 9 メイン構成要素。Day 8 Verdict 先行配置に続く 2 type 追加で Provenance 層 3 type へ",
       "circular_dependency_avoidance": "Mapping 関数 (toEntity) を本ファイル内で namespace AgentSpec.Process 配下に配置することで、Process → Provenance 循環依存を回避 (Q4 案 A 確定方針 Section 2.16)",
@@ -1152,18 +1112,14 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Provenance.ResearchActivity (9 variant inductive: investigate/decompose/refine/verify/retire + Day 26 investigateOf/retireOf + Day 27 decomposeOf/refineOf、payload: verify=Hypothesis+Verdict、他 4 payload-bearing variants=Hypothesis または Hypothesis×Hypothesis)"
-      ],
+      "provides_types": ["AgentSpec.Provenance.ResearchActivity (9 variant inductive: investigate/decompose/refine/verify/retire + Day 26 investigateOf/retireOf + Day 27 decomposeOf/refineOf、payload: verify=Hypothesis+Verdict、他 4 payload-bearing variants=Hypothesis または Hypothesis×Hypothesis)"],
       "provides_definitions": [
         "ResearchActivity.trivial (= investigate、test fixture)",
         "ResearchActivity.isVerify / isRetire (Bool 判定)",
         "ResearchActivity.isInvestigateOf / isRetireOf (Day 26 追加)",
         "ResearchActivity.isDecomposeOf / isRefineOf (Day 27 追加、5 variant 全 payload 対応 milestone)"
       ],
-      "provides_instances": [
-        "DecidableEq ResearchActivity / Inhabited / Repr (deriving)"
-      ],
+      "provides_instances": ["DecidableEq ResearchActivity / Inhabited / Repr (deriving)"],
       "design_origin": "02-data-provenance §4.1 PROV-O ResearchActivity の Lean 化 (Day 9、5 variant 完全実装) + **Day 26 で payload 拡充 (investigateOf / retireOf 追加、Day 13-22 = 12 Day 連続繰り延げ解消、Day 24 audit 次 long-deferred candidate 対処)**",
       "verify_variant_alignment": "verify variant の (input : Hypothesis, output : Verdict) は Day 8 EvolutionStep B4 4-arg post と直接整合。Day 10+ で EvolutionStep transition を ResearchActivity.verify として PROV mapping する path 確立",
       "decision_log": "ResearchActivity.lean docstring D1-D3 (Day 9) + **D4-D6 added (Day 26 Q1 backward compatible payload 拡充 / Q2 2 variant 選択 investigateOf + retireOf / Q3 Hypothesis payload 型で Day 9 verify pattern 継続)**"
@@ -1288,9 +1244,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_definitions": [
-        "AgentSpec.Provenance.transitionToActivity (Q4 案 A free function: (h : Hypothesis) → (v : Verdict) → ResearchActivity := .verify h v)"
-      ],
+      "provides_definitions": ["AgentSpec.Provenance.transitionToActivity (Q4 案 A free function: (h : Hypothesis) → (v : Verdict) → ResearchActivity := .verify h v)"],
       "design_origin": "Day 8 EvolutionStep B4 4-arg post (Q4 案 A) と Day 9 ResearchActivity.verify (input : Hypothesis, output : Verdict) の連携 path 確立 (Day 10 Q4 案 A)",
       "layer_dependency_note": "Spine 層 EvolutionStep を import しない (input/output のみで signature 整合保証)。Day 8 layer architecture (Spine = core abstraction、Process/Provenance = 具体型) と整合的、層依存性最小化",
       "decision_log": "EvolutionMapping.lean docstring D1-D2 (Q4 案 A free function 採用 / EvolutionStep import 不要)"
@@ -1872,9 +1826,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Spine.Rationale (structure 5 field: text / references / confidence / author? / timestamp?、Day 49 で attribution 2 field conservative 追加)"
-      ],
+      "provides_types": ["AgentSpec.Spine.Rationale (structure 5 field: text / references / confidence / author? / timestamp?、Day 49 で attribution 2 field conservative 追加)"],
       "provides_definitions": [
         "AgentSpec.Spine.Rationale.trivial",
         "AgentSpec.Spine.Rationale.ofText",
@@ -1891,9 +1843,7 @@
       ],
       "assumptions": [],
       "scope": "formalization",
-      "refs": [
-        "GA-S8"
-      ]
+      "refs": ["GA-S8"]
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.RationaleTest",
@@ -1906,9 +1856,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "GA-S8"
-      ],
+      "refs": ["GA-S8"],
       "example_count": 41
     },
     {
@@ -1933,9 +1881,7 @@
       ],
       "assumptions": [],
       "scope": "formalization",
-      "refs": [
-        "GA-S7"
-      ]
+      "refs": ["GA-S7"]
     },
     {
       "id": "agent-spec-lib:AgentSpec.Test.Spine.StateTest",
@@ -1948,9 +1894,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "GA-S7"
-      ],
+      "refs": ["GA-S7"],
       "example_count": 42
     },
     {
@@ -1963,9 +1907,7 @@
           "edge": "wasDerivedFrom"
         }
       ],
-      "provides_types": [
-        "AgentSpec.Spine.ResearchSpec (structure polymorphic (State Input Output : Type)、pre/post Hoare 4-arg)"
-      ],
+      "provides_types": ["AgentSpec.Spine.ResearchSpec (structure polymorphic (State Input Output : Type)、pre/post Hoare 4-arg)"],
       "provides_definitions": [
         "AgentSpec.Spine.ResearchSpec.trivial",
         "AgentSpec.Spine.ResearchSpec.unsatisfiable",
@@ -1995,9 +1937,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "GA-S11"
-      ],
+      "refs": ["GA-S11"],
       "example_count": 13
     },
     {
@@ -2044,9 +1984,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "GA-S1"
-      ],
+      "refs": ["GA-S1"],
       "example_count": 40
     },
     {
@@ -2097,9 +2035,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "GA-S10"
-      ],
+      "refs": ["GA-S10"],
       "example_count": 31
     },
     {
@@ -2124,9 +2060,7 @@
         "#check_unattributed_rationale_in_namespace command (Day 62 sprint 3/4)",
         "#check_unattributed_rationale_auto command (Day 62 sprint 3/4、watched 列挙 + total 集計)"
       ],
-      "provides_definitions": [
-        "getWatchedRationaleNamespaces (env → List Name)"
-      ],
+      "provides_definitions": ["getWatchedRationaleNamespaces (env → List Name)"],
       "assumptions": [],
       "scope": "formalization",
       "refs": [
@@ -2145,9 +2079,7 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "F1"
-      ],
+      "refs": ["F1"],
       "example_count": 0
     },
     {
@@ -2165,15 +2097,153 @@
       ],
       "assumptions": [],
       "scope": "test",
-      "refs": [
-        "F1"
-      ],
+      "refs": ["F1"],
       "example_count": 0
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.Ontology",
+      "path": "AgentSpec/Manifest/Ontology.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T1",
+      "path": "AgentSpec/Manifest/T1.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T2",
+      "path": "AgentSpec/Manifest/T2.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T3",
+      "path": "AgentSpec/Manifest/T3.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T4",
+      "path": "AgentSpec/Manifest/T4.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T5",
+      "path": "AgentSpec/Manifest/T5.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T6",
+      "path": "AgentSpec/Manifest/T6.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T7",
+      "path": "AgentSpec/Manifest/T7.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.T8",
+      "path": "AgentSpec/Manifest/T8.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.E1",
+      "path": "AgentSpec/Manifest/E1.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.E2",
+      "path": "AgentSpec/Manifest/E2.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.E3",
+      "path": "AgentSpec/Manifest/E3.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.P1",
+      "path": "AgentSpec/Manifest/P1.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.P2",
+      "path": "AgentSpec/Manifest/P2.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
     }
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 91 P1b+P2 (T+E+P 18 axiom + 5 theorem)",
+    "last_verified_phase": "Week 3 Day 92 Empirical #8 finding F1+F4+F5 対処",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -3434,6 +3504,16 @@
       "scope": "P 系列 batch 2 件 (P1 完了 + P2 完了)。残: P3 (3 theorem)、P4 (3 theorem)、P5 (1 theorem)、P6 (2 theorem)、auxiliary e1b_from_e1a。Day 92 で P3 batch 候補 (T1+T2 合成 proof、modifier_agent_terminates 等)。Step 6 同 commit 統合。",
       "change_category": "proof_addition",
       "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 3 Day 92 Empirical #8 finding F1+F4+F5 対処 (process_only)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 1,
+      "evaluator": "Empirical #8 (ad hoc) で 5 finding 識別、Day 92 で 3 件即時対処 (F1 artifacts[] catalog backfill 14 entry / F4 jq-recipes verifier_history append recipe を Day 87 schema 反映 / F5 schema description に Check 15 resolve trigger 明記)。F2 (P3 Day# empirical gating) + F3 (Plausible) は Day 95+ defer 継続。F1 backfill で artifacts 62→76 entry。perl post-process 副作用で既存 1-element array 多数が inline 化 normalization。",
+      "scope": "Day 87 finding 解消率 4/6 → 7/6 (F1+F4+F5 追加解消)、残 2/6 (P3+Plausible) 継続 defer。jq + perl pipeline の format consistency 向上。",
+      "change_category": "process_only",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
@@ -3443,12 +3523,8 @@
         "lakefile",
         "lean-toolchain"
       ],
-      "Core": [
-        "AgentSpec.Core"
-      ],
-      "Cross": [
-        "AgentSpec.Test.Cross.SpineProcessTest"
-      ],
+      "Core": ["AgentSpec.Core"],
+      "Cross": ["AgentSpec.Test.Cross.SpineProcessTest"],
       "Process": [
         "AgentSpec.Process.Hypothesis",
         "AgentSpec.Process.Failure",
@@ -3459,9 +3535,7 @@
         "AgentSpec.Test.Process.EvolutionTest",
         "AgentSpec.Test.Process.HandoffChainTest"
       ],
-      "Proofs": [
-        "AgentSpec.Proofs.RoundTrip"
-      ],
+      "Proofs": ["AgentSpec.Proofs.RoundTrip"],
       "Provenance": [
         "AgentSpec.Provenance.Verdict",
         "AgentSpec.Test.Provenance.VerdictTest",
@@ -3486,9 +3560,7 @@
         "AgentSpec.Test.Provenance.RetirementWatchedFixture2",
         "AgentSpec.Test.Provenance.RetirementLinterCommandTest"
       ],
-      "Root": [
-        "AgentSpec.Test.CoreTest"
-      ],
+      "Root": ["AgentSpec.Test.CoreTest"],
       "Spine": [
         "AgentSpec.Spine.FolgeID",
         "AgentSpec.Test.Spine.FolgeIDTest",

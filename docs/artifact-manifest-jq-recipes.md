@@ -65,10 +65,12 @@ jq '(.artifacts[] | select(.id == "agent-spec-lib:AgentSpec.Provenance.ResearchA
    agent-spec-lib/artifact-manifest.json > /tmp/m.json \
    && mv /tmp/m.json agent-spec-lib/artifact-manifest.json
 
-# verifier_history に新 entry append
-jq '.verifier_history += [{"round": "Week 2 Day 30 Round 1", "date": "2026-04-21", "result": "PASS", "addressable_count": 0, "evaluator": "..."}]' \
+# verifier_history に新 entry append (Day 87 schema 拡張: change_category enum + subagent_dispatch field)
+jq '.verifier_history += [{"round": "Week 3 Day NN ...", "date": "2026-04-23", "result": "PASS", "addressable_count": 0, "evaluator": "...", "change_category": "additive_axiom", "subagent_dispatch": false}]' \
    agent-spec-lib/artifact-manifest.json > /tmp/m.json \
    && mv /tmp/m.json agent-spec-lib/artifact-manifest.json
+# change_category enum: namespace_only / additive_axiom / additive_definition / additive_test / proof_addition / behavior_change / breaking / metadata_only / process_only / compatible_change
+# Day 88 P2 guideline: structure World 拡張 + Inhabited update を含む変更は compatible_change 以上 (additive_axiom 不可)
 
 # build_status の job_count / counts 更新
 jq '.build_status.lake_build_results.AgentSpec.job_count = 105' \

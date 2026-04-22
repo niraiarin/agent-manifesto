@@ -106,7 +106,7 @@
           "immediate_fix_details": { "type": "string", "maxLength": 400 },
           "change_category": {
             "enum": ["namespace_only", "additive_axiom", "additive_definition", "additive_test", "proof_addition", "behavior_change", "breaking", "metadata_only", "process_only", "compatible_change"],
-            "description": "Day 81 N3 + Day 87 補完。Subagent 省略 justification の boilerplate 化防止。change の性質を明示 (namespace_only/additive は Subagent 省略可、proof_addition/behavior_change/breaking/compatible_change は Subagent 必須)。Day 88 P2 guideline: structure World 拡張 + instance Inhabited update を含む変更は compatible_change 以上 (additive_axiom 不可)、breaking field 削除 or rename は breaking。Check 15 動的検出は Day 90+ defer、現状 schema description で human-enforce"
+            "description": "Day 81 N3 + Day 87 補完。Subagent 省略 justification の boilerplate 化防止。change の性質を明示 (namespace_only/additive は Subagent 省略可、proof_addition/behavior_change/breaking/compatible_change は Subagent 必須)。Day 88 P2 guideline: structure World 拡張 + instance Inhabited update を含む変更は compatible_change 以上 (additive_axiom 不可)、breaking field 削除 or rename は breaking。Check 15 動的検出は Day 90+ defer、resolve trigger: pending_items entry 'Day 87 P2: cycle-check change_category Inhabited/structure guideline' status='in_progress' → 'done' で trigger (現状は schema description で human-enforce)"
           },
           "subagent_dispatch": {
             "type": "boolean",
