@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.99.0-week3-day99-v-complete",
+  "version": "1.00.0-week3-day100-d-batch-1",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2299,17 +2299,27 @@
       "enforces": "structural",
       "dependencies": [],
       "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.D",
+      "path": "AgentSpec/Manifest/D.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
     }
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 99 V 系列完了 (T+E+P+L+D4+V 33 axiom + 17 theorem)",
+    "last_verified_phase": "Week 3 Day 100 D batch 1 (D7+D8+D10、6 theorem)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 396,
+        "job_count": 397,
         "scope": "production-only",
-        "note": "Day 99: V.lean に V batch 2 4 axiom 追記 + Ontology に 3 opaque + 1 def 拡張 (jobs 396 不変、V.lean 内拡張)。V 系列完備 13 axiom。Mathlib import 維持"
+        "note": "Day 100: Manifest.D 追加 (+1 jobs、396→397)。D 系列 batch 1 (D7+D8+D10) 完了。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2330,7 +2340,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 33,
-    "theorem_count": 51,
+    "theorem_count": 57,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2667,6 +2677,10 @@
       },
       "Manifest/V.lean": {
         "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/D.lean": {
+        "theorems": 6,
         "examples": 0
       }
     }
@@ -3667,6 +3681,16 @@
       "evaluator": "lake build 396 jobs PASS、axiom 29→33。Ontology に investmentLevel + collaborativeValue + trustIncrementBound opaque + systemHealthy def 追加。V.lean に trust_accumulates_gradually + trust_drives_investment + risk_reduces_investment + overexpansion_reduces_value 4 axiom 追記 byte-identical。V 系列完備 13 axiom (tradeoff 7 + goodhart 2 + investment cycle 4)。",
       "scope": "V 系列完了。Manifest 移植 累計: 33 axiom + 17 theorem (T1-T8 13+1 / E1-E3 4 / P1-P6 + ObservableDesign 3 axiom + 14 theorem / L+D4 inductive+2 / V 13)。残: D 残 16 theorem + Manifest 周辺 (degradation level / observability 等)。Day 100 で D 系列着手予定。Step 6 同 commit 統合。",
       "change_category": "additive_axiom",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 100 D batch 1 (D7+D8+D10、6 theorem)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 397 jobs PASS (+1 = D.lean)、theorem 51→57。D.lean 新規 (D7 d7_accumulation_bounded + d7_damage_unbounded / D8 d8_overexpansion_risk + d8_capability_risk / D10 d10_agent_temporary_structure_permanent + d10_epoch_monotone) byte-identical。proof は既存 axiom (T+E+P+V Day 80-99 移植済) 直接 reuse、新 dependency なし。",
+      "scope": "D 系列 batch 1 完了 (依存軽い 3 D 6 theorem)。version 1.00 milestone (Manifest 移植 33 axiom + 17→23 theorem 経由)。残: D1-D3 + D5+D6 + D9 + D11-D17 約 60 theorem。Day 101+ で D 残 batch 順次。Step 6 同 commit 統合。",
+      "change_category": "proof_addition",
       "subagent_dispatch": false
     }
   ],
