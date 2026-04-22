@@ -204,6 +204,97 @@ theorem router_exists_for_M_interp : <goal> := by
 -- Public API <-> proof の逆方向 traceability
 ```"""),
 
+    # === trace-interp additional long variants (#653 Phase 5 weak task 対処) ===
+
+    ("trace-interp-long-2", "local_probable",
+     SYSTEM_STUB + """
+## タスク: T-interp — 部分順序ギャップの重み付け分析
+
+以下の manifest-trace 出力を解釈:
+
+```json
+{
+  "coverage": {"total_propositions": 53, "covered": 44, "coverage_rate": 0.830},
+  "uncovered": ["D15", "D16", "D17", "D18", "E2", "P4.3", "L2.7", "T7.2", "V6.1"],
+  "partial_order": {
+    "nodes": 53,
+    "edges": 142,
+    "max_depth": 5,
+    "hub_propositions": ["D13", "P2", "T6", "P3"],
+    "orphan_propositions": ["T7.2"]
+  },
+  "deviations": [
+    {"artifact": "scripts/verifier-refinement.py", "refs_claimed": ["P2"], "traces_found": ["P2", "D13"], "mismatch": "extra D13"},
+    {"artifact": ".claude/skills/paperize/SKILL.md", "refs_claimed": ["P3"], "traces_found": [], "mismatch": "missing"}
+  ],
+  "hub_degree": {"D13": 12, "P2": 9, "T6": 7, "P3": 6}
+}
+```
+
+出力:
+1. カバレッジ状況 — 全体率 83%、未カバー 9 命題の優先度 (hub_degree 逆引き + D13 影響波及)
+2. 逸脱解釈 — 2 件の artifacts それぞれの hub 近接度
+3. 改善提案 優先度順 3 件: hub 未カバー追加実装、extra trace 削除、missing trace 補完
+
+orphan は影響範囲 0、hub は max_depth 近傍で影響範囲大。"""),
+
+    ("trace-interp-long-3", "local_probable",
+     SYSTEM_STUB + """
+以下は D13 影響波及分析を含む trace レポート:
+
+```json
+{
+  "coverage_rate": 0.906,
+  "uncovered": ["D15", "D16", "D17", "D18", "E2"],
+  "d13_impact_analysis": {
+    "D15": {"downstream": ["D16", "D17"], "direct_propositions_affected": 3},
+    "D16": {"downstream": ["D17", "D18"], "direct_propositions_affected": 2},
+    "D17": {"downstream": ["D18"], "direct_propositions_affected": 8},
+    "D18": {"downstream": [], "direct_propositions_affected": 1}
+  }
+}
+```
+
+T-interp レポート生成せよ:
+1. カバレッジ: 90.6%、5 命題未カバー (D15-D18 は条件付き形式化階層)
+2. 影響波及: D13 の観点で D17 が最重要 (downstream 3 + 直接 8)
+3. 改善提案:
+   - 最優先: D17 実装
+   - 次: D15 (前提条件)
+   - D18 は孤立で低優先
+
+D13 概念: propagation impact 考慮。hub 命題が最優先、orphan は後回し。"""),
+
+    ("trace-interp-long-4", "local_probable",
+     SYSTEM_STUB + """
+`bash manifest-trace json` の出力が以下の場合、T-interp 実行:
+
+```json
+{
+  "summary": {
+    "total_propositions": 53,
+    "implemented": 49,
+    "formalized_in_lean": 48,
+    "tested": 47,
+    "coverage_rate_implemented": 0.925,
+    "coverage_rate_formalized": 0.906,
+    "coverage_rate_tested": 0.887
+  },
+  "gap_stack": [
+    {"name": "D17", "layer": "formalized", "missing_at": ["implementation", "test"]},
+    {"name": "D18", "layer": "implemented", "missing_at": ["formalization", "test"]},
+    {"name": "E2", "layer": "all", "missing_at": ["implementation", "formalization", "test"]}
+  ]
+}
+```
+
+3 段階カバレッジ (implemented > formalized > tested) + gap_stack 解釈:
+- 全段階欠落 (E2): stack 最優先、implementation から
+- formalization 途中 (D17): implementation 完成 → formalization
+- implementation 済 (D18): formalization → testing
+
+半順序 (D13 影響波及) で上位命題から進めると下流が自然に生じる。"""),
+
     # === hybrid long ===
     ("qa-long", "hybrid",
      SYSTEM_STUB + """
