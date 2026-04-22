@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-007",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-007.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "\n\nメトリクスを分析します。\n\n## 1. 全体評価: WARNING\n\n**理由**: 表面は健全（テスト全通、Leanビルド成功）だが、`valueless_change.current_streak=4` で `halt_recommended=true`。連動する改善が止まっており、リソースを消費し続けている状態。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| Metric | 現在値 | 判定 | コメント |\n|--------|--------|------|----------|\n| **V1 Skill Quality** | formal graduated | OK | theorem_delta_avg=6.3, test_delta_avg=8.9 は健在。ただし `non_triviality.score=0` — 最終runで追加定理/テストなし。卒業後の停滞を示す |\n| **V2 Context Efficiency** | recent=46, cumulative=40 | OK | trend=stable、divergence=15% は許容範囲。コスト効率は $2.33/improvement |\n| **V3 Output Quality** | test_pass=100% | WARNING | `hypothesis_error_active=36` が最大の問題。品質ゲート導入後でも 19件がポストゲートで残存。仮説の前提検証が不十分 |\n| **V4 Gate Pass Rate** | 99% (28,587/28,693) | OK | L1/P2 統治は機能している |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 人間承認パイプラインは健全 |\n| **V6 Knowledge Structure** | entries=12, retired=0 | WARNING | 陳腐化メモリが1件も退役していない。MEMORY.md のメンテナンスが止まっている |\n| **V7 Task Design** | completed=188, teamwork=0% | OK (by design) | `suppressed_single_agent` は意図的設定 |\n\n---\n\n## 3. 改善提案（優先度順）\n\n### ① `/evolve` の一時的停止（最優先）\n`valueless_change.current_streak=4, halt_recommended=true`。過去10回中最大ストリークを更新中。仮説エラー(36)の根本原因を人間がレビューするまで、自動改善ループを止めるべき。\n\n### ② hypothesis_error (36件) の根因特定と品質ゲート強化\n`H_impl_specification`(8), `H_wrong_premise`(6) が主要失敗パターン。ポストゲート残留率: hypothesis 52% (19/36)。仮説作成時の前提チェックリストを `/evolve` SKILL.md に追加し、ベリファイアが事前に検証できるようにする。\n\n### ③ メモリ退役プロセスの再開\n`retired_count=0` は知識が陳腐化したままになっている兆候。activeなmemory entryの期限切れレビューを実行し、不要なエントリを退役させる。V6 Knowledge Structure の実質的な価値測定が可能になる。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 130981,
+  "timestamp": "2026-04-18T02:56:23Z",
+  "run_number": 1,
+  "exit_code": 0
+}

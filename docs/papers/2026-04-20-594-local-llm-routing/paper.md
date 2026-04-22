@@ -98,6 +98,24 @@ LM Studio FP16 で M-interp 29 件を流すと 14/29 (48%) が FAILED（Content 
 5. **#595 発見の汎用性**: ccr pass-through で CLAUDE.md/rules/tools を system prompt 注入する方式は、Local LLM 側に独自のドメイン知識インジェクションを実装する必要をなくし、評価を「モデルの自然言語理解力」だけに限定させる。
 6. **Tooling 教訓**: undici `bodyTimeout` のデフォルト 300s は 35B MoE モデルの reasoning が完走する前に切れる。ccr 側の `API_TIMEOUT_MS` は `AbortSignal.timeout` にしか効かず、`bodyTimeout` は dispatcher 経由で別指定が必須。
 
+### 3.4 Addendum: Q2_K_XL ローカル 24GB spot check (2026-04-21)
+
+`Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf` (11GB, unsloth) を 24GB unified memory Mac (Apple M4) でローカル実行し、ccr → llama-server (:8090, ctx=32768) 経由で M-interp 3 件の spot check を実施した。CC pass-through なし（直接 POST 方式）。
+
+| # | input | elapsed | text chars | verdict | Cloud verdict | 一致 |
+|---|-------|---------|-----------|---------|---------------|------|
+| 001 | metrics-input-001 | 97s | 1,460 | WARNING | WARNING | ✅ |
+| 003 | metrics-input-003 | 108s | 1,868 | WARNING | WARNING | ✅ |
+| 004 | metrics-input-004 | 119s | 1,668 | WARNING | WARNING | ✅ |
+
+**観察**:
+- 3/3 で Cloud (Opus) と verdict 一致 (WARNING)。主要論点 (`valueless_change streak 4`, `halt_recommended`, `non_triviality=0`, D5/D3 欠陥) も Cloud と共通。
+- thinking 約 10K chars → 可視テキスト ~1.5K chars。BF16 (remote) の ~3K chars よりコンパクトだが論点網羅。
+- 平均 108s/item (Q2 local) vs ~300s/item (BF16 remote)。ローカルの方が速い（ネットワーク遅延なし + 軽量量子化）。
+- Metal GPU offload (n_gpu_layers=999) で 24GB Mac でも安定動作。ctx=32768 で CC system prompt (~32K) はギリギリ。ctx=65536 の安定性は未確認。
+
+**制限**: CC pass-through なし（`claude -p` の再帰呼び出し制限による直接 POST 方式）。CLAUDE.md/rules/tools (~32K system prompt) が Q2 に注入されていないため、ドメイン知識は M-interp 入力データ中の語彙のみから推定。#595 pass-through 方式での full 55 件バッチは別途 user ターミナルで実施要。
+
 ## 5. Limitations and Follow-up
 
 ### 制限事項
@@ -107,6 +125,7 @@ LM Studio FP16 で M-interp 29 件を流すと 14/29 (48%) が FAILED（Content 
 - **Judge スコア粒度**: 0.2 刻み (5 軸 × 1–5 scale 平均)。`|Δ|=0.6` は実質 3 刻み分の最小有意差。対称閾値 0.5 の上限に接するケース (M-interp 3/29, T-interp 5/26) は "boundary" とすべき。
 - **ccr パッチ保守性**: cli.js に 4 箇所のパッチ。ccr upgrade 時に再適用必要、`.bak` で回復可能。
 - **SSH tunnel 依存**: Node.js undici の EHOSTUNREACH 挙動で LAN IP 直接接続不可。SSH tunnel 経由が必須。
+- **Q2_K_XL spot check は CC pass-through なし**: §3.4 の 3 件は直接 POST。CC system prompt (~32K) 注入なしでの verdict 一致は確認したが、ドメイン知識インジェクション条件でのフルバッチは未実施。
 
 ### 次のアクション（詳細は todos.md）
 
@@ -114,6 +133,7 @@ LM Studio FP16 で M-interp 29 件を流すと 14/29 (48%) が FAILED（Content 
 - **拡張**: Tier 2 タスク（verify / observer）で同様のベンチマーク。
 - **学習**: 55 件 preference + Arena 55k 混合で RouteLLM Matrix Factorization 学習 → タスク種別 × モデル品質ルーティングテーブル。
 - **検証**: 人間評価 20% ブラインドで judge バイアスを定量化。
+- **Q2 full batch**: Q2_K_XL で 55 件フルバッチ (CC pass-through 方式、user ターミナル実行)。ctx=65536 の安定性確認含む。
 
 ## Appendix — Evidence Index
 
