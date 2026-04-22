@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.93.0-week3-day93-p3",
+  "version": "0.94.0-week3-day94-p4-p5",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2249,17 +2249,37 @@
       "enforces": "structural",
       "dependencies": [],
       "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.P4",
+      "path": "AgentSpec/Manifest/P4.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.P5",
+      "path": "AgentSpec/Manifest/P5.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
     }
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 93 P3 batch (T+E+P 18 axiom + 9 theorem)",
+    "last_verified_phase": "Week 3 Day 94 P4+P5 batch (T+E+P 20 axiom + 13 theorem)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 391,
+        "job_count": 393,
         "scope": "production-only",
-        "note": "Day 93: Manifest.P3 追加 (+1 jobs、390→391)。T+E+P1-P3 18 axiom + 9 theorem。Mathlib import 維持"
+        "note": "Day 94: Manifest.P4 + P5 追加 (+2 jobs、391→393)。T+E+P1-P5 20 axiom + 13 theorem。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2279,8 +2299,8 @@
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
-    "axiom_count": 18,
-    "theorem_count": 43,
+    "axiom_count": 20,
+    "theorem_count": 47,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2597,6 +2617,14 @@
       },
       "Manifest/P3.lean": {
         "theorems": 4,
+        "examples": 0
+      },
+      "Manifest/P4.lean": {
+        "theorems": 3,
+        "examples": 0
+      },
+      "Manifest/P5.lean": {
+        "theorems": 1,
         "examples": 0
       }
     }
@@ -3536,6 +3564,16 @@
       "addressable_count": 0,
       "evaluator": "lake build 391 jobs PASS (+1 = P3.lean、390→391)、theorem 39→43。Ontology に CompatibilityClass + KnowledgeIntegration 追加、P3.lean 新規 (modifier_agent_terminates + modification_persists_after_termination + ungoverned_breaking_change_irrecoverable + compatibility_exhaustive)。proof は T1/T2 直接 reuse + 1 cases simp。Subagent 省略 (proof_addition + structure dependency 追加で既存 module 不変)。",
       "scope": "P 系列 batch、P3 完了 (4 theorem)。残: P4 (3 theorem)、P5 (1 theorem)、P6 (2 theorem)、auxiliary e1b_from_e1a。Day 94 で P4 batch 候補 (improvement_requires_observability 等、T5 由来)。Step 6 同 commit 統合。",
+      "change_category": "proof_addition",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 94 P4+P5 batch (4 theorem + 2 axiom + 2 opaque)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 393 jobs PASS (+2 = P4.lean + P5.lean)、axiom 18→20 (degradation_level_surjective + interpretation_nondeterminism、ObservableDesign 由来)、theorem 43→47。Ontology に degradationLevel + interpretsStructure opaque 追加。P4.lean (improvement_requires_observability + process_improvement_requires_observability + degradation_is_gradient) + P5.lean (structure_interpretation_nondeterministic) byte-identical proof reuse。",
+      "scope": "P 系列 batch、P4+P5 完了 (4 theorem)。残: P6 (2 theorem) + auxiliary e1b_from_e1a。Day 95 で P6+auxiliary 完了予定で P 系列終了。Step 6 同 commit 統合。",
       "change_category": "proof_addition",
       "subagent_dispatch": false
     }

@@ -324,4 +324,24 @@ structure KnowledgeIntegration where
   compatibility : CompatibilityClass
   deriving Repr
 
+/-! ## Day 94 拡張: P4+P5 用 dependency (ObservableDesign 由来) -/
+
+/-- Degradation level (P4、opaque、Phase 4 で Observable 化予定)。 -/
+opaque degradationLevel (w : World) : Nat
+
+/-- Structure interpretation predicate (P5、agent が structure 解釈で action 生成)。 -/
+opaque interpretsStructure
+  (agent : Agent) (st : Structure) (action : Action) (w : World) : Prop
+
+/-- P4b axiom: degradation level 全射 (劣化は連続スペクトル、binary でなく gradient)。 -/
+axiom degradation_level_surjective :
+  ∀ (n : Nat), ∃ (w : World), degradationLevel w = n
+
+/-- P5 axiom: 同一 structure に対する interpretation は非決定的 (T4 由来 design 公理)。 -/
+axiom interpretation_nondeterminism :
+  ∃ (agent : Agent) (st : Structure) (action₁ action₂ : Action) (w : World),
+    interpretsStructure agent st action₁ w ∧
+    interpretsStructure agent st action₂ w ∧
+    action₁ ≠ action₂
+
 end AgentSpec.Manifest
