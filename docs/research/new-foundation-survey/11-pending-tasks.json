@@ -528,9 +528,9 @@
       "section": "2.10",
       "topic": "F1 Rationale prod site strict 化 (Hypothesis.lean L97-99 ofClaimWithText、L89 trivial、ResearchGoal.lean L96/100/115)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 58-59",
-      "detail": "Day 57 empirical F1 Option B 先行推奨、3 prod site で Rationale.strict 化"
+      "detail": "Day 70 精査: ofClaimWithText は Day 58 @[deprecated] 済、trivial/ofTitle は test fixture or test-only 利用 (prod consumer 0)。Day 66 G4 reinterpretation 追認: scanner flag は design 通り、strict 化は semantic 矛盾"
     },
     {
       "section": "6.4",
@@ -561,9 +561,9 @@
       "section": "2.10",
       "topic": "G5 Day 54 Step 7 重複 entry cleanup + future_research status 分離 (pending_items size 削減)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 67+",
-      "detail": "Day 64 empirical G5、Core.lean Decidable は Day 56 resolved、重複記録を解消"
+      "detail": "Day 66 で重複 resolved + blocked_external 分離、Day 70 で F1/G6 done 化により Check 4 noise 5→2 に削減。残 2 件 (Fin 101 / references structured) は breaking で人間判断要 = aging escalate 対象"
     },
     {
       "section": "6.4",
@@ -1026,6 +1026,12 @@
       "status": "done",
       "scope": "9-step cycle 違反監査 + retroactive 補完 (案A+B)。Day 67/68 の Step 1/3/6/7/8/9 全省略を監査、Step 7 mandatory checklist 6 項目 retroactive 実証 (G6 done 化漏れ識別)、Step 1/3 retroactive 評価 (Day 67=S1/S4/Pattern#5 / Day 68=TyDD 対象外)。再発防止: steps_completed schema field + Check 12 + memory handoff-resume awareness 規律。compatible change",
       "commit": "f1c8774",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 70,
+      "status": "done",
+      "scope": "F1 prod site 精査 (全件 done or test-only、Day 66 G4 追認) + G5 done 化 (Check 4 noise 5→2 削減)。conservative extension",
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
