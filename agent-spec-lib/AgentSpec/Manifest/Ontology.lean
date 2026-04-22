@@ -9,7 +9,8 @@ namespace で再定義 (Lake cross-project require は避ける)。
 - Day 74 PoC: T1 session_bounded のみ → AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton (sessions + time)
 - Day 80 拡張: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state) → StructureId/WorldHash opaque + Severity/AgentRole/AuditEntry/ContextWindow/Action/Agent + canTransition opaque + World に auditLog 追加 (compatible change: Inhabited instance update 含む)
 - Day 83 拡張: T2 (structure_persists / structure_accumulates) → Epoch abbrev + StructureKind/Structure + validTransition def + World に structures + epoch 追加
-- Week 3-4: T3-T8 + P1-P6 順次
+- Day 84 拡張: T3 (context_contribution_nonuniform) → PrecisionLevel + Task + ContextItem opaque + precisionContribution opaque。T4 (output_nondeterministic) は既存 dependency のみで追加なし。
+- Week 3-4: T5-T8 + P1-P6 順次
 -/
 
 namespace AgentSpec.Manifest
@@ -151,5 +152,30 @@ opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
 /-- Valid transition: w → w' が何らかの agent + action 経由で可能。 -/
 def validTransition (w w' : World) : Prop :=
   ∃ (agent : Agent) (action : Action), canTransition agent action w w'
+
+/-! ## Day 84 拡張: T3 用 dependency -/
+
+/-- Precision level: T8 由来、Task の要求精度 (千分率)。required > 0 不変式。 -/
+structure PrecisionLevel where
+  required     : Nat
+  required_pos : required > 0 := by omega
+  deriving Repr
+
+/-- Task: a goal + its constraints (T3 contextBudget + T7 resourceBudget + T8 precisionRequired)。 -/
+structure Task where
+  description       : String
+  precisionRequired : PrecisionLevel
+  contextBudget     : Nat
+  resourceBudget    : Nat
+  deriving Repr
+
+/-- Context window 内の単一 item。T3 で context が有限 → bounded。 -/
+opaque ContextItem : Type
+
+instance : Repr ContextItem := ⟨fun _ _ => "«ContextItem»"⟩
+
+/-- Precision contribution: ContextItem が Task の精度に寄与する量。
+    Task 別に異なる (information theory: not all info is equally relevant)。 -/
+opaque precisionContribution : ContextItem → Task → Nat
 
 end AgentSpec.Manifest
