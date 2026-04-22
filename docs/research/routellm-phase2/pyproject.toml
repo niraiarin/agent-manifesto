@@ -1,0 +1,11 @@
+[project]
+name = "routellm-phase2"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=3.0",
+    "huggingface-hub",
+]
+
+[project.optional-dependencies]
+train = ["routellm>=0.1", "torch", "numpy", "scikit-learn"]
