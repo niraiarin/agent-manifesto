@@ -117,6 +117,23 @@
             "type": "array",
             "items": { "type": "integer", "minimum": 1, "maximum": 9 },
             "description": "9-step cycle 実施記録。Day 69+ で必須運用 (Day 69 再発防止 compatible change)"
+          },
+          "steps_skipped": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["step", "reason"],
+              "additionalProperties": false,
+              "properties": {
+                "step": { "type": "integer", "minimum": 1, "maximum": 9 },
+                "reason": { "type": "string" }
+              }
+            },
+            "description": "Day 81 N10: legitimate skip した step + 理由。CLAUDE.md 'Step skip 禁止規律' の reason 明記用"
+          },
+          "docs_reflection_commit": {
+            "type": "string",
+            "description": "Day 81 N5: Step 6 で生成した別 commit hash (e.g. 8615340 for Day 74)。同 commit に統合した場合は省略可、scope 内に '同 commit に統合' と明記"
           }
         }
       }

@@ -273,6 +273,28 @@ else
   echo "[12] ---  legacy day ($last_day_for_steps < $STEP_TRACK_SINCE、steps_completed tracking は Day $STEP_TRACK_SINCE+ で有効)"
 fi
 
+# ----- Check 13: Step 6 docs 反映 artifact ref (Day 81 N5 [Gap D] fix) -----
+# Day 70+ で step 6 claimed の entry は、docs_reflection_commit field か
+# scope に「同 commit に統合」/「後続 docs 反映」等の textual ref を要求
+# (Day 74 で 8615340 separate commit pattern、Day 75-77 で scope 内統合 pattern の両方許容)
+STEP6_MISSING=$(jq -r '
+  .day_plan
+  | map(select((.day | tostring | tonumber? // 0) >= 70))
+  | map(select((.steps_completed // []) | any(. == 6)))
+  | map(select((.docs_reflection_commit // null) == null))
+  | map(select(((.scope // "") | test("後続 docs|docs 反映|同 commit に統合|docs_reflection")) | not))
+  | map("Day \(.day): Step 6 claimed but no docs_reflection_commit field nor textual ref in scope")
+  | .[]
+' "$PENDING" 2>/dev/null | head -3)
+
+if [ -n "$STEP6_MISSING" ]; then
+  echo "[13] WARN  Step 6 docs 反映の artifact ref 不在 (Day 70+、steps_completed に 6 含む entry):"
+  echo "$STEP6_MISSING" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[13] OK  Step 6 docs 反映 artifact ref (Day 70+)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \

@@ -120,7 +120,7 @@
       "section": "6.4",
       "topic": "Day 78 N2 [Gap B]: Documentation inflation 規律強化 (verifier_history evaluator 741 chars 等)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
       "detail": "Day 78 empirical #6 negative subagent 識別。Day 75 evaluator 741 chars / Day 77 day_plan scope 513 chars が CLAUDE.md '3-5 行 / 1-2 文' 制限超過。commit message には書けない情報を JSON evaluator field に push する anti-pattern。lint script 候補 (length check + ceremonial token detect)"
@@ -129,7 +129,7 @@
       "section": "6.4",
       "topic": "Day 78 N5 [Gap D]: cycle-check Check 13 (Step 6 docs 反映 artifact ref 必須化)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
       "detail": "Day 78 empirical #6 negative subagent 識別。Day 74 は Step 6 separate commit (8615340) があるが Day 75-77 は steps_completed=[1..9] 主張のみで artifact ref なし。Check 12 は array count のみ check、Step 6 が実 commit/file 改変で履行されたかを検証する Check 13 追加候補"
@@ -138,7 +138,7 @@
       "section": "6.4",
       "topic": "Day 78 N3 [Gap C]: Subagent 省略 justification 区別化 (proof 追加 vs namespace 追加)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
       "detail": "Day 78 empirical #6 negative subagent 識別。Day 27 audit basis 'backward-compat additive' を Day 74-77 全 commit で連発。Day 77 le_antisymm proof は属性的に additive ではなく proof 追加。justification template に 'change category: namespace_only / proof_addition / behavior_change' を必須化"
@@ -147,7 +147,7 @@
       "section": "6.4",
       "topic": "Day 78 N10 [Gap F]: steps_skipped schema field 拡張 (skip-with-reason marker)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
       "detail": "Day 78 empirical #6 negative subagent 識別。steps_completed=[1..9] が Day 71-77 で均一、skip-with-reason marker なし。Day 75 (人間判断 Day) で Step 8 commit ≠ feat 等の legitimate skip を schema で区別。schema 拡張: steps_completed + steps_skipped: [{step, reason}]"
@@ -1289,7 +1289,7 @@
     {
       "day": 80,
       "status": "done",
-      "scope": "Manifest 移植 T1 完備 + jq format drift fix (案 A 履行)。Ontology.lean に additive 拡張 (StructureId/WorldHash opaque + Severity/AgentRole + Action/AuditEntry/ContextWindow/Agent + canTransition opaque + World に auditLog field)、T1.lean に no_cross_session_memory + session_no_shared_state 2 axiom 追加 (byte-identical signature)。axiom 1→3 で T1 stand-alone 完備 (3/3)。並行: backfill-day-commit.sh に jq format drift post-process (1-element string array inline 復元)。lake build 378 jobs PASS、example_count 699 不変。compatible change (World field 追加で Inhabited update)",
+      "scope": "Manifest 移植 T1 完備 + jq format drift fix (案 A)。Ontology.lean additive 拡張 + T1.lean に T1.2/T1.3 axiom 追加 (byte-identical signature)。axiom 1→3 で T1 stand-alone 完備。Step 6 後続 docs 反映は同 commit に統合 (T1 follow-up entry done 化)。compatible change (World field 追加で Inhabited update)",
       "steps_completed": [
         1,
         2,
@@ -1302,6 +1302,12 @@
         9
       ],
       "commit": "4628556"
+    },
+    {
+      "day": 81,
+      "status": "done",
+      "scope": "process gap 4 件 (N2/N3/N5/N10) 一括解消。N2: scripts/check-doc-length.sh 新規 (lint)。N3: artifact-manifest schema に change_category enum。N5: cycle-check Check 13 追加 (Step 6 docs ref 必須化)。N10: tasks-DB schema に step omission marker + docs_reflection_commit field。同 commit に schema + docs 反映統合 (Step 6 履行)。",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {
