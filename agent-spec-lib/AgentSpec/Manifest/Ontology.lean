@@ -344,4 +344,20 @@ axiom interpretation_nondeterminism :
     interpretsStructure agent st action₂ w ∧
     action₁ ≠ action₂
 
+/-! ## Day 95 拡張: P6 用 dependency (TaskStrategy + strategyFeasible) -/
+
+/-- Task execution strategy (P6 で使用、3 軸 = T3+T7+T8 制約)。 -/
+structure TaskStrategy where
+  task               : Task
+  contextUsage       : Nat
+  resourceUsage      : Nat
+  achievedPrecision  : Nat
+  deriving Repr
+
+/-- Strategy feasibility: T3 + T7 + T8 制約を同時に満たす。 -/
+def strategyFeasible (s : TaskStrategy) (agent : Agent) : Prop :=
+  s.contextUsage ≤ agent.contextWindow.capacity ∧
+  s.resourceUsage ≤ s.task.resourceBudget ∧
+  s.achievedPrecision ≥ s.task.precisionRequired.required
+
 end AgentSpec.Manifest
