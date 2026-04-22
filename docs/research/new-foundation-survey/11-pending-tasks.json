@@ -169,7 +169,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Day 75-76",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 74 PoC で session_bounded 移植済 (commit 98c6841)。残 2 axiom には AuditEntry / Action / canTransition opaque + 関連 World fields 拡張が必要。Ontology.lean を additive 拡張、AgentSpec/Manifest/T1.lean に追記。conservative extension (axiom 追加のみ)"
     },
     {
@@ -178,7 +180,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Day 77-Week 4 終わり",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 74 PoC で path 確立済。T 順 (T2-T8) → P 順 → L 順 → V 順 → D 順で additive 拡張、各 T で必要 opaque/structure を Ontology.lean に追加。54 axiom 全件再定義、namespace AgentSpec.Manifest 統一。完成基準: lean-formalization/Manifest/ の 55 axiom 全件が AgentSpec.Manifest 配下に存在 + lake build PASS"
     },
     {
@@ -187,7 +191,9 @@
       "mark": "🔴",
       "status": "done",
       "timing": "Day 75 (人間判断 Day) → Day 76-77 実装",
-      "gaps": ["GA-S15"],
+      "gaps": [
+        "GA-S15"
+      ],
       "detail": "Day 75 design 確定 (Q1=A/Q2=B/Q3=B/Q4=D)、Day 76 PrePred/PostPred 自動 Lattice + 2 theorem rfl + 8 法則 examples (commit 967a2e6)、Day 77 ResearchSpec naive product Lattice instance (LE/Sup/Inf/PartialOrder/Lattice inline) + 5 helper theorem + 34 test examples で Q2=B 完了。GA-M11 LLM refine loop 収束証明の足掛かり完成。Hoare refinement order (Liquid Haskell subtype) は別 instance で Day 78+ or Week 4 で必要時追加可能。Confidence migration (Q4-A) は consumer 出現時"
     },
     {
@@ -1098,35 +1104,72 @@
       "status": "done",
       "scope": "G1 scanner filter — 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) で Lean.Linter.isDeprecated decl を blacklist 検査前に除外。Day 52 fixture (trivialDeprecated / ofTextUnauthoredDeprecated) semi-FP noise 解消、conservative extension",
       "commit": "22ccfc8",
-      "steps_completed": [2, 5]
+      "steps_completed": [
+        2,
+        5
+      ]
     },
     {
       "day": 68,
       "status": "done",
       "scope": "G2/G6 cycle-check.sh F3 5 gap 追加 — Check 7 (verifier_history date monotonic) / Check 8 (commit hash format) / Check 9 (day_plan day duplicate) / Check 10 (breakdown keys 存在) / Check 11 (long-deferred aging 14+ Day escalate)。Day 47+/46+ Rationale 課題 2 件を新規 escalate、conservative extension",
       "commit": "5b38f1b",
-      "steps_completed": [2, 4, 5]
+      "steps_completed": [
+        2,
+        4,
+        5
+      ]
     },
     {
       "day": 69,
       "status": "done",
       "scope": "9-step cycle 違反監査 + retroactive 補完 (案A+B)。Day 67/68 の Step 1/3/6/7/8/9 全省略を監査、Step 7 mandatory checklist 6 項目 retroactive 実証 (G6 done 化漏れ識別)、Step 1/3 retroactive 評価 (Day 67=S1/S4/Pattern#5 / Day 68=TyDD 対象外)。再発防止: steps_completed schema field + Check 12 + memory handoff-resume awareness 規律。compatible change",
       "commit": "f1c8774",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 70,
       "status": "done",
       "scope": "F1 prod site 精査 (全件 done or test-only、Day 66 G4 追認) + G5 done 化 (Check 4 noise 5→2 削減)。conservative extension",
       "commit": "c1589f6",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 71,
       "status": "done",
       "scope": "Empirical Revalidation #5 (7-day cycle)。3 subagent (median 6/6 PASS / edge 3 BUG + 4 EDGE / negative 2 gaps)。BUG 3 件即時修正 (Check 7 null guard / Check 8 uppercase / Check 12 unique)。cycle-check 初 ALL PASS (12 check、WARN 0)。conservative extension",
       "commit": "1e8de06",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 72,
@@ -1134,55 +1177,136 @@
       "scope": "inductive Reference (doi/url/arxiv/commit) 導入 + Rationale.references : List String → List Reference migration。DataCite pattern 準拠、Day 70 人間判断実施。breaking change",
       "breaking_change": true,
       "commit": "cba5db0",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 73,
       "status": "done",
       "scope": "ReferenceTest.lean 新規作成 (23 examples)。Day 72 Reference inductive の behavior test: 4 variant 構築 / value accessor / DecidableEq (同 variant 同値・異値・異 variant 同値文字列) / Inhabited / List Reference 操作。conservative extension",
       "commit": "42b05f4",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 74,
       "status": "done",
       "scope": "Manifest 移植 PoC (案Z step 1/3) — AgentSpec/Manifest/Ontology.lean (AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton) + AgentSpec/Manifest/T1.lean (session_bounded axiom)。GA-I7 (b) 再定義方針実証、cross-project require 回避。lake build 108 jobs PASS (+3)、example_count 640 不変。conservative extension",
       "commit": "98c6841",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 75,
       "status": "done",
       "scope": "GA-S15 SpecSig Lattice 論文サーベイ + design 議論 (案Z step 2/3、人間判断 Day)。code 変更なし、論文 4 source 統合 (gap-analysis GA-S15 + GA-M11 + TyDD-F7 + Day 70 人間判断記録)、Mathlib v4.29.0 利用可能性確認 (Pi.instLattice + Prop.instDistribLattice)、Q1-Q4 案を user 判断 (Q1=A/Q2=B/Q3=B/Q4=D)。Day 76-77 実装方針確定。conservative extension",
       "commit": "219e5a7",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 76,
       "status": "done",
       "scope": "GA-S15 SpecSig Lattice instance 実装 (Q1=A/Q3=B 設計、案Z step 3/3 前半)。AgentSpec/Spine/ResearchSpecLattice.lean 新規 (abbrev PrePred/PostPred + Mathlib Pi.instLattice + Prop.instDistribLattice 自動継承 + 2 theorem rfl 証明 + 8 lattice 法則 examples)。lake build 378 jobs PASS (+270 jobs = Mathlib import)、example_count 640→652 (+12)、theorem 15→17 (+2)。conservative extension",
       "commit": "967a2e6",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 77,
       "status": "done",
       "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpecLattice.lean に ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice、le_antisymm は cases+congr) + 5 helper theorem (inf_pre/inf_post/sup_pre/sup_post/le_iff)、Test/Spine/ResearchSpecLatticeTest.lean 新規 34 examples (PrePred/PostPred + ResearchSpec lattice 法則 + Day 53 helper 連結)。lake build AgentSpec 378 + AgentSpecTest 412 jobs PASS、example_count 652→686 (+34)、theorem 17→22 (+5)。GA-S15 entry done 化。conservative extension",
       "commit": "e834e3a",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 78,
       "status": "done",
       "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 [critical] PASS / edge 1 BUG + 4 EDGE / negative 2 high + 4 medium + 2 low gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正: ResearchSpec を DistribLattice 化、OrderTop/OrderBot 追加 (trivial=⊤、unsatisfiable=⊥)、ext lemma、Test 13 example 追加、docstring identifier 修正。process gap 6 件 (handoff stale / docs inflation / subagent justification / Step 6 inconsistency / metadata-only commit script 化 / steps_skipped schema) を Day 79+ improvement entry として記録。example_count 686→699 (+13)、theorem 22→25 (+3)。conservative extension",
       "commit": "d8cb8d5",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
     },
     {
       "day": 79,
       "status": "done",
       "scope": "process scripts (案 A、Day 78 N1+N7 解消)。scripts/update-handoff.sh (handoff auto-update、Day 73 PC-crash 構造的解消) + scripts/backfill-day-commit.sh (metadata-only commit を 1 invocation 化、CLAUDE.md 新 rule 履行)。両 script 試験成功。pending_items の N1/N7 entry done 化。code 変更なし、scripts/ 配下のみ。conservative extension",
-      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "a6d2ef8"
     }
   ],
   "gap_analysis": {

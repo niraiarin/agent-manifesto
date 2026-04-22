@@ -41,15 +41,17 @@ if [ "$EXISTING" != "\"__none__\"" ] && [ -n "$EXISTING" ]; then
 fi
 
 # Step 2: jq で commit field 追加 (in-place、format preserve via tmp)
-TMP=$(mktemp)
+TMP=$(mktemp "${TMPDIR:-/tmp}/backfill-day-commit.XXXXXX")
 jq --argjson d "$DAY" --arg c "$COMMIT" \
   '.day_plan |= map(if .day == $d and (.commit // null) == null then . + {commit: $c} else . end)' \
   "$PENDING" > "$TMP" || { echo "ERROR: jq failed" >&2; rm -f "$TMP"; exit 1; }
 mv "$TMP" "$PENDING"
 
-# Step 3: cycle-check.sh quick 実行
+# Step 3: cycle-check.sh full 実行 (exit 1 = FAIL block、exit 2 = WARN 許容)
 echo "Running cycle-check..." >&2
-if ! bash "$SCRIPT_DIR/cycle-check.sh" >&2; then
+bash "$SCRIPT_DIR/cycle-check.sh" >&2
+CC_EXIT=$?
+if [ "$CC_EXIT" -eq 1 ]; then
   echo "ERROR: cycle-check FAIL after commit field fill, restore manually" >&2
   exit 1
 fi
