@@ -479,9 +479,9 @@
       "section": "2.10",
       "topic": "Rationale references の structured 化 (DOI/URL/paper/commit 分離、Day 44 追加検討)",
       "mark": "🔴",
-      "status": "in_progress",
+      "status": "done",
       "timing": "Week 3",
-      "detail": "Day 70 人間判断: 実施決定。DataCite Metadata Schema 4.x の relatedIdentifierType enum が production 標準。4 variant minimal (doi/url/arxiv/commit) で開始、conservative extension で追加可能。List String は情報損失 (型安全 violation)、provenance theorem の前提条件として活用可能"
+      "detail": "Day 72 実装完了。inductive Reference (doi/url/arxiv/commit) + Rationale.references : List Reference に migration。lake build 106 jobs PASS、/verify 5/5 PASS。DataCite pattern 準拠"
     },
     {
       "section": "2.10",
@@ -1040,6 +1040,13 @@
       "day": 71,
       "status": "done",
       "scope": "Empirical Revalidation #5 (7-day cycle)。3 subagent (median 6/6 PASS / edge 3 BUG + 4 EDGE / negative 2 gaps)。BUG 3 件即時修正 (Check 7 null guard / Check 8 uppercase / Check 12 unique)。cycle-check 初 ALL PASS (12 check、WARN 0)。conservative extension",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 72,
+      "status": "done",
+      "scope": "inductive Reference (doi/url/arxiv/commit) 導入 + Rationale.references : List String → List Reference migration。DataCite pattern 準拠、Day 70 人間判断実施。breaking change",
+      "breaking_change": true,
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],

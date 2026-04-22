@@ -14,7 +14,7 @@ open AgentSpec.Spine
 /-! ### structure 構築 -/
 
 /-- 全 field 直接指定 -/
-example : Rationale := { text := "hypothesis confirmed", references := ["DOI:10.1145/x"], confidence := 85 }
+example : Rationale := { text := "hypothesis confirmed", references := [.doi "10.1145/x"], confidence := 85 }
 
 /-- 最小構築 (trivial と等価) -/
 example : Rationale := { text := "", references := [], confidence := 0 }
@@ -24,7 +24,7 @@ example : Rationale := { text := "", references := [], confidence := 0 }
 example :
     ({text := "t", references := [], confidence := 42} : Rationale).text = "t" := rfl
 example :
-    ({text := "", references := ["a", "b"], confidence := 0} : Rationale).references = ["a", "b"] := rfl
+    ({text := "", references := [.url "a", .url "b"], confidence := 0} : Rationale).references = [.url "a", .url "b"] := rfl
 example :
     ({text := "", references := [], confidence := 99} : Rationale).confidence = 99 := rfl
 
@@ -33,16 +33,16 @@ example :
 example : Rationale.ofText "evidence by induction" 80 =
           { text := "evidence by induction", references := [], confidence := 80 } := rfl
 
-example : Rationale.mk' "h" ["r1", "r2"] 50 =
-          { text := "h", references := ["r1", "r2"], confidence := 50 } := rfl
+example : Rationale.mk' "h" [.url "r1", .url "r2"] 50 =
+          { text := "h", references := [.url "r1", .url "r2"], confidence := 50 } := rfl
 
 example :
-    (Rationale.ofText "t" 10).addReference "new-ref" =
-    { text := "t", references := ["new-ref"], confidence := 10 } := rfl
+    (Rationale.ofText "t" 10).addReference (.url "new-ref") =
+    { text := "t", references := [.url "new-ref"], confidence := 10 } := rfl
 
 example :
-    (Rationale.mk' "h" ["r1"] 50).addReference "r2" =
-    { text := "h", references := ["r1", "r2"], confidence := 50 } := rfl
+    (Rationale.mk' "h" [.url "r1"] 50).addReference (.url "r2") =
+    { text := "h", references := [.url "r1", .url "r2"], confidence := 50 } := rfl
 
 /-! ### trivial fixture + isTrivial -/
 
@@ -51,7 +51,7 @@ example : Rationale.trivial = { text := "", references := [], confidence := 0 } 
 example : Rationale.trivial.isTrivial = true := rfl
 
 example : (Rationale.ofText "x" 0).isTrivial = false := rfl
-example : (Rationale.mk' "" ["r"] 0).isTrivial = false := rfl
+example : (Rationale.mk' "" [.url "r"] 0).isTrivial = false := rfl
 example : (Rationale.mk' "" [] 1).isTrivial = false := rfl
 
 /-! ### DecidableEq / Inhabited -/
@@ -73,13 +73,13 @@ example :
 
 /-- 異値判定 (references 違い) -/
 example :
-    (Rationale.mk' "x" ["a"] 10) ≠ (Rationale.mk' "x" ["b"] 10) := by decide
+    (Rationale.mk' "x" [.url "a"] 10) ≠ (Rationale.mk' "x" [.url "b"] 10) := by decide
 
 /-! ### Day 49: attribution 拡張 (author / timestamp、Day 44 D2 deferred 解消) -/
 
 /-- author / timestamp を明示指定で構築 -/
 example : Rationale :=
-  { text := "verified by peer review", references := ["arXiv:2604.14572"],
+  { text := "verified by peer review", references := [.arxiv "2604.14572"],
     confidence := 90, author := some "alice", timestamp := some 1714000000 }
 
 /-- field default 維持 (author / timestamp 未指定で既存 Day 44 API 互換) -/
@@ -132,18 +132,18 @@ example :
 
 /-- Rationale.strict 全 5 field 必須構築 -/
 example : Rationale :=
-  Rationale.strict "induction proof n≥0" ["arXiv:2604.14572", "Lean4 Prelude"]
+  Rationale.strict "induction proof n≥0" [.arxiv "2604.14572", .url "Lean4 Prelude"]
                    85 "alice" 1714000000
 
 /-- strict 構築結果の field 確認 -/
 example :
-    (Rationale.strict "t" ["r"] 50 "alice" 100).author = some "alice" := rfl
+    (Rationale.strict "t" [.url "r"] 50 "alice" 100).author = some "alice" := rfl
 example :
-    (Rationale.strict "t" ["r"] 50 "alice" 100).timestamp = some 100 := rfl
+    (Rationale.strict "t" [.url "r"] 50 "alice" 100).timestamp = some 100 := rfl
 
 /-- isProperlyAttributed: strict 構築は true -/
 example :
-    (Rationale.strict "evidence" ["paper:X"] 80 "bob" 200).isProperlyAttributed = true := rfl
+    (Rationale.strict "evidence" [.doi "paper:X"] 80 "bob" 200).isProperlyAttributed = true := rfl
 
 /-- isProperlyAttributed: trivial は false (全 field 空) -/
 example : Rationale.trivial.isProperlyAttributed = false := rfl
@@ -157,7 +157,7 @@ example :
 
 /-- isProperlyAttributed: confidence = 0 でも false (境界値) -/
 example :
-    (Rationale.strict "t" ["r"] 0 "alice" 100).isProperlyAttributed = false := rfl
+    (Rationale.strict "t" [.url "r"] 0 "alice" 100).isProperlyAttributed = false := rfl
 
 -- Day 52 deprecated fixture: trivialDeprecated は trivial と等価 (挙動は同じ、警告のみ)
 set_option linter.deprecated false in
