@@ -1,0 +1,30 @@
+{
+  "model_type": "setfit",
+  "encoder": "intfloat/multilingual-e5-small",
+  "labels": [
+    "local_confident",
+    "local_probable",
+    "cloud_required",
+    "hybrid",
+    "unknown"
+  ],
+  "num_iterations": 5,
+  "epochs": 1,
+  "train_n": 680,
+  "taxonomy_eval_metrics": {
+    "n": 150,
+    "exact_accuracy": 1.0,
+    "routing_accuracy": 1.0,
+    "leak_rate": 0.0,
+    "over_cautious_rate": 0.0,
+    "local_predictions": 60
+  },
+  "gt_holdout_metrics": {
+    "n": 20,
+    "exact_accuracy": 0.6,
+    "routing_accuracy": 0.95,
+    "leak_rate": 0.05,
+    "over_cautious_rate": 0.0,
+    "local_predictions": 1
+  }
+}
