@@ -101,6 +101,69 @@
   ],
   "pending_items": [
     {
+      "section": "6.4",
+      "topic": "Day 78 N1 [Gap A]: handoff-resume.md auto-update hook (Day 73 PC-crash incident 構造的解消)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。handoff-resume.md が Day 66 で 11 Day 遅れ、Day 73 PC-crash 再発時の resume が古い state から始まる。SessionEnd hook or post-cycle-check hook で current Day + HEAD sha + build state + next steps を auto-update。N1 高優先"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N7 [Gap E]: metadata-only commit script 化 (CLAUDE.md 新 rule 反映)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 74-77 で 4 件の chore(metadata) backfill commit (b0c3f64/4789ca7/87a6bc0/87a6bc0) は同一 template (1-line .json + body 4 行) で推論不要。CLAUDE.md 新 rule 'Cycle Task script 化' 対象、scripts/backfill-day-commit.sh <day> <commit-hash> で 1 invocation 化"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N2 [Gap B]: Documentation inflation 規律強化 (verifier_history evaluator 741 chars 等)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 75 evaluator 741 chars / Day 77 day_plan scope 513 chars が CLAUDE.md '3-5 行 / 1-2 文' 制限超過。commit message には書けない情報を JSON evaluator field に push する anti-pattern。lint script 候補 (length check + ceremonial token detect)"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N5 [Gap D]: cycle-check Check 13 (Step 6 docs 反映 artifact ref 必須化)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 74 は Step 6 separate commit (8615340) があるが Day 75-77 は steps_completed=[1..9] 主張のみで artifact ref なし。Check 12 は array count のみ check、Step 6 が実 commit/file 改変で履行されたかを検証する Check 13 追加候補"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N3 [Gap C]: Subagent 省略 justification 区別化 (proof 追加 vs namespace 追加)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 27 audit basis 'backward-compat additive' を Day 74-77 全 commit で連発。Day 77 le_antisymm proof は属性的に additive ではなく proof 追加。justification template に 'change category: namespace_only / proof_addition / behavior_change' を必須化"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N10 [Gap F]: steps_skipped schema field 拡張 (skip-with-reason marker)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。steps_completed=[1..9] が Day 71-77 で均一、skip-with-reason marker なし。Day 75 (人間判断 Day) で Step 8 commit ≠ feat 等の legitimate skip を schema で区別。schema 拡張: steps_completed + steps_skipped: [{step, reason}]"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 M-OBS [pre-existing]: theorem manifest 22 vs 31 (Provenance/ProvRelation 4 + Spine/LearningCycle 5)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 median subagent 識別。Day 74-77 起因ではない pre-existing manifest gap。Provenance/ProvRelation.lean (4 theorem: TransDerived.empty_false / Acyclic.empty / TransDerived.subset / Acyclic.subset) + Spine/LearningCycle.lean (5 theorem: le_refl / le_trans / le_antisymm / observation_le / le_retirement) が breakdown 未反映。manifest backfill"
+    },
+    {
       "section": "2.10",
       "topic": "Manifest 移植 follow-up: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)",
       "mark": "🟡",
@@ -1106,6 +1169,12 @@
       "status": "done",
       "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpecLattice.lean に ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice、le_antisymm は cases+congr) + 5 helper theorem (inf_pre/inf_post/sup_pre/sup_post/le_iff)、Test/Spine/ResearchSpecLatticeTest.lean 新規 34 examples (PrePred/PostPred + ResearchSpec lattice 法則 + Day 53 helper 連結)。lake build AgentSpec 378 + AgentSpecTest 412 jobs PASS、example_count 652→686 (+34)、theorem 17→22 (+5)。GA-S15 entry done 化。conservative extension",
       "commit": "e834e3a",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 78,
+      "status": "done",
+      "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 [critical] PASS / edge 1 BUG + 4 EDGE / negative 2 high + 4 medium + 2 low gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正: ResearchSpec を DistribLattice 化、OrderTop/OrderBot 追加 (trivial=⊤、unsatisfiable=⊥)、ext lemma、Test 13 example 追加、docstring identifier 修正。process gap 6 件 (handoff stale / docs inflation / subagent justification / Step 6 inconsistency / metadata-only commit script 化 / steps_skipped schema) を Day 79+ improvement entry として記録。example_count 686→699 (+13)、theorem 22→25 (+3)。conservative extension",
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],

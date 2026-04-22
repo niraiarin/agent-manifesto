@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.77.0-week3-day77-lattice-test",
+  "version": "0.78.0-week3-day78-empirical-6",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,7 +2173,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 77 ResearchSpec Lattice + Test 拡張",
+    "last_verified_phase": "Week 3 Day 78 Empirical Revalidation #6",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2200,8 +2200,8 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 1,
-    "theorem_count": 22,
-    "example_count": 686,
+    "theorem_count": 25,
+    "example_count": 699,
     "warning_count": 0,
     "deprecated_api_usage": 0,
     "native_decide_usage": 0,
@@ -2460,12 +2460,12 @@
         "examples": 0
       },
       "Spine/ResearchSpecLattice.lean": {
-        "theorems": 7,
+        "theorems": 10,
         "examples": 12
       },
       "Test/Spine/ResearchSpecLatticeTest.lean": {
         "theorems": 0,
-        "examples": 34
+        "examples": 47
       }
     }
   },
@@ -3214,6 +3214,29 @@
       "addressable_count": 0,
       "evaluator": "lake build AgentSpec 378 jobs PASS、AgentSpecTest 412 jobs PASS (+34 jobs = ResearchSpecLatticeTest.lean)。example_count 652→686 (+34)、theorem 17→22 (+5: inf_pre/inf_post/sup_pre/sup_post/le_iff、全て rfl 証明)。ResearchSpecLattice.lean に ResearchSpec の Lattice instance を inline 定義 (LE/Sup/Inf/PartialOrder/Lattice 全 fields、Sup/Inf 別 instance 分離は diamond で build 失敗→Lattice inline で解消)。le_antisymm は cases + congr で structure ext 経由証明。Subagent verification 省略 (Day 27 audit basis: backward-compat additive、Q3=B 隔離維持、既存 ResearchSpec.lean 不変)。",
       "scope": "Q2=B Day 76-77 sprint 完了。ResearchSpec 全体に naive product order (両 covariant) で PartialOrder + Lattice instance、Day 53 helper との連結 rfl 証明。Hoare refinement order (Liquid Haskell subtype: pre contravariant + post covariant) は別 instance として Day 78+ or Week 4 で必要時追加可能、Q3=B 隔離設計を維持して実装。GA-S15 entry を done 化、TyDD-F7 fixed-point 収束証明 (GA-M11) の足掛かり完成。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 3 Day 78 Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 5,
+      "evaluator": "3 parallel subagent dispatch (median: 10/10 [critical] PASS / edge: 1 BUG + 4 EDGE / negative: 2 high + 4 medium + 2 low process gap)。BUG E1 即時修正: ResearchSpec を DistribLattice 化 (両 component DistribLattice なのに Day 77 plain Lattice で停止していた、inf_sup_left 等が resolution 失敗)。EDGE E2/E3/E4 + nit 同 commit 修正: OrderTop/OrderBot 追加 (trivial=⊤、unsatisfiable=⊥)、ext lemma 追加 (cases+congr fragility 緩和)、Test 13 example 追加 (sup_assoc/sup_idem on ResearchSpec、PostPred absorption、meetPre/joinPost semantics、DistribLattice 法則、⊤/⊥ 連結)、docstring identifier 不一致修正。",
+      "scope": "Day 71 (#5) → Day 78 (#6) の 7-day empirical cycle 維持。Day 74-77 成果物 (Manifest PoC + GA-S15 Lattice sprint) を 3 角度で検証、構造的 BUG 1 件 + EDGE 4 件 + nit 1 件を即時修正、process gap (handoff stale / docs inflation / subagent justification 形骸化 / Step 6 inconsistency / metadata-only commit script 化候補 / steps_skipped schema 不在) を pending_items に Day 79+ improvement entry として記録。lake build AgentSpec 378 + AgentSpecTest 412 jobs PASS、example_count 686→699 (+13)、theorem 22→25 (+3: ext + top_eq_trivial + bot_eq_unsatisfiable)。",
+      "empirical_findings": [
+        "E1 [BUG fixed]: ResearchSpec DistribLattice instance 未付与 → 修正 (DistribLattice instance + le_sup_inf 提供)",
+        "E2 [EDGE fixed]: OrderTop/OrderBot 未登録 → trivial=⊤, unsatisfiable=⊥ で解消",
+        "E3 [EDGE fixed]: Test 4 件 missing (sup_assoc/sup_idem on ResearchSpec、PostPred absorption、helper semantics) → 13 example 追加",
+        "E4 [EDGE fixed]: le_antisymm cases+congr fragility → ext lemma 追加で defensive 強化",
+        "M-NIT [fixed]: docstring identifier 旧名 (strengthenPre_eq_meetPre) → 新名修正",
+        "N1 [Gap A、高優先]: handoff-resume.md stale at Day 66 (11 Day 遅れ) → Day 79+ で auto-handoff hook 検討",
+        "N2 [Gap B、高優先]: Documentation inflation (Day 75 evaluator 741 chars vs CLAUDE.md 1-2 文) → Day 79+ で evaluator field 圧縮規律強化",
+        "N3 [Gap C、中優先]: Subagent 省略 justification boilerplate 化 (Day 27 audit basis 連発) → Day 79+ で proof 追加か namespace 追加かを区別",
+        "N5 [Gap D、中優先]: Step 6 docs commit inconsistency (Day 74 separate vs Day 75-77 absorbed) → Day 79+ Check 13 (Step 6 artifact ref 必須化)",
+        "N7 [Gap E、中優先]: metadata-only commit (3 件/Day) script 化候補 → Day 79+ で scripts/backfill-day-commit.sh (CLAUDE.md 新 rule 反映)",
+        "N10 [Gap F、低優先]: steps_skipped schema field 不在 → Day 79+ schema 拡張",
+        "M-OBS [pre-existing]: theorem manifest 22 vs 31 (Provenance/ProvRelation 4 + Spine/LearningCycle 5) — Day 74-77 起因なし、Day 79+ で manifest backfill"
+      ],
       "compatibility": "conservative extension"
     }
   ],
