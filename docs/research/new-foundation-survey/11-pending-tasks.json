@@ -471,16 +471,17 @@
       "section": "2.10",
       "topic": "Rationale confidence の Fin 101 型強制 (Day 44 D3 deferred)",
       "mark": "🟢",
-      "status": "pending",
-      "timing": "Day 47+",
-      "detail": "Nat (0-100 convention) → Fin 101 or Score structure"
+      "status": "deferred",
+      "timing": "GA-S15 Lattice 導入時",
+      "detail": "Day 70 人間判断: deferred 継続。Fin 101 は Fin.add mod wrap で score 算術に不適切。Score structure (val : Nat; h : val ≤ 100) は consumer (算術操作/順序証明) 出現時に導入。GA-S15 Lattice が自然な導入点。先行事例: 確率プログラミング (Stan/Pyro) の newtype pattern が production 主流"
     },
     {
       "section": "2.10",
       "topic": "Rationale references の structured 化 (DOI/URL/paper/commit 分離、Day 44 追加検討)",
-      "mark": "🟢",
-      "status": "pending",
-      "timing": "Day 46+"
+      "mark": "🔴",
+      "status": "in_progress",
+      "timing": "Week 3",
+      "detail": "Day 70 人間判断: 実施決定。DataCite Metadata Schema 4.x の relatedIdentifierType enum が production 標準。4 variant minimal (doi/url/arxiv/commit) で開始、conservative extension で追加可能。List String は情報損失 (型安全 violation)、provenance theorem の前提条件として活用可能"
     },
     {
       "section": "2.10",
