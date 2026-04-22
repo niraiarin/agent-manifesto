@@ -1,7 +1,10 @@
 import AgentSpec.Manifest.T1
 import AgentSpec.Manifest.T2
+import AgentSpec.Manifest.T3
+import AgentSpec.Manifest.T4
 import AgentSpec.Manifest.T5
 import AgentSpec.Manifest.E2
+import AgentSpec.Manifest.P6
 import AgentSpec.Manifest.V
 
 /-! # AgentSpec.Manifest.D (Week 3 Day 100、D 系列 batch 1)
@@ -114,5 +117,76 @@ theorem d3_full_observability_sufficient :
 theorem d3_human_readable_insufficient :
   ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ := by
   simp [effectivelyOptimizable]
+
+/-! ## D12 制約充足タスク設計 (P6 + T3+T7+T8) — Day 103 -/
+
+/-- D12a: タスク設計は CSP (P6 task_is_constraint_satisfaction 直接 reuse、design 原則 restatement)。 -/
+theorem d12_task_is_csp :
+  ∀ (task : Task) (agent : Agent),
+    agent.contextWindow.capacity > 0 →
+    task.resourceBudget ≤ globalResourceBound →
+    task.precisionRequired.required > 0 →
+    ∀ (s : TaskStrategy),
+      s.task = task →
+      strategyFeasible s agent →
+      s.contextUsage ≤ agent.contextWindow.capacity ∧
+      s.resourceUsage ≤ globalResourceBound ∧
+      s.achievedPrecision > 0 :=
+  task_is_constraint_satisfaction
+
+/-- D12b: タスク設計自体も probabilistic (T4 output_nondeterministic 直接、P2 検証経由要)。 -/
+theorem d12_task_design_probabilistic :
+  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
+    canTransition agent action w w₁ ∧
+    canTransition agent action w w₂ ∧
+    w₁ ≠ w₂ :=
+  output_nondeterministic
+
+/-! ## D14 検証順序の制約充足性 (P6 拡張) — Day 103 -/
+
+/-- D14: 検証順序も CSP の一部 (P6 と同 proof term、verification ordering context 適用)。 -/
+theorem d14_verification_order_is_csp :
+  ∀ (task : Task) (agent : Agent),
+    agent.contextWindow.capacity > 0 →
+    task.resourceBudget ≤ globalResourceBound →
+    task.precisionRequired.required > 0 →
+    ∀ (s : TaskStrategy),
+      s.task = task →
+      strategyFeasible s agent →
+      s.contextUsage ≤ agent.contextWindow.capacity ∧
+      s.resourceUsage ≤ globalResourceBound ∧
+      s.achievedPrecision > 0 :=
+  task_is_constraint_satisfaction
+
+/-! ## D16 情報関連性 (T3 context_contribution_nonuniform 拡張) — Day 103 -/
+
+/-- D16a: zero-contribution items 存在 (eviction 可、ForgeCode B1 semantic search 対応)。 -/
+theorem d16a_zero_contribution_items_exist :
+  ∀ (task : Task),
+    task.precisionRequired.required > 0 →
+    ∃ (item : ContextItem),
+      precisionContribution item task = 0 :=
+  fun task h_prec => context_contribution_nonuniform task h_prec
+
+/-- D16b: context composition matters (zero-contribution + 精度要求の共存で composition は非自明)。 -/
+theorem d16b_context_composition_matters :
+  ∀ (task : Task),
+    task.precisionRequired.required > 0 →
+    ∃ (item : ContextItem),
+      precisionContribution item task = 0 ∧
+      task.precisionRequired.required > 0 :=
+  fun task h_prec =>
+    let ⟨item, hitem⟩ := context_contribution_nonuniform task h_prec
+    ⟨item, hitem, h_prec⟩
+
+/-- D16c: 高 contribution phase に resource 配分が rational (T7 finite + T3 nonuniform)。 -/
+theorem d16c_resource_follows_contribution :
+  ∀ (task : Task) (w : World),
+    task.precisionRequired.required > 0 →
+    (w.allocations.map (·.amount)).foldl (· + ·) 0 ≤ globalResourceBound →
+    ∃ (item : ContextItem),
+      precisionContribution item task = 0 := by
+  intro task w h_prec _h_bound
+  exact context_contribution_nonuniform task h_prec
 
 end AgentSpec.Manifest

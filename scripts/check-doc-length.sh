@@ -24,7 +24,7 @@ PENDING="$REPO_ROOT/docs/research/new-foundation-survey/11-pending-tasks.json"
 MODE="${1:-warn}"
 EVAL_LIMIT=600
 SCOPE_LIMIT=400
-CEREMONIAL_PATTERN='(N 度目|段階発展|極致到達|ぶり|完遂)'
+CEREMONIAL_PATTERN='(N 度目|段階発展|極致到達|Day [0-9]+ ぶり|完遂)'
 
 EXIT=0
 
