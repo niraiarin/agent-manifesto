@@ -204,9 +204,70 @@ TRouter の fail-fast 原則 + BELLA の skill decomposition を参考:
 | BELLA | skill profile 6 軸で透明な routing 判断 | §3.1 の A1-A6 軸に採用 |
 | TRouter | 階層 taxonomy + cold-start 対策 | §4 のプロファイリング構造に採用 |
 | SkillRouter | SKILL.md 本文が routing signal | ccr router が SKILL.md 本文を読む設計を推奨 |
-| RouteLLM | preference data + MF は多モデル向き | 2 モデルの間は threshold で十分、5+ モデル時に再検討 |
+| RouteLLM | preference data + MF は多モデル向き | §7 で再評価: scope 拡張により MF も選択肢に復活 |
 | Augment Code guide | hybrid routing がデフォルト化 | Cloud/Local 二値ではなく Hybrid カテゴリを設置 |
 | Local LLM coding state | Qwen3-Coder-Next 58.7% SWE-bench on 24GB | コード生成は local 移行の threshold に近づいている |
+
+## 7. Router アーキテクチャの再評価（scope 拡張後）
+
+### 7.1 前提の変化
+
+当初 (#594 Phase 1 完了時) の routing 前提:
+- タスク 2 種 (M-interp / T-interp)
+- モデル 2 個 (Opus / qwen3.6-bf16)
+- routing 決定空間 = 2 × 2 = 4
+
+この scope では Threshold router で十分と判定していた。しかし §4 の taxonomy で scope が拡張:
+
+| 項目 | Phase 1 時点 | Taxonomy 後 |
+|---|---|---|
+| タスク種別 | 2 | **24 プロファイル化** (うち routable 14) |
+| モデル数 | 2 | **4+** (Opus, qwen3.6-bf16, Q2_K_XL, Opus-distilled-v2) |
+| routing 決定空間 | 4 | **24 × 4 = 96+** |
+
+### 7.2 各 Router 方式の再評価
+
+**Threshold Router**
+- 運用コスト: 24 タスク × 4 モデルぶんのルールを人間が維持
+- 新タスク・新モデル追加のたびに実験 + 閾値再設定
+- **❌ scope 拡張により scale しない**
+
+**Causal LM Router**
+- 1 モデルで 24 タスク横断判定
+- 学習データ: HelpSteer3 38k + domain 55 件（本 research で変換済み）で初期学習可能
+- 新タスクは少量のラベル付きデータ追加で対応
+- 実装コスト: 中（分類器学習 + ccr 統合）
+- **◎ 中規模 (5-20 モデル × 20-50 タスク) に最適**
+
+**MF Router (RouteLLM)**
+- 24 × 4 matrix の潜在因子分解で routing 表現
+- モデル追加 = 新しい factor vector の学習（matrix 拡張）
+- Blocker 1 残存: MODEL_IDS に 4 モデル (`opus-*`, `qwen3.6-bf16`, `qwen3.6-q2`, `opus-distilled-v2`) の登録
+- Blocker 2 残存: prompt embedding 生成（各タスクの代表プロンプト × ローカル embedding モデル、例: `sentence-transformers/all-MiniLM-L6-v2`）
+- 実装コスト: 高（MODEL_IDS 拡張 + embedding pipeline + MF 学習）
+- **△ 多モデル (50+) で本領発揮、現 scope (4 モデル) では Causal LM 優位**
+
+### 7.3 改訂後の採用方針
+
+| スコープ | 採用 Router | 理由 |
+|---|---|---|
+| Phase 1 (2×2) | Threshold | Phase 1 結果で判定済み |
+| 現 scope (4×24) | **Causal LM (推奨)** | HelpSteer3 38k データが活きる、実装コスト中 |
+| Tier 3 拡張 (5-10 models × 50+ tasks) | Causal LM 継続 or MF へ移行検討 | embedding pipeline が実装済みなら MF も選択肢 |
+
+### 7.4 HelpSteer3 データの再価値評価
+
+本 research で変換した HelpSteer3 38,459 件 (RouteLLM battle 形式) は:
+- Threshold router では **不要**（ルール駆動のため学習データ不要）
+- Causal LM router では **必要**（general domain の知識伝達）
+- MF router では **使用可能**（prompt embedding ペア + winner ラベル）
+
+つまり **Causal LM / MF のどちらに進んでも data は活きる**。方向転換で死蔵にはならない。
+
+### 7.5 後続 Issue への示唆
+
+- Causal LM router 実装を次の Sub-Issue として起票推奨
+- MODEL_IDS 拡張 + sentence-transformers embedding pipeline は別途 issue（MF 移行準備）
 
 ## References
 
