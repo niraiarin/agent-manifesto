@@ -115,3 +115,56 @@ example {S I : Type} (p : PrePred S I) : p ⊓ p = p := inf_idem _
 example {S I O : Type} (p : PostPred S I O) : p ⊔ p = p := sup_idem _
 
 end AgentSpec.Spine.ResearchSpecLattice
+
+/-! ## ResearchSpec 全体 Lattice instance (Day 77、Q2=B 後半)
+
+naive product order: `spec1 ≤ spec2 ⟺ spec1.pre ≤ spec2.pre ∧ spec1.post ≤ spec2.post`
+
+Hoare refinement order との関係: Liquid Haskell subtype は pre contravariant + post covariant
+(`pre(s2) ≤ pre(s1) ∧ post(s1) ≤ post(s2)`)。本 instance は naive product (両方 covariant)、
+Q1=A の PrePred/PostPred 個別 Lattice の自然な拡張。Hoare refinement 別 instance は Day 78+
+or Week 4 で必要時に追加可能 (Q3=B 隔離設計を維持して別 namespace に置く)。
+-/
+
+namespace AgentSpec.Spine.ResearchSpec
+
+instance {S I O : Type} : Lattice (ResearchSpec S I O) where
+  le s1 s2 := s1.pre ≤ s2.pre ∧ s1.post ≤ s2.post
+  sup s1 s2 := { pre := s1.pre ⊔ s2.pre, post := s1.post ⊔ s2.post }
+  inf s1 s2 := { pre := s1.pre ⊓ s2.pre, post := s1.post ⊓ s2.post }
+  le_refl _ := ⟨le_refl _, le_refl _⟩
+  le_trans _ _ _ h12 h23 := ⟨le_trans h12.1 h23.1, le_trans h12.2 h23.2⟩
+  le_antisymm s1 s2 h12 h21 := by
+    have hpre : s1.pre = s2.pre := le_antisymm h12.1 h21.1
+    have hpost : s1.post = s2.post := le_antisymm h12.2 h21.2
+    cases s1; cases s2; congr
+  inf_le_left _ _ := ⟨inf_le_left, inf_le_left⟩
+  inf_le_right _ _ := ⟨inf_le_right, inf_le_right⟩
+  le_inf _ _ _ h1 h2 := ⟨le_inf h1.1 h2.1, le_inf h1.2 h2.2⟩
+  le_sup_left _ _ := ⟨le_sup_left, le_sup_left⟩
+  le_sup_right _ _ := ⟨le_sup_right, le_sup_right⟩
+  sup_le _ _ _ h1 h2 := ⟨sup_le h1.1 h2.1, sup_le h1.2 h2.2⟩
+
+/-! ### ResearchSpec lattice helper theorem -/
+
+/-- meet の pre は pointwise meet。 -/
+theorem inf_pre {S I O : Type} (s1 s2 : ResearchSpec S I O) :
+    (s1 ⊓ s2).pre = s1.pre ⊓ s2.pre := rfl
+
+/-- meet の post は pointwise meet。 -/
+theorem inf_post {S I O : Type} (s1 s2 : ResearchSpec S I O) :
+    (s1 ⊓ s2).post = s1.post ⊓ s2.post := rfl
+
+/-- join の pre は pointwise join。 -/
+theorem sup_pre {S I O : Type} (s1 s2 : ResearchSpec S I O) :
+    (s1 ⊔ s2).pre = s1.pre ⊔ s2.pre := rfl
+
+/-- join の post は pointwise join。 -/
+theorem sup_post {S I O : Type} (s1 s2 : ResearchSpec S I O) :
+    (s1 ⊔ s2).post = s1.post ⊔ s2.post := rfl
+
+/-- LE は pointwise (pre + post 両方)。 -/
+theorem le_iff {S I O : Type} (s1 s2 : ResearchSpec S I O) :
+    s1 ≤ s2 ↔ s1.pre ≤ s2.pre ∧ s1.post ≤ s2.post := Iff.rfl
+
+end AgentSpec.Spine.ResearchSpec

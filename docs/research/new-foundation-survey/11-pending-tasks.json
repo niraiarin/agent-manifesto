@@ -122,10 +122,10 @@
       "section": "2.10",
       "topic": "GA-S15 SpecSig Lattice 設計 (ResearchSpec pre/post meet/join)",
       "mark": "🔴",
-      "status": "in_progress",
+      "status": "done",
       "timing": "Day 75 (人間判断 Day) → Day 76-77 実装",
       "gaps": ["GA-S15"],
-      "detail": "Day 75 design 確定 (Q1=A PrePred/PostPred 独立 Lattice / Q2=B Day 76-77 scope / Q3=B 新 module 隔離 / Q4=D Confidence migration 後送り)。Day 76 で AgentSpec/Spine/ResearchSpecLattice.lean に PrePred/PostPred Lattice instance + helper theorem (Mathlib Pi.instLattice + Prop.instDistribLattice 流用)、Day 77 で test 30 examples + ResearchSpec.PartialOrder + Lattice。Confidence migration は Day 78+ or Week 4 で consumer 出現時。LLM refine loop 収束証明 (GA-M11) の足掛かり"
+      "detail": "Day 75 design 確定 (Q1=A/Q2=B/Q3=B/Q4=D)、Day 76 PrePred/PostPred 自動 Lattice + 2 theorem rfl + 8 法則 examples (commit 967a2e6)、Day 77 ResearchSpec naive product Lattice instance (LE/Sup/Inf/PartialOrder/Lattice inline) + 5 helper theorem + 34 test examples で Q2=B 完了。GA-M11 LLM refine loop 収束証明の足掛かり完成。Hoare refinement order (Liquid Haskell subtype) は別 instance で Day 78+ or Week 4 で必要時追加可能。Confidence migration (Q4-A) は consumer 出現時"
     },
     {
       "section": "2.1",
@@ -1099,6 +1099,12 @@
       "status": "done",
       "scope": "GA-S15 SpecSig Lattice instance 実装 (Q1=A/Q3=B 設計、案Z step 3/3 前半)。AgentSpec/Spine/ResearchSpecLattice.lean 新規 (abbrev PrePred/PostPred + Mathlib Pi.instLattice + Prop.instDistribLattice 自動継承 + 2 theorem rfl 証明 + 8 lattice 法則 examples)。lake build 378 jobs PASS (+270 jobs = Mathlib import)、example_count 640→652 (+12)、theorem 15→17 (+2)。conservative extension",
       "commit": "967a2e6",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 77,
+      "status": "done",
+      "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpecLattice.lean に ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice、le_antisymm は cases+congr) + 5 helper theorem (inf_pre/inf_post/sup_pre/sup_post/le_iff)、Test/Spine/ResearchSpecLatticeTest.lean 新規 34 examples (PrePred/PostPred + ResearchSpec lattice 法則 + Day 53 helper 連結)。lake build AgentSpec 378 + AgentSpecTest 412 jobs PASS、example_count 652→686 (+34)、theorem 17→22 (+5)。GA-S15 entry done 化。conservative extension",
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],

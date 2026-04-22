@@ -9,6 +9,7 @@ import AgentSpec.Test.Spine.ReferenceTest
 import AgentSpec.Test.Spine.RationaleTest
 import AgentSpec.Test.Spine.StateTest
 import AgentSpec.Test.Spine.ResearchSpecTest
+import AgentSpec.Test.Spine.ResearchSpecLatticeTest
 import AgentSpec.Test.Spine.ResearchNodeTest
 import AgentSpec.Test.Spine.ResearchGoalTest
 import AgentSpec.Test.Process.HypothesisTest
