@@ -360,4 +360,24 @@ def strategyFeasible (s : TaskStrategy) (agent : Agent) : Prop :=
   s.resourceUsage ≤ s.task.resourceBudget ∧
   s.achievedPrecision ≥ s.task.precisionRequired.required
 
+/-! ## Day 96 拡張: D4 用 dependency (DevelopmentPhase L1-L6 系列カバー) -/
+
+/-- Development phase (D4 の progressive self-application、L1-L6 系列対応)。
+    safety=L1, verification=P2, observability=P4, governance=P3, equilibrium=投資+動的調整。 -/
+inductive DevelopmentPhase where
+  | safety
+  | verification
+  | observability
+  | governance
+  | equilibrium
+  deriving BEq, Repr
+
+/-- Inter-phase dependency: 後続 phase は先行 phase 完了後のみ開始可。 -/
+def phaseDependency : DevelopmentPhase → DevelopmentPhase → Prop
+  | .verification,  .safety        => True
+  | .observability, .verification  => True
+  | .governance,    .observability => True
+  | .equilibrium,   .governance    => True
+  | _,              _              => False
+
 end AgentSpec.Manifest

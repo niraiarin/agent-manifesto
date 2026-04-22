@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.95.0-week3-day95-p-series-complete",
+  "version": "0.96.0-week3-day96-l-d4",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2279,17 +2279,27 @@
       "enforces": "structural",
       "dependencies": [],
       "provides_types": []
+    },
+    {
+      "id": "agent-spec-lib:AgentSpec.Manifest.D4",
+      "path": "AgentSpec/Manifest/D4.lean",
+      "scope": "formalization",
+      "refs": ["GA-I7"],
+      "assumptions": [],
+      "enforces": "structural",
+      "dependencies": [],
+      "provides_types": []
     }
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 95 P 系列完了 (T+E+P 20 axiom + 15 theorem)",
+    "last_verified_phase": "Week 3 Day 96 L+D4 (T+E+P+D4 20 axiom + 17 theorem)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 394,
+        "job_count": 395,
         "scope": "production-only",
-        "note": "Day 95: Manifest.P6 追加 (+1 jobs、393→394)。T+E+P 全完了 20 axiom + 15 theorem。Mathlib import 維持"
+        "note": "Day 96: Manifest.D4 追加 + Ontology DevelopmentPhase 拡張 (+1 jobs、394→395)。L1-L6 系列を DevelopmentPhase 5 constructor で表現 (axiom 不要)。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2310,7 +2320,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 20,
-    "theorem_count": 49,
+    "theorem_count": 51,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2638,6 +2648,10 @@
         "examples": 0
       },
       "Manifest/P6.lean": {
+        "theorems": 2,
+        "examples": 0
+      },
+      "Manifest/D4.lean": {
         "theorems": 2,
         "examples": 0
       }
@@ -3599,6 +3613,16 @@
       "evaluator": "lake build 394 jobs PASS (+1 = P6.lean、393→394)、theorem 47→49。Ontology に TaskStrategy + strategyFeasible 追加。P6.lean (task_is_constraint_satisfaction + task_design_is_probabilistic) byte-identical。e1b_from_e1a auxiliary は P2 self_verification_unsound と semantic 重複で skip。P 系列 完備 (P1-P6 14 theorem)。",
       "scope": "P 系列完了。Manifest 移植 累計: 20 axiom + 15 theorem (T1-T8 13+1 / E1-E3 4 / P1-P6 + ObservableDesign 由来 axiom 3 + 14 theorem)。残: L1-L6 + V1-V7 + D1-D18 = ~32 axiom。Day 96 で L 系列着手予定。Step 6 同 commit 統合。",
       "change_category": "proof_addition",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 96 L 系列 + D4 (DevelopmentPhase + 2 theorem)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 395 jobs PASS (+1 = D4.lean、394→395)、theorem 49→51。Ontology に DevelopmentPhase inductive (5 constructor: safety/verification/observability/governance/equilibrium) + phaseDependency def 追加 (L1-L6 系列を D4 phase constructor で表現、axiom 0)。D4.lean (d4_no_self_dependency + d4_full_chain) byte-identical。",
+      "scope": "L 系列完了 (DevelopmentPhase inductive で L1=safety 等 5 phase 表現、axiom 不要)。D4 phase ordering 完備。残: V 系列 (ObservableDesign 由来 axiom batch ~10 件) + D 残 16 theorem。Day 97 で V 系列着手予定。Step 6 同 commit 統合。",
+      "change_category": "additive_definition",
       "subagent_dispatch": false
     }
   ],
