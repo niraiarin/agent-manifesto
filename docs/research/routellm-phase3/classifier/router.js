@@ -32,8 +32,14 @@ const FORCE_CLOUD_PREFIXES = [
 const COST_SAFETY = parseFloat(process.env.ROUTING_COST_SAFETY || "2.0");
 const COST_CLOUD = parseFloat(process.env.ROUTING_COST_CLOUD || "1.0");
 
-const LOCAL_PROVIDER = "llama-server,qwen3.6-35b-a3b-bf16";
+const LOCAL_PROVIDER = process.env.ROUTING_LOCAL_PROVIDER || "llama-server,qwen3.6-35b-a3b-bf16";
 // null = fallback to default (= Cloud via anthropic provider)
+
+// Circuit breaker: 5 consecutive failures → skip classifier for 30s
+let _consecutiveFailures = 0;
+let _circuitOpenUntil = 0;
+const CB_THRESHOLD = 5;
+const CB_COOLDOWN_MS = 30 * 1000;
 
 function utilityDecide(probs, costSafety, costCloud) {
   // probs: {local_confident, local_probable, cloud_required, hybrid, unknown}
@@ -60,22 +66,45 @@ module.exports = async function customRouter(request, allConfig, { event }) {
     // Cap prompt to ~2KB for classifier latency
     const prompt = content.slice(0, 2000);
 
-    // Safety net 1: force Cloud for known safety-critical skill prefixes
-    const trimmed = prompt.trimStart();
+    // Safety net 1: force Cloud for known safety-critical skill prefixes.
+    // Search across *full content* (not just 2000-char truncation) to prevent
+    // bypass via long preamble (Verifier finding C-2). Check both leading
+    // and occurrences at line start.
     for (const prefix of FORCE_CLOUD_PREFIXES) {
-      if (trimmed.startsWith(prefix)) {
+      if (content.includes("\n" + prefix) || content.trimStart().startsWith(prefix)) {
         request.log?.info?.(`[router.js] force-cloud prefix=${prefix}`);
         return null;  // → default (Cloud)
       }
     }
 
-    const resp = await fetch(CLASSIFIER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-      signal: AbortSignal.timeout(1000),
-    });
-    if (!resp.ok) return null;
+    // Circuit breaker check (Verifier finding C-1)
+    const now = Date.now();
+    if (now < _circuitOpenUntil) {
+      request.log?.info?.(`[router.js] circuit open, fallback to default`);
+      return null;
+    }
+
+    let resp;
+    try {
+      resp = await fetch(CLASSIFIER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+        signal: AbortSignal.timeout(1000),
+      });
+    } catch (err) {
+      _consecutiveFailures++;
+      if (_consecutiveFailures >= CB_THRESHOLD) {
+        _circuitOpenUntil = now + CB_COOLDOWN_MS;
+        request.log?.warn?.(`[router.js] circuit opened for ${CB_COOLDOWN_MS}ms after ${_consecutiveFailures} failures`);
+      }
+      throw err;
+    }
+    if (!resp.ok) {
+      _consecutiveFailures++;
+      return null;
+    }
+    _consecutiveFailures = 0;
 
     const { label, confidence, probs, fallback } = await resp.json();
 

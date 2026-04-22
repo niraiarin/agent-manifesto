@@ -32,6 +32,11 @@ class ClassifyResponse(BaseModel):
     probs: dict[str, float]
     fallback: bool
     latency_ms: float
+    # Aggregate probabilities for routing decision (Verifier finding D-2: log routing direction).
+    # Client (router.js) applies utility_decide on these to get final routing.
+    p_local: float
+    p_cloud: float
+    utility_route: str  # "local" or "cloud" — computed at default cost_safety=2
 
 
 class DriftLogger:
@@ -51,6 +56,9 @@ class DriftLogger:
             "confidence": resp.confidence,
             "fallback": resp.fallback,
             "latency_ms": resp.latency_ms,
+            "p_local": resp.p_local,
+            "p_cloud": resp.p_cloud,
+            "utility_route": resp.utility_route,
         }
         with open(self.path, "a") as f:
             f.write(json.dumps(entry) + "\n")
@@ -83,6 +91,16 @@ def create_app(model_dir: Path, log_path: Path, oov_threshold: float = 0.3) -> F
 
         probs_dict = {id_to_label[i]: float(p) for i, p in enumerate(probs_arr)}
 
+        # Aggregate Local vs Cloud probabilities for utility decision
+        p_local = probs_dict.get("local_confident", 0.0) + probs_dict.get("local_probable", 0.0)
+        p_cloud = probs_dict.get("cloud_required", 0.0) + probs_dict.get("hybrid", 0.0) + probs_dict.get("unknown", 0.0)
+        # Utility-based routing (default cost_safety=2, cost_cloud=1)
+        # U(local) = p_cloud * (-2) + p_local * 1
+        # U(cloud) = p_cloud * 1 + p_local * (-1)
+        u_local = p_cloud * (-2.0) + p_local * 1.0
+        u_cloud = p_cloud * 1.0 + p_local * (-1.0)
+        utility_route = "local" if u_local > u_cloud else "cloud"
+
         # OOV fallback: if top confidence below threshold, treat as unknown→cloud
         threshold = req.min_confidence if req.min_confidence is not None else oov_threshold
         fallback = confidence < threshold
@@ -95,6 +113,9 @@ def create_app(model_dir: Path, log_path: Path, oov_threshold: float = 0.3) -> F
             probs=probs_dict,
             fallback=fallback,
             latency_ms=round(latency_ms, 2),
+            p_local=round(p_local, 4),
+            p_cloud=round(p_cloud, 4),
+            utility_route=utility_route,
         )
         drift_logger.log(req, resp)
         return resp
