@@ -308,4 +308,20 @@ axiom trust_decreases_on_materialized_risk :
     riskMaterialized agent w' →
     trustLevel agent w' < trustLevel agent w
 
+/-! ## Day 93 拡張: P3 用 dependency (CompatibilityClass + KnowledgeIntegration) -/
+
+/-- P3 core: knowledge integration の互換性分類。 -/
+inductive CompatibilityClass where
+  | conservativeExtension
+  | compatibleChange
+  | breakingChange
+  deriving BEq, Repr
+
+/-- Knowledge integration event (P3 で使用)。 -/
+structure KnowledgeIntegration where
+  before        : World
+  after         : World
+  compatibility : CompatibilityClass
+  deriving Repr
+
 end AgentSpec.Manifest
