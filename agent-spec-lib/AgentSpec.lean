@@ -33,6 +33,7 @@ import AgentSpec.Manifest.E1
 import AgentSpec.Manifest.E2
 import AgentSpec.Manifest.E3
 import AgentSpec.Manifest.P1
+import AgentSpec.Manifest.P2
 import AgentSpec.Spine.ResearchSpecLattice
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)

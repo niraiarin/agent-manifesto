@@ -292,4 +292,20 @@ opaque riskExposure (agent : Agent) (w : World) : Nat
 /-- World output (E3 で使用、output extraction、opaque)。 -/
 opaque worldOutput (w : World) : Output Nat
 
+/-! ## Day 91 拡張: P1b 用 dependency (ObservableDesign 由来) -/
+
+/-- Risk materialization (P1b、opaque)。 -/
+opaque riskMaterialized (agent : Agent) (w : World) : Prop
+
+/-- Trust level (P1b、opaque、Phase 4 で Observable 化予定)。 -/
+opaque trustLevel (agent : Agent) (w : World) : Nat
+
+/-- Trust 毀損 axiom (P1b 依存、ObservableDesign.lean line 307 由来)。
+    action space 拡大後 risk 顕在化で trust 低下、信頼の非対称性 (蓄積漸進・毀損急激)。 -/
+axiom trust_decreases_on_materialized_risk :
+  ∀ (agent : Agent) (w w' : World),
+    actionSpaceSize agent w < actionSpaceSize agent w' →
+    riskMaterialized agent w' →
+    trustLevel agent w' < trustLevel agent w
+
 end AgentSpec.Manifest
