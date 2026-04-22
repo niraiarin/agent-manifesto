@@ -122,10 +122,10 @@
       "section": "2.10",
       "topic": "GA-S15 SpecSig Lattice 設計 (ResearchSpec pre/post meet/join)",
       "mark": "🔴",
-      "status": "pending",
-      "timing": "Day 75 (人間判断 Day) → Day 76+ 実装",
+      "status": "in_progress",
+      "timing": "Day 75 (人間判断 Day) → Day 76-77 実装",
       "gaps": ["GA-S15"],
-      "detail": "Day 75 で 03-lean-metaprogramming.md (mathlib lattice) + TyDD-F2/S4 (Liquid Haskell) 精読、Q1-Q4 案を user 判断仰ぐ。実装は Day 76+。Rationale.confidence Fin 101 deferred 解消の足掛かり (GA-S15 Lattice が natural な導入点と Day 70 人間判断で確認済)。LLM refine loop の収束証明基盤"
+      "detail": "Day 75 design 確定 (Q1=A PrePred/PostPred 独立 Lattice / Q2=B Day 76-77 scope / Q3=B 新 module 隔離 / Q4=D Confidence migration 後送り)。Day 76 で AgentSpec/Spine/ResearchSpecLattice.lean に PrePred/PostPred Lattice instance + helper theorem (Mathlib Pi.instLattice + Prop.instDistribLattice 流用)、Day 77 で test 30 examples + ResearchSpec.PartialOrder + Lattice。Confidence migration は Day 78+ or Week 4 で consumer 出現時。LLM refine loop 収束証明 (GA-M11) の足掛かり"
     },
     {
       "section": "2.1",
@@ -1085,6 +1085,12 @@
       "status": "done",
       "scope": "Manifest 移植 PoC (案Z step 1/3) — AgentSpec/Manifest/Ontology.lean (AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton) + AgentSpec/Manifest/T1.lean (session_bounded axiom)。GA-I7 (b) 再定義方針実証、cross-project require 回避。lake build 108 jobs PASS (+3)、example_count 640 不変。conservative extension",
       "commit": "98c6841",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 75,
+      "status": "done",
+      "scope": "GA-S15 SpecSig Lattice 論文サーベイ + design 議論 (案Z step 2/3、人間判断 Day)。code 変更なし、論文 4 source 統合 (gap-analysis GA-S15 + GA-M11 + TyDD-F7 + Day 70 人間判断記録)、Mathlib v4.29.0 利用可能性確認 (Pi.instLattice + Prop.instDistribLattice)、Q1-Q4 案を user 判断 (Q1=A/Q2=B/Q3=B/Q4=D)。Day 76-77 実装方針確定。conservative extension",
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],

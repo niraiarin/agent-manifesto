@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.74.0-week3-day74-manifest-poc",
+  "version": "0.75.0-week3-day75-lattice-design",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -3173,6 +3173,21 @@
       "addressable_count": 0,
       "evaluator": "lake build 108 jobs PASS (104→108、+3 jobs = Manifest.Ontology + Manifest.T1 + AgentSpec rebuild)、example_count 640 不変。Subagent verification 省略 (Day 27 audit basis: backward-compat additive、新 namespace AgentSpec.Manifest 追加のみで既存 Spine/Process/Provenance 全 module 不変)。GA-I7 (b) 再定義方針: lean-formalization/Manifest/Ontology.lean の minimum subset (AgentId/SessionId opaque + Session + SessionStatus + Time abbrev + World skeleton 2 fields) と Axioms.lean の session_bounded axiom のみを AgentSpec.Manifest namespace で再定義。",
       "scope": "Phase 0 Week 3-4 scope (Manifest 移植、roadmap[1]) の path 確立 PoC。GA-I7 (b) 再定義方針を実証、cross-project require 回避。Day 74 では T1 3 axiom のうち session_bounded のみ移植 (Day 75-76 で残 2 axiom = no_cross_session_memory + session_no_shared_state を AuditEntry/Action/canTransition opaque 追加とともに additive 拡張、Day 77+ で T2 structure_persists 等を Structure/Epoch 追加とともに継続)。54 axiom 残、Week 3-4 内に大部分完了予定。",
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 3 Day 75 GA-S15 SpecSig Lattice 論文サーベイ + design 議論 (人間判断 Day)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "code 変更なし (人間判断 Day、Day 70 と同パターン)。論文サーベイ 4 source 統合: gap-analysis GA-S15 (lattice instance 必要、TyDD-F2/S4 由来、対応案=high-tokenizer refines 拡張)、GA-M11 (LLM refine loop 収束証明は GA-S15 依存)、TyDD-F7 (Fixed-point iteration on SpecSig lattice、Liquid Haskell)、Day 70 人間判断 (Rationale.confidence Fin 101 は GA-S15 が natural な導入点)。既存 ResearchSpec.lean (Day 53) の strengthenPre/weakenPost が既に lattice の meet/join semantic を持つが formal Lattice instance なしと確認、Mathlib v4.29.0 の Prop.instDistribLattice + Pi.instLattice 利用可能性確認 (FolgeID.lean で既に Mathlib.Order import 実績あり)。Q1-Q4 4 軸案を user に提示、推奨案 Q1=A (PrePred/PostPred 独立 Lattice) / Q2=B (Day 76-77 2 Day scope) / Q3=B (新 module 隔離) / Q4=D (Confidence migration 後送り) を user 承認。Subagent 省略 (人間判断 Day、code 変更なし)。",
+      "scope": "案Z step 2/3 (人間判断 Day)。Day 70 と同パターンの design Day、論文サーベイ + design 議論で次 Day 実装方針を確定。Day 76 で AgentSpec/Spine/ResearchSpecLattice.lean (新 module 隔離) に PrePred/PostPred Lattice instance + 5-7 helper theorem 実装、Day 77 で test 30 examples + ResearchSpec.PartialOrder + Lattice instance 拡張予定。Confidence migration (Q4-A) は Day 78+ or Week 4 で consumer 出現時に対応。",
+      "human_decisions": {
+        "Q1": "A (PrePred/PostPred 独立 Lattice、Pi.instLattice 流用)",
+        "Q2": "B (Day 76-77 2 Day scope、ResearchSpec.PartialOrder + Lattice + test 30 examples)",
+        "Q3": "B (新 module Spine/ResearchSpecLattice.lean 隔離、既存 ResearchSpec.lean 不変保持)",
+        "Q4": "D (Confidence migration せず GA-S15 Lattice 単独着手、Day 70 deferred 継続)"
+      },
       "compatibility": "conservative extension"
     }
   ],
