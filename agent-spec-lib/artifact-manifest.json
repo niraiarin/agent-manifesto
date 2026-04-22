@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.78.0-week3-day78-empirical-6",
+  "version": "0.79.0-week3-day79-process-scripts",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,7 +2173,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 78 Empirical Revalidation #6",
+    "last_verified_phase": "Week 3 Day 79 process scripts (N1+N7)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -3237,6 +3237,15 @@
         "N10 [Gap F、低優先]: steps_skipped schema field 不在 → Day 79+ schema 拡張",
         "M-OBS [pre-existing]: theorem manifest 22 vs 31 (Provenance/ProvRelation 4 + Spine/LearningCycle 5) — Day 74-77 起因なし、Day 79+ で manifest backfill"
       ],
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 3 Day 79 process scripts (N1 update-handoff.sh + N7 backfill-day-commit.sh)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "CLAUDE.md 新 rule 'Cycle Task script 化' 履行。scripts/update-handoff.sh (N1: Day 73 PC-crash 構造的解消) + scripts/backfill-day-commit.sh (N7: metadata-only commit を 1 invocation 化) 新規追加。両 script 試験成功 (update-handoff: handoff-resume を Day 78 完了状態に再生成、backfill: Day 78 既存 commit field で no-op exit 2 確認)。Subagent 省略 (Day 27 audit basis: script 追加のみで Lean code 不変、scripts/ 配下は production build に影響なし)。",
+      "scope": "Day 78 empirical #6 高優先 process gap (N1 + N7) を解消。N1 で handoff-resume.md auto-update 化 → Day 73 PC-crash incident の再発防止。N7 で Day 74-78 で 5 件の chore(metadata) backfill commit を 1 script invocation 化 → 推論不要 cycle task の自動化。N2/N3/N5/N10 は Day 80+ で順次対処予定。",
       "compatibility": "conservative extension"
     }
   ],

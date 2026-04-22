@@ -104,19 +104,19 @@
       "section": "6.4",
       "topic": "Day 78 N1 [Gap A]: handoff-resume.md auto-update hook (Day 73 PC-crash incident 構造的解消)",
       "mark": "🔴",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
-      "detail": "Day 78 empirical #6 negative subagent 識別。handoff-resume.md が Day 66 で 11 Day 遅れ、Day 73 PC-crash 再発時の resume が古い state から始まる。SessionEnd hook or post-cycle-check hook で current Day + HEAD sha + build state + next steps を auto-update。N1 高優先"
+      "detail": "Day 79 で scripts/update-handoff.sh 実装 (commit TBD)。HEAD sha + branch + 最新 day_plan entry + build state + next empirical 取得し handoff-resume-research-new-foundation.md を auto-regenerate。Day 78 完了状態 (HEAD=5573d49) で試験成功、Day 73 PC-crash 再発防止確立"
     },
     {
       "section": "6.4",
       "topic": "Day 78 N7 [Gap E]: metadata-only commit script 化 (CLAUDE.md 新 rule 反映)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
-      "detail": "Day 78 empirical #6 negative subagent 識別。Day 74-77 で 4 件の chore(metadata) backfill commit (b0c3f64/4789ca7/87a6bc0/87a6bc0) は同一 template (1-line .json + body 4 行) で推論不要。CLAUDE.md 新 rule 'Cycle Task script 化' 対象、scripts/backfill-day-commit.sh <day> <commit-hash> で 1 invocation 化"
+      "detail": "Day 79 で scripts/backfill-day-commit.sh 実装 (commit TBD)。Usage: bash scripts/backfill-day-commit.sh <day> <commit-hash>、jq で commit field 追加 + cycle-check + chore(metadata) commit を 1 invocation 化。Day 78 既存 entry で no-op exit 2 試験成功"
     },
     {
       "section": "6.4",
@@ -1176,6 +1176,12 @@
       "status": "done",
       "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 [critical] PASS / edge 1 BUG + 4 EDGE / negative 2 high + 4 medium + 2 low gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正: ResearchSpec を DistribLattice 化、OrderTop/OrderBot 追加 (trivial=⊤、unsatisfiable=⊥)、ext lemma、Test 13 example 追加、docstring identifier 修正。process gap 6 件 (handoff stale / docs inflation / subagent justification / Step 6 inconsistency / metadata-only commit script 化 / steps_skipped schema) を Day 79+ improvement entry として記録。example_count 686→699 (+13)、theorem 22→25 (+3)。conservative extension",
       "commit": "d8cb8d5",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    {
+      "day": 79,
+      "status": "done",
+      "scope": "process scripts (案 A、Day 78 N1+N7 解消)。scripts/update-handoff.sh (handoff auto-update、Day 73 PC-crash 構造的解消) + scripts/backfill-day-commit.sh (metadata-only commit を 1 invocation 化、CLAUDE.md 新 rule 履行)。両 script 試験成功。pending_items の N1/N7 entry done 化。code 変更なし、scripts/ 配下のみ。conservative extension",
       "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
