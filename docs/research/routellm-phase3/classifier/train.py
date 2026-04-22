@@ -18,6 +18,7 @@ LABEL_TO_ID = {
     "local_probable": 1,
     "cloud_required": 2,
     "hybrid": 3,
+    "unknown": 4,
 }
 ID_TO_LABEL = {v: k for k, v in LABEL_TO_ID.items()}
 

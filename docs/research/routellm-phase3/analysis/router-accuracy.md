@@ -1,14 +1,14 @@
 # Causal LM Router Accuracy Report (#649)
 
 **日付**: 2026-04-23
-**学習データ**: 446 entries (taxonomy-manual 335 + helpsteer3 111)
+**学習データ**: 687 entries (taxonomy-manual 550 + helpsteer3 137), 5-way (unknown 追加後)
 **アーキテクチャ**: `intfloat/multilingual-e5-small` (384 dim) + Logistic Regression
 
 ## Gate 判定: **PASS**
 
 Gate 基準:
-- [x] Overall accuracy ≥ 85% → **92.22%**
-- [x] 全 4 categories F1 ≥ 0.70 → min 0.80 (local_probable)
+- [x] Overall accuracy ≥ 85% → **90.58%** (5-way), **92.22%** (4-way 初版)
+- [x] 全カテゴリ F1 ≥ 0.70 → min 0.84 (local_probable, 5-way)
 
 ## 学習条件
 
@@ -23,26 +23,37 @@ hybrid_downsample = auto (target=111)
 
 ## 評価結果
 
+### v2 (5-way with unknown, 138 eval)
+
 | Category | Precision | Recall | F1 | Support |
 |---|---|---|---|---|
-| local_confident | 0.91 | 1.00 | **0.95** | 20 |
-| local_probable | 0.77 | 0.83 | **0.80** | 12 |
-| cloud_required | 0.94 | 1.00 | **0.97** | 29 |
-| hybrid | 1.00 | 0.83 | **0.91** | 29 |
+| local_confident | 0.81 | 1.00 | **0.89** | 17 |
+| local_probable | 0.93 | 0.77 | **0.84** | 35 |
+| cloud_required | 0.83 | 1.00 | **0.91** | 25 |
+| hybrid | 1.00 | 0.88 | **0.94** | 43 |
+| **unknown** | 0.90 | 1.00 | **0.95** | 18 |
 
-- Accuracy: **0.9222**
+- Accuracy: **0.9058**
 - Macro F1: **0.91**
-- Weighted F1: **0.92**
+- Weighted F1: **0.90**
 
-## Confusion Matrix
+### Confusion Matrix
 
 ```
-                  local_confident  local_probable  cloud_required  hybrid
-local_confident                20               0               0       0
-local_probable                  2              10               0       0
-cloud_required                  0               0              29       0
-hybrid                          0               3               2      24
+                  local_confident  local_probable  cloud_required  hybrid  unknown
+local_confident               17              0              0       0        0
+local_probable                 4             27              4       0        0
+cloud_required                 0              0             25       0        0
+hybrid                         0              2              1      38        2
+unknown                        0              0              0       0       18
 ```
+
+### 誤分類の実害評価
+
+- `cloud_required`: 25/25 recall 1.00 → **Cloud 必須タスクが Local に流れるケースゼロ** (safety ◎)
+- `unknown`: 18/18 recall 1.00 → OOD prompt は全て正しく unknown → fallback で Cloud に流れる
+- `local_probable → cloud_required` 4 件: overcautious だが実害なし (Cloud で正しく処理される)
+- `local_probable → local_confident` 4 件: 同じ Local への流れ、実害なし
 
 ### 誤分類の傾向
 
@@ -86,15 +97,43 @@ def classify(prompt: str) -> str:
 4. **日本語 prompt の bias**: taxonomy-manual は全日本語、helpsteer3 は全英語。domain shift の影響未検証
 5. **OOD 判定なし**: 4 カテゴリのどれにも属さない prompt に対する挙動未定義。次版で `unknown` カテゴリ追加検討
 
-## Deferred
+## v1 → v2 変更点 (同 PR 内で実施)
 
-- 実運用下での drift monitoring
-- 分類信頼度 (predict_proba) の閾値調整（低 confidence → Cloud fallback）
-- multi-label vs single-label の選択再評価
+| 項目 | v1 | v2 |
+|---|---|---|
+| Label 数 | 4 | **5** (+unknown) |
+| 学習データ | 446 | **687** (+54%) |
+| local_probable F1 | 0.80 | **0.84** (+0.04) |
+| OOD 対応 | 低信頼度のみ | **unknown カテゴリ + OOD fallback** |
+| 実装 | scripts のみ | **+ FastAPI serve + ccr router.js + drift monitor** |
 
-## 次ステップ
+## 実装成果物（同 PR 内）
 
-1. `ccr-integration.md` §方式 B の FastAPI 実装
-2. `~/.claude-code-router/router.js` 作成
-3. config.json に `CUSTOM_ROUTER_PATH` 追加
-4. `ccr restart` + 実運用で validate
+1. **`classifier/serve.py`** — FastAPI で `POST /classify` を提供、`predict_proba` + confidence threshold (default 0.5) で OOD fallback 判定
+2. **`classifier/router.js`** — ccr CUSTOM_ROUTER_PATH hook、FastAPI に fetch で `label → provider,model` 変換、1秒 timeout + fallback 設計
+3. **`classifier/monitor_drift.py`** — predictions.jsonl を日次バケット化、L1 distance for label dist drift + confidence drift + fallback rate 監視、alert 判定付き
+
+## 運用フロー
+
+```
+1. FastAPI 起動:
+   cd classifier && uv run python3 serve.py --port 9001
+
+2. ccr 設定:
+   ~/.claude-code-router/router.js にコピー
+   config.json に "CUSTOM_ROUTER_PATH" 追加
+   ccr restart
+
+3. ログ蓄積:
+   classifier/logs/predictions.jsonl に自動記録
+
+4. drift 監視 (週次):
+   uv run python3 monitor_drift.py --reference-days 7 --output drift-report.json
+```
+
+## 残課題
+
+- eval 138 件は小規模。実運用 log (数千件) で再評価
+- OOD unknown は routing 時 `cloud_required` にフォールバック (serve.py:fallback=True)
+- unknown 誤検出 (false unknown) が出た場合の再学習設計は未定
+- classifier model の自動再学習トリガは未実装 (drift alert 後 manual)

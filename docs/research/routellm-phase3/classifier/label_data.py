@@ -189,6 +189,13 @@ TASK_SEED_PROMPTS: list[tuple[str, str, str]] = [
      "機械学習でクラス分類する時、F1 スコアと accuracy の使い分けは？"),
 ]
 
+# v2: additional variants + OOD unknown (from additional_prompts.py)
+try:
+    from additional_prompts import ADDITIONAL_LOCAL_PROBABLE, OOD_UNKNOWN
+    TASK_SEED_PROMPTS = TASK_SEED_PROMPTS + ADDITIONAL_LOCAL_PROBABLE + OOD_UNKNOWN
+except ImportError:
+    pass
+
 
 def load_phase1_domain(path: Path) -> list[dict]:
     """Phase 1 domain data (M-interp/T-interp prompts) → local_probable ラベル。"""
