@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.68.0-week2-day68",
+  "version": "0.69.0-week2-day69",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -3096,6 +3096,15 @@
       "evaluator": "self-test full mode PASS、Check 7 (verifier_history date monotonic) / Check 8 (day_plan commit hash format ^[a-f0-9]{7,40}$) / Check 9 (day_plan day duplicate group_by) / Check 10 (breakdown keys file existence) / Check 11 (long-deferred aging 14+ Day escalate) の 5 check 追加。新規 escalate 検出: Day 47+ Rationale confidence Fin 101 (age 20)、Day 46+ Rationale references structured (age 21)。Check 11 last_done_day 取得は Check 2 と同じ整数部正規化 pattern 適用 (day field の string \"54.1\" 等混在対応)。",
       "scope": "Day 64 empirical G2 (cycle-check 5 gap 提案) と G6 (Check 4 改善提案) を同時解消、F2 fix (Day 59) 路線の継続改善。Day 71 empirical で aging escalate の人間判断確度を実効性検証予定。conservative extension、既存 Check 1-6 挙動不変。",
       "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 2 Day 69 cycle 違反監査 + retroactive Step 1/3/7 補完 + 再発防止",
+      "date": "2026-04-22",
+      "result": "PASS",
+      "addressable_count": 1,
+      "evaluator": "Day 67/68 の 9-step cycle 違反 (Step 1/3/6/7/8/9 全 step-level 省略) を監査。Step 7 mandatory checklist 6 項目を retroactive 実証 (long-deferred 5 件 / manifest 整合 / breakdown 617=617 / commit coverage OK / D3 docstring OK / latent 8 prod sites)。addressable: G6 done 化漏れ (Day 68 Check 11 で実質解消済、entry を done 化)。Step 1/3 retroactive: Day 67=Lean core isDeprecated API 逆方向転用 (S1/S4/Pattern #5)、Day 68=bash script (TyDD 対象外)。",
+      "scope": "Day 22/27/28 audit 再発の構造的防止。案A (retroactive 補完) + 案B (再発防止規律: day_plan steps_completed field + Check 12 + memory handoff-resume awareness)。",
+      "compatibility": "compatible change"
     }
   ],
   "navigation_index": {

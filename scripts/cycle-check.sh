@@ -244,6 +244,34 @@ else
   echo "[11] OK  long-deferred aging 範囲内 (< $AGING_THRESHOLD Day)"
 fi
 
+# ----- Check 12: 9-step cycle coverage (Day 69 再発防止) -----
+# Day 69+ の done entry には steps_completed field で 9 step 実施記録を要求
+# Day 68 以前は legacy (field 不在を許容)
+STEP_TRACK_SINCE=69
+last_done_entry=$(jq -r '
+  [.day_plan[] | select(.status == "done")]
+  | sort_by(.day | if type == "number" then . else (split(".") | .[0] | tonumber) end)
+  | .[-1]
+' "$PENDING")
+last_day_for_steps=$(echo "$last_done_entry" | jq -r '.day | if type == "number" then . else (split(".") | .[0] | tonumber) end')
+
+if [ "$last_day_for_steps" -ge "$STEP_TRACK_SINCE" ] 2>/dev/null; then
+  steps_json=$(echo "$last_done_entry" | jq '.steps_completed // []')
+  steps_count=$(echo "$steps_json" | jq 'length')
+  if [ "$steps_count" -eq 0 ]; then
+    echo "[12] WARN  Day $last_day_for_steps: steps_completed field なし (9-step cycle tracking 未実施)"
+    WARN=1
+  elif [ "$steps_count" -lt 9 ]; then
+    missing_steps=$(echo "$steps_json" | jq '[range(1;10)] - . | sort')
+    echo "[12] WARN  Day $last_day_for_steps: 9-step cycle incomplete ($steps_count/9), missing steps: $missing_steps"
+    WARN=1
+  else
+    echo "[12] OK  Day $last_day_for_steps: 9-step cycle complete (9/9)"
+  fi
+else
+  echo "[12] ---  legacy day ($last_day_for_steps < $STEP_TRACK_SINCE、steps_completed tracking は Day $STEP_TRACK_SINCE+ で有効)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \

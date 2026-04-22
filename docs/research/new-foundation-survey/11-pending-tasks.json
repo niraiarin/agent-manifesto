@@ -569,9 +569,9 @@
       "section": "6.4",
       "topic": "G6 cycle-check.sh Check 4 改善 (未 resolved Day N 形式 only + stale 閾値 aging)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 68+",
-      "detail": "Day 64 empirical G6、cycle-check v2 候補"
+      "detail": "Day 68 Check 11 (long-deferred aging 14+ Day escalate) で吸収。Day 69 Step 7 checklist で done 化漏れを識別"
     }
   ],
   "day_plan": [
@@ -1011,13 +1011,21 @@
       "day": 67,
       "status": "done",
       "scope": "G1 scanner filter — 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) で Lean.Linter.isDeprecated decl を blacklist 検査前に除外。Day 52 fixture (trivialDeprecated / ofTextUnauthoredDeprecated) semi-FP noise 解消、conservative extension",
-      "commit": "22ccfc8"
+      "commit": "22ccfc8",
+      "steps_completed": [2, 5]
     },
     {
       "day": 68,
       "status": "done",
       "scope": "G2/G6 cycle-check.sh F3 5 gap 追加 — Check 7 (verifier_history date monotonic) / Check 8 (commit hash format) / Check 9 (day_plan day duplicate) / Check 10 (breakdown keys 存在) / Check 11 (long-deferred aging 14+ Day escalate)。Day 47+/46+ Rationale 課題 2 件を新規 escalate、conservative extension",
-      "commit": "5b38f1b"
+      "commit": "5b38f1b",
+      "steps_completed": [2, 4, 5]
+    },
+    {
+      "day": 69,
+      "status": "done",
+      "scope": "9-step cycle 違反監査 + retroactive 補完 (案A+B)。Day 67/68 の Step 1/3/6/7/8/9 全省略を監査、Step 7 mandatory checklist 6 項目 retroactive 実証 (G6 done 化漏れ識別)、Step 1/3 retroactive 評価 (Day 67=S1/S4/Pattern#5 / Day 68=TyDD 対象外)。再発防止: steps_completed schema field + Check 12 + memory handoff-resume awareness 規律。compatible change",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {

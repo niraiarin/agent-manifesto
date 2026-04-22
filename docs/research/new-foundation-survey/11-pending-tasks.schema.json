@@ -112,7 +112,12 @@
           "scope": { "type": "string" },
           "commit": { "type": "string" },
           "breaking_change": { "type": "boolean" },
-          "empirical_findings": { "type": "array", "items": { "type": "string" } }
+          "empirical_findings": { "type": "array", "items": { "type": "string" } },
+          "steps_completed": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 1, "maximum": 9 },
+            "description": "9-step cycle 実施記録。Day 69+ で必須運用 (Day 69 再発防止 compatible change)"
+          }
         }
       }
     },
