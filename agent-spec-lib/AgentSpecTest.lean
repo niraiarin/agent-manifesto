@@ -5,6 +5,7 @@ import AgentSpec.Test.Spine.EvolutionStepTest
 import AgentSpec.Test.Spine.SafetyConstraintTest
 import AgentSpec.Test.Spine.LearningCycleTest
 import AgentSpec.Test.Spine.ObservableTest
+import AgentSpec.Test.Spine.ReferenceTest
 import AgentSpec.Test.Spine.RationaleTest
 import AgentSpec.Test.Spine.StateTest
 import AgentSpec.Test.Spine.ResearchSpecTest
