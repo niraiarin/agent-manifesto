@@ -59,6 +59,8 @@ axiom no_cross_session_memory :
   ∀ (w : World) (e1 e2 : AuditEntry),
     e1 ∈ w.auditLog → e2 ∈ w.auditLog →
     e1.session ≠ e2.session →
+    -- 異なるセッションの監査エントリは因果的に独立
+    -- （一方の preHash が他方の postHash に依存しない）
     e1.preHash ≠ e2.postHash
 
 /-- T1.3: No mutable state sharing across different sessions.
@@ -71,6 +73,8 @@ axiom session_no_shared_state :
     (w w' : World),
     action1.session ≠ action2.session →
     canTransition agent1 action1 w w' →
+    -- action2 が w で可能なら、w' でも可能（セッション1の遷移が
+    -- セッション2のアクション可否に直接影響しない）
     (∃ w'', canTransition agent2 action2 w w'') →
     (∃ w''', canTransition agent2 action2 w' w''')
 

@@ -282,7 +282,7 @@ STEP6_MISSING=$(jq -r '
   | map(select((.day | tostring | tonumber? // 0) >= 70))
   | map(select((.steps_completed // []) | any(. == 6)))
   | map(select((.docs_reflection_commit // null) == null))
-  | map(select(((.scope // "") | test("後続 docs|docs 反映|同 commit に統合|docs_reflection")) | not))
+  | map(select(((.scope // "") | test("後続 docs|docs 反映|同 commit に?統合|docs_reflection|Step 6 同 commit")) | not))
   | map("Day \(.day): Step 6 claimed but no docs_reflection_commit field nor textual ref in scope")
   | .[]
 ' "$PENDING" 2>/dev/null | head -3)

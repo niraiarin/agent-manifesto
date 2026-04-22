@@ -100,6 +100,42 @@
   "pending_items": [
     {
       "section": "6.4",
+      "topic": "Day 87 P1: check-doc-length.sh cycle-check 統合 (orphan script 解消)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative subagent 識別。check-doc-length.sh は Day 81 から導入だが cycle-check.sh から呼ばれず orphan 状態。pre-commit lint or cycle-check.sh から invoke、超過 entry を early surface"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 P2: cycle-check Check 14 (Inhabited/structure 変更時 change_category 必須化)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative 識別。Day 80/85 で World structure 拡張 (additive_axiom 誤分類) が起きた。git diff で Inhabited or structure World 変更を検出した時、change_category ∈ {compatible_change, behavior_change, breaking} + subagent_dispatch=true を強制"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 P3: Day-number empirical gating (Check 3 calendar→Day#)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative 識別。Day 78→Day 87 は calendar で同日 (Day-cycle 圧縮) → Check 3 calendar 7-day で OK 判定だが Day-number gap +9 で 2 Day overdue。Check 3 を expected_next_empirical_day = last_empirical_day + 7 で Day# gating、HARD GATE 化候補"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 Plausible: property-based test 導入 (TyDD 統合サイクル step 5)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative 識別。CLAUDE.md 新節 TyDD 統合サイクル step 5 (round-trip / property-based test) 未履行。Mathlib v4.29.0 に Plausible 含まれる、agent-spec-lib では 0 利用。GA-S15 Lattice (Day 76-77) の commutativity/associativity 等の property-based test 候補"
+    },
+    {
+      "section": "6.4",
       "topic": "Day 78 N1 [Gap A]: handoff-resume.md auto-update hook (Day 73 PC-crash incident 構造的解消)",
       "mark": "🔴",
       "status": "done",
@@ -1238,7 +1274,7 @@
     {
       "day": 77,
       "status": "done",
-      "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpecLattice.lean に ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice、le_antisymm は cases+congr) + 5 helper theorem (inf_pre/inf_post/sup_pre/sup_post/le_iff)、Test/Spine/ResearchSpecLatticeTest.lean 新規 34 examples (PrePred/PostPred + ResearchSpec lattice 法則 + Day 53 helper 連結)。lake build AgentSpec 378 + AgentSpecTest 412 jobs PASS、example_count 652→686 (+34)、theorem 17→22 (+5)。GA-S15 entry done 化。conservative extension",
+      "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice + 5 helper theorem) + Test 新規 34 examples。lake build 378+412 jobs PASS、example 652→686、theorem 17→22。GA-S15 done 化。conservative extension",
       "commit": "e834e3a",
       "steps_completed": [
         1,
@@ -1255,7 +1291,7 @@
     {
       "day": 78,
       "status": "done",
-      "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 [critical] PASS / edge 1 BUG + 4 EDGE / negative 2 high + 4 medium + 2 low gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正: ResearchSpec を DistribLattice 化、OrderTop/OrderBot 追加 (trivial=⊤、unsatisfiable=⊥)、ext lemma、Test 13 example 追加、docstring identifier 修正。process gap 6 件 (handoff stale / docs inflation / subagent justification / Step 6 inconsistency / metadata-only commit script 化 / steps_skipped schema) を Day 79+ improvement entry として記録。example_count 686→699 (+13)、theorem 22→25 (+3)。conservative extension",
+      "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 PASS / edge 1 BUG + 4 EDGE / negative 6 process gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正、process gap 6 件 (詳細は pending_items entry) を Day 79+ improvement 化。example 686→699、theorem 22→25。conservative extension",
       "commit": "d8cb8d5",
       "steps_completed": [
         1,
@@ -1404,6 +1440,12 @@
         9
       ],
       "commit": "841928c"
+    },
+    {
+      "day": 87,
+      "status": "done",
+      "scope": "Empirical Revalidation #7 (Day 78+7 期限の +2 Day overdue 解消)。3 parallel subagent (median 14 PASS + 1 FAIL / edge 3 BUG / negative 6 process gap)。FAIL/BUG 5 件即時修正 (example_count drift 699→717 / T1.2/T1.3 byte-identical 復元 / Day 80/85 change_category 修正 / Check 13 regex 拡張 / N10 schema 補完) + legacy 3 件圧縮。process gap 4 件 (P1/P2/P3/Plausible) を Day 88+ improvement 化。change_category=process_only、subagent_dispatch=true。compatible change",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {
