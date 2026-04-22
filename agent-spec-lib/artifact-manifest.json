@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.87.0-week3-day87-empirical-7",
+  "version": "0.88.0-week3-day88-p1-p2-integration",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,7 +2173,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 87 Empirical #7",
+    "last_verified_phase": "Week 3 Day 88 P1+P2 process gap (cycle-check 14 check 化)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -3373,6 +3373,16 @@
         "negative CI gate [Day 88+]: AgentSpecTest 自動 build 確認 + 規律化",
         "negative Plausible [Day 88+]: property-based test 導入 (TyDD 統合サイクル step 5)"
       ],
+      "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 3 Day 88 process gap P1+P2 (cycle-check Check 14 統合 + change_category guideline)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "P1: cycle-check.sh に Check 14 = check-doc-length.sh invoke 統合 (orphan script 解消、Day 87 で 1 warn detect、Day 87 scope 432→<400 圧縮で resolve)。P2: artifact-manifest.schema.json change_category description 強化 (World/Inhabited 変更時 compatible_change 以上を guideline 明記)。Check 15 動的検出 (git diff 解析) は Day 90+ defer (false positive リスク高、scope 大)。Subagent 省略 (process_only、script + schema description 修正のみ)。",
+      "scope": "Day 87 empirical #7 後の P1+P2 解消、cycle-check 13→14 check 拡張、check-doc-length 自動 invocation 確立。残 P3 (Day# empirical gating) + Plausible は Day 90+。Day 89 で P 系列着手予定 (P1 axiom cognitive_role_separation)。",
+      "change_category": "process_only",
       "compatibility": "compatible change"
     }
   ],

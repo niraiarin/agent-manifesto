@@ -102,19 +102,19 @@
       "section": "6.4",
       "topic": "Day 87 P1: check-doc-length.sh cycle-check 統合 (orphan script 解消)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 88+",
       "gaps": [],
       "detail": "Day 87 empirical #7 negative subagent 識別。check-doc-length.sh は Day 81 から導入だが cycle-check.sh から呼ばれず orphan 状態。pre-commit lint or cycle-check.sh から invoke、超過 entry を early surface"
     },
     {
       "section": "6.4",
-      "topic": "Day 87 P2: cycle-check Check 14 (Inhabited/structure 変更時 change_category 必須化)",
+      "topic": "Day 87 P2: cycle-check change_category Inhabited/structure guideline",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 88+",
       "gaps": [],
-      "detail": "Day 87 empirical #7 negative 識別。Day 80/85 で World structure 拡張 (additive_axiom 誤分類) が起きた。git diff で Inhabited or structure World 変更を検出した時、change_category ∈ {compatible_change, behavior_change, breaking} + subagent_dispatch=true を強制"
+      "detail": "Day 88 で P2 部分実装: artifact-manifest schema change_category description 強化 (World/Inhabited 変更時 compatible_change 以上 guideline 化)。Check 15 動的 git diff 検出は scope 大 + false positive リスク高で Day 90+ defer (schema description で human-enforce 当面)"
     },
     {
       "section": "6.4",
@@ -1444,7 +1444,7 @@
     {
       "day": 87,
       "status": "done",
-      "scope": "Empirical Revalidation #7 (Day 78+7 期限の +2 Day overdue 解消)。3 parallel subagent (median 14 PASS + 1 FAIL / edge 3 BUG / negative 6 process gap)。FAIL/BUG 5 件即時修正 (example_count drift 699→717 / T1.2/T1.3 byte-identical 復元 / Day 80/85 change_category 修正 / Check 13 regex 拡張 / N10 schema 補完) + legacy 3 件圧縮。process gap 4 件 (P1/P2/P3/Plausible) を Day 88+ improvement 化。change_category=process_only、subagent_dispatch=true。compatible change",
+      "scope": "Empirical #7 (Day 78+7 期限 +2 Day overdue 解消)。3 parallel subagent。FAIL/BUG 5 件即時修正 (詳細は verifier_history) + legacy 3 件圧縮。process gap 4 件 (P1/P2/P3/Plausible) Day 88+ 化。subagent_dispatch=true。compatible change",
       "steps_completed": [
         1,
         2,
@@ -1457,6 +1457,12 @@
         9
       ],
       "commit": "41b263d"
+    },
+    {
+      "day": 88,
+      "status": "done",
+      "scope": "P1+P2 process gap (Day 87 empirical #7 後の継続)。P1: cycle-check.sh に Check 14 = check-doc-length.sh invoke 統合 (orphan 解消、Day 87 scope 432→<400 圧縮で resolve)。P2: schema change_category description に World/Inhabited guideline 明記。Check 15 動的検出 Day 90+ defer。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {

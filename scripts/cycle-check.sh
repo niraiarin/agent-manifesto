@@ -295,6 +295,22 @@ else
   echo "[13] OK  Step 6 docs 反映 artifact ref (Day 70+)"
 fi
 
+# ----- Check 14: doc-length lint integration (Day 88 P1 fix) -----
+# orphan だった check-doc-length.sh を cycle-check で invoke。
+# warn-only (super-strict は --strict mode、本 cycle-check では non-strict)
+if [ -x "$SCRIPT_DIR/check-doc-length.sh" ]; then
+  DL_OUT=$(bash "$SCRIPT_DIR/check-doc-length.sh" 2>&1)
+  DL_WARN=$(echo "$DL_OUT" | grep -c "WARN" || true)
+  if [ "$DL_WARN" -gt 0 ]; then
+    echo "[14] WARN  check-doc-length: $DL_WARN warning detected (詳細は check-doc-length.sh 単独実行)"
+    WARN=1
+  else
+    echo "[14] OK  check-doc-length: 全 PASS"
+  fi
+else
+  echo "[14] ---  check-doc-length.sh not executable (Day 88 P1 integration が未配備)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \
