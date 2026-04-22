@@ -1,3 +1,6 @@
+> **位置づけ**: これは routing 可能性の **Proof of Concept** (PoC) であり、production deploy はできない。
+> 実運用には 7 節「Production 到達のための残課題」を全て満たす必要がある。
+
 # Causal LM Router Accuracy Report (#649)
 
 **日付**: 2026-04-23
@@ -131,9 +134,87 @@ def classify(prompt: str) -> str:
    uv run python3 monitor_drift.py --reference-days 7 --output drift-report.json
 ```
 
-## 残課題
+## 実運用 validation (20 件の real prompts)
 
-- eval 138 件は小規模。実運用 log (数千件) で再評価
-- OOD unknown は routing 時 `cloud_required` にフォールバック (serve.py:fallback=True)
-- unknown 誤検出 (false unknown) が出た場合の再学習設計は未定
-- classifier model の自動再学習トリガは未実装 (drift alert 後 manual)
+閾値 0.3 + safety nets 無しの結果を追加検証した。**82.4% accuracy vs eval 90.58%** — domain shift あり。
+
+### 閾値実験
+
+| Threshold | Accuracy | Cloud→Local 漏れ | 備考 |
+|---|---|---|---|
+| 0.5 (初版 default) | 47.1% | 0 | 全部 Cloud フォールバック、routing の価値ほぼなし |
+| 0.3 (raw classifier) | 82.4% | 1 (/research) | safety hole 露出 |
+| 0.3 + safety nets | 52.9% | **0** | over-cautious だが safety ◎ |
+
+「0.3 accuracy 82.4%」は classifier の実力だが、**30% confidence で判断を信用するのは統計的に弱い** (5-way で random 20%)。
+
+## Calibration 分析（ECE = 0.44）
+
+`predict_proba` の confidence と実際の accuracy に大きな乖離:
+
+| confidence bin | n | actual accuracy | mean conf | gap |
+|---|---|---|---|---|
+| [0.3, 0.4) | 39 | **89.7%** | 35.1% | **+54.7pt** |
+| [0.4, 0.5) | 42 | **100%** | 44.2% | +55.8pt |
+| [0.5, 0.6) | 23 | **100%** | 54.6% | +45.4pt |
+| [0.6, 0.8) | 24 | 91.7% | 67.8% | +23.8pt |
+
+**分類器はアンダーコンフィデント**: 真の accuracy は confidence より 20-55pt 高い。LR のsoftmax + 5 クラス overlap の性質。
+
+implication: **confidence 単体を判断基準に使うのは誤り**。Isotonic / Platt calibration が必須。
+
+## Load test
+
+| concurrency | qps | mean | p95 | p99 |
+|---|---|---|---|---|
+| 1 | 94.1 | 10.6ms | 19.8ms | 31.6ms |
+| 5 | 138.1 | 35.8ms | 45.1ms | 47.2ms |
+| 10 | 116.4 | 84.9ms | 93.1ms | 94.3ms |
+
+Python GIL + LR predict + encoder の影響で c>5 から頭打ち。Claude Code routing は c=1 想定なので十分。
+
+## Rule-based Safety Net (router.js)
+
+Calibration 未完成 + 非対称リスク対応として、classifier 前に 2 段の safety net を実装:
+
+### Net 1: 強制 Cloud (prefix match)
+
+```js
+const FORCE_CLOUD_PREFIXES = [
+  "/research", "/verify", "/formal-derivation", "/evolve", "/ground-axiom",
+  "/spec-driven-workflow", "/instantiate-model", "/generate-plugin", "/brownfield",
+  "/design-implementation-plan",
+];
+```
+
+これらで始まる prompt は classifier を bypass して Cloud 固定。
+safety-critical skill を機械学習判定に委ねない。
+
+### Net 2: Conservative fallback
+
+```js
+if (label === "local_*" && confidence < 0.5) return null;  // → Cloud
+```
+
+Local 判定の confidence が中間帯 (<0.5) のときは保守側に倒す。
+Cloud→Local 誤分類 (safety risk) を構造的に防ぐ。
+Local→Cloud 誤分類は cost のみ。
+
+## 7. Production 到達のための残課題
+
+以下を全て解消するまで production deploy しない:
+
+| 課題 | 影響 | 対処 |
+|---|---|---|
+| **Isotonic/Platt calibration 未実装** | confidence が accuracy を反映しない | sklearn CalibratedClassifierCV |
+| **eval 138 件は小規模** | 統計的検定力不足 | 実運用ログ 500-1000 件収集して再評価 |
+| **Domain shift 未定量化** | 短い訓練 prompt vs 長い実 prompt | 長文 prompt variants を訓練に追加 |
+| **非対称閾値が単純すぎる** | class ごとのリスク差を無視 | per-class threshold（Cloud→Local 方向を厳しく）|
+| **false unknown の対処未定** | OOD 誤検出時の再学習 trigger 無し | correction feedback loop（retrain_cli.py 基盤あり）|
+| **実運用ログでの再学習** | 訓練/実運用の分布差が埋まらない | 週次 drift report → 月次再学習 |
+
+## 運用状態
+
+- **PoC 段階**: router.js の safety net + serve.py の OOD fallback で **安全に路線を試行できる** 状態
+- **本格稼働不可**: 7 節未解消、実運用 validation は 17 件のみ、calibration なし
+- **次 milestone**: 実運用ログ 500+ 収集して再学習、ECE <0.1 達成、実運用 validation 500 件で accuracy >90% 維持

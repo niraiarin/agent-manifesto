@@ -61,7 +61,7 @@ class DriftLogger:
         return hashlib.sha256(s.encode()).hexdigest()[:16]
 
 
-def create_app(model_dir: Path, log_path: Path, oov_threshold: float = 0.5) -> FastAPI:
+def create_app(model_dir: Path, log_path: Path, oov_threshold: float = 0.3) -> FastAPI:
     app = FastAPI(title="Agent-Manifesto Routing Classifier")
     log = logging.getLogger("routing")
 
@@ -115,7 +115,8 @@ def main():
     parser.add_argument("--model-dir", type=Path, default=Path("../model"))
     parser.add_argument("--log-path", type=Path, default=Path("../logs/predictions.jsonl"))
     parser.add_argument("--port", type=int, default=9001)
-    parser.add_argument("--oov-threshold", type=float, default=0.5)
+    parser.add_argument("--oov-threshold", type=float, default=0.3,
+                        help="confidence threshold below which treat as OOD/unknown (default 0.3, tuned from validate_real.py)")
     args = parser.parse_args()
 
     import uvicorn
