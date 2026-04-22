@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 # agent-spec-lib Day N cycle compliance check
-# Day 54.1 (2026-04-21) で導入、Day 49-54 の Step 7 mandatory checklist 部分省略 再発防止。
+# Day 54.1 (2026-04-21) で導入 (Day 49-54 の Step 7 部分省略 再発防止)。
+# Day 78/81/88/102/104 で拡張、現 16 check (cycle hygiene + metadata 整合 + 9-step coverage 検証)。
+# Check 1-6: breakdown / commit / empirical / long-deferred / schema / monotonic
+# Check 7-11: date monotonic / hash format / day duplicate / breakdown keys / aging
+# Check 12: 9-step complete (Day 69+) / Check 13: Step 6 ref (Day 81+)
+# Check 14: doc-length lint (Day 88+) / Check 15: 9-step coverage (Day 102 audit prevention)
+# Check 16: scope marker 検査 (Day 104 empirical #10 / Day 103+ false PASS 防御)
 #
 # 用途:
-#   bash scripts/cycle-check.sh             # 全 check
-#   bash scripts/cycle-check.sh --quick     # breakdown + schema のみ (fast)
+#   bash scripts/cycle-check.sh             # 全 check (full mode、15 check)
+#   bash scripts/cycle-check.sh --quick     # breakdown 整合のみ (Check 1)、commit 直前 fast check
 #
 # 終了コード:
 #   0  全 check PASS
@@ -331,6 +337,36 @@ if [ -n "$INCOMPLETE_DAYS" ]; then
   WARN=1
 else
   echo "[15] OK  9-step cycle coverage (Day 90+ 全 entry ≥ 8 step coverage)"
+fi
+
+# ----- Check 16: scope text marker 検査 (Day 104 empirical #10 / iter 2 fix) -----
+# Empirical #10 で Check 15 の濃度のみ検査の限界 (false PASS) を識別、要素真正性 check として追加。
+# Day 103+ entry で steps_completed に Step 1/3/7 を含む場合、scope に対応 marker 必須化。
+# Day 103 base (Day 102 audit 規律下の最初の Day、Day 91-101 legacy 除外)。
+NO_MARKER_DAYS=$(jq -r '
+  .day_plan
+  | map(select(.status == "done"))
+  | map(select((.day | tostring | tonumber? // 0) >= 103))
+  | map(. as $entry | (.steps_completed // []) as $sc |
+      [
+        (if ($sc | any(. == 1)) and (($entry.scope // "") | test("paper survey|paper サーベイ|外部 paper|00-synthesis|Principles\\.lean|reference (read|内容)|subagent (dispatch)?|対象.*(read|レビュー)|iter [0-9]") | not)
+         then "Day \($entry.day): Step 1 in completed but no paper survey marker in scope" else empty end),
+        (if ($sc | any(. == 3)) and (($entry.scope // "") | test("TyDD|S1 (5 軸|構造)|S4 (5 principles|原則)|F/B/H|G1-G6|Section 10\\.2") | not)
+         then "Day \($entry.day): Step 3 in completed but no TyDD evaluation marker in scope" else empty end),
+        (if ($sc | any(. == 7)) and (($entry.scope // "") | test("Step 7|やり残し|mandatory checklist|cycle-check\\.sh|6 項目|empirical iter") | not)
+         then "Day \($entry.day): Step 7 in completed but no mandatory checklist marker in scope" else empty end)
+      ]
+    )
+  | flatten
+  | .[]
+' "$PENDING" 2>/dev/null | head -3)
+
+if [ -n "$NO_MARKER_DAYS" ]; then
+  echo "[16] WARN  Day 103+ で steps_completed の Step 1/3/7 が scope marker で裏付けられない:"
+  echo "$NO_MARKER_DAYS" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[16] OK  Day 103+ scope marker 検証 (Step 1/3/7 token 裏付け)"
 fi
 
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
