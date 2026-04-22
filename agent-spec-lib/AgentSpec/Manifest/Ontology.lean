@@ -413,4 +413,25 @@ def GoodhartVulnerable (m : World → Nat) : Prop :=
     (∃ w, approx w = m w) →
     ∃ w', approx w' ≠ m w'
 
+/-! ## Day 99 拡張: V batch 2 用 dependency (investment cycle + system health) -/
+
+/-- Investment level (Section 6 投資サイクル、opaque)。 -/
+opaque investmentLevel (w : World) : Nat
+
+/-- Collaborative value (Section 6 均衡、agent-human 協働価値、opaque)。 -/
+opaque collaborativeValue (w : World) : Nat
+
+/-- Trust increment bound (1 step で増加できる trust の上限、漸進蓄積の非対称性)。 -/
+opaque trustIncrementBound : Nat
+
+/-- System health: 全 V index が threshold 以上 (一律閾値版、Phase 4 由来)。 -/
+def systemHealthy (threshold : Nat) (w : World) : Prop :=
+  skillQuality w ≥ threshold ∧
+  contextEfficiency w ≥ threshold ∧
+  outputQuality w ≥ threshold ∧
+  gatePassRate w ≥ threshold ∧
+  proposalAccuracy w ≥ threshold ∧
+  knowledgeStructureQuality w ≥ threshold ∧
+  taskDesignEfficiency w ≥ threshold
+
 end AgentSpec.Manifest

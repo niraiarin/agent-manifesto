@@ -35,4 +35,36 @@ axiom v4_goodhart : GoodhartVulnerable gatePassRate
 /-- V7 (task design efficiency) は Goodhart 脆弱 (測定容易タスクに偏るリスク)。 -/
 axiom v7_goodhart : GoodhartVulnerable taskDesignEfficiency
 
+/-! ## Day 99 拡張: V batch 2 (investment cycle + trust 漸進蓄積) -/
+
+/-- 信頼の漸進蓄積 (action space 拡大 + risk 未顕在化 で trust 増加、但し増加幅は bounded)。 -/
+axiom trust_accumulates_gradually :
+  ∀ (agent : Agent) (w w' : World),
+    actionSpaceSize agent w ≤ actionSpaceSize agent w' →
+    ¬riskMaterialized agent w' →
+    trustLevel agent w ≤ trustLevel agent w' ∧
+    trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound
+
+/-- 投資は信頼に駆動される (system 健全 + V 改善 → 投資非減少)。 -/
+axiom trust_drives_investment :
+  ∀ (w w' : World),
+    (∃ t, systemHealthy t w ∧ systemHealthy t w' ∧
+      (skillQuality w < skillQuality w' ∨
+       contextEfficiency w < contextEfficiency w' ∨
+       outputQuality w < outputQuality w')) →
+    investmentLevel w ≤ investmentLevel w'
+
+/-- 逆サイクル: risk 顕在化 + trust 低下 → 投資縮小。 -/
+axiom risk_reduces_investment :
+  ∀ (agent : Agent) (w w' : World),
+    riskMaterialized agent w' →
+    trustLevel agent w' < trustLevel agent w →
+    investmentLevel w' ≤ investmentLevel w
+
+/-- 過拡張は協働価値を減らす (action space 拡大 → collaborative value 低下する世界対が存在)。 -/
+axiom overexpansion_reduces_value :
+  ∃ (agent : Agent) (w w' : World),
+    actionSpaceSize agent w < actionSpaceSize agent w' ∧
+    collaborativeValue w' < collaborativeValue w
+
 end AgentSpec.Manifest
