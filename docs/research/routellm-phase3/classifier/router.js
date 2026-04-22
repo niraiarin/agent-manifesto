@@ -24,19 +24,31 @@ const FORCE_CLOUD_PREFIXES = [
   "/design-implementation-plan",
 ];
 
-// Conservative fallback: confidence が中間帯 (0.3-0.5) のときは Local 系予測でも
-// Cloud に倒す。非対称リスク対応: Local → Local 誤分類は無害だが Cloud → Local は safety risk。
-const CONSERVATIVE_THRESHOLD = 0.5;
+// v3 (#651): 期待効用最大化ベースの routing 判定.
+// cost_safety:cost_cloud = 2:1 で eval set 上 zero-leak + 98.64% routing accuracy,
+// real corpus 1173 件で Local 17.3% (cost_safety=10 の 2x) を両立。
+// argmax だと eval で 0.68% leak が出る。非対称コストを明示的に扱うのが正解。
+// utility_decision.py の sweep 結果 (analysis/utility-decision.json) 参照。
+const COST_SAFETY = parseFloat(process.env.ROUTING_COST_SAFETY || "2.0");
+const COST_CLOUD = parseFloat(process.env.ROUTING_COST_CLOUD || "1.0");
 
-// Mapping from routing label to ccr provider,model string
+const LOCAL_PROVIDER = process.env.ROUTING_LOCAL_PROVIDER || "llama-server,qwen3.6-35b-a3b-bf16";
 // null = fallback to default (= Cloud via anthropic provider)
-const LABEL_TO_PROVIDER = {
-  local_confident: "llama-server,qwen3.6-35b-a3b-bf16",
-  local_probable: "llama-server,qwen3.6-35b-a3b-bf16",
-  cloud_required: null,
-  hybrid: null,
-  unknown: null,
-};
+
+// Circuit breaker: 5 consecutive failures → skip classifier for 30s
+let _consecutiveFailures = 0;
+let _circuitOpenUntil = 0;
+const CB_THRESHOLD = 5;
+const CB_COOLDOWN_MS = 30 * 1000;
+
+function utilityDecide(probs, costSafety, costCloud) {
+  // probs: {local_confident, local_probable, cloud_required, hybrid, unknown}
+  const pLocal = (probs.local_confident ?? 0) + (probs.local_probable ?? 0);
+  const pCloud = (probs.cloud_required ?? 0) + (probs.hybrid ?? 0) + (probs.unknown ?? 0);
+  const uCloud = pCloud * 1.0 + pLocal * (-costCloud);
+  const uLocal = pCloud * (-costSafety) + pLocal * 1.0;
+  return uLocal > uCloud ? "local" : "cloud";
+}
 
 module.exports = async function customRouter(request, allConfig, { event }) {
   try {
@@ -54,35 +66,55 @@ module.exports = async function customRouter(request, allConfig, { event }) {
     // Cap prompt to ~2KB for classifier latency
     const prompt = content.slice(0, 2000);
 
-    // Safety net 1: force Cloud for known safety-critical skill prefixes
-    const trimmed = prompt.trimStart();
+    // Safety net 1: force Cloud for known safety-critical skill prefixes.
+    // Search across *full content* (not just 2000-char truncation) to prevent
+    // bypass via long preamble (Verifier finding C-2). Check both leading
+    // and occurrences at line start.
     for (const prefix of FORCE_CLOUD_PREFIXES) {
-      if (trimmed.startsWith(prefix)) {
+      if (content.includes("\n" + prefix) || content.trimStart().startsWith(prefix)) {
         request.log?.info?.(`[router.js] force-cloud prefix=${prefix}`);
         return null;  // → default (Cloud)
       }
     }
 
-    const resp = await fetch(CLASSIFIER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-      signal: AbortSignal.timeout(1000),
-    });
-    if (!resp.ok) return null;
-
-    const { label, confidence, fallback } = await resp.json();
-
-    // Safety net 2: Conservative fallback on mid-confidence Local predictions
-    // Cloud→Local misclassification is safety-critical; Local→Cloud is cost-only
-    const isLocalLabel = label === "local_confident" || label === "local_probable";
-    if (isLocalLabel && confidence < CONSERVATIVE_THRESHOLD) {
-      request.log?.info?.(`[router.js] conservative-fallback label=${label} conf=${confidence} → cloud`);
-      return null;  // → default (Cloud)
+    // Circuit breaker check (Verifier finding C-1)
+    const now = Date.now();
+    if (now < _circuitOpenUntil) {
+      request.log?.info?.(`[router.js] circuit open, fallback to default`);
+      return null;
     }
 
-    request.log?.info?.(`[router.js] label=${label} conf=${confidence} fallback=${fallback}`);
-    return LABEL_TO_PROVIDER[label] ?? null;
+    let resp;
+    try {
+      resp = await fetch(CLASSIFIER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+        signal: AbortSignal.timeout(1000),
+      });
+    } catch (err) {
+      _consecutiveFailures++;
+      if (_consecutiveFailures >= CB_THRESHOLD) {
+        _circuitOpenUntil = now + CB_COOLDOWN_MS;
+        request.log?.warn?.(`[router.js] circuit opened for ${CB_COOLDOWN_MS}ms after ${_consecutiveFailures} failures`);
+      }
+      throw err;
+    }
+    if (!resp.ok) {
+      _consecutiveFailures++;
+      return null;
+    }
+    _consecutiveFailures = 0;
+
+    const { label, confidence, probs, fallback } = await resp.json();
+
+    // v3 (#651): Utility-based decision with asymmetric safety cost.
+    // Argmax (which classifier label did) can silently leak at ~0.7% even with calibrated probs.
+    // Expected-utility decision with cost_safety >= 2 eliminates leak while keeping Local high.
+    const decision = utilityDecide(probs || {}, COST_SAFETY, COST_CLOUD);
+    const provider = decision === "local" ? LOCAL_PROVIDER : null;
+    request.log?.info?.(`[router.js] label=${label} conf=${confidence} utility=${decision} costSafety=${COST_SAFETY}`);
+    return provider;
   } catch (err) {
     request.log?.warn?.(`[router.js] classifier unreachable: ${err.message}`);
     return null;  // fallback to default on any error
