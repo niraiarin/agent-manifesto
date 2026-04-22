@@ -22,6 +22,7 @@ import AgentSpec.Provenance.RetirementLinterCommand
 import AgentSpec.Proofs.RoundTrip
 import AgentSpec.Manifest.Ontology
 import AgentSpec.Manifest.T1
+import AgentSpec.Spine.ResearchSpecLattice
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)
 -- → `lake build AgentSpecTest` で test lib をビルドする
