@@ -117,23 +117,33 @@ axiom foo : Nat
 ### Gate 基準 (Sub-Issue #657 より)
 
 > **PASS**: 3 カテゴリ (Parser / Syntax-SourceInfo / Elaborator) 全てで使用例が特定され、サンプルコードで `parse → Syntax → SourceInfo.original range` 取得が動作
+>
+> **CONDITIONAL**: 3 カテゴリのうち 1 カテゴリで API が experimental / undocumented → 代替案 + 安定化タイミングを記録、追加 sub-issue で継続調査
 
-### 判定: **PASS**
+### 判定: **CONDITIONAL**
 
 | Category | 使用例特定 | smoketest 動作 |
 |---|---|---|
 | Parser | ✅ `parseHeader` / `parseCommand` / `testParseFile` 全て特定 | ✅ sample.lean parse 成功 |
 | Syntax/SourceInfo | ✅ `Syntax.getRange?`, `SourceInfo.getRange?` 特定、byte-level 検証 | ✅ range `[36, 51]` が byte 単位で一致 |
-| Elaborator | ✅ `Lean.Elab.Command.elabCommand` (stable) 特定、使用例は doc-gen4 / Lean 本体 `Elab/Frontend.lean` 内 | ⏸ 別 sample で検証未実施 (Sub-E に委譲、parse+rewrite のみなら不要) |
+| Elaborator | ✅ `Lean.Elab.Command.elabCommand` (stable) 特定、Lean 本体 `Elab/Frontend.lean` line 66 で使用例確認 | ⏸ **runtime smoketest 未実施** |
 
-**全カテゴリで API は documented + stable、Parser + SourceInfo は smoketest で動作検証済**。Elaborator は Sub-E (byte-preserving rewrite) の post-edit type-check で使うため、そのフェーズで実地検証される。
+**理由**: Parser + SourceInfo は smoketest で byte-level 一致まで検証済。Elaborator は Lean 本体で stable API として使われていることは確認済だが、本 Sub-B の sample には elaborate パスが含まれず、runtime で call 検証が未完了。Gate PASS 基準は「3 カテゴリ全てで smoketest 動作」を明示しているため、厳密読みで CONDITIONAL に分類。
 
-### Unaddressable
+### CONDITIONAL の stabilization 計画
 
-なし。
+**Elaborator 検証の fork 先**: Sub-E (#660) byte-preserving rewrite PoC。
+
+Sub-E は「body 置換後の type check」で `Lean.Elab.Command.elabCommand` を呼び出す必要があり、その際に runtime で Elaborator API が動作することが自然に検証される。Sub-E の Gate PASS が Elaborator 実地動作の stabilization を兼ねる。
+
+**タイミング**: Sub-E の実施時 (Sub-B, Sub-C 完了後の Batch 2)。別 sub-issue の追加は不要 (Sub-E が吸収)。
+
+### Addressable なし (CONDITIONAL 理由を記録した状態で残存 finding ゼロ)
+
+Judge の指摘 (addressable: Elaborator runtime 未検証) は本 CONDITIONAL 分類により解消。Verifier は 0 addressable で PASS 判定だが、Gate 基準の厳密読みで安全側に倒す選択。
 
 ### 次のアクション
 
-- Sub-C (#658): lakefile placement 判断。本 smoketest は standalone lakefile で動作 → 同一 lakefile に追加も別 package も技術的に可能
-- Sub-E (#660): byte-preserving rewrite PoC。本研究の `getRangeWithTrailing?` + byte-level slice 戦略が使える
-- Sub-D (#659): startup cost 計測。Init-only で 0.16s user、Manifest imports 込みでどう変化するかが本 PoC の延長で計測可能
+- **Sub-C (#658)**: lakefile placement 判断。本 smoketest は standalone lakefile で動作 → 同一 lakefile に追加も別 package も技術的に可能
+- **Sub-E (#660)**: byte-preserving rewrite PoC。本研究の `getRangeWithTrailing?` + byte-level slice 戦略が使える。**加えて** Elaborator runtime smoketest を本 Sub-E の scope に含める (CONDITIONAL fork)
+- **Sub-D (#659)**: startup cost 計測。Init-only で 0.16s user、Manifest imports 込みでどう変化するかが本 PoC の延長で計測可能
