@@ -11,7 +11,8 @@ namespace で再定義 (Lake cross-project require は避ける)。
 - Day 83 拡張: T2 (structure_persists / structure_accumulates) → Epoch abbrev + StructureKind/Structure + validTransition def + World に structures + epoch 追加
 - Day 84 拡張: T3 (context_contribution_nonuniform) → PrecisionLevel + Task + ContextItem opaque + precisionContribution opaque。T4 (output_nondeterministic) は既存 dependency のみで追加なし。
 - Day 85 拡張: T5 (no_improvement_without_feedback x2) + T6 (human_resource_authority + resource_revocable) → FeedbackKind/FeedbackTarget/Feedback + ProcessId opaque + ResourceId opaque + ResourceKind/ResourceAllocation + World に feedbacks + allocations + structureImproved def + processImproved opaque + isHuman def
-- Week 3-4: T7-T8 + P1-P6 順次
+- Day 86 拡張: T7 (resource_finite + sequential_exceeds_component) + T8 (task_has_precision theorem) → globalResourceBound opaque + executionDuration opaque
+- Week 3-4: P1-P6 + L1-L6 + V1-V7 + D1-D18
 -/
 
 namespace AgentSpec.Manifest
@@ -247,5 +248,13 @@ opaque processImproved : ProcessId → World → World → Prop
 /-- T6 で参照する isHuman 判定 (Agent.role == .human)。 -/
 def isHuman (agent : Agent) : Prop :=
   agent.role = AgentRole.human
+
+/-! ## Day 86 拡張: T7 用 dependency -/
+
+/-- 全 World 共通の resource bound (T7、Phase 2+ で domain-specific に concretize)。 -/
+opaque globalResourceBound : Nat
+
+/-- Task 実行に要する時間 (T7b、opaque)。 -/
+opaque executionDuration : Task → Nat
 
 end AgentSpec.Manifest

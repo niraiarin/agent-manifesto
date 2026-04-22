@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.85.0-week3-day85-t5-t6",
+  "version": "0.86.0-week3-day86-t-complete",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,13 +2173,13 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 85 T5+T6 batch (T1-T6 11/55 axiom)",
+    "last_verified_phase": "Week 3 Day 86 T 系列完了 (T1-T8 13 axiom + 1 theorem)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 383,
+        "job_count": 385,
         "scope": "production-only",
-        "note": "Day 85: Manifest.T5 + T6 追加 (+2 jobs、381→383)。T1-T6 11 axiom。Mathlib import 維持"
+        "note": "Day 86: Manifest.T7 + T8 追加 (+2 jobs、383→385)。T 系列完了 (13 axiom + 1 theorem)。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2199,8 +2199,8 @@
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
-    "axiom_count": 11,
-    "theorem_count": 34,
+    "axiom_count": 13,
+    "theorem_count": 35,
     "example_count": 699,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2477,6 +2477,14 @@
       },
       "Manifest/T6.lean": {
         "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/T7.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/T8.lean": {
+        "theorems": 1,
         "examples": 0
       },
       "Spine/ResearchSpecLattice.lean": {
@@ -3324,6 +3332,16 @@
       "addressable_count": 0,
       "evaluator": "lake build 383 jobs PASS (+2 = T5.lean + T6.lean)、axiom 7→11 (T1-T6 計 11/55)。Ontology.lean に大幅 additive 拡張: ProcessId/ResourceId opaque + FeedbackKind/FeedbackTarget/Feedback + ResourceKind/ResourceAllocation + structureImproved def + processImproved opaque + isHuman def + World に feedbacks/allocations field 追加 (Inhabited 7-tuple update)。T5.lean (no_improvement_without_feedback x2) + T6.lean (human_resource_authority + resource_revocable) byte-identical。declaration order に注意: Feedback/ResourceAllocation を World 定義より前に配置 (forward reference 回避)。",
       "scope": "T-batch 継続、Day 84 (T3+T4) と同 pattern。Day 85 で T5+T6 を 1 Day batch、T 残 2 (T7+T8) は Day 86 batch 予定。World 既存 5 fields → 7 fields (Manifest reference 完全整合)。Step 6 後続 docs 反映同 commit 統合。",
+      "change_category": "additive_axiom",
+      "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 3 Day 86 Manifest 移植 T7+T8 (T 系列完了、13 axiom + 1 theorem)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 385 jobs PASS (+2)、axiom 11→13、theorem 34→35。T7 dependency 追加 (globalResourceBound + executionDuration opaque)、T7.lean (resource_finite + sequential_exceeds_component)、T8.lean (task_has_precision theorem、PrecisionLevel.required_pos 由来 derivation)。T8 は axiom 不要 (型強制で derive)、theorem として記録。",
+      "scope": "T 系列完了 (T1-T8 13 axiom + 1 theorem、existing Manifest 完全整合)。残 axiom: P1-P6 + L1-L6 + V1-V7 + D1-D18 = ~42 axiom。Day 87 で P 系列着手予定 (P1 cognitive_role_separation 等)。Step 6 同 commit 統合。",
       "change_category": "additive_axiom",
       "compatibility": "compatible change"
     }
