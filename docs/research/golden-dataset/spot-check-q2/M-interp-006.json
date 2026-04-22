@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-006",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-006.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "提供されたメトリクスデータに基づく分析レポートです。\n\n---\n\n## 1. 全体評価: **WARNING**\n\nシステムは表面的には健全（Lean ビルド成功、テスト全通、sorry 0）だが、**valueless_change の streak=4 で halt_recommended=true** という改善の質的停滞が顕在化している。また FAIL ループバックの未解決 55 件中 hypothesis_error が 36 件（65%）を占め、仮説化フェーズの根本改善が未着手。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| V# | 指標 | 現在値 | 判定 | 備考 |\n|----|------|--------|------|------|\n| V1 | Skill Quality | formal graduation済み | OK | 10回平均 theorem_delta=6.3, test_delta=8.9。ただし non_triviality スコア=0（trivial）。saturation: test consecutive zero delta=2 |\n| V2 | Context Efficiency | recent_avg=46, cumulative_avg=40 | OK | 安定。divergence=15% は許容範囲 |\n| V3 | Output Quality | test_pass_rate=100% | OK | hallucination_proxy: hypothesis_error_active=36 が最大。quality_gate導入後（Run57+）のPost-gate率はhypothesis=19/57=33% |\n| V4 | Gate Pass Rate | 99% (28587/28693) | OK | 非常に安定 |\n| V5 | Proposal Accuracy | 96% (162/168) | OK | schema_drift=false |\n| V6 | Knowledge Structure | entries=12, retired=0 | **要注視** | 陳腐化したmemoryの退役が0件。知識が蓄積するのみで整理されていない |\n| V7 | Task Design | completed=188, teamwork=0% | OK | single_agentモードで抑制中 |\n\n**valueless_change**: current_streak=4, max_streak=4, **halt_recommended=true** — 直近4回のevolveエントリが実質的に価値ある変更をもたらしていない。10回中の最大streakも4で、改善の収束が始まっている兆候。\n\n**failure_patterns**: 未解決55件中 hypothesis_error=36 (65%) が支配的。H_impl_specification=8, H_wrong_premise=6 のサブタイプが散見されるが、根本原因対策は行われていない。\n\n---\n\n## 3. 改善提案（優先度順）\n\n### (1) [breaking change] valueless_change 停止判定の実装と原因調査\nvalueless_change streak=4 で halt_recommended=true が出ている現状で、これを無視して evolve を継続することはリソースの無駄。まずは Run 104-107 のエントリを調査し、なぜ価値ある変更が生まれているのかの根本原因（observerの発見品質低下か、hypothesizerの提案が質的にかたよっているか）を特定する。\n\n### (2) [compatible change] hypothesis_error 36件の根本原因分類と対策\nhypothesis_error が未解決で最大カテゴリ（65%）。特に H_impl_specification=8, H_wrong_premise=6 のパターンが反復されている。Verifier の FAIL パターンを Lean 定義と SKILL.md 実装に逆引きするチェックを /evolve の Phase 2 に組み込む（前回の human feedback で指摘された D5 三層断裂の継続対策）。\n\n### (3) [conservative extension] memory_retirement の仕組み導入\nretired_count=0 は知識の陳腐化が全く起きていない。P3 学習の統治規範（観察→仮説化→検証→統合→退役）の「退役」ステップが未運用。MEMORY.md へのポインタと実ファイルの日付・内容整合性をチェックする簡易スクリプトを追加し、まずは手動で退役候補を選別する。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 391043,
+  "timestamp": "2026-04-18T05:25:14Z",
+  "run_number": 1,
+  "exit_code": 0
+}

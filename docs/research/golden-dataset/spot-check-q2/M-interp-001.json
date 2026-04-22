@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-001",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-001.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "1. **全体評価**: `WARNING`\n\nLean/テストは健全だが、`valueless_change` ストリーク=4 で停止推奨発動、かつ未解決失敗パターン55件（hypothesis_error 65%）が構造的な学習停止を示す。\n\n---\n\n2. **V1-V7 各指標の解釈**\n\n| 指標 | 現在値 | 判定 | 備考 |\n|---|---|---|---|\n| V1 (Skill Quality) | formal graduation済み | OK | 定理/テスト双方成長率正(6.3/8.9)。test_delta_outlier=true は注意 |\n| V2 (Context Efficiency) | recent=46, cumulative=40 | 安定 | trend=stable、divergence=15% は許容範囲だが横ばい |\n| V3 (Output Quality) | hallucination: 42 hypo / 6 obs | 要注意 | quality gate 導入後でも post_gate hypo_error=19。仮説品質の劣化が継続 |\n| V4 (Gate Pass Rate) | 99% (28587/28693) | OK | 構造的には健全 |\n| V5 (Proposal Accuracy) | 96% (162/168) | OK | 人間承認品質は高い |\n| V6 (Knowledge Structure) | 12 entries, 0 retired | **問題** | 113 evolve 回で退役0件。知識が固定化している疑い |\n| V7 (Task Design) | 188完了, single_agent | 注意 | teamwork=0%。分散検証の可能性が制限されている |\n\n---\n\n3. **改善提案（優先度順）**\n\n1. **V6: 陳腐化知識の退役処理を実行する**\n   - 113 evolve 回のうち retired=0 は異常。P3 学習ライフサイクルの「退役」フェーズが機能していない\n   - MEMORY-ONLY エントリをレビューし、obsolete なものを退役・削除\n   - 影響: evolve_history の知識純粋性向上\n\n2. **V3: hypothesis_error (42件) の根本原因分析**\n   - `H_impl_specification`(8), `H_wrong_premise`(6) が最多。Observer→Hypothesizer の情報伝達に構造的な情報損失\n   - Phase 1 (Observer) の観察品質改善、または Phase 2 (Hypothesizer) の前提検証手順強化\n   - 影響: 未解決55件の削減、evolve コスト効率化\n\n3. **valueless_change ストリーク停止からの回復**\n   - 現在4連発で `halt_recommended=true`。次の evolve 実行は禁止状態\n   - 改善の「質」ではなく「方向性」を変える必要がある。未解決 failure pattern のうち assumption_error(7) を解消すれば新規改善方向が開拓できる\n   - 影響: evolve ループの再加速",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 268443,
+  "timestamp": "2026-04-18T04:58:25Z",
+  "run_number": 1,
+  "exit_code": 0
+}

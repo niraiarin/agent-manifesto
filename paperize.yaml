@@ -1,0 +1,25 @@
+input:
+  jsonl_path: .claude/metrics/p2-verified.jsonl
+  git_range: main..HEAD
+paper:
+  template: internal-report
+  max_pages: 8
+  slug_format: "594-local-llm-routing"
+agents:
+  outline: {model: claude-opus-4-7, max_tokens: 8000}
+  section_writing: {model: claude-opus-4-7, extended_thinking: true}
+  refinement:
+    verifier: logprob/qwen
+    k_rounds: 3
+    bidirectional: true
+    halt_on_margin_below: 0.0
+    max_iterations: 7
+follow_up:
+  todos_file: todos.md
+  categories: [decisions, experiments, findings, literature, questions, reviews]
+  decay_days: 30
+enforcement:
+  mode: warn
+  jsonl_flush_on_complete: false
+  git_commit_on_complete: false
+  require_evaluator_independent: false
