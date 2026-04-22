@@ -30,8 +30,8 @@
         "lean-formalization/Manifest/ → AgentSpec/Manifest/"
       ],
       "completion_criteria": "既存 55 axioms 全て import 可",
-      "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)",
-      "status": "pending"
+      "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)。Day 74 着手 PoC 完了 (T1 session_bounded + Ontology skeleton、commit 98c6841)、残 54 axiom は Day 75-76 で T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)、Day 77+ で T2-T8 + P1-P6 を additive 拡張。",
+      "status": "in_progress"
     },
     {
       "week": "4-5",
@@ -100,6 +100,33 @@
     }
   ],
   "pending_items": [
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 follow-up: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 75-76",
+      "gaps": ["GA-I7"],
+      "detail": "Day 74 PoC で session_bounded 移植済 (commit 98c6841)。残 2 axiom には AuditEntry / Action / canTransition opaque + 関連 World fields 拡張が必要。Ontology.lean を additive 拡張、AgentSpec/Manifest/T1.lean に追記。conservative extension (axiom 追加のみ)"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 main sprint: T2-T8 + P1-P6 + L1-L6 + V1-V7 + D1-D18 (54 axiom)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 77-Week 4 終わり",
+      "gaps": ["GA-I7"],
+      "detail": "Day 74 PoC で path 確立済。T 順 (T2-T8) → P 順 → L 順 → V 順 → D 順で additive 拡張、各 T で必要 opaque/structure を Ontology.lean に追加。54 axiom 全件再定義、namespace AgentSpec.Manifest 統一。完成基準: lean-formalization/Manifest/ の 55 axiom 全件が AgentSpec.Manifest 配下に存在 + lake build PASS"
+    },
+    {
+      "section": "2.10",
+      "topic": "GA-S15 SpecSig Lattice 設計 (ResearchSpec pre/post meet/join)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 75 (人間判断 Day) → Day 76+ 実装",
+      "gaps": ["GA-S15"],
+      "detail": "Day 75 で 03-lean-metaprogramming.md (mathlib lattice) + TyDD-F2/S4 (Liquid Haskell) 精読、Q1-Q4 案を user 判断仰ぐ。実装は Day 76+。Rationale.confidence Fin 101 deferred 解消の足掛かり (GA-S15 Lattice が natural な導入点と Day 70 人間判断で確認済)。LLM refine loop の収束証明基盤"
+    },
     {
       "section": "2.1",
       "topic": "lakefile.lean: LeanHammer/Lean-Auto/Duper/CSLib require",
