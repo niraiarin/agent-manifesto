@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.97.0-week3-day97-v-batch-1",
+  "version": "0.98.0-week3-day98-empirical-9",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2303,7 +2303,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 97 V batch 1 (T+E+P+D4+V partial 29 axiom + 17 theorem)",
+    "last_verified_phase": "Week 3 Day 98 Empirical #9",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -3648,6 +3648,16 @@
       "scope": "V 系列 batch 1 完了。Day 98 で V batch 2 (trust_accumulates_gradually + trust_drives_investment + risk_reduces_investment + overexpansion_reduces_value、4 axiom) 予定。Day 99 で empirical #9 期限到達。Step 6 同 commit 統合。",
       "change_category": "additive_axiom",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 98 Empirical #9 (handoff template 対象、iter 2 で収束)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "/empirical-prompt-tuning skill 適用 (Day 92 → Day 98、5 Day 早期化、期限 Day 99 内)。対象: handoff-resume-research-new-foundation.md (Day 79 N1 finding 解消の効果検証)。3 parallel subagent (median A 93.75% / edge B 87.5% / negative C 87.5%) → iter 2 で全 100% (4 改善: lake build PASS marker / Check 1-14 統一表記 / empirical 7-day 規律明示 / pending priority scope 明示)。残不明瞭点 minor (legacy WARN 内容 + semantics 区別) は scope 外。",
+      "scope": "Day 79 N1 (handoff auto-update) の効果が iter 2 で実証 (cross-consistency drift 0、resume 精度 100%)。scripts/update-handoff.sh template 4 改善 commit。Day 99 で empirical #10 期限 (Day 92+7 → Day 105 に push)。",
+      "change_category": "process_only",
+      "subagent_dispatch": true
     }
   ],
   "navigation_index": {

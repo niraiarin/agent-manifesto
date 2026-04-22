@@ -83,22 +83,23 @@ intent: agent-manifesto-new-foundation worktree で Phase 0 Week 3 Day-by-Day cy
 $LATEST_SCOPE
 
 ### Build state (HEAD = $HEAD_SHA)
+- lake build: PASS (cycle-check 14/14、Check 1-14 全 OK 期待、Day 70-72 legacy WARN は許容)
 - artifact-manifest version: $VERSION
 - example_count: $EXAMPLE_COUNT
 - theorem_count: $THEOREM_COUNT
 - axiom_count: $AXIOM_COUNT
 - sorry_count: $SORRY_COUNT
 - last empirical: $LAST_EMP ($LAST_EMP_ROUND)
-- next empirical scheduled: $NEXT_EMP
+- next empirical scheduled: $NEXT_EMP (CLAUDE.md 7-day cycle 規律、Day# gap +7 で期限到達)
 
-### Pending priority
+### Pending priority (scope: pending_items where status=pending、resolved/done/deferred 除外)
 - 🔴 high: $PENDING_RED 件
 - 🟡 medium: $PENDING_YELLOW 件
 
 ## Resume 手順
 
 1. \`cd $REPO_ROOT\`
-2. \`bash scripts/cycle-check.sh\` で current state 確認 (Check 12 = 9/9 期待)
+2. \`bash scripts/cycle-check.sh\` で current state 確認 (Check 1-14 全 OK 期待、Day 70-72 legacy WARN は許容)
 3. \`jq '.day_plan[-3:]' $PENDING\` で直近 3 Day の scope 確認
 4. \`jq '.pending_items[] | select(.mark == "🔴")' $PENDING\` で 🔴 priority 列挙
 5. Day $((LATEST_DAY + 1)) 着手 — 9-step cycle (paper survey → impl → TyDD → impl → metadata → docs → やり残し → Day N+1 議論 → 最終後続)
