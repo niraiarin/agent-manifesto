@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.88.0-week3-day88-p1-p2-integration",
+  "version": "0.89.0-week3-day89-e-series",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,13 +2173,13 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 88 P1+P2 process gap (cycle-check 14 check 化)",
+    "last_verified_phase": "Week 3 Day 89 E1+E2+E3 batch (T+E 17/55 axiom)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 385,
+        "job_count": 388,
         "scope": "production-only",
-        "note": "Day 86: Manifest.T7 + T8 追加 (+2 jobs、383→385)。T 系列完了 (13 axiom + 1 theorem)。Mathlib import 維持"
+        "note": "Day 89: Manifest.E1 + E2 + E3 追加 (+3 jobs、385→388)。T+E 17 axiom + 1 theorem。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2199,7 +2199,7 @@
     "section_2_9_b4_4arg_post": "Day 8 で完全解消 (Q4 案 A: transition refactor + transitionLegacy derive)",
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
-    "axiom_count": 13,
+    "axiom_count": 17,
     "theorem_count": 35,
     "example_count": 717,
     "warning_count": 0,
@@ -2485,6 +2485,18 @@
       },
       "Manifest/T8.lean": {
         "theorems": 1,
+        "examples": 0
+      },
+      "Manifest/E1.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/E2.lean": {
+        "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/E3.lean": {
+        "theorems": 0,
         "examples": 0
       },
       "Spine/ResearchSpecLattice.lean": {
@@ -3383,6 +3395,16 @@
       "evaluator": "P1: cycle-check.sh に Check 14 = check-doc-length.sh invoke 統合 (orphan script 解消、Day 87 で 1 warn detect、Day 87 scope 432→<400 圧縮で resolve)。P2: artifact-manifest.schema.json change_category description 強化 (World/Inhabited 変更時 compatible_change 以上を guideline 明記)。Check 15 動的検出 (git diff 解析) は Day 90+ defer (false positive リスク高、scope 大)。Subagent 省略 (process_only、script + schema description 修正のみ)。",
       "scope": "Day 87 empirical #7 後の P1+P2 解消、cycle-check 13→14 check 拡張、check-doc-length 自動 invocation 確立。残 P3 (Day# empirical gating) + Plausible は Day 90+。Day 89 で P 系列着手予定 (P1 axiom cognitive_role_separation)。",
       "change_category": "process_only",
+      "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 3 Day 89 Manifest 移植 E1+E2+E3 batch (4 axiom)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 388 jobs PASS (+3 = E1.lean + E2.lean + E3.lean、385→388)、axiom 13→17 (T+E 計 17/55)。Ontology に Confidence/Output structure + 6 opaque (generates/verifies/sharesInternalState/actionSpaceSize/riskExposure/worldOutput) 追加。E1 (verification_requires_independence + shared_bias_reduces_detection) + E2 (capability_risk_coscaling) + E3 (confidence_is_self_description) byte-identical。Subagent 省略 (additive_axiom + 新 structure 追加で World 不変)。",
+      "scope": "Empirical Postulates 系列完了。E は P1-P6 theorem 導出の base 公理 (P1=E2 直接、P2=T4+E1、P3-P6=T₀ のみ)。Day 90+ で P 系列着手 (theorem 形式、proof 構築要)。Step 6 同 commit 統合。",
+      "change_category": "additive_axiom",
       "compatibility": "compatible change"
     }
   ],

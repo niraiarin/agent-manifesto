@@ -12,7 +12,8 @@ namespace で再定義 (Lake cross-project require は避ける)。
 - Day 84 拡張: T3 (context_contribution_nonuniform) → PrecisionLevel + Task + ContextItem opaque + precisionContribution opaque。T4 (output_nondeterministic) は既存 dependency のみで追加なし。
 - Day 85 拡張: T5 (no_improvement_without_feedback x2) + T6 (human_resource_authority + resource_revocable) → FeedbackKind/FeedbackTarget/Feedback + ProcessId opaque + ResourceId opaque + ResourceKind/ResourceAllocation + World に feedbacks + allocations + structureImproved def + processImproved opaque + isHuman def
 - Day 86 拡張: T7 (resource_finite + sequential_exceeds_component) + T8 (task_has_precision theorem) → globalResourceBound opaque + executionDuration opaque
-- Week 3-4: P1-P6 + L1-L6 + V1-V7 + D1-D18
+- Day 89 拡張: E1 (verification_requires_independence + shared_bias_reduces_detection) + E2 (capability_risk_coscaling) + E3 (confidence_is_self_description) → Confidence/Output structure + generates/verifies/sharesInternalState/actionSpaceSize/riskExposure/worldOutput opaque
+- Week 3-4: P1-P6 (theorem) + L1-L6 + V1-V7 + D1-D18
 -/
 
 namespace AgentSpec.Manifest
@@ -256,5 +257,39 @@ opaque globalResourceBound : Nat
 
 /-- Task 実行に要する時間 (T7b、opaque)。 -/
 opaque executionDuration : Task → Nat
+
+/-! ## Day 89 拡張: E1-E3 用 dependency -/
+
+/-- Confidence (T4 由来、output の確率的解釈の self-description)。 -/
+structure Confidence where
+  value : Float
+  deriving Repr
+
+/-- Agent output (T4 反映、result + confidence)。 -/
+structure Output (α : Type) where
+  result     : α
+  confidence : Confidence
+  deriving Repr
+
+instance : Inhabited Confidence := ⟨⟨0.0⟩⟩
+instance : Inhabited (Output Nat) := ⟨⟨0, default⟩⟩
+
+/-- Action 生成 predicate (E1 で使用、opaque)。 -/
+opaque generates (agent : Agent) (action : Action) (w : World) : Prop
+
+/-- Action verification predicate (E1 で使用、opaque)。 -/
+opaque verifies (agent : Agent) (action : Action) (w : World) : Prop
+
+/-- 内部状態共有 predicate (E1 sharesInternalState、opaque)。 -/
+opaque sharesInternalState (a b : Agent) : Prop
+
+/-- Action space size (E2 capability、opaque)。 -/
+opaque actionSpaceSize (agent : Agent) (w : World) : Nat
+
+/-- Risk exposure (E2、opaque)。 -/
+opaque riskExposure (agent : Agent) (w : World) : Nat
+
+/-- World output (E3 で使用、output extraction、opaque)。 -/
+opaque worldOutput (w : World) : Output Nat
 
 end AgentSpec.Manifest
