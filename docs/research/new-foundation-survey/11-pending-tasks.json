@@ -156,10 +156,10 @@
       "section": "6.4",
       "topic": "Day 78 M-OBS [pre-existing]: theorem manifest 22 vs 31 (Provenance/ProvRelation 4 + Spine/LearningCycle 5)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 79+",
       "gaps": [],
-      "detail": "Day 78 empirical #6 median subagent 識別。Day 74-77 起因ではない pre-existing manifest gap。Provenance/ProvRelation.lean (4 theorem: TransDerived.empty_false / Acyclic.empty / TransDerived.subset / Acyclic.subset) + Spine/LearningCycle.lean (5 theorem: le_refl / le_trans / le_antisymm / observation_le / le_retirement) が breakdown 未反映。manifest backfill"
+      "detail": "Day 82 で完了 (commit TBD)。breakdown.Spine/LearningCycle.lean theorems 0→5 + breakdown.Provenance/ProvRelation.lean theorems 0→4 + theorem_count 25→34。Day 65 / Day 11 の breakdown 反映漏れを retroactive 修正、観測精度向上"
     },
     {
       "section": "2.10",
@@ -1319,6 +1319,12 @@
         9
       ],
       "commit": "a730633"
+    },
+    {
+      "day": 82,
+      "status": "done",
+      "scope": "M-OBS theorem manifest backfill。breakdown.Spine/LearningCycle.lean theorems 0→5 + breakdown.Provenance/ProvRelation.lean theorems 0→4 + theorem_count 25→34。Day 65/Day 11 反映漏れの retroactive 修正。change_category=metadata_only (Day 81 schema 拡張の最初稼働 entry)。Step 6 後続 docs 反映は同 commit に統合。",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {
