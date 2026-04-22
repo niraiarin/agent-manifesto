@@ -8,7 +8,7 @@ namespace で再定義 (Lake cross-project require は避ける)。
 
 - Day 74 PoC: T1 session_bounded のみ → AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton (sessions + time)
 - Day 80 拡張: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state) → StructureId/WorldHash opaque + Severity/AgentRole/AuditEntry/ContextWindow/Action/Agent + canTransition opaque + World に auditLog 追加 (compatible change: Inhabited instance update 含む)
-- Day 81+: T2 (structure_persists / structure_accumulates) → Structure/StructureKind/Epoch 追加
+- Day 83 拡張: T2 (structure_persists / structure_accumulates) → Epoch abbrev + StructureKind/Structure + validTransition def + World に structures + epoch 追加
 - Week 3-4: T3-T8 + P1-P6 順次
 -/
 
@@ -104,19 +104,52 @@ structure Agent where
   currentSession : Option SessionId
   deriving Repr
 
-/-- World skeleton (Day 74 PoC + Day 80 auditLog 追加)。
+/-! ## Day 83 拡張: T2 用 dependency -/
 
-    既存 Manifest の World は 7 fields だが、Day 80 までで T1 3 axiom に必要な
-    sessions + time + auditLog の 3 field のみ。Day 81+ で structures + 他追加. -/
-structure World where
-  sessions : List Session
-  time     : Time
-  auditLog : List AuditEntry
+/-- Epoch (T2 構造世代管理、append-only 論理時計、Lamport-style monotonic)。 -/
+abbrev Epoch : Type := Nat
+
+/-- StructureKind (manifest 列挙の persistent structure 種別)。 -/
+inductive StructureKind where
+  | document
+  | test
+  | skill
+  | designConvention
+  | manifest
+  deriving BEq, Repr
+
+/-- Structure: T2 で永続化する artifact (session を超えて生き残る)。
+
+    `dependencies` は ATMS (Assumption-Based Truth Maintenance System) 流の
+    依存追跡、Section 8 性質 2「順序情報の自己内包」を実装。 -/
+structure Structure where
+  id             : StructureId
+  kind           : StructureKind
+  createdAt      : Epoch
+  lastModifiedAt : Epoch
+  dependencies   : List StructureId
   deriving Repr
 
-instance : Inhabited World := ⟨⟨[], 0, []⟩⟩
+/-- World (Day 74 sessions/time + Day 80 auditLog + Day 83 structures/epoch)。
+
+    既存 Manifest の World は 7 fields だが、Day 83 までで T1+T2 5 axiom に
+    必要な sessions/time/auditLog/structures/epoch の 5 field。残 2 field
+    (allocations/feedbacks) は T6/T7 着手時 (P 系列) に追加予定. -/
+structure World where
+  sessions   : List Session
+  time       : Time
+  auditLog   : List AuditEntry
+  structures : List Structure
+  epoch      : Epoch
+  deriving Repr
+
+instance : Inhabited World := ⟨⟨[], 0, [], [], 0⟩⟩
 
 /-- State transition relation (T₀ opaque、session_no_shared_state で必要)。 -/
 opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
+
+/-- Valid transition: w → w' が何らかの agent + action 経由で可能。 -/
+def validTransition (w w' : World) : Prop :=
+  ∃ (agent : Agent) (action : Action), canTransition agent action w w'
 
 end AgentSpec.Manifest
