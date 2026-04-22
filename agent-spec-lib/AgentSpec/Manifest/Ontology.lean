@@ -380,4 +380,37 @@ def phaseDependency : DevelopmentPhase → DevelopmentPhase → Prop
   | .equilibrium,   .governance    => True
   | _,              _              => False
 
+/-! ## Day 97 拡張: V 系列用 dependency (V index 7 opaque + 2 predicate def) -/
+
+/-- V1: Skill quality (World ごとに測定)。 -/
+opaque skillQuality (w : World) : Nat
+
+/-- V2: Context efficiency。 -/
+opaque contextEfficiency (w : World) : Nat
+
+/-- V3: Output quality。 -/
+opaque outputQuality (w : World) : Nat
+
+/-- V4: Gate pass rate。 -/
+opaque gatePassRate (w : World) : Nat
+
+/-- V5: Proposal accuracy。 -/
+opaque proposalAccuracy (w : World) : Nat
+
+/-- V6: Knowledge structure quality。 -/
+opaque knowledgeStructureQuality (w : World) : Nat
+
+/-- V7: Task design efficiency。 -/
+opaque taskDesignEfficiency (w : World) : Nat
+
+/-- Tradeoff existence: m₁ 改善時に m₂ 劣化する世界対が存在 (Pareto 不可能性は含意せず)。 -/
+def TradeoffExists (m₁ m₂ : World → Nat) : Prop :=
+  ∃ w w', m₁ w < m₁ w' ∧ m₂ w' < m₂ w
+
+/-- Goodhart vulnerability: 真指標 m に対する近似 approx が乖離可能 (1 点一致でも全体乖離あり)。 -/
+def GoodhartVulnerable (m : World → Nat) : Prop :=
+  ∀ (approx : World → Nat),
+    (∃ w, approx w = m w) →
+    ∃ w', approx w' ≠ m w'
+
 end AgentSpec.Manifest
