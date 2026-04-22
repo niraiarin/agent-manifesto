@@ -1,31 +1,15 @@
-/-! # AgentSpec.Manifest.Ontology (Week 3 Day 74、Manifest 移植 PoC)
+/-! # AgentSpec.Manifest.Ontology (Week 3 Day 74-80、Manifest 移植)
 
-新基盤 Manifest 移植 Phase 1 (T1 stand-alone reproduction)。
-GA-I7 (b) 再定義方針: lean-formalization/Manifest/Ontology.lean を
-AgentSpec.Manifest namespace で再定義 (Lake cross-project require は避ける)。
+新基盤 Manifest 移植 Phase 1。GA-I7 (b) 再定義方針:
+lean-formalization/Manifest/Ontology.lean の必要 subset を AgentSpec.Manifest
+namespace で再定義 (Lake cross-project require は避ける)。
 
-## Day 74 PoC scope
+## Scope progression
 
-T1 (session_bounded) に必要な最小 dependency のみ:
-- `AgentId` / `SessionId` opaque
-- `SessionStatus` inductive
-- `Time` abbrev
-- `Session` structure
-- `World` structure (sessions + time のみ)
-
-## 後続 Day で additive 拡張予定
-
-- Day 75-76: T1 残 axiom (no_cross_session_memory + session_no_shared_state) →
-  `AuditEntry` / `Action` / `canTransition` opaque 追加
-- Day 77+: T2 (structure_persists / structure_accumulates) →
-  `Structure` / `StructureKind` / `Epoch` 追加
+- Day 74 PoC: T1 session_bounded のみ → AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton (sessions + time)
+- Day 80 拡張: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state) → StructureId/WorldHash opaque + Severity/AgentRole/AuditEntry/ContextWindow/Action/Agent + canTransition opaque + World に auditLog 追加 (compatible change: Inhabited instance update 含む)
+- Day 81+: T2 (structure_persists / structure_accumulates) → Structure/StructureKind/Epoch 追加
 - Week 3-4: T3-T8 + P1-P6 順次
-
-## 設計根拠
-
-`docs/research/new-foundation-survey/00-synthesis.md` §4.1 + 制約 C1
-(T₀ 無矛盾性継承)、`10-gap-analysis.md` GA-I7 (b) 再定義方針。
-既存 Manifest 55 axioms を 7 週で移植、本 Day 74 PoC は path 確立。
 -/
 
 namespace AgentSpec.Manifest
@@ -61,16 +45,78 @@ structure Session where
   status : SessionStatus
   deriving Repr
 
-/-- World skeleton (Day 74 PoC、minimum for T1 session_bounded only).
+/-! ## Day 80 拡張: T1 残 2 axiom 用 dependency -/
 
-    既存 Manifest の World は 7 fields (structures / sessions / allocations /
-    feedbacks / auditLog / epoch / time) だが、Day 74 PoC では sessions + time
-    のみで session_bounded axiom 表現に十分。Day 75+ で additive 拡張予定. -/
-structure World where
-  sessions : List Session
+/-- Structure identifier (opaque per T2)、Day 80 では Action.target 用に必要。 -/
+opaque StructureId : Type
+
+instance : Repr StructureId := ⟨fun _ _ => "«StructureId»"⟩
+
+/-- Severity of an action. T1 では使われないが Action.severity 必須。 -/
+inductive Severity where
+  | low
+  | medium
+  | high
+  | critical
+  deriving BEq, Repr
+
+/-- Agent action: state transition の単位。session_no_shared_state で必要。 -/
+structure Action where
+  agent    : AgentId
+  target   : StructureId
+  severity : Severity
+  session  : SessionId
   time     : Time
   deriving Repr
 
-instance : Inhabited World := ⟨⟨[], 0⟩⟩
+/-- Hash of a WorldState. AuditEntry の preHash/postHash で使用。 -/
+opaque WorldHash : Type
+
+instance : Repr WorldHash := ⟨fun _ _ => "«WorldHash»"⟩
+
+/-- Audit entry: no_cross_session_memory で必要 (preHash/postHash 因果独立性)。 -/
+structure AuditEntry where
+  timestamp : Time
+  agent     : AgentId
+  session   : SessionId
+  action    : Action
+  preHash   : WorldHash
+  postHash  : WorldHash
+  deriving Repr
+
+/-- Agent role (P2 cognitive role separation)。Agent.role で必要。 -/
+inductive AgentRole where
+  | human
+  | worker
+  | verifier
+  deriving BEq, Repr
+
+/-- Context window minimal (Day 80 では capacity のみ、T3 完全版は後続 Day)。 -/
+structure ContextWindow where
+  capacity : Nat
+  deriving Repr
+
+/-- Agent: state transition を実行する entity。session_no_shared_state で必要。 -/
+structure Agent where
+  id             : AgentId
+  role           : AgentRole
+  contextWindow  : ContextWindow
+  currentSession : Option SessionId
+  deriving Repr
+
+/-- World skeleton (Day 74 PoC + Day 80 auditLog 追加)。
+
+    既存 Manifest の World は 7 fields だが、Day 80 までで T1 3 axiom に必要な
+    sessions + time + auditLog の 3 field のみ。Day 81+ で structures + 他追加. -/
+structure World where
+  sessions : List Session
+  time     : Time
+  auditLog : List AuditEntry
+  deriving Repr
+
+instance : Inhabited World := ⟨⟨[], 0, []⟩⟩
+
+/-- State transition relation (T₀ opaque、session_no_shared_state で必要)。 -/
+opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
 
 end AgentSpec.Manifest

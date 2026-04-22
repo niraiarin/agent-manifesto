@@ -167,12 +167,12 @@
       "section": "2.10",
       "topic": "Manifest 移植 follow-up: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 75-76",
       "gaps": [
         "GA-I7"
       ],
-      "detail": "Day 74 PoC で session_bounded 移植済 (commit 98c6841)。残 2 axiom には AuditEntry / Action / canTransition opaque + 関連 World fields 拡張が必要。Ontology.lean を additive 拡張、AgentSpec/Manifest/T1.lean に追記。conservative extension (axiom 追加のみ)"
+      "detail": "Day 80 で完了 (commit TBD)。Ontology.lean に additive 拡張 (StructureId/WorldHash opaque + Severity/AgentRole inductive + Action/AuditEntry/ContextWindow/Agent structure + canTransition opaque + World に auditLog field 追加、Inhabited instance update)、T1.lean に 2 axiom 追加。byte-identical signature with lean-formalization。axiom 1→3、T1 stand-alone 完備。compatible change (World field 追加)"
     },
     {
       "section": "2.10",
@@ -1307,6 +1307,12 @@
         9
       ],
       "commit": "a6d2ef8"
+    },
+    {
+      "day": 80,
+      "status": "done",
+      "scope": "Manifest 移植 T1 完備 + jq format drift fix (案 A 履行)。Ontology.lean に additive 拡張 (StructureId/WorldHash opaque + Severity/AgentRole + Action/AuditEntry/ContextWindow/Agent + canTransition opaque + World に auditLog field)、T1.lean に no_cross_session_memory + session_no_shared_state 2 axiom 追加 (byte-identical signature)。axiom 1→3 で T1 stand-alone 完備 (3/3)。並行: backfill-day-commit.sh に jq format drift post-process (1-element string array inline 復元)。lake build 378 jobs PASS、example_count 699 不変。compatible change (World field 追加で Inhabited update)",
+      "steps_completed": [1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   ],
   "gap_analysis": {

@@ -40,12 +40,22 @@ if [ "$EXISTING" != "\"__none__\"" ] && [ -n "$EXISTING" ]; then
   exit 2
 fi
 
-# Step 2: jq で commit field 追加 (in-place、format preserve via tmp)
+# Step 2: jq で commit field 追加 + post-process で array inline 復元 (format drift 緩和)
+# jq の default は ["X"] を [\n  "X"\n] に展開する副作用あり (Day 79 検出)。
+# 対症療法として簡易の inline 復元 (1-element array のみ対応)。
 TMP=$(mktemp "${TMPDIR:-/tmp}/backfill-day-commit.XXXXXX")
 jq --argjson d "$DAY" --arg c "$COMMIT" \
   '.day_plan |= map(if .day == $d and (.commit // null) == null then . + {commit: $c} else . end)' \
   "$PENDING" > "$TMP" || { echo "ERROR: jq failed" >&2; rm -f "$TMP"; exit 1; }
-mv "$TMP" "$PENDING"
+
+# 1-element string array を inline に戻す (multi-line → single-line)
+# 例: [\n        "GA-I7"\n      ] → ["GA-I7"]
+TMP2=$(mktemp "${TMPDIR:-/tmp}/backfill-day-commit-inline.XXXXXX")
+perl -0777 -pe 's/\[\s*\n\s*("[^"]+")\s*\n\s*\]/[$1]/g' "$TMP" > "$TMP2" || {
+  echo "ERROR: inline restoration failed" >&2; rm -f "$TMP" "$TMP2"; exit 1;
+}
+mv "$TMP2" "$PENDING"
+rm -f "$TMP"
 
 # Step 3: cycle-check.sh full 実行 (exit 1 = FAIL block、exit 2 = WARN 許容)
 echo "Running cycle-check..." >&2

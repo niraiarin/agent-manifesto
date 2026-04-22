@@ -25,12 +25,14 @@ follows from finite resource consumption (T7).
 導出不可能 — `canTransition`, `validTransition` が opaque のため、有限時間
 での終了を型から導出できない。axiom として維持。
 
-## Day 74 PoC scope
+## Scope progression
+
+- Day 74 PoC: session_bounded のみ
+- Day 80: no_cross_session_memory + session_no_shared_state 追加 (Ontology.lean に
+  AuditEntry / Action / canTransition / Agent 追加とともに、T1 3 axiom 完備)
 
 T1 は本来 3 axiom (session_bounded / no_cross_session_memory /
-session_no_shared_state) で構成。Day 74 では session_bounded のみ移植、
-残 2 axiom は Day 75-76 で `AuditEntry` / `Action` / `canTransition`
-opaque 追加とともに additive 拡張予定。
+session_no_shared_state) で構成。Day 80 で全 3 axiom 移植完了、T1 stand-alone 達成。
 -/
 
 namespace AgentSpec.Manifest
@@ -46,5 +48,30 @@ axiom session_bounded :
     ∃ (w' : World), w.time ≤ w'.time ∧
       ∃ (s' : Session), s' ∈ w'.sessions ∧
         s'.id = s.id ∧ s'.status = SessionStatus.terminated
+
+/-- T1.2: No state sharing across sessions (causal independence of audit entries).
+
+    Source: manifesto.md T1 "There is no continuous 'self'"
+    Theoretical grounding: [R31] Milner CCS — parallel composition with
+    no shared names = causal independence。
+    Refutation condition: If session state could leak across process boundaries. -/
+axiom no_cross_session_memory :
+  ∀ (w : World) (e1 e2 : AuditEntry),
+    e1 ∈ w.auditLog → e2 ∈ w.auditLog →
+    e1.session ≠ e2.session →
+    e1.preHash ≠ e2.postHash
+
+/-- T1.3: No mutable state sharing across different sessions.
+
+    Source: manifesto.md T1 "Each instance is an independent entity"
+    Theoretical grounding: [R31] Milner CCS, [R32] Honda session types。
+    Refutation condition: If inter-session communication channels existed. -/
+axiom session_no_shared_state :
+  ∀ (agent1 agent2 : Agent) (action1 action2 : Action)
+    (w w' : World),
+    action1.session ≠ action2.session →
+    canTransition agent1 action1 w w' →
+    (∃ w'', canTransition agent2 action2 w w'') →
+    (∃ w''', canTransition agent2 action2 w' w''')
 
 end AgentSpec.Manifest
