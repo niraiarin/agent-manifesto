@@ -25,6 +25,8 @@ import AgentSpec.Manifest.T1
 import AgentSpec.Manifest.T2
 import AgentSpec.Manifest.T3
 import AgentSpec.Manifest.T4
+import AgentSpec.Manifest.T5
+import AgentSpec.Manifest.T6
 import AgentSpec.Spine.ResearchSpecLattice
 
 -- Test modules は AgentSpecTest.lean に分離 (Week 2 Day 2)

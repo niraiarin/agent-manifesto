@@ -10,7 +10,8 @@ namespace で再定義 (Lake cross-project require は避ける)。
 - Day 80 拡張: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state) → StructureId/WorldHash opaque + Severity/AgentRole/AuditEntry/ContextWindow/Action/Agent + canTransition opaque + World に auditLog 追加 (compatible change: Inhabited instance update 含む)
 - Day 83 拡張: T2 (structure_persists / structure_accumulates) → Epoch abbrev + StructureKind/Structure + validTransition def + World に structures + epoch 追加
 - Day 84 拡張: T3 (context_contribution_nonuniform) → PrecisionLevel + Task + ContextItem opaque + precisionContribution opaque。T4 (output_nondeterministic) は既存 dependency のみで追加なし。
-- Week 3-4: T5-T8 + P1-P6 順次
+- Day 85 拡張: T5 (no_improvement_without_feedback x2) + T6 (human_resource_authority + resource_revocable) → FeedbackKind/FeedbackTarget/Feedback + ProcessId opaque + ResourceId opaque + ResourceKind/ResourceAllocation + World に feedbacks + allocations + structureImproved def + processImproved opaque + isHuman def
+- Week 3-4: T7-T8 + P1-P6 順次
 -/
 
 namespace AgentSpec.Manifest
@@ -131,20 +132,73 @@ structure Structure where
   dependencies   : List StructureId
   deriving Repr
 
-/-- World (Day 74 sessions/time + Day 80 auditLog + Day 83 structures/epoch)。
+/-! ## Day 85 拡張: T5 (Feedback) + T6 (Resource) 用 dependency -/
 
-    既存 Manifest の World は 7 fields だが、Day 83 までで T1+T2 5 axiom に
-    必要な sessions/time/auditLog/structures/epoch の 5 field。残 2 field
-    (allocations/feedbacks) は T6/T7 着手時 (P 系列) に追加予定. -/
-structure World where
-  sessions   : List Session
-  time       : Time
-  auditLog   : List AuditEntry
-  structures : List Structure
-  epoch      : Epoch
+/-- ProcessId opaque (T5 process improvement target)。 -/
+opaque ProcessId : Type
+
+instance : Repr ProcessId := ⟨fun _ _ => "«ProcessId»"⟩
+
+/-- ResourceId opaque (T6 resource allocation 識別)。 -/
+opaque ResourceId : Type
+
+instance : Repr ResourceId := ⟨fun _ _ => "«ResourceId»"⟩
+
+/-- T5 control loop の三要素 (測定 → 比較 → 調整)。 -/
+inductive FeedbackKind where
+  | measurement
+  | comparison
+  | adjustment
+  deriving BEq, Repr
+
+/-- Feedback の対象。Structure (T5 backward compat) と Process (#316 meta)。 -/
+inductive FeedbackTarget where
+  | structure (id : StructureId)
+  | process   (id : ProcessId)
   deriving Repr
 
-instance : Inhabited World := ⟨⟨[], 0, [], [], 0⟩⟩
+/-- Feedback unit (measurement → comparison → adjustment loop)。 -/
+structure Feedback where
+  kind      : FeedbackKind
+  source    : AgentId
+  target    : FeedbackTarget
+  timestamp : Time
+  deriving Repr
+
+/-- T7 由来 resource 種別。 -/
+inductive ResourceKind where
+  | computation
+  | dataAccess
+  | executionPermission
+  | time
+  | energy
+  deriving BEq, Repr
+
+/-- Resource allocation (T6 grantedBy human + T7 amount 有限)。 -/
+structure ResourceAllocation where
+  resource    : ResourceId
+  kind        : ResourceKind
+  amount      : Nat
+  grantedBy   : AgentId
+  grantedTo   : AgentId
+  validFrom   : Time
+  validUntil  : Option Time
+  deriving Repr
+
+/-- World (Day 74 sessions/time + Day 80 auditLog + Day 83 structures/epoch + Day 85 feedbacks/allocations)。
+
+    既存 Manifest の 7 fields と整合 (feedbacks + allocations は T5/T6 axiom 用)。 -/
+structure World where
+  sessions    : List Session
+  time        : Time
+  auditLog    : List AuditEntry
+  structures  : List Structure
+  epoch       : Epoch
+  feedbacks   : List Feedback
+  allocations : List ResourceAllocation
+  deriving Repr
+
+instance : Inhabited World := ⟨⟨[], 0, [], [], 0, [], []⟩⟩
 
 /-- State transition relation (T₀ opaque、session_no_shared_state で必要)。 -/
 opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
@@ -177,5 +231,21 @@ instance : Repr ContextItem := ⟨fun _ _ => "«ContextItem»"⟩
 /-- Precision contribution: ContextItem が Task の精度に寄与する量。
     Task 別に異なる (information theory: not all info is equally relevant)。 -/
 opaque precisionContribution : ContextItem → Task → Nat
+
+/-! ## Day 85 拡張: T5 後半 (structureImproved / processImproved / isHuman) -/
+
+/-- T5 で参照する structureImproved def (lastModifiedAt の単調増加で観測)。 -/
+def structureImproved (w w' : World) : Prop :=
+  ∃ (s' : Structure),
+    s' ∈ w'.structures ∧
+    ((∀ (s : Structure), s ∈ w.structures → s.id = s'.id → s.lastModifiedAt < s'.lastModifiedAt)
+    ∨ (¬∃ (s : Structure), s ∈ w.structures ∧ s.id = s'.id))
+
+/-- T5 process 版 (opaque、ProcessId と process-level quality は型で表現できないため)。 -/
+opaque processImproved : ProcessId → World → World → Prop
+
+/-- T6 で参照する isHuman 判定 (Agent.role == .human)。 -/
+def isHuman (agent : Agent) : Prop :=
+  agent.role = AgentRole.human
 
 end AgentSpec.Manifest
