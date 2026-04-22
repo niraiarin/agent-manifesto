@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.89.0-week3-day89-e-series",
+  "version": "0.90.0-week3-day90-p1-poc",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2173,13 +2173,13 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 89 E1+E2+E3 batch (T+E 17/55 axiom)",
+    "last_verified_phase": "Week 3 Day 90 P1a PoC (T+E+P partial、17 axiom + 2 theorem)",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 388,
+        "job_count": 389,
         "scope": "production-only",
-        "note": "Day 89: Manifest.E1 + E2 + E3 追加 (+3 jobs、385→388)。T+E 17 axiom + 1 theorem。Mathlib import 維持"
+        "note": "Day 90: Manifest.P1 追加 (+1 jobs、388→389)。T+E+P1a 17 axiom + 2 theorem (T8 + P1a)。Mathlib import 維持"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2200,7 +2200,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 17,
-    "theorem_count": 35,
+    "theorem_count": 36,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2497,6 +2497,10 @@
       },
       "Manifest/E3.lean": {
         "theorems": 0,
+        "examples": 0
+      },
+      "Manifest/P1.lean": {
+        "theorems": 1,
         "examples": 0
       },
       "Spine/ResearchSpecLattice.lean": {
@@ -3406,6 +3410,16 @@
       "scope": "Empirical Postulates 系列完了。E は P1-P6 theorem 導出の base 公理 (P1=E2 直接、P2=T4+E1、P3-P6=T₀ のみ)。Day 90+ で P 系列着手 (theorem 形式、proof 構築要)。Step 6 同 commit 統合。",
       "change_category": "additive_axiom",
       "compatibility": "compatible change"
+    },
+    {
+      "round": "Week 3 Day 90 Manifest 移植 P1a PoC + design",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 389 jobs PASS (+1 = P1.lean)、theorem 35→36 (T8 + P1a)。AgentSpec/Manifest/P1.lean に autonomy_vulnerability_coscaling theorem 1 件移植 (E2 capability_risk_coscaling 直接適用、1 行 proof)。Principles.lean 全 15 theorem の中で最 minimum dependency PoC、proof 構築 path 確立。Subagent 省略 (Day 87 empirical 直近、proof_addition だが 1 行 reuse で risk 低)。",
+      "scope": "P 系列着手 PoC。Q1-Q4 内的判断: Q1=15 全 theorem 段階移植、Q2=full proof (AgentSpec.Manifest と既存 axiom 名一致なので reuse 可)、Q3=P1.lean-P6.lean 6 file (axiom 系列と同 pattern)、Q4=P 順 (P1a→P1b→P2→...)。Day 91-94 で残 14 theorem batch 計画 (Day 91 P1b+P2、Day 92 P3、Day 93 P4+P5、Day 94 P6 + e1b_from_e1a auxiliary)。",
+      "change_category": "proof_addition",
+      "compatibility": "conservative extension"
     }
   ],
   "navigation_index": {
