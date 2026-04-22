@@ -24,21 +24,25 @@ const FORCE_CLOUD_PREFIXES = [
   "/design-implementation-plan",
 ];
 
-// Conservative fallback: confidence が中間帯 (0.3-0.5) のときは Local 系予測でも
-// Cloud に倒す。非対称リスク対応: Local → Local 誤分類は無害だが Cloud → Local は safety risk。
-// v2 (#651): Calibration (isotonic) により confidence と accuracy が一致、conservative fallback 不要化
-// router-accuracy.md §7: ECE 0.44 → 0.073。serve.py:oov_threshold=0.3 が OOD detection を担当
-const CONSERVATIVE_THRESHOLD = 0.0;  // 旧 logic 無効化 (FORCE_CLOUD_PREFIXES は維持)
+// v3 (#651): 期待効用最大化ベースの routing 判定.
+// cost_safety:cost_cloud = 2:1 で eval set 上 zero-leak + 98.64% routing accuracy,
+// real corpus 1173 件で Local 17.3% (cost_safety=10 の 2x) を両立。
+// argmax だと eval で 0.68% leak が出る。非対称コストを明示的に扱うのが正解。
+// utility_decision.py の sweep 結果 (analysis/utility-decision.json) 参照。
+const COST_SAFETY = parseFloat(process.env.ROUTING_COST_SAFETY || "2.0");
+const COST_CLOUD = parseFloat(process.env.ROUTING_COST_CLOUD || "1.0");
 
-// Mapping from routing label to ccr provider,model string
+const LOCAL_PROVIDER = "llama-server,qwen3.6-35b-a3b-bf16";
 // null = fallback to default (= Cloud via anthropic provider)
-const LABEL_TO_PROVIDER = {
-  local_confident: "llama-server,qwen3.6-35b-a3b-bf16",
-  local_probable: "llama-server,qwen3.6-35b-a3b-bf16",
-  cloud_required: null,
-  hybrid: null,
-  unknown: null,
-};
+
+function utilityDecide(probs, costSafety, costCloud) {
+  // probs: {local_confident, local_probable, cloud_required, hybrid, unknown}
+  const pLocal = (probs.local_confident ?? 0) + (probs.local_probable ?? 0);
+  const pCloud = (probs.cloud_required ?? 0) + (probs.hybrid ?? 0) + (probs.unknown ?? 0);
+  const uCloud = pCloud * 1.0 + pLocal * (-costCloud);
+  const uLocal = pCloud * (-costSafety) + pLocal * 1.0;
+  return uLocal > uCloud ? "local" : "cloud";
+}
 
 module.exports = async function customRouter(request, allConfig, { event }) {
   try {
@@ -73,18 +77,15 @@ module.exports = async function customRouter(request, allConfig, { event }) {
     });
     if (!resp.ok) return null;
 
-    const { label, confidence, fallback } = await resp.json();
+    const { label, confidence, probs, fallback } = await resp.json();
 
-    // Safety net 2: Conservative fallback on mid-confidence Local predictions
-    // Cloud→Local misclassification is safety-critical; Local→Cloud is cost-only
-    const isLocalLabel = label === "local_confident" || label === "local_probable";
-    if (isLocalLabel && confidence < CONSERVATIVE_THRESHOLD) {
-      request.log?.info?.(`[router.js] conservative-fallback label=${label} conf=${confidence} → cloud`);
-      return null;  // → default (Cloud)
-    }
-
-    request.log?.info?.(`[router.js] label=${label} conf=${confidence} fallback=${fallback}`);
-    return LABEL_TO_PROVIDER[label] ?? null;
+    // v3 (#651): Utility-based decision with asymmetric safety cost.
+    // Argmax (which classifier label did) can silently leak at ~0.7% even with calibrated probs.
+    // Expected-utility decision with cost_safety >= 2 eliminates leak while keeping Local high.
+    const decision = utilityDecide(probs || {}, COST_SAFETY, COST_CLOUD);
+    const provider = decision === "local" ? LOCAL_PROVIDER : null;
+    request.log?.info?.(`[router.js] label=${label} conf=${confidence} utility=${decision} costSafety=${COST_SAFETY}`);
+    return provider;
   } catch (err) {
     request.log?.warn?.(`[router.js] classifier unreachable: ${err.message}`);
     return null;  // fallback to default on any error

@@ -58,17 +58,49 @@ v2 (sigmoid):    accuracy 0.9524  ECE 0.1644
 
 Isotonic が ECE 最小 + accuracy もトップに到達。5-fold CV で汎化性能確認。
 
-## 3. Grid Search で判明した事実（Gap 3）
+## 3. Gap 3 再検証 — 非対称コストは必要（初期判断の修正）
 
-calibrated classifier に対し per-class threshold を grid search した結果、
-**uniform threshold 0.3 で zero-leak + 90.6% routing accuracy** 達成可能。
+最初の grid search は **argmax 前提の per-class threshold** のみ探索し、「uniform 0.3 で OK」と結論。
+しかし user の指摘で **期待効用最大化 (utility_decide)** を実装し直したところ、argmax は silently
+leak していたことが判明。
 
-| 設定 | Accuracy | Leak | Over-cautious | Reject |
+### Argmax vs Utility (cost_safety sweep on eval 138)
+
+| cost_safety | routing_acc | **leak** | Local | Cloud |
 |---|---|---|---|---|
-| Baseline (local=0.5, cloud=0.3) | 90.6% | 0% | 5.07% | 13.77% |
-| Asymmetric grid best (全クラス 0.3) | 90.6% | 0% | 5.07% | 13.77% |
+| 1 (=argmax) | 97.96% | **0.68%** ❌ | 49 | 98 |
+| **2** ⭐ | **98.64%** | **0%** | 48 | 99 |
+| 5 | 97.96% | 0% | 47 | 100 |
+| 10 | 95.92% | 0% | 44 | 103 |
+| 50 | 83.67% | 0% | 26 | 121 |
 
-→ **非対称化は calibration が既に解消**。v2 router.js で `CONSERVATIVE_THRESHOLD = 0.0` に変更し冗長な防衛 logic を削除。
+`cost_safety=2` が sweet spot: routing accuracy **最高** + zero-leak + Local 48/49 維持。
+
+### Real Corpus 1,173 件での Local 率
+
+| cost_safety | Local % | Local count |
+|---|---|---|
+| 1 (argmax) | 21.3% | 250 (leak あり) |
+| **2** ⭐ | **17.3%** | **203** (zero-leak) |
+| 3 | 14.5% | 170 |
+| 5 | 11.1% | 130 |
+| 10 | 8.8% | 103 |
+
+cost_safety=10 は過剰保守（real corpus で Local 8.8% のみ）。
+cost_safety=2 で **zero-leak + 実運用 17.3% Local routing** = コスト削減 ~17%。
+
+### 決定式
+
+```
+U(local | x) = P(cloud|x) * (-cost_safety) + P(local|x) * 1
+U(cloud | x) = P(cloud|x) * 1 + P(local|x) * (-cost_cloud)
+choose local iff U(local) > U(cloud)
+```
+
+P(local) = P(local_confident) + P(local_probable)
+P(cloud) = P(cloud_required) + P(hybrid) + P(unknown)
+
+→ **router.js v3 (#651) で `utilityDecide()` 実装、デフォルト cost_safety=2**。
 
 ## 4. Long-form Training の効果（Gap 4）
 
