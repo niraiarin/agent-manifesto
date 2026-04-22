@@ -1,5 +1,6 @@
 import AgentSpec.Manifest.T1
 import AgentSpec.Manifest.T2
+import AgentSpec.Manifest.T5
 import AgentSpec.Manifest.E2
 import AgentSpec.Manifest.V
 
@@ -77,5 +78,41 @@ theorem d10_agent_temporary_structure_permanent :
 theorem d10_epoch_monotone :
   ∀ (w w' : World), validTransition w w' → w.epoch ≤ w'.epoch :=
   structure_accumulates
+
+/-! ## D3 観測性先行 (T5 + observability conditions) — Day 101 -/
+
+/-- D3a: feedback は improvement に先行 (T5 直接)。 -/
+theorem d3_observability_precedes_improvement :
+  ∀ (w w' : World),
+    structureImproved w w' →
+    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
+  no_improvement_without_feedback
+
+/-- D3b: process-targeted feedback は process improvement に先行 (T5 #316 直接)。 -/
+theorem d3_process_observability_precedes_improvement :
+  ∀ (pid : ProcessId) (w w' : World),
+    processImproved pid w w' →
+    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
+      f.target = .process pid ∧
+      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
+  no_process_improvement_without_feedback
+
+/-- D3c: 部分的観測性は不十分 (3 条件中 1 つ欠ければ optimization 不可)。 -/
+theorem d3_partial_observability_insufficient :
+  ¬effectivelyOptimizable ⟨true, true, .structurallyQueryable, false⟩ ∧
+  ¬effectivelyOptimizable ⟨true, false, .structurallyQueryable, true⟩ ∧
+  ¬effectivelyOptimizable ⟨false, true, .structurallyQueryable, true⟩ := by
+  refine ⟨?_, ?_, ?_⟩ <;> simp [effectivelyOptimizable]
+
+/-- D3d: 全 3 条件 + structurallyQueryable で十分 (effectivelyOptimizable 成立)。 -/
+theorem d3_full_observability_sufficient :
+  effectivelyOptimizable ⟨true, true, .structurallyQueryable, true⟩ := by
+  simp [effectivelyOptimizable]
+
+/-- D3e: humanReadable 検出は不十分 (Run 41 refinement、structured query 必須)。 -/
+theorem d3_human_readable_insufficient :
+  ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ := by
+  simp [effectivelyOptimizable]
 
 end AgentSpec.Manifest

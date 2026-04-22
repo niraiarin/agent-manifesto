@@ -434,4 +434,25 @@ def systemHealthy (threshold : Nat) (w : World) : Prop :=
   knowledgeStructureQuality w ≥ threshold ∧
   taskDesignEfficiency w ≥ threshold
 
+/-! ## Day 101 拡張: D3 observability conditions -/
+
+/-- Detection mode (D3 observability の検出形式区別、Run 41 由来)。 -/
+inductive DetectionMode where
+  | humanReadable
+  | structurallyQueryable
+  deriving BEq, Repr
+
+/-- D3 observability 3 条件 + structurallyQueryable 検出形式 (default)。 -/
+structure ObservabilityConditions where
+  measurable            : Bool
+  degradationDetectable : Bool
+  detectionMode         : DetectionMode := .structurallyQueryable
+  improvementVerifiable : Bool
+  deriving BEq, Repr
+
+/-- 真に optimization 可能な variable: 全 3 条件 + structurallyQueryable detection。 -/
+def effectivelyOptimizable (c : ObservabilityConditions) : Prop :=
+  c.measurable = true ∧ c.degradationDetectable = true ∧
+  c.detectionMode = .structurallyQueryable ∧ c.improvementVerifiable = true
+
 end AgentSpec.Manifest
