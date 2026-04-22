@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "0.73.0-week3-day73",
+  "version": "0.73.1-week3-day73-backfill",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -3138,6 +3138,24 @@
         "H5 [Gap B, 中優先]: Check 12 は WARN-only (exit 2)。blocking (exit 1) 化は future consideration",
         "H6 [EDGE informational]: Check 8 non-string commit type / Check 9 integer vs string day / Check 11 last_done_day=0 fallback — 現データでは発火しない defensive gap"
       ],
+      "compatibility": "conservative extension"
+    },
+    {
+      "round": "Week 3 Day 72 inductive Reference + Rationale.references migration (Day 46+ stale 解消)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "/verify subagent 5/5 PASS、lake build 106 jobs PASS、example_count 617 不変 (Day 73 で test 追加予定)。inductive Reference (4 variant: doi/url/arxiv/commit) は DataCite Metadata Schema 4.x relatedIdentifierType pattern 準拠、Rationale.references : List String → List Reference の breaking migration、後続 docstring D5/D6 entry 追記。Day 70 人間判断 (references Week 3 実施) を履行。",
+      "scope": "Day 46+ stale 課題 (Rationale references structured 化、age 23 Day) を解消。文字列直書きから 4 variant inductive へ移行で provenance theorem の前提条件として活用可能、情報損失消失。breaking change だが prod 利用箇所は smart constructor 経由のため migration impact は小 (RationaleTest 32 行更新のみ)。74 先行研究サーベイの DataCite/Schema.org/PROV-O Reference pattern を最小化採用。",
+      "compatibility": "breaking change"
+    },
+    {
+      "round": "Week 3 Day 73 ReferenceTest.lean 新規 (23 examples)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 142 jobs PASS (prod 106 + test 36)、example_count 617→640 (+23)、cycle-check Check 12 = 9/9。ReferenceTest.lean: 4 variant 構築 / value accessor rfl / DecidableEq 10 case (同 variant 同値・異値 + 異 variant 同値文字列 6 cross-variant) / Inhabited / List Reference 混合操作 + 型による DOI-URL 区別証明。AgentSpecTest.lean に import 追加。",
+      "scope": "Day 72 Reference inductive の behavior test カバレッジ確保。同値文字列でも variant が異なれば !=、List 混合操作で型 safety 確認、provenance proof の足掛かり。conservative extension、prod 挙動不変。",
       "compatibility": "conservative extension"
     }
   ],
