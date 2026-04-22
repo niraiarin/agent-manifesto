@@ -26,7 +26,9 @@ const FORCE_CLOUD_PREFIXES = [
 
 // Conservative fallback: confidence が中間帯 (0.3-0.5) のときは Local 系予測でも
 // Cloud に倒す。非対称リスク対応: Local → Local 誤分類は無害だが Cloud → Local は safety risk。
-const CONSERVATIVE_THRESHOLD = 0.5;
+// v2 (#651): Calibration (isotonic) により confidence と accuracy が一致、conservative fallback 不要化
+// router-accuracy.md §7: ECE 0.44 → 0.073。serve.py:oov_threshold=0.3 が OOD detection を担当
+const CONSERVATIVE_THRESHOLD = 0.0;  // 旧 logic 無効化 (FORCE_CLOUD_PREFIXES は維持)
 
 // Mapping from routing label to ccr provider,model string
 // null = fallback to default (= Cloud via anthropic provider)

@@ -196,6 +196,13 @@ try:
 except ImportError:
     pass
 
+# v3 (#651 Gap 4): long-form prompt variants (~2000 chars with system stub)
+try:
+    from long_prompts import LONG_FORM_PROMPTS
+    TASK_SEED_PROMPTS = TASK_SEED_PROMPTS + LONG_FORM_PROMPTS
+except ImportError:
+    pass
+
 
 def load_phase1_domain(path: Path) -> list[dict]:
     """Phase 1 domain data (M-interp/T-interp prompts) → local_probable ラベル。"""
