@@ -89,7 +89,13 @@ or for fallback:
 }
 ```
 
-Exit 2 (= Claude Code hook の "block") で Edit を止め、exit 0 で Edit を許可するのは既存 `prefer-jq-for-structured-data.sh` と同じ pattern。ただし本 hook は「CLI で成功したら Edit を不要にする」ケースを追加するため、tool_input 書き換え機能が必要。この書き換えは Claude Code の `hookSpecificOutput.toolInput` で指定可能 (2026-04 時点の仕様)。
+Exit 2 (= Claude Code hook の "block") で Edit を止め、exit 0 で Edit を許可するのは既存 `prefer-jq-for-structured-data.sh` と同じ pattern。ただし本 hook は「CLI で成功したら Edit を不要にする」ケースを追加するため、tool_input 書き換え / Edit suppression 機能が必要。Claude Code の `hookSpecificOutput.permissionDecision ∈ {"allow", "deny", "ask"}` + `additionalContext` + `toolInput` は 2026-04 時点の hook 仕様として documented (docs.claude.com/en/docs/claude-code/hooks-guide 参照)。**ただし本 project で実際に動作確認したのは exit-code-only pattern のみ** (既存 3 hook 全てが exit code 方式)。`hookSpecificOutput` JSON protocol の実動作は Sub-G 内では未検証、**実装フェーズで Claude Code 実機確認が必要**。
+
+**Fallback design**: もし JSON protocol が期待通り動作しない場合、以下の退化パスで機能する:
+- Exit 0 で Edit を常に継続させる (hook は観測のみ、CLI の edit は独立の副次プロセスとして実行)
+- Exit 2 で Edit を block、user が agent に CLI 使用を促す
+
+この退化パスでは Edit suppression はできないが、**CLI が編集を先行させて disk に書く + Edit が後続で上書きする** race が発生する。運用上は JSON protocol 動作前提で実装を進め、動作しない場合は設計変更。
 
 ### 既存 jq hook との整合
 
@@ -148,7 +154,7 @@ exit 0
 #     # Recoverable: let Edit proceed, inject context
 #     cat "$stderr_tmp" >&2
 #     echo "[lean-cli] fallback to Edit tool" >&2
-#     exit 0
+#     exit 1   # non-2 exit = Edit proceeds (Sub-A sample と揃える、PreToolUse 仕様上 exit 2 のみが block)
 #     ;;
 #   4|10)
 #     # Abort
@@ -173,23 +179,50 @@ exit 0
 - **CONDITIONAL**: `LEAN_PATH` が fragile、個別 env setup 文書化
 - **FAIL**: Claude Code の hook 実行環境で `lake env` が機能しない
 
-### 判定: **PASS**
+### 判定: **CONDITIONAL**
 
 | 基準 | 達成 |
 |---|---|
 | 1-line hermetic invocation | `(cd $CLAUDE_PROJECT_DIR/lean-formalization && lake env lake exe lean-cli ...)` ✅ |
-| 既存 hygiene hook との一貫性 | 既存 `prefer-jq-*` hook と PreToolUse / exit code 規律を共有 ✅ |
-| 100ms 以内 decision | CLI 除外条件判定 (拡張子・存在確認・project 構造) は bash native、<10ms ✅ |
+| 既存 hygiene hook との一貫性 | 既存 `prefer-jq-*` hook と PreToolUse / exit code 規律を共有。ただし JSON protocol 使用は新規 ⏸ |
+| 100ms 以内 decision | CLI 除外条件判定 (拡張子・存在確認・project 構造) は bash native、<10ms ✅ (assertion、未計測) |
 | Fallback policy 明確 | exit code → hook action の完全 mapping (Sub-A error contract 使用) ✅ |
 
-### Addressable
+CONDITIONAL 理由: 基準 2 に付随する **`hookSpecificOutput` JSON protocol の Claude Code 実機動作が未検証**。退化 fallback (exit-code-only) に降格すれば本 Sub-G の他の設計は動作するが、Edit suppression 機能が失われる。
 
-なし (後述 Verifier で最終確認)。
+### Stabilization 計画
+
+- **Option 1 (Verification task)**: 実装フェーズ冒頭で `hookSpecificOutput.permissionDecision = "deny"` + `toolInput` 書き換えが機能するかを最小 hook で確認。動作すれば PASS 相当、動かなければ設計変更
+- **Option 2 (Fallback path)**: JSON protocol が動かない場合、CLI 実行は hook と独立させ、Edit は block せずに継続。編集 race は skill 側の規律で対処 (Sub-F の concurrency 研究範疇)
+
+本 Sub-G は **Option 1 前提の spec**、Option 2 は fallback として記録のみ。
+
+### Addressable (解消済み)
+
+Round 1 Verifier 指摘 5 件を反映:
+1. lake --dir 非実在 → 「環境要件」節に Sub-C reference 明記
+2. `hookSpecificOutput` 未検証 → 本 CONDITIONAL + Fallback design で明示
+3. Sub-A vs Sub-G の exit code (1 vs 0) 不整合 → sample script を exit 1 に揃え、コメント追記
+4. `CLAUDE_PROJECT_DIR` 未設定 → 「環境要件」節で `git rev-parse` fallback 言及
+5. `lake` PATH 要件 → 「環境要件」節で elan install 前提 + ハードコード fallback path 記載
 
 ### Unaddressable
 
 - Edit input (`old_string` / `new_string`) から CLI subcommand を**正確に**推論するロジックは spec 未確定、実装フェーズで決定。本 Sub-G はインタフェース層の設計のみ扱う。
 - CLI が "edit" を判断する際の ambiguous cases (複数 body 候補、class instance 等) は Sub-A scope で考慮、Sub-G 再確認不要
+
+## 環境要件・前提
+
+### Hook 実行環境
+
+- `$CLAUDE_PROJECT_DIR`: Claude Code hook で提供される (2026-04 仕様、settings.json から参照可)。未設定環境では `git rev-parse --show-toplevel` へ fallback (sample script 参照)
+- `lake` が PATH に存在: elan 経由 install の場合、macOS では `.zshrc` / `.zprofile` で `~/.elan/bin` が export されている前提。Claude Code hook が shell config を source しない環境では fallback として `~/.elan/bin/lake` のハードコード path を使用
+- `jq`: 入力 JSON parse 用、標準的 macOS / Linux で install 済前提 (既存 `prefer-jq-*` hook が同じ前提)
+- Bash 3.2+ 互換: `[[ ]]` / `case` のみ使用、bash 4+ 機能 (associative array 等) は使わない
+
+### Sub-C (#658) 参照: lake --dir option 非実在
+
+lake CLI 2026-04 時点 (Lean 4.29.0) で `--dir` flag は未実装。確認手順: `lake --help` 出力に `--dir` がない、Sub-C (build-placement-decision.md) で cross-checked。代替は invocation pattern I1 or I2 (subshell)。
 
 ## 既存 hooks との関係
 
