@@ -683,6 +683,36 @@
       "status": "done",
       "timing": "Day 68+",
       "detail": "Day 68 Check 11 (long-deferred aging 14+ Day escalate) で吸収。Day 69 Step 7 checklist で done 化漏れを識別"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 D17 (deductive design workflow、最大 8 theorem + state machine + helper def 多数)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 111+",
+      "gaps": ["GA-I7"],
+      "detail": "D17 = D2+D3+D5+D9+D13 全依存、WorkflowState + DeductiveDesignStep + WorkflowTransition state machine + 多 helper def。scope 大、empirical #11 後 (Day 111+) で着手"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 D13 残 4 theorem (PropositionId+native_decide 依存)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 112+",
+      "gaps": [
+        "GA-I7",
+        "GA-C27"
+      ],
+      "detail": "PropositionId 40-variant inductive + propositionDependsOn def + affected def + d13_constraint_negation_has_impact (native_decide) + d13_l5_limited_impact (native_decide) + d13_assumption_subsumes/monotone (List proof)。GA-C27 trusted code 最小化原則で native_decide 依存は問題、assumptionImpact 軽い 2 件のみ移植 → constraint_negation/l5_limited は defer"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 周辺整備 (skill axioms / ConformanceVerification / Framework 残)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": ["GA-I7"],
+      "detail": "FormalDerivationSkill (17 axiom) / ConformanceVerification (3 axiom) / EvolveSkill / Framework/* は metatheory layer、Phase 0 Manifest core scope 外。Week 4 で必要時着手判断"
     }
   ],
   "day_plan": [
@@ -2031,6 +2061,27 @@
         }
       ],
       "commit": "c14961e"
+    },
+    {
+      "day": 110,
+      "status": "done",
+      "scope": "D18+D11 残 batch (4 theorem + ContextWindow 拡張) + 後続 docs 反映 full 9-step。Ontology ContextWindow 拡張 + context_finite theorem、D.lean D11 d11_context_finite + D18 2 theorem。手順変更: D17 scope 大 + D13 残 native_decide GA-C27 抵触で defer、軽量 D18+D11 先行、pending_items に 3 entry 追加 (D17 / D13 残 / Manifest 周辺整備)。axiom 不変、theorem 90→94。change_category=compatible_change (ContextWindow field 追加)。Step 6 同 commit 統合 (pending_items 3 entry 追加)。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
     }
   ],
   "gap_analysis": {

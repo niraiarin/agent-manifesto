@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "1.09.0-week3-day109-d15-d13",
+  "version": "1.10.0-week3-day110-d18-d11",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2313,7 +2313,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 109 D15+D13 batch",
+    "last_verified_phase": "Week 3 Day 110 D18+D11 残 + 後続 docs 反映",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2340,7 +2340,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 33,
-    "theorem_count": 90,
+    "theorem_count": 94,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2680,7 +2680,7 @@
         "examples": 0
       },
       "Manifest/D.lean": {
-        "theorems": 38,
+        "theorems": 42,
         "examples": 0
       }
     }
@@ -3781,6 +3781,16 @@
       "evaluator": "lake build 397 jobs PASS、theorem 85→90。Ontology に ComputationStep structure + marginalReturn def 追加。D.lean に D15 4 theorem (d15a_unbounded_retry_infeasible Nat 数式 + d15b_non_convergence_requires_human T6 直接 + d15c_eviction_preserves_feasibility CSP 操作 + d15d_computation_saturation T3+T8 obtain) + D13 minimum (d13_retirement_requires_feedback simp) batch。残 D13 4 theorem (PropositionId+native_decide 依存) は Day 110+ defer。Step 1: DesignFoundation.lean D13/D15 reference read 対象、Step 3 TyDD: S1+S4+F+H proof_addition、Step 7: cycle-check 16/16 機械的代替。",
       "scope": "D 系列 batch 8 (累計 D 38 theorem)。D13 残 + D17 + D18 + D11 残が Day 110-111 候補、Day 111 で empirical #11 期限到達 (Day 104+7)。",
       "change_category": "proof_addition",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 110 D18+D11 残 batch (4 theorem + ContextWindow 拡張) + 後続 docs 反映",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 397 jobs PASS、theorem 90→94。Ontology に ContextWindow 拡張 (used field + capacity_pos + used_le_cap invariant、Day 80 minimum → 完全版) + context_finite theorem 追加。D.lean に D11 d11_context_finite (Day 106 deferred 解消) + D18 (parallel_reduces_temporal_cost + coordination_rational_under_constraints) batch。後続 docs 反映: pending_items に D17 (state machine 大) + D13 残 (PropositionId+native_decide GA-C27 抵触) + Manifest 周辺整備 (skill axioms metatheory) entry 3 件追加、Day 111+ defer 計画明示。Step 1: DesignFoundation.lean D11/D18 reference read、Step 3 TyDD: S1+S4+F+H proof_addition、Step 7: cycle-check 16/16 機械的代替。",
+      "scope": "D 系列 batch 9 (累計 D 42 theorem)。D 完了範囲: D1+D2+D3+D4+D5+D6 部分+D7+D8+D9+D10+D11+D12+D13 部分+D14+D15+D16+D18 (D17 + D13 残 + d6_fixed 補完済)。手順変更: 当初 Day 110 D17 計画 → D17 scope 大 + D13 残 native_decide GA-C27 で defer、軽量 D18+D11 残 先行 (後続 docs 反映済)。Day 111 で empirical #11 期限到達。",
+      "change_category": "compatible_change",
       "subagent_dispatch": false
     }
   ],

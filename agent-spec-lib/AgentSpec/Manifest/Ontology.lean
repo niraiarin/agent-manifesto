@@ -95,9 +95,12 @@ inductive AgentRole where
   | verifier
   deriving BEq, Repr
 
-/-- Context window minimal (Day 80 では capacity のみ、T3 完全版は後続 Day)。 -/
+/-- Context window (Day 80 capacity + Day 110 used + invariant 拡張、T3 完全版)。 -/
 structure ContextWindow where
-  capacity : Nat
+  capacity     : Nat
+  used         : Nat := 0
+  capacity_pos : capacity > 0 := by omega
+  used_le_cap  : used ≤ capacity := by omega
   deriving Repr
 
 /-- Agent: state transition を実行する entity。session_no_shared_state で必要。 -/
@@ -654,5 +657,15 @@ structure ComputationStep where
 /-- Marginal precision return (0 = waste computation、saturation point の根拠)。 -/
 def marginalReturn (step : ComputationStep) (task : Task) : Nat :=
   precisionContribution step.item task
+
+/-! ## Day 110 拡張: context_finite theorem (T3 ContextWindow 拡張由来) -/
+
+/-- T3: agent context window は finite (capacity > 0 + used ≤ capacity、structure invariant 由来)。 -/
+theorem context_finite :
+  ∀ (agent : Agent),
+    agent.contextWindow.capacity > 0 ∧
+    agent.contextWindow.used ≤ agent.contextWindow.capacity := by
+  intro agent
+  exact ⟨agent.contextWindow.capacity_pos, agent.contextWindow.used_le_cap⟩
 
 end AgentSpec.Manifest

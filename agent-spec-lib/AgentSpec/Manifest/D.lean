@@ -382,4 +382,32 @@ theorem d15d_computation_saturation :
   obtain ⟨item, h_zero⟩ := context_contribution_nonuniform task h_prec
   exact ⟨⟨item, 1, by omega⟩, h_zero⟩
 
+/-! ## D11 残 (context_finite 由来) — Day 110 -/
+
+/-- D11c: agent context window finite (T3 context_finite 直接 reuse、Day 106 deferred 解消)。 -/
+theorem d11_context_finite :
+  ∀ (agent : Agent),
+    agent.contextWindow.capacity > 0 ∧
+    agent.contextWindow.used ≤ agent.contextWindow.capacity :=
+  context_finite
+
+/-! ## D18 マルチエージェント協調 (T7b + D12 + T3) — Day 110 -/
+
+/-- D18a: 並列協調は temporal cost を削減 (T7b sequential_exceeds_component 直接)。 -/
+theorem d18_parallel_reduces_temporal_cost :
+  ∀ (t1 t2 : Task),
+    executionDuration t1 > 0 →
+    executionDuration t2 > 0 →
+    executionDuration t1 + executionDuration t2 > executionDuration t1 :=
+  fun t1 t2 h1 h2 => (sequential_exceeds_component t1 t2 h1 h2).1
+
+/-- D18b: 制約下の協調は rational (T7b 両 component 超過、parallel max < sequential)。 -/
+theorem d18_coordination_rational_under_constraints :
+  ∀ (t1 t2 : Task),
+    executionDuration t1 > 0 →
+    executionDuration t2 > 0 →
+    executionDuration t1 + executionDuration t2 > executionDuration t1 ∧
+    executionDuration t1 + executionDuration t2 > executionDuration t2 :=
+  fun t1 t2 h1 h2 => sequential_exceeds_component t1 t2 h1 h2
+
 end AgentSpec.Manifest
