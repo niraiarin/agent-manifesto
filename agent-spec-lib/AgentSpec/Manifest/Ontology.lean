@@ -455,4 +455,43 @@ def effectivelyOptimizable (c : ObservabilityConditions) : Prop :=
   c.measurable = true ∧ c.degradationDetectable = true ∧
   c.detectionMode = .structurallyQueryable ∧ c.improvementVerifiable = true
 
+/-! ## Day 105 拡張: D5 SpecLayer + TestKind + D6 DesignStage -/
+
+/-- D5: 三層表現 (formal spec → acceptance test → implementation)。 -/
+inductive SpecLayer where
+  | formalSpec
+  | acceptanceTest
+  | implementation
+  deriving BEq, Repr
+
+/-- D5: テスト分類 (T4 confluence、structural=決定、behavioral=確率)。 -/
+inductive TestKind where
+  | structural
+  | behavioral
+  deriving BEq, Repr
+
+/-- D5: 三層の order (formal=0 → test=1 → impl=2)。 -/
+def specLayerOrder : SpecLayer → Nat
+  | .formalSpec      => 0
+  | .acceptanceTest  => 1
+  | .implementation  => 2
+
+/-- D5: structural test は決定論的、behavioral は確率的 (T4)。 -/
+def testDeterministic : TestKind → Bool
+  | .structural => true
+  | .behavioral => false
+
+/-- D6: 三段設計 stages (boundary → mitigation → variable)。 -/
+inductive DesignStage where
+  | identifyBoundary
+  | designMitigation
+  | defineVariable
+  deriving BEq, Repr, DecidableEq
+
+/-- D6: 三段設計 order。 -/
+def designStageOrder : DesignStage → Nat
+  | .identifyBoundary  => 0
+  | .designMitigation  => 1
+  | .defineVariable    => 2
+
 end AgentSpec.Manifest

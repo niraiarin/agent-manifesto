@@ -3,6 +3,7 @@ import AgentSpec.Manifest.T2
 import AgentSpec.Manifest.T3
 import AgentSpec.Manifest.T4
 import AgentSpec.Manifest.T5
+import AgentSpec.Manifest.T8
 import AgentSpec.Manifest.E2
 import AgentSpec.Manifest.P6
 import AgentSpec.Manifest.V
@@ -188,5 +189,39 @@ theorem d16c_resource_follows_contribution :
       precisionContribution item task = 0 := by
   intro task w h_prec _h_bound
   exact context_contribution_nonuniform task h_prec
+
+/-! ## D5 仕様-テスト-実装 三層 (T8 + P4 + P6) — Day 105 -/
+
+/-- D5a: テストは非ゼロ精度要求 (T8 task_has_precision 直接)。 -/
+theorem d5_test_has_precision :
+  ∀ (task : Task),
+    task.precisionRequired.required > 0 :=
+  task_has_precision
+
+/-- D5b: 三層は strict 順序 (formal < test < impl)。 -/
+theorem d5_layer_sequential :
+  specLayerOrder .formalSpec < specLayerOrder .acceptanceTest ∧
+  specLayerOrder .acceptanceTest < specLayerOrder .implementation := by
+  simp [specLayerOrder]
+
+/-- D5c (+T4): structural test 決定論的、behavioral 確率的。 -/
+theorem d5_structural_test_deterministic :
+  testDeterministic .structural = true ∧
+  testDeterministic .behavioral = false := by
+  constructor <;> rfl
+
+/-! ## D6 三段設計 (boundary → mitigation → variable) — Day 105 -/
+
+/-- D6b: 三段は strict 順序 (boundary < mitigation < variable)。 -/
+theorem d6_stage_sequential :
+  designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
+  designStageOrder .designMitigation < designStageOrder .defineVariable := by
+  simp [designStageOrder]
+
+/-- D6c: 逆方向不可 (variable から boundary 改善禁止、Goodhart 罠回避)。 -/
+theorem d6_no_reverse :
+  ∀ (s : DesignStage),
+    designStageOrder .identifyBoundary ≤ designStageOrder s := by
+  intro s; cases s <;> simp [designStageOrder]
 
 end AgentSpec.Manifest
