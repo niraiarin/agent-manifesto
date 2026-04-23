@@ -2313,13 +2313,13 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 114 ConformanceVerification",
+    "last_verified_phase": "Week 3 Day 115 EvolveSkill",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
-        "job_count": 398,
+        "job_count": 399,
         "scope": "production-only",
-        "note": "Day 114: Manifest.ConformanceVerification 追加 (+1 jobs、397→398)。metatheory conformance layer 先行 port"
+        "note": "Day 115: Manifest.EvolveSkill 追加 (+1 jobs、398→399)。axiom-free evolve skill conformance layer port"
       },
       "AgentSpecTest": {
         "result": "exit 0",
@@ -2340,7 +2340,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 36,
-    "theorem_count": 124,
+    "theorem_count": 156,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2685,6 +2685,10 @@
       },
       "Manifest/ConformanceVerification.lean": {
         "theorems": 23,
+        "examples": 0
+      },
+      "Manifest/EvolveSkill.lean": {
+        "theorems": 32,
         "examples": 0
       }
     }
@@ -3835,6 +3839,16 @@
       "evaluator": "lake build AgentSpec PASS (398 jobs)。ConformanceVerification.lean を新規追加し、procedure/terminology 最小 vocabulary + file classification + rule application + docstring-content 3 axiom + lean_files_conform + SelfGoverning instance を port。AgentSpec root import 追加。theorem 101→124、axiom 33→36、sorry 0。Step 1/3 実施。",
       "scope": "Manifest 周辺整備の先行 slice。ConformanceVerification 3 axiom + 23 theorem を self-contained module として追加。残りは FormalDerivationSkill / EvolveSkill / Framework。",
       "change_category": "additive_axiom",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 115 EvolveSkill conformance layer",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build AgentSpec PASS (399 jobs)。EvolveSkill.lean を新規追加し、workflow/evolution subset + /evolve domain + verification profile + gate/retirement/loopback theorem 群を port。AgentSpec root import 追加。axiom 追加なし、theorem 124→156、axiom 36、sorry 0。Step 1/3 実施。",
+      "scope": "Manifest 周辺整備 slice 2。EvolveSkill を axiom-free self-contained module として追加。残りは FormalDerivationSkill / Framework。",
+      "change_category": "proof_addition",
       "subagent_dispatch": false
     }
   ],

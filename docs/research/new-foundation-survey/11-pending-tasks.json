@@ -712,7 +712,7 @@
       "status": "pending",
       "timing": "Week 4+",
       "gaps": ["GA-I7"],
-      "detail": "Day 114 で ConformanceVerification を先行完了 (3 axiom + 23 theorem、self-contained minimal procedure/terminology vocabulary)。残: FormalDerivationSkill (17 axiom) / EvolveSkill / Framework/*。"
+      "detail": "Day 114: ConformanceVerification 完了 (3 axiom + 23 theorem)。Day 115: EvolveSkill 完了 (axiom 0 + 32 theorem)。残: FormalDerivationSkill (17 axiom) / Framework/*。"
     },
     {
       "section": "2.11",
@@ -2180,6 +2180,27 @@
         }
       ],
       "commit": "555ab60"
+    },
+    {
+      "day": 115,
+      "status": "done",
+      "scope": "EvolveSkill conformance layer 9-step。Step 1 reference read (EvolveSkill/Workflow/Evolution)。Step 3 TyDD eval (workflow/evolution subset + axiom-free theorem layer: S1/S4/F/H OK)。Step 7 cycle-check schema OK、WARN のみ。32 theorem + 0 axiom、theorem 124→156、axiom 36 不変。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
     }
   ],
   "gap_analysis": {
