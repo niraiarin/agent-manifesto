@@ -97,7 +97,8 @@ validate_dependency_format() {
     cleaned=$(echo "$line" | sed 's/^\s*-\s*//')
     # #N パターンと区切り文字（カンマ、スペース）以外の文字が含まれていないか
     local stripped
-    stripped=$(echo "$cleaned" | sed 's/#[0-9]\+//g' | sed 's/[,[:space:]]//g')
+    # Use [0-9][0-9]* (POSIX BRE, portable) instead of [0-9]\+ (GNU extension, fails on BSD sed / macOS)
+    stripped=$(echo "$cleaned" | sed 's/#[0-9][0-9]*//g' | sed 's/[,[:space:]]//g')
     if [[ -n "$stripped" ]]; then
       echo "  #${issue}: ERROR — 依存セクションにフリーテキスト混入: \"${line}\"" >&2
       echo "           許容形式: 「なし」または「#N」のカンマ区切り" >&2
