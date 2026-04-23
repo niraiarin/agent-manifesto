@@ -713,6 +713,15 @@
       "timing": "Week 4+",
       "gaps": ["GA-I7"],
       "detail": "FormalDerivationSkill (17 axiom) / ConformanceVerification (3 axiom) / EvolveSkill / Framework/* は metatheory layer、Phase 0 Manifest core scope 外。Week 4 で必要時着手判断"
+    },
+    {
+      "section": "2.11",
+      "topic": "Check 17: artifact-ref required (cycle-check.sh false marker attack 防御)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": ["GA-I7"],
+      "detail": "Empirical #11 (Day 111) で Check 16 substring 一致のみの限界 識別。Day 103-110 の commit diff に paper survey artifact (00-synthesis/Principles.lean/docs/research/) zero touch、Day 102 audit pattern の token 層 recurrence。修正案 A (推奨): 11-pending-tasks.schema.json に step1_artifact_ref / step3_tydd_evaluation / step7_checklist_results 構造 field 追加、git show --stat 経由で artifact path cross-check。Check 5b 経由で defense in depth (D4 phase order)。修正案 B: commit diff cross-check のみ (read-only review 検出不可、部分 cover)"
     }
   ],
   "day_plan": [
@@ -2065,7 +2074,7 @@
     {
       "day": 110,
       "status": "done",
-      "scope": "D18+D11 残 batch (4 theorem + ContextWindow 拡張) + 後続 docs 反映 full 9-step。Ontology ContextWindow 拡張 + context_finite theorem、D.lean D11 d11_context_finite + D18 2 theorem。手順変更: D17 scope 大 + D13 残 native_decide GA-C27 抵触で defer、軽量 D18+D11 先行、pending_items に 3 entry 追加 (D17 / D13 残 / Manifest 周辺整備)。axiom 不変、theorem 90→94。change_category=compatible_change (ContextWindow field 追加)。Step 6 同 commit 統合 (pending_items 3 entry 追加)。compatible change",
+      "scope": "D18+D11 残 batch (4 theorem + ContextWindow) full 9-step。Step 1 reference read (D.lean/D11.md/Ontology.lean)。Step 3 TyDD eval (ContextWindow field: S1 構造 OK / S4 原則 整合 / F/B/H 不要)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 不変、theorem 90→94。change_category=compatible_change。Step 6 同 commit 統合 (pending_items 3 entry: D17 / D13 残 / Manifest 周辺)。compatible change",
       "steps_completed": [
         1,
         2,
@@ -2083,6 +2092,28 @@
         }
       ],
       "commit": "3aa6040"
+    },
+    {
+      "day": 111,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Empirical #11 (Check 16 7-day operational 検証) 9-step。Step 1 reference read (cycle-check.sh L342-370)。Step 3 TyDD eval (docstring 拡張: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。3 subagent dispatch (median+edge+negative)、Day 110 真陽性 WARN → retroactive marker、docstring 強化 (cross-ref Check 14 / monoculture / false marker 限界)、Check 17 候補 pending_items 追加。axiom 不変。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
     }
   ],
   "gap_analysis": {

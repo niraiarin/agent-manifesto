@@ -343,6 +343,14 @@ fi
 # Empirical #10 で Check 15 の濃度のみ検査の限界 (false PASS) を識別、要素真正性 check として追加。
 # Day 103+ entry で steps_completed に Step 1/3/7 を含む場合、scope に対応 marker 必須化。
 # Day 103 base (Day 102 audit 規律下の最初の Day、Day 91-101 legacy 除外)。
+#
+# Empirical #11 (Day 111) 知見:
+#   - Check 14 (SCOPE_LIMIT 400) と互換: marker token cost ~30 chars (e.g. "reference read"+"TyDD"+"Step 7 mandatory checklist")、
+#     budget 92% 余裕。Check 14 WARN は冗長 prose 起因であり Check 16 marker 必須化と conflict しない。
+#   - Token monoculture 警告: Day 103-110 で `reference read`=5/8 hit dominant、`Principles.lean` `iter N` `対象…read/レビュー` は hit 0。
+#     marker 多様化推奨 (artifact path + iter 番号 + subagent 種別など複数 token を組合せる)。
+#   - 限界 (false marker attack): substring 一致のみのため `paper survey TyDD Step 7 mandatory checklist` 並べた偽 scope は PASS。
+#     真の artifact-ref 検証は Check 17 候補 (pending_items: artifact-ref required) で別解決。
 NO_MARKER_DAYS=$(jq -r '
   .day_plan
   | map(select(.status == "done"))
