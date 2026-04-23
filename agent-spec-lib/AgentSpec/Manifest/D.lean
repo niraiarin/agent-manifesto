@@ -224,4 +224,40 @@ theorem d6_no_reverse :
     designStageOrder .identifyBoundary ≤ designStageOrder s := by
   intro s; cases s <;> simp [designStageOrder]
 
+/-! ## D1 強制レイヤリング (P5 + L1-L6) — Day 106 -/
+
+/-- D1a: Fixed boundary (L1 等) は structural enforcement 必要。 -/
+theorem d1_fixed_requires_structural :
+  minimumEnforcement .fixed = .structural := by rfl
+
+/-- D1b: Enforcement strength は boundary layer に対して monotone。 -/
+theorem d1_enforcement_monotone :
+  (minimumEnforcement .fixed).strength ≥
+  (minimumEnforcement .investmentVariable).strength ∧
+  (minimumEnforcement .investmentVariable).strength ≥
+  (minimumEnforcement .environmental).strength := by
+  simp [minimumEnforcement, EnforcementLayer.strength]
+
+/-! ## D6a 固定 boundary 緩和策 (Day 105 deferred) — Day 106 -/
+
+/-- D6a: ethicsSafety + ontological は fixed boundary。 -/
+theorem d6_fixed_boundary_mitigated :
+  boundaryLayer .ethicsSafety = .fixed ∧
+  boundaryLayer .ontological = .fixed := by
+  simp [boundaryLayer]
+
+/-! ## D11 コンテキスト経済 (T3 + D1) — Day 106 -/
+
+/-- D11a: Enforcement power と context cost は逆相関 (structural 低 < procedural < normative 高)。 -/
+theorem d11_enforcement_cost_inverse :
+  contextCost .structural < contextCost .procedural ∧
+  contextCost .procedural < contextCost .normative := by
+  simp [contextCost]
+
+/-- D11b: structural enforcement への昇格は context cost を minimize。 -/
+theorem d11_structural_minimizes_cost :
+  ∀ (e : EnforcementLayer),
+    contextCost .structural ≤ contextCost e := by
+  intro e; cases e <;> simp [contextCost]
+
 end AgentSpec.Manifest

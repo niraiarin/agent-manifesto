@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "1.05.0-week3-day105-d5-d6",
+  "version": "1.06.0-week3-day106-d1-d11",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2313,7 +2313,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 105 D5+D6 batch + full 9-step",
+    "last_verified_phase": "Week 3 Day 106 D1+D11+d6_fixed batch",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2340,7 +2340,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 33,
-    "theorem_count": 73,
+    "theorem_count": 78,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2680,7 +2680,7 @@
         "examples": 0
       },
       "Manifest/D.lean": {
-        "theorems": 22,
+        "theorems": 27,
         "examples": 0
       }
     }
@@ -3740,6 +3740,16 @@
       "addressable_count": 0,
       "evaluator": "lake build 397 jobs PASS、theorem 68→73。Ontology に SpecLayer + TestKind + DesignStage inductive + specLayerOrder + testDeterministic + designStageOrder def 追加。D.lean に D5 3 theorem (d5_test_has_precision = T8 直接 / d5_layer_sequential = simp / d5_structural_test_deterministic = constructor) + D6 2 theorem (d6_stage_sequential + d6_no_reverse、各 simp + cases) 追記。Step 1: DesignFoundation.lean D5/D6 reference read 対象、Step 3 TyDD: S1 構造表現 (3 inductive 追加)+S4 (proof simp/cases minimum effort)+F (byte-identical)+H (D layer)、Step 7: cycle-check 16/16 機械的代替 (long-deferred 既知 / breakdown 整合 / 改訂ログ Day 100-105 連番)。",
       "scope": "D 系列 batch 4 (依存 inductive 追加、累計 D 22 theorem)。d6_fixed_boundary_mitigated は BoundaryLayer + boundaryLayer def 依存で Day 106+ defer。Day 106 で D11 (T3+D1 dep の D1 inductive 追加 batch) 候補。Step 6 同 commit 統合。",
+      "change_category": "proof_addition",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 106 D1+d6_fixed+D11 batch (5 theorem + 3 inductive + 4 def)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 397 jobs PASS、theorem 73→78。Ontology に BoundaryId + BoundaryLayer + EnforcementLayer inductive + boundaryLayer + minimumEnforcement + EnforcementLayer.strength + contextCost def 追加。D.lean に D1 (d1_fixed_requires_structural rfl + d1_enforcement_monotone simp) + d6_fixed_boundary_mitigated (Day 105 deferred、boundaryLayer simp) + D11 minimum (d11_enforcement_cost_inverse + d11_structural_minimizes_cost、各 simp) 5 theorem batch。Step 1: DesignFoundation.lean D1/D11 reference read 対象 + iter 0 整合チェック、Step 3 TyDD: S1 (3 inductive 構造表現)+S4 (proof rfl/simp/cases minimum)+F (byte-identical)+H (D layer)、Step 7: cycle-check 16/16 機械的代替 (long-deferred / breakdown / 改訂ログ Day 100-106 連番)。",
+      "scope": "D 系列 batch 5 (累計 D 27 theorem)。d11_context_finite は ContextWindow.used field + context_finite axiom 不在で defer。Day 107 で D2 (VerificationIndependence + ResourcePolicy 新 dependency batch) 候補。Step 6 同 commit 統合。",
       "change_category": "proof_addition",
       "subagent_dispatch": false
     }

@@ -494,4 +494,57 @@ def designStageOrder : DesignStage → Nat
   | .designMitigation  => 1
   | .defineVariable    => 2
 
+/-! ## Day 106 拡張: D1 + d6_fixed + D11 用 dependency -/
+
+/-- L1-L6 boundary identifier (D1+D6 で使用)。 -/
+inductive BoundaryId where
+  | ethicsSafety
+  | ontological
+  | resource
+  | actionSpace
+  | platform
+  | architecturalConvention
+  deriving BEq, Repr
+
+/-- Boundary layer (3 分類: fixed=L1+L2 / investmentVariable=L3+L4 / environmental=L5+L6)。 -/
+inductive BoundaryLayer where
+  | fixed
+  | investmentVariable
+  | environmental
+  deriving BEq, Repr
+
+/-- Boundary id → layer mapping。 -/
+def boundaryLayer : BoundaryId → BoundaryLayer
+  | .ethicsSafety            => .fixed
+  | .ontological             => .fixed
+  | .resource                => .investmentVariable
+  | .actionSpace             => .investmentVariable
+  | .platform                => .environmental
+  | .architecturalConvention => .environmental
+
+/-- D1: Enforcement layer (structural=最強 / procedural=中 / normative=弱、P5 由来)。 -/
+inductive EnforcementLayer where
+  | structural
+  | procedural
+  | normative
+  deriving BEq, Repr
+
+/-- Enforcement strength (structural=3 / procedural=2 / normative=1)。 -/
+def EnforcementLayer.strength : EnforcementLayer → Nat
+  | .structural => 3
+  | .procedural => 2
+  | .normative  => 1
+
+/-- 最低必要 enforcement layer (boundary 種別に応じて)。 -/
+def minimumEnforcement : BoundaryLayer → EnforcementLayer
+  | .fixed              => .structural
+  | .investmentVariable => .procedural
+  | .environmental      => .normative
+
+/-- D11: Enforcement layer 別 context cost (structural=0 / procedural=1 / normative=2、強い enforcement ほど低コスト)。 -/
+def contextCost : EnforcementLayer → Nat
+  | .structural => 0
+  | .procedural => 1
+  | .normative  => 2
+
 end AgentSpec.Manifest
