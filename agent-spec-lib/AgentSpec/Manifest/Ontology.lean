@@ -642,4 +642,17 @@ structure DesignPrincipleUpdate where
 def governedPrincipleUpdate (u : DesignPrincipleUpdate) : Prop :=
   u.hasRationale = true
 
+/-! ## Day 109 拡張: D15d ComputationStep + marginalReturn -/
+
+/-- Computation step (chain-of-thought 単位 / tool call、resource consume + precision contribution)。 -/
+structure ComputationStep where
+  item     : ContextItem
+  cost     : Nat
+  cost_pos : cost > 0 := by omega
+  deriving Repr
+
+/-- Marginal precision return (0 = waste computation、saturation point の根拠)。 -/
+def marginalReturn (step : ComputationStep) (task : Task) : Nat :=
+  precisionContribution step.item task
+
 end AgentSpec.Manifest

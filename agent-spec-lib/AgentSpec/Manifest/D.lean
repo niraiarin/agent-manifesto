@@ -6,6 +6,8 @@ import AgentSpec.Manifest.T5
 import AgentSpec.Manifest.T8
 import AgentSpec.Manifest.E1
 import AgentSpec.Manifest.E2
+import AgentSpec.Manifest.T6
+import AgentSpec.Manifest.T7
 import AgentSpec.Manifest.P6
 import AgentSpec.Manifest.V
 
@@ -324,5 +326,60 @@ theorem d9_all_principles_enumerated :
     p = .d17_deductiveDesignWorkflow ∨
     p = .d18_multiAgentCoordination := by
   intro p; cases p <;> simp
+
+/-! ## D13 minimum (P3 + T5、retirement requires feedback) — Day 109 -/
+
+/-- D13a: feedback 不在 → measurement feedback 検出不能 (P3 retirement の T5 前提)。 -/
+theorem d13_retirement_requires_feedback :
+  ∀ (w : World),
+    w.feedbacks = [] →
+    ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
+  fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
+
+/-! ## D15 Harness Engineering (T3-T8 + P6) — Day 109 -/
+
+/-- D15a: 有限 resource 下で retry 数は bounded (T7 + T4)。 -/
+theorem d15a_unbounded_retry_infeasible :
+  ∀ (costPerAttempt : Nat),
+    costPerAttempt > 0 →
+    ∀ (n : Nat),
+      n * costPerAttempt > globalResourceBound →
+      ¬(n * costPerAttempt ≤ globalResourceBound) := by
+  intro _ _h_pos _ h_exceed h_le
+  exact Nat.not_le.mpr h_exceed h_le
+
+/-- D15b: 非収束 agent loop は人間 intervention 必要 (T6 resource_revocable 直接)。 -/
+theorem d15b_non_convergence_requires_human :
+  ∀ (w : World) (alloc : ResourceAllocation),
+    alloc ∈ w.allocations →
+    ∃ (w' : World) (human : Agent),
+      isHuman human ∧
+      validTransition w w' ∧
+      alloc ∉ w'.allocations :=
+  fun w alloc h_alloc =>
+    resource_revocable w alloc h_alloc
+
+/-- D15c: zero-precision-contribution context 削除は feasibility 維持 (T3+T8+P6)。 -/
+theorem d15c_eviction_preserves_feasibility :
+  ∀ (s : TaskStrategy) (agent : Agent),
+    strategyFeasible s agent →
+    ∀ (s' : TaskStrategy),
+      s'.task = s.task →
+      s'.contextUsage ≤ s.contextUsage →
+      s'.resourceUsage = s.resourceUsage →
+      s'.achievedPrecision = s.achievedPrecision →
+      strategyFeasible s' agent := by
+  intro s agent ⟨h_ctx, h_res, h_prec⟩ s' h_task h_ctx' h_res' h_prec'
+  exact ⟨Nat.le_trans h_ctx' h_ctx, h_res' ▸ (h_task ▸ h_res), h_prec' ▸ (h_task ▸ h_prec)⟩
+
+/-- D15d: 全 task で zero-return computation step 存在 (saturation point 根拠、T3 ext + T8)。 -/
+theorem d15d_computation_saturation :
+  ∀ (task : Task),
+    ∃ (step : ComputationStep),
+      marginalReturn step task = 0 := by
+  intro task
+  have h_prec := task.precisionRequired.required_pos
+  obtain ⟨item, h_zero⟩ := context_contribution_nonuniform task h_prec
+  exact ⟨⟨item, 1, by omega⟩, h_zero⟩
 
 end AgentSpec.Manifest
