@@ -286,4 +286,43 @@ theorem d2_from_e1 :
     gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver :=
   verification_requires_independence
 
+/-! ## D9 メンテナンス (P3 + Section 7 self-application) — Day 108 -/
+
+/-- D9a: CompatibilityClass exhaustiveness (Day 93 重複だが D9 context で再陳述)。 -/
+theorem d9_update_classified :
+  ∀ (c : CompatibilityClass),
+    c = .conservativeExtension ∨
+    c = .compatibleChange ∨
+    c = .breakingChange := by
+  intro c; cases c <;> simp
+
+/-- D9b: D9 self-application (DesignPrinciple SelfGoverning instance 経由 governed_update_classified)。 -/
+theorem d9_self_applicable :
+  ∀ (_p : DesignPrinciple) (c : CompatibilityClass),
+    c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
+  fun _p c => governed_update_classified _p c
+
+/-- D9c: D1-D18 全列挙 (DesignPrinciple inductive exhaustive)。 -/
+theorem d9_all_principles_enumerated :
+  ∀ (p : DesignPrinciple),
+    p = .d1_enforcementLayering ∨
+    p = .d2_workerVerifierSeparation ∨
+    p = .d3_observabilityFirst ∨
+    p = .d4_progressiveSelfApplication ∨
+    p = .d5_specTestImpl ∨
+    p = .d6_boundaryMitigationVariable ∨
+    p = .d7_trustAsymmetry ∨
+    p = .d8_equilibriumSearch ∨
+    p = .d9_selfMaintenance ∨
+    p = .d10_structuralPermanence ∨
+    p = .d11_contextEconomy ∨
+    p = .d12_constraintSatisfactionTaskDesign ∨
+    p = .d13_premiseNegationPropagation ∨
+    p = .d14_verificationOrderConstraint ∨
+    p = .d15_harnessEngineering ∨
+    p = .d16_informationRelevance ∨
+    p = .d17_deductiveDesignWorkflow ∨
+    p = .d18_multiAgentCoordination := by
+  intro p; cases p <;> simp
+
 end AgentSpec.Manifest

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/agent-spec-lib-manifest.json",
   "schema_role": "thin artifact catalog (GA-I1 assumption refs layer). Queryable inventory of artifacts, dependencies, provides_*, assumptions, and current build_status snapshot. NOT a narrative / changelog — per-Day progress lives in git log, Lean docstring D-entries, and diffs. Managed via jq: see docs/artifact-manifest-jq-recipes.md.",
-  "version": "1.07.0-week3-day107-d2",
+  "version": "1.08.0-week3-day108-d9",
   "package": "agent-spec-lib",
   "description": "agent-manifesto 新基盤 Lean ライブラリの artifact manifest. GA-I1 (artifact-manifest assumption refs layer) の新基盤実装.",
   "scopes": [
@@ -2313,7 +2313,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 107 D2 batch",
+    "last_verified_phase": "Week 3 Day 108 D9 batch + SelfGoverning typeclass",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2340,7 +2340,7 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 33,
-    "theorem_count": 81,
+    "theorem_count": 85,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
@@ -2680,7 +2680,7 @@
         "examples": 0
       },
       "Manifest/D.lean": {
-        "theorems": 30,
+        "theorems": 33,
         "examples": 0
       }
     }
@@ -3761,6 +3761,16 @@
       "evaluator": "lake build 397 jobs PASS、theorem 78→81。Ontology に VerificationIndependence (4 Bool field) + VerificationRisk (4 variant) inductive + requiredConditions + satisfiedConditions + sufficientVerification def 追加。D.lean に D2 (critical_requires_all_four = rfl + subagent_only_sufficient_for_low = simp + d2_from_e1 = E1 verification_requires_independence 直接) 3 theorem batch。Step 1: DesignFoundation.lean D2 reference read 対象、Step 3 TyDD: S1 (4-Bool conjunction structure) + S4 + F (byte-identical) + H (D layer)、Step 7: cycle-check 16/16 機械的代替。",
       "scope": "D 系列 batch 6 (累計 D 30 theorem)。E1 dependency 追加で D2 完備。Day 108 で D9 (SelfGoverning typeclass) 候補。Step 6 同 commit 統合。",
       "change_category": "proof_addition",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 108 D9 batch (3 theorem + 1 typeclass + 1 inductive 18-variant + 1 structure + 2 instance)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 397 jobs PASS、theorem 81→85。Ontology に SelfGoverning typeclass + governed_update_classified theorem + CompatibilityClass SelfGoverning instance + DesignPrinciple 18-variant inductive + DesignPrinciple SelfGoverning instance + DesignPrincipleUpdate structure + governedPrincipleUpdate def 追加。D.lean に D9 (d9_update_classified cases simp + d9_self_applicable governed_update_classified 直接 + d9_all_principles_enumerated cases simp) batch。Step 1: DesignFoundation.lean D9 reference read 対象 + Section 7 self-application paper context、Step 3 TyDD: S1 (typeclass + 18-variant + structure)+S4 (proof typeclass instance 経由)+F (byte-identical)+H (D layer self-application)、Step 7: cycle-check 16/16 機械的代替。",
+      "scope": "D 系列 batch 7 (累計 D 33 theorem)。SelfGoverning typeclass 自己参照基盤、CompatibilityClass + DesignPrinciple の双方が SelfGoverning instance で D9 self-application 完全実装。Day 109 で D13+D15 (P3+T5+影響波及 / T3-T8+P6+retry) 候補。Step 6 同 commit 統合。",
+      "change_category": "additive_definition",
       "subagent_dispatch": false
     }
   ],

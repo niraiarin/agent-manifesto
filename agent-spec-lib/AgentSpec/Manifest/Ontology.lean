@@ -584,4 +584,62 @@ def sufficientVerification
     (vi : VerificationIndependence) (risk : VerificationRisk) : Prop :=
   satisfiedConditions vi ≥ requiredConditions risk
 
+/-! ## Day 108 拡張: D9 SelfGoverning typeclass + DesignPrinciple -/
+
+/-- D9 core: 任意の type が compatibility classification + per-element 判定可能と表明する typeclass。 -/
+class SelfGoverning (α : Type) where
+  classificationExhaustive :
+    ∀ (c : CompatibilityClass),
+      c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange
+  canClassifyUpdate : α → CompatibilityClass → Prop
+
+/-- SelfGoverning type の update は常に 3 分類のいずれか。 -/
+theorem governed_update_classified {α : Type} [inst : SelfGoverning α]
+    (_witness : α) (c : CompatibilityClass) :
+    c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
+  inst.classificationExhaustive c
+
+/-- CompatibilityClass 自体が SelfGoverning (自己参照基盤、Day 93 移植 type の self-application)。 -/
+instance : SelfGoverning CompatibilityClass where
+  classificationExhaustive := by intro c; cases c <;> simp
+  canClassifyUpdate _ _ := True
+
+/-- D1-D18 を value として列挙 (D9 self-application のため)。 -/
+inductive DesignPrinciple where
+  | d1_enforcementLayering
+  | d2_workerVerifierSeparation
+  | d3_observabilityFirst
+  | d4_progressiveSelfApplication
+  | d5_specTestImpl
+  | d6_boundaryMitigationVariable
+  | d7_trustAsymmetry
+  | d8_equilibriumSearch
+  | d9_selfMaintenance
+  | d10_structuralPermanence
+  | d11_contextEconomy
+  | d12_constraintSatisfactionTaskDesign
+  | d13_premiseNegationPropagation
+  | d14_verificationOrderConstraint
+  | d15_harnessEngineering
+  | d16_informationRelevance
+  | d17_deductiveDesignWorkflow
+  | d18_multiAgentCoordination
+  deriving BEq, Repr
+
+/-- DesignPrinciple は SelfGoverning (D1-D9 自身も governed update に従う、D9 self-application)。 -/
+instance : SelfGoverning DesignPrinciple where
+  classificationExhaustive := by intro c; cases c <;> simp
+  canClassifyUpdate _ _ := True
+
+/-- DesignPrinciple update event (compatibility classification 必須 + rationale)。 -/
+structure DesignPrincipleUpdate where
+  principle     : DesignPrinciple
+  compatibility : CompatibilityClass
+  hasRationale  : Bool
+  deriving Repr
+
+/-- Governed update predicate (rationale 必須)。 -/
+def governedPrincipleUpdate (u : DesignPrincipleUpdate) : Prop :=
+  u.hasRationale = true
+
 end AgentSpec.Manifest
