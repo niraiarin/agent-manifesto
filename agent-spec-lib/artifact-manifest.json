@@ -3802,6 +3802,16 @@
       "scope": "Empirical #11 (cycle-check.sh Check 16 7-day operational effectiveness 検証)。前回 #10 (Day 104) の Check 16 設計を 7 day 後 (Day 111) に再検証、3 parallel subagent dispatch。Day 110 真陽性検出と false marker attack 限界 識別、Check 17 (artifact-ref required) 候補登録。",
       "change_category": "process_only",
       "subagent_dispatch": true
+    },
+    {
+      "round": "Week 3 Day 112 D17 deductive design workflow (state machine 版)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 397 jobs PASS、theorem 94→97 (+3: d17_high_risk / d17_initial / d17_state_machine)。axiom 不変。D.lean に DeductiveDesignStep + 5 typed output structures + WorkflowState + FeedbackAction + WorkflowTransition (6 constructor with verify gate) + 5 def (validity / risk / currentStep / initial / applyTransition) 追加。Manifest reference byte-identical signature 維持。Step 1: DesignFoundation.lean L1665-1907 read、Step 3 TyDD: S1+S4+F+H OK、Step 7: cycle-check 16/16 PASS。",
+      "scope": "D17 (state machine 版) port batch。元最大 8 theorem 計画 → manifest 既存で 5 theorem 削減 (state machine 構造 enforcement に置換) → 3 theorem + state machine infrastructure。pending #72 done。残: D13 残 (PropositionId+native_decide GA-C27 抵触 defer) + Manifest 周辺整備 (Week 4+ defer、codex handoff)。",
+      "change_category": "additive_axiom",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {

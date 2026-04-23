@@ -410,4 +410,179 @@ theorem d18_coordination_rational_under_constraints :
     executionDuration t1 + executionDuration t2 > executionDuration t2 :=
   fun t1 t2 h1 h2 => sequential_exceeds_component t1 t2 h1 h2
 
+/-! ## D17 deductive design workflow (state machine 版、Day 112) -/
+
+/-- Steps of the deductive design workflow.
+    Each step produces output required by subsequent steps. -/
+inductive DeductiveDesignStep where
+  | investigate
+  | extract
+  | construct
+  | derive
+  | validate
+  | feedback
+  deriving BEq, Repr
+
+/-- Output of Step 0 (investigate): collected platform design decisions.
+    T4 mitigation: parallel passes + category coverage check. -/
+structure InvestigationReport where
+  platformName : String
+  decisionCount : Nat
+  sourceCount : Nat
+  investigationPasses : Nat
+  categoriesCovered : Nat
+  categoriesTotal : Nat
+  deriving Repr
+
+/-- Investigation completeness check (T4 mitigation: 2+ passes + full categories). -/
+def investigateStepValid (r : InvestigationReport) : Bool :=
+  r.investigationPasses ≥ 2 &&
+  r.categoriesCovered == r.categoriesTotal &&
+  r.decisionCount > 0 &&
+  r.sourceCount > 0
+
+/-- Output of Step 1 (extract): assumptions with epistemic source tracking. -/
+structure AssumptionSet where
+  humanDecisionCount : Nat
+  llmInferenceCount : Nat
+  allHaveTemporalValidity : Bool
+  deriving Repr
+
+/-- Output of Step 2 (construct): conditional axiom system build result. -/
+structure ConditionalAxiomBuildResult where
+  axiomCount : Nat
+  theoremCount : Nat
+  sorryCount : Nat
+  buildSuccess : Bool
+  deriving Repr
+
+/-- Output of Step 3 (derive): derived design decisions. -/
+structure DerivationOutput where
+  decisionCount : Nat
+  allAxiomsUsed : Bool
+  deriving Repr
+
+/-- Output of Step 4 (validate): accuracy measurement. -/
+structure ValidationMetrics where
+  totalPD : Nat
+  matchCount : Nat
+  partialCount : Nat
+  missCount : Nat
+  deriving Repr
+
+/-- Verification risk level for step transitions. Maps to D2's VerificationRisk. -/
+def stepTransitionRisk : DeductiveDesignStep → VerificationRisk
+  | .investigate => .high
+  | .extract     => .high
+  | .construct   => .high
+  | .derive      => .moderate
+  | .validate    => .moderate
+  | .feedback    => .low
+
+/-- D17 high-risk transitions require 3+ independence conditions (D2 derivation).
+    investigate is high because completeness deficiency (D13) propagates downstream. -/
+theorem d17_high_risk_transitions_need_hook_verify :
+  requiredConditions (stepTransitionRisk .investigate) ≥ 3 ∧
+  requiredConditions (stepTransitionRisk .extract) ≥ 3 ∧
+  requiredConditions (stepTransitionRisk .construct) ≥ 3 := by
+  simp [stepTransitionRisk, requiredConditions]
+
+/-- A valid construct step requires sorryCount = 0 and buildSuccess = true (soundness). -/
+def constructStepValid (r : ConditionalAxiomBuildResult) : Bool :=
+  r.sorryCount == 0 && r.buildSuccess
+
+/-- A valid extract step requires temporal validity on all assumptions (#225). -/
+def extractStepValid (a : AssumptionSet) : Bool :=
+  a.allHaveTemporalValidity && a.humanDecisionCount + a.llmInferenceCount > 0
+
+/-! ### D17 state machine: typed state transitions with verify gates -/
+
+/-- Workflow state: accumulates outputs of completed steps. -/
+structure WorkflowState where
+  investigation : Option InvestigationReport
+  assumptions   : Option AssumptionSet
+  axiomSystem   : Option ConditionalAxiomBuildResult
+  derivation    : Option DerivationOutput
+  validation    : Option ValidationMetrics
+  iteration     : Nat
+  deriving Repr
+
+/-- Compute current step from state (no encoding theorem needed). -/
+def WorkflowState.currentStep (s : WorkflowState) : DeductiveDesignStep :=
+  if s.investigation.isNone then .investigate
+  else if s.assumptions.isNone then .extract
+  else if s.axiomSystem.isNone then .construct
+  else if s.derivation.isNone then .derive
+  else if s.validation.isNone then .validate
+  else .feedback
+
+/-- Initial workflow state: all steps pending. -/
+def WorkflowState.initial : WorkflowState :=
+  { investigation := none, assumptions := none, axiomSystem := none,
+    derivation := none, validation := none, iteration := 0 }
+
+/-- Feedback actions determine reset scope (D13 impact propagation). -/
+inductive FeedbackAction where
+  | addAssumption (content : String)
+  | extendCoreAxiom (content : String)
+  | markOutOfScope (pdId : String)
+  | improveWorkflow (content : String)
+  deriving Repr
+
+/-- Workflow transitions with verify gates on high-risk steps. -/
+inductive WorkflowTransition where
+  | completeInvestigation (report : InvestigationReport)
+      (verified : investigateStepValid report = true)
+  | completeExtraction (aset : AssumptionSet)
+      (verified : extractStepValid aset = true)
+  | completeConstruction (result : ConditionalAxiomBuildResult)
+      (verified : constructStepValid result = true)
+  | completeDerivation (output : DerivationOutput)
+  | completeValidation (metrics : ValidationMetrics)
+  | feedbackLoop (action : FeedbackAction)
+
+/-- Apply a transition to the current state.
+    Returns none if the transition is invalid for the current step. -/
+def applyTransition (s : WorkflowState) (t : WorkflowTransition) : Option WorkflowState :=
+  match t with
+  | .completeInvestigation r _ =>
+    if s.currentStep == .investigate then some { s with investigation := some r }
+    else none
+  | .completeExtraction a _ =>
+    if s.currentStep == .extract then some { s with assumptions := some a }
+    else none
+  | .completeConstruction r _ =>
+    if s.currentStep == .construct then some { s with axiomSystem := some r }
+    else none
+  | .completeDerivation o =>
+    if s.currentStep == .derive then some { s with derivation := some o }
+    else none
+  | .completeValidation m =>
+    if s.currentStep == .validate then some { s with validation := some m }
+    else none
+  | .feedbackLoop action =>
+    if s.currentStep == .feedback then
+      match action with
+      | .addAssumption _ =>
+        some { s with assumptions := none, axiomSystem := none,
+                      derivation := none, validation := none,
+                      iteration := s.iteration + 1 }
+      | .extendCoreAxiom _ =>
+        some { WorkflowState.initial with iteration := s.iteration + 1 }
+      | .markOutOfScope _ =>
+        some { s with validation := none, iteration := s.iteration + 1 }
+      | .improveWorkflow _ =>
+        some { WorkflowState.initial with iteration := s.iteration + 1 }
+    else none
+
+/-- D17 initial state starts at the investigate step (structural, not encoding). -/
+theorem d17_initial_starts_at_investigate :
+  WorkflowState.initial.currentStep = .investigate := by rfl
+
+/-- D17 state machine combined property: initial step + iteration counter. -/
+theorem d17_state_machine_properties :
+  WorkflowState.initial.currentStep = .investigate ∧
+  WorkflowState.initial.iteration = 0 := by
+  exact ⟨rfl, rfl⟩
+
 end AgentSpec.Manifest

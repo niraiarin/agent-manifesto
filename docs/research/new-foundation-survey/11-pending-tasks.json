@@ -688,10 +688,10 @@
       "section": "2.10",
       "topic": "Manifest 移植 D17 (deductive design workflow、最大 8 theorem + state machine + helper def 多数)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 111+",
       "gaps": ["GA-I7"],
-      "detail": "D17 = D2+D3+D5+D9+D13 全依存、WorkflowState + DeductiveDesignStep + WorkflowTransition state machine + 多 helper def。scope 大、empirical #11 後 (Day 111+) で着手"
+      "detail": "D17 = D2+D3+D5+D9+D13 全依存、WorkflowState + DeductiveDesignStep + WorkflowTransition state machine + 多 helper def。scope 大、empirical #11 後 (Day 111+) で着手 | Day 112 完了 (D17 3 theorem + state machine + 5 typed outputs + transition gating)"
     },
     {
       "section": "2.10",
@@ -2098,6 +2098,28 @@
       "commit": "a262f04",
       "status": "done",
       "scope": "Empirical #11 (Check 16 7-day operational 検証) 9-step。Step 1 reference read (cycle-check.sh L342-370)。Step 3 TyDD eval (docstring 拡張: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。3 subagent dispatch (median+edge+negative)、Day 110 真陽性 WARN → retroactive marker、docstring 強化 (cross-ref Check 14 / monoculture / false marker 限界)、Check 17 候補 pending_items 追加。axiom 不変。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
+    },
+    {
+      "day": 112,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "D17 (state machine 版) port 9-step。Step 1 reference read (DesignFoundation.lean L1665-1907)。Step 3 TyDD eval (state machine + 5 typed output: S1/S4/F/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。3 theorem + DeductiveDesignStep + WorkflowState + FeedbackAction + WorkflowTransition + applyTransition。axiom 不変、theorem 94→97。pending #72 done。D13 残 + Manifest 周辺整備 codex handoff。additive_axiom",
       "steps_completed": [
         1,
         2,
