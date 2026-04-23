@@ -3,7 +3,7 @@
 # Builds 12 test input .lean files with various edge cases,
 # runs rewrite-poc on each, compares output with expected.
 
-set -uo pipefail
+set -euo pipefail
 cd "$(dirname "$0")"
 export PATH="$HOME/.elan/bin:$PATH"
 
@@ -30,7 +30,8 @@ check_pattern() {
     else
       RESULTS+=("FAIL  $id  byte diff from expected")
       FAIL=$((FAIL+1))
-      cmp -l "$exp" "$out" | head -3 >>"$log"
+      # cmp -l exits non-zero on diff; || true keeps set -euo pipefail from aborting the harness
+      (cmp -l "$exp" "$out" | head -3 >>"$log") || true
     fi
   else
     RESULTS+=("FAIL  $id  rewrite exit $?: $(cat $log | head -1)")
@@ -151,9 +152,8 @@ printf 'axiom foo_\xc3\xa9 : Bool\n' > "$INDIR/p10.expected.lean"
 check_pattern P10 "$INDIR/p10.lean" "foo_é" "axiom foo_é : Bool" "$INDIR/p10.expected.lean"
 
 # ─────────────────────────────────────────────────
-# P11: tabs + spaces mixed. Inside namespace, axiom foo is at top-level.
-# Note: Lean's grammar may normalize tab→space in specific contexts; byte-preservation
-# should still hold because we slice raw bytes.
+# P11: namespace + axiom + end (structural wrapping preserve).
+# Surrounding `namespace Test\n` (before) and `\nend Test\n` (after) stay byte-identical.
 # ─────────────────────────────────────────────────
 printf 'namespace Test\naxiom foo : Nat\nend Test\n' > "$INDIR/p11.lean"
 printf 'namespace Test\naxiom foo : Bool\nend Test\n' > "$INDIR/p11.expected.lean"
@@ -185,6 +185,25 @@ axiom foo : Bool
 axiom a2 : Nat
 EOF
 check_pattern P12 "$INDIR/p12.lean" "foo" "axiom foo : Bool" "$INDIR/p12.expected.lean"
+
+# ─────────────────────────────────────────────────
+# P13: NFD in before-range (outside the target declaration).
+# NFD bytes (e\xcc\x81) live in a /-! ... -/ block ABOVE the target axiom.
+# Verifies that byte-level slicing preserves NFD bytes in the `before` portion,
+# independent of whether NFD appears in the replacement text.
+# ─────────────────────────────────────────────────
+printf '/-! block with NFD: e\xcc\x81 -/\n\naxiom foo : Nat\n' > "$INDIR/p13.lean"
+printf '/-! block with NFD: e\xcc\x81 -/\n\naxiom foo : Bool\n' > "$INDIR/p13.expected.lean"
+check_pattern P13 "$INDIR/p13.lean" "foo" "axiom foo : Bool" "$INDIR/p13.expected.lean"
+
+# ─────────────────────────────────────────────────
+# P14: UTF-8 BOM + multiple declarations, rewrite the 2nd.
+# Verifies bomOffset arithmetic on non-first declarations — the 2nd decl's
+# startByte = range.start.byteIdx + 3 must correctly land past the 1st decl.
+# ─────────────────────────────────────────────────
+printf '\xEF\xBB\xBFaxiom first : Nat\naxiom target : Nat\n' > "$INDIR/p14.lean"
+printf '\xEF\xBB\xBFaxiom first : Nat\naxiom target : Bool\n' > "$INDIR/p14.expected.lean"
+check_pattern P14 "$INDIR/p14.lean" "target" "axiom target : Bool" "$INDIR/p14.expected.lean"
 
 # ─────────────────────────────────────────────────
 # Report
