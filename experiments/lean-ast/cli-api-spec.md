@@ -86,7 +86,8 @@ $ lean-cli query Manifest/Axioms.lean --kind theorem --name context_finite --out
 
 Options:
 - `--kind <K>`: kind filter
-- `--name-pattern <regex>`: name regex filter
+- `--name <N>`: exact name match
+- `--name-pattern <regex>`: name regex filter (`--name` と排他)
 - `--output-field {name|kind|range|type|body|doc|all}`: 特定フィールドのみ出力
 - `--format {json|text}`: default json、text は `name:kind:range` 形式
 
@@ -136,7 +137,9 @@ $ lean-cli insert -i file.lean --after existing_foo 'axiom new_foo : Nat'
 | 10 | `internal_error` | CLI bug (panic 等) | Edit に fallback、bug report 推奨 |
 | 64 | `usage_error` | CLI 引数不正 | user 通知 (hook bug) |
 
-**原則**: exit code ∈ {0, 2-6, 10, 64}。その他は未使用。
+**原則**: exit code ∈ {0, 2-6, 10, 64}。その他は予約 / 未使用。
+
+**Exit 1 は意図的に未使用**: 多くの shell ツールが exit 1 を generic failure として扱うため、本 CLI は明示的な error_kind を常に返す方針。exit 1 を観測したら bug とみなして良い (実装側は `exit 10` → `internal_error` を返すべき)。
 
 ### Error JSON 形式 (stderr)
 
@@ -171,10 +174,11 @@ Hook の簡易経路として、exit code のみで判断可能:
 # lean-cli-hook.sh (抜粋)
 lean-cli edit -i "$file" --replace-body "$name" "$expr" 2>/tmp/err
 case $? in
-  0)  exit 0 ;;                                          # 成功、Edit 不要
+  0)   exit 0 ;;                                          # 成功、Edit 不要
   2|3|5|6) echo "[lean-cli] fallback to Edit tool" >&2 ; exit 1 ;;  # recoverable
-  4|10) cat /tmp/err >&2 ; exit 2 ;;                    # abort with reason
-  *)  exit 2 ;;                                         # unknown
+  4|10)  cat /tmp/err >&2 ; exit 2 ;;                     # abort with reason
+  64)  echo "[lean-cli] hook argument error, continuing with Edit" >&2 ; exit 1 ;;  # hook bug
+  *)   cat /tmp/err >&2 ; exit 2 ;;                      # unknown exit, abort with stderr
 esac
 ```
 
