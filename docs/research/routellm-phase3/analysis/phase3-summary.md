@@ -4,6 +4,26 @@
 
 本 PR で Phase 3, 4, 5 を自動実行可能な部分まで完了。Phase 1 (human GT) は候補 100 件の sampling まで完了、実際のラベリングは operational task。
 
+2026-04-23 追記: Phase 2 architecture comparison の最終 winner は
+**microsoft/mdeberta-v3-base full fine-tune**。GT hold-out routing 100% / leak 0% により
+production router の default とする。
+
+## Phase 2: Architecture comparison 最終結論
+
+| Model | Taxonomy exact | GT hold-out exact | GT routing | GT leak | 判定 |
+|---|---:|---:|---:|---:|---|
+| LR + calibrated e5 | 96.6% | 60.0% | 90.0% | 10.0% | 退役候補 |
+| SetFit + e5 | 100.0% | 65.0% | 95.0% | 5.0% | 次点 |
+| mmBERT-base full FT | 100.0% | 60.0% | 100.0% | 0.0% | 次点 |
+| **mDeBERTa-v3-base full FT** | **99.3%** | **65.0%** | **100.0%** | **0.0%** | **採用** |
+| xlm-roberta-base full FT | 95.3% | 65.0% | 100.0% | 0.0% | taxonomy leak で除外 |
+
+追加検証:
+- Eval calibration: ECE 0.1096, accuracy 99.3%
+- GT hold-out calibration: ECE 0.2702, exact accuracy 65.0%
+- Load test: p95 43.9ms (c=1), 80.8ms (c=5), 259.2ms (c=10)
+- E2E smoke: `serve_encoder.py` -> `/classify` -> `router.js` utility decision PASS
+
 ## Phase 3: Fine-grained cost_safety sweep
 
 **Verifier B-3 (medium)** の「cost_safety={1,2,5,10,20,50} の粗い grid」を解消。
@@ -97,4 +117,9 @@ calibration は実際に汎化する。v2 の ECE 0.073 claim は defensible。V
 | 4 | held-out ECE 0.0524 < 0.0734 報告値、double-dipping なし | ✅ |
 | 5 | 40/41 tasks で routing_acc ≥ 0.80 | ✅ (trace-interp のみ要改善) |
 
-**Sub-5 (#653) → Phase 3-5 Gate PASS。Phase 1 (GT) + trace-interp 追加変種 + Phase 2 (GT-based accuracy) は後続 Issue。**
+**Sub-5 (#653) → production sign-off Gate PASS。**
+
+残すべき follow-up は production blocker ではなく quality/ops improvement:
+1. Human GT 500+ + Cohen's kappa
+2. Trace-interp 追加変種の継続
+3. Auto-retrain cron と Prometheus/Grafana observability

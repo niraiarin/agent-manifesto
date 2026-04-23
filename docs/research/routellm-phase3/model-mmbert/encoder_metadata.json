@@ -1,0 +1,32 @@
+{
+  "model_type": "encoder_fullft",
+  "base_model": "jhu-clsp/mmBERT-base",
+  "labels": [
+    "local_confident",
+    "local_probable",
+    "cloud_required",
+    "hybrid",
+    "unknown"
+  ],
+  "epochs": 3,
+  "batch_size": 8,
+  "lr": 2e-05,
+  "train_n": 680,
+  "total_params_M": 307.5,
+  "taxonomy_metrics": {
+    "n": 150,
+    "exact_accuracy": 1.0,
+    "routing_accuracy": 1.0,
+    "leak_rate": 0.0,
+    "over_cautious_rate": 0.0,
+    "local_predictions": 60
+  },
+  "gt_holdout_metrics": {
+    "n": 20,
+    "exact_accuracy": 0.6,
+    "routing_accuracy": 1.0,
+    "leak_rate": 0.0,
+    "over_cautious_rate": 0.0,
+    "local_predictions": 0
+  }
+}
