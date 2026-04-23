@@ -2313,7 +2313,7 @@
   ],
   "build_status": {
     "last_verified": "2026-04-23",
-    "last_verified_phase": "Week 3 Day 110 D18+D11 残 + 後続 docs 反映",
+    "last_verified_phase": "Week 3 Day 113 D13 impact propagation",
     "lake_build_results": {
       "AgentSpec": {
         "result": "exit 0",
@@ -2340,11 +2340,11 @@
     "prov_mapping_status": "Day 9 Process 4 type → ResearchEntity Mapping 完成、Day 10 ResearchAgent.toEntity (5 toEntity) + EvolutionMapping.transitionToActivity、Day 11 で 3 main PROV-O relation、Day 12 で RetiredEntity + RetirementReason 4 variant で §4.4 構造的検出完備、Day 13 で auxiliary 2 + WasRetiredBy 1 = 6 relation 完備、Day 14 で linter A-Minimal、Day 15 で linter A-Compact (Hybrid macro @[retired])、Day 16 Spine 層 transitionLegacy deprecation、Day 17 Spine 層 transitionLegacy 完全削除 A-Standard 完遂、**Day 18 Provenance 層 linter A-Standard A-Minimal (#check_retired command、Lean.Elab.Command 拡張)、段階的 Lean 機能習得 3/4 段階目達成**",
     "sorry_count": 0,
     "axiom_count": 33,
-    "theorem_count": 94,
+    "theorem_count": 101,
     "example_count": 717,
     "warning_count": 0,
     "deprecated_api_usage": 0,
-    "native_decide_usage": 0,
+    "native_decide_usage": 2,
     "finite_bounded_universal_cases": 512,
     "breakdown": {
       "Core.lean": {
@@ -2592,7 +2592,7 @@
         "examples": 0
       },
       "Manifest/Ontology.lean": {
-        "theorems": 0,
+        "theorems": 2,
         "examples": 0
       },
       "Manifest/T1.lean": {
@@ -2680,7 +2680,7 @@
         "examples": 0
       },
       "Manifest/D.lean": {
-        "theorems": 42,
+        "theorems": 48,
         "examples": 0
       }
     }
@@ -3811,6 +3811,16 @@
       "evaluator": "lake build 397 jobs PASS、theorem 94→97 (+3: d17_high_risk / d17_initial / d17_state_machine)。axiom 不変。D.lean に DeductiveDesignStep + 5 typed output structures + WorkflowState + FeedbackAction + WorkflowTransition (6 constructor with verify gate) + 5 def (validity / risk / currentStep / initial / applyTransition) 追加。Manifest reference byte-identical signature 維持。Step 1: DesignFoundation.lean L1665-1907 read、Step 3 TyDD: S1+S4+F+H OK、Step 7: cycle-check 16/16 PASS。",
       "scope": "D17 (state machine 版) port batch。元最大 8 theorem 計画 → manifest 既存で 5 theorem 削減 (state machine 構造 enforcement に置換) → 3 theorem + state machine infrastructure。pending #72 done。残: D13 残 (PropositionId+native_decide GA-C27 抵触 defer) + Manifest 周辺整備 (Week 4+ defer、codex handoff)。",
       "change_category": "additive_axiom",
+      "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 113 D13 impact propagation (4 theorem + PropositionId graph)",
+      "date": "2026-04-23",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build AgentSpec PASS (397 jobs)。Ontology に PropositionCategory + PropositionId 47 variant + category/dependencies/propositionDependsOn 追加。D.lean に allPropositions/dependents/affected/d13_propagation + assumptionImpact/Raw + D13 残 4 theorem 追加。native_decide 2 件は timeout なし。axiom 不変、theorem 97→101。Step 1/3/7 実施。",
+      "scope": "D13 残 4 theorem 解消。PropositionId dependency graph と impact propagation を GA-I7 再定義方針で port。Day 114 は Manifest 周辺整備 (ConformanceVerification 先行) 候補。",
+      "change_category": "proof_addition",
       "subagent_dispatch": false
     }
   ],

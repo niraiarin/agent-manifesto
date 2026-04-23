@@ -336,6 +336,75 @@ theorem d13_retirement_requires_feedback :
     ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
   fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
 
+/-! ### D13 impact propagation (PropositionId dependency closure) — Day 113 -/
+
+/-- Enumeration of all named propositions used in affected computation. -/
+def allPropositions : List PropositionId :=
+  [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
+   .e1, .e2,
+   .p1, .p2, .p3, .p4, .p5, .p6,
+   .l1, .l2, .l3, .l4, .l5, .l6,
+   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14,
+   .d15, .d16, .d17, .d18,
+   .v1, .v2, .v3, .v4, .v5, .v6, .v7]
+
+/-- Set of propositions that directly depend on proposition `s` (reverse edges). -/
+def PropositionId.dependents (s : PropositionId) : List PropositionId :=
+  allPropositions.filter (fun p => propositionDependsOn p s)
+
+/-- Computes the impact set when premise `s` is negated.
+    The fuel parameter guarantees termination of the transitive closure. -/
+def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
+  match fuel with
+  | 0 => []
+  | fuel' + 1 =>
+    let direct := s.dependents
+    let transitive := direct.flatMap (fun p => affected p fuel')
+    (direct ++ transitive).eraseDups
+
+/-- Operational definition of D13: impact propagation upon premise negation. -/
+def d13_propagation (negated : PropositionId) : List PropositionId :=
+  affected negated
+
+/-- Negation of T4 has at least one downstream impact. -/
+theorem d13_constraint_negation_has_impact :
+  (d13_propagation .t4).length > 0 := by
+  native_decide
+
+/-- Negation of L5 is no broader than T4 in the encoded dependency graph. -/
+theorem d13_l5_limited_impact :
+  (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by
+  native_decide
+
+/-- Computes the impact set when an assumption expires. -/
+def assumptionImpact (supportedPropositions : List PropositionId) : List PropositionId :=
+  (supportedPropositions.flatMap (fun p => affected p)).eraseDups
+
+/-- Raw impact set for assumption expiration, before deduplication. -/
+def assumptionImpactRaw (supportedPropositions : List PropositionId) : List PropositionId :=
+  supportedPropositions.flatMap (fun p => affected p)
+
+/-- Assumption expiration subsumes individual proposition negation. -/
+theorem d13_assumption_subsumes_proposition :
+  ∀ (p : PropositionId) (supported : List PropositionId),
+    p ∈ supported →
+    ∀ (q : PropositionId),
+      q ∈ d13_propagation p →
+      q ∈ assumptionImpactRaw supported := by
+  intro p supported hp q hq
+  simp only [assumptionImpactRaw, d13_propagation] at *
+  exact List.mem_flatMap.mpr ⟨p, hp, hq⟩
+
+/-- Broader assumptions have broader raw impact. -/
+theorem d13_assumption_impact_monotone :
+  ∀ (s₁ s₂ : List PropositionId),
+    (∀ p, p ∈ s₁ → p ∈ s₂) →
+    ∀ q, q ∈ assumptionImpactRaw s₁ → q ∈ assumptionImpactRaw s₂ := by
+  intro s₁ s₂ hsub q hq
+  simp only [assumptionImpactRaw] at *
+  obtain ⟨p, hp, hpq⟩ := List.mem_flatMap.mp hq
+  exact List.mem_flatMap.mpr ⟨p, hsub p hp, hpq⟩
+
 /-! ## D15 Harness Engineering (T3-T8 + P6) — Day 109 -/
 
 /-- D15a: 有限 resource 下で retry 数は bounded (T7 + T4)。 -/

@@ -697,13 +697,13 @@
       "section": "2.10",
       "topic": "Manifest 移植 D13 残 4 theorem (PropositionId+native_decide 依存)",
       "mark": "🟢",
-      "status": "pending",
-      "timing": "Day 112+",
+      "status": "done",
+      "timing": "Day 113",
       "gaps": [
         "GA-I7",
         "GA-C27"
       ],
-      "detail": "PropositionId 40-variant inductive + propositionDependsOn def + affected def + d13_constraint_negation_has_impact (native_decide) + d13_l5_limited_impact (native_decide) + d13_assumption_subsumes/monotone (List proof)。GA-C27 trusted code 最小化原則で native_decide 依存は問題、assumptionImpact 軽い 2 件のみ移植 → constraint_negation/l5_limited は defer"
+      "detail": "Day 113 で完了。Ontology に PropositionCategory + PropositionId 47 variant + category/dependencies/propositionDependsOn、D.lean に allPropositions/dependents/affected/d13_propagation + assumptionImpact/Raw + D13 残 4 theorem を追加。native_decide 2 件は build PASS。"
     },
     {
       "section": "2.10",
@@ -2134,6 +2134,27 @@
         {
           "step": 4,
           "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
+    },
+    {
+      "day": 113,
+      "status": "done",
+      "scope": "D13 impact propagation 9-step。Step 1 reference read (DesignFoundation.lean L1040-1180 + Ontology PropositionId)。Step 3 TyDD eval (PropositionId graph + fuel closure: S1/S4/F/H OK)。Step 7 cycle-check 権限付き再実行で schema OK、WARN のみ。4 theorem + PropositionId graph、axiom 不変、theorem 97→101。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
         }
       ]
     }

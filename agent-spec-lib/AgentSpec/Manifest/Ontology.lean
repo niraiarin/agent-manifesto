@@ -668,4 +668,85 @@ theorem context_finite :
   intro agent
   exact ⟨agent.contextWindow.capacity_pos, agent.contextWindow.used_le_cap⟩
 
+/-! ## Day 113 拡張: D13 PropositionId dependency graph -/
+
+/-- Proposition categories used by D13 impact propagation. -/
+inductive PropositionCategory where
+  | constraint
+  | empiricalPostulate
+  | principle
+  | boundary
+  | designTheorem
+  | hypothesis
+  deriving BEq, Repr
+
+/-- Proposition identifier. Enumerates named propositions in the Manifest. -/
+inductive PropositionId where
+  | t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8
+  | e1 | e2
+  | p1 | p2 | p3 | p4 | p5 | p6
+  | l1 | l2 | l3 | l4 | l5 | l6
+  | d1 | d2 | d3 | d4 | d5 | d6 | d7 | d8 | d9 | d10 | d11 | d12 | d13 | d14
+  | d15 | d16 | d17 | d18
+  | v1 | v2 | v3 | v4 | v5 | v6 | v7
+  deriving BEq, Repr
+
+/-- Returns the category of a proposition. -/
+def PropositionId.category : PropositionId → PropositionCategory
+  | .t1 | .t2 | .t3 | .t4 | .t5 | .t6 | .t7 | .t8 => .constraint
+  | .e1 | .e2 => .empiricalPostulate
+  | .p1 | .p2 | .p3 | .p4 | .p5 | .p6 => .principle
+  | .l1 | .l2 | .l3 | .l4 | .l5 | .l6 => .boundary
+  | .d1 | .d2 | .d3 | .d4 | .d5 | .d6 | .d7 | .d8
+  | .d9 | .d10 | .d11 | .d12 | .d13 | .d14
+  | .d15 | .d16 | .d17 | .d18 => .designTheorem
+  | .v1 | .v2 | .v3 | .v4 | .v5 | .v6 | .v7 => .boundary
+
+/-- Returns the direct dependencies of a proposition. -/
+def PropositionId.dependencies : PropositionId → List PropositionId
+  | .t1 | .t2 | .t3 | .t4 | .t5 | .t6 | .t7 | .t8 => []
+  | .e1 => [.t4]
+  | .e2 => []
+  | .p1 => [.e2]
+  | .p2 => [.t4, .e1]
+  | .p3 => [.t1, .t2]
+  | .p4 => [.t5, .t7]
+  | .p5 => [.t4]
+  | .p6 => [.t3, .t7, .t8]
+  | .l1 => [.p1, .t6]
+  | .l2 => [.t1, .t3, .t4]
+  | .l3 => [.t6, .t7]
+  | .l4 => [.t6, .p1, .d8]
+  | .l5 => []
+  | .l6 => [.t6, .p3]
+  | .d1 => [.p5, .l1, .l2, .l3, .l4, .l5, .l6]
+  | .d2 => [.e1, .p2]
+  | .d3 => [.p4, .t5]
+  | .d4 => [.p3]
+  | .d5 => [.t8, .p4, .p6]
+  | .d6 => [.d3]
+  | .d7 => [.p1]
+  | .d8 => [.e2]
+  | .d9 => [.p3]
+  | .d10 => [.t1, .t2]
+  | .d11 => [.t3, .d1, .d3]
+  | .d12 => [.p6, .t3, .t7, .t8]
+  | .d13 => [.p3, .t5]
+  | .d14 => [.p6, .t7, .t8]
+  | .d15 => [.t3, .t4, .t5, .t6, .t7, .t8, .p6]
+  | .d16 => [.t3, .t7, .t8]
+  | .d17 => [.t5, .t6, .e1, .p3, .d2, .d3, .d5, .d9, .d13]
+  | .d18 => [.t3, .t7, .d12]
+  | .v1 => [.l2, .l5]
+  | .v2 => [.l2, .l3]
+  | .v3 => [.l1, .l4]
+  | .v4 => [.l6, .l4]
+  | .v5 => [.l4, .l6]
+  | .v6 => [.l2]
+  | .v7 => [.l3, .l6]
+
+/-- A proposition directly depends on another proposition. -/
+def propositionDependsOn (a b : PropositionId) : Bool :=
+  a.dependencies.contains b
+
 end AgentSpec.Manifest
