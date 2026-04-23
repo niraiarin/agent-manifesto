@@ -4,6 +4,7 @@ import AgentSpec.Manifest.T3
 import AgentSpec.Manifest.T4
 import AgentSpec.Manifest.T5
 import AgentSpec.Manifest.T8
+import AgentSpec.Manifest.E1
 import AgentSpec.Manifest.E2
 import AgentSpec.Manifest.P6
 import AgentSpec.Manifest.V
@@ -259,5 +260,30 @@ theorem d11_structural_minimizes_cost :
   ∀ (e : EnforcementLayer),
     contextCost .structural ≤ contextCost e := by
   intro e; cases e <;> simp [contextCost]
+
+/-! ## D2 Worker/Verifier 分離 (E1 + P2) — Day 107 -/
+
+/-- D2a: critical risk は 4 条件全必要。 -/
+theorem critical_requires_all_four :
+  requiredConditions .critical = 4 := by rfl
+
+/-- D2b: subagent-only (contextSeparated のみ) は low risk のみ十分、moderate には不足。 -/
+theorem subagent_only_sufficient_for_low :
+  let subagentOnly : VerificationIndependence :=
+    { contextSeparated := true
+      framingIndependent := false
+      executionAutomatic := false
+      evaluatorIndependent := false }
+  sufficientVerification subagentOnly .low ∧
+  ¬sufficientVerification subagentOnly .moderate := by
+  simp [sufficientVerification, satisfiedConditions, requiredConditions]
+
+/-- D2c: 検証 valid → 役割分離 (E1 verification_requires_independence 直接)。 -/
+theorem d2_from_e1 :
+  ∀ (gen ver : Agent) (action : Action) (w : World),
+    generates gen action w →
+    verifies ver action w →
+    gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver :=
+  verification_requires_independence
 
 end AgentSpec.Manifest

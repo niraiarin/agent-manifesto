@@ -547,4 +547,41 @@ def contextCost : EnforcementLayer → Nat
   | .procedural => 1
   | .normative  => 2
 
+/-! ## Day 107 拡張: D2 verification independence (E1 + P2) -/
+
+/-- D2: 4 条件 (context separation + framing + execution automaticity + evaluator independence)。 -/
+structure VerificationIndependence where
+  contextSeparated      : Bool
+  framingIndependent    : Bool
+  executionAutomatic    : Bool
+  evaluatorIndependent  : Bool
+  deriving BEq, Repr
+
+/-- 検証 risk 4 段 (critical=L1 関連 / high=構造変更 / moderate=通常 / low=docs)。 -/
+inductive VerificationRisk where
+  | critical
+  | high
+  | moderate
+  | low
+  deriving BEq, Repr
+
+/-- Risk 別 必要条件数 (critical=4 / high=3 / moderate=2 / low=1)。 -/
+def requiredConditions : VerificationRisk → Nat
+  | .critical => 4
+  | .high     => 3
+  | .moderate => 2
+  | .low      => 1
+
+/-- 4 条件中の充足数。 -/
+def satisfiedConditions (vi : VerificationIndependence) : Nat :=
+  (if vi.contextSeparated then 1 else 0) +
+  (if vi.framingIndependent then 1 else 0) +
+  (if vi.executionAutomatic then 1 else 0) +
+  (if vi.evaluatorIndependent then 1 else 0)
+
+/-- 検証充足: 充足 ≥ 必要。 -/
+def sufficientVerification
+    (vi : VerificationIndependence) (risk : VerificationRisk) : Prop :=
+  satisfiedConditions vi ≥ requiredConditions risk
+
 end AgentSpec.Manifest
