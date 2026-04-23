@@ -3,7 +3,36 @@
 > **位置づけ**: #650 PoC に対する production 化 7 項目の解消レポート。
 > Gate PASS に必要な条件を系統的に満たしていく。
 
-## Gate 判定: **PASS** (条件付き)
+## Gate 判定: **PASS** (mDeBERTa 採用で更新)
+
+2026-04-23 の Phase 2 architecture comparison により、production router は
+**microsoft/mdeberta-v3-base full fine-tune** を採用する。LR + calibrated e5 は
+PoC/v2 baseline として残すが、GT hold-out の leak 10% が production blocker になったため退役候補。
+
+### Production sign-off 指標 (Phase 2 winner)
+
+| 指標 | LR + calibrated e5 | SetFit | **mDeBERTa-v3-base full FT** | Gate |
+|---|---:|---:|---:|---|
+| Taxonomy exact | 96.6% | 100.0% | **99.3%** | PASS |
+| Taxonomy routing | 98.6% | 100.0% | **100.0%** | PASS |
+| GT hold-out exact (n=20) | 60.0% | 65.0% | **65.0%** | advisory |
+| GT hold-out routing (n=20) | 90.0% | 95.0% | **100.0%** | PASS |
+| GT hold-out Cloud->Local leak | 10.0% | 5.0% | **0.0%** | PASS |
+| Eval ECE | 0.0734 | n/a | **0.1096** | monitor |
+| GT hold-out ECE | n/a | n/a | **0.2702** | monitor |
+
+Calibration note: mDeBERTa raw softmax is usable for utility routing, but is not calibrated enough
+to treat exact-label confidence as a standalone production guarantee. The safety gate is therefore
+GT routing/leak + `router.js` utility decision, not the raw top-class confidence.
+
+### Runtime verification
+
+| Check | Result |
+|---|---|
+| `serve_encoder.py` `/classify` schema | compatible with `router.js` |
+| Load test c=1/5/10, n=50 each | p95 43.9ms / 80.8ms / 259.2ms |
+| E2E smoke classify -> router.js | PASS, 6/6 routed as expected |
+| `/verify` safety prefix | PASS, forced cloud by router safety net |
 
 ### 主要指標の改善
 
@@ -246,9 +275,9 @@ calibration 済モデルは real-corpus でも自信を持って予測。
 ## 8. 運用移行ガイド
 
 ```bash
-# 1. serve (calibrated model)
+# 1. serve (production encoder model)
 cd docs/research/routellm-phase3/classifier
-uv run python3 serve.py --port 9001 --model-dir ../model --oov-threshold 0.3
+uv run python3 serve_encoder.py --port 9001 --model-dir ../model-mdeberta --oov-threshold 0.3
 
 # 2. ccr 統合
 cp router.js ~/.claude-code-router/router.js
@@ -263,3 +292,19 @@ ccr restart
 #   - 人間がラベル訂正 → corrections.jsonl に append
 #   - retrain_cli.py で再学習 + 自動 rollback
 ```
+
+## 9. Architecture Phase 2 最終比較
+
+| Model | Taxonomy exact | GT routing | GT leak | Latency / notes | 判定 |
+|---|---:|---:|---:|---|---|
+| LR + calibrated e5 | 96.6% | 90.0% | 10.0% | fast, calibrated | 退役候補 |
+| SetFit + e5 | 100.0% | 95.0% | 5.0% | ~20ms | 次点 |
+| Qwen 2.5-0.5B LoRA | 88.0% | 65.0% | 35.0% | overfit | 除外 |
+| Qwen 3.5-4B zero-shot | n/a | 95.0% | 5.0% | ~8s/request | 除外 |
+| mmBERT-base full FT | 100.0% | 100.0% | 0.0% | strong | 次点 |
+| **mDeBERTa-v3-base full FT** | **99.3%** | **100.0%** | **0.0%** | best balance | **採用** |
+| xlm-roberta-base full FT | 95.3% | 100.0% | 0.0% | taxonomy leak 1.3% | 除外 |
+
+結論: production default は `serve_encoder.py --model-dir ../model-mdeberta`。
+モデル成果物本体 (`model-*/encoder_model/`, `_training/`) は gitignore 対象とし、
+metadata と analysis のみを PR に含める。

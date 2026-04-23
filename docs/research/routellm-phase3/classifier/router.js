@@ -29,7 +29,7 @@ const FORCE_CLOUD_PREFIXES = [
 // real corpus 1173 件で Local 17.3% (cost_safety=10 の 2x) を両立。
 // argmax だと eval で 0.68% leak が出る。非対称コストを明示的に扱うのが正解。
 // utility_decision.py の sweep 結果 (analysis/utility-decision.json) 参照。
-const COST_SAFETY = parseFloat(process.env.ROUTING_COST_SAFETY || "2.0");
+const COST_SAFETY = parseFloat(process.env.ROUTING_COST_SAFETY || "1.8");
 const COST_CLOUD = parseFloat(process.env.ROUTING_COST_CLOUD || "1.0");
 
 const LOCAL_PROVIDER = process.env.ROUTING_LOCAL_PROVIDER || "llama-server,qwen3.6-35b-a3b-bf16";
