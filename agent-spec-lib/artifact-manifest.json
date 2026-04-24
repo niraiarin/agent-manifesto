@@ -3860,6 +3860,16 @@
       "scope": "FormalDerivationSkill 17 axiom + 35 theorem (T₀ enum 17 + 補題 16 + skill_implements_procedure + all_requirements_enumerated) + 17 inductive + 1 opaque + 1 instance SelfGoverning + 1 def の port。pending #75 (Manifest 周辺整備 skill axioms) 進捗。",
       "change_category": "additive_axiom",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 117 Framework/NodeKind (9 theorem) port",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 401 jobs PASS、theorem 191→200 (+9)。元 lean-formalization/Manifest/Framework/NodeKind.lean (151 行) を sed で namespace + import rewrite (Manifest.* → AgentSpec.Manifest.*) のみ実施し byte-identical port。AgentSpec.lean に import AgentSpec.Manifest.Framework.NodeKind 追加。dir agent-spec-lib/AgentSpec/Manifest/Framework/ を新規作成。Step 1: source file L1-151 read、Step 3 TyDD: sed 機械変換、Step 7: cycle-check 16/16 PASS。",
+      "scope": "Framework/ port 第 1 弾。NodeKind (4-way classification by mutability and origin)。Framework/ 9 file 中 1 完了、4 file (AcyclicGraph/DanglingDetection/CoTFaithfulness/CompatibilityClassification) は依存解決可で順次 port、5 file (EpistemicBridge/EpistemicTagging/LLMRejection/PromotionProtocol) は EpistemicLayer/Observable/Terminology 未 port で defer 必要。",
+      "change_category": "proof_addition",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
