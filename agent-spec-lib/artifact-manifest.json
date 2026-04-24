@@ -3920,6 +3920,16 @@
       "scope": "Framework EpistemicLayer 前提の 1/2 完了 (Procedure)。残: EpistemicLayer (次 Day)、Models.Assumptions.EpistemicLayer、Axioms、Evolution、Observable。EmpiricalPostulates は E1/E2/E3 で cover 済、再 port 不要。",
       "change_category": "proof_addition",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 123 EpistemicLayer (47 theorem) + Ontology 補強",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build PASS、theorem 265→313 (+48: EpistemicLayer 47 + Ontology constraints_are_roots 1)、axiom 55 不変。EpistemicLayer.lean (649 行、47 theorem) を sed で namespace+import rewrite し port、autoImplicit 違反 (`α` `c` 等の implicit binding) 解消のため `set_option autoImplicit true` を namespace 直前に追加。Ontology に constraints_are_roots theorem (PropositionId.category=.constraint → dependencies=[]) を byte-identical 補強。Framework EpistemicBridge / EpistemicTagging / LLMRejection の前提揃った。",
+      "scope": "Framework 残 5 file の前提解消第 2 弾。Models.Assumptions.EpistemicLayer (237 行、0 theorem、EpistemicLayer 後) が次の前提候補。Axioms / Evolution / Observable は Evolution chain で別系統。",
+      "change_category": "proof_addition",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {

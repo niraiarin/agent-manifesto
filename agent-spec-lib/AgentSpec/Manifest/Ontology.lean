@@ -749,6 +749,12 @@ def PropositionId.dependencies : PropositionId → List PropositionId
 def propositionDependsOn (a b : PropositionId) : Bool :=
   a.dependencies.contains b
 
+/-- T (constraints) are root nodes: they depend on nothing. -/
+theorem constraints_are_roots :
+  ∀ (p : PropositionId),
+    p.category = .constraint → p.dependencies = [] := by
+  intro p hp; cases p <;> simp [PropositionId.category] at hp <;> rfl
+
 /-! ## Day 119 拡張: StructureKind.priority + PropositionCategory.strength (Framework AcyclicGraph 系 unblock) -/
 
 /-- Priority of StructureKind. Reflects the partial order from manifesto Section 8.
