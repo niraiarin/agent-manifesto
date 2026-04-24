@@ -287,6 +287,66 @@ land in different events (via parent_event_id), but the shape is uniform.
 - **Retention**: unlimited by default. Runbook should include a prune command
   referencing `find -mtime +N`.
 
+## Operational setup
+
+### 1. Install git post-commit hook (emits `outcome.commit`)
+
+```bash
+bash scripts/install-decision-log-hooks.sh
+```
+
+Idempotent. Symlinks `scripts/decision-log-commit-hook.sh` into the repo's
+`.git/hooks/post-commit`. Works with linked worktrees (resolves to the main
+repo's git dir).
+
+### 2. Register Claude Code hooks (governance — human approval required)
+
+Edit `.claude/settings.json` and add the block printed by the installer:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [{"hooks": [{"type": "command",
+       "command": "bash $CLAUDE_PROJECT_DIR/scripts/decision-log-emit.sh user.turn"}]}],
+    "PreToolUse":      [{"hooks": [{"type": "command",
+       "command": "bash $CLAUDE_PROJECT_DIR/scripts/decision-log-emit.sh agent.tool_call"}]}],
+    "PostToolUse":     [{"hooks": [{"type": "command",
+       "command": "bash $CLAUDE_PROJECT_DIR/scripts/decision-log-emit.sh agent.tool_call_complete"}]}],
+    "Stop":            [{"hooks": [{"type": "command",
+       "command": "bash $CLAUDE_PROJECT_DIR/scripts/decision-log-emit.sh agent.output"}]}]
+  }
+}
+```
+
+### 3. Start decision-logged classifier
+
+```bash
+DECISION_LOG_DIR=$(pwd)/docs/research/routellm-phase3/logs \
+uv run python3 docs/research/routellm-phase3/classifier/serve_encoder.py \
+  --decision-log-dir docs/research/routellm-phase3/logs
+```
+
+The env var `DECISION_LOG_DIR` is also honored by `router.js` and the hook
+script — keep them pointed at the same directory so events share partitions.
+
+### 4. Schedule log rotation (daily)
+
+Add to `crontab` or launchd:
+
+```cron
+# daily at 00:05 UTC
+5 0 * * * cd /path/to/agent-manifesto && bash scripts/rotate-decision-logs.sh
+```
+
+Files older than 7 days (configurable via `RETAIN_RAW_DAYS`) are gzip'd.
+Analysis helpers must handle both `.jsonl` and `.jsonl.gz`.
+
+### 5. Redaction policy
+
+Production default: `DECISION_LOG_REDACTION=prompt_sha_only` — prompt text
+replaced by SHA-256 hash, length preserved. Development: `none` to keep
+verbatim text for analysis. `router.js` reads `DECISION_LOG_REDACTION` env.
+
 ## Integrity & safety
 
 - Writers SHOULD write one line per event atomically (`open(..., 'a')` with
@@ -301,11 +361,56 @@ land in different events (via parent_event_id), but the shape is uniform.
 
 ## Analysis recipes
 
+> All recipes assume raw `.jsonl` plus gzip'd older files. Use a helper to
+> stream both formats:
+>
+> ```bash
+> decision_cat() {
+>   for f in docs/research/routellm-phase3/logs/decisions-*.jsonl \
+>            docs/research/routellm-phase3/logs/decisions-*.jsonl.gz; do
+>     [ -f "$f" ] || continue
+>     case "$f" in *.gz) gunzip -c "$f";; *) cat "$f";; esac
+>   done
+> }
+> ```
+
+### Event-type histogram (health check)
+
+```bash
+decision_cat | jq -r '.event_type' | sort | uniq -c | sort -rn
+```
+
+### Per-emitter counts (by provenance.recorded_by)
+
+```bash
+decision_cat | jq -r '.provenance.recorded_by' | sort | uniq -c | sort -rn
+```
+
+### Routing decision distribution over last 24h
+
+```bash
+decision_cat | jq -c 'select(.event_type == "router.decision")
+  | {action: .decision.action, rule: .decision.rule_applied,
+     ts: .timestamp_utc}' \
+  | awk -F'"ts":"' '{print $2}' | awk -F'T' '{print $1}' | sort | uniq -c
+```
+
+### Session reconstruction (full DAG for a session)
+
+```bash
+SESSION_ID="<uuid>"
+decision_cat | jq -c --arg sid "$SESSION_ID" \
+  'select(.context.session_id == $sid)
+   | {t: .timestamp_utc, type: .event_type,
+      pid: .parent_event_id, eid: .event_id}' \
+  | sort
+```
+
 ### Routing accuracy once human GT arrives
 
 ```bash
 # Join router.classification with outcome.human_gt_assigned by event_id chain
-jq -s '
+decision_cat | jq -s '
   [.[] | select(.event_type == "router.classification")] as $cls |
   [.[] | select(.event_type == "outcome.human_gt_assigned")] as $gt |
   $cls | map(
@@ -314,7 +419,37 @@ jq -s '
     )}
   ) | map(select(.human_gt))
   | map({predicted: .decision.predicted_label, gt: .human_gt})
-' decisions-*.jsonl
+  | group_by(.predicted)
+  | map({predicted: .[0].predicted, n: length,
+         correct: map(select(.predicted == .gt)) | length})
+'
+```
+
+### Commit → classification join (were cloud-routed turns more likely to commit?)
+
+```bash
+# 1. Get all router.decision events with their event_id
+decision_cat | jq -c 'select(.event_type == "router.decision")
+  | {eid: .event_id, action: .decision.action, ts: .timestamp_utc}' \
+  > /tmp/decisions.jsonl
+
+# 2. Get outcome.commit events with parent_event_id
+decision_cat | jq -c 'select(.event_type == "outcome.commit")
+  | {pid: .parent_event_id, sha: .outcome.git_commit_hash}' \
+  > /tmp/commits.jsonl
+
+# 3. Join: for each action, count how many led to a commit
+python3 -c "
+import json
+decs = [json.loads(l) for l in open('/tmp/decisions.jsonl')]
+cmts = {c['pid'] for c in (json.loads(l) for l in open('/tmp/commits.jsonl'))}
+from collections import Counter
+total = Counter(d['action'] for d in decs)
+hit = Counter(d['action'] for d in decs if d['eid'] in cmts)
+for action in total:
+    rate = hit[action] / total[action] if total[action] else 0
+    print(f'{action:20s} {hit[action]:5d}/{total[action]:5d} commits ({rate*100:.1f}%)')
+"
 ```
 
 ### User rewind rate per classifier
