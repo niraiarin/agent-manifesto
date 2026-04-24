@@ -6,8 +6,9 @@ Exercises:
   1. decision_logger.DecisionLogger (Python side)
   2. router.js emitter (invoked via node child_process)
   3. scripts/decision-log-emit.sh (invoked via bash child_process)
+  4. scripts/decision-log-commit-hook.sh (git post-commit emitter)
 
-All events from all 3 emitters land in the same temp dir and are validated
+All events from all 4 emitters land in the same temp dir and are validated
 against decision_event.schema.json v1.0.0.
 
 Runtime: single process, no network, no model weights required.
@@ -33,7 +34,7 @@ sys.path.insert(0, str(CLASSIFIER_DIR))
 from decision_logger import DecisionLogger, build_context, sha256_hex
 
 
-def run_subprocess(cmd: list[str], *, env: dict[str, str], stdin: str = "") -> tuple[int, str, str]:
+def run_subprocess(cmd: list[str], *, env: dict[str, str], stdin: str = "", cwd: str | None = None) -> tuple[int, str, str]:
     result = subprocess.run(
         cmd,
         input=stdin,
@@ -41,6 +42,7 @@ def run_subprocess(cmd: list[str], *, env: dict[str, str], stdin: str = "") -> t
         capture_output=True,
         text=True,
         check=False,
+        cwd=cwd,
     )
     return result.returncode, result.stdout, result.stderr
 
@@ -98,6 +100,25 @@ def drive_all_emitters(log_dir: Path) -> list[dict]:
         )
         assert rc == 0, f"hook rc={rc} err={err}"
 
+    # 4. decision-log-commit-hook.sh: simulate a git post-commit inside a
+    # freshly-initialized throwaway repo so it picks up a real commit sha.
+    commit_hook = REPO_ROOT / "scripts" / "decision-log-commit-hook.sh"
+    git_tmp = Path(tempfile.mkdtemp(prefix="decision-log-git-"))
+    try:
+        for git_cmd in (
+            ["git", "init", "--quiet"],
+            ["git", "config", "user.email", "test@example.com"],
+            ["git", "config", "user.name", "integration-test"],
+            ["bash", "-c", "echo seed > seed.txt && git add seed.txt && git commit -q -m 'seed commit'"],
+        ):
+            rc, out, err = run_subprocess(git_cmd, env=env_base, cwd=str(git_tmp))
+            assert rc == 0, f"git setup failed: {git_cmd} rc={rc} err={err}"
+        # Fire the post-commit hook manually from the git tmp dir
+        rc, out, err = run_subprocess(["bash", str(commit_hook)], env=env_base, cwd=str(git_tmp))
+        assert rc == 0, f"commit hook rc={rc} err={err}"
+    finally:
+        shutil.rmtree(git_tmp, ignore_errors=True)
+
     files = sorted(glob.glob(str(log_dir / "decisions-*.jsonl")))
     assert files, "no log files written"
     events = []
@@ -144,7 +165,7 @@ def main() -> int:
         validate_schema(events)
         by_recorder = group_by_recorder(events)
 
-        expected_recorders = {"integration.test", "router.js", "claude-code-hook"}
+        expected_recorders = {"integration.test", "router.js", "claude-code-hook", "git-post-commit-hook"}
         missing = expected_recorders - set(by_recorder.keys())
         assert not missing, f"missing emitter(s): {missing}"
 
@@ -159,8 +180,9 @@ def main() -> int:
         assert "user.turn" in observed_types, "hook did not emit user.turn"
         assert "agent.tool_call" in observed_types, "hook did not emit agent.tool_call"
         assert "agent.tool_call_complete" in observed_types, "hook did not emit agent.tool_call_complete"
+        assert "outcome.commit" in observed_types, "git post-commit hook did not emit"
 
-        print(f"\nPASS integration: {len(events)} events, 3 emitters, schema-valid")
+        print(f"\nPASS integration: {len(events)} events, 4 emitters, schema-valid")
         return 0
     finally:
         shutil.rmtree(log_dir, ignore_errors=True)
