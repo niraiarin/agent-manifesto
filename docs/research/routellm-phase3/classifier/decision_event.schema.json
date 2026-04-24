@@ -29,7 +29,9 @@
           "type": "string",
           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
         },
-        { "type": "null" }
+        {
+          "type": "null"
+        }
       ]
     },
     "event_type": {
@@ -41,6 +43,7 @@
         "router.classification",
         "router.decision",
         "agent.tool_call",
+        "agent.tool_call_complete",
         "agent.output",
         "skill.invocation",
         "subagent.invocation",
@@ -57,85 +60,241 @@
     },
     "context": {
       "type": "object",
-      "required": ["session_id", "project_id"],
+      "required": [
+        "session_id",
+        "project_id"
+      ],
       "additionalProperties": true,
       "properties": {
-        "session_id": { "type": "string" },
-        "turn_id": { "type": "integer", "minimum": 0 },
-        "sequence_id": { "type": "integer", "minimum": 0 },
-        "project_id": { "type": "string" },
-        "project_path": { "type": "string" },
-        "working_directory": { "type": "string" },
-        "git_branch": { "type": ["string", "null"] },
-        "git_commit_sha": { "type": ["string", "null"] },
-        "git_worktree": { "type": "boolean" },
-        "tz": { "type": "string" },
-        "machine_id": { "type": "string" },
-        "os": { "type": "string" },
-        "cli_version": { "type": "string" },
-        "model_version": { "type": "string" }
+        "session_id": {
+          "type": "string"
+        },
+        "turn_id": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sequence_id": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "project_id": {
+          "type": "string"
+        },
+        "project_path": {
+          "type": "string"
+        },
+        "working_directory": {
+          "type": "string"
+        },
+        "git_branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git_commit_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git_worktree": {
+          "type": "boolean"
+        },
+        "tz": {
+          "type": "string"
+        },
+        "machine_id": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "cli_version": {
+          "type": "string"
+        },
+        "model_version": {
+          "type": "string"
+        }
       }
     },
     "input": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "prompt": { "type": ["string", "null"] },
+        "prompt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "prompt_sha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
-        "prompt_length": { "type": "integer", "minimum": 0 },
-        "prompt_language": { "type": ["string", "null"] },
+        "prompt_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "prompt_language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "prompt_source": {
           "type": "string",
-          "enum": ["user", "hook", "subagent_return", "cron", "system"]
+          "enum": [
+            "user",
+            "hook",
+            "subagent_return",
+            "cron",
+            "system"
+          ]
         },
-        "context_preview_sha": { "type": ["string", "null"] },
-        "tool_context_sha": { "type": ["string", "null"] },
-        "file_context": { "type": "array", "items": { "type": "string" } },
-        "environment_vars": { "type": "object", "additionalProperties": { "type": "string" } }
+        "context_preview_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_context_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "file_context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "environment_vars": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
       }
     },
     "decision": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["kind"],
+      "required": [
+        "kind"
+      ],
       "properties": {
         "kind": {
           "type": "string",
-          "enum": ["classification", "routing", "tool_call", "skill_invocation", "subagent_invocation"]
+          "enum": [
+            "classification",
+            "routing",
+            "tool_call",
+            "skill_invocation",
+            "subagent_invocation"
+          ]
         },
-        "classifier_id": { "type": "string" },
-        "classifier_model_hash": { "type": ["string", "null"] },
-        "classifier_version": { "type": "string" },
+        "classifier_id": {
+          "type": "string"
+        },
+        "classifier_model_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "classifier_version": {
+          "type": "string"
+        },
         "probs": {
           "type": "object",
-          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
         },
         "predicted_label": {
-          "type": ["string", "null"],
-          "enum": ["local_confident", "local_probable", "cloud_required", "hybrid", "unknown", null]
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "local_confident",
+            "local_probable",
+            "cloud_required",
+            "hybrid",
+            "unknown",
+            null
+          ]
         },
-        "predicted_confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
-        "p_local": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
-        "p_cloud": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "predicted_confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "p_local": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "p_cloud": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
         "alt_classifiers": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "id": { "type": "string" },
-              "label": { "type": ["string", "null"] },
-              "confidence": { "type": ["number", "null"] },
-              "source": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "confidence": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "source": {
+                "type": "string"
+              }
             }
           }
         },
-        "latency_ms": { "type": ["number", "null"], "minimum": 0 },
+        "latency_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
         "action": {
           "type": "string",
-          "enum": ["route_to_cloud", "route_to_local", "fallback_cloud", "force_cloud", "error"]
+          "enum": [
+            "route_to_cloud",
+            "route_to_local",
+            "fallback_cloud",
+            "force_cloud",
+            "error"
+          ]
         },
         "rule_applied": {
           "type": "string",
@@ -147,99 +306,304 @@
             "manual_override"
           ]
         },
-        "rule_inputs": { "type": "object", "additionalProperties": true },
-        "rule_outputs": { "type": "object", "additionalProperties": true },
+        "rule_inputs": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "rule_outputs": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "target": {
           "type": "object",
           "properties": {
             "provider": {
               "type": "string",
-              "enum": ["anthropic", "ccr", "llama-server", "subagent", "internal"]
+              "enum": [
+                "anthropic",
+                "ccr",
+                "llama-server",
+                "subagent",
+                "internal"
+              ]
             },
-            "model": { "type": "string" },
-            "endpoint": { "type": "string" },
-            "model_tier": { "type": "string", "enum": ["frontier", "mid", "small", "local"] }
+            "model": {
+              "type": "string"
+            },
+            "endpoint": {
+              "type": "string"
+            },
+            "model_tier": {
+              "type": "string",
+              "enum": [
+                "frontier",
+                "mid",
+                "small",
+                "local"
+              ]
+            }
           }
         },
         "alternatives_considered": {
           "type": "array",
-          "items": { "type": "object", "additionalProperties": true }
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
         },
-        "rationale_human": { "type": "string" },
-        "name": { "type": "string" },
-        "args_sha": { "type": "string" },
-        "args_preview": { "type": "string" }
+        "rationale_human": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "args_sha": {
+          "type": "string"
+        },
+        "args_preview": {
+          "type": "string"
+        }
       }
     },
     "execution": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "started_at_utc": { "type": "string", "format": "date-time" },
-        "ended_at_utc": { "type": "string", "format": "date-time" },
-        "duration_ms": { "type": "number", "minimum": 0 },
-        "success": { "type": "boolean" },
-        "error_class": { "type": ["string", "null"] },
-        "error_message": { "type": ["string", "null"] },
-        "retry_count": { "type": "integer", "minimum": 0 },
-        "tool_calls_made": { "type": "array", "items": { "type": "string" } },
-        "files_read": { "type": "array", "items": { "type": "string" } },
-        "files_modified": { "type": "array", "items": { "type": "string" } },
-        "tokens_in": { "type": "integer", "minimum": 0 },
-        "tokens_out": { "type": "integer", "minimum": 0 },
-        "output_sha256": { "type": ["string", "null"] }
+        "started_at_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "error_class": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tool_calls_made": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "files_read": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "files_modified": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "outcome": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["horizon"],
+      "required": [
+        "horizon"
+      ],
       "properties": {
         "horizon": {
           "type": "string",
-          "enum": ["immediate", "late"]
+          "enum": [
+            "immediate",
+            "late"
+          ]
         },
         "exit_status": {
           "type": "string",
-          "enum": ["completed", "interrupted", "failed", "blocked"]
+          "enum": [
+            "completed",
+            "interrupted",
+            "failed",
+            "blocked"
+          ]
         },
-        "tool_calls_count": { "type": "integer", "minimum": 0 },
-        "output_tokens": { "type": "integer", "minimum": 0 },
-        "response_hash": { "type": ["string", "null"] },
-        "user_rewind": { "type": "boolean" },
-        "user_correction_prompt_sha": { "type": ["string", "null"] },
-        "time_to_rewind_ms": { "type": ["number", "null"], "minimum": 0 },
+        "tool_calls_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "response_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "user_rewind": {
+          "type": "boolean"
+        },
+        "user_correction_prompt_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "time_to_rewind_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
         "subsequent_verify": {
           "type": "object",
           "properties": {
-            "status": { "type": "string", "enum": ["PASS", "FAIL", "CONDITIONAL", "N/A"] },
-            "findings_count": { "type": "integer", "minimum": 0 },
-            "addressable": { "type": "integer", "minimum": 0 }
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASS",
+                "FAIL",
+                "CONDITIONAL",
+                "N/A"
+              ]
+            },
+            "findings_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "addressable": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         },
-        "git_commit_hash": { "type": ["string", "null"] },
-        "pr_number": { "type": ["integer", "null"] },
-        "pr_merged_at_utc": { "type": ["string", "null"], "format": "date-time" },
-        "human_gt_label": {
-          "type": ["string", "null"],
-          "enum": ["local_confident", "local_probable", "cloud_required", "hybrid", "unknown", null]
+        "git_commit_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
-        "human_gt_annotator": { "type": ["string", "null"] },
-        "human_gt_notes": { "type": ["string", "null"] },
-        "satisfaction_signal": { "type": ["integer", "null"], "enum": [-1, 0, 1, null] },
-        "human_note": { "type": ["string", "null"] }
+        "pr_number": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "pr_merged_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "human_gt_label": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "local_confident",
+            "local_probable",
+            "cloud_required",
+            "hybrid",
+            "unknown",
+            null
+          ]
+        },
+        "human_gt_annotator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "human_gt_notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "satisfaction_signal": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "enum": [
+            -1,
+            0,
+            1,
+            null
+          ]
+        },
+        "human_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "provenance": {
       "type": "object",
-      "required": ["schema_version", "recorded_by"],
+      "required": [
+        "schema_version",
+        "recorded_by"
+      ],
       "additionalProperties": true,
       "properties": {
-        "logger_version": { "type": "string" },
-        "schema_version": { "type": "string" },
-        "recorded_by": { "type": "string" },
-        "hook_id": { "type": ["string", "null"] },
-        "redaction_level": { "type": "string", "enum": ["none", "prompt_sha_only"] }
+        "logger_version": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "recorded_by": {
+          "type": "string"
+        },
+        "hook_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "redaction_level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "prompt_sha_only"
+          ]
+        }
       }
     }
   }

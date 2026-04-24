@@ -15,6 +15,68 @@
 
 const CLASSIFIER_URL = process.env.ROUTING_CLASSIFIER_URL || "http://localhost:9001/classify";
 
+// Decision log sink (append-only JSONL, daily-partitioned). Matches Python
+// DecisionLogger. When unset, decision logging is silently disabled.
+const DECISION_LOG_DIR = process.env.DECISION_LOG_DIR || null;
+const DECISION_LOG_REDACTION = process.env.DECISION_LOG_REDACTION || "prompt_sha_only";
+const SCHEMA_VERSION = "1.0.0";
+const LOGGER_VERSION = "1.0.0";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+function newEventId() {
+  return crypto.randomUUID();
+}
+
+function sha256Hex(text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
+function utcNowIso() {
+  return new Date().toISOString().replace(/\.\d{3}/, "");
+}
+
+// Per-process session id. ccr starts once per shell, so every request within
+// this ccr process shares this id. Claude Code hooks can override by setting
+// DECISION_LOG_SESSION_ID before ccr starts.
+const _SESSION_ID = process.env.DECISION_LOG_SESSION_ID || `ccr-${newEventId()}`;
+
+function emitDecisionEvent(event) {
+  if (!DECISION_LOG_DIR) return;
+  try {
+    fs.mkdirSync(DECISION_LOG_DIR, { recursive: true });
+    const date = new Date().toISOString().slice(0, 10);
+    const file = path.join(DECISION_LOG_DIR, `decisions-${date}.jsonl`);
+    const envelope = {
+      schema_version: SCHEMA_VERSION,
+      event_id: event.event_id || newEventId(),
+      parent_event_id: event.parent_event_id || null,
+      event_type: event.event_type,
+      timestamp_utc: utcNowIso(),
+      context: event.context || {},
+      ...(event.input ? { input: event.input } : {}),
+      ...(event.decision ? { decision: event.decision } : {}),
+      ...(event.execution ? { execution: event.execution } : {}),
+      ...(event.outcome ? { outcome: event.outcome } : {}),
+      provenance: {
+        schema_version: SCHEMA_VERSION,
+        logger_version: LOGGER_VERSION,
+        recorded_by: "router.js",
+        redaction_level: DECISION_LOG_REDACTION,
+        ...(event.provenance || {}),
+      },
+    };
+    fs.appendFileSync(file, JSON.stringify(envelope) + "\n");
+    return envelope.event_id;
+  } catch (err) {
+    // Best-effort: logging must never break routing.
+    process.stderr.write(`[router.js] decision log emit failure: ${err.message}\n`);
+    return null;
+  }
+}
+
 // Rule-based safety net: これらのプレフィックスを含む prompt は classifier を
 // bypass して必ず Cloud に流す。分類器の Cloud → Local 誤分類 (safety risk) を
 // 構造的に防ぐ (router-accuracy.md v2 の既知リスク)
@@ -51,6 +113,10 @@ function utilityDecide(probs, costSafety, costCloud) {
 }
 
 module.exports = async function customRouter(request, allConfig, { event }) {
+  const baseContext = {
+    session_id: _SESSION_ID,
+    project_id: "agent-manifesto",
+  };
   try {
     const msgs = request.messages || [];
     const lastUser = [...msgs].reverse().find(m => m.role === "user");
@@ -65,6 +131,7 @@ module.exports = async function customRouter(request, allConfig, { event }) {
 
     // Cap prompt to ~2KB for classifier latency
     const prompt = content.slice(0, 2000);
+    const promptSha = sha256Hex(prompt);
 
     // Safety net 1: force Cloud for known safety-critical skill prefixes.
     // Search across *full content* (not just 2000-char truncation) to prevent
@@ -73,6 +140,18 @@ module.exports = async function customRouter(request, allConfig, { event }) {
     for (const prefix of FORCE_CLOUD_PREFIXES) {
       if (content.includes("\n" + prefix) || content.trimStart().startsWith(prefix)) {
         request.log?.info?.(`[router.js] force-cloud prefix=${prefix}`);
+        emitDecisionEvent({
+          event_type: "router.decision",
+          context: baseContext,
+          input: { prompt_sha256: promptSha, prompt_length: prompt.length, prompt_source: "hook" },
+          decision: {
+            kind: "routing",
+            action: "force_cloud",
+            rule_applied: "force_cloud_prefix",
+            rule_inputs: { force_cloud_prefix: prefix },
+            rationale_human: `force-cloud prefix matched: ${prefix}`,
+          },
+        });
         return null;  // → default (Cloud)
       }
     }
@@ -81,15 +160,31 @@ module.exports = async function customRouter(request, allConfig, { event }) {
     const now = Date.now();
     if (now < _circuitOpenUntil) {
       request.log?.info?.(`[router.js] circuit open, fallback to default`);
+      emitDecisionEvent({
+        event_type: "router.decision",
+        context: baseContext,
+        input: { prompt_sha256: promptSha, prompt_length: prompt.length, prompt_source: "hook" },
+        decision: {
+          kind: "routing",
+          action: "fallback_cloud",
+          rule_applied: "circuit_breaker_open",
+          rule_inputs: { circuit_breaker: "open", reopen_at_utc: new Date(_circuitOpenUntil).toISOString() },
+          rationale_human: "classifier circuit breaker is open; defaulting to cloud",
+        },
+      });
       return null;
     }
 
     let resp;
+    const classifyBody = {
+      prompt,
+      session_id: _SESSION_ID,
+    };
     try {
       resp = await fetch(CLASSIFIER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify(classifyBody),
         signal: AbortSignal.timeout(1000),
       });
     } catch (err) {
@@ -98,22 +193,81 @@ module.exports = async function customRouter(request, allConfig, { event }) {
         _circuitOpenUntil = now + CB_COOLDOWN_MS;
         request.log?.warn?.(`[router.js] circuit opened for ${CB_COOLDOWN_MS}ms after ${_consecutiveFailures} failures`);
       }
+      emitDecisionEvent({
+        event_type: "router.decision",
+        context: baseContext,
+        input: { prompt_sha256: promptSha, prompt_length: prompt.length, prompt_source: "hook" },
+        decision: {
+          kind: "routing",
+          action: "error",
+          rule_applied: "manual_override",
+          rule_inputs: { error_class: err.name, classifier_url: CLASSIFIER_URL },
+          rationale_human: `classifier fetch failure: ${err.message}`,
+        },
+      });
       throw err;
     }
     if (!resp.ok) {
       _consecutiveFailures++;
+      emitDecisionEvent({
+        event_type: "router.decision",
+        context: baseContext,
+        input: { prompt_sha256: promptSha, prompt_length: prompt.length, prompt_source: "hook" },
+        decision: {
+          kind: "routing",
+          action: "error",
+          rule_applied: "manual_override",
+          rule_inputs: { http_status: resp.status },
+          rationale_human: `classifier returned HTTP ${resp.status}`,
+        },
+      });
       return null;
     }
     _consecutiveFailures = 0;
 
-    const { label, confidence, probs, fallback } = await resp.json();
+    const classifyJson = await resp.json();
+    const { label, confidence, probs, fallback, event_id: classificationEventId } = classifyJson;
 
     // v3 (#651): Utility-based decision with asymmetric safety cost.
     // Argmax (which classifier label did) can silently leak at ~0.7% even with calibrated probs.
     // Expected-utility decision with cost_safety >= 2 eliminates leak while keeping Local high.
-    const decision = utilityDecide(probs || {}, COST_SAFETY, COST_CLOUD);
+    const pLocal = (probs?.local_confident ?? 0) + (probs?.local_probable ?? 0);
+    const pCloud = (probs?.cloud_required ?? 0) + (probs?.hybrid ?? 0) + (probs?.unknown ?? 0);
+    const uLocal = pCloud * (-COST_SAFETY) + pLocal * 1.0;
+    const uCloud = pCloud * 1.0 + pLocal * (-COST_CLOUD);
+    const decision = uLocal > uCloud ? "local" : "cloud";
     const provider = decision === "local" ? LOCAL_PROVIDER : null;
+
     request.log?.info?.(`[router.js] label=${label} conf=${confidence} utility=${decision} costSafety=${COST_SAFETY}`);
+
+    emitDecisionEvent({
+      parent_event_id: classificationEventId || null,
+      event_type: "router.decision",
+      context: baseContext,
+      input: { prompt_sha256: promptSha, prompt_length: prompt.length, prompt_source: "hook" },
+      decision: {
+        kind: "routing",
+        action: decision === "local" ? "route_to_local" : "route_to_cloud",
+        rule_applied: fallback ? "fallback_low_confidence" : "utility_max",
+        rule_inputs: {
+          cost_safety: COST_SAFETY,
+          cost_cloud: COST_CLOUD,
+          circuit_breaker: "closed",
+        },
+        rule_outputs: {
+          utility_local: Math.round(uLocal * 10000) / 10000,
+          utility_cloud: Math.round(uCloud * 10000) / 10000,
+          margin: Math.round((uCloud - uLocal) * 10000) / 10000,
+        },
+        target: {
+          provider: decision === "local" ? "ccr" : "anthropic",
+          model: decision === "local" ? LOCAL_PROVIDER : "default",
+          model_tier: decision === "local" ? "local" : "frontier",
+        },
+        rationale_human: `utility_${decision} wins (uLocal=${uLocal.toFixed(3)} uCloud=${uCloud.toFixed(3)}); label=${label} conf=${confidence.toFixed(3)}`,
+      },
+    });
+
     return provider;
   } catch (err) {
     request.log?.warn?.(`[router.js] classifier unreachable: ${err.message}`);
