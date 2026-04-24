@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-013",
+  "task_type": "T-interp",
+  "input_file": "trace-input-013.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "トレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバレッジ率 | **100%** (未カバー命題 0) |\n| 証拠付き (with_evidence) | **19/43** (44%) |\n| 導出付き (with_derivation) | **39/43** (91%) |\n| 証拠なし | 24/43 (56%) |\n| ルート命題 | T1-T8, E2, L5 (10件) |\n| ラーフ命題 | D4,D6,D7,D10,D11,D14, V1-V7 (13件) |\n\n**判定**: 形式的には全命題がアーティファクトでカバーされているが、証拠 (evidence) の欠如が半数を占める。\n\n## 2. ギャップ分析 — 最重要ギャップ\n\n### ギャップ A: P3 (学習の統治) の証拠欠如 — 最大リスク\n\n| 項目 | 値 |\n|---|---|\n| 依存先 | T1, T2 |\n| 依存される命題 | **L6, D4, D9, D13, D17** |\n| evidence | [] (空) |\n| コアアーティファクト | evolve-history.jsonl, assumptions.jsonl 等のみ |\n\n**影響**: P3 は `evolve` ワークフローの中核。証拠なしは「構造改善が統治ルールに則って行われた」ことを検証不可能にする。D13（トレーサビリティ）に直接影響し、トレーサビリティ自体の信頼を根底から揺るがす。\n\n### ギャップ B: D1-D9 (設計定理) の半数以上で evidence 欠如\n\n| 命題 | evidence | 依存される命題 |\n|---|---|---|\n| D1 (最もアーティファクト多:50件) | ✗ | D11 |\n| D3 (38件) | ✗ | D6, D11, D17 |\n| D13 (36件) | ✗ | D17 |\n\n**影響**: アーティファクト数は多いが証拠がない。「多ければ信頼される」わけではない。D3 は D17 を介して最終的な品質評価に、D1 は enforcement layering の正当性に直結する。\n\n### ギャップ C: L5 (プラットフォーム境界) の孤立\n\nL5 は `depends_on: []` で何からも導出されず、`depended_by: [D1, V1]` されるのみ。技術固有の環境制約として位置付けられているが、証拠も導出もない状態が継続している。\n\n## 3. 改善提案（優先度順）\n\n### 提案 1: P3 の証拠強化 (breaking change 注意)\n\n**内容**: `evolve-history.jsonl` の各エントリに `axiom_card_refs` フィールドを追加し、各改善案がどの公理カードに根拠を求めるかを記録する。`validate-evolve-entry.sh` で必須検証にする。\n\n**互換性**: **breaking change** — 既存の evolve-history 形式が変更される。移行スクリプトが必要。\n\n**期待効果**: P3 の `has_evidence` → true。D13 のトレーサビリティ連鎖が補強される。\n\n### 提案 2: D1/D3/D13 の証拠追加 (compatible change)\n\n**内容**: 既存の Lean 定理 (`d1_fixed_requires_structural`, `d3_observability_precedes_improvement`, `d13_assumption_subsumes_propagation`) に対し、対応するテストケースを `tests/phase1/` および `tests/phase5/` に明示的に追加し、evidence 配列に参照を付与する。\n\n**互換性**: **compatible change** — 既存ワークフロー継続可能。追加のみ。\n\n**期待効果**: 50件・38件・36件のアーティファクトを持つ最重要設計定理の信頼性向上。\n\n### 提案 3: T7/T8 の証拠投入 (conservative extension)\n\n**内容**: T7 (`resource_budget_finite`) と T8 (`precision_requirement`) は derivation も evidence も極めて少ない。既存の Lean axiom 定義 (`Axioms.lean`) とテスト (`test-all.sh` のリソース制約テスト) を evidence 配列に明示的にリンクさせる。\n\n**互換性**: **conservative extension** — 既存を一切変更せず、メタデータの追加のみ。\n\n**期待効果**: ルート命題 T1-T8 全員の `has_evidence: true` 達成。基礎層の整合性が確認できる。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 1164713,
+  "timestamp": "2026-04-18T09:28:01Z",
+  "run_number": 1,
+  "exit_code": 0
+}

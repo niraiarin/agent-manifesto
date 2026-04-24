@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-008",
+  "task_type": "T-interp",
+  "input_file": "trace-input-008.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "トレーサビリティレポートを分析します。\n\n## 1. カバレッジ状況\n\n| 項目 | 値 |\n|---|---|\n| 全命題数 | 43 |\n| カバレッジ率 | **100%**（未カバー 0） |\n| 証拠付き | 19/43（44%） |\n| 導出付き | 39/43（91%） |\n| 証拠なし | 24/43（56%） |\n| 導出なし | 4/43（9%） |\n\n**証拠なし命題（24件）**: T8, P2, P3, P6, L1, L3, L4, L5, L6, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, V6\n\n**導出なし命題（4件）**: T4, T5, T6, T7（すべて T₀ 環境束縛 — 型から導出不可能として適切）\n\n## 2. ギャップ分析\n\n### Critical: D1（設計定理: 強制階層化）— 自身に artifact がゼロ\n\nD1 は自身に `artifacts` を持たず、すべてが共有参照（CLAUDE.md, hooks 等）経由で間接参照されている。これは **D1 が「強制の階層化」を主張しながら、自身を強制する構造的手段を持たない** というパラドックス。\n\n- **影響波及**: D1 ← D11, D13, V1, V2, V3, V6, V7\n- **深刻度**: D13（トレーサビリティ、36 artifacts）は D1 に依存しており、D1 の脆弱性が D13 の正当性を揺るがす\n\n### High: P2/P3（検証独立性 / 学習統治）— 証拠なしで高依存\n\n| 命題 | 依存数（depended_by） | 状態 |\n|---|---|---|\n| P2 | D2 のみ | 証拠なし、artifact は豊富 |\n| P3 | L6, D4, D9, D13, D17 | 証拠なし、artifact 42件（最多） |\n\nP3 は最も多くの artifact（42件）を持つにもかかわらず証拠がゼロ。これは「構造的には巨大だが、証拠ベースで正当化されていない」状態。\n\n## 3. 改善提案（優先度順）\n\n### ① D1 の証拠補強（最優先）\nD1 は強制の階層化を主張する設計定理であり、その正当性自体が証拠を必要とする。具体的な証拠として:\n- hooks が実際に構造的強制を機能していることの実証データ\n- 既存の D1 関連 Lean 定理（`d1_fixed_requires_structural`, `id1_stdin_is_correct`）を証拠として登録\n\n### ② D13 の証拠登録\nD13 はトレーサビリティの核心設計定理で、36 artifacts を持つが証拠なし。以下を証拠として登録:\n- `p4-manifest-refs-check.sh`, `p4-traces-integrity-check.sh` が実際に逸脱を検出している実績\n- Lean の `AcyclicGraph.lean`, `DanglingDetection.lean` による定理（0 sorry）\n\n### ③ V6 の証拠補強\nV6（知識構造品質）は唯一「導出あり・証拠なし」の observable。Lean の Observable.lean で `v6_measurable` が導出されているが、実装上の測定証拠がない。\n- `trace` スキルや `depgraph` スクリプトによる測定実績を証拠として登録",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 410982,
+  "timestamp": "2026-04-18T12:01:18Z",
+  "run_number": 1,
+  "exit_code": 0
+}

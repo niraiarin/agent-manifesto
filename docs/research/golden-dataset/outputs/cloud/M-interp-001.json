@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-001",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-001.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\nformal 指標（V1, V3, V4, V5）は高水準だが、**valueless_change 連続 4 回（halt_recommended=true）** と **非自明性スコア 0（trivial）** が構造改善の停滞を示している。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 備考 |\n|------|-----|------|------|\n| **V1** skill_quality | trivial (0/4), pass_rate 77% | ⚠️ 注意 | Δtheorem/Δtest=0 が 2 回連続。verifier fail=105 蓄積 |\n| **V2** context_efficiency | recent 46 / cum 40, +15% | ✅ 良好 | stable、divergence 許容範囲 |\n| **V3** output_quality | test 100%, hypothesis_error=36 active | ⚠️ 注意 | post_gate でも H_impl_specification=8, H_wrong_premise=6 が残存 |\n| **V4** gate_pass_rate | 99% | ✅ 優秀 | blocked 106 のみ |\n| **V5** proposal_accuracy | 96% (162/168) | ✅ 優秀 | schema_drift なし |\n| **V6** knowledge_structure | 12 entries, orphan=0 | ✅ 良好 | retirement 候補なし |\n| **V7** task_design | teamwork 0% (suppressed) | — | 単一エージェント運用のため抑制中 |\n\n**追加シグナル**:\n- `valueless_change.current_streak=4`, `halt_recommended=true` 🔴\n- `scope_balance`: meta 8 / substance 7（meta 偏重ではない）\n- `priority_bias_review.review_needed=false`（次 Run 117）\n\n## 3. 改善提案（優先順）\n\n### 優先度1: valueless_change ループの脱却 🔴\n- 4 連続で構造的価値の出ない改善が続いている。次回 /evolve は **Observer で substance 候補（公理/定理/テスト成長につながる改善）を明示的に探索** し、meta 改善は一旦保留する。\n\n### 優先度2: hypothesis_error のパターン分析と構造化防止\n- unresolved 55 のうち 36 が hypothesis_error、特に `H_impl_specification`(8) と `H_wrong_premise`(6) が post_gate でも残存。**Hypothesizer に仕様検証前チェックリスト**を追加し、Verifier の再発防止を構造化。\n\n### 優先度3: verifier fail 救済プロセスの検証\n- pass_rate 77% (fail 累計 105) は改善の質に影響。human_feedback (2026-03-24) で指摘された「末端エラーからの遡及検証」を次回 /evolve で実装着手（半順序公理の実装的含意 (a)(b)(c)(d)）。",
+  "tokens_in": 6,
+  "tokens_out": 1395,
+  "latency_ms": 26458,
+  "timestamp": "2026-04-17T01:41:09Z",
+  "run_number": 1,
+  "exit_code": 0
+}

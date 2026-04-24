@@ -97,8 +97,7 @@ validate_dependency_format() {
     cleaned=$(echo "$line" | sed 's/^\s*-\s*//')
     # #N パターンと区切り文字（カンマ、スペース）以外の文字が含まれていないか
     local stripped
-    # Use [0-9][0-9]* (POSIX BRE, portable) instead of [0-9]\+ (GNU extension, fails on BSD sed / macOS)
-    stripped=$(echo "$cleaned" | sed 's/#[0-9][0-9]*//g' | sed 's/[,[:space:]]//g')
+    stripped=$(echo "$cleaned" | sed -E 's/#[0-9]+//g' | sed 's/[,[:space:]]//g')
     if [[ -n "$stripped" ]]; then
       echo "  #${issue}: ERROR — 依存セクションにフリーテキスト混入: \"${line}\"" >&2
       echo "           許容形式: 「なし」または「#N」のカンマ区切り" >&2
@@ -149,20 +148,9 @@ validate_all_dependencies() {
 }
 
 # Parent Issue body から Sub-Issues テーブルを抽出し、issue 番号リストを返す
-# 「## Sub-Issues」セクションがあればそこのみを走査する（Parent body 本文中の
-# 本来無関係な #N reference が Sub-Issue として誤検知されるのを防ぐ）。
-# セクションが無いか空の場合は body 全体にフォールバックして後方互換性を保つ。
 extract_sub_issues() {
   local parent="$1"
-  local body sub_section source
-  body=$(gh issue view "$parent" --json body --jq '.body' 2>/dev/null) || return 0
-  sub_section=$(echo "$body" | sed -n '/^## Sub-Issues/,/^## /{ /^## Sub-Issues/d; /^## /d; p; }')
-  if [[ -n "$sub_section" ]]; then
-    source="$sub_section"
-  else
-    source="$body"
-  fi
-  echo "$source" \
+  gh issue view "$parent" --json body --jq '.body' \
     | grep -oE '#[0-9]+' \
     | grep -v "^#${parent}$" \
     | sed 's/^#//' \

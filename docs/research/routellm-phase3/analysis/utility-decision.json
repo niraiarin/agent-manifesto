@@ -1,0 +1,135 @@
+{
+  "eval_argmax": {
+    "n": 147,
+    "routing_accuracy": 0.9796,
+    "leak_rate": 0.0068,
+    "over_cautious_rate": 0.0136,
+    "local_routed": 49,
+    "cloud_routed": 98,
+    "label_dist": {
+      "cloud_required": 33,
+      "hybrid": 46,
+      "local_confident": 15,
+      "unknown": 19,
+      "local_probable": 34
+    }
+  },
+  "sweep": [
+    {
+      "cost_safety": 1,
+      "n": 147,
+      "routing_accuracy": 0.9796,
+      "leak_rate": 0.0068,
+      "over_cautious_rate": 0.0136,
+      "local_routed": 49,
+      "cloud_routed": 98,
+      "label_dist": {
+        "cloud_required": 98,
+        "local_confident": 15,
+        "local_probable": 34
+      }
+    },
+    {
+      "cost_safety": 2,
+      "n": 147,
+      "routing_accuracy": 0.9864,
+      "leak_rate": 0.0,
+      "over_cautious_rate": 0.0136,
+      "local_routed": 48,
+      "cloud_routed": 99,
+      "label_dist": {
+        "cloud_required": 99,
+        "local_confident": 15,
+        "local_probable": 33
+      }
+    },
+    {
+      "cost_safety": 5,
+      "n": 147,
+      "routing_accuracy": 0.9796,
+      "leak_rate": 0.0,
+      "over_cautious_rate": 0.0204,
+      "local_routed": 47,
+      "cloud_routed": 100,
+      "label_dist": {
+        "cloud_required": 100,
+        "local_confident": 15,
+        "local_probable": 32
+      }
+    },
+    {
+      "cost_safety": 10,
+      "n": 147,
+      "routing_accuracy": 0.9592,
+      "leak_rate": 0.0,
+      "over_cautious_rate": 0.0408,
+      "local_routed": 44,
+      "cloud_routed": 103,
+      "label_dist": {
+        "cloud_required": 103,
+        "local_confident": 15,
+        "local_probable": 29
+      }
+    },
+    {
+      "cost_safety": 20,
+      "n": 147,
+      "routing_accuracy": 0.932,
+      "leak_rate": 0.0,
+      "over_cautious_rate": 0.068,
+      "local_routed": 40,
+      "cloud_routed": 107,
+      "label_dist": {
+        "cloud_required": 107,
+        "local_confident": 14,
+        "local_probable": 26
+      }
+    },
+    {
+      "cost_safety": 50,
+      "n": 147,
+      "routing_accuracy": 0.8367,
+      "leak_rate": 0.0,
+      "over_cautious_rate": 0.1633,
+      "local_routed": 26,
+      "cloud_routed": 121,
+      "label_dist": {
+        "cloud_required": 121,
+        "local_confident": 14,
+        "local_probable": 12
+      }
+    }
+  ],
+  "eval_utility": {
+    "cost_safety": 10.0,
+    "cost_cloud": 1.0,
+    "n": 147,
+    "routing_accuracy": 0.9592,
+    "leak_rate": 0.0,
+    "over_cautious_rate": 0.0408,
+    "local_routed": 44,
+    "cloud_routed": 103,
+    "label_dist": {
+      "cloud_required": 103,
+      "local_confident": 15,
+      "local_probable": 29
+    }
+  },
+  "real_corpus": {
+    "n": 1173,
+    "argmax_local": 292,
+    "utility_local": 103,
+    "argmax_dist": {
+      "local_probable": 234,
+      "unknown": 161,
+      "hybrid": 445,
+      "cloud_required": 275,
+      "local_confident": 58
+    },
+    "utility_dist": {
+      "local_probable": 79,
+      "cloud_required": 1070,
+      "local_confident": 24
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-015",
+  "task_type": "T-interp",
+  "input_file": "trace-input-015.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ**: 43/43 命題 = **100%** （未カバー・弱カバー 0）\n- **アーティファクト総数**: 572\n- **Evidence あり**: 19/43 (44%)\n- **Derivation あり**: 39/43 (91%)\n- **Evidence 欠落 (24件)**: T8, P2, P3, P6, L1, L3, L4, L5, L6, D1–D14（全 14 件）, V6\n- **Derivation 欠落 (4件)**: **T4, T5, T6, T7**\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 重大ギャップ A: 根幹制約の導出欠如\nT4/T5/T6/T7 に derivation がない。これらは `depended_by` で多数の下流命題（P1, P2, P3, P4, P6, L1–L6, 複数 D）を支える**根ノード**。D13 影響波及では、根の形式的裏付け欠如が **下流 30+ 命題の形式的健全性リスク** として伝播する。特に T6 → L1/L3/L4/L6 → V3/V4/V5/V7 の安全・権限連鎖が脆弱。\n\n### 重大ギャップ B: 設計定理の Evidence ゼロ\nD1–D14 全てが `has_evidence: false`。derivation は揃っているが、**経験的反証可能性** が未設計。P5（非決定性）下で設計定理の実運用妥当性が疑わしい場合、退役・改訂の根拠が不足。\n\n### 中程度ギャップ C: 統治系命題の Evidence 欠落\nP2, P3, P6 に evidence なし。学習統治（P3）は 42 artifact を持ちながら経験的裏付けが弱い。V5/V7 トラッキングと連携した運用データ収集が必要。\n\n## 3. 改善提案（優先度順）\n\n| # | アクション | 対象 | 互換性分類 | 根拠 |\n|---|---|---|---|---|\n| 1 | **T5/T6/T7 の derivation 追加** — Foundation 定理（ProcessModel, ControlTheory 等）を根ノードに紐付け、derivation フィールドを埋める | T5, T6, T7 | conservative extension | D13 波及で最大 30 命題の健全性向上。T4 はすでに Foundation/Probability.lean に形式化済のため残りのみ優先 |\n| 2 | **D1–D14 の Evidence Card 整備** — ObservableDesign.lean パターンに従い、各 D に反証条件と経験ソースを付与 | D1–D14 | compatible change | 設計定理の退役経路を確立し、P3 学習統治を実効化 |\n| 3 | **V6（知識構造品質）の evidence 設計** — trade-off 分析と Goodhart リスクを他 V と同様に明記 | V6 | conservative extension | V1–V7 の一貫性確保。V6 のみ evidence なしで計測設計が非対称 |",
+  "tokens_in": 6,
+  "tokens_out": 1383,
+  "latency_ms": 33120,
+  "timestamp": "2026-04-17T01:57:49Z",
+  "run_number": 1,
+  "exit_code": 0
+}

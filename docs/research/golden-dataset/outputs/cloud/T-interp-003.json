@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-003",
+  "task_type": "T-interp",
+  "input_file": "trace-input-003.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 100% (43/43)\n- **未カバー命題**: なし\n- **弱カバレッジ**: なし\n- **根ノード**: 10 個 (T1-T8, E2, L5)\n- **葉ノード**: 13 個 (D4, D6, D7, D10, D11, D14, V1-V7)\n\n形式的には全命題が少なくとも1つの成果物に紐付いているが、**質的ギャップ**が存在する。\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 致命的ギャップ\n\n| 命題 | 問題 | D13 影響波及 |\n|------|------|-------------|\n| **T8** | has_evidence=false（根の強度5制約で根拠なし） | P6, D5, D12, D14, D15, D16 が根拠不明の土台に依存。 `task_has_precision` が定義のみで裏付けなし |\n| **T3** | has_implementation=false | P6, D11, D12, D15-D18 へ伝播。7 命題が実装的裏付けを欠く |\n| **T4** | has_implementation=false | E1, P2, P5, D15 へ伝播。非決定性の実装検証が不在 |\n| **L3** | has_implementation=false | V2, V7 の境界が実装的に未具現化 |\n\n### 体系的ギャップ\n\n- **証拠欠落 24 命題**: 特に L1, L3, L4, L5, L6 の境界命題群と D1-D14 の設計定理群。設計定理は derivation で埋まるが、**境界命題の証拠欠落は根拠の薄さ**を示す\n- **D4 孤立**: 葉ノードかつ depended_by が空。位相的に終端だが、自己適用の観測手段が不明\n\n## 3. 改善提案（優先度順）\n\n### 優先度 High: T8 に証拠を付与\n`task_has_precision` に Axiom Card を作成。`Programming with Agents` 等の外部文献参照、または定義的公理（opaque）として layer を明示。影響命題 6 件 (P6→D5,D12,D14,D15,D16) の土台が補強される。\n\n### 優先度 High: T3, T4, L3 の実装アーティファクト補完\n- T3: コンテキスト有限性を観測する実装（トークン計測スクリプト）を追加\n- T4: 非決定性の計測・再現テスト（temperature/seed 変動テスト）\n- L3: リソース境界の hook/script（タイムアウト、予算監視）\n\n### 優先度 Medium: 境界命題（L1-L6）への証拠追記\nL1/L3/L4/L5/L6 に `Ontology.lean` 由来の derivation 以外に、`implementation-boundaries.md` からの具体的 evidence を追記。境界を「なぜここに引くのか」の根拠が明文化され、D13 伝播の下流命題の信頼性が向上する。",
+  "tokens_in": 6,
+  "tokens_out": 1642,
+  "latency_ms": 31120,
+  "timestamp": "2026-04-17T01:52:12Z",
+  "run_number": 1,
+  "exit_code": 0
+}

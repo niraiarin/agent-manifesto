@@ -1,0 +1,30 @@
+{
+  "model_type": "qlora",
+  "base_model": "Qwen/Qwen2.5-0.5B",
+  "labels": [
+    "local_confident",
+    "local_probable",
+    "cloud_required",
+    "hybrid",
+    "unknown"
+  ],
+  "epochs": 3,
+  "lora_rank": 16,
+  "train_n": 680,
+  "taxonomy_metrics": {
+    "n": 150,
+    "exact_accuracy": 0.88,
+    "routing_accuracy": 0.9466666666666667,
+    "leak_rate": 0.04,
+    "over_cautious_rate": 0.013333333333333334,
+    "local_predictions": 64
+  },
+  "gt_holdout_metrics": {
+    "n": 20,
+    "exact_accuracy": 0.1,
+    "routing_accuracy": 0.65,
+    "leak_rate": 0.35,
+    "over_cautious_rate": 0.0,
+    "local_predictions": 7
+  }
+}

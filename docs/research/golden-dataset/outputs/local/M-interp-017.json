@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-017",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-017.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "メトリクスを分析します。\n\n## 1. 全体評価: **WARNING**\n\nLeanビルドは健全（axiom 54, theorem 468）だが、**valueless_change streak=4 で halt recommended**、**sorry=2**、**762/763 テストの1失敗**が懸念材料。\n\n---\n\n## 2. V1-V7 各指標の解釈\n\n| V | 指標 | 現在値 | 判定 | 備考 |\n|---|------|--------|------|------|\n| **V1** | Skill Quality | formal graduated | OK | 但し **non_triviality=0** — 直近10回で theorem/test 増加なし。飽和の可能性 |\n| **V1** | Saturation | test_consecutive_zero_delta=2 | OK | まだ警戒段階 |\n| **V2** | Context Efficiency | recent_avg=46, cumulative_avg=40 | OK | trend=stable, divergence=15%（許容範囲） |\n| **V3** | Output Quality | hallucination errors 42 | **注意** | hypothesis_errorが最多(42)。quality gate導入後19件がポストゲートで残存 |\n| **V4** | Gate Pass Rate | 99% (28587/28693) | **良好** | |\n| **V5** | Proposal Accuracy | 96% (162/168) | **良好** | schema_drift=false |\n| **V6** | Knowledge Structure | entries=12, retired=0, orphans=0 | OK | 但し retired=0 は退役メカニズム未稼働の可能性 |\n| **V7** | Task Design | completed=188, teamwork=0% | 意図的 | suppressed_single_agent 設定による |\n\n**追加観察:**\n- **Evolve**: Run 107 累计, 466 proposals 中 verifier_pass=360 (77%)、verifier_fail=105 は依然高い\n- **Failure patterns**: 55 unresolved (hypothesis_error 36件が過半)\n- **Stale files**: `docs/design-development-foundation.md`, `.claude/skills/evolve/SKILL.md` が stale として検出（ただし structure_file_currency だと evolve SKILL.md は 4/16 更新済み — 検知ロジックの再確認が必要）\n- **Cost Efficiency**: mean $8.34/session, $2.33/improvement\n\n---\n\n## 3. 改善提案（優先度順）\n\n### ① Valueless Change Streak 4 の解消（最優先）\n`valueless_change.halt_recommended=true`。直近4回の evolve エントリが構造に実質的な改善をもたらしていない。\n- **アクション**: 今回の evolve を中止し、Observer が「何が valueless か」を分類。streak の原因（meta-only runs 過多？仮説の質低下？）を特定してから再開する\n- **互換性**: conservative extension（中止のみ）\n\n### ② Sorry 2 件の解消\nLean に `sorry=2` が残る。54 axioms・468 theorems の中でこれは唯一の形式不完全性。\n- **アクション**: sorry の所在を特定し、placeholder/deferred/exploratory のいずれかに分類。可能であれば証明を完了させる\n- **互換性**: conservative extension\n\n### ③ Hypothesis Error 42 件の根本原因特定\nV3 hallucination proxy で hypothesis_error が最多（42件、active 36件）。特に `H_impl_specification`(8) と `H_wrong_premise`(6) がサブタイプとして顕著。\n- **アクション**: Observer が FAIL ループバックの共通パターンを抽出し、Hypothesizer SKILL.md の事前チェックリストを強化する\n- **互換性**: compatible change（SKILL.md 改善）",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 371816,
+  "timestamp": "2026-04-18T06:04:45Z",
+  "run_number": 1,
+  "exit_code": 0
+}

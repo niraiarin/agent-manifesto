@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-027",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-027.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# Agent Manifesto メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — 主要指標は健全だが、`valueless_change` streak=4 で halt_recommended=true、テスト失敗 40 件、sorry 3 件が検出されている。構造品質は高水準だが、evolve の価値産出が停滞傾向。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 評価 | コメント |\n|---|---|---|---|\n| **V1 Skill Quality** | non_triviality=trivial (0) | 注意 | theorem/test delta last_run=0、連続 0 増加 2回。飽和警告の前兆 |\n| **V2 Context Efficiency** | recent=46, cumulative=40 | 良好 | trend=stable、divergence 15% 許容範囲内 |\n| **V3 Output Quality** | test_pass=100%, hypothesis_error 42 | 注意 | pass_rate は良好だが、post_gate でも hypothesis_error 19 件残存 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | 良好 | ブロック率 0.37%、健全 |\n| **V5 Proposal Accuracy** | 96% (162/168) | 良好 | schema_drift なし |\n| **V6 Knowledge Structure** | 12 entries, 更新 0 日前 | 良好 | orphan/missing ゼロ、整合性維持 |\n| **V7 Task Design** | completed 188, teamwork 0% | 注意 | teamwork=suppressed_single_agent、協働設計が機能していない可能性 |\n\n**追加注意点**:\n- `valueless_change.current_streak=4` → halt_recommended=true（4回連続で価値産出なし）\n- `tests.failed=40` / `sorry=3`（Lean 側に未完成要素）\n- `stale_files`: `.claude/skills/verify/SKILL.md` が陳腐化候補\n\n## 3. 改善提案（優先度順）\n\n### 🔴 優先度 1: evolve 停滞の打破（halt_recommended=true）\n- **根拠**: valueless_change streak=4、V1 non_triviality=trivial、10回中 meta_only=1・meta=8 でメタ改善偏重\n- **アクション**: 次 evolve を実質的構造改善（substance）に振り向ける。human_feedback 2026-03-24 の「半順序公理追加」「Lean↔テスト↔実装トレーサビリティ逆引き」が具体的候補\n\n### 🟡 優先度 2: hypothesis_error 残存への対処\n- **根拠**: unresolved 55 件中 hypothesis_error 36 件（65%）、post_gate でも H_impl_specification 8 / H_wrong_premise 6\n- **アクション**: Hypothesizer の前提検証強化、または Judge の拒否基準に H_impl_specification 専用チェックを追加\n\n### 🟡 優先度 3: テスト失敗 40 件と sorry 3 件の解消\n- **根拠**: test_pass_rate=100% と矛盾するように failed=40 が計上されている（計測不整合の可能性）。sorry_classification は総数0だが lean.sorry=3 と食い違う\n- **アクション**: `observe.sh` のテスト集計と sorry 検出ロジックの整合性を検証、実体の有無を確認",
+  "tokens_in": 6,
+  "tokens_out": 1208,
+  "latency_ms": 24258,
+  "timestamp": "2026-04-17T01:52:59Z",
+  "run_number": 1,
+  "exit_code": 0
+}

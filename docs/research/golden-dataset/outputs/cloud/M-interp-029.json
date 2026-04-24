@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-029",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-029.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価\n\n**WARNING** — テスト全通過・ビルド健全だが、`valueless_change.halt_recommended=true`（4連続 valueless）と V1 飽和（trivial）が進化の停滞を示唆。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 現状 | 評価 |\n|---|---|---|\n| **V1 skill_quality** | verifier_pass_rate 77%, non_triviality=trivial, test/theorem delta=0（直近）| ⚠ 停滞。直近の改善が構造貢献していない |\n| **V2 context_efficiency** | recent_avg 46, cumulative 40, divergence 15%, stable | ✅ 健全 |\n| **V3 output_quality** | test_pass_rate 100%, 未解決 rejection 55 件（うち hypothesis_error 36）| ⚠ 仮説品質に課題 |\n| **V4 gate_pass_rate** | 99% (28587/28693) | ✅ 良好 |\n| **V5 proposal_accuracy** | 96% (162/168), schema_drift=false | ✅ 良好 |\n| **V6 knowledge_structure** | 12 entries, orphan=0, 退役=0 | ✅ 整合性あり |\n| **V7 task_design** | 188 completed, teamwork=0% (suppressed_single_agent) | ➖ 単独実行前提 |\n\n**追加の赤信号**:\n- `sorry=1`（ビルド）だが `sorry_classification.total=0` → **不整合**\n- `stale_files` 4 件（evolve/research SKILL, p3 rule, 古テスト）\n- `evolve_history.valueless_change.halt_recommended=true`\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: valueless_change halt 対応\n4連続 valueless → **/evolve 一時停止し根本原因分析**。直近の observer findings が構造貢献しない理由を判定（対象の枯渇 vs 仮説精度低下 vs 検証粒度過小）。human_feedback 2026-03-24 の「半順序公理」実装が停滞解消の本命候補。\n\n### 🟠 P2: sorry 分類不整合 + 1 件残存の解消\nLean ビルドに `sorry=1` が存在するが分類表に載っていない。**どのファイル・どのクラス（placeholder/dangling/deferred/exploratory）かを特定して退役判定** → 正典 0 sorry に復帰。\n\n### 🟡 P3: hypothesis_error 36 件の型別対策\npost_gate で `H_impl_specification=8`, `H_wrong_premise=6` が支配的。Hypothesizer プロンプトに「実装を仕様と混同しない」「前提の明示検証」チェックを組み込み、V1 verifier_pass_rate（現 77%）を引き上げる。",
+  "tokens_in": 6,
+  "tokens_out": 1474,
+  "latency_ms": 27436,
+  "timestamp": "2026-04-17T01:53:49Z",
+  "run_number": 1,
+  "exit_code": 0
+}

@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-013",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-013.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "データは十分にあるので分析します。\n\n---\n\n## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: WARNING\n\n**理由**: 3つの重大な警報が同時に発火している。\n- evolve の valueless_change streak が **5**（halt_recommended=true）\n- Lean の `sorry` が **9**（ゼロではない）\n- stale_files が **3件**（SKILL.md, 設計論, V7Metrics）\n\nテストは 721/739 で 97.6% 通過率。構造的には安定しているが、改善サイクルは停止している。\n\n---\n\n### 2. V1-V7 各指標の解釈\n\n| V1-V7 | 現在値 | 判定 | 解釈 |\n|---|---|---|---|\n| **V1 Skill Quality** | formal graduation済み | OK | theorem_delta=0, test_delta=0 — 改善の停止を確認。saturation status=\"ok\"（連続ゼロデルタ=2）。V1/Q3 non_triviality=0 は graduation 後なので問題なし。 |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40 | OK | 安定。divergence=15% は閾値以内。 |\n| **V3 Output Quality** | test_pass_rate=100%, formal graduation済み | OK | hallucination_proxy: hypothesis_error_active=36 が最も多いが、quality_gate導入後は19→4→2に減少傾向。改善中。 |\n| **V4 Gate Pass Rate** | 99% (28587/28693) | OK | 非常に良好。 |\n| **V5 Proposal Accuracy** | 96% (162/168) | OK | 良好。schema_drift=false。 |\n| **V6 Knowledge Structure** | memory_entries=12, retired=0 | WARNING | retired_count=0 は知識の陳腐化が検出されていない可能性。stale_files=3件あるのに。 |\n| **V7 Task Design** | completed=188, teamwork=0% | INFO | suppressed_single_agent で意図的。 |\n\n**補足指標**:\n- **evolve_history**: 107回実行、total_entries=113。Verifier pass=360, fail=105 (77%)。hypothesis_error=42 が最大 FAIL 要因。\n- **valueless_change**: current_streak=5, max_streak=5, **halt_recommended=true** — 5連続の価値のない変更。evolve ハルト条件発動済み。\n- **sorry=9**: 429 theorem に対して 9。ゼロではないが、Graduation 対象外なら許容範囲。\n- **stale_files**: `.claude/skills/verify/SKILL.md`, `docs/design-development-foundation.md`, `lean-formalization/Manifest/V7Metrics.lean` が古いコミットのまま。\n\n---\n\n### 3. 改善提案（優先度順）\n\n1. **Valueless streak の原因調査と evolve パイプラインの再検証**（最重要）\n   - 5連続 valueless change は「改善すべき構造がもうない」か「valueless 判定が甘すぎる」かの両義性。\n   - observer の発見が質的に枯渇している可能性を検証。もし前者なら halt が正当。もし後なら valueless 判定ロジックの修正が必要。\n\n2. **stale_files の更新または退役処理**\n   - `verify/SKILL.md` と `judge.md` の両方が存在する状態は Verifier→Judge パラダイム移行 (#600) の痕跡。古い verify SKILL.md は退役させるか、ドキュメント化すべき。\n   - `V7Metrics.lean` の stale は V3 graduation 後のメトリクス定義変更によるものなら、退役処理を行う。\n\n3. **hypothesis_error (active=36) の根本原因分析**\n   - 69件中36件が未解決の hypothesis_error。うち `H_impl_specification`=8, `H_wrong_premise`=6 がサブタイプ最多。\n   - Hypothesizer AGENT.md の品質基準を強化するか、pre-verification ガートを追加する対応が有効そう（過去の human feedback でも言及済み）。\n\n---\n\n**総括**: システムは「成熟フェーズ」に入った。V1/V3 graduation 済み、V4/V5 が安定。現在の課題は「これ以上改善すべき対象があるかどうか」の見極め。streak=5 で halt_recommended なら、一度止まって構造の価値基準を見直すのが D4（フェーズ順序）に沿った対応。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 263266,
+  "timestamp": "2026-04-18T05:46:54Z",
+  "run_number": 1,
+  "exit_code": 0
+}

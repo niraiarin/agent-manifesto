@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-021",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-021.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価\n\n**⚠️ WARNING** — コア構造は健全（Lean 0 sorry / tests 100% / V4 99% / V5 96%）だが、`valueless_change.halt_recommended=true`（4連続無価値変更）と V1 non-triviality=\"trivial\" により **学習ループの生産性が停滞**。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 判定 | 備考 |\n|------|-----|------|------|\n| **V1 スキル品質** | trivial (0) | 🔴 注意 | theorem/test delta = 0 が 2連続。飽和兆候 |\n| **V2 文脈効率** | recent 46 / cum 40 | 🟡 許容 | divergence 15%・stable だが微増傾向 |\n| **V3 出力品質** | pass 100% / 未解消 55 | 🟡 注意 | hypothesis_error 36 件が滞留（H_impl_specification 8, H_wrong_premise 6） |\n| **V4 ゲート通過率** | 99% | 🟢 良好 | blocked 106 は正常範囲 |\n| **V5 提案精度** | 96% | 🟢 良好 | schema_drift なし |\n| **V6 知識構造** | 12 entries / 退役 0 | 🟢 良好 | index 整合・last_update 0日 |\n| **V7 タスク設計** | 188完了 / teamwork 0% | 🟡 注意 | single-agent 抑制中。完了数は伸びる |\n\n**補足シグナル**:\n- `valueless_change.current_streak=4` (halt 推奨) — **最重要**\n- `stale_files`: `Ontology.lean` 1件\n- scope_balance: meta 8 / substance 7（バランスは OK）\n- Verifier pass rate 77% — hypothesis 品質のボトルネック\n\n## 3. 改善提案（優先度順）\n\n### 🥇 提案1: 無価値変更ストリーク halt を受けて /evolve を一時停止し、棚卸し\n- 根拠: 4連続 trivial（V1 non-triviality=0 / test_consecutive_zero_delta=2）\n- アクション: 次 run で Observer を **substance 観察**（Lean/テストの未カバー領域）に限定。meta 観察を1run停止\n- D4/P3 準拠: 計測裏付けのない構造変更を抑止\n\n### 🥈 提案2: Hypothesizer の仕様誤解系エラー（H_impl_specification 8件）の構造対策\n- 根拠: failure_patterns で hypothesis_error が 36/55 を占め、最大サブタイプは H_impl_specification\n- アクション: hypothesizer.md に「提案前に対象スキルの入出力契約を `.claude/skills/*/SKILL.md` から引用する」手順を追加\n- 分類: compatible change\n\n### 🥉 提案3: `Ontology.lean` の stale 解消 + teamwork 活用の再評価\n- 根拠: stale_files 1件、V7 teamwork_percent=0（suppressed）\n- アクション: Ontology.lean の最終編集理由を git log で確認し、退役/更新判断。並列化できる Observer+Hypothesizer タスクを1件試行\n- 分類: conservative extension",
+  "tokens_in": 6,
+  "tokens_out": 1807,
+  "latency_ms": 34012,
+  "timestamp": "2026-04-17T01:50:07Z",
+  "run_number": 1,
+  "exit_code": 0
+}

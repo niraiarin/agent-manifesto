@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-012",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-012.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\nLean 形式検証・テスト・ゲート通過率は良好だが、`valueless_change.halt_recommended=true` (連続4回) と V1 non_triviality が `trivial` で、evolve の実質的改善が停滞している。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 解釈 |\n|---|---|---|---|\n| **V1 Skill Quality** | score=0, trivial / saturation 2 | ⚠️ 注意 | theorem/test delta が直近連続ゼロ。evolve が実効的な構造成長を生んでいない |\n| **V2 Context Efficiency** | recent_avg=46, trend=stable, div=15% | ✅ 良好 | 累積平均 40 に対し 15% 乖離でトレンド stable。許容範囲 |\n| **V3 Output Quality** | test_pass 100% / unresolved 55 | ⚠️ 注意 | テストは完全だが hypothesis_error 36 件が未解決。H_impl_specification=8, H_wrong_premise=6 が顕著 |\n| **V4 Gate Pass** | 99% (28587/28693) | ✅ 良好 | ゲート機構は安定稼働 |\n| **V5 Proposal Accuracy** | 96% (162/168) | ✅ 良好 | 提案承認率が目標ラインで安定 |\n| **V6 Knowledge** | 12 entries, 0 retired, 0 orphan | ⚠️ 注意 | 退役実績ゼロ。陳腐化検証が機能している証拠が不足 |\n| **V7 Task Design** | 188 完了, teamwork 0% | ℹ️ 仕様 | single_agent モードで抑制済み。設計通り |\n\n**補助指標**: Lean 56 axioms / 495 theorems / 0 sorry、manifest_trace coverage 43/43 (100%)、stale files 3 件 (`evolve/SKILL.md`, `Ontology.lean`, `test-refs-integrity.sh`)。\n\n## 3. 優先改善アクション (最大3件)\n\n### 【P0】valueless_change 停止勧告への対応\n- **問題**: `halt_recommended=true`, current_streak=4 — 4連続で価値なし変更\n- **アクション**: 次回 evolve を即時起動せず、**scope 拡張の判断**を行う。直近10runで meta_runs=8 に偏っており、substance（公理系・Lean）側の観察対象を明示的に追加する\n- **根拠**: D4 (フェーズ順序) と scope_balance の meta 偏重\n\n### 【P1】未処理の人間フィードバック (半順序公理) を消化\n- **問題**: 2026-03-24 の feedback 3件 (FAIL ループバック / D5-D3 違反 / 半順序公理追加提案) が evolve_history の latest_run=107 (04-12) 以降も反映されていない可能性\n- **アクション**: Issue #290 (CLOSED) の実装完了度を検証し、`PartialOrder` 型クラスの Lean 形式化と Lean→test→実装のトレーサビリティ逆引きチェックが稼働しているか確認\n- **根拠**: T6 (人間の最終決定権)、breaking change として明示的に設計されていた\n\n### 【P2】hypothesis_error 36件 (未解決) のパターン分析\n- **問題**: `H_impl_specification=8`, `H_wrong_premise=6` — 仮説化段階での根本的な誤り型が蓄積\n- **アクション**: hypothesizer AGENT.md に「実装仕様との整合性」「前提の根拠確認」チェックリストを追加し、post_gate 指標で改善を測定\n- **根拠**: V3 幻覚プロキシ。post_gate subtype 分布が品質ゲート後の改善余地を示している",
+  "tokens_in": 6,
+  "tokens_out": 1868,
+  "latency_ms": 34435,
+  "timestamp": "2026-04-17T01:45:50Z",
+  "run_number": 1,
+  "exit_code": 0
+}

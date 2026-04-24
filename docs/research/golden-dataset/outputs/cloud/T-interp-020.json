@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-020",
+  "task_type": "T-interp",
+  "input_file": "trace-input-020.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n**全体カバレッジ率: 100% (43/43 命題)**\n\n- `covered`: 43、`uncovered`: []、`weak`: []\n- 全命題に少なくとも 1 つの artifact が紐付いている\n- 総 artifact 数: 699\n\n**二次指標の欠損**:\n| 指標 | 充足 | 欠損 |\n|------|------|------|\n| Evidence 保有 | 19/43 | **24/43** |\n| Derivation 保有 | 39/43 | 4/43 (T4-T7 のみ、T₀ 根元なので想定内) |\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 深刻度 HIGH: Evidence 欠損の上流命題\n\nD13（影響波及）は「前提が外れたら波及先の検証が必要」を要求するが、以下は下流依存が広いのに evidence を持たない:\n\n- **T8** (`task_has_precision`): P6, D5, D12, D14, D15, D16 に波及。derivation のみで経験的根拠なし\n- **P3** (学習の統治): L6, D4, D9, D13, D17 に波及。5 つの D に影響するが evidence なし\n- **L1, L3, L4, L5, L6**: 全 boundary が evidence なし（derivation のみ）。V1-V7 観測変数が依存するため、境界の経験的裏付け欠損は測定可能性の信頼性に波及\n\n### 深刻度 MEDIUM: V6 の evidence 欠損\n\nV6（知識構造品質）は `without_evidence` かつ `test_result` ソースのみ。他の V* は ObservableDesign.lean に trade-off axiom を持つ。V6 単独で設計的裏付けが弱い。\n\n### 深刻度 LOW: T4-T7 の derivation 欠損\n\nT₀（環境派生）axiom は型定義から導出不可と明記済み（`降格判定: 導出不可`）。これは仕様どおり。\n\n## 3. 改善提案（優先度順）\n\n### 提案 1 — T8 に Evidence を追加（conservative extension）\n\n`task_has_precision` は 6 つの下流命題を支える骨格だが経験的根拠が空。\n**アクション**: `Axioms.lean` に precision_requirement の数理的根拠（Shannon 情報量 / Kolmogorov 複雑度）を追記し、Axiom Card を更新。\n\n### 提案 2 — L1-L6 Boundary の Evidence 補強（compatible change）\n\n境界命題は全て derivation のみで evidence なし。V1-V7 観測変数の信頼性が境界の裏付けに依存するため、`Ontology.lean` に境界ごとの refutation 条件（境界が破綻する経験的シナリオ）を最低 1 件ずつ追加。\n\n### 提案 3 — V6 の Trade-off Axiom 追加（conservative extension）\n\n他 V と対称性を保つため、V6（知識構造品質）と V2（コンテキスト効率）の trade-off を `ObservableDesign.lean` に形式化。知識構造の詳細化がコンテキストを消費する制約を明示。\n\n---\n\n**総括**: 構造的カバレッジは完璧だが、T₀ ではない命題の約 56% が経験的根拠を欠く。D13 波及範囲が広い T8・P3・境界群から優先的に補強すべき。",
+  "tokens_in": 6,
+  "tokens_out": 1904,
+  "latency_ms": 34707,
+  "timestamp": "2026-04-17T02:00:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

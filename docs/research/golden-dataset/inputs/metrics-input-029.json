@@ -1,0 +1,475 @@
+{
+  "meta": {
+    "id": "metrics-input-029",
+    "type": "metrics",
+    "timestamp": "2026-04-11T08:22:00Z",
+    "git_rev": "cca2a53",
+    "source": "observe.sh"
+  },
+  "data": {
+    "lean": {
+      "axioms": 55,
+      "theorems": 486,
+      "sorry": 1,
+      "modules": 30,
+      "warnings": 0,
+      "compression_ratio": 892,
+      "de_bruijn_factor": 683,
+      "foundation_theorems": 17
+    },
+    "tests": {
+      "passed": 757,
+      "failed": 0
+    },
+    "stale_files": [
+      ".claude/skills/research/SKILL.md",
+      ".claude/skills/evolve/SKILL.md",
+      "tests/phase5/test-refs-integrity.sh",
+      ".claude/rules/p3-governed-learning.md"
+    ],
+    "evolve_history": {
+      "latest_run_number": 107,
+      "total_entries": 113,
+      "last_run": "2026-04-12T06:28:01Z",
+      "phases_totals": {
+        "observer_findings": 740,
+        "hypothesizer_proposals": 466,
+        "verifier_pass": 360,
+        "verifier_fail": 105,
+        "null_entries_count": 12,
+        "hypothesis_errors": 66
+      },
+      "valueless_change": {
+        "current_streak": 2,
+        "halt_recommended": false,
+        "max_streak": 4
+      }
+    },
+    "decision_log": {
+      "total": 1,
+      "active": 1,
+      "rejected_alternatives": 1,
+      "assumptions_tracked": 1,
+      "recent_30d": 1
+    },
+    "assumption_tracker": {
+      "total": 5,
+      "active": 5,
+      "review_overdue": 0,
+      "invalidated": 0
+    },
+    "judge_patterns": {
+      "total_rejections": 69,
+      "resolved": 14,
+      "unresolved": 55,
+      "by_type": {
+        "hypothesis_error": 42,
+        "assumption_error": 11,
+        "observation_error": 6,
+        "precondition_error": 6
+      }
+    },
+    "metrics": {
+      "tool_calls": 62028
+    },
+    "v1_v7": {
+      "v1_skill_quality": {
+        "gqm_version": "0.1.0",
+        "q1_structural_contribution": {
+          "theorem_delta_last_run": 0,
+          "test_delta_last_run": 0,
+          "theorem_delta_avg_10r": 6.3,
+          "test_delta_avg_10r": 8.9,
+          "test_delta_outlier_in_window": true
+        },
+        "q2_verification_quality": {
+          "verifier_pass_total": 360,
+          "verifier_fail_total": 105,
+          "verifier_pass_rate": 77,
+          "rejected_last_run": 0,
+          "rejected_avg_10r": 0.5
+        },
+        "q3_operational_stability": {
+          "evolve_success_rate": 98,
+          "lean_health": 1,
+          "skill_count": 14
+        },
+        "non_triviality": {
+          "score": 0,
+          "label": "trivial",
+          "c1_theorem_growth": 0,
+          "c2_test_growth": 0,
+          "c3_axiom_change": 0,
+          "c4_multi_verification": 0
+        },
+        "saturation": {
+          "test_consecutive_zero_delta": 2,
+          "status": "ok"
+        },
+        "proxy_classification": "formal",
+        "graduation_date": "2026-03-27",
+        "graduation_source": "#77 G1-G4"
+      },
+      "v2_context_efficiency": {
+        "tool_calls": 62028,
+        "sessions": 1699,
+        "recent_avg": 46,
+        "cumulative_avg": 40,
+        "raw_cumulative_avg": 36,
+        "trend_direction": "stable",
+        "divergence_percent": 15,
+        "primary_metric": "recent_median",
+        "raw_delta_count": 10,
+        "filtered_delta_count": 10,
+        "min_session_delta": 3
+      },
+      "v3_output_quality": {
+        "total_commits": 573,
+        "test_pass_rate": 100,
+        "proxy_classification": "formal",
+        "graduation_date": "2026-03-27",
+        "graduation_source": "#77 G1-G4",
+        "hallucination_proxy": {
+          "observation_error": 6,
+          "hypothesis_error": 42,
+          "assumption_error": 11,
+          "precondition_error": 6,
+          "loopback_total": 19,
+          "typed_rejected_total": 69,
+          "observation_error_active": 3,
+          "hypothesis_error_active": 36,
+          "assumption_error_active": 7,
+          "precondition_error_active": 5,
+          "observation_error_post_gate": 0,
+          "hypothesis_error_post_gate": 19,
+          "assumption_error_post_gate": 4,
+          "precondition_error_post_gate": 2,
+          "subtype_post_gate": {
+            "H_wrong_premise": 6,
+            "H_impl_specification": 8,
+            "H_trivially_true": 0,
+            "none": 9
+          },
+          "quality_gate_run": 57,
+          "note": "failure_type 標準化は Run 54 から。_post_gate は Run 57 品質ゲート導入後のみ"
+        }
+      },
+      "v4_gate_pass_rate": {
+        "passed": 28587,
+        "blocked": 106,
+        "blocked_excluded": 10620,
+        "total": 28693,
+        "rate_percent": 99
+      },
+      "v5_proposal_accuracy": {
+        "approved": 162,
+        "total": 168,
+        "rate_percent": 96,
+        "grep_crosscheck": 162,
+        "schema_drift": false
+      },
+      "v6_knowledge_structure": {
+        "memory_entries": 12,
+        "memory_files": 12,
+        "last_update_days_ago": 0,
+        "retired_count": 0,
+        "type_distribution": {
+          "feedback": 5,
+          "project": 4,
+          "reference": 3,
+          "other": 0
+        },
+        "index_consistency": {
+          "orphan_files": 0,
+          "missing_files": 0
+        },
+        "note": "proxy: entry_count + staleness"
+      },
+      "v7_task_design": {
+        "completed": 188,
+        "unique_subjects": 180,
+        "teamwork_percent": 0,
+        "teamwork_status": "suppressed_single_agent"
+      }
+    },
+    "ccusage": {},
+    "backfill_result": {
+      "backfilled": 0,
+      "note": "no ccusage session data with UUID"
+    },
+    "evolve_cost_efficiency": {
+      "data_points": 38,
+      "mean_session_cost_usd": 8.34,
+      "mean_cost_per_improvement_usd": 2.33,
+      "total_improvements": 409
+    },
+    "deferred_open": [],
+    "hypothesis_table_stats": {
+      "header": {
+        "max_run": 107,
+        "total_entries": 113
+      },
+      "h1_verifier": {
+        "pass": 360,
+        "fail": 105,
+        "total": 465,
+        "pass_rate_percent": 77
+      },
+      "h4_compatibility": {
+        "conservative_extension": 229,
+        "compatible_change": 177,
+        "breaking_change": 1,
+        "other": 2,
+        "total": 409
+      },
+      "h5_valid_uuids": 39
+    },
+    "priority_bias_review": {
+      "current_run": 107,
+      "run_at_decision": 97,
+      "runs_since_decision": 10,
+      "triggers_fired": [
+        {
+          "trigger": "V1/V3 formal graduation",
+          "fired": false,
+          "detail": ""
+        },
+        {
+          "trigger": "20 runs elapsed",
+          "fired": false,
+          "next": 117
+        }
+      ],
+      "review_needed": false,
+      "authority": "T6 (human decision required)"
+    },
+    "manifest_trace": {
+      "version": "0.3.0",
+      "coverage": {
+        "covered": 43,
+        "uncovered": 0,
+        "weak": 0,
+        "total": 43
+      },
+      "artifacts": 185,
+      "evidence_coverage": {
+        "with": 9,
+        "total": 9
+      },
+      "derivation_completeness": {
+        "with": 34,
+        "total": 34
+      },
+      "by_strength": {
+        "s5": "8/8",
+        "s4": "2/2",
+        "s3": "6/6",
+        "s2": "6/6",
+        "s1": "14/14",
+        "s0": "7/7"
+      },
+      "priority_repairs": []
+    },
+    "task_classification": {
+      "table_rows": 25,
+      "checklist_rows": 25,
+      "valid": true
+    },
+    "sorry_classification": {
+      "total": 0,
+      "classified": 0,
+      "unclassified": 0,
+      "by_class": {
+        "placeholder": 0,
+        "dangling": 0,
+        "deferred": 0,
+        "exploratory": 0
+      },
+      "items": []
+    },
+    "human_feedback_recent": [
+      {
+        "run": null,
+        "timestamp": "2026-03-24T11:15:00Z",
+        "notes": "【次回 evolve の最優先課題】T7 ResourceBound の Claude Code 環境への具体化が /evolve 設計時に欠落。/evolve 自体のコスト効率の最適化ループも不在。以下を次回 evolve で実施すること。--- [Phase 1 Observer] (A) 過去 evolve 各回の改善の質・数・種類を分析し、各エージェント（Observer/Hypothesizer/Verifier/Integrator）の独立した寄与を評価する。Verifier の FAIL 救済回数、Observer 固有の発見数など。(B) この分析に必要な可観測性が現状の記録・設計に十分か評価し、不足していればそれ自体を改善候補にする。(C) T→L→環境マッピングで他に同様の漏れがないか体系的に調査。(D) ccusage (https://github.com/ryoppippi/ccusage) を Claude Code リソース消費の観測ツールとして調査（Step 0b prior art）。--- [Phase 2 Hypothesizer] 上記の計測結果に基づき /evolve の設計見直しを改善案として設計する。検討済みの選択肢: (i) エージェント統合 4→2（Observer+Hypothesizer, Verifier+Integrator）、(ii) 段階的実行（observe.sh 軽量化、テストは統合時のみ）、(iii) コスト予算の導入。ただしコスト削減でパフォーマンスを犠牲にしないこと。構造変更は計測なしに判断しない（D4）。"
+      },
+      {
+        "run": null,
+        "timestamp": "2026-03-24T17:00:00Z",
+        "notes": "【次回 evolve の最優先課題】FAIL ループバック実装後の人間レビューで、設計漏れの根本原因が派生スキルの構造的欠陥にあることが判明。--- [発見1: D5 三層断裂] Workflow.lean L63-64 で validPhaseTransition .verification .hypothesizing => True（ループバック）が形式仕様として定義済みだったが、テスト（層2）も SKILL.md 実装（層3）も存在しなかった。D5 violation。--- [発見2: D3 可観測性欠如] FAIL の失敗パターンについて degradationDetectable=false, improvementVerifiable=false だった。d3_partial_observability_insufficient により名目上の最適化対象に過ぎなかった。D3 violation。--- [発見3: 派生スキルの責務隙間] 3つの派生スキルに構造的欠陥: (A) /evolve SKILL.md の Lean 対応表が名前参照のみで、validPhaseTransition の全ケース（特に verification→hypothesizing）が実行手順に展開されていない。逆引きチェックがない。(B) /design-implementation-plan の D5 品質チェックリストが各層の「存在」のみ確認し、Lean形式仕様→テスト→実装の三者間トレーサビリティを確認していない。(C) /formal-derivation は実装→Lean方向のスキルだが、逆方向（Lean→実装の網羅性検証）の責務がどのスキルにも割り当てられていない。--- [次回 evolve で実施すべきこと] (1) Lean定義→テスト→実装の三者間トレーサビリティを体系的に検証する機構の設計。どのスキルが担うか、または新規スキルが必要か。(2) /evolve SKILL.md の Lean 対応表を「参照リスト」から「逆引きチェックリスト」に拡張（各 Lean 定義のケースごとに対応するテストID・SKILL.md行番号を記載）。(3) /design-implementation-plan の D5 品質基準に Lean→テスト→実装の網羅性チェックを追加。(4) 失敗パターンの Lean 形式化を検討（failure_feedback_is_improvement_prerequisite 等）。"
+      },
+      {
+        "run": null,
+        "timestamp": "2026-03-24T17:30:00Z",
+        "notes": "【次回 evolve: 新公理の追加提案】人間から新公理の追加提案あり。今回の FAIL ループバック議論と派生スキルの D5/D3 違反分析から導出された。--- [提案公理] 「公理の体系、及びそれらに準拠した成果物は半順序関係にある。」--- [公理が要求する3つの性質] (1) 半順序の存在: 反射律・反対称律・推移律。依存関係の DAG 構造を強制。循環依存の禁止。D5（仕様→テスト→実装）、D6（境界→緩和策→変数）、D4（フェーズ順序）は全てこの半順序の個別インスタンスであり、統一的な公理として明示されていなかった。(2) 順序情報の自己内包: 各要素が「自分はどの要素に依存しているか」を構造的に保持しなければならない。/evolve SKILL.md の Lean 対応表が「名前参照のみ」で依存元の各ケースとの対応を内包していなかったのはこの違反。(3) 末端エラーからの遡及検証: 末端でエラーが発生した場合、半順序を遡って全ての依存元を検証する能力がシステムに備わっていなければならない。今回の FAIL→根本原因分析→Workflow.lean の仕様漏れ発見→派生スキルの責務隙間発見、という遡及を構造的に実行できなかった。--- [配置場所の検討] T1-T8（エージェントの存在論的性質）ではなく、公理系自体のメタ性質。Section 7（自己適用）の拡張か、新 Section 8（構造的整合性）として配置が適切。D9 自己適用により、この公理自身にも適用される（自分の依存先を明示し、テスト・実装への展開が検証可能でなければならない）。--- [根拠: 今回の経験] T5→Workflow.lean(verification→hypothesizing)→テスト(不在)→SKILL.md実装(不在) の依存チェーンで末端エラー発生。遡及に人間介入が必要だった。性質2（自己内包）と性質3（遡及検証能力）が欠如していたため、構造自身が断裂を検出できなかった。--- [実装への含意] (a) 全要素にトレーサビリティ情報を付与する仕組み（Lean対応表の双方向化）。(b) 末端エラーからの遡及を自動実行するスキルまたは機構。(c) 半順序の循環がないことの Lean 形式検証。(d) D4/D5/D6 がこの公理の個別インスタンスであることの Lean 上での証明。--- [次回 evolve での実施] Phase 1: Observer は manifesto.md と Lean 形式化の現状を確認し、この公理の追加位置を特定。Phase 2: Hypothesizer は (a) manifesto.md への公理追加、(b) Lean 形式化（PartialOrder 型クラスの適用、半順序の3性質の定理）、(c) テスト追加、(d) 派生スキルへの波及（/evolve, /design-implementation-plan, /formal-derivation のトレーサビリティ機構）を設計。互換性分類は breaking change（新公理の追加は公理系の構造変更）。"
+      }
+    ],
+    "t6_issues": {
+      "items": [
+        {
+          "number": 291,
+          "title": "[T6] 第3モデルインスタンスの方向性（ForgeCode 完成後）",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 290,
+          "title": "[T6] 半順序公理の追加（human feedback 2026-03-24）",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 3
+        },
+        {
+          "number": 250,
+          "title": "[T6] V1-V7 priority bias レビュー (Run 96, 20 runs elapsed)",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 217,
+          "title": "[T6] H6 仮説の退役または再定義",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 215,
+          "title": "[T6] manifest-trace evidence 定義の derived propositions 適用範囲",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 196,
+          "title": "[T6] Lean ソースファイル24件の artifact-manifest 登録方針",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        },
+        {
+          "number": 146,
+          "title": "[T6] V1-V7 priority_bias レビュー（Run 63 以降未更新）",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 1
+        },
+        {
+          "number": 145,
+          "title": "改善の優先順位の見直し — 当初の目標達成後、次に何を重視するか",
+          "state": "CLOSED",
+          "has_comments": true,
+          "comment_count": 2
+        }
+      ],
+      "open_count": 0,
+      "open_with_response": 0
+    },
+    "failure_patterns": {
+      "unresolved_total": 55,
+      "by_type": [
+        {
+          "type": "hypothesis_error",
+          "count": 36
+        },
+        {
+          "type": "assumption_error",
+          "count": 7
+        },
+        {
+          "type": "precondition_error",
+          "count": 5
+        },
+        {
+          "type": "observation_error",
+          "count": 3
+        },
+        {
+          "type": "scope_deferred",
+          "count": 2
+        },
+        {
+          "type": "invariant_violation",
+          "count": 1
+        },
+        {
+          "type": "no_implementation",
+          "count": 1
+        }
+      ],
+      "by_subtype": [
+        {
+          "subtype": "H_impl_specification",
+          "type": "hypothesis_error",
+          "count": 8
+        },
+        {
+          "subtype": "H_wrong_premise",
+          "type": "hypothesis_error",
+          "count": 6
+        },
+        {
+          "subtype": "H_no_pre_verification",
+          "type": "hypothesis_error",
+          "count": 1
+        },
+        {
+          "subtype": "H_repeated_failure",
+          "type": "assumption_error",
+          "count": 1
+        },
+        {
+          "subtype": "H_technical_validation",
+          "type": "hypothesis_error",
+          "count": 1
+        },
+        {
+          "subtype": "design_analysis_only",
+          "type": "no_implementation",
+          "count": 1
+        }
+      ]
+    },
+    "memory_retirement_candidates": [],
+    "structure_file_currency": [
+      {
+        "file": ".claude/skills/evolve/SKILL.md",
+        "last_commit": "2026-04-16 11:58:24 +0900"
+      },
+      {
+        "file": ".claude/agents/observer/AGENT.md",
+        "last_commit": "2026-04-12 03:05:23 +0900"
+      },
+      {
+        "file": ".claude/agents/hypothesizer/AGENT.md",
+        "last_commit": "2026-04-12 16:11:36 +0900"
+      },
+      {
+        "file": ".claude/agents/integrator/AGENT.md",
+        "last_commit": "2026-04-12 16:11:36 +0900"
+      },
+      {
+        "file": ".claude/agents/verifier.md",
+        "last_commit": "2026-04-16 11:58:24 +0900"
+      },
+      {
+        "file": ".claude/agents/judge.md",
+        "last_commit": "2026-04-16 12:38:31 +0900"
+      }
+    ],
+    "scope_balance": {
+      "recent_runs_analyzed": 10,
+      "meta_runs": 8,
+      "substance_runs": 7,
+      "meta_only_runs": 1,
+      "bias_warning": false
+    },
+    "valueless_change": {
+      "current_streak": 4,
+      "max_streak_in_last_10": 4,
+      "halt_recommended": true
+    },
+    "failed_test_details": []
+  }
+}

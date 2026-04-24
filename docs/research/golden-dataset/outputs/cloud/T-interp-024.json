@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-024",
+  "task_type": "T-interp",
+  "input_file": "trace-input-024.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **総命題数**: 43 / **カバー済み**: 43 (100%)\n- **総アーティファクト数**: 699\n- **未カバー命題**: なし\n- **弱カバレッジ命題**: なし\n\nただし、形式的な「カバー済み」状態の下に質的ギャップが存在する。\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### ギャップ A: 派生 (derivation) 欠落 — 4 命題\n`without_derivation`: **T4, T5, T6, T7**\n\nこれらは全て `strength=5` の根本制約。T4(解釈非決定性)・T5(改善はフィードバック必須)・T6(人間の権限)・T7(リソース有限) は導出元が無い T₀ 公理だが、Foundation 層への形式的紐付け（定理）がレポートに反映されていない。**D13 影響波及上、これらが揺らぐと下流 38+ 命題に伝播する**にも関わらず、退役判定の根拠が不足。\n\n### ギャップ B: 証拠 (evidence) 欠落 — 24 命題\n特に重要なもの:\n- **P2, P3, P6** (principle, strength=3) — 規範原則だが Axiom Card 由来 evidence なし\n- **L1, L3, L4, L5, L6** (boundary 5/6) — 境界条件だが基礎経験的証拠の紐付けなし\n- **D1〜D14** (designTheorem 全 14 件中ほぼ全て) — 設計定理が「導出はあるが基礎証拠なし」状態\n\n### ギャップ C: 実装欠落 — 3 命題\n`has_implementation: false`: **T3, T4, L3** — 文書と Lean のみ、運用フックなし。T3(コンテキスト有限)・T4(解釈非決定性) は本来検出機構が必要。\n\n### ギャップ D: アーティファクト分布の偏り\n- P4 (可観測性): 72 アーティファクト（過密）\n- D1, P3: それぞれ 50, 42（過密）\n- L3, L6, D6, D11: 6〜9（疎）\n\nP4 への過剰集中は、改善時に P4 を触ると **D13 影響波及** が広範に及ぶリスクを示す。\n\n## 3. 改善提案（優先度順）\n\n### 提案 1【高】T₀ 公理の形式的退役判定整備\n**対象**: T4, T5, T6, T7\n**アクション**: `derivations` 欄を埋める（\"axiom — 退役不可\" を明記）か、Foundation/* への bridge theorem を追加。`/ground-axiom` スキルで反復処理。\n**理由**: 根本制約の根拠が形式化されていないと、D13 影響波及解析時に「退役可能か」を判断できない。互換性: **conservative extension**\n\n### 提案 2【中】設計定理 D1〜D14 の Axiom Card 整備\n**対象**: D2, D3, D4, D6, D7, D9〜D14（evidence 欠落 12 件）\n**アクション**: 各 D に対し evidence (基礎経験的根拠) または explicit \"derived-only\" マーキングを追加。`p3-axiom-evidence-check.sh` 拡張で構造的に強制。\n**理由**: 設計定理の根拠が不明確だと P3 学習統治の更新時に判断材料不足。互換性: **compatible change**\n\n### 提案 3【中】P4 過密の構造的分散\n**対象**: P4 配下 72 アーティファクト\n**アクション**: P4 の責務を `metric-collection` / `traceability` / `drift-detection` の 3 サブカテゴリに分割し、artifact tagging を導入。\n**理由**: D13 影響波及上、P4 変更が広範に伝播する。サブカテゴリ化で blast radius を限定。互換性: **compatible change**",
+  "tokens_in": 6,
+  "tokens_out": 1344,
+  "latency_ms": 29728,
+  "timestamp": "2026-04-17T02:02:07Z",
+  "run_number": 1,
+  "exit_code": 0
+}

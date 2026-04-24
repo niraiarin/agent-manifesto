@@ -1,0 +1,13 @@
+{
+  "id": "M-interp-001",
+  "task_type": "M-interp",
+  "input_file": "docs/research/golden-dataset/inputs/metrics-input-001.json",
+  "model": "claude-opus",
+  "output": "## V1-V7 メトリクス分析レポート\n\n### 1. 全体評価: **WARNING**\n\nシステムの基盤（Lean 形式検証 55 axioms / 488 theorems / 0 sorry、テスト 769/769 通過）は健全だが、V1 の non_triviality が score=0（trivial）で構造的改善が停滞している。\n\n### 2. V1-V7 各指標の解釈\n\n| 指標 | 現在値 | 評価 | 根拠 |\n|------|--------|------|------|\n| **V1 Skill Quality** | non_triviality=0, saturation consecutive_zero_delta=2 | ⚠️ WARNING | C1(theorem_growth)=0, C2(test_growth)=0, C3(axiom_change)=0, C4(multi_verification)=0。直近2回の evolve で構造的改善ゼロ。10回平均では theorem 6.3, test 8.9 と活発だったが停滞中。proxy_classification=formal（卒業済み）なので計測方法は信頼できる |\n| **V2 Context Efficiency** | recent_avg=46, cumulative_avg=40, divergence=15% | ✅ 良好 | trend=stable。divergence 15%は許容範囲。V1↔V2 トレードオフの観点からも妥当 |\n| **V3 Output Quality** | test_pass_rate=100%, hypothesis_error=42(active 36, post_gate 19) | ✅/⚠️ 混在 | テスト全通過は良好だが、hallucination_proxy で hypothesis_error が突出。H_impl_specification=8, H_wrong_premise=6 が主要な失敗パターン |\n| **V4 Gate Pass Rate** | 99% (28,587/28,693) | ✅ 良好 | blocked=106。ただし V4 は Goodhart 脆弱（v4_goodhart: 簡単なタスクに偏ると高く出る） |\n| **V5 Proposal Accuracy** | 96% (162/168) | ✅ 良好 | schema_drift=false |\n| **V6 Knowledge Structure** | entries=12, orphan=0, missing=0, retired_count=0 | ⚠️ 注意 | 型分布は balanced（feedback 5, project 4, reference 3）だが retired_count=0 は P3 学習ライフサイクルの退役フェーズが未稼働 |\n| **V7 Task Design** | completed=188, unique=180, teamwork=0% | ✅ 良好 | teamwork_status=suppressed_single_agent は意図的。ただし V7 も Goodhart 脆弱（v7_goodhart: 計測しやすいタスクに偏る可能性） |\n\n### 3. 改善提案（優先度順）\n\n**1. V1 non_triviality の回復（最優先）**\n- consecutive_zero_delta=2 は早期警告。human_feedback_recent に3件の具体的指示が蓄積されている\n- 次回 evolve で theorem/test delta > 0 を明示的に目標にする\n\n**2. V3 hypothesis_error の削減**\n- 42件中 active 36件、post_gate でも19件残存\n- H_impl_specification(8) と H_wrong_premise(6) の削減が Hypothesizer 品質に直結\n\n**3. V6 退役プロセスの始動**\n- retired_count=0 は P3 ライフサイクルの Retire フェーズが未活用\n- project 型メモリ（4件）は変化が速く陳腐化しやすいため、鮮度確認を実施すべき",
+  "tokens_in": -1,
+  "tokens_out": -1,
+  "latency_ms": 0,
+  "timestamp": "2026-04-16T08:30:00Z",
+  "exit_code": 0,
+  "note": "Generated within Claude Code session with identical context as Local (M-interp-context.md). Analysis uses only domain knowledge from context file + input JSON."
+}

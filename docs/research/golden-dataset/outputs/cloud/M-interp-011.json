@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-011",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-011.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **WARNING** ⚠️\n\n主因: `valueless_change.halt_recommended=true`（streak=4）、失敗テスト 4 件、sorry 2 件（CLAUDE.md 記載の 0 から増加）、V1 non-triviality score=0 (trivial)。構造品質は高水準（V4=99%, V5=96%）だが学習サイクルが飽和気味。\n\n## 2. V1-V7 解釈\n\n| 指標 | 値 | 判定 | 根拠 |\n|---|---|---|---|\n| **V1** 技能品質 | non-triviality=0, saturation=ok | ⚠️ 注意 | theorem/test delta=0（直近）、trivial label |\n| **V2** 文脈効率 | recent_avg=46, trend=stable | ✅ 良好 | divergence 15% 安定 |\n| **V3** 出力品質 | test_pass_rate=100%, hypothesis_error=36 未解決 | ⚠️ 注意 | H_impl_specification(8) / H_wrong_premise(6) が優勢 |\n| **V4** Gate 通過率 | 99% | ✅ 良好 | — |\n| **V5** 提案精度 | 96% (162/168) | ✅ 良好 | schema_drift=false |\n| **V6** 知識構造 | 12 entries, orphan=0 | ✅ 良好 | 退役候補なし |\n| **V7** タスク設計 | teamwork=0% (suppressed) | ⚪ 計測外 | single-agent モード |\n\n補足懸念:\n- **Lean**: sorry 2 件（CLAUDE.md 宣言 0 と不整合）、warnings 4\n- **Tests**: 4 件 FAIL（詳細空：`failed_test_details=[]`）\n- **evolve**: valueless streak 4 → 停止推奨\n\n## 3. 改善提案（優先順）\n\n### 🔴 P1: 失敗テスト 4 件と sorry 2 件の解消\n- `failed_test_details` が空で原因不明。`bash tests/test-all.sh` 実行で特定。\n- sorry 2 件は `sorry_classification.items=[]` と矛盾 → 分類メタ更新漏れ。\n- **L1 安全境界**: テスト失敗放置は `L1` 違反リスク。**evolve 継続前に修復必須**。\n\n### 🟠 P2: hypothesis_error パターンの構造的対策\n- 未解決 55 件中 36 件が hypothesis_error（特に `H_impl_specification` 8、`H_wrong_premise` 6）。\n- Hypothesizer agent に **前提妥当性チェック** と **実装仕様の分離** を強制する改訂を投入。\n- 人間フィードバック 2026-03-24（半順序公理）の実装完了確認 — Issue #290 は CLOSED だが V1 trivial のまま。\n\n### 🟡 P3: valueless_change 停止推奨への対応\n- streak=4, max=4 → evolve 自動停止推奨状態。\n- 直近 10 run の meta_runs=8 / substance_runs=7 で **メタ偏向の兆候**（bias_warning=false だが接近）。\n- 次回は substance（公理系・テストの直接拡張）に集中するか、**human feedback 2026-03-24 の \"コスト効率最適化ループ\"** 未実装分の着手。\n\n---\n**推奨アクション**: P1 を先行 → L1/P2 確立 → その後 evolve 再開（D4 フェーズ順序）。",
+  "tokens_in": 6,
+  "tokens_out": 1636,
+  "latency_ms": 32568,
+  "timestamp": "2026-04-17T01:45:18Z",
+  "run_number": 1,
+  "exit_code": 0
+}

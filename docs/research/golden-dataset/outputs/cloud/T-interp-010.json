@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-010",
+  "task_type": "T-interp",
+  "input_file": "trace-input-010.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| **全体カバレッジ** | 43/43 (**100%**) |\n| **成果物総数** | 585 |\n| **未カバー命題** | なし |\n| **弱カバレッジ命題** | なし |\n\n- **実装なし**: T3, T4, L3, D6, D11（5件 — Lean 形式化と文書のみ）\n- **Evidence 欠落**: 24件（T8, P2, P3, P6, L1, L3-L6, D1-D14, V6）\n- **Derivation 欠落**: 4件（T4, T5, T6, T7 — すべて T₀ 環境公理で derivation が意味をなさない）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n### 最重要ギャップ: Evidence 欠落の構造的偏り\n\nDerivation は 39/43 あるが、Evidence は 19/43 しかない。特に:\n\n- **P2, P3, P6**（強度3 原則）に evidence なし → これらは多数の D に depended_by する中核。evidence 未充足は下流の D1-D14 に **形式検証の根拠レベルで波及**\n- **L1, L3-L6**（境界）に evidence なし → V1-V7 観測変数の根拠が弱く、**測定の妥当性が derivation のみに依存**\n- **D1-D14** は1件の例外（D8）を除いて全て evidence なし → design theorem の経験的裏付けが未蓄積\n\n### 実装ギャップ\n- **T3**（context_finite）: artifacts 配列が空。hook/test が evidence なしでカウントされている可能性あり\n- **L3**（resource boundary）: implementation なし、test のみ\n\n## 3. 改善提案（優先度順）\n\n### P1. P2/P3/P6 原則への Evidence 追加（高）\n中核原則 3件に evidence を付与。影響範囲が最大（P3 は 42 artifacts、P2 は 27 artifacts）。具体的には Axiom Card を Principles.lean に拡張し、**検証独立性 (E1) → P2**、**学習統治 (T1+T2) → P3** の経験的根拠を記載。\n\n### P2. L1-L6 境界の Axiom Card 整備（中）\nV1-V7 は全て L1-L6 に depends_on するが、境界側に evidence がないため **V の妥当性が derivation の連鎖に依存**。`implementation-boundaries.md` の記述を Axiom Card 形式に昇格させる。\n\n### P3. T3 実装バインディングの確認（低）\nT3 は artifacts 空だが coverage 10 を報告 → 集計ロジックと artifact 配列の不整合の可能性。`manifest-trace` の集計ルールを確認し、ドキュメント由来のカウントが artifacts に含まれていない原因を特定。",
+  "tokens_in": 6,
+  "tokens_out": 1161,
+  "latency_ms": 23574,
+  "timestamp": "2026-04-17T01:55:28Z",
+  "run_number": 1,
+  "exit_code": 0
+}

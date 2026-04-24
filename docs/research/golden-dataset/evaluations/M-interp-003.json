@@ -1,0 +1,44 @@
+{
+  "run_id": "M-interp-003",
+  "task_type": "M-interp",
+  "timestamp": "2026-04-18T07:13:23Z",
+  "judge_model": "claude",
+  "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-003.json",
+  "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-003.json",
+  "judge_scoring": {
+    "cloud": {
+      "c1": 5,
+      "c2": 5,
+      "c3": 4,
+      "c4": 5,
+      "c5": 5,
+      "overall": 4.8,
+      "rationale": "正確な数値引用と構造化が優れ、P3/D4/飽和シグナル等の固有概念も適切に扱う。アクションは具体的だが failed_test/sorry の実査を促す段階で実行粒度がやや粗い"
+    },
+    "local": {
+      "c1": 4,
+      "c2": 5,
+      "c3": 4,
+      "c4": 5,
+      "c5": 4,
+      "overall": 4.4,
+      "rationale": "Comprehensive V1-V7 coverage with structured tables and actionable priorities; flagged metric inconsistencies show rigor, though some numeric claims (e.g. sorry=2 vs 0) are reported without deeper root-cause analysis."
+    }
+  },
+  "mechanical_agreement": {
+    "assessment_match": true,
+    "cloud_assessment": "WARNING",
+    "local_assessment": "WARNING",
+    "v_coverage_cloud": 7,
+    "v_coverage_local": 7,
+    "v_coverage_match": true,
+    "proposal_count_cloud": 6,
+    "proposal_count_local": 4,
+    "proposal_count_similar": false,
+    "key_insight_nontriviality_cloud": true,
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 0.75
+  },
+  "delta": 0.4
+}

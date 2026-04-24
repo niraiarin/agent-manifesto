@@ -1,0 +1,44 @@
+{
+  "run_id": "M-interp-011",
+  "task_type": "M-interp",
+  "timestamp": "2026-04-18T07:14:13Z",
+  "judge_model": "claude",
+  "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-011.json",
+  "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-011.json",
+  "judge_scoring": {
+    "cloud": {
+      "c1": 4,
+      "c2": 5,
+      "c3": 4,
+      "c4": 5,
+      "c5": 5,
+      "overall": 4.6,
+      "rationale": "V1-V7 全指標を構造化して網羅し、D4 フェーズ順序と L1 安全境界を根拠にした優先順位が妥当。失敗詳細が空の点を自覚しつつ具体的な再実行コマンドを提示。C1 はメトリクスの矛盾（sorry vs classification）を指摘した分を評価、ただし生ログ未検証で減点。"
+    },
+    "local": {
+      "c1": 4,
+      "c2": 4,
+      "c3": 4,
+      "c4": 5,
+      "c5": 4,
+      "overall": 4.2,
+      "rationale": "Accurate metric citations with clear V1-V7 table and prioritized actions; minor gaps in tying non_triviality=0 to D4 phase ordering and deeper P3 retirement mechanism."
+    }
+  },
+  "mechanical_agreement": {
+    "assessment_match": true,
+    "cloud_assessment": "WARNING",
+    "local_assessment": "WARNING",
+    "v_coverage_cloud": 7,
+    "v_coverage_local": 7,
+    "v_coverage_match": true,
+    "proposal_count_cloud": 4,
+    "proposal_count_local": 3,
+    "proposal_count_similar": true,
+    "key_insight_nontriviality_cloud": true,
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 1.0
+  },
+  "delta": 0.4
+}

@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-04-17T12:35:00Z",
+  "skill": "research",
+  "phase": "Sub-3 バッチ実験 + エラー調査",
+  "git_sha": "d6e29f6",
+  "branch": "research/594-golden-dataset",
+  "intent": "Local LLM ルーティング実現可能性検証 (#589)。Claude Code スキル処理を Local LLM に委譲できるか品質比較実験で検証する。",
+  "progress": {
+    "done": [
+      "Sub-1 #592 PASS: ccr + Ollama 動作確認",
+      "Sub-2 #594 CONDITIONAL PASS: 比較実験基盤構築",
+      "#595 PASS: Local LLM が Claude Code agent framework 内で動作",
+      "Sub-3 実験設計修正: run-comparison.sh を claude -p + ccr 方式に全面改修",
+      "6モデル比較実験 (M-interp): gemma4:e4b→Opus-distilled-v2",
+      "T-interp 26件バッチ完了: avg_delta=0.07, pass_rate=69%",
+      "M-interp 15件評価完了: avg_delta=0.37, pass_rate=67%",
+      "Go/No-Go 判定文書作成 (暫定)",
+      "ccr パッチ: reasoning→thinking 変換 + 空content フォールバック",
+      "ccr EHOSTUNREACH 問題: SSH tunnel (autossh + launchd) で恒久回避",
+      "LM Studio API → OpenAI API エンドポイント切替"
+    ],
+    "remaining": [
+      "M-interp エラー率 52% の根本原因解消",
+      "エラー解消後に M-interp 29件の再バッチ実行",
+      "Go/No-Go 判定文書の最終更新",
+      "RouteLLM データ変換 (Sub-4)"
+    ]
+  },
+  "next_steps": [
+    "1. M-interp FAILED の verbose ログ分析: claude -p --verbose で Content block is not a text block の発生箇所を特定",
+    "2. ccr のマルチターン tool_use 応答の content block 変換を修正 (#1329 参考)",
+    "3. 修正後に M-interp 29件を再バッチ実行",
+    "4. 全件の evaluate-all.sh で最終集計",
+    "5. Go/No-Go 判定文書を更新して PR マージ"
+  ],
+  "files_modified": [
+    "docs/research/golden-dataset/ (worktree research-594)",
+    "docs/research/local-llm-routing.md (worktree research-594)",
+    "~/.claude-code-router/config.json (ccr config)",
+    "~/.volta/.../claude-code-router/dist/cli.js (ccr パッチ 2箇所)"
+  ],
+  "blocked": "M-interp の Content block is not a text block エラー (ccr のマルチターン tool_use 変換)",
+  "decisions": [
+    "ccr デフォルト: qwen3.6-35b-a3b FP16 (LM Studio, SSH tunnel 経由 localhost:11234)",
+    "LM Studio API endpoint: OpenAI API に切替済み",
+    "autossh + launchd で SSH tunnel 自動維持: ~/Library/LaunchAgents/com.lmstudio.tunnel.plist",
+    "ccr cli.js にパッチ2箇所適用済み (reasoning変換 + 空content フォールバック)",
+    "M-interp エラーの根本原因: LLM が tool_use → ccr がマルチターン変換時に content block 形式が壊れる"
+  ]
+}

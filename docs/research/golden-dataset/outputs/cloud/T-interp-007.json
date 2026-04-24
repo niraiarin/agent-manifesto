@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-007",
+  "task_type": "T-interp",
+  "input_file": "trace-input-007.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティ分析レポート\n\n## 1. カバレッジ状況\n\n- **全体カバレッジ率**: 43/43 = **100%**（未カバー命題なし）\n- **総成果物数**: 587\n- **根（Roots）**: T1–T8, E2, L5（10 命題）\n- **葉（Leaves）**: D4, D6, D7, D10, D11, D14, V1–V7（13 命題）\n- **Evidence あり**: 19 / 43、**Derivation あり**: 39 / 43\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n| 命題 | 問題 | 下流影響 |\n|---|---|---|\n| **T4** | artifacts=[], evidence=[], derivation=[] の三重空欄。coverage.total=9 だが直接的な実装/証拠が皆無 | E1→P2, P5, L2, D15 へ波及。T4（出力非決定性）は E1（独立検証）・P5（不完全解釈）の基盤 → **最も深刻** |\n| **T5, T6, T7** | derivation なし（T-axiom として想定内）だが、T6 は evidence の直接記載なし、下流命題多数（L1/L3/L4/L6, P4, D15, D17 等） | T6（人間権威）失効時の影響範囲が広い |\n| **V6** | evidence なし。V1/V2/V3/V7 は tradeoff 系 evidence を持つが V6（知識構造品質）のみ空 | Goodhart 対策の設計根拠が不在 |\n| **L3, L4, L5, L6** | 直接 artifacts=[]、coverage は継承のみ | 境界条件の独立検証が弱い |\n\n**D13 波及深刻度**: T4 は非常に上流（strength=5）に位置し、5 命題が依存。T4 の根拠不在は E1→P2→D2 の検証独立性チェーン、および P5→D1 のロバスト設計チェーンの両方を弱める。\n\n## 3. 改善提案（優先度順）\n\n1. **[最優先] T4 への artifact 付与と evidence 記述**\n   - `output_nondeterministic` axiom の数理的根拠（例: LLM サンプリング温度、Rice の定理）を Axiom Card に記載\n   - `lean:axioms`, `lean:empirical-postulates` への参照を artifacts に追加\n   - `compatible change` で追加可能（evidence 追記のみ）\n\n2. **[高] V6 evidence の補完**\n   - Goodhart 則の適用を明文化（既に V7 では記載済み）\n   - `docs/v6-design-rationale.md` もしくは ObservableDesign.lean に tradeoff axiom を追加\n\n3. **[中] T6 direct artifacts の明示**\n   - 人間権威の構造的強制点（hook での承認要求、PR マージポリシー）を T6 artifacts に直接マッピング\n   - 現状は coverage に含まれているが artifacts=[] のため D13 波及チェーンが不明瞭",
+  "tokens_in": 6,
+  "tokens_out": 1789,
+  "latency_ms": 31850,
+  "timestamp": "2026-04-17T01:54:07Z",
+  "run_number": 1,
+  "exit_code": 0
+}

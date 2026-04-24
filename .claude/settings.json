@@ -36,6 +36,12 @@
         "~/work",
         "./.claude/handoffs"
       ]
+    },
+    "network": {
+      "allowedDomains": [
+        "localhost"
+      ],
+      "allowLocalBinding": true
     }
   },
   "hooks": {
@@ -173,6 +179,14 @@
           {
             "type": "command",
             "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/handoff-resume-loader.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/session-context-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/paperize-jsonl-warn.sh"
           }
         ]
       }
@@ -199,6 +213,17 @@
           }
         ],
         "matcher": ""
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/paperize-stop-reminder.sh"
+          }
+        ]
       }
     ]
   }

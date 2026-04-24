@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-026",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-026.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "## 1. 全体評価: **WARNING**\n\nテストは全通過・Lean は健全だが、`valueless_change.halt_recommended=true`（直近4連続で無価値変更）、V1 non-triviality=trivial、hypothesis_error 未解決36件 が重なり、evolve ループが空回り気味。\n\n## 2. V1-V7 解釈\n\n| 指標 | 値 | 評価 |\n|---|---|---|\n| **V1 skill_quality** | non-triviality=trivial (score=0), 直近 theorem/test Δ=0, verifier_pass_rate=77% | ⚠️ 飽和の兆候。Run 107 で構造寄与ゼロ |\n| **V2 context_efficiency** | recent_avg=46 / cumulative=40, divergence=15%, stable | ◯ 許容範囲内だが微増傾向 |\n| **V3 output_quality** | test_pass_rate=100%, hypothesis_error=42 (post_gate 19) | ⚠️ 表面は良好、H_impl_specification=8 / H_wrong_premise=6 が主因 |\n| **V4 gate_pass_rate** | 99% (28587/28693) | ◎ 健全 |\n| **V5 proposal_accuracy** | 96% (162/168), schema_drift=false | ◎ 健全 |\n| **V6 knowledge_structure** | 12 entries, retired=0, orphan=0 | ◯ 新鮮だが退役なし＝陳腐化兆候要監視 |\n| **V7 task_design** | completed=188, teamwork=0 (suppressed) | ◯ 単一エージェント運用として想定内 |\n| **Lean** | 54 axioms / 483 theorems / 0 sorry / warnings=1 | ◎ |\n| **manifest_trace** | coverage 43/43, s5 8/8 | ◎ 完全カバレッジ |\n\n## 3. 改善提案（優先度順）\n\n1. **【最優先】evolve ループ一時停止と原因分析**\n   `valueless_change.current_streak=4` で halt 推奨。Run 107 は theorem/test Δ=0 で構造寄与なし。人間レビュー（human_feedback 3件）で未着手の「半順序公理追加」「Lean→実装トレーサビリティ逆引き」が残存。次 evolve 起動前にこれらを Issue 化。\n\n2. **hypothesis_error の系統的削減**\n   未解決 36 件のうち H_impl_specification=8 / H_wrong_premise=6 が支配的。Hypothesizer の前提検証ステップ（pre-verification）を AGENT.md に追加し、post_gate 導入後（Run 57〜）の再発を抑止。\n\n3. **退役プロセスの実行と stale ファイル更新**\n   `memory_retirement_candidates=[]` だが V6 retired_count=0 が継続＝退役が機能していない可能性。併せて `stale_files: .claude/skills/verify/SKILL.md` を最新化。",
+  "tokens_in": 6,
+  "tokens_out": 1416,
+  "latency_ms": 27054,
+  "timestamp": "2026-04-17T01:52:32Z",
+  "run_number": 1,
+  "exit_code": 0
+}

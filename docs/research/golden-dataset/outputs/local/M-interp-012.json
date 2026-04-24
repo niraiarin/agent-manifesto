@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-012",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-012.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "メトリクスを分析します。\n\n## 全体評価: **WARNING**\n\nコアシステム（Lean ビルド 0 sorry、テスト全通、ゲート通過率 99%）は健全だが、**valueless_change streak = 4（halt_recommended: true）** が改善の質的停滞を示している。\n\n---\n\n## V1-V7 各指標の解釈\n\n| Metric | 値 | 判定 | 備考 |\n|--------|-----|------|------|\n| **V1 Skill Quality** | formal graduate | OK | verifier_pass 77% は許容圏。non_triviality=0 は改善が定量的に計測困難 |\n| **V2 Context Efficiency** | stable | OK | recent_avg=46, cumulative_avg=40。divergence 15% は軽度 |\n| **V3 Output Quality** | WARNING | 要注視 | hallucination proxy: hypothesis_error 42 件（active 36）、unresolved 55 件中 62% が仮説エラー |\n| **V4 Gate Pass Rate** | 99% | OK | 優秀。blocked 106/28693 |\n| **V5 Proposal Accuracy** | 96% | OK | approved 162/168 |\n| **V6 Knowledge Structure** | OK | 健全 | memory 12 entries, orphan=0。retired=0 は新しすぎる |\n| **V7 Task Design** | OK | 健全 | completed 188, unique 180 |\n\n---\n\n## 改善提案（優先度順）\n\n### 1. valueless_change ループ脱却（最優先）\n**現状**: streak=4, max_streak_in_last_10=4, halt_recommended=true\n過去 10 回の evolve 中で最大 streak を既に更新する状態。改善が定量的に検出できない（V1 non_triviality=0, test_consecutive_zero_delta=2）ため、**次の evolve で改善対象を選定する前に valueless_change 閾値の再定義**が必要。案: theorem_delta と test_delta の合算スコアを導入し、単なる増加分ではなく「新 axiom への依存新增分」を非自明性の尺度とする。\n\n### 2. hypothesis_error 36 件の根本解消\n**現状**: 未解決 55 件の 65% が hypothesis_error（うち H_impl_specification=8, H_wrong_premise=6）\nObserver→Hypothesizer の引き継ぎで前提が歪むパターンが定着している。**Phase 1 Observer の出力フォーマットに「検証可能な仮説の条件チェックリスト」を埋め込み**、Hypothesizer が前提を再確認する仕組みを SKILL.md に組み込む。\n\n### 3. stale files 3 件の更新\n`.claude/skills/evolve/SKILL.md`, `Ontology.lean`, `test-refs-integrity.sh` が stale として検出されている。特に `evolve/SKILL.md` と `Ontology.lean` は半順序公理（T6 #290）の導入後に更新されていない可能性があり、**D5 三层亀裂（前回の human feedback）の再発リスク**がある。",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 296821,
+  "timestamp": "2026-04-18T05:41:57Z",
+  "run_number": 1,
+  "exit_code": 0
+}

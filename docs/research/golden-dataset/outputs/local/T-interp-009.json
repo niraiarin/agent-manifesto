@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-009",
+  "task_type": "T-interp",
+  "input_file": "trace-input-009.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "manifest-trace レポートを分析します。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|---|---|\n| 総命題数 | 43 |\n| カバード | 43 (100%) |\n| 未カバー | 0 |\n| 総アーティファクト | 588 |\n\n**全て命題は何らかのアーティファクトでカバーされている。** ただし「カバレッジ」の質に大きな偏りがある:\n\n| 分類 | 件数 | 割合 |\n|---|---|---|\n| エビデンスあり | 19 | 44% |\n| エビデンスなし | 24 | 56% |\n| 導出あり | 38 | 88% |\n| 導出なし | 4 | 9% |\n\n## 2. ギャップ分析\n\n### 重大度ランキング: エビデンス欠如 × 依存ノード数\n\n| 命題 | 層 | 被依存数 | 影響範囲 |\n|---|---|---|---|\n| **T8** (precision) | constraint | 6 | P6 → D5,D12,D14,D15 |\n| **L4** (action space) | boundary | 7 | V3,V4,V5 + D1 |\n| **L6** (arch. convention) | boundary | 7 | V4,V5,V7 + D1 |\n| **P3** (governance) | principle | 9 | L6,D4,D9,D13,D17 |\n| **P6** (task = CSP) | principle | 5 | D5,D12,D14,D15 |\n\n**最も深刻なギャップ: T8 → P6 → D5/D12/D14 の連鎖**\n\nT8 (`task_has_precision`) にエビデンスがないため、これを前提とする P6 もエビデレスとなり、さらに D5（テスト精度・正式導出手順）、D12（制約充足タスク設計）、D14（検証順序の CSP 性）のすべてが根拠薄弱になる。これは `spec-driven-workflow` や `formal-derivation` の実践的基盤を空洞化する。\n\n**D13 影響波及の観点:**\n- D13 (traceability) はエビデンスこそあるが、P3 に依存。P3 がエビデレスのため、「学習の統治」プロセス自体の正当性が未検証。D13 の仮説退役メカニズムが機能しているのか、単に文書化されているだけなのかの区別がつかない。\n\n## 3. 改善提案（優先度順）\n\n### ① T8 `task_has_precision` のエビデンス付与（最優先）\n\n**理由:** 6つの直接依存先（T3,T7,T8 → P6）を介して 10+ 命題に波及。P6 のエビデンス欠如を解消する鍵。\n\n**アクション:**\n- 既存のタスク分類実績（`research/` ディレクトリのタスク分析ログ、`v7-tasks.jsonl`）をエビデンスとして形式化\n- Lean の `TaskClassification.lean` に `task_has_precision` の実証定理を追加\n- 具体的なタスク例について「precision level ≥ 1」が満たされていることをデータで示す\n\n### ② L4/L6 のアーティファクト追加（並行）\n\n**理由:** 両者とも被依存数が 7 で最大クラス。V3,V4,V5（出力品質・ゲート合格率・提案精度）の基盤が空洞化している。\n\n**アクション:**\n- L4（行動空間）: `adjust-action-space` スキルの実行履歴と、行動空間調整前後の V3/V5 値の相関データをエビデンスとして追加\n- L6（設計規約）: `evolve` スキルの互換性分類実績（`evolve-history.jsonl`）を L6 のエビデンスとして形式化\n\n### ③ P3 依存命題のエビデンス強化（中優先）\n\n**理由:** P3 は 9 被依存数で最大。ただし T8 が解消されれば P6 は自然にエビデンスを得られるため、T8 完了後の実施が効率的。\n\n**アクション:**\n- `p3-governed-learning.md` のルール遵守実績を `evolve-history.jsonl` から抽出・集計\n- 互換性分類（conservative/compatible/breaking）が実際にコミットに付与されていることを `v5-approvals.jsonl` で実証\n- P3 のエビデンスが完了すれば、D4,D9,D13,D17 の根拠が自動的に強化される",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 534907,
+  "timestamp": "2026-04-18T12:08:10Z",
+  "run_number": 1,
+  "exit_code": 0
+}

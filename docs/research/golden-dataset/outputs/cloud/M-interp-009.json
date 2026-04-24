@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-009",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-009.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# V1-V7 メトリクス分析レポート\n\n## 1. 全体評価: **WARNING**\n\nテスト・Gate 健全性は維持されているが、`valueless_change.halt_recommended=true`（4連続で無価値変更）が最重要シグナル。改善サイクルが空転している。加えて `sorry=1` が出現（0 → 1 の退行）。\n\n## 2. V1-V7 各指標の解釈\n\n| 指標 | 値 | 評価 | 所見 |\n|---|---|---|---|\n| **V1 skill_quality** | non_triviality=trivial (0), theorem_delta_last=0, test_delta_last=0 | ⚠️ 注意 | 直近2回テスト増分ゼロ。`graduated formal` だが実質的寄与が鈍化 |\n| **V2 context_efficiency** | recent_avg=46, cumulative=40, divergence=15% | ⚠️ 注意 | 直近ツール呼数が累積平均より 15% 悪化。効率の緩やかな劣化 |\n| **V3 output_quality** | test_pass_rate=100%, hypothesis_error active=36 | ⚠️ 注意 | テスト成功率は完全だが `hypothesis_error` が支配的（H_impl_specification=8, H_wrong_premise=6） |\n| **V4 gate_pass_rate** | 99% (28587/28693) | ✅ 良好 | Gate は安定 |\n| **V5 proposal_accuracy** | 96% (162/168) | ✅ 良好 | schema_drift なし |\n| **V6 knowledge_structure** | 12 entries, orphan/missing=0, 退役=0 | ✅ 良好 | 索引整合性 OK |\n| **V7 task_design** | 188 completed, teamwork=0% (suppressed) | ℹ️ 保留 | 単一エージェント運用のため抑制中 |\n\n追加シグナル:\n- **Lean**: `sorry=1`（CLAUDE.md の「0 sorry」から退行）。`sorry_classification` では 0 と矛盾 → 索引整合性に疑問\n- **valueless_change**: 4連続、halt_recommended=true（最重要）\n- **failure_patterns**: `hypothesis_error` が未解決 36 件で支配的\n- **structure_file_currency**: `verify/SKILL.md` と `design-development-foundation.md` が stale\n\n## 3. 改善提案（優先度順）\n\n### 🔴 P1: Evolve ループの空転を止める（halt_recommended 対応）\n- **理由**: 4連続無価値変更は「観察→仮説化」段階で real value を特定できていない兆候\n- **アクション**: 次回 evolve 前に Observer を再設計。人間フィードバック3件（2026-03-24）が示す **半順序公理の追加・トレーサビリティ双方向化** を具体タスクに落とす。メタ改善偏重（meta_runs=8/10）から substance 側へバランス回復\n\n### 🟡 P2: `sorry=1` の正体特定と退行阻止\n- **理由**: CLAUDE.md 宣言「0 sorry」から1件増えたが、`sorry_classification.total=0` と矛盾。計測スクリプトか実体のどちらかが壊れている\n- **アクション**: `grep -r \"sorry\" lean-formalization/Manifest/` で実体確認 → 該当箇所を `sorry_classification` で `placeholder/dangling/deferred/exploratory` に分類、または証明完了\n\n### 🟡 P3: Hypothesizer の品質向上（H_impl_specification=8, H_wrong_premise=6）\n- **理由**: Verifier FAIL の根本原因が仮説段階の「実装仕様の誤り」と「前提の誤り」に集中。V1 non_triviality=trivial の遠因でもある\n- **アクション**: Hypothesizer AGENT.md に「前提検証チェックリスト」を追加（Lean 定義・既存テスト・SKILL.md 実装の三者一致を事前確認）。#290（半順序公理）のトレーサビリティ機構と接続",
+  "tokens_in": 6,
+  "tokens_out": 1977,
+  "latency_ms": 35426,
+  "timestamp": "2026-04-17T01:44:14Z",
+  "run_number": 1,
+  "exit_code": 0
+}

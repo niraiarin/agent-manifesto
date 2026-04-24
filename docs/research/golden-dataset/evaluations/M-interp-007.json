@@ -1,0 +1,44 @@
+{
+  "run_id": "M-interp-007",
+  "task_type": "M-interp",
+  "timestamp": "2026-04-18T07:39:49Z",
+  "judge_model": "claude",
+  "cloud_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/cloud/M-interp-007.json",
+  "local_file": "/Users/nirarin/work/agent-manifesto-research-594/docs/research/golden-dataset/outputs/local/M-interp-007.json",
+  "judge_scoring": {
+    "cloud": {
+      "c1": 5,
+      "c2": 5,
+      "c3": 4,
+      "c4": 5,
+      "c5": 5,
+      "overall": 4.8,
+      "rationale": "メトリクス引用が正確で V1-V7 を網羅、ドメイン概念（D4/halt_recommended/hypothesis_error 分類）も正しく運用しているが、アクション3件目が「/trace で確認」止まりでやや抽象的"
+    },
+    "local": {
+      "c1": 4,
+      "c2": 4,
+      "c3": 5,
+      "c4": 5,
+      "c5": 4,
+      "overall": 4.4,
+      "rationale": "構造化と提案の実行可能性が高く、メトリクス値の引用も具体的。V6退役0の指摘やhalt_recommended優先順位づけが的確だが、V7のteamwork=0%の解釈根拠やhypothesis_error内訳の出典明示がやや弱い。"
+    }
+  },
+  "mechanical_agreement": {
+    "assessment_match": true,
+    "cloud_assessment": "WARNING",
+    "local_assessment": "WARNING",
+    "v_coverage_cloud": 7,
+    "v_coverage_local": 7,
+    "v_coverage_match": true,
+    "proposal_count_cloud": 3,
+    "proposal_count_local": 1,
+    "proposal_count_similar": false,
+    "key_insight_nontriviality_cloud": true,
+    "key_insight_nontriviality_local": true,
+    "key_insight_match": true,
+    "agreement_score": 0.75
+  },
+  "delta": 0.4
+}

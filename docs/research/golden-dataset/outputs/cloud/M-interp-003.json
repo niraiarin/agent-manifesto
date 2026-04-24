@@ -1,0 +1,14 @@
+{
+  "id": "M-interp-003",
+  "task_type": "M-interp",
+  "input_file": "metrics-input-003.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# Agent-Manifesto メトリクス分析報告\n\n## 1. 全体評価\n\n**WARNING** — 構造は安定しているが、停滞シグナルと未解決失敗の蓄積が顕在化。\n\n**根拠**:\n- `valueless_change.halt_recommended: true`（4連続で価値なき変更、停止推奨）\n- `v1.saturation.test_consecutive_zero_delta: 2`、`non_triviality.label: \"trivial\"`\n- `sorry: 2`, `tests.failed: 2`, `hallucination_proxy` 未解決 55件\n- 一方 `lean_health: 1`, `v4: 99%`, `v5: 96%`, `manifest_trace: 43/43 (100%)` は良好\n\n---\n\n## 2. V1-V7 指標の解釈\n\n| 指標 | 現在値 | 評価 | コメント |\n|---|---|---|---|\n| **V1** skill_quality | trivial (0/4) | ⚠️ 注意 | 直近 run で theorem/test Δ=0、飽和シグナル。定理・テスト成長が止まっている |\n| **V2** context_efficiency | recent 46 / cum 40 | ⚠️ 注意 | divergence 15%、recent が cumulative を上回り漸増傾向（stable ラベルだが境界） |\n| **V3** output_quality | test 100% / 未解決 hallucination 55件 | ⚠️ 注意 | hypothesis_error 36件が支配的。H_impl_specification (8), H_wrong_premise (6) |\n| **V4** gate_pass_rate | 99% | ✅ 良好 | blocked 106/28693、健全 |\n| **V5** proposal_accuracy | 96% | ✅ 良好 | 162/168、スキーマ drift なし |\n| **V6** knowledge_structure | 12 entries / stale 0日 | ✅ 良好 | orphan/missing ゼロ、退役候補もなし |\n| **V7** task_design | 188/180 / teamwork 0% | ⚠️ 注意 | teamwork_status が single_agent で抑制中。チーム化の機会 |\n\n**その他の注目点**:\n- `evolve_history`: 107 run、verifier_pass_rate 77%（fail 105 は多め）\n- `scope_balance`: meta_runs 8 / substance_runs 7（メタ偏重傾向、bias_warning は未発火）\n- `human_feedback_recent` に T7 ResourceBound 具体化要望、半順序公理追加要望あり（未着手の可能性）\n\n---\n\n## 3. 優先度の高い改善アクション（最大3件）\n\n### 🔴 優先1: 価値なき変更ループの停止（V1 飽和対応）\n- **根拠**: `valueless_change.halt_recommended=true`、test_consecutive_zero_delta=2、non_triviality=trivial\n- **アクション**: 次回 /evolve 前に Observer フェーズで「過去 10 run の改善が trivial 化した原因」を分析。human_feedback (2026-03-24) の3項目（T7 具体化、D5 三者間トレーサビリティ、半順序公理追加）が未着手なら優先着手\n\n### 🟡 優先2: hypothesis_error の削減（V3 幻覚プロキシ）\n- **根拠**: 未解決 55件中 36件が hypothesis_error、うち H_impl_specification=8, H_wrong_premise=6\n- **アクション**: Hypothesizer エージェントの前提検証を強化（AGENT.md に仕様根拠の明示セクション追加、またはサブエージェント分離）\n\n### 🟡 優先3: Lean sorry と failed test の解消\n- **根拠**: `sorry: 2`, `tests.failed: 2`（L1/P2 から見て品質ゲート違反）\n- **アクション**: `sorry_classification` は全て 0（分類されていない2件あり）→ まず分類 → 解消または公理昇格判断。failed test 2件は即座に調査\n\n---\n\n**注**: 詳細な内訳（例えば failed test の具体名、sorry 位置）が `failed_test_details: []`, `sorry_classification.items: []` で空になっているため、実査が必要です。",
+  "tokens_in": 6,
+  "tokens_out": 1482,
+  "latency_ms": 28704,
+  "timestamp": "2026-04-17T01:41:36Z",
+  "run_number": 1,
+  "exit_code": 0
+}

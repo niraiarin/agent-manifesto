@@ -1,0 +1,181 @@
+{
+  "classifier_url": "http://127.0.0.1:9001/classify",
+  "local_provider": "llama-server,qwen3.6-35b-a3b-bf16",
+  "cost_safety": 1.8,
+  "results": [
+    {
+      "prompt": "V1-V7 メトリクスを解釈して停滞シグナルを報告してください。",
+      "classification": {
+        "label": "local_probable",
+        "confidence": 0.948362410068512,
+        "probs": {
+          "local_confident": 0.01920289173722267,
+          "local_probable": 0.948362410068512,
+          "cloud_required": 0.01753326505422592,
+          "hybrid": 0.006561222020536661,
+          "unknown": 0.00834027398377657
+        },
+        "fallback": false,
+        "latency_ms": 121.33,
+        "p_local": 0.9676,
+        "p_cloud": 0.0324,
+        "utility_route": "local"
+      },
+      "routing": {
+        "provider": "llama-server,qwen3.6-35b-a3b-bf16",
+        "decision": "local",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] label=local_probable conf=0.948362410068512 utility=local costSafety=1.8"
+          }
+        ]
+      }
+    },
+    {
+      "prompt": "このコード変更を独立検証してください。L1 safety 違反をチェック。",
+      "classification": {
+        "label": "cloud_required",
+        "confidence": 0.8913015723228455,
+        "probs": {
+          "local_confident": 0.016299812123179436,
+          "local_probable": 0.023665830492973328,
+          "cloud_required": 0.8913015723228455,
+          "hybrid": 0.047137703746557236,
+          "unknown": 0.02159506268799305
+        },
+        "fallback": false,
+        "latency_ms": 32.68,
+        "p_local": 0.04,
+        "p_cloud": 0.96,
+        "utility_route": "cloud"
+      },
+      "routing": {
+        "provider": null,
+        "decision": "cloud",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] label=cloud_required conf=0.8913015723228455 utility=cloud costSafety=1.8"
+          }
+        ]
+      }
+    },
+    {
+      "prompt": "今日の天気はどう？",
+      "classification": {
+        "label": "hybrid",
+        "confidence": 0.8081620335578918,
+        "probs": {
+          "local_confident": 0.02637214958667755,
+          "local_probable": 0.019138801842927933,
+          "cloud_required": 0.03602772206068039,
+          "hybrid": 0.8081620335578918,
+          "unknown": 0.11029926687479019
+        },
+        "fallback": false,
+        "latency_ms": 33.01,
+        "p_local": 0.0455,
+        "p_cloud": 0.9545,
+        "utility_route": "cloud"
+      },
+      "routing": {
+        "provider": null,
+        "decision": "cloud",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] label=hybrid conf=0.8081620335578918 utility=cloud costSafety=1.8"
+          }
+        ]
+      }
+    },
+    {
+      "prompt": "outline と evidence から Method セクションを single-pass で執筆。",
+      "classification": {
+        "label": "local_probable",
+        "confidence": 0.9132328629493713,
+        "probs": {
+          "local_confident": 0.057151295244693756,
+          "local_probable": 0.9132328629493713,
+          "cloud_required": 0.015104345977306366,
+          "hybrid": 0.006519787013530731,
+          "unknown": 0.007991758175194263
+        },
+        "fallback": false,
+        "latency_ms": 29.53,
+        "p_local": 0.9704,
+        "p_cloud": 0.0296,
+        "utility_route": "local"
+      },
+      "routing": {
+        "provider": "llama-server,qwen3.6-35b-a3b-bf16",
+        "decision": "local",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] label=local_probable conf=0.9132328629493713 utility=local costSafety=1.8"
+          }
+        ]
+      }
+    },
+    {
+      "prompt": "Python の asyncio と threading の違いを説明。",
+      "classification": {
+        "label": "hybrid",
+        "confidence": 0.8907614350318909,
+        "probs": {
+          "local_confident": 0.010037804022431374,
+          "local_probable": 0.00965730007737875,
+          "cloud_required": 0.032914090901613235,
+          "hybrid": 0.8907614350318909,
+          "unknown": 0.05662931501865387
+        },
+        "fallback": false,
+        "latency_ms": 9.54,
+        "p_local": 0.0197,
+        "p_cloud": 0.9803,
+        "utility_route": "cloud"
+      },
+      "routing": {
+        "provider": null,
+        "decision": "cloud",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] label=hybrid conf=0.8907614350318909 utility=cloud costSafety=1.8"
+          }
+        ]
+      }
+    },
+    {
+      "prompt": "/verify この差分に regression がないか独立検証してください。",
+      "classification": {
+        "label": "cloud_required",
+        "confidence": 0.88127601146698,
+        "probs": {
+          "local_confident": 0.024443117901682854,
+          "local_probable": 0.03952094539999962,
+          "cloud_required": 0.88127601146698,
+          "hybrid": 0.034793782979249954,
+          "unknown": 0.019966183230280876
+        },
+        "fallback": false,
+        "latency_ms": 27.98,
+        "p_local": 0.064,
+        "p_cloud": 0.936,
+        "utility_route": "cloud"
+      },
+      "routing": {
+        "provider": null,
+        "decision": "cloud",
+        "logs": [
+          {
+            "level": "info",
+            "msg": "[router.js] force-cloud prefix=/verify"
+          }
+        ]
+      }
+    }
+  ]
+}

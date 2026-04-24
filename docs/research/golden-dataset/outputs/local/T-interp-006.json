@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-006",
+  "task_type": "T-interp",
+  "input_file": "trace-input-006.json",
+  "label": "local",
+  "model": "unknown",
+  "output": "manifest-trace レポートを分析する。\n\n## 1. カバレッジ状況\n\n| 指標 | 値 |\n|------|-----|\n| 総命題数 | 43 |\n| カバー済み | 43 (100%) |\n| 未カバー | 0 |\n| 弱カバー | 0 |\n| 証拠あり | 19/43 (44%) |\n| 導出あり | 39/43 (91%) |\n\n**判定**: 全命題が少なくとも1つのアーティファクトでカバーされている。100%カバレッジ達成。\n\nただし**証拠（evidence）付きは44%のみ**。証拠なし24命題の多くは Lean 定理の導出（derivation）のみで裏付けられている。\n\n## 2. ギャップ分析\n\n### 重大度が高い順\n\n**(1) P3（学習の統治）— 証拠なし、42アーティファクトを持つ最大命題**\n- P3は D4, D9, D13, L6, V4, V5 の6命題から依存されている\n- 42アーティファクト（hook×3, skill×5, agent×3, test×5, lean×9, script×4, data×4, rule×1, config×2, doc×6）を持つが、`evidence: []`\n- **D13（トレーサビリティ）への直接的な影響**: P3→D13 の依存鏈で D13 も証拠なし。D13 は D17 から依存されており、トレーサビリティの根幹が空洞化している\n\n**(2) D1（設計定理の基礎）— 証拠なし、50アーティファクト**\n- D1 は V1, V2, V3, V4, V6, V7 の全観測可能変数の Lx 層を通じて最終的に影響\n- 50アーティファクト（Lean 17本、hook 4、skill 7、script 6など）の最大クラスターだが証拠なし\n- **V1-V7 の基盤が空洞**: 全7観測可能変数が D1 の上に構築されている\n\n**(3) T層4命題の導出欠落（T4, T5, T6, T7）**\n- 全 T 層（T1-T8）が環境要因（T₀）であり導出対象外だが、T4-T7 は `derivations: []` または空\n- T5（観測可能性）→ P4 → D3 → D6,D11,D17 の連鎖が導出なし\n- T6（人間権限）→ L1,L3,L4,L6 → D1,D7,D15,D17 の連鎖が導出なし\n\n## 3. 改善提案（優先度順）\n\n| 優先度 | アクション | 影響範囲 | 労度 |\n|--------|-----------|---------|------|\n| **P1** | P3 の証拠追加: `evolve-history.jsonl` の実績データから「互換性分類が breaking change を防止した実例」を evidence として付与 | P3→D4,D9,D13,D17 全連鎖 | 小 |\n| **P2** | D1 の証拠追加: Lean 定理 `d1_fixed_requires_structural` と実装（l1-safety-check.sh などが L1 を構造的に強制している）の対応関係を evidence として記録 | D1→V1-V7 全観測可能変数 | 中 |\n| **P3** | T4-T7 の導出補充: T5→`improvement_requires_observability` (P4)、T6→`human_resource_authority` (L1) のように、T 層 axiom → 定理への明示的導出チェーンを Lean で補完 | T層→P層→D層の全上位連鎖 | 大 |",
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "latency_ms": 581358,
+  "timestamp": "2026-04-18T11:40:35Z",
+  "run_number": 1,
+  "exit_code": 0
+}

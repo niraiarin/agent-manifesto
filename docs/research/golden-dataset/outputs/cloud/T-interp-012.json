@@ -1,0 +1,14 @@
+{
+  "id": "T-interp-012",
+  "task_type": "T-interp",
+  "input_file": "trace-input-012.json",
+  "label": "cloud",
+  "model": "unknown",
+  "output": "# トレーサビリティレポート分析\n\n## 1. カバレッジ状況\n\n- **カバレッジ率**: 43/43 = **100%** （`uncovered: []`、`weak: []`）\n- **根拠付き命題（evidence）**: 19/43 (44%)\n- **導出付き命題（derivation）**: 39/43 (91%)\n- **導出欠落**: T4, T5, T6, T7（いずれも T₀ 層の環境/自然科学由来公理 — 導出不可能が妥当）\n\n## 2. ギャップ分析（D13 影響波及の観点）\n\n**最重要ギャップ: `without_evidence` の 24 命題**\n\n| 命題 | 影響範囲（depended_by） | 波及リスク |\n|---|---|---|\n| **P3** | L6, D4, D9, D13, D17（5件） | 学習統治の根拠欠如 → 互換性分類の正当性が脆弱 |\n| **P2** | D2, D17 | 検証独立性の経験的裏付けなし（E1 依存のみ） |\n| **L1** | D1, V3 | 安全境界の経験的観測データなし |\n| **D1** | D11 | 17 Lean ファイルを配下に持つが evidence 未記載 |\n| **D13** | D17 | 影響波及ルール自体の根拠が自己参照的 |\n\n**artifacts 空の命題**: T8, L4, V3, V5, V7, D3, D8 — coverage.total は依存経由で計上されているが、直接的な実装アーティファクトが無い。**L4（行動空間境界）と D8（均衡探索）は運用中**だが artifacts が直接紐付いていない → トレーサビリティ切断の疑い。\n\n## 3. 優先度順の改善アクション\n\n**① [高] P3 / P2 / L1 の evidence 補強**（conservative extension）\n- 観察データ（`.claude/metrics/evolve-history.jsonl`, `p2-verified.jsonl`, `l1-safety` 違反ログ）を evidence として manifest-trace に登録。D13 波及の根元を固める。\n\n**② [中] L4 / D8 の artifacts 直接紐付け**（compatible change）\n- `adjust-action-space` skill と `v5-approvals.jsonl` を L4/D8 の artifacts に明示登録。運用実態とトレース構造の乖離を解消。\n\n**③ [低] T4-T7 の導出欠落を明示文書化**（conservative extension）\n- 「T₀ 層公理のため導出不可能」を `without_derivation` のメタデータに記録し、将来の誤検出を防ぐ。",
+  "tokens_in": 6,
+  "tokens_out": 1342,
+  "latency_ms": 25636,
+  "timestamp": "2026-04-17T01:56:28Z",
+  "run_number": 1,
+  "exit_code": 0
+}
