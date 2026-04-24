@@ -3900,6 +3900,16 @@
       "scope": "Empirical #12 (cycle-check.sh Check 16 7-day operational 検証 + hidden gap 探索)。Empirical #11 (Day 111) からの 7 day 経過、Check 16 継続有効性確認 + Check 18 新設で Step 5/9 hidden gap 解消。Day 113-119 は legacy 許容、Day 120+ で discipline 適用。",
       "change_category": "process_only",
       "subagent_dispatch": true
+    },
+    {
+      "round": "Week 3 Day 121 Manifest.Terminology (23 theorem) port",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build PASS、theorem 214→237 (+23)、axiom 55 不変。元 lean-formalization/Manifest/Terminology.lean (612 行) を sed で namespace + import rewrite (Manifest.* → AgentSpec.Manifest.*) のみ実施し byte-identical port。Ontology のみ依存で一発 build PASS。AgentSpec.lean に import AgentSpec.Manifest.Terminology 追加。Framework/EpistemicBridge port 前提の 1/2 完了 (残: Manifest.EpistemicLayer port)。",
+      "scope": "Framework 残 5 file unblock 第一弾。Terminology が EpistemicBridge 前提の 1/2 (もう 1 つは EpistemicLayer)。残 前提 file: Evolution / EpistemicLayer / Models.Assumptions.EpistemicLayer / Observable / Procedure / Axioms / EmpiricalPostulates の依存連鎖が判明、当初 4 file 想定が 6+ file 必要に拡大。",
+      "change_category": "proof_addition",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
