@@ -1,7 +1,7 @@
 import Lean
 
 /-!
-# Byte-Preserving Rewrite PoC — Sub-E #660
+# Byte-Preserving Rewrite PoC — Sub-E #660 + Sub-F #661 CONDITIONAL resolution (Impl-B #663)
 
 Demonstrates that a Lean declaration can be replaced while preserving
 every byte outside the declaration's source range.
@@ -14,7 +14,12 @@ every byte outside the declaration's source range.
 4. Find target declaration by name
 5. Get `Syntax.getRange?` → byte offsets (start, stop) — these are UTF-8 byte indices
 6. Output = inputBytes[0..start] ++ newDeclBytes ++ inputBytes[stop..end]
-7. Write output as raw bytes (no re-encoding)
+7. Write output to `<outputPath>.tmp.<pid>.<heartbeats>` (same directory for rename atomicity)
+8. `IO.FS.rename` to replace outputPath atomically (POSIX rename(2))
+
+Atomic rename (step 7-8) is the Sub-F CONDITIONAL mitigation:
+concurrent writers write to process-unique tmp files then atomically publish
+via rename(2). Last writer wins; no partial-write visibility.
 
 ## Usage
 
@@ -103,8 +108,16 @@ def main (args : List String) : IO UInt32 := do
         let after := inputBytes.extract stopByte inputBytes.size
         let newBytes := newDeclText.toUTF8
         let output := (before ++ newBytes) ++ after
-        -- 7. Write raw (preserves encoding)
-        IO.FS.writeBinFile outputPath output
+        -- 7. Atomic write: write to process-unique tmp, then rename(2) (Impl-B #663)
+        let pid ← IO.Process.getPID
+        let heartbeats ← IO.getNumHeartbeats
+        let tmpPath := outputPath ++ s!".tmp.{pid}.{heartbeats}"
+        IO.FS.writeBinFile tmpPath output
+        try
+          IO.FS.rename tmpPath outputPath
+        catch e =>
+          try IO.FS.removeFile tmpPath catch _ => pure ()
+          throw e
         IO.println s!"OK range=[{startByte},{stopByte}] original_size={inputBytes.size} output_size={output.size}"
         return 0
   | _ =>
