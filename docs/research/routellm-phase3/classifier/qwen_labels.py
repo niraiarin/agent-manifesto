@@ -82,9 +82,9 @@ def extract_label(content: str) -> str:
     return "unknown"
 
 
-def classify_via_llama_server(prompt: str, url: str, timeout: int = 120) -> tuple[str, float, str]:
+def classify_via_llama_server(prompt: str, url: str, timeout: int = 120, model_alias: str = "qwen3.6-35b-a3b") -> tuple[str, float, str]:
     body = {
-        "model": "qwen3.6-35b-a3b",
+        "model": model_alias,
         "messages": [
             {"role": "system", "content": SYSTEM},
             {"role": "user", "content": prompt[:MAX_USER_CHARS]},
@@ -116,6 +116,8 @@ def main() -> None:
     parser.add_argument("--checkpoint-every", type=int, default=50)
     parser.add_argument("--limit", type=int, default=0, help="If >0, only process first N candidates (for smoke tests).")
     parser.add_argument("--timeout", type=int, default=120)
+    parser.add_argument("--annotator-label", default="qwen3.6-35b-a3b", help="Value written to each entry's annotator field.")
+    parser.add_argument("--model-alias", default="qwen3.6-35b-a3b", help="Model name sent to /v1/chat/completions.")
     args = parser.parse_args()
 
     url = validate_localhost_url(args.llama_url)
@@ -149,7 +151,7 @@ def main() -> None:
                 continue
 
             try:
-                label, latency_ms, raw_content = classify_via_llama_server(prompt_text, url, args.timeout)
+                label, latency_ms, raw_content = classify_via_llama_server(prompt_text, url, args.timeout, args.model_alias)
             except (urllib.error.URLError, ValueError) as exc:
                 print(f"[qwen-labels] classify failed for {cid}: {exc}; marking unknown")
                 label, latency_ms, raw_content = "unknown", 0.0, ""
@@ -164,7 +166,7 @@ def main() -> None:
 
             enriched = dict(candidate)
             enriched["gt_label"] = label
-            enriched["annotator"] = "qwen3.6-35b-a3b"
+            enriched["annotator"] = args.annotator_label
             enriched.setdefault("annotator_notes", None)
             enriched["latency_ms"] = round(latency_ms, 2)
             enriched["ts"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
