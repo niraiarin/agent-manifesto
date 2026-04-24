@@ -54,16 +54,32 @@ else
   echo "Created fresh $SETTINGS"
 fi
 
-# Merge hook entry using jq. We register under hooks.PreToolUse.Edit.
-# If an entry for this exact command already exists, do not duplicate.
+# Merge hook entry using jq. Schema: hooks.PreToolUse is an array of
+# {matcher, hooks} objects. Each hooks[] entry is {type: "command", command: ...}.
+# See https://code.claude.com/docs/en/hooks and the existing .claude/settings.json
+# for the canonical shape.
 HOOK_CMD="bash \$CLAUDE_PROJECT_DIR/.claude/hooks/lean-cli-route.sh"
 updated=$(jq --arg cmd "$HOOK_CMD" '
+  # Ensure hooks.PreToolUse is an array.
   .hooks //= {} |
-  .hooks.PreToolUse //= {} |
-  .hooks.PreToolUse.Edit //= [] |
-  if any(.hooks.PreToolUse.Edit[]; .command == $cmd)
-  then .
-  else .hooks.PreToolUse.Edit += [{command: $cmd}]
+  (.hooks.PreToolUse | type) as $t |
+  if ($t == "null") or ($t == "object") or ($t == "string") then .hooks.PreToolUse = []
+  else .
+  end |
+  # Find an existing matcher == "Edit" entry; add our command to its hooks.
+  # If no such entry, append a new matcher block.
+  (.hooks.PreToolUse | map(.matcher) | index("Edit")) as $idx |
+  if $idx == null then
+    .hooks.PreToolUse += [{
+      matcher: "Edit",
+      hooks: [{type: "command", command: $cmd}]
+    }]
+  else
+    # Do not duplicate the same command under the same matcher
+    if any(.hooks.PreToolUse[$idx].hooks[]?; .command == $cmd)
+    then .
+    else .hooks.PreToolUse[$idx].hooks += [{type: "command", command: $cmd}]
+    end
   end
 ' "$SETTINGS")
 printf '%s\n' "$updated" > "$SETTINGS"
