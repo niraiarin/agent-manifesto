@@ -31,25 +31,36 @@ file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // ""')
 old_string=$(printf '%s' "$input" | jq -r '.tool_input.old_string // ""')
 new_string=$(printf '%s' "$input" | jq -r '.tool_input.new_string // ""')
 
+# Optional diagnostic trace (Phase 2 tests). If LEAN_CLI_HOOK_TRACE_FILE is set,
+# every invocation logs one line to that file. Off by default → zero overhead
+# in production.
+trace() {
+  [[ -z "${LEAN_CLI_HOOK_TRACE_FILE:-}" ]] && return 0
+  printf '%s %s tool=%s file=%s result=%s\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$$" \
+    "$tool_name" "$file_path" "$1" \
+    >> "$LEAN_CLI_HOOK_TRACE_FILE" 2>/dev/null || true
+}
+
 # Gate: only engage on Edit tool
-[[ "$tool_name" != "Edit" ]] && exit 0
-[[ -z "$file_path" ]] && exit 0
-[[ ! -f "$file_path" ]] && exit 0
+[[ "$tool_name" != "Edit" ]] && { trace "passthrough-wrong-tool"; exit 0; }
+[[ -z "$file_path" ]] && { trace "passthrough-no-path"; exit 0; }
+[[ ! -f "$file_path" ]] && { trace "passthrough-missing-file"; exit 0; }
 case "$file_path" in
   *.lean) ;;
-  *) exit 0 ;;
+  *) trace "passthrough-not-lean"; exit 0 ;;
 esac
 
 # Resolve project structure
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || true)}"
-[[ -z "$PROJECT_DIR" ]] && exit 0
+[[ -z "$PROJECT_DIR" ]] && { trace "passthrough-no-project-dir"; exit 0; }
 
 # Locate lean-cli package dir. We invoke via subshell + `lake env` so the
 # lean-toolchain file in the package dir is honoured. See Sub-G #662 invocation
 # pattern I2 (subshell-scoped cd; parent cwd unaffected).
 CLI_PKG="$PROJECT_DIR/experiments/lean-ast/lean-cli"
-[[ ! -d "$CLI_PKG/.lake/build" ]] && exit 0
-[[ ! -f "$CLI_PKG/lean-toolchain" ]] && exit 0
+[[ ! -d "$CLI_PKG/.lake/build" ]] && { trace "passthrough-no-build"; exit 0; }
+[[ ! -f "$CLI_PKG/lean-toolchain" ]] && { trace "passthrough-no-toolchain"; exit 0; }
 export PATH="$HOME/.elan/bin:$PATH"
 
 # Conservative subcommand inference.
@@ -74,11 +85,13 @@ case "$first_line" in
     ;;
   *)
     # Not a pattern we route. Let Edit proceed.
+    trace "passthrough-unsupported-pattern"
     exit 0
     ;;
 esac
 
 if [[ -z "$target_name" ]]; then
+  trace "passthrough-no-target-name"
   exit 0
 fi
 
@@ -100,6 +113,7 @@ set -e
 if [[ "$rc" -eq 0 ]]; then
   # Success: atomically replace and suppress Edit.
   mv -f "$tmp_out" "$file_path"
+  trace "engaged-success target=$target_name"
   # Emit hookSpecificOutput to instruct Claude Code that the edit is done.
   # Format per docs.claude.com/en/docs/claude-code/hooks-guide (PreToolUse).
   jq -n --arg decl "$target_name" --arg path "$file_path" '{
@@ -114,6 +128,7 @@ fi
 
 # lean-cli failed. Let Edit proceed; surface the reason to context.
 err_head=$(head -n1 "$tmp_out.err" 2>/dev/null || echo "unknown")
+trace "engaged-fallback target=$target_name err=$err_head"
 jq -n --arg err "$err_head" '{
   hookSpecificOutput: {
     hookEventName: "PreToolUse",
