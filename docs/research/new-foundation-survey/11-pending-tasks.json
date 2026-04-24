@@ -722,6 +722,15 @@
       "timing": "Week 4+",
       "gaps": ["GA-I7"],
       "detail": "Empirical #11 (Day 111) で Check 16 substring 一致のみの限界 識別。Day 103-110 の commit diff に paper survey artifact (00-synthesis/Principles.lean/docs/research/) zero touch、Day 102 audit pattern の token 層 recurrence。修正案 A (推奨): 11-pending-tasks.schema.json に step1_artifact_ref / step3_tydd_evaluation / step7_checklist_results 構造 field 追加、git show --stat 経由で artifact path cross-check。Check 5b 経由で defense in depth (D4 phase order)。修正案 B: commit diff cross-check のみ (read-only review 検出不可、部分 cover)"
+    },
+    {
+      "section": "2.12",
+      "topic": "Framework/* port 残 7 file (AcyclicGraph / DanglingDetection / CompatibilityClassification / EpistemicBridge / EpistemicTagging / LLMRejection / PromotionProtocol)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": ["GA-I7"],
+      "detail": "Day 117-118 で NodeKind + CoTFaithfulness 完了。残 7 file は (a) port 先 Ontology に PropositionCategory.strength + StructureKind.priority 不在 + autoImplicit 違反 + sorry あり (AcyclicGraph 系: AcyclicGraph→DanglingDetection→CompatibilityClassification 連鎖 3 file)、(b) 前提未 port (EpistemicBridge: Terminology+EpistemicLayer / EpistemicTagging+LLMRejection: EpistemicLayer / PromotionProtocol: Observable / CompatibilityClassification: Evolution) で defer。Ontology 補強案: PropositionCategory.strength field 追加 (+axiom_quality member)、StructureKind.priority field 追加。Week 4 Framework batch 着手時にまず Ontology 補強"
     }
   ],
   "day_plan": [
@@ -2230,6 +2239,28 @@
       "commit": "273d9b6",
       "status": "done",
       "scope": "Day 117 Framework/NodeKind (9 theorem) port 9-step。Step 1 reference read (Manifest/Framework/NodeKind.lean L1-151)。Step 3 TyDD eval (sed namespace+import rewrite: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 不変、theorem 191→200。AgentSpec.lean import 追加。Framework/ 残 8 file 依存軽い順 defer (4 file 解決可、5 file 要前提 port)。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 118,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 118 Framework/CoTFaithfulness (1 axiom + 2 theorem) port 9-step。Step 1 reference read (Manifest/Framework/CoTFaithfulness.lean L1-125)。Step 3 TyDD eval (sed namespace+import+E expand: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 53→54、theorem 200→202。Framework 残 7 file (AcyclicGraph 等) は Ontology 補強要 or 前提未 port、pending_items defer。additive_axiom",
       "steps_completed": [
         1,
         2,

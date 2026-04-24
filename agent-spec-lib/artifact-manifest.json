@@ -3870,6 +3870,16 @@
       "scope": "Framework/ port 第 1 弾。NodeKind (4-way classification by mutability and origin)。Framework/ 9 file 中 1 完了、4 file (AcyclicGraph/DanglingDetection/CoTFaithfulness/CompatibilityClassification) は依存解決可で順次 port、5 file (EpistemicBridge/EpistemicTagging/LLMRejection/PromotionProtocol) は EpistemicLayer/Observable/Terminology 未 port で defer 必要。",
       "change_category": "proof_addition",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 118 Framework/CoTFaithfulness (1 axiom + 2 theorem) port",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build PASS、theorem 200→202 (+2)、axiom 53→54 (+1: chain_of_thought_unfaithfulness)。元 lean-formalization/Manifest/Framework/CoTFaithfulness.lean (125 行) を sed で namespace + import rewrite + Empirical→E1/E2/E3 展開。AgentSpec.lean に import AgentSpec.Manifest.Framework.CoTFaithfulness 追加。AcyclicGraph + DanglingDetection は port 先 Ontology の PropositionCategory.strength / StructureKind.priority member 不在 + autoImplicit 違反 + sorry あり、Ontology 補強必要、defer。pending_items に Framework/* 残 8 file defer entry 登録予定。",
+      "scope": "Framework/ port 第 2 弾。CoTFaithfulness (CoT faithfulness 不能性、E1+T4+Ontology 依存)。Framework/ 9 file 中 2 完了 (NodeKind+CoTFaithfulness)、残 7 file は依存 unavailable または port 先 Ontology 補強必要で defer。",
+      "change_category": "additive_axiom",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {

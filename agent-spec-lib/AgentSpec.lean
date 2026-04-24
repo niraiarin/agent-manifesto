@@ -43,6 +43,7 @@ import AgentSpec.Manifest.V
 import AgentSpec.Manifest.D
 import AgentSpec.Manifest.FormalDerivationSkill
 import AgentSpec.Manifest.Framework.NodeKind
+import AgentSpec.Manifest.Framework.CoTFaithfulness
 import AgentSpec.Manifest.ConformanceVerification
 import AgentSpec.Manifest.EvolveSkill
 import AgentSpec.Spine.ResearchSpecLattice
