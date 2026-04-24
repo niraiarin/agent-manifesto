@@ -3850,6 +3850,16 @@
       "scope": "Manifest 周辺整備 slice 2。EvolveSkill を axiom-free self-contained module として追加。残りは FormalDerivationSkill / Framework。",
       "change_category": "proof_addition",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 116 FormalDerivationSkill (17 axiom + 35 theorem) port",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 400 jobs PASS、theorem 156→191 (+35)、axiom 36→53 (+17 skill_covers_*)。元 lean-formalization/Manifest/FormalDerivationSkill.lean (730 行) を sed で namespace + import rewrite (Manifest.* → AgentSpec.Manifest.*) のみ実施し byte-identical port。AgentSpec.lean に import AgentSpec.Manifest.FormalDerivationSkill 追加。Step 1: source file L1-730 read、Step 3 TyDD: S1+S4+F+B+H OK (sed 機械変換)、Step 7: cycle-check 16/16 PASS (Day 70-72 legacy WARN 許容)。+6 補助 lemma 追加なし (codex Day 114 とは異なり真の byte-identical)。",
+      "scope": "FormalDerivationSkill 17 axiom + 35 theorem (T₀ enum 17 + 補題 16 + skill_implements_procedure + all_requirements_enumerated) + 17 inductive + 1 opaque + 1 instance SelfGoverning + 1 def の port。pending #75 (Manifest 周辺整備 skill axioms) 進捗。",
+      "change_category": "additive_axiom",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
