@@ -15,11 +15,12 @@
 set -euo pipefail
 
 PORT="${LLAMA_PORT:-8090}"
-MODEL="${LLAMA_MODEL:-$HOME/models/Qwen3.5-4B-UD-Q6_K_XL.gguf}"
+MODEL="${LLAMA_MODEL:-$HOME/models/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf}"
 NGL="${LLAMA_NGL:-99}"
-CTX="${LLAMA_CTX:-4096}"
+CTX="${LLAMA_CTX:-8192}"
+ALIAS="${LLAMA_ALIAS:-qwen3.6-35b-a3b}"
 HEALTH_URL="http://localhost:${PORT}/health"
-MAX_WAIT=60  # seconds to wait for startup
+MAX_WAIT=120  # Qwen3.6-35B load time on M-series typically 30-90s
 
 check_health() {
   curl -sf --max-time 3 "$HEALTH_URL" 2>/dev/null | grep -q '"ok"'
@@ -52,10 +53,13 @@ fi
 echo "Starting llama-server on port $PORT..." >&2
 nohup llama-server \
   -m "$MODEL" \
+  --host 127.0.0.1 \
   --port "$PORT" \
   -ngl "$NGL" \
   -c "$CTX" \
-  --no-mmap \
+  --alias "$ALIAS" \
+  --jinja \
+  --threads 8 \
   > /tmp/llama-server.log 2>&1 &
 
 LLAMA_PID=$!
