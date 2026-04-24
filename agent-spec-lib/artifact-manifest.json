@@ -3950,6 +3950,16 @@
       "scope": "scope creep 再発防止後の本道 task 第 1 弾。Phase 0 Week 5-6 (Tooling) 部分着手 + Week 7-8 (Verification) 拡大 + 派生負債 1 件 (D13 trusted axiom) 解消。次 Day 候補: Tooling 層 VcForSkill VCG / SMT hammer integration、Verification 拡大、または Models.Assumptions.EpistemicLayer (Framework 残 unblock 補完)。",
       "change_category": "conservative_extension",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 126 本道 bundle (Tooling SkillRegistry + Verification 拡大)",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 409 jobs PASS、theorem 313 不変、axiom 55 不変。2 件 bundle: (1) Tooling Phase 0 Week 5-6 = AgentSpec/Tooling/SkillRegistry.lean 新規 (SimplePersistentEnvExtension で SkillMeta 集約、registerSkill + getRegisteredSkills helper、GA-C9 EnvExtension Auto-Register 試作)。(2) Verification 拡大 = 6 件 (Provenance.TransDerived.empty_false/Acyclic.empty/TransDerived.subset = none、RoundTrip.roundTrip_zero_stable/version = propext+Classical+Quot、consumeChar_dot_nil = none)、累計 19/19 健全。Check 19 本道 entry 2 件。",
+      "scope": "scope creep 再発防止後の本道 task 第 2 弾。Phase 0 Week 5-6 (Tooling) 第 2 entry (agent_verify tactic + SkillRegistry EnvExtension)、Week 7-8 (Verification) 累計 19 spot check。本道進捗 monitor 上昇中。",
+      "change_category": "conservative_extension",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
