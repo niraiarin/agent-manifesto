@@ -21,8 +21,10 @@ fi
 # executes in the session CWD (main worktree). Extract the cd target so
 # `git diff --cached` queries the correct worktree.
 GIT_DIR=""
+# Extract via grep -oE then strip — avoids sed `\|` alternation which is GNU-only
+# (BSD sed on macOS returns empty, causing fallback to cwd). Day 122 fix.
 if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
+GIT_DIR=$(echo "$COMMAND" | grep -oE '^[[:space:]]*cd[[:space:]]+("[^"]*"|[^ &;]+)' | head -1 | sed -E 's/^[[:space:]]*cd[[:space:]]+//' | tr -d '"')
 fi
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
