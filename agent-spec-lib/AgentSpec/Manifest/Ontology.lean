@@ -749,4 +749,52 @@ def PropositionId.dependencies : PropositionId → List PropositionId
 def propositionDependsOn (a b : PropositionId) : Bool :=
   a.dependencies.contains b
 
+/-! ## Day 119 拡張: StructureKind.priority + PropositionCategory.strength (Framework AcyclicGraph 系 unblock) -/
+
+/-- Priority of StructureKind. Reflects the partial order from manifesto Section 8.
+    manifest > designConvention > skill > test > document. -/
+def StructureKind.priority : StructureKind → Nat
+  | .manifest          => 5
+  | .designConvention  => 4
+  | .skill             => 3
+  | .test              => 2
+  | .document          => 1
+
+/-- Dependency between structures. Structure a depends on structure b (b has higher priority). -/
+def structureDependsOn (a b : Structure) : Prop :=
+  a.kind.priority < b.kind.priority
+
+/-- manifest has the highest priority. -/
+theorem manifest_highest_priority :
+  ∀ (k : StructureKind), k.priority ≤ StructureKind.manifest.priority := by
+  intro k; cases k <;> simp [StructureKind.priority]
+
+/-- document has the lowest priority. -/
+theorem document_lowest_priority :
+  ∀ (k : StructureKind), StructureKind.document.priority ≤ k.priority := by
+  intro k; cases k <;> simp [StructureKind.priority]
+
+/-- Priority is injective (different kinds have different priorities). -/
+theorem priority_injective :
+  ∀ (k₁ k₂ : StructureKind),
+    k₁.priority = k₂.priority → k₁ = k₂ := by
+  intro k₁ k₂; cases k₁ <;> cases k₂ <;> simp [StructureKind.priority]
+
+/-- Epistemological strength ordering of PropositionCategory.
+    T > E > P. L and D are below P. -/
+def PropositionCategory.strength : PropositionCategory → Nat
+  | .constraint         => 5
+  | .empiricalPostulate => 4
+  | .principle          => 3
+  | .boundary           => 2
+  | .designTheorem      => 1
+  | .hypothesis         => 0
+
+/-- Dependencies follow descending epistemological strength.
+    If proposition A depends on B, then B.strength ≥ A.strength. -/
+axiom dependency_respects_strength :
+  ∀ (a b : PropositionId),
+    propositionDependsOn a b = true →
+    b.category.strength ≥ a.category.strength
+
 end AgentSpec.Manifest

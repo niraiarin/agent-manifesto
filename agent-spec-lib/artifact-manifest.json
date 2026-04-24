@@ -3880,6 +3880,16 @@
       "scope": "Framework/ port 第 2 弾。CoTFaithfulness (CoT faithfulness 不能性、E1+T4+Ontology 依存)。Framework/ 9 file 中 2 完了 (NodeKind+CoTFaithfulness)、残 7 file は依存 unavailable または port 先 Ontology 補強必要で defer。",
       "change_category": "additive_axiom",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 119 Ontology 補強 + Framework/AcyclicGraph + DanglingDetection bundle",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 404 jobs PASS、theorem 202→214 (+12)、axiom 54→55 (+1)。(1) Ontology.lean に StructureKind.priority + structureDependsOn + manifest_highest_priority + document_lowest_priority + priority_injective + PropositionCategory.strength + dependency_respects_strength axiom を byte-identical 追加 (Manifest/Ontology.lean L833/L1199 から port)。(2) Framework/AcyclicGraph.lean (172 行、3 theorem) port、set_option autoImplicit true 追加。(3) Framework/DanglingDetection.lean (109 行、6 theorem) port、同様。port 先 lakefile autoImplicit=false の制約を局所 set_option で迂回。",
+      "scope": "Day 117/118 で defer した Framework/AcyclicGraph 系 3 file unblock 第一弾。Day 117 NodeKind / Day 118 CoTFaithfulness と合わせ Framework 9 file 中 4 完了、残 5 file (CompatibilityClassification + EpistemicBridge + EpistemicTagging + LLMRejection + PromotionProtocol) は前提 (Evolution + Terminology + EpistemicLayer + Observable) 未 port で defer 維持。",
+      "change_category": "additive_axiom",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {

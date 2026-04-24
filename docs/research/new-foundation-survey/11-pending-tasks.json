@@ -725,12 +725,12 @@
     },
     {
       "section": "2.12",
-      "topic": "Framework/* port 残 7 file (AcyclicGraph / DanglingDetection / CompatibilityClassification / EpistemicBridge / EpistemicTagging / LLMRejection / PromotionProtocol)",
+      "topic": "Framework/* port 残 5 file (CompatibilityClassification + EpistemicBridge + EpistemicTagging + LLMRejection + PromotionProtocol)",
       "mark": "🟡",
       "status": "pending",
       "timing": "Week 4+",
       "gaps": ["GA-I7"],
-      "detail": "Day 117-118 で NodeKind + CoTFaithfulness 完了。残 7 file は (a) port 先 Ontology に PropositionCategory.strength + StructureKind.priority 不在 + autoImplicit 違反 + sorry あり (AcyclicGraph 系: AcyclicGraph→DanglingDetection→CompatibilityClassification 連鎖 3 file)、(b) 前提未 port (EpistemicBridge: Terminology+EpistemicLayer / EpistemicTagging+LLMRejection: EpistemicLayer / PromotionProtocol: Observable / CompatibilityClassification: Evolution) で defer。Ontology 補強案: PropositionCategory.strength field 追加 (+axiom_quality member)、StructureKind.priority field 追加。Week 4 Framework batch 着手時にまず Ontology 補強"
+      "detail": "Day 117-119 で NodeKind / CoTFaithfulness / AcyclicGraph / DanglingDetection 完了 (Ontology に StructureKind.priority + PropositionCategory.strength 補強済)。残 5 file は前提未 port: CompatibilityClassification (Evolution) / EpistemicBridge (Terminology+EpistemicLayer) / EpistemicTagging+LLMRejection (EpistemicLayer) / PromotionProtocol (Observable)。Week 4+ 着手予定、まず前提 file (Evolution/Terminology/EpistemicLayer/Observable) port から。"
     }
   ],
   "day_plan": [
@@ -2261,6 +2261,28 @@
       "commit": "b2a8727",
       "status": "done",
       "scope": "Day 118 Framework/CoTFaithfulness (1 axiom + 2 theorem) port 9-step。Step 1 reference read (Manifest/Framework/CoTFaithfulness.lean L1-125)。Step 3 TyDD eval (sed namespace+import+E expand: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 53→54、theorem 200→202。Framework 残 7 file (AcyclicGraph 等) は Ontology 補強要 or 前提未 port、pending_items defer。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 119,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 119 Ontology 補強 (priority+strength) + Framework/AcyclicGraph + DanglingDetection bundle 9-step。Step 1 reference read (Manifest/Ontology.lean L833/L1199 + Framework 2 file)。Step 3 TyDD eval (連鎖依存 unblock + sed port: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 54→55、theorem 202→214。bundle: ratelimit 配慮。additive_axiom",
       "steps_completed": [
         1,
         2,

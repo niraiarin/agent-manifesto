@@ -44,6 +44,8 @@ import AgentSpec.Manifest.D
 import AgentSpec.Manifest.FormalDerivationSkill
 import AgentSpec.Manifest.Framework.NodeKind
 import AgentSpec.Manifest.Framework.CoTFaithfulness
+import AgentSpec.Manifest.Framework.AcyclicGraph
+import AgentSpec.Manifest.Framework.DanglingDetection
 import AgentSpec.Manifest.ConformanceVerification
 import AgentSpec.Manifest.EvolveSkill
 import AgentSpec.Spine.ResearchSpecLattice
