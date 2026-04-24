@@ -739,7 +739,7 @@
       "status": "pending",
       "timing": "Tooling 着手後の Verification spot check で意味的整合確認",
       "gaps": ["GA-I7"],
-      "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。"
+      "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。 | Day 124 spot check (Verification 部分着手): #print axioms on 6 representatives → 5/6 健全 (D1/T8/P6/D4/D18 が none/propext/manifest axiom 直接使用)、1/6 ⚠️ d13_constraint_negation_has_impact が `_native.native_decide.ax_1_1` 生成 (GA-C27 trusted code 拡張、kernel verify 外)。次回 Tooling 着手時に native_decide 代替 (decide / by simp / 手動 case 分割) 検討。"
     }
   ],
   "day_plan": [
@@ -2394,6 +2394,28 @@
         {
           "step": 4,
           "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 124,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 124 Verification spot check (Phase 0 Week 7-8 部分着手) 9-step。Step 1 reference read (派生負債 + #print axioms 設計)。Step 3 TyDD eval (port 健全性 spot check: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。#print axioms 6 theorem 確認: 5/6 健全、1/6 d13 が native_decide trusted axiom (GA-C27)。派生負債 entry 2.13 追記。Step 5 verifier_history append、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし (spot check のみ)"
         }
       ]
     }
