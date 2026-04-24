@@ -1,0 +1,173 @@
+name: lean-cli
+
+on:
+  push:
+    paths:
+      - "experiments/lean-ast/lean-cli/**"
+      - "experiments/lean-ast/rewrite-poc/**"
+      - "experiments/lean-ast/hooks/**"
+      - "experiments/lean-ast/concurrency-stress/**"
+      - "experiments/lean-ast/lake-concurrency/**"
+      - "lean-formalization/Manifest/Models/Instances/LeanAstCli/**"
+      - ".github/workflows/lean-cli.yml"
+  pull_request:
+    paths:
+      - "experiments/lean-ast/**"
+      - "lean-formalization/Manifest/Models/Instances/LeanAstCli/**"
+      - ".github/workflows/lean-cli.yml"
+  workflow_dispatch:
+    inputs:
+      run_lake_concurrency:
+        description: "Run the destructive Lake concurrency stress test (Impl-D)"
+        required: false
+        default: "false"
+
+# Impl-F #670 (Parent #665). Continuous verification of the lean-cli
+# package, byte-preserving rewrite harness, and hook routing tests.
+# The perf-regression job enforces Impl-F Gate (d). Dev machines use
+# 130 ms (Sub-D Profile A 103 ms + 25 %); GitHub macos-latest runners
+# are slower (p95 ~170 ms observed 2026-04-24) so CI_PERF_GATE_MS
+# overrides the threshold.
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean 4 toolchain manager)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+          bash elan-init.sh -y --default-toolchain leanprover/lean4:v4.29.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Cache lake build dirs
+        uses: actions/cache@v4
+        with:
+          path: |
+            experiments/lean-ast/lean-cli/.lake
+            experiments/lean-ast/rewrite-poc/.lake
+          key: lake-${{ matrix.os }}-4.29.0-${{ hashFiles('experiments/lean-ast/**/lakefile.lean', 'experiments/lean-ast/**/lean-toolchain') }}
+          restore-keys: |
+            lake-${{ matrix.os }}-4.29.0-
+
+      - name: Build lean-cli
+        working-directory: experiments/lean-ast/lean-cli
+        run: lake build
+
+      - name: Build rewrite-poc
+        working-directory: experiments/lean-ast/rewrite-poc
+        run: lake build rewrite-poc elab-smoketest
+
+      - name: lean-cli integration tests (7 tests)
+        working-directory: experiments/lean-ast/lean-cli
+        run: bash tests/run-tests.sh
+
+      - name: rewrite-poc byte-preserving tests (14 patterns)
+        working-directory: experiments/lean-ast/rewrite-poc
+        run: bash run-tests.sh
+
+      - name: Hook routing unit tests (4 tests)
+        run: bash experiments/lean-ast/hooks/tests/run-tests.sh
+
+  perf-regression:
+    runs-on: macos-latest
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+          bash elan-init.sh -y --default-toolchain leanprover/lean4:v4.29.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Cache lake build
+        uses: actions/cache@v4
+        with:
+          path: experiments/lean-ast/lean-cli/.lake
+          key: lake-perf-${{ hashFiles('experiments/lean-ast/lean-cli/**/lakefile.lean', 'experiments/lean-ast/lean-cli/**/lean-toolchain') }}
+
+      - name: Build lean-cli (warm)
+        working-directory: experiments/lean-ast/lean-cli
+        run: lake build
+
+      - name: Warm-up (discard first invocation)
+        working-directory: experiments/lean-ast/lean-cli
+        run: .lake/build/bin/lean-cli parse tests/fixtures/basic.lean >/dev/null || echo "warm-up complete"
+
+      - name: Measure 20 warm invocations and check Gate
+        working-directory: experiments/lean-ast/lean-cli
+        env:
+          # CI_PERF_GATE_MS: regression threshold for the GitHub macos-latest
+          # runner class. Sub-D Profile A baseline (103 ms) was measured on
+          # developer M1 hardware. Shared CI runners steady-state at ~170 ms
+          # p95 (observed 2026-04-24). Threshold = 250 ms = CI baseline +
+          # ~50 % margin so a real regression (2x+ slowdown) still triggers
+          # but ambient variance does not flap. If a future Lean 4 release
+          # drops startup below 100 ms on CI, lower this and update LA-H3 in
+          # lean-formalization/Manifest/Models/Instances/LeanAstCli/Assumptions.lean.
+          CI_PERF_GATE_MS: "250"
+        run: |
+          python3 - <<'PY'
+          # Impl-F Issue #670 Gate (d): perf regression guard.
+          # Dev env: export CI_PERF_GATE_MS=130 to enforce the dev threshold.
+          import os, subprocess, time, json, statistics, sys, pathlib
+          cli = pathlib.Path(".lake/build/bin/lean-cli").resolve()
+          fixture = pathlib.Path("tests/fixtures/basic.lean").resolve()
+          gate_ms = int(os.environ.get("CI_PERF_GATE_MS", "130"))
+          assert cli.exists(), f"lean-cli binary missing at {cli}"
+          ns_samples = []
+          # 22 runs: drop first 2 as warmup, use remaining 20 for p50/p95.
+          n_runs = 22
+          for _ in range(n_runs):
+              t0 = time.perf_counter_ns()
+              r = subprocess.run([str(cli), "parse", str(fixture)],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+              t1 = time.perf_counter_ns()
+              if r.returncode != 0:
+                  sys.stderr.write(r.stderr.decode(errors="replace"))
+                  sys.exit(1)
+              ns_samples.append(t1 - t0)
+          kept = sorted(ns_samples[2:])
+          ms = [ns / 1_000_000 for ns in kept]
+          p50 = statistics.median(ms)
+          # p95 over 20 samples: index 19 (95 % point)
+          p95 = ms[int(round(20 * 0.95 - 1))]
+          print(json.dumps({
+              "samples_ms": [round(x, 1) for x in ms],
+              "p50_ms": round(p50, 1),
+              "p95_ms": round(p95, 1),
+              "gate_ms": gate_ms,
+          }, indent=2))
+          if p95 > gate_ms:
+              sys.exit(f"PERF REGRESSION: p95={p95:.1f}ms > {gate_ms}ms Gate")
+          PY
+
+  lake-concurrency:
+    # Impl-D stress test. Destructive (.lake/build wipe) → opt-in only.
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_lake_concurrency == 'true'
+    runs-on: macos-latest
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+          bash elan-init.sh -y --default-toolchain leanprover/lean4:v4.29.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build lean-cli (required for the stress harness)
+        working-directory: experiments/lean-ast/lean-cli
+        run: lake build
+      - name: Run Lake concurrency stress
+        run: bash experiments/lean-ast/lake-concurrency/stress.sh
+      - name: Upload summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lake-concurrency-summary
+          path: experiments/lean-ast/lake-concurrency/log/summary.json
