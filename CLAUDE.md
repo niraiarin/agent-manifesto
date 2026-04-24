@@ -60,6 +60,16 @@
 安全（L1）→ 検証（P2）→ 可観測性（P4）→ 統治（P3）→ 動的調整
 先行フェーズを壊す変更は、後続フェーズの信頼性を損なう。
 
+### Scope discipline (Day 123 反省 / agent-spec-lib Phase 0 運用)
+
+agent-spec-lib roadmap (`agent-spec-lib/AgentSpec.lean` + `docs/research/new-foundation-survey/11-pending-tasks.json` の roadmap section) に明示された Week scope に従う。Day cycle で本道を逸脱しないため:
+
+- **scope creep の警鐘**: 当初 Week N scope に明記されていない file (Framework/, Models/, EvolveSkill 等) を port する場合、pending_items entry に **事前** に declare する。Day cycle 内で「ついでに」 scope 拡張しない。
+- **本道優先**: 直近 N=14 day で Tooling 層 (Week 5-6) / CI (Week 6-7) / Verification (Week 7-8) の進捗ゼロが続いたら、scope 拡張型 Day を **連続 3 day 以上行わない**。3 day 経過したら本道 task を 1 Day 挿む。
+- **進捗報告は scope を分離**: 「Phase 0 完了率 X%」を単一値で報告しない。本道 (Week 1-8 元 scope) と拡張 (Framework/Models/Skill 系) を別 metric として提示する。
+- **派生負債の catalog 化**: byte-identical port 規律から逸脱した派生 (Ontology 補強、autoImplicit 局所有効化、World field 順吸収、新規 helper theorem 追加 等) は pending_items に "派生負債" entry として記録、累積を可視化する。
+- **Verification spot check の必須化**: Tooling 層が integrate された後は、port した theorem の代表サンプルに `#print axioms` 等の意味検証を spot check する。lake build PASS のみで意味的整合を主張しない。
+
 ## スキルルーティング
 
 ユーザーの要求に応じて適切なスキルを選択する。スキルに該当しない場合は直接対応する。

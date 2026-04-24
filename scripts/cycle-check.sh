@@ -406,6 +406,28 @@ else
   echo "[18] OK  Day 120+ scope marker 検証 (Step 5/9 token 裏付け)"
 fi
 
+# ----- Check 19: 本道 (Tooling/CI/Verification) aging warn (Day 123 反省) -----
+# Phase 0 当初 scope の Week 5-8 (Tooling 層 / CI / Verification) が pending のまま N day 経過。
+# 直近 14 day の day_plan で本道着手 (Tooling/CI/Verify token を scope に含む entry) が無ければ WARN。
+# Scope discipline (CLAUDE.md): scope 拡張型 Day を 3 day 以上連続したら本道 1 Day 挿む。
+RECENT_MAINSTREAM=$(jq -r '
+  .day_plan
+  | map(select(.status == "done"))
+  | map(select((.day | tostring | tonumber? // 0) >= 110))
+  | sort_by(.day | tostring | tonumber? // 0)
+  | .[-14:]
+  | map(select((.scope // "") | test("agent_verify|VcForSkill|SMT hammer|EnvExtension|lake test|lake lint|GitHub Actions|LeanDojo|Pantograph|再証明|CLEVER|self-benchmark|external benchmark|verification spot check|#print axioms")))
+  | length
+' "$PENDING" 2>/dev/null)
+
+if [ -z "$RECENT_MAINSTREAM" ] || [ "$RECENT_MAINSTREAM" -eq 0 ]; then
+  echo "[19] WARN  直近 14 day で本道 (Tooling/CI/Verification、Phase 0 Week 5-8) 進捗ゼロ"
+  echo "    Scope discipline: scope 拡張型 Day を 3 day 以上連続したら本道 1 Day 挿む (CLAUDE.md 反省 rule)"
+  WARN=1
+else
+  echo "[19] OK  直近 14 day で本道 entry $RECENT_MAINSTREAM 件"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \

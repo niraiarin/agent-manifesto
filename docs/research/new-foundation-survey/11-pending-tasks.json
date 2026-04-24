@@ -29,7 +29,7 @@
       "files": ["lean-formalization/Manifest/ → AgentSpec/Manifest/"],
       "completion_criteria": "既存 55 axioms 全て import 可",
       "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)。Day 74 着手 PoC 完了 (T1 session_bounded + Ontology skeleton、commit 98c6841)、残 54 axiom は Day 75-76 で T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)、Day 77+ で T2-T8 + P1-P6 を additive 拡張。",
-      "status": "in_progress"
+      "status": "in_progress (当初 scope T1-T8/P1-P6/D1-D18 完了 = 100%; 拡張 scope ConformanceVerification/EvolveSkill/FormalDerivationSkill/Procedure/Terminology/EpistemicLayer/Framework 4-of-9 完了 = scope creep 認識、CLAUDE.md Scope discipline rule で再発防止 Day 123)"
     },
     {
       "week": "4-5",
@@ -731,6 +731,15 @@
       "timing": "Week 4+",
       "gaps": ["GA-I7"],
       "detail": "Day 117-119 で NodeKind / CoTFaithfulness / AcyclicGraph / DanglingDetection 完了 (Ontology に StructureKind.priority + PropositionCategory.strength 補強済)。残 5 file は前提未 port: CompatibilityClassification (Evolution) / EpistemicBridge (Terminology+EpistemicLayer) / EpistemicTagging+LLMRejection (EpistemicLayer) / PromotionProtocol (Observable)。Week 4+ 着手予定、まず前提 file (Evolution/Terminology/EpistemicLayer/Observable) port から。"
+    },
+    {
+      "section": "2.13",
+      "topic": "byte-identical port 規律からの派生負債 catalog (Day 119/122/123 累積)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Tooling 着手後の Verification spot check で意味的整合確認",
+      "gaps": ["GA-I7"],
+      "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。"
     }
   ],
   "day_plan": [
