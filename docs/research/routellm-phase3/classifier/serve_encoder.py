@@ -8,15 +8,20 @@ POST /classify {"prompt": "..."} -> ClassifyResponse compatible with router.js.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
+import sys
 from collections import Counter, deque
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from decision_logger import DecisionLogger, new_event_id, sha256_hex, build_context
 
 
 LOCAL_LABELS = {"local_confident", "local_probable"}
@@ -26,6 +31,9 @@ CLOUD_LABELS = {"cloud_required", "hybrid", "unknown"}
 class ClassifyRequest(BaseModel):
     prompt: str
     min_confidence: float | None = None
+    session_id: str | None = None
+    turn_id: int | None = None
+    parent_event_id: str | None = None
 
 
 class ClassifyResponse(BaseModel):
@@ -37,6 +45,7 @@ class ClassifyResponse(BaseModel):
     p_local: float
     p_cloud: float
     utility_route: str
+    event_id: str | None = None
 
 
 class DriftLogger:
@@ -120,6 +129,8 @@ def create_app(
     oov_threshold: float = 0.3,
     cost_safety: float = 1.8,
     cost_cloud: float = 1.0,
+    decision_log_dir: Path | None = None,
+    redaction_level: str = "prompt_sha_only",
 ) -> FastAPI:
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -143,6 +154,20 @@ def create_app(
     model.to(device)
     model.eval()
     drift_logger = DriftLogger(log_path)
+
+    classifier_id = meta.get("base_model", "unknown")
+    classifier_version = meta.get("model_type", "encoder_fullft")
+
+    decision_logger_instance: DecisionLogger | None = None
+    if decision_log_dir is not None:
+        decision_logger_instance = DecisionLogger(
+            log_dir=decision_log_dir,
+            recorded_by="serve_encoder",
+            hook_id="post.classify",
+            redaction_level=redaction_level,
+        )
+        log.info("decision logger enabled at %s (redaction=%s)", decision_log_dir, redaction_level)
+
     log.info("loaded encoder router base=%s device=%s", meta.get("base_model"), device)
 
     @app.post("/classify", response_model=ClassifyResponse)
@@ -169,6 +194,44 @@ def create_app(
         label = "cloud_required" if fallback else labels[label_id]
 
         latency_ms = (time.time() - t0) * 1000
+
+        event_id: str | None = None
+        if decision_logger_instance is not None:
+            event_id = new_event_id()
+            prompt_text = req.prompt
+            input_payload: dict[str, Any] = {
+                "prompt_sha256": sha256_hex(prompt_text),
+                "prompt_length": len(prompt_text),
+                "prompt_source": "hook",
+            }
+            if redaction_level == "none":
+                input_payload["prompt"] = prompt_text
+            session_id = req.session_id or "anonymous"
+            context = build_context(
+                session_id=session_id,
+                project_id="agent-manifesto",
+                turn_id=req.turn_id,
+            )
+            decision_payload = {
+                "kind": "classification",
+                "classifier_id": classifier_id,
+                "classifier_version": classifier_version,
+                "probs": probs_dict,
+                "predicted_label": label,
+                "predicted_confidence": confidence,
+                "p_local": round(p_local, 4),
+                "p_cloud": round(p_cloud, 4),
+                "latency_ms": round(latency_ms, 2),
+            }
+            decision_logger_instance.emit({
+                "event_id": event_id,
+                "parent_event_id": req.parent_event_id,
+                "event_type": "router.classification",
+                "context": context,
+                "input": input_payload,
+                "decision": decision_payload,
+            })
+
         resp = ClassifyResponse(
             label=label,
             confidence=confidence,
@@ -178,6 +241,7 @@ def create_app(
             p_local=round(p_local, 4),
             p_cloud=round(p_cloud, 4),
             utility_route=utility_route,
+            event_id=event_id,
         )
         drift_logger.log(req, resp)
         return resp
@@ -214,11 +278,32 @@ def main():
     parser.add_argument("--oov-threshold", type=float, default=0.3)
     parser.add_argument("--cost-safety", type=float, default=float(os.environ.get("ROUTING_COST_SAFETY", "1.8")))
     parser.add_argument("--cost-cloud", type=float, default=float(os.environ.get("ROUTING_COST_CLOUD", "1.0")))
+    default_decision_dir = os.environ.get("DECISION_LOG_DIR")
+    parser.add_argument(
+        "--decision-log-dir",
+        type=Path,
+        default=Path(default_decision_dir) if default_decision_dir else None,
+        help="If set, emit router.classification events (decision_event v1.0.0) to this dir.",
+    )
+    parser.add_argument(
+        "--decision-redaction",
+        choices=("none", "prompt_sha_only"),
+        default=os.environ.get("DECISION_LOG_REDACTION", "prompt_sha_only"),
+        help="Redaction level for prompt in decision log events (default: prompt_sha_only).",
+    )
     args = parser.parse_args()
 
     import uvicorn
 
-    app = create_app(args.model_dir, args.log_path, args.oov_threshold, args.cost_safety, args.cost_cloud)
+    app = create_app(
+        args.model_dir,
+        args.log_path,
+        args.oov_threshold,
+        args.cost_safety,
+        args.cost_cloud,
+        decision_log_dir=args.decision_log_dir,
+        redaction_level=args.decision_redaction,
+    )
     uvicorn.run(app, host="127.0.0.1", port=args.port)
 
 
