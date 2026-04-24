@@ -11,9 +11,11 @@ import argparse
 import json
 import logging
 import os
+from collections import Counter, deque
 from pathlib import Path
+from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from pydantic import BaseModel
 
 
@@ -40,8 +42,11 @@ class ClassifyResponse(BaseModel):
 class DriftLogger:
     """Append-only JSONL log for drift monitoring."""
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, buffer_size: int = 1000):
         self.path = path
+        self.recent: deque[dict[str, Any]] = deque(maxlen=buffer_size)
+        self.prediction_total: Counter[str] = Counter()
+        self.fallback_total = 0
         path.parent.mkdir(parents=True, exist_ok=True)
 
     def log(self, req: ClassifyRequest, resp: ClassifyResponse):
@@ -60,8 +65,47 @@ class DriftLogger:
             "p_cloud": resp.p_cloud,
             "utility_route": resp.utility_route,
         }
+        self.recent.append(entry)
+        self.prediction_total[resp.label] += 1
+        if resp.fallback:
+            self.fallback_total += 1
         with open(self.path, "a") as f:
             f.write(json.dumps(entry) + "\n")
+
+    def metrics_text(self) -> str:
+        lines = [
+            "# HELP router_prediction_total Total predictions by label",
+            "# TYPE router_prediction_total counter",
+        ]
+        for label in sorted(self.prediction_total):
+            lines.append(f'router_prediction_total{{label="{label}"}} {self.prediction_total[label]}')
+
+        confidences = [float(entry["confidence"]) for entry in self.recent]
+        confidence_mean = sum(confidences) / len(confidences) if confidences else 0.0
+        lines.extend(
+            [
+                "",
+                "# HELP router_confidence_mean Mean confidence (recent 1000 predictions)",
+                "# TYPE router_confidence_mean gauge",
+                f"router_confidence_mean {confidence_mean:.6f}",
+                "",
+                "# HELP router_fallback_total Total fallback triggers",
+                "# TYPE router_fallback_total counter",
+                f"router_fallback_total {self.fallback_total}",
+                "",
+                "# HELP router_latency_p95_ms p95 latency in milliseconds (recent 1000)",
+                "# TYPE router_latency_p95_ms gauge",
+                f"router_latency_p95_ms {self._latency_p95_ms():.6f}",
+            ]
+        )
+        return "\n".join(lines) + "\n"
+
+    def _latency_p95_ms(self) -> float:
+        latencies = sorted(float(entry["latency_ms"]) for entry in self.recent)
+        if not latencies:
+            return 0.0
+        index = min(len(latencies) - 1, int(len(latencies) * 0.95))
+        return latencies[index]
 
 
 def utility_decide(p_local: float, p_cloud: float, cost_safety: float, cost_cloud: float) -> str:
@@ -151,6 +195,13 @@ def create_app(
     @app.get("/metadata")
     def metadata():
         return meta
+
+    @app.get("/metrics")
+    def metrics():
+        return Response(
+            content=drift_logger.metrics_text(),
+            media_type="text/plain; version=0.0.4",
+        )
 
     return app
 
