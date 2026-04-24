@@ -3940,6 +3940,16 @@
       "scope": "Phase 0 Week 7-8 (Verification) 部分着手 = port した theorem の意味的整合 health check。lake build PASS は syntax のみ、`#print axioms` で公理使用 chain が manifest reference と整合するか初確認。今後 Tooling 整備 (Week 5-6) と並行で代表サンプル拡大予定。",
       "change_category": "process_only",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 125 本道 bundle (Tooling skeleton + Verification 拡大 + GA-C27 解消)",
+      "date": "2026-04-24",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 408 jobs PASS、theorem 313 不変、axiom 55 不変。3 件 bundle: (A) Tooling Phase 0 Week 5-6 着手 = AgentSpec/Tooling/AgentVerify.lean 新規 (Lean macro elab で agent_verify tactic skeleton + smoke test、現状 assumption の thin wrapper、将来 verify token + VcForSkill VCG 拡張)。(B) Verification 拡大 = 7 件 (Spine.FolgeID 3 + ResearchSpecLattice + d18 + procedure_has_four_phases + d13_assumption)、全 propext/Quot.sound/manifest axiom のみ依存。Day 124 と合わせ累計 13/13 健全。(C) GA-C27 解消 = D.lean L370-377 を native_decide → decide、trusted axiom 排除確認。",
+      "scope": "scope creep 再発防止後の本道 task 第 1 弾。Phase 0 Week 5-6 (Tooling) 部分着手 + Week 7-8 (Verification) 拡大 + 派生負債 1 件 (D13 trusted axiom) 解消。次 Day 候補: Tooling 層 VcForSkill VCG / SMT hammer integration、Verification 拡大、または Models.Assumptions.EpistemicLayer (Framework 残 unblock 補完)。",
+      "change_category": "conservative_extension",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {

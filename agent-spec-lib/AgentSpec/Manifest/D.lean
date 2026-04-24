@@ -366,15 +366,17 @@ def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
 def d13_propagation (negated : PropositionId) : List PropositionId :=
   affected negated
 
-/-- Negation of T4 has at least one downstream impact. -/
+/-- Negation of T4 has at least one downstream impact.
+    Day 125 C: native_decide → decide で代替試行 (kernel reduce、trusted axiom 排除)。 -/
 theorem d13_constraint_negation_has_impact :
   (d13_propagation .t4).length > 0 := by
-  native_decide
+  decide
 
-/-- Negation of L5 is no broader than T4 in the encoded dependency graph. -/
+/-- Negation of L5 is no broader than T4 in the encoded dependency graph.
+    Day 125 C: native_decide → decide で代替試行。 -/
 theorem d13_l5_limited_impact :
   (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by
-  native_decide
+  decide
 
 /-- Computes the impact set when an assumption expires. -/
 def assumptionImpact (supportedPropositions : List PropositionId) : List PropositionId :=
