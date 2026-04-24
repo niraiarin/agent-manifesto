@@ -377,6 +377,35 @@ else
   echo "[16] OK  Day 103+ scope marker 検証 (Step 1/3/7 token 裏付け)"
 fi
 
+# ----- Check 18: scope text marker for Step 5/9 (Empirical #12 / Day 119 negative gap fix) -----
+# Empirical #12 (Day 119) で Check 16 が cover していない Step 5 (metadata commit) と
+# Step 9 (handoff/最終後続) の hidden gap を識別 (Day 117 が triple gap 真陽性、Step 9 は 16/17 entry で marker zero = 94% invisibility)。
+# Step 6 は Check 13 が既に owner、本 check では扱わない (責任分担明確化)。
+# Day 120 base (Check 18 導入後 baseline、Day 103-119 は legacy 許容、Day 120+ で discipline 適用)。
+NO_S59_MARKER=$(jq -r '
+  .day_plan
+  | map(select(.status == "done"))
+  | map(select((.day | tostring | tonumber? // 0) >= 120))
+  | map(. as $entry | (.steps_completed // []) as $sc |
+      [
+        (if ($sc | any(. == 5)) and (($entry.scope // "") | test("change_category[=:]|verifier_history|artifact-manifest|metadata commit|day_plan entry|metadata 更新") | not)
+         then "Day \($entry.day): Step 5 in completed but no metadata commit marker in scope" else empty end),
+        (if ($sc | any(. == 9)) and (($entry.scope // "") | test("backfill|update-handoff|handoff|commit hash|最終後続|後続作業|backfill-day-commit") | not)
+         then "Day \($entry.day): Step 9 in completed but no handoff/backfill marker in scope" else empty end)
+      ]
+    )
+  | flatten
+  | .[]
+' "$PENDING" 2>/dev/null | head -5)
+
+if [ -n "$NO_S59_MARKER" ]; then
+  echo "[18] WARN  Day 120+ で steps_completed の Step 5/9 が scope marker で裏付けられない:"
+  echo "$NO_S59_MARKER" | sed 's/^/    /'
+  WARN=1
+else
+  echo "[18] OK  Day 120+ scope marker 検証 (Step 5/9 token 裏付け)"
+fi
+
 # baseline 更新 (EXIT=0/2 の場合のみ、FAIL 時は更新せず既存を保持)
 if [ "$EXIT" -eq 0 ]; then
   printf '{"verifier_history_count":%d,"day_plan_count":%d,"last_checked":"%s"}\n' \
