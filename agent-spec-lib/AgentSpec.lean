@@ -44,6 +44,7 @@ import AgentSpec.Manifest.D
 import AgentSpec.Manifest.Terminology
 import AgentSpec.Manifest.Procedure
 import AgentSpec.Manifest.EpistemicLayer
+import AgentSpec.Manifest.Models.Assumptions.EpistemicLayer
 import AgentSpec.Tooling.AgentVerify
 import AgentSpec.Tooling.SkillRegistry
 import AgentSpec.Tooling.SkillVCG
