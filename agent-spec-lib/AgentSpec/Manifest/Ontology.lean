@@ -797,4 +797,45 @@ axiom dependency_respects_strength :
     propositionDependsOn a b = true →
     b.category.strength ≥ a.category.strength
 
+/-! ## Day 122 拡張: reachableVia (Procedure 前提、Section 8 dependency chain) -/
+
+/-- Structure s' directly depends on Structure s (reverse edge). -/
+def isDirectDependent (s' s : Structure) : Prop :=
+  s.id ∈ s'.dependencies
+
+/-- Reachability of impact propagation: changes to s reach target.
+    Defined inductively as a transitive closure. -/
+inductive reachableVia (w : World) (s : Structure) : Structure → Prop where
+  | direct : ∀ t, t ∈ w.structures → isDirectDependent t s →
+             reachableVia w s t
+  | trans  : ∀ mid t, reachableVia w s mid → t ∈ w.structures →
+             isDirectDependent t mid → reachableVia w s t
+
+/-- In an empty World, nothing is reachable. -/
+theorem empty_world_no_reach :
+  ∀ (s t : Structure),
+    ¬reachableVia ⟨[], 0, [], [], 0, [], []⟩ s t := by
+  intro s t h
+  cases h with
+  | direct _ hm _ => simp at hm
+  | trans _ _ _ hm _ => simp at hm
+
+/-- A Structure with no dependencies has no direct dependents. -/
+theorem no_dependencies_no_direct_dependent :
+  ∀ (s' s : Structure),
+    s'.dependencies = [] → ¬isDirectDependent s' s := by
+  intro s' s hempty hdep
+  simp [isDirectDependent, hempty] at hdep
+
+/-- reachableVia is transitive. -/
+theorem reachableVia_trans :
+  ∀ (w : World) (s mid t : Structure),
+    reachableVia w s mid → reachableVia w mid t → reachableVia w s t := by
+  intro w s mid t hsm hmt
+  induction hmt with
+  | direct t' ht'mem ht'dep =>
+    exact reachableVia.trans mid t' hsm ht'mem ht'dep
+  | trans mid' t' _ ht'mem ht'dep ih =>
+    exact reachableVia.trans mid' t' ih ht'mem ht'dep
+
 end AgentSpec.Manifest
