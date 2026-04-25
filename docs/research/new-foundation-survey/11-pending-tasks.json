@@ -26,7 +26,9 @@
     {
       "week": "3-4",
       "scope": "Manifest 移植",
-      "files": ["lean-formalization/Manifest/ → AgentSpec/Manifest/"],
+      "files": [
+        "lean-formalization/Manifest/ → AgentSpec/Manifest/"
+      ],
       "completion_criteria": "既存 55 axioms 全て import 可",
       "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)。Day 74 着手 PoC 完了 (T1 session_bounded + Ontology skeleton、commit 98c6841)、残 54 axiom は Day 75-76 で T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)、Day 77+ で T2-T8 + P1-P6 を additive 拡張。",
       "status": "in_progress (当初 scope T1-T8/P1-P6/D1-D18 完了 = 100%; 拡張 scope ConformanceVerification/EvolveSkill/FormalDerivationSkill/Procedure/Terminology/EpistemicLayer/Framework 4-of-9 完了 = scope creep 認識、CLAUDE.md Scope discipline rule で再発防止 Day 123)"
@@ -203,7 +205,9 @@
       "mark": "🟡",
       "status": "done",
       "timing": "Day 75-76",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 80 で完了 (commit TBD)。Ontology.lean に additive 拡張 (StructureId/WorldHash opaque + Severity/AgentRole inductive + Action/AuditEntry/ContextWindow/Agent structure + canTransition opaque + World に auditLog field 追加、Inhabited instance update)、T1.lean に 2 axiom 追加。byte-identical signature with lean-formalization。axiom 1→3、T1 stand-alone 完備。compatible change (World field 追加)"
     },
     {
@@ -212,7 +216,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Day 77-Week 4 終わり",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 74 PoC で path 確立済。T 順 (T2-T8) → P 順 → L 順 → V 順 → D 順で additive 拡張、各 T で必要 opaque/structure を Ontology.lean に追加。54 axiom 全件再定義、namespace AgentSpec.Manifest 統一。完成基準: lean-formalization/Manifest/ の 55 axiom 全件が AgentSpec.Manifest 配下に存在 + lake build PASS"
     },
     {
@@ -221,7 +227,9 @@
       "mark": "🔴",
       "status": "done",
       "timing": "Day 75 (人間判断 Day) → Day 76-77 実装",
-      "gaps": ["GA-S15"],
+      "gaps": [
+        "GA-S15"
+      ],
       "detail": "Day 75 design 確定 (Q1=A/Q2=B/Q3=B/Q4=D)、Day 76 PrePred/PostPred 自動 Lattice + 2 theorem rfl + 8 法則 examples (commit 967a2e6)、Day 77 ResearchSpec naive product Lattice instance (LE/Sup/Inf/PartialOrder/Lattice inline) + 5 helper theorem + 34 test examples で Q2=B 完了。GA-M11 LLM refine loop 収束証明の足掛かり完成。Hoare refinement order (Liquid Haskell subtype) は別 instance で Day 78+ or Week 4 で必要時追加可能。Confidence migration (Q4-A) は consumer 出現時"
     },
     {
@@ -239,7 +247,9 @@
       "topic": "lakefile.lean: weak.linter.unreachableTactic の termination 保護",
       "status": "deferred",
       "timing": "Week 5-6",
-      "gaps": ["GA-C31"]
+      "gaps": [
+        "GA-C31"
+      ]
     },
     {
       "section": "2.1",
@@ -267,7 +277,9 @@
       "mark": "⏳",
       "status": "pending",
       "timing": "Week 4-5",
-      "gaps": ["GA-S15"]
+      "gaps": [
+        "GA-S15"
+      ]
     },
     {
       "section": "2.2",
@@ -298,7 +310,9 @@
       "mark": "⏳",
       "status": "pending",
       "timing": "Week 6-7",
-      "gaps": ["GA-M4"]
+      "gaps": [
+        "GA-M4"
+      ]
     },
     {
       "section": "2.4",
@@ -313,7 +327,9 @@
       "mark": "⏳",
       "status": "pending",
       "timing": "Week 4",
-      "gaps": ["TyDD-J5"]
+      "gaps": [
+        "TyDD-J5"
+      ]
     },
     {
       "section": "2.4",
@@ -321,7 +337,9 @@
       "mark": "⏳",
       "status": "pending",
       "timing": "Week 4",
-      "gaps": ["GA-I1"]
+      "gaps": [
+        "GA-I1"
+      ]
     },
     {
       "section": "2.4",
@@ -348,7 +366,9 @@
       "mark": "🔄",
       "status": "ongoing",
       "detail": "Week 2 Day 1-36 で実践中",
-      "gaps": ["TyDD-S1 benefit #7"]
+      "gaps": [
+        "TyDD-S1 benefit #7"
+      ]
     },
     {
       "section": "2.8",
@@ -434,7 +454,9 @@
       "status": "pending",
       "timing": "Week 6-7",
       "paper": "G1 Cedar VGD",
-      "gaps": ["GA-M4"]
+      "gaps": [
+        "GA-M4"
+      ]
     },
     {
       "section": "2.10",
@@ -690,7 +712,9 @@
       "mark": "🟡",
       "status": "done",
       "timing": "Day 111+",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "D17 = D2+D3+D5+D9+D13 全依存、WorkflowState + DeductiveDesignStep + WorkflowTransition state machine + 多 helper def。scope 大、empirical #11 後 (Day 111+) で着手 | Day 112 完了 (D17 3 theorem + state machine + 5 typed outputs + transition gating)"
     },
     {
@@ -711,7 +735,9 @@
       "mark": "🟢",
       "status": "pending",
       "timing": "Week 4+",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 114: ConformanceVerification 完了 (3 axiom + 23 theorem)。Day 115: EvolveSkill 完了 (axiom 0 + 32 theorem)。残: FormalDerivationSkill (17 axiom) / Framework/*。"
     },
     {
@@ -720,7 +746,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Week 4+",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Empirical #11 (Day 111) で Check 16 substring 一致のみの限界 識別。Day 103-110 の commit diff に paper survey artifact (00-synthesis/Principles.lean/docs/research/) zero touch、Day 102 audit pattern の token 層 recurrence。修正案 A (推奨): 11-pending-tasks.schema.json に step1_artifact_ref / step3_tydd_evaluation / step7_checklist_results 構造 field 追加、git show --stat 経由で artifact path cross-check。Check 5b 経由で defense in depth (D4 phase order)。修正案 B: commit diff cross-check のみ (read-only review 検出不可、部分 cover)"
     },
     {
@@ -729,7 +757,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Week 4+",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 117-119 で NodeKind / CoTFaithfulness / AcyclicGraph / DanglingDetection 完了 (Ontology に StructureKind.priority + PropositionCategory.strength 補強済)。残 5 file は前提未 port: CompatibilityClassification (Evolution) / EpistemicBridge (Terminology+EpistemicLayer) / EpistemicTagging+LLMRejection (EpistemicLayer) / PromotionProtocol (Observable)。Week 4+ 着手予定、まず前提 file (Evolution/Terminology/EpistemicLayer/Observable) port から。"
     },
     {
@@ -738,7 +768,9 @@
       "mark": "🟡",
       "status": "pending",
       "timing": "Tooling 着手後の Verification spot check で意味的整合確認",
-      "gaps": ["GA-I7"],
+      "gaps": [
+        "GA-I7"
+      ],
       "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。 | Day 124 spot check (Verification 部分着手): #print axioms on 6 representatives → 5/6 健全 (D1/T8/P6/D4/D18 が none/propext/manifest axiom 直接使用)、1/6 ⚠️ d13_constraint_negation_has_impact が `_native.native_decide.ax_1_1` 生成 (GA-C27 trusted code 拡張、kernel verify 外)。次回 Tooling 着手時に native_decide 代替 (decide / by simp / 手動 case 分割) 検討。 | Day 144 識別: Axioms.lean port が port 先 Ontology / T1-T8 / etc と structureImproved/processImproved/isHuman 等 declarations 重複 + actionBlocked autoImplicit 違反 → revert。Framework 残 chain (PromotionProtocol Observable / CompatibilityClassification Evolution) は Axioms 重複解消 or Evolution/Observable で T1-T8 個別 import 戦略変更必要。Day 145+ 別解決 (autoImplicit 5 file 明示 binder 化 = 規模大 別 Day cycle)。 | Day 145: autoImplicit 解消 試行 — AcyclicGraph + DanglingDetection 2 file は variable {α : Type} [BEq α] [DecidableEq α] で明示 binder 化 PASS。EpistemicLayer / EpistemicTagging / LLMRejection は lowercase a/b 等 多 type variable に依存、variable で cover 困難 → 各 declaration 個別明示 binder 化が必要、規模大 (EpistemicLayer 47 theorem)、defer 維持。派生負債 5→3 file 残存。 | Day 146: Observable.lean port も blocker 確認 — port 先 Ontology に skillQuality/contextEfficiency/outputQuality 等の opaque def が pre-pick されている (Day 100+ 拡張で先取り) + ConstraintId が Axioms にあった type で port されていない。Observable 単純 port 不可、Ontology の重複 def 削除 or Observable から重複部分削除が必要。Day 147+ 別 strategy。"
     }
   ],
@@ -2890,6 +2922,24 @@
           "reason": "TyDD 評価で Observable revert 識別、別 strategy"
         }
       ]
+    },
+    {
+      "day": 147,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 147 B'' Observable port 成功 (Strategy A) 9-step。Step 1 reference read。Step 3 TyDD eval (ConstraintId Ontology pre-pick + Observable 重複削除: S1/S4/F/B/H OK)。Step 4 fixup: Ontology に ConstraintId additive、Observable.lean copy + import/namespace 変換 + 8 opaque def + systemHealthy 削除 → lake build 417/417 PASS。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 5/5 PASS)。B chain blocker 解消 (Day 144/146 revert→今回 Strategy A で成立)。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
     }
   ],
   "gap_analysis": {
@@ -3380,7 +3430,9 @@
     {
       "priority": "未定",
       "criteria": "ユーザー判断待ち",
-      "gaps": ["Lean 文書 linter (日本語禁止)"],
+      "gaps": [
+        "Lean 文書 linter (日本語禁止)"
+      ],
       "week": "指示待ち"
     }
   ],

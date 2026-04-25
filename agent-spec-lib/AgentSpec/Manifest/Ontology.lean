@@ -516,6 +516,13 @@ inductive BoundaryLayer where
   | environmental
   deriving BEq, Repr
 
+/-- Identifier for constraints (T1-T8). Day 147: Observable.lean port のため pre-pick。
+    Type-level identifier for each constraint composing T₀ in Axioms.lean.
+    Domain of constraintBoundary (Observable.lean). -/
+inductive ConstraintId where
+  | t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8
+  deriving BEq, Repr
+
 /-- Boundary id → layer mapping。 -/
 def boundaryLayer : BoundaryId → BoundaryLayer
   | .ethicsSafety            => .fixed
