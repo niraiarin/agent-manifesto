@@ -500,6 +500,22 @@ if [ -n "$PREV_LOG" ]; then
       WARN=1
     fi
   fi
+  # 4-5: verifier_history cross-ref (Day 143 完全 enforcement)
+  # 最新 verifier_history entry に optional `cycle_check_log_hash` field があれば、
+  # 対応 log file の SHA-256 と一致するか確認 (subagent が log を実 read+commit したことを構造証明)
+  if [ "$CHK20_OK" = true ]; then
+    LATEST_VH_HASH=$(jq -r '.verifier_history[-1].cycle_check_log_hash // empty' "$MANIFEST" 2>/dev/null)
+    if [ -n "$LATEST_VH_HASH" ]; then
+      ACTUAL_HASH=$(shasum -a 256 "$PREV_LOG" 2>/dev/null | awk '{print $1}')
+      if [ "$LATEST_VH_HASH" != "$ACTUAL_HASH" ]; then
+        echo "[20] WARN  最新 verifier_history.cycle_check_log_hash が前回 log hash と不一致"
+        echo "    expected: $LATEST_VH_HASH"
+        echo "    actual:   $ACTUAL_HASH"
+        CHK20_OK=false
+        WARN=1
+      fi
+    fi
+  fi
   if [ "$CHK20_OK" = true ]; then
     echo "[20] OK  前回 run log 整合性 ($(basename "$PREV_LOG"))"
   fi

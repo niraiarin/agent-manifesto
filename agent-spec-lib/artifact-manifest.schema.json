@@ -4,85 +4,190 @@
   "title": "agent-spec-lib artifact manifest schema",
   "description": "Day 29.2 で導入された strict schema。thin catalog 原則 (per-Day narrative 禁止、jq 経由 CRUD、navigable structure) を structural に強制する。",
   "type": "object",
-  "required": ["$schema", "schema_role", "version", "package", "description", "scopes", "navigation_index", "artifacts", "build_status", "verifier_history"],
+  "required": [
+    "$schema",
+    "schema_role",
+    "version",
+    "package",
+    "description",
+    "scopes",
+    "navigation_index",
+    "artifacts",
+    "build_status",
+    "verifier_history"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "schema_role": { "type": "string", "minLength": 50 },
-    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" },
-    "package": { "type": "string" },
-    "description": { "type": "string" },
+    "$schema": {
+      "type": "string"
+    },
+    "schema_role": {
+      "type": "string",
+      "minLength": 50
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+"
+    },
+    "package": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
     "scopes": {
       "type": "array",
-      "items": { "enum": ["formalization", "test", "config"] },
+      "items": {
+        "enum": [
+          "formalization",
+          "test",
+          "config"
+        ]
+      },
       "uniqueItems": true
     },
-    "propositions_referenced": { "type": "array", "items": { "type": "string" } },
+    "propositions_referenced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "navigation_index": {
       "type": "object",
-      "required": ["by_layer", "by_scope", "last_compiled"],
+      "required": [
+        "by_layer",
+        "by_scope",
+        "last_compiled"
+      ],
       "additionalProperties": false,
       "properties": {
         "by_layer": {
           "type": "object",
           "additionalProperties": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         },
         "by_scope": {
           "type": "object",
           "additionalProperties": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         },
         "test_pairs": {
           "type": "object",
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": {
+            "type": "string"
+          }
         },
-        "last_compiled": { "type": "string", "format": "date" }
+        "last_compiled": {
+          "type": "string",
+          "format": "date"
+        }
       }
     },
     "artifacts": {
       "type": "array",
-      "items": { "$ref": "#/$defs/artifact" }
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
     },
     "build_status": {
       "type": "object",
-      "required": ["last_verified", "last_verified_phase", "lake_build_results"],
+      "required": [
+        "last_verified",
+        "last_verified_phase",
+        "lake_build_results"
+      ],
       "properties": {
-        "last_verified": { "type": "string", "format": "date" },
-        "last_verified_phase": { "type": "string" },
+        "last_verified": {
+          "type": "string",
+          "format": "date"
+        },
+        "last_verified_phase": {
+          "type": "string"
+        },
         "lake_build_results": {
           "type": "object",
           "additionalProperties": {
             "type": "object",
-            "required": ["result", "job_count", "scope"],
+            "required": [
+              "result",
+              "job_count",
+              "scope"
+            ],
             "properties": {
-              "result": { "type": "string" },
-              "job_count": { "type": "integer", "minimum": 0 },
-              "scope": { "type": "string" },
-              "note": { "type": "string", "maxLength": 300 }
+              "result": {
+                "type": "string"
+              },
+              "job_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "scope": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string",
+                "maxLength": 300
+              }
             }
           }
         },
-        "sorry_count": { "type": "integer", "minimum": 0 },
-        "axiom_count": { "type": "integer", "minimum": 0 },
-        "theorem_count": { "type": "integer", "minimum": 0 },
-        "example_count": { "type": "integer", "minimum": 0 },
-        "warning_count": { "type": "integer", "minimum": 0 },
-        "deprecated_api_usage": { "type": "integer", "minimum": 0 },
-        "native_decide_usage": { "type": "integer", "minimum": 0 },
-        "finite_bounded_universal_cases": { "type": "integer", "minimum": 0 },
+        "sorry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "axiom_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "theorem_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "example_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deprecated_api_usage": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "native_decide_usage": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "finite_bounded_universal_cases": {
+          "type": "integer",
+          "minimum": 0
+        },
         "breakdown": {
           "type": "object",
           "additionalProperties": {
             "type": "object",
-            "required": ["theorems", "examples"],
+            "required": [
+              "theorems",
+              "examples"
+            ],
             "properties": {
-              "theorems": { "type": "integer", "minimum": 0 },
-              "examples": { "type": "integer", "minimum": 0 }
+              "theorems": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "examples": {
+                "type": "integer",
+                "minimum": 0
+              }
             }
           }
         }
@@ -93,24 +198,67 @@
       "description": "Historical entries may contain legacy narrative fields; Day 29.2+ new entries should use compact form (round / date / result / addressable_count / evaluator ≤2000 chars).",
       "items": {
         "type": "object",
-        "required": ["round", "date", "result"],
+        "required": [
+          "round",
+          "date",
+          "result"
+        ],
         "additionalProperties": true,
         "properties": {
-          "round": { "type": "string" },
-          "date": { "type": "string" },
-          "result": { "enum": ["PASS", "FAIL"] },
-          "addressable_count": { "type": "integer", "minimum": 0 },
-          "informational_count": { "type": "integer", "minimum": 0 },
-          "addressed": { "type": "boolean" },
-          "evaluator": { "type": "string", "maxLength": 2000 },
-          "immediate_fix_details": { "type": "string", "maxLength": 400 },
+          "round": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "addressable_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "informational_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "addressed": {
+            "type": "boolean"
+          },
+          "evaluator": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "immediate_fix_details": {
+            "type": "string",
+            "maxLength": 400
+          },
           "change_category": {
-            "enum": ["namespace_only", "additive_axiom", "additive_definition", "additive_test", "proof_addition", "behavior_change", "breaking", "metadata_only", "process_only", "compatible_change"],
+            "enum": [
+              "namespace_only",
+              "additive_axiom",
+              "additive_definition",
+              "additive_test",
+              "proof_addition",
+              "behavior_change",
+              "breaking",
+              "metadata_only",
+              "process_only",
+              "compatible_change"
+            ],
             "description": "Day 81 N3 + Day 87 補完。Subagent 省略 justification の boilerplate 化防止。change の性質を明示 (namespace_only/additive は Subagent 省略可、proof_addition/behavior_change/breaking/compatible_change は Subagent 必須)。Day 88 P2 guideline: structure World 拡張 + instance Inhabited update を含む変更は compatible_change 以上 (additive_axiom 不可)、breaking field 削除 or rename は breaking。Check 15 動的検出は Day 90+ defer、resolve trigger: pending_items entry 'Day 87 P2: cycle-check change_category Inhabited/structure guideline' status='in_progress' → 'done' で trigger (現状は schema description で human-enforce)"
           },
           "subagent_dispatch": {
             "type": "boolean",
             "description": "Day 87 N10 補完: Subagent 並列 dispatch 実施時 true。boilerplate 化防止のため明示記録"
+          },
+          "cycle_check_log_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of cycle-check.sh run log file at commit time. Optional. Check 20 4-5 verifies match with .claude/metrics/cycle-check-runs/<TS>.log content."
           }
         }
       }
@@ -119,7 +267,11 @@
   "$defs": {
     "artifact": {
       "type": "object",
-      "required": ["id", "path", "scope"],
+      "required": [
+        "id",
+        "path",
+        "scope"
+      ],
       "additionalProperties": true,
       "patternProperties": {
         "^day[0-9]+_update$": false,
@@ -127,66 +279,247 @@
       },
       "not": {
         "anyOf": [
-          { "required": ["day14_update"] },
-          { "required": ["day15_update"] },
-          { "required": ["day16_update"] },
-          { "required": ["day17_update"] },
-          { "required": ["day18_update"] },
-          { "required": ["day19_update"] },
-          { "required": ["day20_update"] },
-          { "required": ["day21_update"] },
-          { "required": ["day22_update"] },
-          { "required": ["day23_update"] },
-          { "required": ["day24_update"] },
-          { "required": ["day25_update"] },
-          { "required": ["day26_update"] },
-          { "required": ["day27_update"] },
-          { "required": ["day28_update"] },
-          { "required": ["day29_update"] },
-          { "required": ["rfl_preference_pattern"] },
-          { "required": ["initial_build_error_pattern"] },
-          { "required": ["milestone_11_day_rfl_preference"] },
-          { "required": ["milestone_12_day_rfl_preference"] },
-          { "required": ["milestone_13_day_rfl_preference"] },
-          { "required": ["milestone_14_day_rfl_preference"] },
-          { "required": ["milestone_15_day_rfl_preference"] },
-          { "required": ["milestone_16_day_rfl_preference"] },
-          { "required": ["long_deferred_resolved"] },
-          { "required": ["subagent_verification"] },
-          { "required": ["week2_status"] }
+          {
+            "required": [
+              "day14_update"
+            ]
+          },
+          {
+            "required": [
+              "day15_update"
+            ]
+          },
+          {
+            "required": [
+              "day16_update"
+            ]
+          },
+          {
+            "required": [
+              "day17_update"
+            ]
+          },
+          {
+            "required": [
+              "day18_update"
+            ]
+          },
+          {
+            "required": [
+              "day19_update"
+            ]
+          },
+          {
+            "required": [
+              "day20_update"
+            ]
+          },
+          {
+            "required": [
+              "day21_update"
+            ]
+          },
+          {
+            "required": [
+              "day22_update"
+            ]
+          },
+          {
+            "required": [
+              "day23_update"
+            ]
+          },
+          {
+            "required": [
+              "day24_update"
+            ]
+          },
+          {
+            "required": [
+              "day25_update"
+            ]
+          },
+          {
+            "required": [
+              "day26_update"
+            ]
+          },
+          {
+            "required": [
+              "day27_update"
+            ]
+          },
+          {
+            "required": [
+              "day28_update"
+            ]
+          },
+          {
+            "required": [
+              "day29_update"
+            ]
+          },
+          {
+            "required": [
+              "rfl_preference_pattern"
+            ]
+          },
+          {
+            "required": [
+              "initial_build_error_pattern"
+            ]
+          },
+          {
+            "required": [
+              "milestone_11_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "milestone_12_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "milestone_13_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "milestone_14_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "milestone_15_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "milestone_16_day_rfl_preference"
+            ]
+          },
+          {
+            "required": [
+              "long_deferred_resolved"
+            ]
+          },
+          {
+            "required": [
+              "subagent_verification"
+            ]
+          },
+          {
+            "required": [
+              "week2_status"
+            ]
+          }
         ]
       },
       "properties": {
-        "id": { "type": "string", "pattern": "^agent-spec-lib:" },
-        "path": { "type": "string" },
-        "scope": { "enum": ["formalization", "test", "config"] },
-        "summary": { "type": "string", "maxLength": 200 },
-        "refs": { "type": "array", "items": { "type": "string" } },
-        "assumptions": { "type": "array" },
-        "enforces": { "type": "string" },
+        "id": {
+          "type": "string",
+          "pattern": "^agent-spec-lib:"
+        },
+        "path": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "formalization",
+            "test",
+            "config"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assumptions": {
+          "type": "array"
+        },
+        "enforces": {
+          "type": "string"
+        },
         "dependencies": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "edge"],
+            "required": [
+              "id",
+              "edge"
+            ],
             "properties": {
-              "id": { "type": "string" },
-              "module": { "type": "string" },
-              "edge": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "module": {
+                "type": "string"
+              },
+              "edge": {
+                "type": "string"
+              }
             }
           }
         },
-        "provides_types": { "type": "array", "items": { "type": "string" } },
-        "provides_definitions": { "type": "array", "items": { "type": "string" } },
-        "provides_instances": { "type": "array", "items": { "type": "string" } },
-        "design_origin": { "type": "string" },
-        "tydd_alignment": { "type": ["string", "object"] },
-        "decision_log": { "type": "string" },
-        "example_count": { "type": "integer", "minimum": 0 },
-        "command_invocations": { "type": "integer", "minimum": 0 },
-        "sorry_count": { "type": "integer", "minimum": 0 },
-        "axiom_count": { "type": "integer", "minimum": 0 },
-        "test_targets": { "type": "array", "items": { "type": "string" } }
+        "provides_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provides_definitions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provides_instances": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "design_origin": {
+          "type": "string"
+        },
+        "tydd_alignment": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "decision_log": {
+          "type": "string"
+        },
+        "example_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "command_invocations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sorry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "axiom_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "test_targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     }
   }
