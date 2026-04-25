@@ -96,7 +96,7 @@ export PATH="$HOME/.elan/bin:$PATH" && lake build Manifest
 
 ## 参照実装 — Claude Code 上の運用ワークフロー
 
-理論を Claude Code 上で実際に運用するための構成。12 スキル、18 フック、6 エージェント、393 テスト。
+理論を Claude Code 上で実際に運用するための構成。12 スキル、20+ フック、6 エージェント、393 テスト。
 
 ### スキル依存グラフ
 
@@ -226,7 +226,7 @@ graph LR
 | `/instantiate-model` | 条件付き公理系生成 | 形式モデル | ドメイン固有の公理系を生成する時 |
 | `/generate-plugin` | Claude Code plugin 自動生成 | D17 | 条件付き公理系から plugin を構築する時 |
 
-### フック一覧 (17個) — 自動的な構造強制
+### フック一覧 — 自動的な構造強制
 
 エージェントの裁量に依存せず、ツール実行時に自動強制される。
 
@@ -265,6 +265,11 @@ graph LR
 |--------|-----------|------|
 | `h5-doc-lint.sh` | PreToolUse: Bash (git commit) | Lean doc comment の lint（見出し階層、CJK、スラグ） |
 | `hallucination-check.sh` | PreToolUse: Bash (git commit) | ハルシネーション検出 |
+
+**D11 ツール委譲 (コンテキスト経済):**
+| フック | タイミング | 内容 |
+|--------|-----------|------|
+| `lean-cli-route.sh` | PreToolUse: Edit | `.lean` file の単一宣言編集を `lean-cli edit` に routing し、Edit tool の context 消費をゼロにする (L1 file-guard の直後に発火、test/spec パスは passthrough)。Impl-E #669 / PR #682 |
 
 **/evolve 専用:**
 | フック | タイミング | 内容 |
@@ -351,6 +356,7 @@ graph LR
 │   └── metrics/                          #   運用データ (JSONL)
 ├── research/                             # 調査・参照資料
 ├── reports/                              # 生成レポート
+├── experiments/lean-ast/                 # Lean metaprogram CLI (Research #654 + Impl #665)
 ├── archive/                              # 検証済み歴史的成果物
 ├── scripts/                              # 自動化スクリプト
 │   ├── trace-coverage.sh                 #   テスト→命題カバレッジレポート
