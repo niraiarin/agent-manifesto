@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-manifesto.internal/schemas/11-pending-tasks.json",
   "schema_role": "forward-looking pending items + roadmap (machine-readable DB)。Day 37 (2026-04-21) で markdown から migrate。過去 narrative (Day 6-29 per-Day entries / Section 12.6+ per-Day TyDD / Section 13 改訂 log) は 11-pending-tasks-archive.md に退役。本 file は jq で CRUD、検索、更新。新規記録は machine-readable のみ、人間可読性は二次。",
-  "last_updated": "2026-04-21",
+  "last_updated": "2026-04-25",
   "archive_pointer": "11-pending-tasks-archive.md",
   "references": [
     "10-gap-analysis.md: 104 Gap + 10 Warning 根拠",
@@ -772,6 +772,123 @@
         "GA-I7"
       ],
       "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。 | Day 124 spot check (Verification 部分着手): #print axioms on 6 representatives → 5/6 健全 (D1/T8/P6/D4/D18 が none/propext/manifest axiom 直接使用)、1/6 ⚠️ d13_constraint_negation_has_impact が `_native.native_decide.ax_1_1` 生成 (GA-C27 trusted code 拡張、kernel verify 外)。次回 Tooling 着手時に native_decide 代替 (decide / by simp / 手動 case 分割) 検討。 | Day 144 識別: Axioms.lean port が port 先 Ontology / T1-T8 / etc と structureImproved/processImproved/isHuman 等 declarations 重複 + actionBlocked autoImplicit 違反 → revert。Framework 残 chain (PromotionProtocol Observable / CompatibilityClassification Evolution) は Axioms 重複解消 or Evolution/Observable で T1-T8 個別 import 戦略変更必要。Day 145+ 別解決 (autoImplicit 5 file 明示 binder 化 = 規模大 別 Day cycle)。 | Day 145: autoImplicit 解消 試行 — AcyclicGraph + DanglingDetection 2 file は variable {α : Type} [BEq α] [DecidableEq α] で明示 binder 化 PASS。EpistemicLayer / EpistemicTagging / LLMRejection は lowercase a/b 等 多 type variable に依存、variable で cover 困難 → 各 declaration 個別明示 binder 化が必要、規模大 (EpistemicLayer 47 theorem)、defer 維持。派生負債 5→3 file 残存。 | Day 146: Observable.lean port も blocker 確認 — port 先 Ontology に skillQuality/contextEfficiency/outputQuality 等の opaque def が pre-pick されている (Day 100+ 拡張で先取り) + ConstraintId が Axioms にあった type で port されていない。Observable 単純 port 不可、Ontology の重複 def 削除 or Observable から重複部分削除が必要。Day 147+ 別 strategy。"
+    },
+    {
+      "id": "PI-1",
+      "section": "2.14",
+      "topic": "[P0] verifier_history PASS 単一値の意味分解 (cycle_hygiene / implementation / evaluation)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 148",
+      "detail": "現状 'PASS' は cycle-check exit 0 / 実装目的達成 / 意味妥当性 を区別なく等価視 (Day 144/146 で実装 fail でも PASS と記録される問題)。schema 拡張 (conservative extension): pass_layers field 追加 {cycle_hygiene, implementation, evaluation} 各 enum [pass/fail/n_a]。従来 result=PASS は cycle_hygiene=pass と等価扱い。entry 生成器で 3 軸入力強制。"
+    },
+    {
+      "id": "PI-2",
+      "section": "2.14",
+      "topic": "[P0] 同一 blocker N連敗 (>=2) で user escalation 強制",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 148",
+      "detail": "Axioms (Day 144) / Observable (Day 144,146) で 2-3 回 retry を user 確認なしに実行した問題への対応。CLAUDE.md (グローバル) に追記: 同一 scope marker への retry が 2 回連続 implementation=fail なら 3 回目前に user 戦略相談、auto mode 上書き不可。cycle-check Check 21 新設: 直近 14 day で同一 scope marker に対して implementation=fail が 2 回以上で fail-flag。PI-1 (pass_layers) 完了が前提。"
+    },
+    {
+      "id": "PI-3",
+      "section": "2.14",
+      "topic": "[P0] 長期 defer 項目に強制 decision deadline 制度化",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Day 149",
+      "detail": "Day 87 起源の defer (P3 empirical gating, Plausible) が 58 日継続、Manifest 移植 main sprint が 69 日継続、catalog 永久滞留問題への対応。pending_items schema に decision_deadline (Day#) field 追加 (conservative extension)。Check 11 を WARN→ERROR、deadline 超過時 promote/retire/escalate 3 択を強制。既存 deferred 項目には移行猶予 14 day で deadline 設定。"
+    },
+    {
+      "id": "PI-4",
+      "section": "2.14",
+      "topic": "[P1] 9-step cycle Step 3 を PoC + TyDD eval に分割 (Step 4 skip 常態化解消)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 150",
+      "detail": "直近 4 Day 中 2 Day で Step 4 (実装) skip、TyDD eval が事前 PoC 兼ねる構造ミス。CLAUDE.md project レベル cycle 仕様改訂: Step 3a (PoC: 5-15 分 throwaway 試行) + Step 3b (PoC 結果に基づく TyDD eval) + Step 4 (本実装、PoC 成功時のみ)。Step 4 が not_attempted (PoC fail) と skipped (戦略変更) の意味区別を導入。"
+    },
+    {
+      "id": "PI-5",
+      "section": "2.14",
+      "topic": "[P1] 1 commit/Day 化 (chore(metadata) hash backfill 撤廃)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 151",
+      "detail": "現状 1 Day = feat + chore(metadata) commit hash backfill 2 commit 固定。commit-msg hook で TBD placeholder を実 hash に置換、または post-commit hook で artifact-manifest.json + 11-pending-tasks.json の TBD を rewrite (single commit amend ではなく next commit に統合)。ceremonial commit 撤廃で commit log の signal/noise 改善。"
+    },
+    {
+      "id": "PI-6",
+      "section": "2.14",
+      "topic": "[P1] 週次 cost/value retro 制度化 (process_only 比率 + revert 回数 + Day delta 集計)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Day 152-153",
+      "detail": "毎 7 Day で retro entry 生成: token 消費 / commit 数 / 変更 LOC / theorem delta / axiom delta / process_only 比率 / revert 回数。Empirical revalidation (現状 7 Day cycle) と統合。Check 22 新設: '直近 7 Day 内に retro entry 存在' を確認。Phase 0 終了判断 (PI-7) の入力データになる。"
+    },
+    {
+      "id": "PI-7",
+      "section": "2.14",
+      "topic": "[P2] Phase 0 Week 5-6 chronological gate 設定 (user 同意必須)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "user 判断後 (Day 148 提案、Day 155 deadline 候補)",
+      "detail": "Day 147 = Week 21 相当 (147/7)、Week 5-6 名目との乖離大。Phase 0 終了 chronological gate (Day 155 など) を user 提案、終了時点で Manifest 移植進捗% / 残 blocker / Phase 1 移行可否 を判断。user 同意必須 (本項目自体が独立で着手可ではない)。PI-6 retro データを判断材料に。"
+    },
+    {
+      "id": "PI-8",
+      "section": "2.14",
+      "topic": "[P2] 自己評価権限 subagent 委譲 (change_category + implementation 判定)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "user 判断後",
+      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。"
+    },
+    {
+      "id": "PI-9",
+      "section": "2.14",
+      "topic": "[P3] native_decide 5 箇所撤去 (Observable.lean L637/659/683 + EpistemicLayer.lean L534/535)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 156+",
+      "detail": "GA-C27 trusted code 拡張禁止と矛盾。Observable は inductive 上の有限 case 分析なので decide で十分のはず。lakefile に linter.native_decide_warn 風オプション追加 (Mathlib v4.29 lint あり)、または pre-commit で grep ブロック。各 5 箇所を decide / by simp / 手動 case 分割で置換可能か検証。"
+    },
+    {
+      "id": "PI-10",
+      "section": "2.14",
+      "topic": "[P3] Hook ↔ Lean sync (CRITICAL_PATTERNS 二重定義 byte-check)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 156+",
+      "detail": "DesignFoundation.lean の VerificationIndependence / requiredConditions theorem が p2-verify-on-commit.sh hook 挙動を realize しているか Lean 側で検査されない問題。.claude/hooks/p2-verify-on-commit.sh の CRITICAL_PATTERNS を Lean side def criticalPatterns : List String に重複 declare、cycle-check Check 23 新設で両者文字列 list 等しいことを byte-check。または lake exe generate-hooks で Lean → bash 自動生成 (人手書き換え不可)。"
+    },
+    {
+      "id": "PI-11",
+      "section": "2.14",
+      "topic": "[P3] IsVerifyToken / TrustDelegation 二分岐 (object proof と meta attestation 分離)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 156+",
+      "detail": "VerifyToken.lean の IsVerifyToken は proof と外部 attestation を区別しない (smoke test の rfl proof と将来の VerifyTokenLoader 由来 attestation が同 typeclass)。改修: class IsVerifyToken (proof 用、現行) と class TrustDelegation (axiom externalAttestation 経由、attestation 用) に分離、agent_verify tactic で provenance 追跡可能化、#print axioms で attestation 由来を可視化。breaking change (既存呼び出し refactor)。"
+    },
+    {
+      "id": "PI-12",
+      "section": "2.14",
+      "topic": "[P3] Measurable semantic 強化 (現状 trivial provable で意味内容空洞)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 156+",
+      "detail": "Observable.lean Measurable m := ∃ f, ∀ w, f w = m w は f := m で trivial provable、'Demoted: 2026-04-01 — Measurable is trivially satisfied' docstring の通り意味内容失。3 案: (a) Computable f 要求 (Mathlib Computability) / (b) axiom skillQuality_measurable 各 m に declare で #print axioms 可視化 / (c) MeasurableSyntactic vs MeasurableSemantic typeclass 分離。breaking change。"
+    },
+    {
+      "id": "PI-13",
+      "section": "2.14",
+      "topic": "[P3] opaque def に semantic origin tag (SkillRegistry 連携、docstring 依存撤廃)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Day 156+",
+      "detail": "Ontology.lean L389-407 の 8 opaque (skillQuality 等) の semantic 意図 (どの benchmark / どの measure か) が docstring 依存、Lean 側で検査されない。Models/Instances/ の interpretation を Lean 側に持込、def skillQualityModel : InstanceWorld → Nat 提供、axiom skillQuality_model_compatible で結ぶ。または @[deriving_intent] 自製 attribute + SkillRegistry に origin 登録、cycle-check で 'opaque def origin 記載なし' WARN。conservative extension。"
     }
   ],
   "day_plan": [
@@ -2940,6 +3057,28 @@
         9
       ],
       "steps_skipped": []
+    },
+    {
+      "day": 148,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 148 Process Improvement Plan reflection (planning-only) 9-step。Step 1 reference read (構文/意味 × 対象/メタ 三軸評価 + サイクル運用反省)。Step 3 TyDD eval (改善 13 項目を 4 priority tier に区分: S1/S4/F/B/H OK)。Step 4 not_attempted (planning Day、Lean 実装なし、PI-1〜PI-13 各 item で別 Day 実装)。Step 6 docs 反映 = 本 commit (pending_items + process_improvement_plan)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20 5/5 PASS)。Step 5 verifier_history、Step 9 update-handoff。compatible change。次 Day 149 から PI-1 (pass_layers schema 拡張) 着手。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "planning Day、Lean 実装変更なし。PI-1〜PI-13 の各 item は別 Day cycle で実装"
+        }
+      ]
     }
   ],
   "gap_analysis": {
@@ -3697,5 +3836,57 @@
     "🟢": "低優先 — Week 後半または将来",
     "⚠": "部分達成 — 仕様の一部のみ達成、残部分は後続 Day/Week",
     "❗": "breaking change — 互換性分類 breaking change に相当"
+  },
+  "process_improvement_plan": {
+    "created_day": 147,
+    "trigger": "Day 138 'cycle check ってしてる？' user feedback の根本原因 (自己評価バイアス) 系統的対処、Day 144/146 連続 revert で顕在化したサイクル構造問題、構文/意味 × 対象/メタ 三軸評価結果",
+    "rationale": "改善は 4 tier に区分: P0 (自己評価バイアス構造削減 / 自分で着手可) / P1 (サイクル構造修正 / 自分で着手可) / P2 (ガバナンス変更 / user 同意必須) / P3 (Lean 形式系後続改善)。tier 内 item は依存順、tier 間は P0→P1→P2→P3 で実施。",
+    "tiers": {
+      "P0": {
+        "name": "自己評価バイアス構造削減",
+        "user_consent_required": false,
+        "target_days": "148-149",
+        "items": [
+          "PI-1",
+          "PI-2",
+          "PI-3"
+        ],
+        "exit_criteria": "verifier_history で PASS 単一値廃止、N連敗自動 escalate、長期 defer 強制 deadline"
+      },
+      "P1": {
+        "name": "サイクル構造修正",
+        "user_consent_required": false,
+        "target_days": "150-153",
+        "items": [
+          "PI-4",
+          "PI-5",
+          "PI-6"
+        ],
+        "exit_criteria": "Step 4 skip 常態化解消、1 commit/Day、週次 retro エントリ存在"
+      },
+      "P2": {
+        "name": "ガバナンス変更 (user 同意必須)",
+        "user_consent_required": true,
+        "target_days": "user 判断後",
+        "items": [
+          "PI-7",
+          "PI-8"
+        ],
+        "exit_criteria": "Phase 0 終了基準明示、change_category / implementation 判定が subagent 委譲"
+      },
+      "P3": {
+        "name": "Lean 形式系後続改善",
+        "user_consent_required": false,
+        "target_days": "Day 156+",
+        "items": [
+          "PI-9",
+          "PI-10",
+          "PI-11",
+          "PI-12",
+          "PI-13"
+        ],
+        "exit_criteria": "native_decide 撤去、Hook/Lean sync、IsVerifyToken / Measurable / opaque の semantic gap 明示化"
+      }
+    }
   }
 }
