@@ -21,12 +21,19 @@ fi
 # executes in the session CWD (main worktree). Extract the cd target so
 # `git diff --cached` queries the correct worktree.
 GIT_DIR=""
-if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-GIT_DIR=$(echo "$COMMAND" | sed -n 's/^[[:space:]]*cd[[:space:]][[:space:]]*\("\([^"]*\)"\|\([^ &;]*\)\).*/\2\3/p')
+
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
+  GIT_DIR=$(echo "$COMMAND" | grep -oE 'git[[:space:]]+-C[[:space:]]+("[^"]*"|[^[:space:]]+)' | head -1 | sed 's/git[[:space:]]*-C[[:space:]]*//' | tr -d '"')
 fi
+
+if [ -z "$GIT_DIR" ]; then
+  SEGMENT=$(echo "$COMMAND" | tr '|' '\n' | grep 'git.*commit' | head -1)
+  GIT_DIR=$(echo "$SEGMENT" | grep -oE '(^|[;&]+[[:space:]]*)cd[[:space:]]+("[^"]*"|[^ "&;]+)' | tail -1 | sed 's/.*cd[[:space:]]*//' | tr -d '"')
+fi
+
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
-GIT_CMD=(git -C "$GIT_DIR")
+  GIT_CMD=(git -C "$GIT_DIR")
 fi
 STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 if [ -z "$STAGED" ]; then
