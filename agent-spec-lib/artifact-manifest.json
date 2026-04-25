@@ -4040,6 +4040,16 @@
       "scope": "Tooling 第 5 entry。Phase 0 Week 5-6 substantial entry continued、verify token 構造化で p2-verified.jsonl と Lean instance の bridge 基盤。",
       "change_category": "conservative_extension",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 135 agent_verify class-aware 拡張",
+      "date": "2026-04-25",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 415 jobs PASS、theorem 350 不変、axiom 55 不変。AgentVerify.lean 拡張: agent_verify tactic を IsVerifyToken class-aware 化 (synthInstance で IsVerifyToken (goalType) 検索、成功なら mkProj 0 で evidence 取り出し goal.assign、失敗なら assumption fallback)。mkAppM error (too many explicit arguments) → mkProj 直接呼びに修正 (typeclass field accessor の正しい elab API)。smoke test 2 件 (hypothesis + IsVerifyToken instance) PASS。Day 134 の IsVerifyToken と Day 125 の agent_verify が連動。Step 4 fixup: mkAppM → mkProj 修正。",
+      "scope": "Tooling 5 entry 連動深化。verify token 構造化 (Day 134) と tactic 自動 discharge (Day 135) の bridge 完成、p2-verified.jsonl → IsVerifyToken instance → agent_verify discharge の chain の Lean 側半分 完成。残: p2-verified.jsonl token を Lean instance に変換する macro (将来 Tooling 6 entry)。",
+      "change_category": "conservative_extension",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
