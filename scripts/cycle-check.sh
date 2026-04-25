@@ -434,16 +434,33 @@ if [ "$EXIT" -eq 0 ]; then
     "$current_vh" "$current_dp" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$COUNT_FILE"
 fi
 
+# ----- Run trace persistence (Day 140、Empirical #13 L1+L2 foundation) -----
+# cycle-check 実行を構造的に記録 = subagent の「実行した」自己申告に依存せず、
+# log file の存在で証明可能。将来 Check 20 enforcement で verifier_history entry の
+# cycle_check_log_hash field と対応させる。
+RUN_LOG_DIR="${REPO_ROOT}/.claude/metrics/cycle-check-runs"
+mkdir -p "$RUN_LOG_DIR" 2>/dev/null
+TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
+GIT_HEAD=$(cd "$REPO_ROOT" 2>/dev/null && git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+RUN_LOG_FILE="$RUN_LOG_DIR/${TIMESTAMP}.log"
+{
+  printf '{"timestamp":"%s","git_head":"%s","exit":%d,"warn":%d,"vh_count":%d,"dp_count":%d}\n' \
+    "$TIMESTAMP" "$GIT_HEAD" "$EXIT" "$WARN" "$current_vh" "$current_dp"
+} > "$RUN_LOG_FILE" 2>/dev/null
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="
 if [ "$EXIT" -ne 0 ]; then
   echo "FAIL: addressable issues 検出、commit 前に対処すること"
+  echo "Run log: $RUN_LOG_FILE"
   exit 1
 elif [ "$WARN" -ne 0 ]; then
   echo "WARNING: informational items あり、確認推奨 (block せず)"
+  echo "Run log: $RUN_LOG_FILE"
   exit 2
 else
   echo "ALL PASS"
+  echo "Run log: $RUN_LOG_FILE"
   exit 0
 fi
