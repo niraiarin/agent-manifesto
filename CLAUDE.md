@@ -84,6 +84,19 @@
 - `opaque` types need manual `Repr` instances for `deriving Repr` to work on containing structures
 - `SelfGoverning` typeclass: any type defining principles must implement it (Ontology.lean)
 
+## Lean ファイル編集 (`.lean`)
+
+`.lean` ファイルの宣言単位の構造編集は **`lean-cli` (experiments/lean-ast/lean-cli/)** を優先する。Edit tool が file 全体を context に読み込むのに対し、`lean-cli` は Lean 本体 parser を用いた byte-preserving rewrite で context 消費ゼロ。
+
+- 宣言差し替え: `(cd experiments/lean-ast/lean-cli && lake env lake exe lean-cli edit <file> --replace-body <name> "<expr>" --output <file>)`
+- AST 抽出 (JSONL): `lean-cli parse <file>` / `lean-cli query <file> --kind axiom|theorem|def --name-substring <s>`
+- 宣言挿入: `lean-cli insert <file> --before <name> "<decl>" --output <file>`
+- Error contract: 8 exit code × 8 kind (`usage=64 io_read=1 parse_failure=2 ambiguous_name=3 invalid_range=4 name_not_found=5 io_write=6 internal_error=10`)
+- 前提: `(cd experiments/lean-ast/lean-cli && lake build)` を 1 回実行済み
+- 非対象: multi-line signature、partial body edit、attribute 変更 → Edit tool を使う
+- 自動 routing: PreToolUse hook `.claude/hooks/lean-cli-route.sh` が team 共通設定として有効 (l1-file-guard の後に発火、`/test/`・`/tests/`・`/spec/`・`_test.lean`・`_spec.lean` 等の真の test path のみ passthrough、`agent-spec-lib` のような identifier substring は engage)
+- Origin: Research #654 / Implementation #665 (PR #664, merge commit `54631cc`)
+
 ## Development Process
 
 - Step 0 before implementation: `/research` for spec research (0a) + prior art (0b) + PoC (0c)
