@@ -20,9 +20,10 @@ This file provides:
 - Correctness theorem: well-formed graphs have no dangling deps
 -/
 
-set_option autoImplicit true
 
 namespace AgentSpec.Manifest.Framework
+
+variable {α : Type} [BEq α] [DecidableEq α]
 
 open AgentSpec.Manifest
 

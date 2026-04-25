@@ -20,9 +20,10 @@ This is equivalent to the well-founded ordering approach but more
 computationally tractable for decision procedures.
 -/
 
-set_option autoImplicit true
 
 namespace AgentSpec.Manifest.Framework
+
+variable {α : Type} [BEq α] [DecidableEq α]
 
 open AgentSpec.Manifest
 
