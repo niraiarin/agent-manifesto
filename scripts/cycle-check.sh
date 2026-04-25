@@ -456,9 +456,12 @@ fi
     "$TIMESTAMP" "$GIT_HEAD" "$EXIT" "$SHELL_EXIT" "$WARN" "$current_vh" "$current_dp"
 } > "$RUN_LOG_FILE" 2>/dev/null
 
-# ----- Check 20: 前回 run log の整合性検証 (Day 141、Empirical #14 C 対応) -----
-# touch 空 file / git_head 不一致 / schema 欠損 を検出。完全 enforcement (verifier_history
-# cycle_check_log_hash field cross-ref) は schema 変更含むため Day 142+ defer。
+# ----- Check 20: 前回 run log の整合性検証 (Day 141 minimal + Day 142 full enforcement) -----
+# Empirical #14 C 5 loophole 対応:
+#   4-1: 0-byte file (touch 偽造) — Day 141
+#   4-2: schema 完全性 (7 field 全存在) — Day 141
+#   4-3: git_head が現 HEAD の祖先 (古い log の流用検出) — Day 142
+#   4-4: timestamp monotonic (時計改竄 / copy 偽装検出) — Day 142
 PREV_LOG=$(ls -t "$RUN_LOG_DIR"/*.log 2>/dev/null | sed -n '2p')
 if [ -n "$PREV_LOG" ]; then
   CHK20_OK=true
@@ -478,6 +481,24 @@ if [ -n "$PREV_LOG" ]; then
         break
       fi
     done
+  fi
+  # 4-3: git_head が現 HEAD の祖先 commit (古い log の流用 or fake hash 検出)
+  if [ "$CHK20_OK" = true ]; then
+    PREV_HEAD=$(jq -r '.git_head' "$PREV_LOG")
+    if [ "$PREV_HEAD" != "unknown" ] && ! (cd "$REPO_ROOT" && git merge-base --is-ancestor "$PREV_HEAD" HEAD 2>/dev/null); then
+      echo "[20] WARN  前回 log git_head '$PREV_HEAD' が現 HEAD の祖先でない (流用 or fake)"
+      CHK20_OK=false
+      WARN=1
+    fi
+  fi
+  # 4-4: timestamp monotonic (前回 ts < 今回 ts、UTC ISO8601 形式の lexicographic 比較で OK)
+  if [ "$CHK20_OK" = true ]; then
+    PREV_TS=$(jq -r '.timestamp' "$PREV_LOG")
+    if [[ "$PREV_TS" > "$TIMESTAMP" ]]; then
+      echo "[20] WARN  前回 log timestamp 逆行: $PREV_TS > $TIMESTAMP (時計改竄 or copy 偽装)"
+      CHK20_OK=false
+      WARN=1
+    fi
   fi
   if [ "$CHK20_OK" = true ]; then
     echo "[20] OK  前回 run log 整合性 ($(basename "$PREV_LOG"))"

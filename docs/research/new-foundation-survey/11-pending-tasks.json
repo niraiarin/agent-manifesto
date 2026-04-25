@@ -2784,6 +2784,28 @@
           "reason": "TyDD 評価で fixup なし (新 field 追加 + 新 Check 追加のみ)"
         }
       ]
+    },
+    {
+      "day": 142,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 142 Check 20 完全 enforcement (4-3 git_head 祖先 + 4-4 timestamp monotonic) 9-step。Step 1 reference read。Step 3 TyDD eval (shell script 拡張: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 全 4 sub PASS)。4-3: git merge-base で前回 git_head 祖先確認。4-4: timestamp 逆行検出。L1+L2 substantial 進展。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし"
+        }
+      ]
     }
   ],
   "gap_analysis": {
