@@ -4100,6 +4100,16 @@
       "scope": "Empirical #13 Iter 2 の続き (L1+L2 foundation)。完全 enforcement (schema field 追加 + Check 20 hook) は別 Day。",
       "change_category": "compatible_change",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 141 Empirical #14 Iter 2 (log semantic gap fix + Check 20 minimal)",
+      "date": "2026-04-25",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "3 subagent (median+edge+negative)。A (median): log content 確認 OK、finding = log `exit` field が raw EXIT で shell exit と semantic gap。B (edge): subagent_type general-verifier 誤指定で dispatch fail (正しくは verifier)。C (negative): 5/5 loophole TP (touch/copy/read 不足/enforcement 不在/git_head 未検証)、Check 20 minimal design 提示。Iter 2: (1) log `exit` → `fail_flag` + `shell_exit` 分離。(2) Check 20 追加 (前回 log の 0-byte + 7 field schema 検証)。移行確認: 旧 log → WARN、新 log → OK。残 (Check 20 git_head/timestamp monotonic + verifier_history cycle_check_log_hash field cross-ref) は Day 142+ defer。",
+      "scope": "Empirical #14 Iter 2、Day 137 反省 L1+L2 構造解決の続き。完全 enforcement (verifier_history field cross-ref + 外部 oracle hash 検証) は Day 142+ defer。",
+      "change_category": "compatible_change",
+      "subagent_dispatch": true
     }
   ],
   "navigation_index": {

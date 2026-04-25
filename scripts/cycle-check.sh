@@ -434,19 +434,57 @@ if [ "$EXIT" -eq 0 ]; then
     "$current_vh" "$current_dp" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$COUNT_FILE"
 fi
 
-# ----- Run trace persistence (Day 140、Empirical #13 L1+L2 foundation) -----
+# ----- Run trace persistence (Day 140 + Day 141 Empirical #14 修正) -----
 # cycle-check 実行を構造的に記録 = subagent の「実行した」自己申告に依存せず、
-# log file の存在で証明可能。将来 Check 20 enforcement で verifier_history entry の
-# cycle_check_log_hash field と対応させる。
+# log file の存在で証明可能。Day 141 Iter 2: `exit` field を `fail_flag` (raw EXIT) と
+# `shell_exit` (final 0/1/2) に分離 (Empirical #14 A finding 対応)。
 RUN_LOG_DIR="${REPO_ROOT}/.claude/metrics/cycle-check-runs"
 mkdir -p "$RUN_LOG_DIR" 2>/dev/null
 TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
 GIT_HEAD=$(cd "$REPO_ROOT" 2>/dev/null && git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 RUN_LOG_FILE="$RUN_LOG_DIR/${TIMESTAMP}.log"
+# shell_exit を Summary 分岐と同 logic で事前計算
+if [ "$EXIT" -ne 0 ]; then
+  SHELL_EXIT=1
+elif [ "$WARN" -ne 0 ]; then
+  SHELL_EXIT=2
+else
+  SHELL_EXIT=0
+fi
 {
-  printf '{"timestamp":"%s","git_head":"%s","exit":%d,"warn":%d,"vh_count":%d,"dp_count":%d}\n' \
-    "$TIMESTAMP" "$GIT_HEAD" "$EXIT" "$WARN" "$current_vh" "$current_dp"
+  printf '{"timestamp":"%s","git_head":"%s","fail_flag":%d,"shell_exit":%d,"warn":%d,"vh_count":%d,"dp_count":%d}\n' \
+    "$TIMESTAMP" "$GIT_HEAD" "$EXIT" "$SHELL_EXIT" "$WARN" "$current_vh" "$current_dp"
 } > "$RUN_LOG_FILE" 2>/dev/null
+
+# ----- Check 20: 前回 run log の整合性検証 (Day 141、Empirical #14 C 対応) -----
+# touch 空 file / git_head 不一致 / schema 欠損 を検出。完全 enforcement (verifier_history
+# cycle_check_log_hash field cross-ref) は schema 変更含むため Day 142+ defer。
+PREV_LOG=$(ls -t "$RUN_LOG_DIR"/*.log 2>/dev/null | sed -n '2p')
+if [ -n "$PREV_LOG" ]; then
+  CHK20_OK=true
+  # 4-1: 0-byte file (touch 偽造)
+  if [ ! -s "$PREV_LOG" ]; then
+    echo "[20] WARN  前回 run log empty (touch 偽造の疑い): $(basename "$PREV_LOG")"
+    CHK20_OK=false
+    WARN=1
+  fi
+  # 4-2: schema 完全性 (jq で 7 field 全部存在確認)
+  if [ "$CHK20_OK" = true ]; then
+    for field in timestamp git_head fail_flag shell_exit warn vh_count dp_count; do
+      if ! jq -e "has(\"$field\")" "$PREV_LOG" >/dev/null 2>&1; then
+        echo "[20] WARN  前回 run log $(basename "$PREV_LOG") に '$field' field 欠損"
+        CHK20_OK=false
+        WARN=1
+        break
+      fi
+    done
+  fi
+  if [ "$CHK20_OK" = true ]; then
+    echo "[20] OK  前回 run log 整合性 ($(basename "$PREV_LOG"))"
+  fi
+else
+  echo "[20] OK  前回 run log なし (初回 run)"
+fi
 
 # ----- 結果 -----
 echo ""
