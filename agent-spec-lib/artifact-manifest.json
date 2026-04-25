@@ -4050,6 +4050,16 @@
       "scope": "Tooling 5 entry 連動深化。verify token 構造化 (Day 134) と tactic 自動 discharge (Day 135) の bridge 完成、p2-verified.jsonl → IsVerifyToken instance → agent_verify discharge の chain の Lean 側半分 完成。残: p2-verified.jsonl token を Lean instance に変換する macro (将来 Tooling 6 entry)。",
       "change_category": "conservative_extension",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 136 VerifyTokenLoader (p2-verified.jsonl bridge)",
+      "date": "2026-04-25",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 416 jobs PASS、theorem 350 不変、axiom 55 不変。Phase 0 Week 5-6 Tooling 第 6 entry = VerifyTokenLoader.lean (VerifiedTokenRaw struct + loadVerifiedTokens IO + countIndependentTokens helper、Lean.Json.parse で各行 parse、field 不在 skip)。Functional test 実 p2-verified.jsonl: Total 18、Independent PASS 15。Tooling chain 完成: SkillRegistry→SkillVCG→IsVerifyToken→agent_verify↔VerifyTokenLoader。",
+      "scope": "Tooling 第 6 entry 完成。p2-verified.jsonl ↔ Lean 内 verify chain の bridge foundation 完成、Lean 内で hook 出力を解析・enforce 可能基盤。",
+      "change_category": "conservative_extension",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
