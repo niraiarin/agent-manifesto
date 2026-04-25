@@ -70,6 +70,16 @@ agent-spec-lib roadmap (`agent-spec-lib/AgentSpec.lean` + `docs/research/new-fou
 - **派生負債の catalog 化**: byte-identical port 規律から逸脱した派生 (Ontology 補強、autoImplicit 局所有効化、World field 順吸収、新規 helper theorem 追加 等) は pending_items に "派生負債" entry として記録、累積を可視化する。
 - **Verification spot check の必須化**: Tooling 層が integrate された後は、port した theorem の代表サンプルに `#print axioms` 等の意味検証を spot check する。lake build PASS のみで意味的整合を主張しない。
 - **Step 7 mandatory checklist は実行 + 出力確認まで一体** (Day 137 反省): scope に「mandatory checklist 6 項目 (PASS)」と書く前に、`bash scripts/cycle-check.sh` を **必ず実行**、output を読む。schema NG (Check 5a/5b)・cardinality WARN 以外の **新規 WARN/FAIL** が出た場合は commit 前に対処。change_category は `agent-spec-lib/artifact-manifest.schema.json` enum (namespace_only / additive_axiom / additive_definition / additive_test / proof_addition / behavior_change / breaking / metadata_only / process_only / compatible_change) のいずれかから選ぶ。`conservative_extension` は schema 非対応値、commit message body の互換性分類 (P3 hook 用) と区別する。
+- **change_category 混在ケース選択 guideline** (Day 138 Empirical #13 L4 解消): 1 commit が複数 change kind を含む場合は **影響度 高い順** で 1 値を選ぶ。優先順位: `breaking` > `behavior_change` > `compatible_change` > `proof_addition` > `additive_axiom` > `additive_definition` > `additive_test` > `namespace_only` > `metadata_only` > `process_only`。例: 「新 axiom + 派生 theorem + struct 修正」→ `compatible_change` (struct 修正が API 影響、最高)、「新 theorem 5 + 既存 def helper」→ `proof_addition`、「pure metadata commit」→ `metadata_only`。
+- **commit message body ↔ verifier_history mapping table** (Day 138 Empirical #13 L5 解消、dual-track drift 防止):
+
+  | commit message body literal (P3 hook) | verifier_history.change_category (schema enum) |
+  |---|---|
+  | `conservative extension` | `additive_definition` / `additive_axiom` / `additive_test` / `namespace_only` のいずれか |
+  | `compatible change` | `compatible_change` / `proof_addition` / `behavior_change` (機能拡張なら) / `metadata_only` (process_only と区別) |
+  | `breaking change` | `breaking` |
+
+  両 commit (実装 commit + metadata backfill) で literal を一致させ、`grep "(.*change.*)\|(.*extension)"` で commit message + verifier_history の整合を機械的に確認できる構造を維持する。
 
 ## スキルルーティング
 
