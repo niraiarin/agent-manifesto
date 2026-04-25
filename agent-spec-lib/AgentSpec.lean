@@ -53,6 +53,7 @@ import AgentSpec.Tooling.SkillRegistry
 import AgentSpec.Tooling.SkillVCG
 import AgentSpec.Tooling.VerifyToken
 import AgentSpec.Tooling.VerifyTokenLoader
+import AgentSpec.Tooling.VerifyTokenMacro
 import AgentSpec.Manifest.FormalDerivationSkill
 import AgentSpec.Manifest.Framework.NodeKind
 import AgentSpec.Manifest.Framework.CoTFaithfulness

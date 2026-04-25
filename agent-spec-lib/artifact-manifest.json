@@ -4060,6 +4060,16 @@
       "scope": "Tooling 第 6 entry 完成。p2-verified.jsonl ↔ Lean 内 verify chain の bridge foundation 完成、Lean 内で hook 出力を解析・enforce 可能基盤。",
       "change_category": "conservative_extension",
       "subagent_dispatch": false
+    },
+    {
+      "round": "Week 3 Day 137 VerifyTokenMacro (Tooling 7 entry chain link)",
+      "date": "2026-04-25",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "lake build 417 jobs PASS、theorem 350 不変、axiom 55 不変。Tooling 第 7 entry = AgentSpec/Tooling/VerifyTokenMacro.lean (verify_token name : Prop で axiom + IsVerifyToken instance 一括展開)。Step 4 fixup: 当初 macro 単体 → unexpected token error → syntax + macro_rules pattern (Lean 4 標準)。Smoke test 当初 → axiom production residual 派生負債 → 削除、AgentSpecTest 系で隔離予定。Tooling 7 entry chain 完成: SkillRegistry→VCG→IsVerifyToken→agent_verify↔Loader↔Macro。",
+      "scope": "Tooling chain final link 完成。p2-verified.jsonl token → IsVerifyToken instance auto-gen → agent_verify discharge の Lean 側 chain 全部実装済 (foundation level)。次: AgentSpecTest 系で macro 動作 functional test、または VerifyTokenLoader と macro の bridge (token id → instance auto-register) の elab 実装。",
+      "change_category": "conservative_extension",
+      "subagent_dispatch": false
     }
   ],
   "navigation_index": {
