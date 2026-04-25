@@ -69,6 +69,7 @@ agent-spec-lib roadmap (`agent-spec-lib/AgentSpec.lean` + `docs/research/new-fou
 - **進捗報告は scope を分離**: 「Phase 0 完了率 X%」を単一値で報告しない。本道 (Week 1-8 元 scope) と拡張 (Framework/Models/Skill 系) を別 metric として提示する。
 - **派生負債の catalog 化**: byte-identical port 規律から逸脱した派生 (Ontology 補強、autoImplicit 局所有効化、World field 順吸収、新規 helper theorem 追加 等) は pending_items に "派生負債" entry として記録、累積を可視化する。
 - **Verification spot check の必須化**: Tooling 層が integrate された後は、port した theorem の代表サンプルに `#print axioms` 等の意味検証を spot check する。lake build PASS のみで意味的整合を主張しない。
+- **Step 7 mandatory checklist は実行 + 出力確認まで一体** (Day 137 反省): scope に「mandatory checklist 6 項目 (PASS)」と書く前に、`bash scripts/cycle-check.sh` を **必ず実行**、output を読む。schema NG (Check 5a/5b)・cardinality WARN 以外の **新規 WARN/FAIL** が出た場合は commit 前に対処。change_category は `agent-spec-lib/artifact-manifest.schema.json` enum (namespace_only / additive_axiom / additive_definition / additive_test / proof_addition / behavior_change / breaking / metadata_only / process_only / compatible_change) のいずれかから選ぶ。`conservative_extension` は schema 非対応値、commit message body の互換性分類 (P3 hook 用) と区別する。
 
 ## スキルルーティング
 
