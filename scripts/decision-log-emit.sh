@@ -22,6 +22,9 @@
 # Skill-driven invocation (e.g. from .claude/skills/verify/SKILL.md):
 #   echo "$payload_json" | bash scripts/decision-log-emit.sh outcome.verify
 #
+# Poller-driven invocation (e.g. from scripts/poll-pr-merged.py):
+#   echo "$payload_json" | bash scripts/decision-log-emit.sh outcome.pr_merged
+#
 # Environment overrides:
 #   DECISION_LOG_DIR        — destination (default: <repo>/docs/research/routellm-phase3/logs)
 #   DECISION_LOG_REDACTION  — "none" | "prompt_sha_only" (default: prompt_sha_only)
@@ -123,6 +126,29 @@ elif event_type == "agent.output":
         "horizon": "immediate",
         "exit_status": payload.get("exit_status", "completed"),
     }
+elif event_type == "outcome.pr_merged":
+    pr_number = payload.get("pr_number")
+    pr_number = int(pr_number) if pr_number is not None else None
+    merge_commit_sha = payload.get("merge_commit_sha") or payload.get("git_commit_hash")
+    pr_merged_at = payload.get("merged_at_utc") or payload.get("pr_merged_at_utc")
+    pr_title = payload.get("pr_title")
+    head_sha = payload.get("head_sha")
+    base_branch = payload.get("base_branch") or "main"
+    outcome_section = {
+        "horizon": "late",
+    }
+    if pr_number is not None:
+        outcome_section["pr_number"] = pr_number
+    if pr_merged_at is not None:
+        outcome_section["pr_merged_at_utc"] = pr_merged_at
+    if merge_commit_sha is not None:
+        outcome_section["git_commit_hash"] = merge_commit_sha
+    if pr_title is not None:
+        outcome_section["pr_title"] = pr_title
+    if head_sha is not None:
+        outcome_section["head_sha"] = head_sha
+    if base_branch is not None:
+        outcome_section["base_branch"] = base_branch
 elif event_type == "outcome.verify":
     files = payload.get("files") or []
     evaluator = payload.get("evaluator") or "subagent/claude"
