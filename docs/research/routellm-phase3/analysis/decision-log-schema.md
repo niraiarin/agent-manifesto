@@ -264,6 +264,61 @@ land in different events (via parent_event_id), but the shape is uniform.
 }
 ```
 
+### `outcome.pr_merged` event (Poller-driven)
+
+Emitted by `scripts/poll-pr-merged.py`, intended to run on a 1-hour cron.
+Closes the loop: `user.turn → router.decision → agent.tool_call* → outcome.commit → outcome.pr_merged`.
+
+Resolution strategy for `parent_event_id` (priority order, first match wins):
+
+1. **`merge_commit_sha` lookup** — covers merge-commit / rebase-merge cases where
+   the post-commit hook fired locally on the merge SHA (e.g. main worktree
+   pulled it). Single-step, no extra API call.
+2. **PR commits API** — fetch feature-branch SHAs via
+   `gh api repos/:owner/:repo/pulls/:n/commits`, match against existing
+   `outcome.commit.git_commit_hash` in the log. Primary path for squash-merge
+   workflows because the local post-commit hook records feature-branch commits
+   (before push), and these SHAs are returned by the PR commits API.
+3. **`(#NNN)` regex fallback** — scan `outcome.commit.commit_subject` for
+   `(#NNN)` pattern, match by PR number. Last resort if subject already
+   carried the PR number (e.g. amend-after-PR-creation flow).
+4. **None** — emit with `parent_event_id: null`. PRs whose feature commits
+   predate the first decision log file are expected to land here (cutoff is
+   intentional; backfill is not done because there is no parent to attach to).
+
+Invocation contract (poll script writes this payload to stdin):
+
+```jsonc
+{
+  "pr_number":        683,
+  "merge_commit_sha": "5548cdd1...",            // squash-merge SHA on main
+  "pr_title":         "feat(verify): wire outcome.verify decision-log emit (#676) (#683)",
+  "merged_at_utc":    "2026-04-25T07:00:00Z",
+  "head_sha":         "091ff02...",              // tip of the feature branch
+  "base_branch":      "main",
+  "parent_event_id":  "uuid-of-outcome.commit"   // null if no join found
+}
+```
+
+Resulting envelope sections:
+
+```jsonc
+"outcome": {
+  "horizon":          "late",
+  "pr_number":        683,
+  "pr_merged_at_utc": "2026-04-25T07:00:00Z",
+  "git_commit_hash":  "5548cdd1...",
+  "pr_title":         "feat(verify): wire outcome.verify decision-log emit (#676) (#683)",
+  "head_sha":         "091ff02...",
+  "base_branch":      "main"
+}
+```
+
+Idempotency: poll script writes `<log_dir>/.pr-poll-state.json` with
+`seen_pr_numbers` and `last_polled_at`. Re-running the script will not emit
+duplicates for already-seen PRs. Best-effort: any subprocess / network failure
+exits 0 to keep cron silent.
+
 ### `outcome.verify` event (Skill-driven)
 
 Emitted by `.claude/skills/verify/SKILL.md` Step 5 in parallel with the
@@ -390,7 +445,26 @@ Add to `crontab` or launchd:
 Files older than 7 days (configurable via `RETAIN_RAW_DAYS`) are gzip'd.
 Analysis helpers must handle both `.jsonl` and `.jsonl.gz`.
 
-### 5. Redaction policy
+### 5. Schedule PR-merged poller (hourly)
+
+Add to `crontab` or launchd:
+
+```cron
+# every hour at :05 — emits outcome.pr_merged for newly merged PRs
+5 * * * * cd /path/to/agent-manifesto && python3 scripts/poll-pr-merged.py
+```
+
+Requires `gh` CLI authenticated for the repo. Idempotent via state file at
+`docs/research/routellm-phase3/logs/.pr-poll-state.json`. Set
+`DECISION_LOG_POLL_DEBUG=1` to enable verbose stderr logs (default silent).
+
+Manual ad-hoc poll (test mode):
+
+```bash
+DECISION_LOG_POLL_DEBUG=1 python3 scripts/poll-pr-merged.py --dry-run --limit 10
+```
+
+### 6. Redaction policy
 
 Production default: `DECISION_LOG_REDACTION=prompt_sha_only` — prompt text
 replaced by SHA-256 hash, length preserved. Development: `none` to keep
