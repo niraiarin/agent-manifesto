@@ -299,6 +299,42 @@ echo '{"epoch":'$(date +%s)',"files":["file1","file2",...],"verdict":"PASS","eva
 
 **FAIL の場合:** トークンを書き込まない。修正後に再度 /verify を実行する。
 
+#### 並行: decision log への `outcome.verify` emit
+
+P2 トークン書き込みと同時に、`decision_event v1.0.0` の `outcome.verify` を
+append-only ログに emit する。これにより後続の retrospective 分析で
+「どの commit/work に対し、どの evaluator が、どの結果を出したか」が結合可能になる。
+
+verdict が **PASS / FAIL / CONDITIONAL** いずれの場合も emit する（FAIL でも
+トークンは書かないが verify が走った事実は記録）。Best-effort: 失敗しても
+production path をブロックしない（`|| true`）。
+
+```bash
+# PASS / FAIL / CONDITIONAL いずれでも実行
+# files / verdict / evaluator / k_rounds / findings_count は実検証結果に置き換える
+jq -c -n \
+  --argjson files '["file1","file2"]' \
+  --arg verdict "PASS" \
+  --arg evaluator "subagent/claude" \
+  --argjson evaluator_independent false \
+  --argjson k_rounds 1 \
+  --arg pass_rate "1/1" \
+  --argjson findings_count 0 \
+  --argjson addressable 0 \
+  --arg risk_level "moderate" \
+  '$ARGS.named' \
+  | bash "$CLAUDE_PROJECT_DIR/scripts/decision-log-emit.sh" outcome.verify >/dev/null 2>&1 || true
+```
+
+emit script は `outcome.verify` event_type を認識し、payload を以下に展開する:
+
+- `execution.files_modified` ← `files`（検証対象パス）
+- `execution.evaluator` ← `evaluator`（`subagent/claude` / `logprob/qwen` / `human` 等）
+- `execution.evaluator_independent` ← `evaluator_independent`
+- `execution.k_rounds` / `execution.pass_rate` / `execution.risk_level`
+- `outcome.horizon` ← `"late"`（後続結合の合図）
+- `outcome.subsequent_verify` ← `{status, findings_count, addressable}`
+
 ### D10 接続: 検証結果の構造化
 
 D10（構造永続性）: 検証結果はエージェント消滅後も構造に残る。
