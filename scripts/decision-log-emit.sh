@@ -19,6 +19,9 @@
 #     }
 #   }
 #
+# Skill-driven invocation (e.g. from .claude/skills/verify/SKILL.md):
+#   echo "$payload_json" | bash scripts/decision-log-emit.sh outcome.verify
+#
 # Environment overrides:
 #   DECISION_LOG_DIR        — destination (default: <repo>/docs/research/routellm-phase3/logs)
 #   DECISION_LOG_REDACTION  — "none" | "prompt_sha_only" (default: prompt_sha_only)
@@ -119,6 +122,34 @@ elif event_type == "agent.output":
     outcome_section = {
         "horizon": "immediate",
         "exit_status": payload.get("exit_status", "completed"),
+    }
+elif event_type == "outcome.verify":
+    files = payload.get("files") or []
+    evaluator = payload.get("evaluator") or "subagent/claude"
+    evaluator_independent = bool(payload.get("evaluator_independent", False))
+    k_rounds = int(payload.get("k_rounds", 1) or 1)
+    pass_rate = payload.get("pass_rate") or (f"{k_rounds}/{k_rounds}" if str(payload.get("verdict") or "").upper() == "PASS" else None)
+    risk_level = payload.get("risk_level")
+    execution_section = {
+        "files_modified": list(files) if isinstance(files, list) else [],
+        "evaluator": evaluator,
+        "evaluator_independent": evaluator_independent,
+        "k_rounds": k_rounds,
+    }
+    if pass_rate is not None:
+        execution_section["pass_rate"] = pass_rate
+    if risk_level is not None:
+        execution_section["risk_level"] = risk_level
+    verdict_raw = str(payload.get("verdict") or "N/A").upper()
+    status = verdict_raw if verdict_raw in {"PASS", "FAIL", "CONDITIONAL", "N/A"} else "N/A"
+    subsequent_verify = {
+        "status": status,
+        "findings_count": int(payload.get("findings_count", 0) or 0),
+        "addressable": int(payload.get("addressable", payload.get("addressable_count", 0)) or 0),
+    }
+    outcome_section = {
+        "horizon": "late",
+        "subsequent_verify": subsequent_verify,
     }
 
 envelope = {

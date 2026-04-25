@@ -85,13 +85,24 @@ def drive_all_emitters(log_dir: Path) -> list[dict]:
     )
     assert rc == 0, f"node invocation failed rc={rc} err={err}"
 
-    # 3. decision-log-emit.sh: 4 hook event types
+    # 3. decision-log-emit.sh: 5 hook event types (4 lifecycle + 1 skill-driven)
     sh_script = REPO_ROOT / "scripts" / "decision-log-emit.sh"
     for event_type, payload in [
         ("user.turn", {"prompt": "/test the hook"}),
         ("agent.tool_call", {"tool_name": "Edit", "tool_input": {"file_path": "x.py"}}),
         ("agent.tool_call_complete", {"tool_name": "Edit", "tool_response": {"error": None}}),
         ("agent.output", {"exit_status": "completed"}),
+        ("outcome.verify", {
+            "files": ["docs/example.md", "scripts/example.sh"],
+            "verdict": "PASS",
+            "evaluator": "subagent/claude",
+            "evaluator_independent": False,
+            "k_rounds": 1,
+            "pass_rate": "1/1",
+            "findings_count": 0,
+            "addressable": 0,
+            "risk_level": "moderate",
+        }),
     ]:
         rc, out, err = run_subprocess(
             ["bash", str(sh_script), event_type],
@@ -181,9 +192,102 @@ def main() -> int:
         assert "agent.tool_call" in observed_types, "hook did not emit agent.tool_call"
         assert "agent.tool_call_complete" in observed_types, "hook did not emit agent.tool_call_complete"
         assert "outcome.commit" in observed_types, "git post-commit hook did not emit"
+        assert "outcome.verify" in observed_types, "hook did not emit outcome.verify"
+
+        verify_events = [e for e in events if e.get("event_type") == "outcome.verify"]
+        assert verify_events, "no outcome.verify event found"
+        ve = verify_events[0]
+        assert ve.get("execution", {}).get("evaluator") == "subagent/claude", \
+            f"unexpected evaluator: {ve.get('execution', {}).get('evaluator')}"
+        assert ve.get("execution", {}).get("evaluator_independent") is False, \
+            "evaluator_independent should be False"
+        assert ve.get("execution", {}).get("k_rounds") == 1
+        assert ve.get("execution", {}).get("pass_rate") == "1/1", \
+            f"unexpected pass_rate: {ve.get('execution', {}).get('pass_rate')}"
+        assert ve.get("execution", {}).get("risk_level") == "moderate", \
+            f"unexpected risk_level: {ve.get('execution', {}).get('risk_level')}"
+        assert ve.get("outcome", {}).get("horizon") == "late"
+        sv = ve.get("outcome", {}).get("subsequent_verify", {})
+        assert sv.get("status") == "PASS", f"unexpected status: {sv.get('status')}"
+        assert sv.get("findings_count") == 0
+        assert sv.get("addressable") == 0
+        assert ve.get("execution", {}).get("files_modified") == [
+            "docs/example.md",
+            "scripts/example.sh",
+        ]
+
+        run_outcome_verify_negative_paths()
 
         print(f"\nPASS integration: {len(events)} events, 4 emitters, schema-valid")
         return 0
+    finally:
+        shutil.rmtree(log_dir, ignore_errors=True)
+
+
+def _emit_verify(payload: dict, log_dir: Path) -> dict:
+    """Drive decision-log-emit.sh outcome.verify with payload, return parsed event."""
+    sh_script = REPO_ROOT / "scripts" / "decision-log-emit.sh"
+    env = {
+        **os.environ,
+        "DECISION_LOG_DIR": str(log_dir),
+        "DECISION_LOG_REDACTION": "none",
+        "CLAUDE_SESSION_ID": "verify-negative-paths",
+        "CLAUDE_PROJECT_DIR": str(REPO_ROOT),
+    }
+    rc, out, err = run_subprocess(
+        ["bash", str(sh_script), "outcome.verify"],
+        env=env,
+        stdin=json.dumps(payload),
+    )
+    assert rc == 0, f"emit rc={rc} err={err}"
+    files = sorted(glob.glob(str(log_dir / "decisions-*.jsonl")))
+    last = json.loads(open(files[-1]).read().strip().splitlines()[-1])
+    return last
+
+
+def run_outcome_verify_negative_paths() -> None:
+    """T-1: cover non-PASS verdicts, invalid inputs, edge field types."""
+    log_dir = Path(tempfile.mkdtemp(prefix="decision-log-verify-neg-"))
+    try:
+        ev = _emit_verify({
+            "files": ["a.py"], "verdict": "FAIL", "evaluator": "subagent/claude",
+            "evaluator_independent": False, "k_rounds": 1, "findings_count": 3, "addressable": 1,
+        }, log_dir)
+        assert ev["outcome"]["subsequent_verify"]["status"] == "FAIL"
+        assert ev["outcome"]["subsequent_verify"]["findings_count"] == 3
+        assert ev["outcome"]["subsequent_verify"]["addressable"] == 1
+        assert "pass_rate" not in ev["execution"], \
+            f"FAIL verdict should not auto-default pass_rate, got {ev['execution'].get('pass_rate')}"
+
+        ev = _emit_verify({
+            "files": ["b.py"], "verdict": "CONDITIONAL", "evaluator": "logprob/qwen",
+            "evaluator_independent": True, "k_rounds": 3, "pass_rate": "2/3",
+            "findings_count": 1, "addressable": 0,
+        }, log_dir)
+        assert ev["outcome"]["subsequent_verify"]["status"] == "CONDITIONAL"
+        assert ev["execution"]["k_rounds"] == 3
+        assert ev["execution"]["pass_rate"] == "2/3"
+        assert ev["execution"]["evaluator_independent"] is True
+
+        ev = _emit_verify({
+            "files": [], "verdict": "garbage_value", "evaluator": "human",
+            "evaluator_independent": True, "k_rounds": 1,
+        }, log_dir)
+        assert ev["outcome"]["subsequent_verify"]["status"] == "N/A", \
+            f"unknown verdict should map to N/A, got {ev['outcome']['subsequent_verify']['status']}"
+        assert ev["execution"]["files_modified"] == []
+        assert ev["outcome"]["subsequent_verify"]["findings_count"] == 0
+
+        ev = _emit_verify({
+            "evaluator": "api/openrouter", "evaluator_independent": True, "k_rounds": 1,
+        }, log_dir)
+        assert ev["outcome"]["subsequent_verify"]["status"] == "N/A", \
+            "missing verdict should map to N/A"
+        assert ev["execution"]["files_modified"] == []
+        assert "risk_level" not in ev["execution"], \
+            "risk_level absent in payload should be omitted from execution"
+
+        print("PASS outcome.verify negative paths (4 sub-cases)")
     finally:
         shutil.rmtree(log_dir, ignore_errors=True)
 

@@ -264,6 +264,55 @@ land in different events (via parent_event_id), but the shape is uniform.
 }
 ```
 
+### `outcome.verify` event (Skill-driven)
+
+Emitted by `.claude/skills/verify/SKILL.md` Step 5 in parallel with the
+P2 token write to `.claude/metrics/p2-verified.jsonl`. Captures the verifier
+identity, K-round configuration, and the verdict for retrospective routing
+analysis (e.g. "did cloud-routed turns produce code that passed verify more
+often than locally-routed turns?").
+
+Invocation contract (skill writes this payload to stdin):
+
+```jsonc
+{
+  "files":                ["path/a", "path/b"],   // verified file paths
+  "verdict":              "PASS",                  // PASS | FAIL | CONDITIONAL | N/A
+  "evaluator":            "subagent/claude",       // subagent/claude | logprob/qwen | ollama/<m> | api/<provider> | human
+  "evaluator_independent": false,                  // matches VerificationIndependence
+  "k_rounds":             1,
+  "pass_rate":            "1/1",                   // optional, defaults from k_rounds when verdict=PASS
+  "findings_count":       0,
+  "addressable":          0,                       // findings count that worker can address now
+  "risk_level":           "moderate"               // optional: low | moderate | high | critical
+}
+```
+
+Resulting envelope sections:
+
+```jsonc
+"execution": {
+  "files_modified":        ["path/a", "path/b"],
+  "evaluator":             "subagent/claude",
+  "evaluator_independent": false,
+  "k_rounds":              1,
+  "pass_rate":             "1/1",
+  "risk_level":            "moderate"
+},
+"outcome": {
+  "horizon":               "late",
+  "subsequent_verify": {
+    "status":              "PASS",
+    "findings_count":      0,
+    "addressable":         0
+  }
+}
+```
+
+Best-effort, append-only, never blocks the verify step. The skill emits on
+PASS, FAIL, and CONDITIONAL alike — the verify *event* is what the log
+captures, and the verdict is a field within it.
+
 ## `provenance` section
 
 ```jsonc
