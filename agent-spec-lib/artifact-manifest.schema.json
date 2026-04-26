@@ -259,6 +259,66 @@
             "type": "string",
             "pattern": "^[a-f0-9]{64}$",
             "description": "SHA-256 of cycle-check.sh run log file at commit time. Optional. Check 20 4-5 verifies match with .claude/metrics/cycle-check-runs/<TS>.log content."
+          },
+          "pass_layers": {
+            "type": "object",
+            "description": "PI-1 (Day 149): result PASS の意味分解。従来 result=PASS は cycle_hygiene=pass と等価扱い、implementation/evaluation は新 entry で必須。",
+            "additionalProperties": false,
+            "properties": {
+              "cycle_hygiene": {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "n_a"
+                ],
+                "description": "cycle-check.sh 全 check が exit 0 か"
+              },
+              "implementation": {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "not_attempted",
+                  "n_a"
+                ],
+                "description": "Day の主目的が達成されたか。revert は fail、planning Day や PoC fail は not_attempted、observation/audit Day は n_a"
+              },
+              "evaluation": {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "n_a"
+                ],
+                "description": "意味妥当性 (independent verifier / #print axioms / 等) で確認されたか。spot check 該当なしは n_a"
+              }
+            }
+          },
+          "failed_attempt": {
+            "type": "object",
+            "description": "PI-2 (Day 149): pass_layers.implementation=fail 時に必須。N連敗 detection (Check 21) の cross-ref 元。同一 marker への 2 回目以降は user 戦略相談を要する。",
+            "additionalProperties": false,
+            "required": [
+              "marker"
+            ],
+            "properties": {
+              "marker": {
+                "type": "string",
+                "description": "失敗 attempt の semantic identifier (例: \"B-Axioms\" / \"B-Observable\" / \"C-EpistemicLayer-autoImplicit\")。同一 blocker は同一 marker で記述。"
+              },
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "対象 file path (optional)"
+              },
+              "reason": {
+                "type": "string",
+                "description": "失敗 root cause の 1-2 文要約"
+              }
+            }
           }
         }
       }

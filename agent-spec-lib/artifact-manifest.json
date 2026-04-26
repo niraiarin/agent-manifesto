@@ -4253,7 +4253,19 @@
       "scope": "A→B→C→D 順序の B/C/D の bundle Day。A 完了 (Day 143)、B blocker 識別、C 規模大 defer、D Verification continued。",
       "change_category": "process_only",
       "subagent_dispatch": false,
-      "cycle_check_log_hash": "71f985c82b9c52189aebfc127b3a51eba0139cbd83b369d56ae948ce964c4239"
+      "cycle_check_log_hash": "71f985c82b9c52189aebfc127b3a51eba0139cbd83b369d56ae948ce964c4239",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "fail",
+        "evaluation": "pass"
+      },
+      "failed_attempt": {
+        "marker": "B-Axioms",
+        "files": [
+          "agent-spec-lib/AgentSpec/Manifest/Axioms.lean"
+        ],
+        "reason": "structureImproved/processImproved/isHuman 等 declarations 重複 + actionBlocked autoImplicit 違反"
+      }
     },
     {
       "round": "Week 3 Day 145 C 派生負債 autoImplicit 2 file 解消",
@@ -4264,7 +4276,12 @@
       "scope": "派生負債 5 file 中 2 解消、3 残存 (規模大 case)。AcyclicGraph 系 byte-identical 規律強化、Day 117/119 部分修正の clean closure 第 1 弾。",
       "change_category": "compatible_change",
       "subagent_dispatch": false,
-      "cycle_check_log_hash": "71f985c82b9c52189aebfc127b3a51eba0139cbd83b369d56ae948ce964c4239"
+      "cycle_check_log_hash": "71f985c82b9c52189aebfc127b3a51eba0139cbd83b369d56ae948ce964c4239",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     },
     {
       "round": "Week 3 Day 146 B' Observable port 試行 + D Verification",
@@ -4275,7 +4292,19 @@
       "scope": "B' blocker 識別 (Ontology pre-pick による Observable 重複)、D Verification continued。",
       "change_category": "process_only",
       "subagent_dispatch": false,
-      "cycle_check_log_hash": "c98e1a55c04f37cefe9a25ee5aae05bc01afe1b433d0af1e4ba5e5b192cfd2c4"
+      "cycle_check_log_hash": "c98e1a55c04f37cefe9a25ee5aae05bc01afe1b433d0af1e4ba5e5b192cfd2c4",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "fail",
+        "evaluation": "pass"
+      },
+      "failed_attempt": {
+        "marker": "B-Observable",
+        "files": [
+          "agent-spec-lib/AgentSpec/Manifest/Observable.lean"
+        ],
+        "reason": "Ontology pre-pick の 8 opaque def 重複 + ConstraintId 不在"
+      }
     },
     {
       "round": "Week 3 Day 147 B'' Observable port 成功 (Strategy A) + Tooling D",
@@ -4286,7 +4315,12 @@
       "scope": "B'' SUCCESS: Observable.lean 770→ port 成立 (Ontology pre-pick 8 opaque + systemHealthy + ConstraintId 追加で再構成)。Day 144/146 で revert→catalog された Observable blocker を Strategy A (Ontology 拡張 + 重複削除) で解消。B 7/9 → 8/9 progress。",
       "change_category": "compatible_change",
       "subagent_dispatch": false,
-      "cycle_check_log_hash": "b4a43c816d7187d05f3e7da767b88bc66b6085a6156764229e728f8a39cd2445"
+      "cycle_check_log_hash": "b4a43c816d7187d05f3e7da767b88bc66b6085a6156764229e728f8a39cd2445",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     },
     {
       "round": "Day 148 Process Improvement Plan reflection (planning-only)",
@@ -4297,7 +4331,28 @@
       "scope": "planning reflection: pending_items 78→91 (PI-1〜PI-13 追加)、process_improvement_plan section 新設、tier 構造で実施順序明示。",
       "change_category": "compatible_change",
       "subagent_dispatch": false,
-      "cycle_check_log_hash": "e994b4394a33084177af351e7abf3b844b4bb7f83313252fc1d04767b891c3a2"
+      "cycle_check_log_hash": "e994b4394a33084177af351e7abf3b844b4bb7f83313252fc1d04767b891c3a2",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "not_attempted",
+        "evaluation": "n_a"
+      }
+    },
+    {
+      "round": "Day 149 P0 PI-1+PI-2+PI-3 implementation (pass_layers + Check21/22 + decision_deadline)",
+      "date": "2026-04-26",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "P0 tier 完全実装。PI-1: artifact-manifest schema に pass_layers field 追加 (cycle_hygiene/implementation/evaluation 3 軸 enum)、Day 144-148 backfill。PI-2: failed_attempt field 追加 + cycle-check Check 21 (同一 marker N連敗 detection、Day 144 B-Axioms / Day 146 B-Observable backfill 各 1 回)。PI-3: decision_deadline field 機能化 + Check 22 (超過 ERROR)、3 長期 defer に deadline 設定 (Day 87 起源 → Day163、Manifest sprint → Day170 21 day grace)。schema 拡張は全て conservative extension。次 Day 150 から P1 着手。",
+      "scope": "P0 自己評価バイアス削減 3 項目完全実装、Check 21/22 機能化、自分の Day cycle にも適用 (本 entry が pass_layers 付き)。",
+      "change_category": "compatible_change",
+      "subagent_dispatch": false,
+      "cycle_check_log_hash": "da1622152323e90c3f3c33bb40a1bd7ab987deac1f8e86d7a870f29d06d2f2b4",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {

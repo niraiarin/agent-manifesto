@@ -523,6 +523,49 @@ else
   echo "[20] OK  前回 run log なし (初回 run)"
 fi
 
+# ----- Check 21: 同一 scope marker への N 連敗 detection (PI-2、Day 149) -----
+# 直近 14 verifier_history entry で pass_layers.implementation=fail が同一 scope marker に
+# 対して 2 回以上で fail-flag。同一 marker = round / scope の先頭 prefix 一致 (Day NNN B / B' / C 等)。
+# Day 144 (Axioms) / Day 144,146 (Observable) のような無計画 retry を構造的に検出。
+N_RECENT=14
+N_FAIL_THRESHOLD=2
+RECENT_FAILS=$(jq --argjson n "$N_RECENT" '
+  .verifier_history[-$n:]
+  | map(select(.pass_layers.implementation == "fail" and .failed_attempt.marker != null))
+  | map(.failed_attempt.marker)
+  | group_by(.) | map({marker: .[0], count: length})
+  | map(select(.count >= 2))
+' "$MANIFEST" 2>/dev/null)
+if [ -n "$RECENT_FAILS" ] && [ "$RECENT_FAILS" != "[]" ]; then
+  N_HIT=$(echo "$RECENT_FAILS" | jq 'length')
+  echo "[21] NG  同一 scope marker N 連敗 ($N_HIT marker、threshold=$N_FAIL_THRESHOLD):"
+  echo "$RECENT_FAILS" | jq -r '.[] | "    marker=\(.marker) fail_count=\(.count) — 3 回目 retry 前に user 戦略相談"'
+  EXIT=1
+else
+  echo "[21] OK  同一 scope marker N 連敗 なし (直近 $N_RECENT entry)"
+fi
+
+# ----- Check 22: pending_items decision_deadline 超過 detection (PI-3、Day 149) -----
+# pending_items 各 entry の decision_deadline (Day#) field が現 Day# を超過、かつ status が
+# pending/deferred の場合 ERROR (promote/retire/escalate 3 択を強制)。
+# 永久滞留 catalog 防止。
+CURRENT_DAY=$(jq -r '[.day_plan[].day | select(type == "number")] | max // 0' "$PENDING")
+OVERDUE=$(jq -r --argjson cd "$CURRENT_DAY" '
+  [.pending_items[]
+   | select(.decision_deadline != null
+            and .decision_deadline < $cd
+            and (.status == "pending" or .status == "deferred"))
+   | {topic: .topic, deadline: .decision_deadline, status: .status, id: (.id // "no-id")}]
+' "$PENDING" 2>/dev/null)
+if [ -n "$OVERDUE" ] && [ "$OVERDUE" != "[]" ]; then
+  N_OVERDUE=$(echo "$OVERDUE" | jq 'length')
+  echo "[22] NG  decision_deadline 超過 $N_OVERDUE 件 (current Day=$CURRENT_DAY、promote/retire/escalate 必須):"
+  echo "$OVERDUE" | jq -r '.[] | "    [\(.id)] \(.topic) — deadline=Day\(.deadline) status=\(.status)"'
+  EXIT=1
+else
+  echo "[22] OK  decision_deadline 超過 なし (current Day=$CURRENT_DAY)"
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="
