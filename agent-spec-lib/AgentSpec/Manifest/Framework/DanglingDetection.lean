@@ -79,17 +79,17 @@ def propositionDanglingList : List (PropositionId × PropositionId) :=
 
 /-- The manifesto's proposition dependency graph has no dangling dependencies.
     Every PropositionId referenced in dependencies is a known PropositionId.
-    Verified by native_decide (computational proof). -/
+    Verified by decide (computational proof). -/
 theorem proposition_graph_no_dangling :
-    propositionGraphHasDangling = false := by native_decide
+    propositionGraphHasDangling = false := by decide
 
 /-- Dangling list is empty (equivalent to above, more informative). -/
 theorem proposition_dangling_list_empty :
-    propositionDanglingList = [] := by native_decide
+    propositionDanglingList = [] := by decide
 
 /-- Total number of propositions in the manifesto. -/
 theorem proposition_count :
-    allPropositionIds.length = 40 := by native_decide
+    allPropositionIds.length = 40 := by decide
 
 -- ============================================================
 -- Structural properties
@@ -97,16 +97,16 @@ theorem proposition_count :
 
 /-- T-propositions (constraints) are roots: they have no dependencies. -/
 theorem t_propositions_are_roots :
-    (allPropositionNodes.filter fun n => n.kind == .axiom).length = 8 := by native_decide
+    (allPropositionNodes.filter fun n => n.kind == .axiom).length = 8 := by decide
 
 /-- H-propositions (hypothesis) would be assumptions — but none exist in core manifesto.
     The manifesto has no hypothesis-category propositions (all are T/E/P/L/D). -/
 theorem no_hypothesis_in_core :
-    (allPropositionNodes.filter fun n => n.kind == .assumption).length = 0 := by native_decide
+    (allPropositionNodes.filter fun n => n.kind == .assumption).length = 0 := by decide
 
 /-- D-propositions (design theorems) are derived nodes. -/
 theorem d_propositions_are_derived :
     (allPropositionNodes.filter fun n =>
-      n.kind == .derived && n.level == 4).length = 18 := by native_decide
+      n.kind == .derived && n.level == 4).length = 18 := by decide
 
 end AgentSpec.Manifest.Framework

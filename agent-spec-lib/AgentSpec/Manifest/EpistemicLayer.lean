@@ -531,8 +531,8 @@ theorem transitive_dependency_example :
     @TransitivelyDependsOn PropositionId _ .d1 .t6 := by
   apply TransitivelyDependsOn.trans
     (b := PropositionId.l1)
-  · exact TransitivelyDependsOn.direct (by native_decide)
-  · exact TransitivelyDependsOn.direct (by native_decide)
+  · exact TransitivelyDependsOn.direct (by decide)
+  · exact TransitivelyDependsOn.direct (by decide)
 
 -- ============================================================
 -- Theorem 3: join との整合性

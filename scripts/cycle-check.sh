@@ -585,6 +585,36 @@ else
   echo "[23] OK  weekly_retro 直近 (Day ${LATEST_RETRO}、${RETRO_AGE} Day 前)"
 fi
 
+# ----- Check 24: Hook ↔ Lean criticalPatterns sync byte-check (PI-10、Day 153) -----
+# .claude/hooks/p2-verify-on-commit.sh の CRITICAL_PATTERNS と
+# agent-spec-lib/AgentSpec/Tooling/CriticalPatterns.lean の criticalPatterns def が一致するか確認。
+# meta-meta 層: DesignFoundation の VerificationIndependence theorem が hook で realize されているか structural verify。
+HOOK_FILE="$REPO_ROOT/.claude/hooks/p2-verify-on-commit.sh"
+LEAN_FILE="$REPO_ROOT/agent-spec-lib/AgentSpec/Tooling/CriticalPatterns.lean"
+if [ -f "$HOOK_FILE" ] && [ -f "$LEAN_FILE" ]; then
+  HOOK_CP=$(grep -oE "CRITICAL_PATTERNS='[^']+'" "$HOOK_FILE" | sed -E "s/CRITICAL_PATTERNS='([^']+)'/\\1/")
+  # Lean の def criticalPatterns : String := "..." から literal を抽出
+  # Lean 側は \\\\ で escape されている (Lean string literal)、hook は raw single-quote、両者を normalize
+  LEAN_CP=$(grep -oE 'def criticalPatterns : String :=$' -A 1 "$LEAN_FILE" | tail -1 | sed -E 's/^ *"(.*)"$/\1/' | sed 's/\\\\/\\/g')
+  if [ -z "$HOOK_CP" ]; then
+    echo "[24] WARN  hook CRITICAL_PATTERNS 抽出失敗 (file 構造変化?)"
+    WARN=1
+  elif [ -z "$LEAN_CP" ]; then
+    echo "[24] WARN  Lean criticalPatterns 抽出失敗 (file 構造変化?)"
+    WARN=1
+  elif [ "$HOOK_CP" = "$LEAN_CP" ]; then
+    echo "[24] OK  Hook ↔ Lean criticalPatterns sync"
+  else
+    echo "[24] NG  Hook ↔ Lean criticalPatterns drift detected:"
+    echo "    hook: $HOOK_CP"
+    echo "    lean: $LEAN_CP"
+    EXIT=1
+  fi
+else
+  echo "[24] WARN  Hook or Lean file 不在 (PI-10 setup 未完?)"
+  WARN=1
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="

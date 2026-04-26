@@ -634,7 +634,7 @@ def qualityMeasurePriority : QualityMeasureCategory → Nat
 theorem structural_outcome_gt_process_success :
     qualityMeasurePriority .structuralOutcome >
     qualityMeasurePriority .processSuccess := by
-  native_decide
+  decide
 
 /-- Classification of verification signals: independent verification vs self-assessment.
     Formalization of P2 + E1 + ICLR 2024 (Huang et al.). -/
@@ -656,7 +656,7 @@ def verificationReliability : VerificationSignalType → Nat
 theorem independent_verification_gt_self_assessment :
     verificationReliability .independentlyVerified >
     verificationReliability .selfAssessed := by
-  native_decide
+  decide
 
 /-- Quality assurance layers: defect absence vs value creation.
     Application of the D6 DesignStage ordering to the quality dimension. -/
@@ -680,6 +680,6 @@ def qualityAssurancePriority : QualityAssuranceLayer → Nat
 theorem defect_absence_measurement_gt_value_creation :
     qualityAssurancePriority .defectAbsence >
     qualityAssurancePriority .valueCreation := by
-  native_decide
+  decide
 
 end AgentSpec.Manifest
