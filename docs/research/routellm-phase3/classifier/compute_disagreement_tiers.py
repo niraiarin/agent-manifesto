@@ -80,8 +80,18 @@ def load_label_jsonl(path: Path, label_field: str = "label") -> dict[str, dict]:
 
 
 def extract_label(entry: dict) -> Optional[str]:
-    """Return the model's label, falling back across known field names."""
-    for field in ("label", "predicted_label", "gt_label"):
+    """Return the model's label, falling back across known field names.
+
+    Priority: gt_label → label → predicted_label.
+
+    Rationale: Qwen output JSONL preserves the input's `predicted_label`
+    (mDeBERTa's call) AND adds its own `gt_label` (Qwen's call). For a Qwen
+    file we want the Qwen label, so `gt_label` must win. For a candidates
+    file with `gt_label: null` (not yet annotated), the None falls through
+    (isinstance check) and `predicted_label` is returned — preserving the
+    mDeBERTa-only path.
+    """
+    for field in ("gt_label", "label", "predicted_label"):
         v = entry.get(field)
         if isinstance(v, str) and v in VALID_LABELS:
             return v
