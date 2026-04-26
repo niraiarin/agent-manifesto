@@ -4481,6 +4481,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 158 P2 PI-8 部分採用 implementation (change_category subagent 委譲 protocol)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-8 部分採用 完了。agent-spec-lib/AgentSpec/Tooling/SubagentClassification.md 新設 (protocol 文書)、memory feedback_subagent_classification.md 追加 (Day 158+ 適用 rule)、Day 158 entry 自体に Day 158+ 規則を適用 (subagent dispatch で change_category=process_only 判定取得)。subagent_dispatch=true の意味を「PI-8 protocol 適用」に再定義。Day 156 user 同意通り部分採用 (change_category のみ委譲、pass_layers.implementation は Worker 維持)。残 P3: PI-12 (Day 159) + PI-13 (Day 160)。",
+      "scope": "P2 PI-8 部分採用 完了、Day 158+ change_category subagent 委譲 protocol 確立、本 entry が初の適用例。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "82b278b0d53ba06526cb91fcf20b8b91a9a7b3555279d53b9d51c5b99938483b",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     }
   ],
   "navigation_index": {

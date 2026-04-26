@@ -852,9 +852,10 @@
       "section": "2.14",
       "topic": "[P2] 自己評価権限 部分 subagent 委譲 (change_category のみ、implementation 判定は Worker 維持)",
       "mark": "🟡",
-      "status": "scheduled",
+      "status": "done",
       "timing": "user 判断後",
-      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。 | 2026-04-27 user 同意取得 (部分採用案 A 推奨採用): change_category enum 選択のみ Verifier subagent 委譲、pass_layers.implementation 判定は PI-1 で外部検証可能化済のため Worker 維持。実装 Day 156+。"
+      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。 | 2026-04-27 user 同意取得 (部分採用案 A 推奨採用): change_category enum 選択のみ Verifier subagent 委譲、pass_layers.implementation 判定は PI-1 で外部検証可能化済のため Worker 維持。実装 Day 156+。",
+      "resolved_day": 158
     },
     {
       "id": "PI-9",
@@ -3244,6 +3245,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 157 Option F' leaf port 9-step。Step 1 reference read。Step 3a PoC (sed namespace 変換 + python dedup script dry-run)、Step 3b TyDD eval。Step 4 implementation: EmpiricalPostulates port + ObservableDesign port (7 重複 docstring+decl 削除)、lake build 419 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 158 PI-8 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 158,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 158 P2 PI-8 部分採用 implementation 9-step。Step 1 reference read (PI-8 plan + Day 156 user 同意)。Step 3a PoC (subagent dispatch dry-run = 即 change_category 判定取得)、Step 3b TyDD eval。Step 4 implementation: SubagentClassification.md protocol 文書 + memory rule + MEMORY.md index 更新、本 entry 自体に PI-8 適用 (subagent 委譲で change_category=process_only)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true)、Step 9 update-handoff。process_only。Day 159 PI-12 (Measurable semantic 強化) 着手予定。",
       "steps_completed": [
         1,
         2,
