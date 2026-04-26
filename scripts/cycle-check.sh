@@ -173,12 +173,14 @@ else
   echo "[7] OK  verifier_history date monotonic"
 fi
 
-# ----- Check 8: day_plan commit hash format (Day 68 G2 F3-2 fix) -----
+# ----- Check 8: day_plan commit hash format (Day 68 G2 F3-2 fix、PI-5 Day 151 改訂) -----
 # commit field が valid hex (7+ char) でなければ typo 兆候
+# PI-5 (Day 151): "TBD" は 1 commit/Day 化のため恒久的に valid (chore(metadata) backfill 廃止)
 invalid_commits=$(jq -r '
   .day_plan
   | map(select(has("commit")) | select(.commit != null))
   | map(select(.commit | type == "string"))
+  | map(select(.commit != "TBD"))
   | map(select(.commit | test("^[a-fA-F0-9]{7,40}$") | not))
   | map("Day \(.day): commit=\"\(.commit)\"")
   | .[]

@@ -811,18 +811,20 @@
       "section": "2.14",
       "topic": "[P1] 9-step cycle Step 3 を PoC + TyDD eval に分割 (Step 4 skip 常態化解消)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 150",
-      "detail": "直近 4 Day 中 2 Day で Step 4 (実装) skip、TyDD eval が事前 PoC 兼ねる構造ミス。CLAUDE.md project レベル cycle 仕様改訂: Step 3a (PoC: 5-15 分 throwaway 試行) + Step 3b (PoC 結果に基づく TyDD eval) + Step 4 (本実装、PoC 成功時のみ)。Step 4 が not_attempted (PoC fail) と skipped (戦略変更) の意味区別を導入。"
+      "detail": "直近 4 Day 中 2 Day で Step 4 (実装) skip、TyDD eval が事前 PoC 兼ねる構造ミス。CLAUDE.md project レベル cycle 仕様改訂: Step 3a (PoC: 5-15 分 throwaway 試行) + Step 3b (PoC 結果に基づく TyDD eval) + Step 4 (本実装、PoC 成功時のみ)。Step 4 が not_attempted (PoC fail) と skipped (戦略変更) の意味区別を導入。",
+      "resolved_day": 150
     },
     {
       "id": "PI-5",
       "section": "2.14",
       "topic": "[P1] 1 commit/Day 化 (chore(metadata) hash backfill 撤廃)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 151",
-      "detail": "現状 1 Day = feat + chore(metadata) commit hash backfill 2 commit 固定。commit-msg hook で TBD placeholder を実 hash に置換、または post-commit hook で artifact-manifest.json + 11-pending-tasks.json の TBD を rewrite (single commit amend ではなく next commit に統合)。ceremonial commit 撤廃で commit log の signal/noise 改善。"
+      "detail": "現状 1 Day = feat + chore(metadata) commit hash backfill 2 commit 固定。commit-msg hook で TBD placeholder を実 hash に置換、または post-commit hook で artifact-manifest.json + 11-pending-tasks.json の TBD を rewrite (single commit amend ではなく next commit に統合)。ceremonial commit 撤廃で commit log の signal/noise 改善。",
+      "resolved_day": 151
     },
     {
       "id": "PI-6",
@@ -3110,6 +3112,24 @@
       "commit": "cf7b0de",
       "status": "done",
       "scope": "Day 150 P1 PI-4 + P2 status update 9-step。Step 1 reference read (project_day_cycle_pattern.md memory)。Step 3a PoC: memory edit dry-run。Step 3b TyDD eval (process change: S1/S4/F/B/H OK)。Step 4 implementation: project_day_cycle_pattern.md Step 3 を 3a (PoC) + 3b (TyDD eval) に分割、Step 4 not_attempted vs skipped 意味区別追加、pending_items PI-1/2/3 done + PI-7/8 user 同意 reflect。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 151,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 151 P1 PI-5 1 commit/Day 化 9-step。Step 1 reference read (Check 8 + memory)。Step 3a PoC (Check 8 jq filter dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: cycle-check.sh Check 8 改訂 (TBD 許容)、memory project_day_cycle_pattern.md に Commit Pattern 節追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。本 entry が初の commit:'TBD' 永続 pattern。Day 152 PI-6 (週次 retro) 着手予定。",
       "steps_completed": [
         1,
         2,
