@@ -4385,6 +4385,22 @@
         "implementation": "pass",
         "evaluation": "n_a"
       }
+    },
+    {
+      "round": "Day 152 P1 PI-6 完了 (週次 retro 制度化 + 初回 retro entry Day145-151)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-6 完了。schema に weekly_retro array 追加 (window_start/end_day, generated_day, commit_count, process_only_count, implementation_pass/fail/not_attempted_count, theorem/axiom/loc_delta, highlights)。初回 retro entry: Day 145-151 window、commit_count=14、process_only=8/14=57%、implementation pass=5/fail=1/not_attempted=1、theorem +30、loc +694。Highlight: Day 147 Observable port 成功、PI-1〜5 done。Check 23 (cycle-check.sh) で直近 7 Day 内 retro 存在 監視。Phase 0 + P3 (PI-9〜13) + Day 155 PI-7 audit を次 window 焦点。",
+      "scope": "P1 PI-6 完了。P0+P1 全 6 項目 done (PI-1〜PI-6)、残 P3 5 項目 + P2 2 scheduled。",
+      "change_category": "compatible_change",
+      "subagent_dispatch": false,
+      "cycle_check_log_hash": "bff77d38ab2f7242119473260723f6acb65efaa0340881c64eb13731f92e7b14",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     }
   ],
   "navigation_index": {
@@ -4539,5 +4555,21 @@
       "AgentSpec.Cross.SpineProcess": "AgentSpec.Test.Cross.SpineProcessTest"
     },
     "last_compiled": "2026-04-20"
-  }
+  },
+  "weekly_retro": [
+    {
+      "window_start_day": 145,
+      "window_end_day": 151,
+      "generated_day": 152,
+      "commit_count": 14,
+      "process_only_count": 8,
+      "implementation_pass_count": 5,
+      "implementation_fail_count": 1,
+      "implementation_not_attempted_count": 1,
+      "theorem_delta": 30,
+      "axiom_delta": 0,
+      "loc_delta": 694,
+      "highlights": "Week 3 Day 145-151。重大成果: Day 147 Observable.lean port 成功 (+30 theorem、Day 144/146 二度の revert 後 Strategy A で解消)。Day 149-151 で P0/P1 process improvement 実装 (PI-1〜PI-5 done)。process_only 比率 8/14=57% は PI-5 (1 commit/Day 化) で Day 151 以降低下開始 (commit log signal/noise 改善)。implementation_fail 1 件 (Day 146 B-Observable revert)。次 window 焦点: P3 (PI-9 native_decide 撤去 / PI-10 Hook-Lean sync) + Day 155 PI-7 Phase 0 chronological gate audit。"
+    }
+  ]
 }

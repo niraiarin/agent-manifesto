@@ -568,6 +568,23 @@ else
   echo "[22] OK  decision_deadline 超過 なし (current Day=$CURRENT_DAY)"
 fi
 
+# ----- Check 23: 直近 7 Day 内に weekly_retro entry 存在 (PI-6、Day 152) -----
+# 週次 retrospective 制度。PI-6 で artifact-manifest.weekly_retro に entry 追加。
+# 直近 7 Day 内に generated_day を持つ entry がなければ WARN (制度初期は WARN、後に ERROR 化検討)。
+LATEST_RETRO=$(jq --argjson cd "$CURRENT_DAY" '
+  [.weekly_retro // [] | .[].generated_day] | max // 0
+' "$MANIFEST" 2>/dev/null)
+RETRO_AGE=$((CURRENT_DAY - LATEST_RETRO))
+if [ "$LATEST_RETRO" = "0" ]; then
+  echo "[23] WARN  weekly_retro entry なし (PI-6 制度開始前)"
+  WARN=1
+elif [ "$RETRO_AGE" -gt 7 ]; then
+  echo "[23] WARN  weekly_retro 最新 (Day ${LATEST_RETRO}) から ${RETRO_AGE} Day 経過 (>7)、新 retro 必要"
+  WARN=1
+else
+  echo "[23] OK  weekly_retro 直近 (Day ${LATEST_RETRO}、${RETRO_AGE} Day 前)"
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="

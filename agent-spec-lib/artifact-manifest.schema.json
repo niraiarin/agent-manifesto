@@ -322,6 +322,66 @@
           }
         }
       }
+    },
+    "weekly_retro": {
+      "type": "array",
+      "description": "PI-6 (Day 152): 週次 retrospective entry (7 Day window)。Day cycle で集計、Phase 終了判断 / 次 sprint 設計の入力データ。Check 23 が直近 7 Day 内の存在を保証。",
+      "items": {
+        "type": "object",
+        "required": [
+          "window_start_day",
+          "window_end_day",
+          "generated_day"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "window_start_day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "window_end_day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "generated_day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "commit_count": {
+            "type": "integer"
+          },
+          "process_only_count": {
+            "type": "integer",
+            "description": "commit subject に process_only 含む件数 (signal/noise 指標)"
+          },
+          "implementation_fail_count": {
+            "type": "integer",
+            "description": "pass_layers.implementation=fail entry 数 (revert 回数)"
+          },
+          "implementation_pass_count": {
+            "type": "integer"
+          },
+          "implementation_not_attempted_count": {
+            "type": "integer"
+          },
+          "theorem_delta": {
+            "type": "integer",
+            "description": "build_status.theorems の差分"
+          },
+          "axiom_delta": {
+            "type": "integer",
+            "description": "build_status.axioms の差分"
+          },
+          "loc_delta": {
+            "type": "integer",
+            "description": "git diff --stat の合計 (added - removed)"
+          },
+          "highlights": {
+            "type": "string",
+            "description": "1-3 文要約 (主要成果、blocker、次 window 焦点)"
+          }
+        }
+      }
     }
   },
   "$defs": {

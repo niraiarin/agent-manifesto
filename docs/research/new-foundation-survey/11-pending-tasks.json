@@ -831,9 +831,10 @@
       "section": "2.14",
       "topic": "[P1] 週次 cost/value retro 制度化 (process_only 比率 + revert 回数 + Day delta 集計)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 152-153",
-      "detail": "毎 7 Day で retro entry 生成: token 消費 / commit 数 / 変更 LOC / theorem delta / axiom delta / process_only 比率 / revert 回数。Empirical revalidation (現状 7 Day cycle) と統合。Check 22 新設: '直近 7 Day 内に retro entry 存在' を確認。Phase 0 終了判断 (PI-7) の入力データになる。"
+      "detail": "毎 7 Day で retro entry 生成: token 消費 / commit 数 / 変更 LOC / theorem delta / axiom delta / process_only 比率 / revert 回数。Empirical revalidation (現状 7 Day cycle) と統合。Check 22 新設: '直近 7 Day 内に retro entry 存在' を確認。Phase 0 終了判断 (PI-7) の入力データになる。",
+      "resolved_day": 152
     },
     {
       "id": "PI-7",
@@ -3130,6 +3131,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 151 P1 PI-5 1 commit/Day 化 9-step。Step 1 reference read (Check 8 + memory)。Step 3a PoC (Check 8 jq filter dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: cycle-check.sh Check 8 改訂 (TBD 許容)、memory project_day_cycle_pattern.md に Commit Pattern 節追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。本 entry が初の commit:'TBD' 永続 pattern。Day 152 PI-6 (週次 retro) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 152,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 152 P1 PI-6 weekly_retro 制度化 9-step。Step 1 reference read (Day 145-151 metrics)。Step 3a PoC (jq metric extraction dry-run)、Step 3b TyDD eval。Step 4 implementation: artifact-manifest schema に weekly_retro 追加、初回 retro entry (Day 145-151 window) 生成、cycle-check Check 23 (直近 7 Day 内 retro 存在) 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-23 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 153 PI-9 (native_decide 撤去) 着手予定。",
       "steps_completed": [
         1,
         2,
