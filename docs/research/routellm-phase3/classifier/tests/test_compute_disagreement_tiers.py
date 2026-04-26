@@ -96,12 +96,30 @@ def test_classify_tier_missing_model() -> None:
 
 
 def test_extract_label_field_fallbacks() -> None:
+    # Single-field cases
     assert mod.extract_label({"label": "local_confident"}) == "local_confident"
     assert mod.extract_label({"predicted_label": "cloud_required"}) == "cloud_required"
     assert mod.extract_label({"gt_label": "hybrid"}) == "hybrid"
     assert mod.extract_label({"label": "invalid_label"}) is None
     assert mod.extract_label({}) is None
-    print("PASS extract_label field fallbacks (5 sub-cases)")
+
+    # Priority: gt_label wins over predicted_label.
+    # Qwen output preserves input's `predicted_label` (mDeBERTa) AND adds its
+    # own `gt_label` (Qwen). Reading a Qwen file must surface the Qwen label.
+    qwen_style = {"gt_label": "cloud_required", "predicted_label": "hybrid"}
+    assert mod.extract_label(qwen_style) == "cloud_required", \
+        "gt_label must win over predicted_label for Qwen-style records"
+
+    # Candidates-style: gt_label=null → fall through to predicted_label
+    candidates_style = {"gt_label": None, "predicted_label": "local_probable"}
+    assert mod.extract_label(candidates_style) == "local_probable", \
+        "null gt_label must fall through to predicted_label"
+
+    # `label` middle priority: present + no gt_label → wins over predicted_label
+    middle = {"label": "unknown", "predicted_label": "hybrid"}
+    assert mod.extract_label(middle) == "unknown"
+
+    print("PASS extract_label field fallbacks (8 sub-cases)")
 
 
 def test_compute_tiers_end_to_end() -> None:
