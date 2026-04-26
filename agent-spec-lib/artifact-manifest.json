@@ -4497,6 +4497,22 @@
         "implementation": "pass",
         "evaluation": "n_a"
       }
+    },
+    {
+      "round": "Day 159 P3 PI-12 MeasurableSemantic typeclass 追加 (additive_definition)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-12 完了 (conservative extension 版)。既存 Measurable (Observable.lean L95、syntactic 述語、trivially provable) は retain、parallel な semantic 強化版 MeasurableSemantic typeclass を AgentSpec.Tooling.MeasurableSemantic.lean に新設。MeasurementProcedure marker def + MeasurableSemantic class (named axiom evidence 必須、TrustDelegation pattern PI-11 と同型) + measurableSemantic_implies_measurable bridge theorem。lake build PASS。subagent dispatch (PI-8 protocol) で change_category=additive_definition 判定取得 (既存変更なし、新規 file のみ)。残 P3: PI-13 (Day 160 opaque origin tag)。",
+      "scope": "P3 PI-12 完了、Measurable syntactic vs semantic 区別を typeclass 構造で明示、conservative extension。",
+      "change_category": "additive_definition",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "8fb9b32c2945d4bd2e19c71e5794a29b44016540389f934cecb3458f39a0a6a0",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
