@@ -781,27 +781,30 @@
       "section": "2.14",
       "topic": "[P0] verifier_history PASS 単一値の意味分解 (cycle_hygiene / implementation / evaluation)",
       "mark": "🔴",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 148",
-      "detail": "現状 'PASS' は cycle-check exit 0 / 実装目的達成 / 意味妥当性 を区別なく等価視 (Day 144/146 で実装 fail でも PASS と記録される問題)。schema 拡張 (conservative extension): pass_layers field 追加 {cycle_hygiene, implementation, evaluation} 各 enum [pass/fail/n_a]。従来 result=PASS は cycle_hygiene=pass と等価扱い。entry 生成器で 3 軸入力強制。"
+      "detail": "現状 'PASS' は cycle-check exit 0 / 実装目的達成 / 意味妥当性 を区別なく等価視 (Day 144/146 で実装 fail でも PASS と記録される問題)。schema 拡張 (conservative extension): pass_layers field 追加 {cycle_hygiene, implementation, evaluation} 各 enum [pass/fail/n_a]。従来 result=PASS は cycle_hygiene=pass と等価扱い。entry 生成器で 3 軸入力強制。",
+      "resolved_day": 149
     },
     {
       "id": "PI-2",
       "section": "2.14",
       "topic": "[P0] 同一 blocker N連敗 (>=2) で user escalation 強制",
       "mark": "🔴",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 148",
-      "detail": "Axioms (Day 144) / Observable (Day 144,146) で 2-3 回 retry を user 確認なしに実行した問題への対応。CLAUDE.md (グローバル) に追記: 同一 scope marker への retry が 2 回連続 implementation=fail なら 3 回目前に user 戦略相談、auto mode 上書き不可。cycle-check Check 21 新設: 直近 14 day で同一 scope marker に対して implementation=fail が 2 回以上で fail-flag。PI-1 (pass_layers) 完了が前提。"
+      "detail": "Axioms (Day 144) / Observable (Day 144,146) で 2-3 回 retry を user 確認なしに実行した問題への対応。CLAUDE.md (グローバル) に追記: 同一 scope marker への retry が 2 回連続 implementation=fail なら 3 回目前に user 戦略相談、auto mode 上書き不可。cycle-check Check 21 新設: 直近 14 day で同一 scope marker に対して implementation=fail が 2 回以上で fail-flag。PI-1 (pass_layers) 完了が前提。",
+      "resolved_day": 149
     },
     {
       "id": "PI-3",
       "section": "2.14",
       "topic": "[P0] 長期 defer 項目に強制 decision deadline 制度化",
       "mark": "🔴",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 149",
-      "detail": "Day 87 起源の defer (P3 empirical gating, Plausible) が 58 日継続、Manifest 移植 main sprint が 69 日継続、catalog 永久滞留問題への対応。pending_items schema に decision_deadline (Day#) field 追加 (conservative extension)。Check 11 を WARN→ERROR、deadline 超過時 promote/retire/escalate 3 択を強制。既存 deferred 項目には移行猶予 14 day で deadline 設定。"
+      "detail": "Day 87 起源の defer (P3 empirical gating, Plausible) が 58 日継続、Manifest 移植 main sprint が 69 日継続、catalog 永久滞留問題への対応。pending_items schema に decision_deadline (Day#) field 追加 (conservative extension)。Check 11 を WARN→ERROR、deadline 超過時 promote/retire/escalate 3 択を強制。既存 deferred 項目には移行猶予 14 day で deadline 設定。",
+      "resolved_day": 149
     },
     {
       "id": "PI-4",
@@ -835,18 +838,19 @@
       "section": "2.14",
       "topic": "[P2] Phase 0 Week 5-6 chronological gate 設定 (user 同意必須)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "scheduled",
       "timing": "user 判断後 (Day 148 提案、Day 155 deadline 候補)",
-      "detail": "Day 147 = Week 21 相当 (147/7)、Week 5-6 名目との乖離大。Phase 0 終了 chronological gate (Day 155 など) を user 提案、終了時点で Manifest 移植進捗% / 残 blocker / Phase 1 移行可否 を判断。user 同意必須 (本項目自体が独立で着手可ではない)。PI-6 retro データを判断材料に。"
+      "detail": "Day 147 = Week 21 相当 (147/7)、Week 5-6 名目との乖離大。Phase 0 終了 chronological gate (Day 155 など) を user 提案、終了時点で Manifest 移植進捗% / 残 blocker / Phase 1 移行可否 を判断。user 同意必須 (本項目自体が独立で着手可ではない)。PI-6 retro データを判断材料に。 | 2026-04-27 user 同意取得 (Day 155 deadline 推奨採用)。Day 155 で audit gate 実施、Phase 1 移行可否判断。",
+      "decision_deadline": 155
     },
     {
       "id": "PI-8",
       "section": "2.14",
-      "topic": "[P2] 自己評価権限 subagent 委譲 (change_category + implementation 判定)",
+      "topic": "[P2] 自己評価権限 部分 subagent 委譲 (change_category のみ、implementation 判定は Worker 維持)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "scheduled",
       "timing": "user 判断後",
-      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。"
+      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。 | 2026-04-27 user 同意取得 (部分採用案 A 推奨採用): change_category enum 選択のみ Verifier subagent 委譲、pass_layers.implementation 判定は PI-1 で外部検証可能化済のため Worker 維持。実装 Day 156+。"
     },
     {
       "id": "PI-9",
@@ -3088,6 +3092,24 @@
       "commit": "7150bc8",
       "status": "done",
       "scope": "Day 149 P0 PI-1+PI-2+PI-3 implementation 9-step。Step 1 reference read (Day 148 plan)。Step 3 TyDD eval (schema 拡張 + Check 追加: S1/S4/F/B/H OK)。Step 4 implementation: artifact-manifest schema に pass_layers + failed_attempt 追加、pending_items に decision_deadline 機能化、Day 144-148 backfill、Check 21/22 cycle-check.sh 追加 (PASS)、3 長期 defer に deadline 設定。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 全 PASS)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。次 Day 150 から P1 着手 (PI-4 Step 3 PoC + TyDD 分割)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 150,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 150 P1 PI-4 + P2 status update 9-step。Step 1 reference read (project_day_cycle_pattern.md memory)。Step 3a PoC: memory edit dry-run。Step 3b TyDD eval (process change: S1/S4/F/B/H OK)。Step 4 implementation: project_day_cycle_pattern.md Step 3 を 3a (PoC) + 3b (TyDD eval) に分割、Step 4 not_attempted vs skipped 意味区別追加、pending_items PI-1/2/3 done + PI-7/8 user 同意 reflect。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。",
       "steps_completed": [
         1,
         2,
