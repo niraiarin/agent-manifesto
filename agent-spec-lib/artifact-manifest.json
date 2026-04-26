@@ -4417,6 +4417,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 154 P3 PI-11 IsVerifyToken / TrustDelegation 二分岐 (breaking change)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-11 完了。VerifyToken.lean に class TrustDelegation (P : Prop) where evidence + attestation : String を追加 (IsVerifyToken と分離)。VerifyTokenMacro.lean を verify_token <name> '<evaluator>' : <Prop> に改訂、TrustDelegation 生成 (#print axioms で named axiom 追跡可能)。AgentVerify.lean を二段検索 (IsVerifyToken preferred → TrustDelegation fallback → assumption) に改訂。lake build 417/417 PASS。breaking change: 既存の verify_token macro 呼び出しは syntax 変更が必要 (現状 production 利用ゼロ確認済)。構文/意味 × 対象/メタ 評価弱点 #1 (trust delegation と proof の混淆) への structural 対処。",
+      "scope": "P3 PI-11 完了、object 層 proof と meta 層 attestation を typeclass 構造で分離。",
+      "change_category": "breaking_change",
+      "subagent_dispatch": false,
+      "cycle_check_log_hash": "e5c02dfd3cc3aec5555ab2fff9c8f1c6685aec7b2f5feade5833464039f60fa8",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {

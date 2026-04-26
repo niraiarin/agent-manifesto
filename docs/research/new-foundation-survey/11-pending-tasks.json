@@ -880,9 +880,10 @@
       "section": "2.14",
       "topic": "[P3] IsVerifyToken / TrustDelegation 二分岐 (object proof と meta attestation 分離)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 156+",
-      "detail": "VerifyToken.lean の IsVerifyToken は proof と外部 attestation を区別しない (smoke test の rfl proof と将来の VerifyTokenLoader 由来 attestation が同 typeclass)。改修: class IsVerifyToken (proof 用、現行) と class TrustDelegation (axiom externalAttestation 経由、attestation 用) に分離、agent_verify tactic で provenance 追跡可能化、#print axioms で attestation 由来を可視化。breaking change (既存呼び出し refactor)。"
+      "detail": "VerifyToken.lean の IsVerifyToken は proof と外部 attestation を区別しない (smoke test の rfl proof と将来の VerifyTokenLoader 由来 attestation が同 typeclass)。改修: class IsVerifyToken (proof 用、現行) と class TrustDelegation (axiom externalAttestation 経由、attestation 用) に分離、agent_verify tactic で provenance 追跡可能化、#print axioms で attestation 由来を可視化。breaking change (既存呼び出し refactor)。",
+      "resolved_day": 154
     },
     {
       "id": "PI-12",
@@ -3169,6 +3170,25 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 153 P3 PI-9+PI-10 9-step。Step 1 reference read (native_decide 11 occurrence + hook CRITICAL_PATTERNS)。Step 3a PoC (sed bulk replace dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: PI-9 native_decide → decide 全置換 (Observable 3 + EpistemicLayer 2 + DanglingDetection 6)、lake build 417/417 PASS。PI-10 Tooling/CriticalPatterns.lean 新設 + cycle-check Check 24 sync byte-check 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 154 PI-11 (IsVerifyToken 二分岐) または PI-12 着手予定、Day 155 PI-7 audit gate。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 154,
+      "commit": "TBD",
+      "status": "done",
+      "breaking_change": true,
+      "scope": "Day 154 P3 PI-11 9-step。Step 1 reference read (VerifyToken/Macro/AgentVerify)。Step 3a PoC (class Prop annotation 試行→fail、Type に修正)、Step 3b TyDD eval。Step 4 implementation: TrustDelegation typeclass 追加 (evidence + attestation:String)、verify_token macro が TrustDelegation 生成、agent_verify 二段検索化。lake build 417/417 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。breaking change (verify_token macro 呼び出し syntax 変化、production 利用ゼロ)。Day 155 PI-7 chronological gate audit を控え、PI-12/13 は Day 156+ で。",
       "steps_completed": [
         1,
         2,
