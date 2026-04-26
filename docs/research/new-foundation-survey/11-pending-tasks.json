@@ -841,10 +841,11 @@
       "section": "2.14",
       "topic": "[P2] Phase 0 Week 5-6 chronological gate 設定 (user 同意必須)",
       "mark": "🟡",
-      "status": "scheduled",
+      "status": "done",
       "timing": "user 判断後 (Day 148 提案、Day 155 deadline 候補)",
       "detail": "Day 147 = Week 21 相当 (147/7)、Week 5-6 名目との乖離大。Phase 0 終了 chronological gate (Day 155 など) を user 提案、終了時点で Manifest 移植進捗% / 残 blocker / Phase 1 移行可否 を判断。user 同意必須 (本項目自体が独立で着手可ではない)。PI-6 retro データを判断材料に。 | 2026-04-27 user 同意取得 (Day 155 deadline 推奨採用)。Day 155 で audit gate 実施、Phase 1 移行可否判断。",
-      "decision_deadline": 155
+      "decision_deadline": 155,
+      "resolved_day": 155
     },
     {
       "id": "PI-8",
@@ -3189,6 +3190,24 @@
       "status": "done",
       "breaking_change": true,
       "scope": "Day 154 P3 PI-11 9-step。Step 1 reference read (VerifyToken/Macro/AgentVerify)。Step 3a PoC (class Prop annotation 試行→fail、Type に修正)、Step 3b TyDD eval。Step 4 implementation: TrustDelegation typeclass 追加 (evidence + attestation:String)、verify_token macro が TrustDelegation 生成、agent_verify 二段検索化。lake build 417/417 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。breaking change (verify_token macro 呼び出し syntax 変化、production 利用ゼロ)。Day 155 PI-7 chronological gate audit を控え、PI-12/13 は Day 156+ で。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 155,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 155 PI-7 Phase 0 chronological gate audit 9-step。Step 1 reference read (Manifest port progress + PI tier status)。Step 3a PoC (grep+wc 集計 dry-run)、Step 3b TyDD eval。Step 4 implementation: weekly_retro entry 2 (Day 152-154 mini-window) 追加、audit metrics 集計。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。user 判断 pending: Phase 1 移行可否 (A継続/B移行/C Tooling/D Verification/E Hold 5 択)。Day 156 以降は user 判断結果に基づく方針決定。",
       "steps_completed": [
         1,
         2,
