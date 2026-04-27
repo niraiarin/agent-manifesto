@@ -81,6 +81,14 @@ import AgentSpec.Tooling.OpaqueOrigin
 import AgentSpec.Manifest.Framework.CompatibilityClassification
 import AgentSpec.Manifest.Framework.PromotionProtocol
 
+-- Day 183 Phase 4 γ: Foundation 6 file (mathlib 数学依存含む)
+import AgentSpec.Manifest.Foundation.ControlTheory
+import AgentSpec.Manifest.Foundation.InformationTheory
+import AgentSpec.Manifest.Foundation.ProcessModel
+import AgentSpec.Manifest.Foundation.StatisticalTesting
+import AgentSpec.Manifest.Foundation.Probability
+import AgentSpec.Manifest.Foundation.RiskTheory
+
 -- Day 171 Phase 2: DF root integration 完成 (70 symbol cross-file dedup 完了)
 import AgentSpec.Manifest.DesignFoundation
 import AgentSpec.Manifest.TaskClassification
