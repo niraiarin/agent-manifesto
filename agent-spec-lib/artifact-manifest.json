@@ -4945,6 +4945,38 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 190 Phase 5 α step 3/3 — main merge 完遂 (PR #689 squash merged)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 5 α 完成。PR #689 (research/new-foundation → main) squash merged (commit 6a77de8)。実施: (1) main fetch + merge into research/new-foundation で 3 file conflict (.claude/hooks/p2-verify-on-commit.sh + settings.json + CLAUDE.md)、p2-verify は cd PATH + git -C PATH 両 fallback 化で combine resolution。(2) /verify CONDITIONAL (3 findings、Finding 3 = Day 122 起源 pre-existing structural risk) → user 判断 (d) で issue #690 (governance hardening follow-up) 化 + human-approved P2 token 書き込み。(3) PR 作成 → CI 3 回試行: run 1 timeout 30 min cancel → workflow timeout 60 min 拡張 → run 2 example 03 stale assertion fail (registry length 10→32 未更新、Day 172 拡充後の漏れ) → fix push → run 3 SUCCESS (45 min)。(4) gh pr merge 689 --squash 完遂、main に 391 commits → 1 squash commit に統合。research/new-foundation worktree 維持 (user 判断 #3a)。subagent dispatch (PI-8) で metadata_only 判定 (本 entry は merge governance、Lean 変更なし)。",
+      "scope": "Phase 5 α 完遂、agent-spec-lib v0.1.0 + agent-manifesto Phase 0-4 全成果が main に永続化。",
+      "change_category": "metadata_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "bcc665e70563092430f8fd9c907ed28fac145b7e642c0cb2d394406e89e0c9b3",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
+    },
+    {
+      "round": "Day 191 Phase 5 plan setup — A 仕様等価性自動検証 framework (process_only)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Day 187 三面評価 (論文 survey × 実装 × 計画) を受けて Phase 5 方針を決定: Survey GA-E5 P0 (仕様等価性自動検証、CLEVER 0.6% 領域) を採用、infrastructure 完成 (Day 1-190) 後の central problem。phase-transitions/07-phase5-acceptance-draft.md 新設 (5 acceptance criteria + secondary 候補 B/C/D defer + PI-17〜20 + 工数 10-16 Day)。secondary B (SMT) / C (Atlas augment) / D (CLEVER framework) は Phase 6 へ defer (scope creep + 具体性不足)。PI-17 (statement parity audit) / PI-18 (axiom dep parity) / PI-19 (equivalence registry) / PI-20 (Check 27) を pending_items に追加 (deadline=Day207)、Phase5 tier 追加。Day 192 から #1 Statement parity audit (PI-17) 着手。subagent dispatch (PI-8) で process_only 判定。",
+      "scope": "Phase 5 計画 setup 完了、Day 192-207 で Phase 5 A (仕様等価性 framework) 実施予定。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "d59b6f6db93e00617063dbb3b6447b7d04b10ff26da50ff4adcdcabd56ed5a96",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     }
   ],
   "navigation_index": {

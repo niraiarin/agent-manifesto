@@ -942,6 +942,46 @@
       "decision_deadline": 250,
       "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。既存 CI workflow (.github/workflows/agent-spec-lib-build.yml) で examples の compile は手動 step として include 済み、自動化は priority 低。Phase 4+ で必要時着手 (deadline=Day250)。",
       "resolved_day": 186
+    },
+    {
+      "id": "PI-17",
+      "section": "2.14",
+      "topic": "[Phase 5 A1] Statement parity audit (source ↔ port theorem statement byte 比較)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Phase 5 Day 192-194",
+      "decision_deadline": 207,
+      "detail": "Day 191 Phase 5 plan 起源。lean-formalization/Manifest/* と agent-spec-lib/AgentSpec/Manifest/* で同名 axiom/theorem の statement を namespace prefix を modulo で比較、divergence を検出する script (scripts/check-source-port-parity.sh)。"
+    },
+    {
+      "id": "PI-18",
+      "section": "2.14",
+      "topic": "[Phase 5 A2] Axiom dependency parity audit (#print axioms bulk diff)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Phase 5 Day 195-198",
+      "decision_deadline": 207,
+      "detail": "Day 191 Phase 5 plan 起源。各 theorem の #print axioms を取得、source ↔ port で axiom dependency set を比較、divergence (port-only 追加は allow、source 由来欠落 / 別名置換は detect)。"
+    },
+    {
+      "id": "PI-19",
+      "section": "2.14",
+      "topic": "[Phase 5 A3] SemanticEquivalence registry module",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Phase 5 Day 199-201",
+      "decision_deadline": 207,
+      "detail": "Day 191 Phase 5 plan 起源。AgentSpec.Tooling.SemanticEquivalence Lean module で ~50 critical theorems の equivalence record を保持、PI-13 OpaqueOrigin pattern と整合。"
+    },
+    {
+      "id": "PI-20",
+      "section": "2.14",
+      "topic": "[Phase 5 A4] cycle-check Check 27 (equivalence drift auto-detect)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Phase 5 Day 202-203",
+      "decision_deadline": 207,
+      "detail": "Day 191 Phase 5 plan 起源。equivalence drift (added/removed/modified theorem statement または dep mismatch) を auto detect。Check 25 (API drift) と同型 pattern。"
     }
   ],
   "day_plan": [
@@ -3817,6 +3857,42 @@
         9
       ],
       "steps_skipped": []
+    },
+    {
+      "day": 190,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 190 Phase 5 α step 3/3 main merge 完遂 9-step。Step 1 reference read (Day 188-189 prep)。Step 3a PoC (merge into research、conflict 確認、verify dry-run)、Step 3b TyDD eval。Step 4 implementation: merge commit 51ac70f + p2-verify-on-commit.sh combined resolution + issue #690 + P2 token + PR #689 + CI fix (timeout 30→60 min commit 3040ad6 + example 03 length 10→32 fix commit 95c2e76) + squash merge (commit 6a77de8 in main)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。metadata_only。Phase 5 α 完了、worktree 維持。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 191,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 191 Phase 5 plan setup 9-step。Step 1 reference read (Day 187 三面評価 + survey GA-E5)。Step 3a PoC (acceptance criteria 5 項目設計)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/07-phase5-acceptance-draft.md + PI-17/18/19/20 + Phase5 tier。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 192 PI-17 (Statement parity audit) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
     }
   ],
   "gap_analysis": {
@@ -4642,6 +4718,25 @@
         ],
         "exit_criteria": "5 acceptance criteria 達成 (release stability + production examples + governance toolkit + local CI + theorem coverage 50%)、option (α/β/γ/δ) で scope 調整",
         "spec_doc": "docs/research/new-foundation-survey/phase-transitions/03-phase3-acceptance-draft.md"
+      },
+      "Phase5": {
+        "name": "Phase 5: 仕様等価性自動検証 framework (GA-E5 P0、Day 187 三面評価で識別)",
+        "user_consent_required": false,
+        "target_days": "192-207 (10-16 Day 想定)",
+        "items": [
+          "PI-17",
+          "PI-18",
+          "PI-19",
+          "PI-20"
+        ],
+        "themes": [
+          "A: Statement parity",
+          "B: Axiom dep parity",
+          "C: Equivalence registry",
+          "D: CI gate Check 27"
+        ],
+        "exit_criteria": "5 acceptance criteria 達成、4 PI 全 done、divergence documented、main へ merge",
+        "spec_doc": "docs/research/new-foundation-survey/phase-transitions/07-phase5-acceptance-draft.md"
       }
     }
   }
