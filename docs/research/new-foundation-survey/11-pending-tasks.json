@@ -981,10 +981,11 @@
       "section": "2.14",
       "topic": "[Phase 5 A4] cycle-check Check 27 (equivalence drift auto-detect)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Phase 5 Day 202-203",
       "decision_deadline": 207,
-      "detail": "Day 191 Phase 5 plan 起源。equivalence drift (added/removed/modified theorem statement または dep mismatch) を auto detect。Check 25 (API drift) と同型 pattern。"
+      "detail": "Day 191 Phase 5 plan 起源。equivalence drift (added/removed/modified theorem statement または dep mismatch) を auto detect。Check 25 (API drift) と同型 pattern。",
+      "resolved_day": 195
     }
   ],
   "day_plan": [
@@ -3938,6 +3939,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 194 Phase 5 #3 PI-19 9-step。Step 1 reference read (PI-17/18 audit 結果 + OpaqueOrigin pattern)。Step 3a PoC (registry data 設計 + name conflict 検出)、Step 3b TyDD eval。Step 4 implementation: SemanticEquivalence.lean 新設 + root import + name conflict resolve (registry_complete → semantic_equivalence_registry_complete)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Day 195 PI-20 (Check 27 equivalence drift detection) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 195,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 195 Phase 5 #4+#5 PI-20 + example 11 batched 9-step。Step 1 reference read (PI-17/18 script + Day 194 registry)。Step 3a PoC (Check 27 集約 logic + example 11 decide proof)、Step 3b TyDD eval。Step 4 implementation: cycle-check Check 27 + examples/11_semantic_equivalence.lean。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-27 全 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Phase 5 全 5/5 達成、Day 196 final audit + main merge 着手予定。",
       "steps_completed": [
         1,
         2,
