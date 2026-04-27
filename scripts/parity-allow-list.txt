@@ -1,0 +1,30 @@
+# Parity allow-list — known divergences (Phase 5 PI-17、Day 192)
+#
+# Format: 1 name per line、コメント # で skip
+# 各 entry には Why コメントを推奨
+
+# === PI-9 (native_decide → decide) 由来 ===
+# Day 153 で全 11 occurrence を decide に置換、Traceability.lean (Day 171) で
+# l1_poc_* 系 11 theorem も同 pattern。statement diverges only in tactic name.
+l1_poc_l1_covered
+l1_poc_t6_covered
+l1_poc_p1_covered
+l1_poc_s1_1_linked
+l1_poc_s1_5_linked
+l1_poc_s1_6_linked
+l1_poc_b1_1_linked
+l1_poc_b1_2_linked
+l1_poc_hook_justified
+l1_poc_deny_justified
+
+# === port 側 dedup / structural 改修 由来 ===
+# governed_update_classified: Day 165 DesignFoundation port 時、port 側で
+# CompatibilityClass の structure 改修により statement subtle 変化
+governed_update_classified
+
+# breaking_in_diff_is_breaking: port 側で additional axiom dependency reorder
+# (Day 161 で structural 改修)
+breaking_in_diff_is_breaking
+
+# classify_snoc_ge: port D.lean で snoc helper 改修 (Day 100+)
+classify_snoc_ge
