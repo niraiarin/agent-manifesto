@@ -2,6 +2,7 @@ name: agent-spec-lib build & verify
 # Day 164 (PI-7 Phase 1 acceptance #5): CI gate for agent-spec-lib.
 # Day 186 PI-16: examples compile を strict mode に強化 (deferred 解消)。
 # Day 199 Phase 6 ζ PI-21+22: mathlib4-cache get + restore-keys 階層化 (cold cache 35-50 min → 5-15 min 想定)。
+# Day 211 Phase 7 sprint 1 hotfix: Duper を default target 外で明示 build (example 15 が require)。
 # Reads only repository-controlled inputs (no untrusted issue/PR body content).
 on:
   push:
@@ -49,6 +50,11 @@ jobs:
       - name: lake build (agent-spec-lib)
         working-directory: agent-spec-lib
         run: lake build
+      - name: lake build Duper (Day 211 fix, Phase 7 sprint 1 #2 examples 用)
+        # Day 209 で Duper を transitive dep として追加したが default target は AgentSpec のみ。
+        # examples/15_duper_baseline.lean が `import Duper` するため、別 step で明示 build する。
+        working-directory: agent-spec-lib
+        run: lake build Duper
       - name: Verify examples compile (PI-16, Day 186 strict)
         working-directory: agent-spec-lib
         run: |
