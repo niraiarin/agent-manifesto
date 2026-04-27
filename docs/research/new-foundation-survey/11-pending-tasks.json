@@ -902,9 +902,10 @@
       "section": "2.14",
       "topic": "[P3] opaque def に semantic origin tag (SkillRegistry 連携、docstring 依存撤廃)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 156+",
-      "detail": "Ontology.lean L389-407 の 8 opaque (skillQuality 等) の semantic 意図 (どの benchmark / どの measure か) が docstring 依存、Lean 側で検査されない。Models/Instances/ の interpretation を Lean 側に持込、def skillQualityModel : InstanceWorld → Nat 提供、axiom skillQuality_model_compatible で結ぶ。または @[deriving_intent] 自製 attribute + SkillRegistry に origin 登録、cycle-check で 'opaque def origin 記載なし' WARN。conservative extension。"
+      "detail": "Ontology.lean L389-407 の 8 opaque (skillQuality 等) の semantic 意図 (どの benchmark / どの measure か) が docstring 依存、Lean 側で検査されない。Models/Instances/ の interpretation を Lean 側に持込、def skillQualityModel : InstanceWorld → Nat 提供、axiom skillQuality_model_compatible で結ぶ。または @[deriving_intent] 自製 attribute + SkillRegistry に origin 登録、cycle-check で 'opaque def origin 記載なし' WARN。conservative extension。",
+      "resolved_day": 160
     }
   ],
   "day_plan": [
@@ -3282,6 +3283,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 159 P3 PI-12 9-step。Step 1 reference read (Observable.lean L95 Measurable + PI-11 TrustDelegation pattern)。Step 3a PoC (MeasurableSemantic class declaration + bridge theorem build dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: AgentSpec.Tooling.MeasurableSemantic.lean 新設 (MeasurementProcedure def + MeasurableSemantic class + bridge theorem)、lake build PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true、PI-8 適用で additive_definition 判定取得)、Step 9 update-handoff。additive_definition。Day 160 PI-13 (opaque def semantic origin tag) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 160,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 160 P3 PI-13 OpaqueOrigin registry 9-step。Step 1 reference read (Ontology opaque 32 件)。Step 3a PoC (registry data 構造設計 dry-run)、Step 3b TyDD eval。Step 4 implementation: AgentSpec.Tooling.OpaqueOrigin.lean 新設 (10 entry initial)、lake build PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true、PI-8 適用で additive_definition 判定取得)、Step 9 update-handoff。additive_definition。P3 全完了 (PI-9/10/11/12/13)、PI 全体 12/13 done (残 manifest sprint 関連のみ)。Day 161-169 で DesignFoundation best-effort port + 並行 PI-13 拡充、Day 170 final audit。",
       "steps_completed": [
         1,
         2,
