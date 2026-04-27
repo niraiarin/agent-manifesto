@@ -77,6 +77,10 @@ import AgentSpec.Tooling.CriticalPatterns
 import AgentSpec.Tooling.MeasurableSemantic
 import AgentSpec.Tooling.OpaqueOrigin
 
+-- Day 179 Phase 3: Framework 残 2 file (CompatibilityClassification + PromotionProtocol)
+import AgentSpec.Manifest.Framework.CompatibilityClassification
+import AgentSpec.Manifest.Framework.PromotionProtocol
+
 -- Day 171 Phase 2: DF root integration 完成 (70 symbol cross-file dedup 完了)
 import AgentSpec.Manifest.DesignFoundation
 import AgentSpec.Manifest.TaskClassification
