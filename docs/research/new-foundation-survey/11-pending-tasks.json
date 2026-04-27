@@ -909,6 +909,36 @@
       "timing": "Day 156+",
       "detail": "Ontology.lean L389-407 の 8 opaque (skillQuality 等) の semantic 意図 (どの benchmark / どの measure か) が docstring 依存、Lean 側で検査されない。Models/Instances/ の interpretation を Lean 側に持込、def skillQualityModel : InstanceWorld → Nat 提供、axiom skillQuality_model_compatible で結ぶ。または @[deriving_intent] 自製 attribute + SkillRegistry に origin 登録、cycle-check で 'opaque def origin 記載なし' WARN。conservative extension。",
       "resolved_day": 160
+    },
+    {
+      "id": "PI-14",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme C] governance toolkit acceptance test (3 例 project に install 動作確認)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Phase 3 Theme C 内 (Day 174-184)",
+      "decision_deadline": 184,
+      "detail": "Day 174 Phase 3 plan 起源。governance toolkit packaging (Theme C) の acceptance: agent-spec-lib/governance/ を 3 別 project (例: dummy-1, dummy-2, dummy-3) に install.sh 経由で deploy、cycle-check + hooks の動作を確認。Use case 4 (Day 173 主観評価最高 priority) の operational test。"
+    },
+    {
+      "id": "PI-15",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme A] API breaking change auto-detect (Day cycle 自動 audit)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Phase 3 Theme A 内 (Day 174-178)",
+      "decision_deadline": 178,
+      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。"
+    },
+    {
+      "id": "PI-16",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme B] examples compile gate を CI に組込み",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Phase 3 Theme B 内 (Day 174-182)",
+      "decision_deadline": 182,
+      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。"
     }
   ],
   "day_plan": [
@@ -3496,6 +3526,24 @@
         9
       ],
       "steps_skipped": []
+    },
+    {
+      "day": 174,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 174 Phase 3 plan setup 9-step。Step 1 reference read (Day 173 use case 説明 + 限界 8 件)。Step 3a PoC (Phase 3 theme 設計 + α/β/γ/δ option)、Step 3b TyDD eval。Step 4 implementation: usecases/01 + phase-transitions/03 + PI-14/15/16 + Phase3 tier。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 3 着手は user option 確認 pending (推奨 β)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
     }
   ],
   "gap_analysis": {
@@ -4303,6 +4351,24 @@
           "PI-13"
         ],
         "exit_criteria": "native_decide 撤去、Hook/Lean sync、IsVerifyToken / Measurable / opaque の semantic gap 明示化"
+      },
+      "Phase3": {
+        "name": "Phase 3: Stabilization + Production Polish + Governance Toolkit (draft)",
+        "user_consent_required": true,
+        "target_days": "174-184 (β option = 10 Day)",
+        "items": [
+          "PI-14",
+          "PI-15",
+          "PI-16"
+        ],
+        "themes": [
+          "A: Stabilization & Release",
+          "B: Production Polish",
+          "C: Governance Toolkit Packaging",
+          "D: Build Improvement (optional)"
+        ],
+        "exit_criteria": "5 acceptance criteria 達成 (release stability + production examples + governance toolkit + local CI + theorem coverage 50%)、option (α/β/γ/δ) で scope 調整",
+        "spec_doc": "docs/research/new-foundation-survey/phase-transitions/03-phase3-acceptance-draft.md"
       }
     }
   }
