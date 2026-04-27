@@ -21,8 +21,13 @@ fi
 # executes in the session CWD (main worktree). Extract the cd target so
 # `git diff --cached` queries the correct worktree.
 GIT_DIR=""
-
-if echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
+# Day 122 fix (research/new-foundation): cd PATH extraction via grep -oE
+# (BSD sed `\|` alternation 不可、Day 122 で grep+sed POSIX 形式に変更)
+if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
+  GIT_DIR=$(echo "$COMMAND" | grep -oE '^[[:space:]]*cd[[:space:]]+("[^"]*"|[^ &;]+)' | head -1 | sed -E 's/^[[:space:]]*cd[[:space:]]+//' | tr -d '"')
+fi
+# main: git -C PATH extraction (fallback for non-cd invocations)
+if [ -z "$GIT_DIR" ] && echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
   GIT_DIR=$(echo "$COMMAND" | grep -oE 'git[[:space:]]+-C[[:space:]]+("[^"]*"|[^[:space:]]+)' | head -1 | sed 's/git[[:space:]]*-C[[:space:]]*//' | tr -d '"')
 fi
 

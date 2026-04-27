@@ -47,6 +47,7 @@
   conservative extension / compatible change / breaking change
 - MEMORY に書く前に、観察→仮説化→検証のプロセスを経る
 - 陳腐化した知識は退役する
+- **marked done ≠ actually done**: cycle/checklist の各 step を「実施 marked」だけでなく「actual execution + 検証」の両方で完遂する。「空ぶり」「N/A」「skip」と判定する前に必ず根拠を grep / read で実証 (例: long-deferred 累積スキャン、manifest 整合確認)。過去に「空ぶり」が連続したパターンを virtue として内部化すると盲点化する (Day 22 audit 教訓)。
 
 ### P4: 可観測性
 
@@ -58,6 +59,27 @@
 
 安全（L1）→ 検証（P2）→ 可観測性（P4）→ 統治（P3）→ 動的調整
 先行フェーズを壊す変更は、後続フェーズの信頼性を損なう。
+
+### Scope discipline (Day 123 反省 / agent-spec-lib Phase 0 運用)
+
+agent-spec-lib roadmap (`agent-spec-lib/AgentSpec.lean` + `docs/research/new-foundation-survey/11-pending-tasks.json` の roadmap section) に明示された Week scope に従う。Day cycle で本道を逸脱しないため:
+
+- **scope creep の警鐘**: 当初 Week N scope に明記されていない file (Framework/, Models/, EvolveSkill 等) を port する場合、pending_items entry に **事前** に declare する。Day cycle 内で「ついでに」 scope 拡張しない。
+- **本道優先**: 直近 N=14 day で Tooling 層 (Week 5-6) / CI (Week 6-7) / Verification (Week 7-8) の進捗ゼロが続いたら、scope 拡張型 Day を **連続 3 day 以上行わない**。3 day 経過したら本道 task を 1 Day 挿む。
+- **進捗報告は scope を分離**: 「Phase 0 完了率 X%」を単一値で報告しない。本道 (Week 1-8 元 scope) と拡張 (Framework/Models/Skill 系) を別 metric として提示する。
+- **派生負債の catalog 化**: byte-identical port 規律から逸脱した派生 (Ontology 補強、autoImplicit 局所有効化、World field 順吸収、新規 helper theorem 追加 等) は pending_items に "派生負債" entry として記録、累積を可視化する。
+- **Verification spot check の必須化**: Tooling 層が integrate された後は、port した theorem の代表サンプルに `#print axioms` 等の意味検証を spot check する。lake build PASS のみで意味的整合を主張しない。
+- **Step 7 mandatory checklist は実行 + 出力確認まで一体** (Day 137 反省): scope に「mandatory checklist 6 項目 (PASS)」と書く前に、`bash scripts/cycle-check.sh` を **必ず実行**、output を読む。schema NG (Check 5a/5b)・cardinality WARN 以外の **新規 WARN/FAIL** が出た場合は commit 前に対処。change_category は `agent-spec-lib/artifact-manifest.schema.json` enum (namespace_only / additive_axiom / additive_definition / additive_test / proof_addition / behavior_change / breaking / metadata_only / process_only / compatible_change) のいずれかから選ぶ。`conservative_extension` は schema 非対応値、commit message body の互換性分類 (P3 hook 用) と区別する。
+- **change_category 混在ケース選択 guideline** (Day 138 Empirical #13 L4 解消): 1 commit が複数 change kind を含む場合は **影響度 高い順** で 1 値を選ぶ。優先順位: `breaking` > `behavior_change` > `compatible_change` > `proof_addition` > `additive_axiom` > `additive_definition` > `additive_test` > `namespace_only` > `metadata_only` > `process_only`。例: 「新 axiom + 派生 theorem + struct 修正」→ `compatible_change` (struct 修正が API 影響、最高)、「新 theorem 5 + 既存 def helper」→ `proof_addition`、「pure metadata commit」→ `metadata_only`。
+- **commit message body ↔ verifier_history mapping table** (Day 138 Empirical #13 L5 解消、dual-track drift 防止):
+
+  | commit message body literal (P3 hook) | verifier_history.change_category (schema enum) |
+  |---|---|
+  | `conservative extension` | `additive_definition` / `additive_axiom` / `additive_test` / `namespace_only` のいずれか |
+  | `compatible change` | `compatible_change` / `proof_addition` / `behavior_change` (機能拡張なら) / `metadata_only` (process_only と区別) |
+  | `breaking change` | `breaking` |
+
+  両 commit (実装 commit + metadata backfill) で literal を一致させ、`grep "(.*change.*)\|(.*extension)"` で commit message + verifier_history の整合を機械的に確認できる構造を維持する。
 
 ## スキルルーティング
 

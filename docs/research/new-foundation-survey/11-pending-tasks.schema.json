@@ -1,0 +1,693 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-manifesto.internal/schemas/11-pending-tasks.json",
+  "title": "11-pending-tasks machine-readable DB schema",
+  "description": "Day 37 (2026-04-21) Option A migration: markdown 完全置換。machine-readable only (人間可読性は二次、jq CRUD 前提)。",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schema_role",
+    "last_updated",
+    "archive_pointer",
+    "references",
+    "roadmap",
+    "pending_items",
+    "day_plan",
+    "gap_analysis",
+    "scope_out",
+    "qa_tasks",
+    "linter_hooks_settings",
+    "verifier_informational_residual",
+    "cross_references",
+    "priority_matrix",
+    "patterns",
+    "related_docs",
+    "tydd_review_history",
+    "tydd_week1_closure",
+    "mark_legend"
+  ],
+  "additionalProperties": false,
+  "patternProperties": {
+    "^day[0-9]+_update$": false,
+    "^milestone_[0-9]+_day_rfl_preference$": false,
+    "^week[0-9]+_update$": false,
+    "^section_[0-9]+(_[0-9]+)?_narrative$": false
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schema_role": {
+      "type": "string",
+      "minLength": 20
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "archive_pointer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "roadmap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "week",
+          "scope",
+          "completion_criteria",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "week": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files_day6_onwards": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files_day8_plus": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "completion_criteria": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pending_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "section",
+          "topic",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "section": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_progress",
+              "deferred",
+              "partial_day5",
+              "ongoing",
+              "done",
+              "future_research",
+              "blocked_external",
+              "user_pending_decision",
+              "partial_done",
+              "active",
+              "scheduled"
+            ]
+          },
+          "mark": {
+            "type": "string"
+          },
+          "timing": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "paper": {
+            "type": "string"
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "resolved_day": {
+            "type": [
+              "integer",
+              "string"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Day 148 PI- (Process Improvement) item の cross-ref id。process_improvement_plan.tiers から参照される。"
+          },
+          "decision_deadline": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "PI-3 (Day 149+) 制度: 長期 defer 項目の強制決定 deadline (Day#)。超過時は promote/retire/escalate 3 択。"
+          }
+        }
+      }
+    },
+    "day_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "day",
+          "status",
+          "scope"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "day": {
+            "type": [
+              "integer",
+              "string"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "done",
+              "in_progress",
+              "pending",
+              "scheduled",
+              "deferred"
+            ]
+          },
+          "scope": {
+            "type": "string"
+          },
+          "commit": {
+            "type": "string"
+          },
+          "breaking_change": {
+            "type": "boolean"
+          },
+          "empirical_findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "steps_completed": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "description": "9-step cycle 実施記録。Day 69+ で必須運用 (Day 69 再発防止 compatible change)"
+          },
+          "steps_skipped": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "step",
+                "reason"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "step": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9
+                },
+                "reason": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Day 81 N10: legitimate skip した step + 理由。CLAUDE.md 'Step skip 禁止規律' の reason 明記用"
+          },
+          "docs_reflection_commit": {
+            "type": "string",
+            "description": "Day 81 N5: Step 6 で生成した別 commit hash (e.g. 8615340 for Day 74)。同 commit に統合した場合は省略可、scope 内に '同 commit に統合' と明記"
+          }
+        }
+      }
+    },
+    "gap_analysis": {
+      "type": "object",
+      "required": [
+        "high_risk",
+        "medium_risk_count",
+        "medium_risk_summary",
+        "low_risk_count",
+        "low_risk_summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "high_risk": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "tag",
+              "topic",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tag": {
+                "type": "string",
+                "pattern": "^GA-[A-Z][0-9]+$"
+              },
+              "topic": {
+                "type": "string"
+              },
+              "week": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "medium_risk_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "medium_risk_summary": {
+          "type": "string"
+        },
+        "low_risk_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low_risk_summary": {
+          "type": "string"
+        }
+      }
+    },
+    "scope_out": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "reconsider_condition": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "qa_tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "aspect",
+          "current",
+          "plan"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "aspect": {
+            "type": "string"
+          },
+          "current": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "linter_hooks_settings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "topic",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "timing": {
+            "type": "string"
+          },
+          "design_proposal": {
+            "type": "object"
+          },
+          "mark": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verifier_informational_residual": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "item"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "item": {
+              "type": "string"
+            },
+            "mark": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "timing": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "cross_references": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "done": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pending": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "priority_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "priority",
+          "criteria",
+          "week"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "priority": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gaps_summary": {
+            "type": "string"
+          },
+          "week": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "pattern",
+          "rationale"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "violation_symptom": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "related_docs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tydd_review_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "round",
+          "date",
+          "scope",
+          "rate",
+          "verdict"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "round": {
+            "type": [
+              "integer",
+              "string"
+            ]
+          },
+          "date": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tydd_week1_closure": {
+      "type": "object",
+      "required": [
+        "full_match_count",
+        "full_match_items",
+        "partial_match_count",
+        "partial_match_items",
+        "match_rate",
+        "out_of_scope",
+        "benefits_achieved",
+        "benefits_total",
+        "benefits_detail",
+        "week_targets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "full_match_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "full_match_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "partial_match_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "partial_match_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "item",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "item": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "match_rate": {
+          "type": "string"
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "benefits_achieved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "benefits_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "benefits_detail": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "n",
+              "name",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "n": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "week_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "week",
+              "target"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "week": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "mark_legend": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "process_improvement_plan": {
+      "type": "object",
+      "description": "Day 148 process improvement plan (PI-1〜PI-13、4 priority tier)。pending_items の PI-* と cross-ref。",
+      "additionalProperties": true
+    }
+  }
+}

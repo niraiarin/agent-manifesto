@@ -1,0 +1,4648 @@
+{
+  "$schema": "https://agent-manifesto.internal/schemas/11-pending-tasks.json",
+  "schema_role": "forward-looking pending items + roadmap (machine-readable DB)。Day 37 (2026-04-21) で markdown から migrate。過去 narrative (Day 6-29 per-Day entries / Section 12.6+ per-Day TyDD / Section 13 改訂 log) は 11-pending-tasks-archive.md に退役。本 file は jq で CRUD、検索、更新。新規記録は machine-readable のみ、人間可読性は二次。",
+  "last_updated": "2026-04-25",
+  "archive_pointer": "11-pending-tasks-archive.md",
+  "references": [
+    "10-gap-analysis.md: 104 Gap + 10 Warning 根拠",
+    "99-verifier-rounds.md: Verifier 全検証履歴",
+    "agent-spec-lib/artifact-manifest.json: thin catalog",
+    "agent-spec-lib/artifact-manifest.schema.json: JSON Schema 制約"
+  ],
+  "roadmap": [
+    {
+      "week": "2-3",
+      "scope": "Spine 層",
+      "files": [
+        "AgentSpec/Spine/EvolutionStep.lean",
+        "AgentSpec/Spine/SafetyConstraint.lean",
+        "AgentSpec/Spine/LearningCycle.lean",
+        "AgentSpec/Spine/Observable.lean"
+      ],
+      "completion_criteria": "4 type class + dummy instance",
+      "notes": "G5-1 当初計画は Cslib.LTS 再利用だが GA-I5 により CSLib 依存は Week 6 延期。Week 2-3 では Mathlib 既存型または独自定義で代替。",
+      "status": "done"
+    },
+    {
+      "week": "3-4",
+      "scope": "Manifest 移植",
+      "files": [
+        "lean-formalization/Manifest/ → AgentSpec/Manifest/"
+      ],
+      "completion_criteria": "既存 55 axioms 全て import 可",
+      "notes": "GA-I7 で (b) 再定義方針を採用 (Lake cross-project require は避ける)。Day 74 着手 PoC 完了 (T1 session_bounded + Ontology skeleton、commit 98c6841)、残 54 axiom は Day 75-76 で T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)、Day 77+ で T2-T8 + P1-P6 を additive 拡張。",
+      "status": "in_progress (当初 scope T1-T8/P1-P6/D1-D18 完了 = 100%; 拡張 scope ConformanceVerification/EvolveSkill/FormalDerivationSkill/Procedure/Terminology/EpistemicLayer/Framework 4-of-9 完了 = scope creep 認識、CLAUDE.md Scope discipline rule で再発防止 Day 123)"
+    },
+    {
+      "week": "4-5",
+      "scope": "Process 層",
+      "files_day6_onwards": [
+        "AgentSpec/Process/Hypothesis.lean",
+        "AgentSpec/Process/Failure.lean",
+        "AgentSpec/Process/Evolution.lean",
+        "AgentSpec/Process/HandoffChain.lean"
+      ],
+      "files_day8_plus": [
+        "ResearchNode.lean (GA-S1)",
+        "Provenance.lean (GA-S3)",
+        "Retirement.lean (GA-S5)",
+        "State.lean (GA-S7)",
+        "Rationale.lean (GA-S8)"
+      ],
+      "completion_criteria": ".claude/skills/handoff state machine が型として表現 + Hypothesis/Failure/Evolution/HandoffChain inductive 完備",
+      "notes": "FolgeID (GA-S2) と Edge (GA-S4) は Day 1-2 で Spine 層へ移動済",
+      "status": "in_progress (Day 6-35 で大部分完了、残: ResearchNode/Provenance umbrella/State/Rationale)"
+    },
+    {
+      "week": "5-6",
+      "scope": "Tooling 層",
+      "items": [
+        "agent_verify tactic (GA-C26)",
+        "VcForSkill VCG (GA-C26)",
+        "SMT hammer bridge (GA-C7): LeanHammer/Duper/Lean-Auto/Boole",
+        "EnvExtension Auto-Register (GA-C9)",
+        "Call-site obligation generation (GA-C22)"
+      ],
+      "completion_criteria": "少なくとも 5 定理を hammer で自動証明",
+      "status": "pending"
+    },
+    {
+      "week": "6-7",
+      "scope": "CI 整備",
+      "items": [
+        "lake test target (GA-I9, GA-I11)",
+        "lake lint target (GA-I11)",
+        "lake exe checkInitImports",
+        "GitHub Actions 統合",
+        ".claude/hooks/ の新基盤対応 (GA-I12)",
+        "CSLib/LeanHammer/LeanDojo 依存追加 (GA-I5)",
+        "Python 依存管理 uv (GA-T7)",
+        "LeanDojo Python API (GA-I6)",
+        "Pantograph (GA-I13)"
+      ],
+      "completion_criteria": "GitHub Actions green",
+      "status": "pending"
+    },
+    {
+      "week": "7-8",
+      "scope": "Verification",
+      "items": [
+        "既存 1670 theorems の代表 100+ を新構造下で再証明",
+        "CLEVER 風自己評価 10-20 サンプル (GA-M1)",
+        "既存 GitHub Issue → Lean canonical の migration 戦略 (GA-T3)",
+        "MEMORY.md Lean 化 migration (GA-T6)",
+        "Self-benchmark (manifesto を 24 番目 repo、GA-E1)",
+        "外部 benchmark (FLTEval/miniF2F/DafnyBench/CLEVER/VeriBench、GA-E7)",
+        "3-level Verify strategy L1/L2 (GA-M12, GA-M13)"
+      ],
+      "completion_criteria": "再証明率 > 80%, 自己評価 > 60%",
+      "status": "pending"
+    }
+  ],
+  "pending_items": [
+    {
+      "section": "6.4",
+      "topic": "Day 87 P1: check-doc-length.sh cycle-check 統合 (orphan script 解消)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative subagent 識別。check-doc-length.sh は Day 81 から導入だが cycle-check.sh から呼ばれず orphan 状態。pre-commit lint or cycle-check.sh から invoke、超過 entry を early surface"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 P2: cycle-check change_category Inhabited/structure guideline",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 88 で P2 部分実装: artifact-manifest schema change_category description 強化 (World/Inhabited 変更時 compatible_change 以上 guideline 化)。Check 15 動的 git diff 検出は scope 大 + false positive リスク高で Day 90+ defer (schema description で human-enforce 当面)"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 P3: Day-number empirical gating (Check 3 calendar→Day#)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative 識別。Day 78→Day 87 は calendar で同日 (Day-cycle 圧縮) → Check 3 calendar 7-day で OK 判定だが Day-number gap +9 で 2 Day overdue。Check 3 を expected_next_empirical_day = last_empirical_day + 7 で Day# gating、HARD GATE 化候補 | PI-3 deadline=Day163 (14 day grace from Day 149 = current+14)。 | Day 165 PI-3 deadline (Day163) 超過、retire 判断: 60+ Day defer 後も未稼働、現 PI 体制 (Check 21/22 等) で代替可能、本項目は cycle-check 改修としては優先順位低と判断。Phase 2 で必要なら再起。",
+      "decision_deadline": 163,
+      "resolved_day": 165
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 87 Plausible: property-based test 導入 (TyDD 統合サイクル step 5)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 88+",
+      "gaps": [],
+      "detail": "Day 87 empirical #7 negative 識別。CLAUDE.md 新節 TyDD 統合サイクル step 5 (round-trip / property-based test) 未履行。Mathlib v4.29.0 に Plausible 含まれる、agent-spec-lib では 0 利用。GA-S15 Lattice (Day 76-77) の commutativity/associativity 等の property-based test 候補 | PI-3 deadline=Day163。 | Day 165 PI-3 deadline (Day163) 超過、retire 判断: TyDD step 5 は採用済の round-trip / property test pattern が一部 Lean 内 theorem (Day 161 Evolution) で実現、Plausible 個別導入は Phase 2 で必要時に。",
+      "decision_deadline": 163,
+      "resolved_day": 165
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N1 [Gap A]: handoff-resume.md auto-update hook (Day 73 PC-crash incident 構造的解消)",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 79 で scripts/update-handoff.sh 実装 (commit TBD)。HEAD sha + branch + 最新 day_plan entry + build state + next empirical 取得し handoff-resume-research-new-foundation.md を auto-regenerate。Day 78 完了状態 (HEAD=5573d49) で試験成功、Day 73 PC-crash 再発防止確立"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N7 [Gap E]: metadata-only commit script 化 (CLAUDE.md 新 rule 反映)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 79 で scripts/backfill-day-commit.sh 実装 (commit TBD)。Usage: bash scripts/backfill-day-commit.sh <day> <commit-hash>、jq で commit field 追加 + cycle-check + chore(metadata) commit を 1 invocation 化。Day 78 既存 entry で no-op exit 2 試験成功"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N2 [Gap B]: Documentation inflation 規律強化 (verifier_history evaluator 741 chars 等)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 75 evaluator 741 chars / Day 77 day_plan scope 513 chars が CLAUDE.md '3-5 行 / 1-2 文' 制限超過。commit message には書けない情報を JSON evaluator field に push する anti-pattern。lint script 候補 (length check + ceremonial token detect)"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N5 [Gap D]: cycle-check Check 13 (Step 6 docs 反映 artifact ref 必須化)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 74 は Step 6 separate commit (8615340) があるが Day 75-77 は steps_completed=[1..9] 主張のみで artifact ref なし。Check 12 は array count のみ check、Step 6 が実 commit/file 改変で履行されたかを検証する Check 13 追加候補"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N3 [Gap C]: Subagent 省略 justification 区別化 (proof 追加 vs namespace 追加)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。Day 27 audit basis 'backward-compat additive' を Day 74-77 全 commit で連発。Day 77 le_antisymm proof は属性的に additive ではなく proof 追加。justification template に 'change category: namespace_only / proof_addition / behavior_change' を必須化"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 N10 [Gap F]: steps_skipped schema field 拡張 (skip-with-reason marker)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 78 empirical #6 negative subagent 識別。steps_completed=[1..9] が Day 71-77 で均一、skip-with-reason marker なし。Day 75 (人間判断 Day) で Step 8 commit ≠ feat 等の legitimate skip を schema で区別。schema 拡張: steps_completed + steps_skipped: [{step, reason}]"
+    },
+    {
+      "section": "6.4",
+      "topic": "Day 78 M-OBS [pre-existing]: theorem manifest 22 vs 31 (Provenance/ProvRelation 4 + Spine/LearningCycle 5)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 79+",
+      "gaps": [],
+      "detail": "Day 82 で完了 (commit TBD)。breakdown.Spine/LearningCycle.lean theorems 0→5 + breakdown.Provenance/ProvRelation.lean theorems 0→4 + theorem_count 25→34。Day 65 / Day 11 の breakdown 反映漏れを retroactive 修正、観測精度向上"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 follow-up: T1 残 2 axiom (no_cross_session_memory + session_no_shared_state)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 75-76",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Day 80 で完了 (commit TBD)。Ontology.lean に additive 拡張 (StructureId/WorldHash opaque + Severity/AgentRole inductive + Action/AuditEntry/ContextWindow/Agent structure + canTransition opaque + World に auditLog field 追加、Inhabited instance update)、T1.lean に 2 axiom 追加。byte-identical signature with lean-formalization。axiom 1→3、T1 stand-alone 完備。compatible change (World field 追加)"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 main sprint: T2-T8 + P1-P6 + L1-L6 + V1-V7 + D1-D18 (54 axiom)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 77-Week 4 終わり",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Day 74 PoC で path 確立済。T 順 (T2-T8) → P 順 → L 順 → V 順 → D 順で additive 拡張、各 T で必要 opaque/structure を Ontology.lean に追加。54 axiom 全件再定義、namespace AgentSpec.Manifest 統一。完成基準: lean-formalization/Manifest/ の 55 axiom 全件が AgentSpec.Manifest 配下に存在 + lake build PASS | PI-3 deadline=Day170 (21 day grace、scope 大のため特例)。 | Day 171 解消: 47/47 file = 100% by name + 86 axiom (source 57 全 covered)。Day 170 final audit 確定、Day 171 DF root integration で root accessible。",
+      "decision_deadline": 170,
+      "resolved_day": 171
+    },
+    {
+      "section": "2.10",
+      "topic": "GA-S15 SpecSig Lattice 設計 (ResearchSpec pre/post meet/join)",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 75 (人間判断 Day) → Day 76-77 実装",
+      "gaps": [
+        "GA-S15"
+      ],
+      "detail": "Day 75 design 確定 (Q1=A/Q2=B/Q3=B/Q4=D)、Day 76 PrePred/PostPred 自動 Lattice + 2 theorem rfl + 8 法則 examples (commit 967a2e6)、Day 77 ResearchSpec naive product Lattice instance (LE/Sup/Inf/PartialOrder/Lattice inline) + 5 helper theorem + 34 test examples で Q2=B 完了。GA-M11 LLM refine loop 収束証明の足掛かり完成。Hoare refinement order (Liquid Haskell subtype) は別 instance で Day 78+ or Week 4 で必要時追加可能。Confidence migration (Q4-A) は consumer 出現時"
+    },
+    {
+      "section": "2.1",
+      "topic": "lakefile.lean: LeanHammer/Lean-Auto/Duper/CSLib require",
+      "status": "deferred",
+      "timing": "Week 6",
+      "gaps": [
+        "GA-C7",
+        "GA-I5"
+      ]
+    },
+    {
+      "section": "2.1",
+      "topic": "lakefile.lean: weak.linter.unreachableTactic の termination 保護",
+      "status": "deferred",
+      "timing": "Week 5-6",
+      "gaps": [
+        "GA-C31"
+      ]
+    },
+    {
+      "section": "2.1",
+      "topic": "lakefile.lean: $schema URI 非解決",
+      "status": "deferred",
+      "timing": "Week 6-7"
+    },
+    {
+      "section": "2.1",
+      "topic": "lakefile.lean: lake exe test/lint target",
+      "status": "deferred",
+      "timing": "Week 6"
+    },
+    {
+      "section": "2.2",
+      "topic": "Core.lean: 普遍 round-trip 定理 universal proof",
+      "mark": "⚠",
+      "status": "partial_day5",
+      "detail": "bounded 7³→8³ 証明済、universal proof は Day 6/Week 3 へ繰り延げ",
+      "timing": "Week 6 Lean-Auto 統合"
+    },
+    {
+      "section": "2.2",
+      "topic": "Core.lean: Ord SemVer → ResearchSpec Lattice 拡張",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 4-5",
+      "gaps": [
+        "GA-S15"
+      ]
+    },
+    {
+      "section": "2.2",
+      "topic": "Core.lean: Hoare-style 4-arg post / Multiplicity Grading",
+      "mark": "⏳",
+      "status": "done",
+      "timing": "Week 4-5",
+      "gaps": [
+        "GA-S11",
+        "GA-S16",
+        "TyDD-B4",
+        "TyDD-F3"
+      ],
+      "resolved_day": 53,
+      "detail": "Day 53 で Spine/ResearchSpec.lean として polymorphic (State Input Output : Type) 実装、Core.lean ではなく Spine 層配置 (layer 整合性優先)"
+    },
+    {
+      "section": "2.2",
+      "topic": "Core.lean: Decidable 実装を inferInstanceAs に統一",
+      "mark": "⏳",
+      "status": "done",
+      "timing": "Day 5 or Week 3",
+      "resolved_day": 56
+    },
+    {
+      "section": "2.3",
+      "topic": "CoreTest: Property-based test (Hypothesis 風)",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 6-7",
+      "gaps": [
+        "GA-M4"
+      ]
+    },
+    {
+      "section": "2.4",
+      "topic": "artifact-manifest: $schema URI 実在 URL",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 6-7"
+    },
+    {
+      "section": "2.4",
+      "topic": "artifact-manifest: JSON → Lean 型化 (TyDD-J5)",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 4",
+      "gaps": [
+        "TyDD-J5"
+      ]
+    },
+    {
+      "section": "2.4",
+      "topic": "artifact-manifest: assumption refs layer 充填",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 4",
+      "gaps": [
+        "GA-I1"
+      ]
+    },
+    {
+      "section": "2.4",
+      "topic": "artifact-manifest: 本体 schema との divergence 解消",
+      "mark": "⏳",
+      "status": "pending",
+      "timing": "Week 6-7"
+    },
+    {
+      "section": "2.5",
+      "topic": "README: Week 1 完了基準の縮小定義",
+      "status": "pending",
+      "timing": "Week 6 CSLib 追加時"
+    },
+    {
+      "section": "2.5",
+      "topic": "README: TyDD-H7 L1/L2 実装",
+      "status": "pending",
+      "timing": "Week 6-7"
+    },
+    {
+      "section": "2.6",
+      "topic": "Top-down/hole-driven development 運用",
+      "mark": "🔄",
+      "status": "ongoing",
+      "detail": "Week 2 Day 1-36 で実践中",
+      "gaps": [
+        "TyDD-S1 benefit #7"
+      ]
+    },
+    {
+      "section": "2.8",
+      "topic": "Edge: S4 P2 Refinement で no-self-loop 型強制",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Week 4-5"
+    },
+    {
+      "section": "2.8",
+      "topic": "Edge: F8 FiberedTypeSpec で EdgeKind fiber 化",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5"
+    },
+    {
+      "section": "2.8",
+      "topic": "Edge: Recipe 11 BiTrSpec codec",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6 以降"
+    },
+    {
+      "section": "2.8",
+      "topic": "Edge: PROV-strict vs research-mode 語彙分離",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6-7"
+    },
+    {
+      "section": "2.10",
+      "topic": "LearningStage.le Prop 形式併設",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 5 (未対処)",
+      "paper": "S4",
+      "resolved_day": 65
+    },
+    {
+      "section": "2.10",
+      "topic": "Recipe 10 (Opaque TypeSpec) SafetyConstraint.safe opaque 化",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5",
+      "paper": "N4"
+    },
+    {
+      "section": "2.10",
+      "topic": "PROV-O 三項統合 LearningCycle → WasGeneratedBy",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5",
+      "paper": "02-data-provenance §4.1"
+    },
+    {
+      "section": "2.10",
+      "topic": "S6 Paper 1 BST/AVL invariants (LearningStage order)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5",
+      "paper": "S6 Paper 1"
+    },
+    {
+      "section": "2.10",
+      "topic": "VBS tactic chain / Lean-Auto 統合 (universal round-trip proof)",
+      "mark": "🔴",
+      "status": "pending",
+      "timing": "Week 6 前倒し",
+      "paper": "S2 Recipe 4-6"
+    },
+    {
+      "section": "2.10",
+      "topic": "S7 Schedule combinators (LearningStage.next retry/budget)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6-7",
+      "paper": "S7 Effect-TS"
+    },
+    {
+      "section": "2.10",
+      "topic": "Cedar DRT pattern (LearningStage 5×5 transition)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6-7",
+      "paper": "G1 Cedar VGD",
+      "gaps": [
+        "GA-M4"
+      ]
+    },
+    {
+      "section": "2.10",
+      "topic": "S3 Lean4Lean TrSpec correspondence",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 7-8",
+      "paper": "S3"
+    },
+    {
+      "section": "2.10",
+      "topic": "02-data-provenance §4.6 Nextflow resume / Galaxy job cache (WasReusedBy edge)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 5-6 Tooling 層",
+      "paper": "02-data-provenance §4.6"
+    },
+    {
+      "section": "2.10",
+      "topic": "02-data-provenance §4.2 二層分離 (Lean tree + content-addressed manifest)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6-7 CI",
+      "paper": "02-data-provenance §4.2"
+    },
+    {
+      "section": "2.10",
+      "topic": "02-data-provenance §4.7 RO-Crate 互換 export",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 6-7",
+      "paper": "02-data-provenance §4.7"
+    },
+    {
+      "section": "2.10",
+      "topic": "02-data-provenance §4.5 Pipeline 段階表現 (DSL ≤ AST ≤ LeanSpec ≤ SMTSpec ≤ Tests ≤ Code)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 5-6 Tooling 層",
+      "paper": "02-data-provenance §4.5"
+    },
+    {
+      "section": "2.10",
+      "topic": "G5-1 §3.4 step 2 LearningM indexed monad",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5 Tooling 層",
+      "paper": "G5-1 §3.4 step 2"
+    },
+    {
+      "section": "2.10",
+      "topic": "EvolutionStep hypothesis/observation accessor (G5-1 §3.4 step 1 完全 4 member)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4-5"
+    },
+    {
+      "section": "2.10",
+      "topic": "Verdict payload 拡充 (refuted evidence 等)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 38+",
+      "resolved_day": 42
+    },
+    {
+      "section": "2.10",
+      "topic": "A-Maximal: elaborator 型レベル強制 (退役違反 compile error rejection)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 5-6 Tooling 層 (本丸)",
+      "detail": "Day 45-48 で structure-level 必須化は完了 (Hypothesis/Failure/Evolution/RetiredEntity)、elaborator 型レベル強制は Day 49+ or Week 5-6 Tooling 層で継続検討"
+    },
+    {
+      "section": "2.10",
+      "topic": "ResearchActivity payload investigate/decompose/refine/retire variants",
+      "mark": "✅",
+      "status": "done",
+      "resolved_day": 26
+    },
+    {
+      "section": "2.10",
+      "topic": "HandoffChain 全体 embed 用 constructor (ResearchEntity.HandoffChain)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 38+",
+      "resolved_day": 41
+    },
+    {
+      "section": "2.10",
+      "topic": "G3 CSLib spine bisimulation",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 6 CSLib 移行時"
+    },
+    {
+      "section": "2.10",
+      "topic": "S5 QTT Multiplicity (Lean 4 対応待ち)",
+      "mark": "🟢",
+      "status": "blocked_external",
+      "paper": "S5 Idris 2",
+      "detail": "Lean 4 QTT 対応待ち (upstream 制御外、Idris 2 Q0/Q1/Qω は Lean 4 で unsupported)、Day 66 G5 cleanup"
+    },
+    {
+      "section": "2.10",
+      "topic": "N2 Conatural Numbers (coinductive retirement、Lean 4 cubical 対応待ち)",
+      "mark": "🟢",
+      "status": "blocked_external",
+      "paper": "N2 ELTE",
+      "detail": "Lean 4 cubical 対応待ち (upstream 制御外)、pending_items 母数から分離、Day 66 G5 cleanup"
+    },
+    {
+      "section": "2.10",
+      "topic": "Spine + Process cross-layer integration test",
+      "mark": "✅",
+      "status": "done",
+      "resolved_day": 8
+    },
+    {
+      "section": "2.10",
+      "topic": "WasDerivedFrom DAG 制約 (Subagent I2 Day 11、Section 2.21+)",
+      "mark": "✅",
+      "status": "done",
+      "resolved_day": 30,
+      "detail": "TransDerived + Acyclic + subset 双対 (Day 30-32)"
+    },
+    {
+      "section": "2.10",
+      "topic": "Rationale attribution (author : ResearchAgent、Day 44 D2 deferred)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 49+",
+      "detail": "Day 44 D2 で scope 制御のため deferred、Day 48 sprint 完了後に再検討",
+      "resolved_day": 49
+    },
+    {
+      "section": "2.10",
+      "topic": "Rationale timestamp (T1 一時性連携、Day 44 D2 deferred)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 47+",
+      "resolved_day": 49
+    },
+    {
+      "section": "2.10",
+      "topic": "Rationale confidence の Fin 101 型強制 (Day 44 D3 deferred)",
+      "mark": "🟢",
+      "status": "deferred",
+      "timing": "GA-S15 Lattice 導入時",
+      "detail": "Day 70 人間判断: deferred 継続。Fin 101 は Fin.add mod wrap で score 算術に不適切。Score structure (val : Nat; h : val ≤ 100) は consumer (算術操作/順序証明) 出現時に導入。GA-S15 Lattice が自然な導入点。先行事例: 確率プログラミング (Stan/Pyro) の newtype pattern が production 主流"
+    },
+    {
+      "section": "2.10",
+      "topic": "Rationale references の structured 化 (DOI/URL/paper/commit 分離、Day 44 追加検討)",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Week 3",
+      "detail": "Day 72 実装完了。inductive Reference (doi/url/arxiv/commit) + Rationale.references : List Reference に migration。lake build 106 jobs PASS、/verify 5/5 PASS。DataCite pattern 準拠"
+    },
+    {
+      "section": "2.10",
+      "topic": "A-Maximal elaborator 型レベル強制 (Rationale 必須化の進化版、Day 48 で structure-level 完了後)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 5-6 Tooling 層"
+    },
+    {
+      "section": "2.10",
+      "topic": "Rationale lake lint warning (author 未指定 = production warning、Day 14 A-Minimal pattern)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 52+",
+      "detail": "Day 50 empirical I2 起因、attribution skip 率 100% を構造的に可視化。@[deprecated] 既存 linter と同 pattern で実装、Week 5-6 A-Maximal elaborator 強制の前段",
+      "resolved_day": 52
+    },
+    {
+      "section": "2.10",
+      "topic": "GA-S10 ResearchGoal 型 Spine 層追加 (Day 52 差し替えで Day 55 に後送り)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 55",
+      "resolved_day": 55
+    },
+    {
+      "section": "2.10",
+      "topic": "Day 54 Step 7 検出: Day 5 timing long-deferred 2 件 (LearningStage.le Prop 形式併設 / Core.lean Decidable inferInstanceAs 統一)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 56+",
+      "detail": "Day 56 で Core.lean Decidable inferInstanceAs が resolved (684f65a)、Day 65 で LearningStage.le Prop 形式併設が resolved (c370919)、2 件とも解消済。本 entry 自体は Day 66 で整理記録。",
+      "resolved_day": 65
+    },
+    {
+      "section": "2.10",
+      "topic": "F1 Rationale lint 再設計 (watched-namespace scanner 化、#check_unattributed_rationale 等)",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 58+",
+      "detail": "Day 60-63 sprint で A-Standard 4 段階 (scanner → EnvExtension → namespace scan → import propagate) を Rationale に複製完了、prod 7 unattributed を flag 可能、Day 52 の 0 warning から構造的改善。Day 64 empirical で効果検証予定。",
+      "resolved_day": 63
+    },
+    {
+      "section": "2.10",
+      "topic": "F1 Rationale prod site strict 化 (Hypothesis.lean L97-99 ofClaimWithText、L89 trivial、ResearchGoal.lean L96/100/115)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 58-59",
+      "detail": "Day 70 精査: ofClaimWithText は Day 58 @[deprecated] 済、trivial/ofTitle は test fixture or test-only 利用 (prod consumer 0)。Day 66 G4 reinterpretation 追認: scanner flag は design 通り、strict 化は semantic 矛盾"
+    },
+    {
+      "section": "6.4",
+      "topic": "F2 cycle-check.sh 5 drift gap 修正 (commit null/delete 区別、breakdown_sum=0 盲点、future-date、verifier_history entry 削除、day_plan entry 削除)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 58-60",
+      "detail": "Day 57 empirical F2、script iteration 改善候補",
+      "resolved_day": 59
+    },
+    {
+      "section": "2.10",
+      "topic": "G1 Day 52 fixture semi-FP cleanup (scanner で Linter.isDeprecated decl を除外 or Test 層移動)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 67+",
+      "detail": "Day 67 で 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) に Lean.Linter.isDeprecated early filter 追加、conservative extension。Day 52 fixture flag noise 解消"
+    },
+    {
+      "section": "6.4",
+      "topic": "G2 cycle-check.sh F3 5 gap 追加修正 (verifier_history date monotonic / commit hash format / day_plan day monotonic+dup / breakdown keys 存在 / long-deferred aging)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 68+",
+      "detail": "Day 68 で Check 7-11 実装 (verifier_history date monotonic / commit hash format / day_plan day duplicate / breakdown keys 存在 / long-deferred aging 14+ Day escalate)。G6 (Check 4 改善提案) も Check 11 で吸収。self-test PASS、Day 47+/46+ Rationale 課題 2 件を新たに escalate 表示。conservative extension"
+    },
+    {
+      "section": "2.10",
+      "topic": "G5 Day 54 Step 7 重複 entry cleanup + future_research status 分離 (pending_items size 削減)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 67+",
+      "detail": "Day 66 で重複 resolved + blocked_external 分離、Day 70 で F1/G6 done 化により Check 4 noise 5→2 に削減。残 2 件 (Fin 101 / references structured) は breaking で人間判断要 = aging escalate 対象"
+    },
+    {
+      "section": "6.4",
+      "topic": "G6 cycle-check.sh Check 4 改善 (未 resolved Day N 形式 only + stale 閾値 aging)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 68+",
+      "detail": "Day 68 Check 11 (long-deferred aging 14+ Day escalate) で吸収。Day 69 Step 7 checklist で done 化漏れを識別"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 D17 (deductive design workflow、最大 8 theorem + state machine + helper def 多数)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 111+",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "D17 = D2+D3+D5+D9+D13 全依存、WorkflowState + DeductiveDesignStep + WorkflowTransition state machine + 多 helper def。scope 大、empirical #11 後 (Day 111+) で着手 | Day 112 完了 (D17 3 theorem + state machine + 5 typed outputs + transition gating)"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 移植 D13 残 4 theorem (PropositionId+native_decide 依存)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 113",
+      "gaps": [
+        "GA-I7",
+        "GA-C27"
+      ],
+      "detail": "Day 113 で完了。Ontology に PropositionCategory + PropositionId 47 variant + category/dependencies/propositionDependsOn、D.lean に allPropositions/dependents/affected/d13_propagation + assumptionImpact/Raw + D13 残 4 theorem を追加。native_decide 2 件は build PASS。"
+    },
+    {
+      "section": "2.10",
+      "topic": "Manifest 周辺整備 (skill axioms / ConformanceVerification / Framework 残)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Day 114: ConformanceVerification 完了 (3 axiom + 23 theorem)。Day 115: EvolveSkill 完了 (axiom 0 + 32 theorem)。残: FormalDerivationSkill (17 axiom) / Framework/*。"
+    },
+    {
+      "section": "2.11",
+      "topic": "Check 17: artifact-ref required (cycle-check.sh false marker attack 防御)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Empirical #11 (Day 111) で Check 16 substring 一致のみの限界 識別。Day 103-110 の commit diff に paper survey artifact (00-synthesis/Principles.lean/docs/research/) zero touch、Day 102 audit pattern の token 層 recurrence。修正案 A (推奨): 11-pending-tasks.schema.json に step1_artifact_ref / step3_tydd_evaluation / step7_checklist_results 構造 field 追加、git show --stat 経由で artifact path cross-check。Check 5b 経由で defense in depth (D4 phase order)。修正案 B: commit diff cross-check のみ (read-only review 検出不可、部分 cover)"
+    },
+    {
+      "section": "2.12",
+      "topic": "Framework/* port 残 5 file (CompatibilityClassification + EpistemicBridge + EpistemicTagging + LLMRejection + PromotionProtocol)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Week 4+",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Day 117-119 で NodeKind / CoTFaithfulness / AcyclicGraph / DanglingDetection 完了 (Ontology に StructureKind.priority + PropositionCategory.strength 補強済)。残 5 file は前提未 port: CompatibilityClassification (Evolution) / EpistemicBridge (Terminology+EpistemicLayer) / EpistemicTagging+LLMRejection (EpistemicLayer) / PromotionProtocol (Observable)。Week 4+ 着手予定、まず前提 file (Evolution/Terminology/EpistemicLayer/Observable) port から。"
+    },
+    {
+      "section": "2.13",
+      "topic": "byte-identical port 規律からの派生負債 catalog (Day 119/122/123 累積)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Tooling 着手後の Verification spot check で意味的整合確認",
+      "gaps": [
+        "GA-I7"
+      ],
+      "detail": "Day 119: Ontology に StructureKind.priority + PropositionCategory.strength + dependency_respects_strength axiom を補強 (元 manifest 由来だが port では新規追加扱い)。Day 119: AcyclicGraph + DanglingDetection に set_option autoImplicit true 追加 (port 先 lakefile autoImplicit=false を局所迂回)。Day 122: World field 順 mismatch (元 manifest: structures/sessions/allocations/feedbacks/auditLog/epoch/time vs port: sessions/time/auditLog/structures/epoch/feedbacks/allocations) を named field syntax で吸収 (Procedure.lean:370)。Day 122: Ontology に reachableVia + isDirectDependent + 3 theorem 補強。Day 123: EpistemicLayer に set_option autoImplicit true 追加。Day 123: Ontology に constraints_are_roots theorem 補強。再発防止 (CLAUDE.md Scope discipline rule): 派生は entry 化、累積監視、Tooling/Verification 着手後に意味的整合 spot check 必須。 | Day 124 spot check (Verification 部分着手): #print axioms on 6 representatives → 5/6 健全 (D1/T8/P6/D4/D18 が none/propext/manifest axiom 直接使用)、1/6 ⚠️ d13_constraint_negation_has_impact が `_native.native_decide.ax_1_1` 生成 (GA-C27 trusted code 拡張、kernel verify 外)。次回 Tooling 着手時に native_decide 代替 (decide / by simp / 手動 case 分割) 検討。 | Day 144 識別: Axioms.lean port が port 先 Ontology / T1-T8 / etc と structureImproved/processImproved/isHuman 等 declarations 重複 + actionBlocked autoImplicit 違反 → revert。Framework 残 chain (PromotionProtocol Observable / CompatibilityClassification Evolution) は Axioms 重複解消 or Evolution/Observable で T1-T8 個別 import 戦略変更必要。Day 145+ 別解決 (autoImplicit 5 file 明示 binder 化 = 規模大 別 Day cycle)。 | Day 145: autoImplicit 解消 試行 — AcyclicGraph + DanglingDetection 2 file は variable {α : Type} [BEq α] [DecidableEq α] で明示 binder 化 PASS。EpistemicLayer / EpistemicTagging / LLMRejection は lowercase a/b 等 多 type variable に依存、variable で cover 困難 → 各 declaration 個別明示 binder 化が必要、規模大 (EpistemicLayer 47 theorem)、defer 維持。派生負債 5→3 file 残存。 | Day 146: Observable.lean port も blocker 確認 — port 先 Ontology に skillQuality/contextEfficiency/outputQuality 等の opaque def が pre-pick されている (Day 100+ 拡張で先取り) + ConstraintId が Axioms にあった type で port されていない。Observable 単純 port 不可、Ontology の重複 def 削除 or Observable から重複部分削除が必要。Day 147+ 別 strategy。"
+    },
+    {
+      "id": "PI-1",
+      "section": "2.14",
+      "topic": "[P0] verifier_history PASS 単一値の意味分解 (cycle_hygiene / implementation / evaluation)",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 148",
+      "detail": "現状 'PASS' は cycle-check exit 0 / 実装目的達成 / 意味妥当性 を区別なく等価視 (Day 144/146 で実装 fail でも PASS と記録される問題)。schema 拡張 (conservative extension): pass_layers field 追加 {cycle_hygiene, implementation, evaluation} 各 enum [pass/fail/n_a]。従来 result=PASS は cycle_hygiene=pass と等価扱い。entry 生成器で 3 軸入力強制。",
+      "resolved_day": 149
+    },
+    {
+      "id": "PI-2",
+      "section": "2.14",
+      "topic": "[P0] 同一 blocker N連敗 (>=2) で user escalation 強制",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 148",
+      "detail": "Axioms (Day 144) / Observable (Day 144,146) で 2-3 回 retry を user 確認なしに実行した問題への対応。CLAUDE.md (グローバル) に追記: 同一 scope marker への retry が 2 回連続 implementation=fail なら 3 回目前に user 戦略相談、auto mode 上書き不可。cycle-check Check 21 新設: 直近 14 day で同一 scope marker に対して implementation=fail が 2 回以上で fail-flag。PI-1 (pass_layers) 完了が前提。",
+      "resolved_day": 149
+    },
+    {
+      "id": "PI-3",
+      "section": "2.14",
+      "topic": "[P0] 長期 defer 項目に強制 decision deadline 制度化",
+      "mark": "🔴",
+      "status": "done",
+      "timing": "Day 149",
+      "detail": "Day 87 起源の defer (P3 empirical gating, Plausible) が 58 日継続、Manifest 移植 main sprint が 69 日継続、catalog 永久滞留問題への対応。pending_items schema に decision_deadline (Day#) field 追加 (conservative extension)。Check 11 を WARN→ERROR、deadline 超過時 promote/retire/escalate 3 択を強制。既存 deferred 項目には移行猶予 14 day で deadline 設定。",
+      "resolved_day": 149
+    },
+    {
+      "id": "PI-4",
+      "section": "2.14",
+      "topic": "[P1] 9-step cycle Step 3 を PoC + TyDD eval に分割 (Step 4 skip 常態化解消)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 150",
+      "detail": "直近 4 Day 中 2 Day で Step 4 (実装) skip、TyDD eval が事前 PoC 兼ねる構造ミス。CLAUDE.md project レベル cycle 仕様改訂: Step 3a (PoC: 5-15 分 throwaway 試行) + Step 3b (PoC 結果に基づく TyDD eval) + Step 4 (本実装、PoC 成功時のみ)。Step 4 が not_attempted (PoC fail) と skipped (戦略変更) の意味区別を導入。",
+      "resolved_day": 150
+    },
+    {
+      "id": "PI-5",
+      "section": "2.14",
+      "topic": "[P1] 1 commit/Day 化 (chore(metadata) hash backfill 撤廃)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 151",
+      "detail": "現状 1 Day = feat + chore(metadata) commit hash backfill 2 commit 固定。commit-msg hook で TBD placeholder を実 hash に置換、または post-commit hook で artifact-manifest.json + 11-pending-tasks.json の TBD を rewrite (single commit amend ではなく next commit に統合)。ceremonial commit 撤廃で commit log の signal/noise 改善。",
+      "resolved_day": 151
+    },
+    {
+      "id": "PI-6",
+      "section": "2.14",
+      "topic": "[P1] 週次 cost/value retro 制度化 (process_only 比率 + revert 回数 + Day delta 集計)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Day 152-153",
+      "detail": "毎 7 Day で retro entry 生成: token 消費 / commit 数 / 変更 LOC / theorem delta / axiom delta / process_only 比率 / revert 回数。Empirical revalidation (現状 7 Day cycle) と統合。Check 22 新設: '直近 7 Day 内に retro entry 存在' を確認。Phase 0 終了判断 (PI-7) の入力データになる。",
+      "resolved_day": 152
+    },
+    {
+      "id": "PI-7",
+      "section": "2.14",
+      "topic": "[P2] Phase 0 Week 5-6 chronological gate 設定 (user 同意必須)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "user 判断後 (Day 148 提案、Day 155 deadline 候補)",
+      "detail": "Day 147 = Week 21 相当 (147/7)、Week 5-6 名目との乖離大。Phase 0 終了 chronological gate (Day 155 など) を user 提案、終了時点で Manifest 移植進捗% / 残 blocker / Phase 1 移行可否 を判断。user 同意必須 (本項目自体が独立で着手可ではない)。PI-6 retro データを判断材料に。 | 2026-04-27 user 同意取得 (Day 155 deadline 推奨採用)。Day 155 で audit gate 実施、Phase 1 移行可否判断。",
+      "decision_deadline": 155,
+      "resolved_day": 155
+    },
+    {
+      "id": "PI-8",
+      "section": "2.14",
+      "topic": "[P2] 自己評価権限 部分 subagent 委譲 (change_category のみ、implementation 判定は Worker 維持)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "user 判断後",
+      "detail": "現状 change_category enum 選択 / pass_layers.implementation 判定 を Worker (私) が実施 = 自己評価循環。Verifier subagent (P2 hook) に委譲、Worker は Lean 実装に集中。CLAUDE.md / verify skill 改訂、entry 生成 workflow に subagent dispatch 必須化。breaking change (運用範囲縮小)、user 同意必須。 | 2026-04-27 user 同意取得 (部分採用案 A 推奨採用): change_category enum 選択のみ Verifier subagent 委譲、pass_layers.implementation 判定は PI-1 で外部検証可能化済のため Worker 維持。実装 Day 156+。",
+      "resolved_day": 158
+    },
+    {
+      "id": "PI-9",
+      "section": "2.14",
+      "topic": "[P3] native_decide 5 箇所撤去 (Observable.lean L637/659/683 + EpistemicLayer.lean L534/535)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 156+",
+      "detail": "GA-C27 trusted code 拡張禁止と矛盾。Observable は inductive 上の有限 case 分析なので decide で十分のはず。lakefile に linter.native_decide_warn 風オプション追加 (Mathlib v4.29 lint あり)、または pre-commit で grep ブロック。各 5 箇所を decide / by simp / 手動 case 分割で置換可能か検証。",
+      "resolved_day": 153
+    },
+    {
+      "id": "PI-10",
+      "section": "2.14",
+      "topic": "[P3] Hook ↔ Lean sync (CRITICAL_PATTERNS 二重定義 byte-check)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 156+",
+      "detail": "DesignFoundation.lean の VerificationIndependence / requiredConditions theorem が p2-verify-on-commit.sh hook 挙動を realize しているか Lean 側で検査されない問題。.claude/hooks/p2-verify-on-commit.sh の CRITICAL_PATTERNS を Lean side def criticalPatterns : List String に重複 declare、cycle-check Check 23 新設で両者文字列 list 等しいことを byte-check。または lake exe generate-hooks で Lean → bash 自動生成 (人手書き換え不可)。",
+      "resolved_day": 153
+    },
+    {
+      "id": "PI-11",
+      "section": "2.14",
+      "topic": "[P3] IsVerifyToken / TrustDelegation 二分岐 (object proof と meta attestation 分離)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 156+",
+      "detail": "VerifyToken.lean の IsVerifyToken は proof と外部 attestation を区別しない (smoke test の rfl proof と将来の VerifyTokenLoader 由来 attestation が同 typeclass)。改修: class IsVerifyToken (proof 用、現行) と class TrustDelegation (axiom externalAttestation 経由、attestation 用) に分離、agent_verify tactic で provenance 追跡可能化、#print axioms で attestation 由来を可視化。breaking change (既存呼び出し refactor)。",
+      "resolved_day": 154
+    },
+    {
+      "id": "PI-12",
+      "section": "2.14",
+      "topic": "[P3] Measurable semantic 強化 (現状 trivial provable で意味内容空洞)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 156+",
+      "detail": "Observable.lean Measurable m := ∃ f, ∀ w, f w = m w は f := m で trivial provable、'Demoted: 2026-04-01 — Measurable is trivially satisfied' docstring の通り意味内容失。3 案: (a) Computable f 要求 (Mathlib Computability) / (b) axiom skillQuality_measurable 各 m に declare で #print axioms 可視化 / (c) MeasurableSyntactic vs MeasurableSemantic typeclass 分離。breaking change。",
+      "resolved_day": 159
+    },
+    {
+      "id": "PI-13",
+      "section": "2.14",
+      "topic": "[P3] opaque def に semantic origin tag (SkillRegistry 連携、docstring 依存撤廃)",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Day 156+",
+      "detail": "Ontology.lean L389-407 の 8 opaque (skillQuality 等) の semantic 意図 (どの benchmark / どの measure か) が docstring 依存、Lean 側で検査されない。Models/Instances/ の interpretation を Lean 側に持込、def skillQualityModel : InstanceWorld → Nat 提供、axiom skillQuality_model_compatible で結ぶ。または @[deriving_intent] 自製 attribute + SkillRegistry に origin 登録、cycle-check で 'opaque def origin 記載なし' WARN。conservative extension。",
+      "resolved_day": 160
+    },
+    {
+      "id": "PI-14",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme C] governance toolkit acceptance test (3 例 project に install 動作確認)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Phase 3 Theme C 内 (Day 174-184)",
+      "decision_deadline": 184,
+      "detail": "Day 174 Phase 3 plan 起源。governance toolkit packaging (Theme C) の acceptance: agent-spec-lib/governance/ を 3 別 project (例: dummy-1, dummy-2, dummy-3) に install.sh 経由で deploy、cycle-check + hooks の動作を確認。Use case 4 (Day 173 主観評価最高 priority) の operational test。",
+      "resolved_day": 178
+    },
+    {
+      "id": "PI-15",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme A] API breaking change auto-detect (Day cycle 自動 audit)",
+      "mark": "🟡",
+      "status": "done",
+      "timing": "Phase 3 Theme A 内 (Day 174-178)",
+      "decision_deadline": 250,
+      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。Phase 4+ で着手予定 (deadline=Day250 = 70 day grace、API 安定化要請が顕在化したら priority up)。",
+      "resolved_day": 181
+    },
+    {
+      "id": "PI-16",
+      "section": "2.14",
+      "topic": "[Phase 3 Theme B] examples compile gate を CI に組込み",
+      "mark": "🟢",
+      "status": "done",
+      "timing": "Phase 3 Theme B 内 (Day 174-182)",
+      "decision_deadline": 250,
+      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。既存 CI workflow (.github/workflows/agent-spec-lib-build.yml) で examples の compile は手動 step として include 済み、自動化は priority 低。Phase 4+ で必要時着手 (deadline=Day250)。",
+      "resolved_day": 186
+    }
+  ],
+  "day_plan": [
+    {
+      "day": 1,
+      "status": "done",
+      "scope": "Core.lean import + FolgeID signature + round-trip proof",
+      "commit": "a43eef4"
+    },
+    {
+      "day": 2,
+      "status": "done",
+      "scope": "lean_lib AgentSpecTest 分離 + Edge inductive",
+      "commit": "58b75a0"
+    },
+    {
+      "day": 3,
+      "status": "done",
+      "scope": "EvolutionStep + SafetyConstraint type class"
+    },
+    {
+      "day": 4,
+      "status": "done",
+      "scope": "LearningCycle + Observable type class"
+    },
+    {
+      "day": 5,
+      "status": "done",
+      "scope": "FolgeID PartialOrder/Ord"
+    },
+    {
+      "day": 6,
+      "status": "done",
+      "scope": "Process 層 Hypothesis + Failure",
+      "commit": "917c752"
+    },
+    {
+      "day": 7,
+      "status": "done",
+      "scope": "Process 層 Evolution + HandoffChain",
+      "commit": "941b25c"
+    },
+    {
+      "day": 8,
+      "status": "done",
+      "scope": "Verdict + EvolutionStep B4 4-arg post (Section 2.9 解消)",
+      "commit": "0f78fa6"
+    },
+    {
+      "day": 9,
+      "status": "done",
+      "scope": "ResearchEntity + ResearchActivity",
+      "commit": "fa5b373"
+    },
+    {
+      "day": 10,
+      "status": "done",
+      "scope": "ResearchAgent + EvolutionMapping",
+      "commit": "b652347"
+    },
+    {
+      "day": 11,
+      "status": "done",
+      "scope": "ProvRelation 3 structure (WasAttributedTo/GeneratedBy/DerivedFrom)",
+      "commit": "11a32bd"
+    },
+    {
+      "day": 12,
+      "status": "done",
+      "scope": "RetiredEntity + RetirementReason 4 variant",
+      "commit": "49510c6"
+    },
+    {
+      "day": 13,
+      "status": "done",
+      "scope": "ProvRelationAuxiliary (WasInformedBy/ActedOnBehalfOf/WasRetiredBy)",
+      "commit": "40ccd78"
+    },
+    {
+      "day": 14,
+      "status": "done",
+      "scope": "RetiredEntity linter A-Minimal (@[deprecated] 4 fixture)",
+      "commit": "13c4e77"
+    },
+    {
+      "day": 15,
+      "status": "done",
+      "scope": "RetirementLinter A-Compact (@[retired] macro)",
+      "commit": "17db6ef"
+    },
+    {
+      "day": 16,
+      "status": "done",
+      "scope": "transitionLegacy @[deprecated] + 4-arg refactor",
+      "commit": "b678856"
+    },
+    {
+      "day": 17,
+      "status": "done",
+      "scope": "transitionLegacy 完全削除 (breaking change)",
+      "commit": "a8bcf69"
+    },
+    {
+      "day": 18,
+      "status": "done",
+      "scope": "RetirementLinterCommand #check_retired (A-Standard A-Minimal)",
+      "commit": "f127774"
+    },
+    {
+      "day": 19,
+      "status": "done",
+      "scope": "#check_retired_in_namespace (A-Standard-Lite)",
+      "commit": "682364d"
+    },
+    {
+      "day": 20,
+      "status": "done",
+      "scope": "#check_retired_in_namespace_with_depth (A-Compact nested)",
+      "commit": "7fa8f51"
+    },
+    {
+      "day": 21,
+      "status": "done",
+      "scope": "#check_retired_auto (A-Standard-Full hardcode)",
+      "commit": "18c5e94"
+    },
+    {
+      "day": 22,
+      "status": "done",
+      "scope": "SimplePersistentEnvExtension + register_retirement_namespace",
+      "commit": "e6d9b1f"
+    },
+    {
+      "day": 23,
+      "status": "done",
+      "scope": "multi-module import propagate test (helper module)",
+      "commit": "7b95180"
+    },
+    {
+      "day": 24,
+      "status": "done",
+      "scope": "Role.toCtorIdx investigation (Lean 4 4.29.0 rename)",
+      "commit": "b3be98d"
+    },
+    {
+      "day": 25,
+      "status": "done",
+      "scope": "multi-source register / duplicate handling observe-first",
+      "commit": "b9d0dd8"
+    },
+    {
+      "day": 26,
+      "status": "done",
+      "scope": "ResearchActivity investigateOf + retireOf (payload 拡充 2 例目)",
+      "commit": "71e2593"
+    },
+    {
+      "day": 27,
+      "status": "done",
+      "scope": "decomposeOf + refineOf (5 variant 全 payload milestone)",
+      "commit": "60e9aee"
+    },
+    {
+      "day": 28,
+      "status": "done",
+      "scope": "D16 presentation-layer dedup (#check_retired_auto .eraseDups)",
+      "commit": "118fd28"
+    },
+    {
+      "day": 29,
+      "status": "done",
+      "scope": "Test section comment refactor (Day 25 Subagent I2 解消)",
+      "commit": "7d30831"
+    },
+    {
+      "day": "29.1",
+      "status": "done",
+      "scope": "両 file role reset + DB 化 + archive 分離 (thin catalog + navigation_index)",
+      "commit": "998607b",
+      "breaking_change": true
+    },
+    {
+      "day": "29.2",
+      "status": "done",
+      "scope": "navigation_index + JSON Schema + empirical validation (3 subagents)",
+      "commit": "c00b794"
+    },
+    {
+      "day": 30,
+      "status": "done",
+      "scope": "WasDerivedFrom DAG: TransDerived + Acyclic + empty_false + Acyclic.empty",
+      "commit": "3880ea1"
+    },
+    {
+      "day": 31,
+      "status": "done",
+      "scope": "TransDerived.subset monotonicity",
+      "commit": "fb41d78"
+    },
+    {
+      "day": 32,
+      "status": "done",
+      "scope": "Acyclic.subset 双対",
+      "commit": "b068420"
+    },
+    {
+      "day": 33,
+      "status": "done",
+      "scope": "schema pattern-based forbid (^day[0-9]+_update$ / ^milestone_*) + 7-day empirical cycle codify",
+      "commit": "50182c2"
+    },
+    {
+      "day": 34,
+      "status": "done",
+      "scope": "concrete 2-edge TransDerived chain example",
+      "commit": "da46227"
+    },
+    {
+      "day": 35,
+      "status": "done",
+      "scope": "HandoffChain DecidableEq derive",
+      "commit": "672a9f1"
+    },
+    {
+      "day": 36,
+      "status": "done",
+      "scope": "7-day empirical revalidation (3 subagents PASS + 2 informational)",
+      "commit": "d9cc970",
+      "empirical_findings": [
+        "I1: schema に provides_definitions 粒度明記 (Day 37+)",
+        "I2: Process.Evolution DecidableEq 要判定 (Day 37+)"
+      ]
+    },
+    {
+      "day": 37,
+      "status": "done",
+      "scope": "11-pending-tasks JSON migration (Option A、全 JSON 化 + .md 削除)",
+      "breaking_change": true,
+      "commit": "7548f93"
+    },
+    {
+      "day": 38,
+      "status": "done",
+      "scope": "Evolution DecidableEq derive (Day 7 D4 deferred + Day 36 I2 解消)",
+      "commit": "f308c71"
+    },
+    {
+      "day": 43,
+      "status": "done",
+      "scope": "7-day empirical revalidation (3 subagents: median/edge/negative、14/14 PASS、Day 37-42 全成果物検証)",
+      "commit": "2668f4c"
+    },
+    {
+      "day": 39,
+      "status": "done",
+      "scope": "ResearchEntity DecidableEq derive (Day 9 D3 deferred、Day 38 連鎖解消)",
+      "commit": "c21cd02"
+    },
+    {
+      "day": 40,
+      "status": "done",
+      "scope": "DecidableEq cascade: ProvRelation 3 + ProvRelationAuxiliary 3 + RetiredEntity + RetirementReason (Day 39 連鎖、6 types)",
+      "commit": "40fc78d"
+    },
+    {
+      "day": 41,
+      "status": "done",
+      "scope": "ResearchEntity HandoffChain 6th constructor 拡張 (Day 38+ pending 項目解消)",
+      "commit": "066fa3f"
+    },
+    {
+      "day": 42,
+      "status": "done",
+      "scope": "Verdict payload 拡充 3 variant 追加 (provenWith/refutedWith/inconclusiveDueTo、nullary 3 は維持、Day 8 D1 deferred 解消)",
+      "commit": "6a4d73b"
+    },
+    {
+      "day": 50,
+      "status": "done",
+      "scope": "7-day empirical revalidation (3 subagents PASS、15/15 [critical]+auxiliary、Day 45-49 成果物検証、2 informational: GA-S7 variant 名確認 / attribution lint 推奨)",
+      "commit": "e488405"
+    },
+    {
+      "day": 44,
+      "status": "done",
+      "scope": "Rationale 型 Spine 層 minimal (GA-S8 着手、structure 3 field + 4 helper、attach は Day 45+)",
+      "commit": "f8eb983"
+    },
+    {
+      "day": 45,
+      "status": "done",
+      "scope": "Hypothesis.rationale : Rationale 必須化 (GA-S8 B-2 スプリント 1/4、breaking change、~46 sites migration)",
+      "breaking_change": true,
+      "commit": "a19043c"
+    },
+    {
+      "day": 46,
+      "status": "done",
+      "scope": "Failure.rationale : Rationale 必須化 (GA-S8 B-2 2/4、breaking change、smart constructor signature 更新)",
+      "breaking_change": true,
+      "commit": "c30502d"
+    },
+    {
+      "day": 47,
+      "status": "done",
+      "scope": "Evolution.initial/refineWith に transition rationale 必須引数追加 (GA-S8 B-2 3/4、recursive inductive、~18 sites migration)",
+      "breaking_change": true,
+      "commit": "b8d437a"
+    },
+    {
+      "day": 48,
+      "status": "done",
+      "scope": "RetiredEntity.rationale 必須化 (GA-S8 B-2 4/4 完了、全 4 type で Rationale 必須化達成)",
+      "breaking_change": true,
+      "commit": "e455040"
+    },
+    {
+      "day": 49,
+      "status": "done",
+      "scope": "Rationale attribution 拡張 (author? + timestamp? Option field default 追加、conservative extension、Day 44 D2 deferred 解消 + retroactive step 7)",
+      "commit": "06f6226"
+    },
+    {
+      "day": 57,
+      "status": "scheduled",
+      "scope": "次回 7-day empirical revalidation (Day 50 + 7)",
+      "commit": "3f1b1af"
+    },
+    {
+      "day": 51,
+      "status": "done",
+      "scope": "GA-S7 State 型追加 (LifeCyclePhase 8 variant + AllowedTransition Prop、Spine 新 module、conservative、Day 50 median 準拠)",
+      "commit": "6e4a099"
+    },
+    {
+      "day": 52,
+      "status": "done",
+      "scope": "Rationale strict + A-Minimal linter (Day 50 I2 解消、Day 14 RetirementLinter pattern)",
+      "commit": "f1e9cbc"
+    },
+    {
+      "day": 55,
+      "status": "done",
+      "scope": "GA-S10 ResearchGoal + ResearchContext + inheritFrom helper (Sub-Issue 伝搬、Day 45-48 Rationale 必須化 pattern 継承、sprint 最終日)",
+      "commit": "b18baaa"
+    },
+    {
+      "day": 53,
+      "status": "done",
+      "scope": "GA-S11 Hoare-style 4-arg ResearchSpec polymorphic structure 追加 (TyDD-B4 Liquid Haskell pattern、Spine 層)",
+      "commit": "d48808e"
+    },
+    {
+      "day": 54,
+      "status": "done",
+      "scope": "GA-S1 ResearchNode umbrella 完成化 (7 constructor inductive、rationale 必須化、Spine 層 hole-driven)",
+      "commit": "3b655de"
+    },
+    {
+      "day": "54.1",
+      "status": "done",
+      "scope": "Structural recurrence prevention: scripts/cycle-check.sh 導入 (5 項目機械 check、Day 49-54 Step 7 部分省略 再発防止)",
+      "commit": "2bfe37e"
+    },
+    {
+      "day": 56,
+      "status": "done",
+      "scope": "Core.lean Decidable inferInstanceAs 統一 + LE/LT instance 明示命名 (Pattern #3/#4 適用、50+ Day stale 解消、conservative refactor)",
+      "commit": "684f65a"
+    },
+    {
+      "day": 57,
+      "status": "done",
+      "scope": "7-day empirical revalidation (Day 50+7)、14/15 [critical] PASS、F1 Rationale lint 実効性不在 + F2 cycle-check 5 drift gap を検出",
+      "commit": "3f1b1af"
+    },
+    {
+      "day": 64,
+      "status": "done",
+      "scope": "7-day empirical revalidation (Day 57+7)、3 subagents 15/15 [critical] PASS、F1 scanner 実効性 + F2 fix 境界 + long-deferred cleanup 検証、6 findings (G1-G6)",
+      "commit": "1d14183"
+    },
+    {
+      "day": 58,
+      "status": "done",
+      "scope": "F1 Option B 先行 1/3: Hypothesis.ofClaimWithText @[deprecated] 付与 (Day 57 empirical F1 着手、watched-namespace scanner Option C は Day 60+)",
+      "commit": "8f53bab"
+    },
+    {
+      "day": 59,
+      "status": "done",
+      "scope": "F2 cycle-check.sh 5 drift gap 修正 (Day 57 empirical F2 対応、monotonic check 追加、null/missing 区別)",
+      "commit": "bef381f"
+    },
+    {
+      "day": 60,
+      "status": "done",
+      "scope": "Rationale scanner A-Standard: #check_unattributed_rationale command + RationaleLinter module (F1 Option C sprint 1/4、Day 18 RetirementLinterCommand pattern)",
+      "commit": "29e0585"
+    },
+    {
+      "day": 61,
+      "status": "done",
+      "scope": "Rationale watched-namespace register + SimplePersistentEnvExtension (F1 Option C sprint 2/4、Day 22 pattern)",
+      "commit": "c705497"
+    },
+    {
+      "day": 62,
+      "status": "done",
+      "scope": "#check_unattributed_rationale_in_namespace + _auto 変種 (F1 Option C sprint 3/4、Day 19/21 pattern)",
+      "commit": "1e9eb95"
+    },
+    {
+      "day": 63,
+      "status": "done",
+      "scope": "F1 Option C sprint integration test + watched-namespace 実運用 register + buffer (sprint 4/4)",
+      "commit": "5ef9c9f"
+    },
+    {
+      "day": 65,
+      "status": "done",
+      "scope": "LearningStage.le Prop 形式併設 (G3 empirical 推奨、stale 58 Day 解消、conservative、PartialOrder 相当 5 theorem)",
+      "commit": "c370919"
+    },
+    {
+      "day": 66,
+      "status": "done",
+      "scope": "G5 cleanup (Day 54 Step 7 重複 resolved + S5/N2 blocked_external status 分離 + schema enum 拡張) + G4 reinterpretation (F1 scanner の 8 flag は design 通り、trivial fixture strict 化は semantic 矛盾)",
+      "commit": "938cca6"
+    },
+    {
+      "day": 67,
+      "status": "done",
+      "scope": "G1 scanner filter — 3 elab command (#check_unattributed_rationale / _in_namespace / _auto) で Lean.Linter.isDeprecated decl を blacklist 検査前に除外。Day 52 fixture (trivialDeprecated / ofTextUnauthoredDeprecated) semi-FP noise 解消、conservative extension",
+      "commit": "22ccfc8",
+      "steps_completed": [
+        2,
+        5
+      ]
+    },
+    {
+      "day": 68,
+      "status": "done",
+      "scope": "G2/G6 cycle-check.sh F3 5 gap 追加 — Check 7 (verifier_history date monotonic) / Check 8 (commit hash format) / Check 9 (day_plan day duplicate) / Check 10 (breakdown keys 存在) / Check 11 (long-deferred aging 14+ Day escalate)。Day 47+/46+ Rationale 課題 2 件を新規 escalate、conservative extension",
+      "commit": "5b38f1b",
+      "steps_completed": [
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "day": 69,
+      "status": "done",
+      "scope": "9-step cycle 違反監査 + retroactive 補完 (案A+B)。Day 67/68 の Step 1/3/6/7/8/9 全省略を監査、Step 7 mandatory checklist 6 項目 retroactive 実証 (G6 done 化漏れ識別)、Step 1/3 retroactive 評価 (Day 67=S1/S4/Pattern#5 / Day 68=TyDD 対象外)。再発防止: steps_completed schema field + Check 12 + memory handoff-resume awareness 規律。compatible change",
+      "commit": "f1c8774",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 70,
+      "status": "done",
+      "scope": "F1 prod site 精査 (全件 done or test-only、Day 66 G4 追認) + G5 done 化 (Check 4 noise 5→2 削減)。conservative extension",
+      "commit": "c1589f6",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 71,
+      "status": "done",
+      "scope": "Empirical Revalidation #5 (7-day cycle)。3 subagent (median 6/6 PASS / edge 3 BUG + 4 EDGE / negative 2 gaps)。BUG 3 件即時修正 (Check 7 null guard / Check 8 uppercase / Check 12 unique)。cycle-check 初 ALL PASS (12 check、WARN 0)。conservative extension",
+      "commit": "1e8de06",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 72,
+      "status": "done",
+      "scope": "inductive Reference (doi/url/arxiv/commit) 導入 + Rationale.references : List String → List Reference migration。DataCite pattern 準拠、Day 70 人間判断実施。breaking change",
+      "breaking_change": true,
+      "commit": "cba5db0",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 73,
+      "status": "done",
+      "scope": "ReferenceTest.lean 新規作成 (23 examples)。Day 72 Reference inductive の behavior test: 4 variant 構築 / value accessor / DecidableEq (同 variant 同値・異値・異 variant 同値文字列) / Inhabited / List Reference 操作。conservative extension",
+      "commit": "42b05f4",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 74,
+      "status": "done",
+      "scope": "Manifest 移植 PoC (案Z step 1/3) — AgentSpec/Manifest/Ontology.lean (AgentId/SessionId opaque + Session + SessionStatus + Time + World skeleton) + AgentSpec/Manifest/T1.lean (session_bounded axiom)。GA-I7 (b) 再定義方針実証、cross-project require 回避。lake build 108 jobs PASS (+3)、example_count 640 不変。conservative extension",
+      "commit": "98c6841",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 75,
+      "status": "done",
+      "scope": "GA-S15 SpecSig Lattice 論文サーベイ + design 議論 (案Z step 2/3、人間判断 Day)。code 変更なし、論文 4 source 統合 (gap-analysis GA-S15 + GA-M11 + TyDD-F7 + Day 70 人間判断記録)、Mathlib v4.29.0 利用可能性確認 (Pi.instLattice + Prop.instDistribLattice)、Q1-Q4 案を user 判断 (Q1=A/Q2=B/Q3=B/Q4=D)。Day 76-77 実装方針確定。conservative extension",
+      "commit": "219e5a7",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 76,
+      "status": "done",
+      "scope": "GA-S15 SpecSig Lattice instance 実装 (Q1=A/Q3=B 設計、案Z step 3/3 前半)。AgentSpec/Spine/ResearchSpecLattice.lean 新規 (abbrev PrePred/PostPred + Mathlib Pi.instLattice + Prop.instDistribLattice 自動継承 + 2 theorem rfl 証明 + 8 lattice 法則 examples)。lake build 378 jobs PASS (+270 jobs = Mathlib import)、example_count 640→652 (+12)、theorem 15→17 (+2)。conservative extension",
+      "commit": "967a2e6",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 77,
+      "status": "done",
+      "scope": "GA-S15 ResearchSpec Lattice 拡張 + Test 34 examples (Q2=B 後半完了)。ResearchSpec の Lattice instance inline (LE/Sup/Inf/PartialOrder/Lattice + 5 helper theorem) + Test 新規 34 examples。lake build 378+412 jobs PASS、example 652→686、theorem 17→22。GA-S15 done 化。conservative extension",
+      "commit": "e834e3a",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 78,
+      "status": "done",
+      "scope": "Empirical Revalidation #6 (7-day cycle、Day 71+7、案 C)。3 parallel subagent (median 10/10 PASS / edge 1 BUG + 4 EDGE / negative 6 process gap)。BUG E1 + EDGE E2/E3/E4 + nit 即時修正、process gap 6 件 (詳細は pending_items entry) を Day 79+ improvement 化。example 686→699、theorem 22→25。conservative extension",
+      "commit": "d8cb8d5",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "day": 79,
+      "status": "done",
+      "scope": "process scripts (案 A、Day 78 N1+N7 解消)。scripts/update-handoff.sh (handoff auto-update、Day 73 PC-crash 構造的解消) + scripts/backfill-day-commit.sh (metadata-only commit を 1 invocation 化、CLAUDE.md 新 rule 履行)。両 script 試験成功。pending_items の N1/N7 entry done 化。code 変更なし、scripts/ 配下のみ。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "a6d2ef8"
+    },
+    {
+      "day": 80,
+      "status": "done",
+      "scope": "Manifest 移植 T1 完備 + jq format drift fix (案 A)。Ontology.lean additive 拡張 + T1.lean に T1.2/T1.3 axiom 追加 (byte-identical signature)。axiom 1→3 で T1 stand-alone 完備。Step 6 後続 docs 反映は同 commit に統合 (T1 follow-up entry done 化)。compatible change (World field 追加で Inhabited update)",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "4628556"
+    },
+    {
+      "day": 81,
+      "status": "done",
+      "scope": "process gap 4 件 (N2/N3/N5/N10) 一括解消。N2: scripts/check-doc-length.sh 新規 (lint)。N3: artifact-manifest schema に change_category enum。N5: cycle-check Check 13 追加 (Step 6 docs ref 必須化)。N10: tasks-DB schema に step omission marker + docs_reflection_commit field。同 commit に schema + docs 反映統合 (Step 6 履行)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "a730633"
+    },
+    {
+      "day": 82,
+      "status": "done",
+      "scope": "M-OBS theorem manifest backfill。breakdown.Spine/LearningCycle.lean theorems 0→5 + breakdown.Provenance/ProvRelation.lean theorems 0→4 + theorem_count 25→34。Day 65/Day 11 反映漏れの retroactive 修正。change_category=metadata_only (Day 81 schema 拡張の最初稼働 entry)。Step 6 後続 docs 反映は同 commit に統合。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "37a3427"
+    },
+    {
+      "day": 83,
+      "status": "done",
+      "scope": "Manifest 移植 T2 完備 (案 A、structure_persists + structure_accumulates)。Ontology.lean に Epoch abbrev + StructureKind/Structure + validTransition def + World 拡張 (structures + epoch field)、T2.lean 新規 (2 axiom byte-identical)。axiom 3→5 で T1+T2 5/55 完備。lake build 379 jobs PASS、change_category=additive_axiom。Step 6 後続 docs 反映は同 commit に統合。compatible change (World field 追加)",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "8bbb140"
+    },
+    {
+      "day": 84,
+      "status": "done",
+      "scope": "Manifest 移植 T3+T4 batch (案 A 継続)。Ontology.lean に T3 dependency 追加 (PrecisionLevel + Task + ContextItem opaque + precisionContribution opaque)、T3.lean + T4.lean 新規。axiom 5→7 で T1-T4 7/55。lake build 381 jobs PASS、change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "886e13b"
+    },
+    {
+      "day": 85,
+      "status": "done",
+      "scope": "Manifest 移植 T5+T6 batch。Ontology.lean に Feedback/ResourceAllocation 群 + structureImproved/processImproved/isHuman + World に feedbacks/allocations field 追加 (declaration order 整理: forward reference 回避)。T5.lean + T6.lean 新規 (各 2 axiom)。axiom 7→11 で T1-T6 11/55。lake build 383 jobs PASS、change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "7cc93ba"
+    },
+    {
+      "day": 86,
+      "status": "done",
+      "scope": "Manifest 移植 T7+T8 (T 系列完了)。Ontology に globalResourceBound + executionDuration opaque、T7.lean (2 axiom)、T8.lean (theorem required_pos 由来)。axiom 11→13、theorem 34→35。T1-T8 13 axiom + 1 theorem 完備。lake build 385 jobs PASS、change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "841928c"
+    },
+    {
+      "day": 87,
+      "status": "done",
+      "scope": "Empirical #7 (Day 78+7 期限 +2 Day overdue 解消)。3 parallel subagent。FAIL/BUG 5 件即時修正 (詳細は verifier_history) + legacy 3 件圧縮。process gap 4 件 (P1/P2/P3/Plausible) Day 88+ 化。subagent_dispatch=true。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "41b263d"
+    },
+    {
+      "day": 88,
+      "status": "done",
+      "scope": "P1+P2 process gap (Day 87 empirical #7 後の継続)。P1: cycle-check.sh に Check 14 = check-doc-length.sh invoke 統合 (orphan 解消、Day 87 scope 432→<400 圧縮で resolve)。P2: schema change_category description に World/Inhabited guideline 明記。Check 15 動的検出 Day 90+ defer。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "ff74c8d"
+    },
+    {
+      "day": 89,
+      "status": "done",
+      "scope": "Manifest 移植 E1+E2+E3 batch (Empirical Postulates 完了)。Ontology に Confidence/Output structure + 6 opaque 追加、E1+E2+E3.lean 新規 (4 axiom byte-identical)。axiom 13→17、T+E 17/55。lake build 388 jobs PASS、change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "9603dd4"
+    },
+    {
+      "day": 90,
+      "status": "done",
+      "scope": "P 系列着手 PoC + design (案 C)。P1.lean に autonomy_vulnerability_coscaling theorem (E2 直接、1 行 proof) 移植、proof path 確立。Q1-Q4 内的判断確定。theorem 35→36。change_category=proof_addition。Day 91-94 で残 14 theorem batch。Step 6 同 commit 統合。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "f65f2ae",
+      "steps_skipped": [
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ。Step 8 (Q1-Q4 内的判断) で部分代替"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        }
+      ]
+    },
+    {
+      "day": 91,
+      "status": "done",
+      "scope": "P1b + P2 batch (3 theorem + 1 axiom + 2 opaque)。Ontology に riskMaterialized + trustLevel + trust_decreases_on_materialized_risk、P1.lean に P1b 追記、P2.lean 新規 (verificationSound + 2 theorem)。axiom 17→18、theorem 36→39。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "c1f3257",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 92,
+      "status": "done",
+      "scope": "Empirical #8 finding F1+F4+F5 対処 (process_only)。F1: artifacts[] 14 entry backfill (Manifest Ontology+T1-T8+E1-E3+P1+P2)。F4: jq-recipes verifier_history append recipe を change_category+subagent_dispatch 反映で更新。F5: schema description に Check 15 resolve trigger 明記。F2/F3 (P3+Plausible) は Day 95+ defer。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "8c629f9",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 93,
+      "status": "done",
+      "scope": "P3 batch (4 theorem)。Ontology に CompatibilityClass + KnowledgeIntegration、P3.lean 新規 (4 theorem、T1/T2 直接 reuse)。axiom 18 不変、theorem 39→43。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "a2bd19d",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 94,
+      "status": "done",
+      "scope": "P4+P5 batch (4 theorem + 2 axiom + 2 opaque)。Ontology に degradationLevel + interpretsStructure opaque + 2 axiom (ObservableDesign 由来)、P4.lean (3 theorem T5 直接) + P5.lean (1 theorem) 新規。axiom 18→20、theorem 43→47。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "f29cd89",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 95,
+      "status": "done",
+      "scope": "P6 batch + P 系列完了 (2 theorem)。Ontology に TaskStrategy + strategyFeasible、P6.lean (task_is_constraint_satisfaction + task_design_is_probabilistic) 新規。e1b_from_e1a は P2 重複で skip。axiom 不変、theorem 47→49。P1-P6 14 theorem 完備。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "9695133",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 96,
+      "status": "done",
+      "scope": "L 系列 + D4 (DevelopmentPhase 5 constructor + 2 theorem)。Ontology に DevelopmentPhase + phaseDependency、D4.lean (d4_no_self_dependency + d4_full_chain) 新規。L 系列は axiom 0 (inductive で表現)。axiom 不変、theorem 49→51。change_category=additive_definition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "22f4455",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 97,
+      "status": "done",
+      "scope": "V batch 1 (9 axiom)。Ontology に V index 7 opaque + TradeoffExists/GoodhartVulnerable def、V.lean (tradeoff 7 + goodhart 2) 新規。axiom 20→29、theorem 不変。change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "151910d",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 98,
+      "status": "done",
+      "scope": "Empirical #9 (Day 92→98 早期化)。handoff template 対象、3 subagent iter 2 で収束 (median+edge+negative 全 100%)。scripts/update-handoff.sh 4 改善 (lake build PASS marker / Check 1-14 統一 / empirical 7-day 明示 / priority scope 明示)。change_category=process_only、subagent_dispatch=true。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "6dea3de",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 99,
+      "status": "done",
+      "scope": "V batch 2 + V 系列完了 (4 axiom + 3 opaque + 1 def)。Ontology に investmentLevel + collaborativeValue + trustIncrementBound + systemHealthy、V.lean に 4 axiom 追記。axiom 29→33。V 全 13 axiom 完備。change_category=additive_axiom。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "a741e14",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 100,
+      "status": "done",
+      "scope": "D batch 1 (D7+D8+D10、6 theorem)。D.lean 新規、proof は既存 axiom 直接 reuse。version 1.00 milestone。axiom 不変、theorem 51→57。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "d4f9430",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 101,
+      "status": "done",
+      "scope": "D3 batch (5 theorem + 1 inductive + 1 structure + 1 def)。D.lean に D3 5 theorem 追記、Ontology に DetectionMode/ObservabilityConditions/effectivelyOptimizable 追加。axiom 不変、theorem 57→62。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        2,
+        5,
+        6,
+        8,
+        9
+      ],
+      "commit": "8739dc1",
+      "steps_skipped": [
+        {
+          "step": 1,
+          "reason": "Day 102 audit retroactive marker: Manifest reference internal read のみ、TyDD recipe / 00-synthesis 等の外部 paper サーベイ省略"
+        },
+        {
+          "step": 3,
+          "reason": "Day 102 audit retroactive marker: TyDD 5 軸 / 5 principles / F/B/H / G1-G6 / Section 10.2 評価省略、change_category single tag のみ"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略、新 fixup なし"
+        },
+        {
+          "step": 7,
+          "reason": "Day 102 audit retroactive marker: cycle-check.sh 14 check で代替、6 項目 mandatory checklist (long-deferred / manifest-vs-rounds / breakdown / 改訂ログ / informational docstring / 5 latent) 逐一未実施"
+        }
+      ]
+    },
+    {
+      "day": 102,
+      "status": "done",
+      "scope": "cycle violation audit + Check 15 (Day 28/69 audit re-recurrence 構造的解消)。Day 90-101 全 12 Day entry に steps_skipped marker 追加 (Step 1+3+4+7 skip 明示)、cycle-check.sh Check 15 追加 (steps_completed ∪ steps_skipped ≥ 8 step coverage 要求)。Day 102 自体は 9-step full 履行 (audit Day)。change_category=process_only。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "commit": "bf7461f"
+    },
+    {
+      "day": 103,
+      "status": "done",
+      "scope": "D12+D14+D16 batch (6 theorem) + full 9-step 履行 (Day 102 audit 規律下の最初の Day)。D.lean に 6 theorem 追記、proof は P6/T4/T3 既存 reuse。Step 1 paper survey: 00-synthesis §4.1 read。Step 3 TyDD: 5 軸 全 ✓ proof_addition pattern。Step 7 mandatory checklist 6 項目 機械的実施 latent 0。axiom 不変、theorem 62→68。change_category=proof_addition。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern (Day 6-15 確立)"
+        }
+      ],
+      "commit": "12e6f95"
+    },
+    {
+      "day": 104,
+      "status": "done",
+      "scope": "Empirical #10 (cycle-check.sh、Check 16 追加で false PASS gap 解消)。Iter 1 3 subagent [critical] 7/7 ○、Iter 2 で Check 15 濃度のみ → Check 16 要素真正性 (Day 103+ scope marker 必須) で 2 段防御。Day 102 audit pattern 本質解消。change_category=process_only、subagent_dispatch=true。Step 6 同 commit 統合。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 3,
+          "reason": "TyDD 評価省略 (empirical 対象 = process script、TyDD はコード設計 axis、本 Day は process 軸)"
+        },
+        {
+          "step": 4,
+          "reason": "Step 3 連鎖省略"
+        }
+      ],
+      "commit": "aa55f49"
+    },
+    {
+      "day": 105,
+      "status": "done",
+      "scope": "D5+D6 batch (5 theorem + 3 inductive + 3 def) full 9-step。D.lean に D5 3 theorem + D6 2 theorem (d6_fixed_boundary_mitigated は BoundaryLayer 依存で Day 106+ defer)。Step 1: DesignFoundation.lean D5/D6 reference read。Step 3 TyDD: S1+S4+F+H minimum effort proof_addition。Step 7: cycle-check 16/16 機械的代替で mandatory checklist 6 項目 (long-deferred 既知 / breakdown 整合 / 改訂ログ Day 100-105 連番)。axiom 不変、theorem 68→73。change_category=proof_addition。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "e5ed877"
+    },
+    {
+      "day": 106,
+      "status": "done",
+      "scope": "D1+d6_fixed+D11 batch (5 theorem + 3 inductive + 4 def) full 9-step。BoundaryId/BoundaryLayer/EnforcementLayer inductive + 4 def 追加、D.lean に 5 theorem 追記。Step 1: DesignFoundation.lean D1/D11 reference read。Step 3 TyDD: S1+S4 minimum effort proof_addition。Step 7: cycle-check 16/16 機械的代替 mandatory checklist。axiom 不変、theorem 73→78。change_category=proof_addition。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "559f1d4"
+    },
+    {
+      "day": 107,
+      "status": "done",
+      "scope": "D2 batch (3 theorem + 1 structure + 1 inductive + 3 def) full 9-step。VerificationIndependence + VerificationRisk + 3 def 追加、D.lean に D2 3 theorem。Step 1: DesignFoundation.lean D2 reference read。Step 3 TyDD: S1+S4 minimum effort proof_addition。Step 7: cycle-check 16/16 機械的代替 mandatory checklist。axiom 不変、theorem 78→81。change_category=proof_addition。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "f8f50dc"
+    },
+    {
+      "day": 108,
+      "status": "done",
+      "scope": "D9 batch (3 theorem + SelfGoverning typeclass + DesignPrinciple inductive 18 + 2 instance + DesignPrincipleUpdate structure) full 9-step。Ontology に typeclass + governed_update_classified theorem 追加、D.lean に D9 3 theorem。Step 1: DesignFoundation.lean D9 reference read + Section 7 self-application context。Step 3 TyDD: S1+S4+F+H additive_definition pattern。Step 7: cycle-check 16/16 機械的代替 mandatory checklist。axiom 不変、theorem 81→85。change_category=additive_definition。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "711a316"
+    },
+    {
+      "day": 109,
+      "status": "done",
+      "scope": "D15+D13 minimum batch (5 theorem + ComputationStep + marginalReturn) full 9-step。D.lean に D15 4 theorem + D13 d13_retirement_requires_feedback (残 D13 4 theorem は PropositionId+native_decide 依存で Day 110+ defer)。Step 1: DesignFoundation.lean D13/D15 reference read。Step 3 TyDD: S1+S4 proof_addition。Step 7: cycle-check 16/16 機械的代替。axiom 不変、theorem 85→90。change_category=proof_addition。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "c14961e"
+    },
+    {
+      "day": 110,
+      "status": "done",
+      "scope": "D18+D11 残 batch (4 theorem + ContextWindow) full 9-step。Step 1 reference read (D.lean/D11.md/Ontology.lean)。Step 3 TyDD eval (ContextWindow field: S1 構造 OK / S4 原則 整合 / F/B/H 不要)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 不変、theorem 90→94。change_category=compatible_change。Step 6 同 commit 統合 (pending_items 3 entry: D17 / D13 残 / Manifest 周辺)。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ],
+      "commit": "3aa6040"
+    },
+    {
+      "day": 111,
+      "commit": "a262f04",
+      "status": "done",
+      "scope": "Empirical #11 (Check 16 7-day operational 検証) 9-step。Step 1 reference read (cycle-check.sh L342-370)。Step 3 TyDD eval (docstring 拡張: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。3 subagent dispatch (median+edge+negative)、Day 110 真陽性 WARN → retroactive marker、docstring 強化 (cross-ref Check 14 / monoculture / false marker 限界)、Check 17 候補 pending_items 追加。axiom 不変。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
+    },
+    {
+      "day": 112,
+      "commit": "a3f74e3",
+      "status": "done",
+      "scope": "D17 (state machine 版) port 9-step。Step 1 reference read (DesignFoundation.lean L1665-1907)。Step 3 TyDD eval (state machine + 5 typed output: S1/S4/F/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。3 theorem + DeductiveDesignStep + WorkflowState + FeedbackAction + WorkflowTransition + applyTransition。axiom 不変、theorem 94→97。pending #72 done。D13 残 + Manifest 周辺整備 codex handoff。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、空ぶり pattern"
+        }
+      ]
+    },
+    {
+      "day": 113,
+      "status": "done",
+      "scope": "D13 impact propagation 9-step。Step 1 reference read (DesignFoundation.lean L1040-1180 + Ontology PropositionId)。Step 3 TyDD eval (PropositionId graph + fuel closure: S1/S4/F/H OK)。Step 7 cycle-check 権限付き再実行で schema OK、WARN のみ。4 theorem + PropositionId graph、axiom 不変、theorem 97→101。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ],
+      "commit": "13b4451"
+    },
+    {
+      "day": 114,
+      "status": "done",
+      "scope": "ConformanceVerification metatheory layer 9-step。Step 1 reference read (ConformanceVerification/Procedure/Terminology/FormalDerivationSkill)。Step 3 TyDD eval (self-contained vocabulary + 3 docstring axiom: S1/S4/F/H OK)。Step 7 cycle-check schema OK、WARN のみ。23 theorem + 3 axiom、theorem 101→124、axiom 33→36。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ],
+      "commit": "555ab60"
+    },
+    {
+      "day": 115,
+      "status": "done",
+      "scope": "EvolveSkill conformance layer 9-step。Step 1 reference read (EvolveSkill/Workflow/Evolution)。Step 3 TyDD eval (workflow/evolution subset + axiom-free theorem layer: S1/S4/F/H OK)。Step 7 cycle-check schema OK、WARN のみ。32 theorem + 0 axiom、theorem 124→156、axiom 36 不変。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ],
+      "commit": "0c42596"
+    },
+    {
+      "day": 116,
+      "commit": "45eb29a",
+      "status": "done",
+      "scope": "Day 116 FormalDerivationSkill (17 axiom + 35 theorem) port 9-step。Step 1 reference read (lean-formalization/Manifest/FormalDerivationSkill.lean L1-730)。Step 3 TyDD eval (byte-identical sed 変換 + namespace/import rewrite: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 36→53、theorem 156→191。AgentSpec.lean import 追加。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 117,
+      "commit": "273d9b6",
+      "status": "done",
+      "scope": "Day 117 Framework/NodeKind (9 theorem) port 9-step。Step 1 reference read (Manifest/Framework/NodeKind.lean L1-151)。Step 3 TyDD eval (sed namespace+import rewrite: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 不変、theorem 191→200。AgentSpec.lean import 追加。Framework/ 残 8 file 依存軽い順 defer (4 file 解決可、5 file 要前提 port)。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 118,
+      "commit": "b2a8727",
+      "status": "done",
+      "scope": "Day 118 Framework/CoTFaithfulness (1 axiom + 2 theorem) port 9-step。Step 1 reference read (Manifest/Framework/CoTFaithfulness.lean L1-125)。Step 3 TyDD eval (sed namespace+import+E expand: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 53→54、theorem 200→202。Framework 残 7 file (AcyclicGraph 等) は Ontology 補強要 or 前提未 port、pending_items defer。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 119,
+      "commit": "909d3ee",
+      "status": "done",
+      "scope": "Day 119 Ontology 補強 (priority+strength) + Framework/AcyclicGraph + DanglingDetection bundle 9-step。Step 1 reference read (Manifest/Ontology.lean L833/L1199 + Framework 2 file)。Step 3 TyDD eval (連鎖依存 unblock + sed port: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 54→55、theorem 202→214。bundle: ratelimit 配慮。additive_axiom",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 120,
+      "commit": "bf7ec71",
+      "status": "done",
+      "scope": "Day 120 Empirical #12 (Check 16 7-day + hidden gap 探索) 9-step。Step 1 reference read (cycle-check.sh L342-378 + Day 112-119 entry)。Step 3 TyDD eval (3 subagent median+edge+negative: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。Iter 2 Check 18 新設 (Step 5/9 marker、Day 120 base)。Step 5 verifier_history append + artifact-manifest 更新、Step 9 backfill + update-handoff。process_only",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、Check 18 新設のみ"
+        }
+      ]
+    },
+    {
+      "day": 121,
+      "commit": "de7d419",
+      "status": "done",
+      "scope": "Day 121 Manifest.Terminology (23 theorem) port 9-step。Step 1 reference read (Manifest/Terminology.lean L1-612)。Step 3 TyDD eval (sed namespace+import rewrite: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS)。axiom 不変、theorem 214→237。AgentSpec.lean import 追加。change_category=proof_addition、Step 5 verifier_history append、Step 9 backfill+update-handoff。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし、build PASS"
+        }
+      ]
+    },
+    {
+      "day": 122,
+      "commit": "125ab27",
+      "status": "done",
+      "scope": "Day 122 Procedure (25 theorem) + Ontology 補強 (reachableVia + 3 theorem) port 9-step。Step 1 reference read (Procedure.lean + Ontology L984-1021)。Step 3 TyDD eval (sed port + Ontology 拡張、World field 順 mismatch を named field syntax で吸収: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 不変、theorem 237→265。Step 5 verifier_history append、Step 9 backfill+update-handoff。proof_addition",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 123,
+      "commit": "38ffeac",
+      "status": "done",
+      "scope": "Day 123 EpistemicLayer (47 theorem) + Ontology 補強 (constraints_are_roots) port 9-step。Step 1 reference read (EpistemicLayer.lean L1-649 + Ontology L1192)。Step 3 TyDD eval (sed + set_option autoImplicit true 追加: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。axiom 不変、theorem 265→313。Step 5 verifier_history append、Step 9 backfill+update-handoff。proof_addition / conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 124,
+      "commit": "6c22c48",
+      "status": "done",
+      "scope": "Day 124 Verification spot check (Phase 0 Week 7-8 部分着手) 9-step。Step 1 reference read (派生負債 + #print axioms 設計)。Step 3 TyDD eval (port 健全性 spot check: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。#print axioms 6 theorem 確認: 5/6 健全、1/6 d13 が native_decide trusted axiom (GA-C27)。派生負債 entry 2.13 追記。Step 5 verifier_history append、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし (spot check のみ)"
+        }
+      ]
+    },
+    {
+      "day": 125,
+      "commit": "732f2a9",
+      "status": "done",
+      "scope": "Day 125 本道 bundle (A Tooling skeleton + B spot 拡大 + C D13 trusted axiom 解消) 9-step。Step 1 reference read。Step 3 TyDD eval (Phase 0 Week 5-6/7-8 着手 + GA-C27 解消: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。C: D13 native_decide → decide。B: 7 件 spot 拡大、累計 13/13 健全。A: agent_verify tactic skeleton。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 126,
+      "commit": "10ad649",
+      "status": "done",
+      "scope": "Day 126 本道 bundle (Tooling SkillRegistry + Verification 拡大) 9-step。Step 1 reference read。Step 3 TyDD eval (Phase 0 Week 5-6 EnvExtension Auto-Register skeleton + Week 7-8 spot 拡大: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。Verification 6 件 spot check 全健全 (累計 19/19)。Tooling SkillRegistry.lean 新規。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 127,
+      "commit": "fcce6ec",
+      "status": "done",
+      "scope": "Day 127 本道 bundle (Tooling SkillVCG + Verification 拡大) 9-step。Step 1 reference read。Step 3 TyDD eval (VcForSkill VCG mini-PoC + Week 7-8 spot 拡大: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。Tooling SkillVCG.lean 新規。Verification: LearningStage 5 + VCG 1 件 spot (累計 25/25 健全)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 128,
+      "commit": "91fef64",
+      "status": "done",
+      "scope": "Day 128 progressive close (Models.Assumptions.EL + Verification 拡大) 9-step。Step 1 reference read。Step 3 TyDD eval (Framework EpistemicBridge/Tagging/LLMRejection 前提揃った + spot: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。Models.Assumptions.EL port 一発 PASS。Verification: coreAssumptions spot none (累計 26/26)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 129,
+      "commit": "daca945",
+      "status": "done",
+      "scope": "Day 129 progressive close (Framework/EpistemicBridge + Verification 拡大) 9-step。Step 1 reference read。Step 3 TyDD eval (Framework progressive 第 5 file + spot: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。EpistemicBridge port 一発 PASS、+7 theorem。Verification: human_decision_is_empirical spot propext (累計 27/27 健全)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 130,
+      "commit": "4cb0a75",
+      "status": "done",
+      "scope": "Day 130 純粋本道 (Tooling SkillVCG 拡張 + Verification 大規模 spot) 9-step。Step 1 reference read。Step 3 TyDD eval (Scope discipline rule 履行 = 拡張連続後の本道挿み: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。VCG: vcgCompositeFull + theorem 追加 (descriptionNonEmpty)。Verification: D series 8 + VCG 1 spot 全健全 (累計 36/36)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 131,
+      "commit": "c0d037d",
+      "status": "done",
+      "scope": "Day 131 progressive close (Framework/LLMRejection + Verification) 9-step。Step 1 reference read。Step 3 TyDD eval (Framework 第 6 file + spot: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。LLMRejection port 一発 PASS +18 theorem (autoImplicit true)。Verification: soundness_source_independent spot none (累計 37/37 健全)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 132,
+      "commit": "d82f099",
+      "status": "done",
+      "scope": "Day 132 progressive close (Framework/EpistemicTagging + Verification) 9-step。Step 1 reference read。Step 3 TyDD eval (Framework 第 7 file + spot: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。EpistemicTagging port +9 theorem (autoImplicit true で α/β 解消)。Verification: provisional_is_provisional spot propext (累計 38/38 健全)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 133,
+      "commit": "674a4b0",
+      "status": "done",
+      "scope": "Day 133 純粋本道 (Verification 大規模 spot、Scope discipline 履行) 9-step。Step 1 reference read。Step 3 TyDD eval (Day 131/132 拡張連続後の本道挿み: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。Verification: P1/P2/P3/P4 8 件 spot 全健全 (累計 46/46)、manifest reference axiom (E1/E2/T1/T5) 実使用 verify。Step 5 verifier_history、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 134,
+      "commit": "68129b4",
+      "status": "done",
+      "scope": "Day 134 Tooling 第 5 entry (IsVerifyToken typeclass) 9-step。Step 1 reference read。Step 3 TyDD eval (Lean 4 typeclass で verify token 構造化: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。VerifyToken.lean 新規 (IsVerifyToken class + helper + smoke test)。Verification: one_plus_one_verified spot none (累計 47/47 健全)。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 135,
+      "commit": "5ebd5f7",
+      "status": "done",
+      "scope": "Day 135 agent_verify class-aware 拡張 (Day 125+134 連動) 9-step。Step 1 reference read。Step 3 TyDD eval (typeclass instance lookup + mkProj evidence: S1/S4/F/B/H 全 OK、mkAppM error → mkProj)。Step 7 mandatory checklist 6 項目 (PASS)。agent_verify が IsVerifyToken instance 検出時 evidence で exact、なければ assumption fallback。smoke test 2 件 PASS。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 136,
+      "commit": "a5e0de7",
+      "status": "done",
+      "scope": "Day 136 VerifyTokenLoader (p2-verified.jsonl bridge) 9-step。Step 1 reference read。Step 3 TyDD eval (Lean IO + Json parse: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (PASS)。VerifyTokenLoader.lean 新規 (VerifiedTokenRaw + loadVerifiedTokens IO + countIndependentTokens)。Functional test: 実 jsonl 18 tokens、15 independent PASS 確認。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup 識別なし"
+        }
+      ]
+    },
+    {
+      "day": 137,
+      "commit": "f127df0",
+      "status": "done",
+      "scope": "Day 137 VerifyTokenMacro (Tooling 7 entry chain final link) 9-step。Step 1 reference read。Step 3 TyDD eval (syntax+macro_rules: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (PASS)。verify_token macro で axiom + IsVerifyToken instance 一括展開。Step 4 fixup: smoke test 削除で派生負債回避。Tooling chain 完成。Step 5 verifier_history、Step 9 update-handoff。conservative extension",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 138,
+      "commit": "fe30335",
+      "status": "done",
+      "scope": "Day 138 metadata fix (schema 違反解消 + Step 7 強化 rule) 9-step。Step 1 reference read。Step 3 TyDD eval (schema 準拠 batch jq: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh 実行 PASS)。Day 125-137 conservative_extension を proof_addition/additive_definition/compatible_change へ batch 修正。CLAUDE.md Step 7 強化 rule 追加。Step 5 verifier_history、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "metadata fix のため fixup なし"
+        }
+      ]
+    },
+    {
+      "day": 139,
+      "commit": "0761844",
+      "status": "done",
+      "scope": "Day 139 Empirical #13 (Step 7 強化 rule 検証) + Iter 2 (L4+L5 解消) 9-step。Step 1 reference read。Step 3 TyDD eval (3 subagent: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (PASS)。median ○ edge ○ negative △ (5 loophole 中 4 件 真陽性)。Iter 2: 混在 guideline + mapping table を CLAUDE.md 追加。L1+L2 hook 化 Day 140+ defer。Step 5 verifier_history、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし、rule 追加のみ"
+        }
+      ]
+    },
+    {
+      "day": 140,
+      "commit": "9068463",
+      "status": "done",
+      "scope": "Day 140 cycle-check trace persistence (Empirical #13 L1+L2 foundation) 9-step。Step 1 reference read。Step 3 TyDD eval (script + .gitignore: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh 実行 PASS、log 生成確認)。cycle-check.sh 末尾に RUN_LOG persistence。.gitignore 追加。Check 20 enforcement Day 141+ defer。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし"
+        }
+      ]
+    },
+    {
+      "day": 141,
+      "commit": "d1073e9",
+      "status": "done",
+      "scope": "Day 141 Empirical #14 Iter 2 (cycle-check log semantic gap fix + Check 20 minimal) 9-step。Step 1 reference read。Step 3 TyDD eval (3 subagent A finding+B fail+C 5 loophole TP: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 移行確認)。log JSON exit→fail_flag+shell_exit 分離。Check 20 minimal 追加。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし (新 field 追加 + 新 Check 追加のみ)"
+        }
+      ]
+    },
+    {
+      "day": 142,
+      "commit": "d06b828",
+      "status": "done",
+      "scope": "Day 142 Check 20 完全 enforcement (4-3 git_head 祖先 + 4-4 timestamp monotonic) 9-step。Step 1 reference read。Step 3 TyDD eval (shell script 拡張: S1/S4/F/B/H 全 OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 全 4 sub PASS)。4-3: git merge-base で前回 git_head 祖先確認。4-4: timestamp 逆行検出。L1+L2 substantial 進展。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし"
+        }
+      ]
+    },
+    {
+      "day": 143,
+      "commit": "4127d4a",
+      "status": "done",
+      "scope": "Day 143 Check 20 4-5 完全 enforcement 9-step。Step 1 reference read。Step 3 TyDD eval (schema + script: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (PASS、Check 20 全 5 sub PASS)。schema に optional cycle_check_log_hash 追加。script 4-5: 最新 verifier_history hash と前回 log SHA-256 一致確認。Empirical #14 C 5/5 loophole 完全解消。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で fixup なし"
+        }
+      ]
+    },
+    {
+      "day": 144,
+      "commit": "c27d935",
+      "status": "done",
+      "scope": "Day 144 B blocker + C 派生負債 catalog + D Verification 9-step。Step 1 reference read。Step 3 TyDD eval (Axioms port 試行→重複 revert: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (PASS、Check 20 全 5 sub PASS)。B Axioms 重複 catalog 化、C autoImplicit 5 file Day 145+ defer。D: Procedure/Terminology spot 3 件健全 (累計 50/50)。Step 5 verifier_history、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で Axioms revert 識別、別 Day 解決方針"
+        }
+      ]
+    },
+    {
+      "day": 145,
+      "commit": "27d28b5",
+      "status": "done",
+      "scope": "Day 145 C 派生負債解消 (autoImplicit 2 file 明示 binder 化) 9-step。Step 1 reference read。Step 3 TyDD eval (variable で明示 binder: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 5/5 PASS)。AcyclicGraph + DanglingDetection PASS、EpistemicLayer/Tagging/LLMRejection は lowercase 多 type で困難、defer 維持。派生負債 5→3 file 残。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 146,
+      "commit": "89db587",
+      "status": "done",
+      "scope": "Day 146 B Observable port 試行 + D Verification 9-step。Step 1 reference read。Step 3 TyDD eval (Observable port 試行→Ontology 重複 revert: S1/S4/F/B/H OK)。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 5/5 PASS)。B blocker catalog 化 (Day 100+ Ontology pre-pick)。D: EpistemicLayer/Procedure spot 4 件健全 (累計 54/54)。Step 5 verifier_history、Step 9 update-handoff。process_only / compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "TyDD 評価で Observable revert 識別、別 strategy"
+        }
+      ]
+    },
+    {
+      "day": 147,
+      "commit": "e0408df",
+      "status": "done",
+      "scope": "Day 147 B'' Observable port 成功 (Strategy A) 9-step。Step 1 reference read。Step 3 TyDD eval (ConstraintId Ontology pre-pick + Observable 重複削除: S1/S4/F/B/H OK)。Step 4 fixup: Ontology に ConstraintId additive、Observable.lean copy + import/namespace 変換 + 8 opaque def + systemHealthy 削除 → lake build 417/417 PASS。Step 7 mandatory checklist 6 項目 (cycle-check.sh PASS、Check 20 5/5 PASS)。B chain blocker 解消 (Day 144/146 revert→今回 Strategy A で成立)。Step 5 verifier_history、Step 9 update-handoff。compatible change",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 148,
+      "commit": "b239d6e",
+      "status": "done",
+      "scope": "Day 148 Process Improvement Plan reflection (planning-only) 9-step。Step 1 reference read (構文/意味 × 対象/メタ 三軸評価 + サイクル運用反省)。Step 3 TyDD eval (改善 13 項目を 4 priority tier に区分: S1/S4/F/B/H OK)。Step 4 not_attempted (planning Day、Lean 実装なし、PI-1〜PI-13 各 item で別 Day 実装)。Step 6 docs 反映 = 本 commit (pending_items + process_improvement_plan)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20 5/5 PASS)。Step 5 verifier_history、Step 9 update-handoff。compatible change。次 Day 149 から PI-1 (pass_layers schema 拡張) 着手。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": [
+        {
+          "step": 4,
+          "reason": "planning Day、Lean 実装変更なし。PI-1〜PI-13 の各 item は別 Day cycle で実装"
+        }
+      ]
+    },
+    {
+      "day": 149,
+      "commit": "7150bc8",
+      "status": "done",
+      "scope": "Day 149 P0 PI-1+PI-2+PI-3 implementation 9-step。Step 1 reference read (Day 148 plan)。Step 3 TyDD eval (schema 拡張 + Check 追加: S1/S4/F/B/H OK)。Step 4 implementation: artifact-manifest schema に pass_layers + failed_attempt 追加、pending_items に decision_deadline 機能化、Day 144-148 backfill、Check 21/22 cycle-check.sh 追加 (PASS)、3 長期 defer に deadline 設定。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 全 PASS)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。次 Day 150 から P1 着手 (PI-4 Step 3 PoC + TyDD 分割)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 150,
+      "commit": "cf7b0de",
+      "status": "done",
+      "scope": "Day 150 P1 PI-4 + P2 status update 9-step。Step 1 reference read (project_day_cycle_pattern.md memory)。Step 3a PoC: memory edit dry-run。Step 3b TyDD eval (process change: S1/S4/F/B/H OK)。Step 4 implementation: project_day_cycle_pattern.md Step 3 を 3a (PoC) + 3b (TyDD eval) に分割、Step 4 not_attempted vs skipped 意味区別追加、pending_items PI-1/2/3 done + PI-7/8 user 同意 reflect。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 151,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 151 P1 PI-5 1 commit/Day 化 9-step。Step 1 reference read (Check 8 + memory)。Step 3a PoC (Check 8 jq filter dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: cycle-check.sh Check 8 改訂 (TBD 許容)、memory project_day_cycle_pattern.md に Commit Pattern 節追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-22 OK)。Step 5 verifier_history (pass_layers 付き)、Step 9 update-handoff。compatible change。本 entry が初の commit:'TBD' 永続 pattern。Day 152 PI-6 (週次 retro) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 152,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 152 P1 PI-6 weekly_retro 制度化 9-step。Step 1 reference read (Day 145-151 metrics)。Step 3a PoC (jq metric extraction dry-run)、Step 3b TyDD eval。Step 4 implementation: artifact-manifest schema に weekly_retro 追加、初回 retro entry (Day 145-151 window) 生成、cycle-check Check 23 (直近 7 Day 内 retro 存在) 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-23 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 153 PI-9 (native_decide 撤去) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 153,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 153 P3 PI-9+PI-10 9-step。Step 1 reference read (native_decide 11 occurrence + hook CRITICAL_PATTERNS)。Step 3a PoC (sed bulk replace dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: PI-9 native_decide → decide 全置換 (Observable 3 + EpistemicLayer 2 + DanglingDetection 6)、lake build 417/417 PASS。PI-10 Tooling/CriticalPatterns.lean 新設 + cycle-check Check 24 sync byte-check 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 154 PI-11 (IsVerifyToken 二分岐) または PI-12 着手予定、Day 155 PI-7 audit gate。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 154,
+      "commit": "TBD",
+      "status": "done",
+      "breaking_change": true,
+      "scope": "Day 154 P3 PI-11 9-step。Step 1 reference read (VerifyToken/Macro/AgentVerify)。Step 3a PoC (class Prop annotation 試行→fail、Type に修正)、Step 3b TyDD eval。Step 4 implementation: TrustDelegation typeclass 追加 (evidence + attestation:String)、verify_token macro が TrustDelegation 生成、agent_verify 二段検索化。lake build 417/417 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。breaking change (verify_token macro 呼び出し syntax 変化、production 利用ゼロ)。Day 155 PI-7 chronological gate audit を控え、PI-12/13 は Day 156+ で。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 155,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 155 PI-7 Phase 0 chronological gate audit 9-step。Step 1 reference read (Manifest port progress + PI tier status)。Step 3a PoC (grep+wc 集計 dry-run)、Step 3b TyDD eval。Step 4 implementation: weekly_retro entry 2 (Day 152-154 mini-window) 追加、audit metrics 集計。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。user 判断 pending: Phase 1 移行可否 (A継続/B移行/C Tooling/D Verification/E Hold 5 択)。Day 156 以降は user 判断結果に基づく方針決定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 156,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 156 PI-7 follow-up + Option F' plan 確定 9-step。Step 1 reference read (Day 155 audit + reviewer dispatch result)。Step 3a PoC (axiom name-based comparison)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/01-phase1-acceptance-draft.md 新設、axiom 100% by name 検証 (Worker 96%計測の真因 = file location vs name 区別)、Day 157-170 plan 反映。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true)、Step 9 update-handoff。process_only。Day 157 leaf port (EmpiricalPostulates) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 157,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 157 Option F' leaf port 9-step。Step 1 reference read。Step 3a PoC (sed namespace 変換 + python dedup script dry-run)、Step 3b TyDD eval。Step 4 implementation: EmpiricalPostulates port + ObservableDesign port (7 重複 docstring+decl 削除)、lake build 419 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible change。Day 158 PI-8 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 158,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 158 P2 PI-8 部分採用 implementation 9-step。Step 1 reference read (PI-8 plan + Day 156 user 同意)。Step 3a PoC (subagent dispatch dry-run = 即 change_category 判定取得)、Step 3b TyDD eval。Step 4 implementation: SubagentClassification.md protocol 文書 + memory rule + MEMORY.md index 更新、本 entry 自体に PI-8 適用 (subagent 委譲で change_category=process_only)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true)、Step 9 update-handoff。process_only。Day 159 PI-12 (Measurable semantic 強化) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 159,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 159 P3 PI-12 9-step。Step 1 reference read (Observable.lean L95 Measurable + PI-11 TrustDelegation pattern)。Step 3a PoC (MeasurableSemantic class declaration + bridge theorem build dry-run)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: AgentSpec.Tooling.MeasurableSemantic.lean 新設 (MeasurementProcedure def + MeasurableSemantic class + bridge theorem)、lake build PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true、PI-8 適用で additive_definition 判定取得)、Step 9 update-handoff。additive_definition。Day 160 PI-13 (opaque def semantic origin tag) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 160,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 160 P3 PI-13 OpaqueOrigin registry 9-step。Step 1 reference read (Ontology opaque 32 件)。Step 3a PoC (registry data 構造設計 dry-run)、Step 3b TyDD eval。Step 4 implementation: AgentSpec.Tooling.OpaqueOrigin.lean 新設 (10 entry initial)、lake build PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true、PI-8 適用で additive_definition 判定取得)、Step 9 update-handoff。additive_definition。P3 全完了 (PI-9/10/11/12/13)、PI 全体 12/13 done (残 manifest sprint 関連のみ)。Day 161-169 で DesignFoundation best-effort port + 並行 PI-13 拡充、Day 170 final audit。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 161,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 161 Manifest sprint surge 9-step。Step 1 reference read。Step 3a PoC (Axioms dedup retry + dependency chain analysis)、Step 3b TyDD eval。Step 4 implementation: Axioms.lean port success (Day 144 fail 解消) + Principles port (2 重複削除) + Evolution port + Workflow port + Meta port + AxiomQuality port、Ontology に actionBlocked def 追加。lake build 417/417 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history (subagent_dispatch=true)、Step 9 update-handoff。additive_axiom。残 source-only file 3 (DesignFoundation + TaskClassification + Traceability、全て DF chain)。Day 162-169 で DF 部分 port 試行 + Day 170 final audit、または Phase 1 移行判断。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 162,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 162 Phase 1 acceptance #2 (Public API) + #4 (version) 9-step。Step 1 reference read (AgentSpec.lean root + lakefile)。Step 3a PoC (root import 追加 dry-run + verificationSound 重複検出)、Step 3b TyDD eval。Step 4 implementation: 12 import 追加、Principles.lean dup 削除、lakefile version、CHANGELOG.md。lake build 429 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible_change。Day 163 examples/ 整備 (Phase 1 #3) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 163,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 163 Phase 1 acceptance #3 9-step。Step 1 reference read (AgentSpec.lean root)。Step 3a PoC (1 example dry-compile)、Step 3b TyDD eval。Step 4 implementation: examples/ 3 file 新設 + compile 確認。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Phase 1 4/5 達成。Day 164 #5 CI gate 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 164,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 164 Phase 1 acceptance #5 9-step。Step 1 reference read (.github/workflows/)。Step 3a PoC (workflow yaml dry-design)、Step 3b TyDD eval。Step 4 implementation: agent-spec-lib-build.yml 新設 (lake build + examples + sorry/axiom/native_decide check)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 1 acceptance 5/5 全達成。Day 165 DesignFoundation 部分 port best-effort 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 165,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 165 DF chain port surprise 9-step。Step 1 reference read。Step 3a PoC (DF dedup script + extract 25 duplicates)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: DF + TaskClass + Traceability port、AgentSpec.lean に defer 注記。lake build 429 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Manifest port 100% by file 達成。Day 166 examples 拡充 or DF root integration 試行 (時間次第)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 166,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 166 PI-3 retire + 週次 retro 9-step。Step 1 reference read (Check 22 NG output + Check 23 WARN)。Step 3a PoC (jq retire transformation dry-run)、Step 3b TyDD eval。Step 4 implementation: 2 deferred 項目 retire (Day 87 P3 + Plausible)、weekly_retro Day 156-165 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 167-169 Phase 2 root integration、Day 170 final audit。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 167,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 167 example 04 + DF Phase 2 defer 9-step。Step 1 reference read (D.lean ↔ DF cross-file 重複 70 symbol 検出)。Step 3a PoC (example 04 dry-compile + decide tactic 修正)、Step 3b TyDD eval。Step 4 implementation: examples/04_manifest_port_complete.lean 新設、DF Phase 2 deferral rationale 文書化 (verifier_history scope に明記)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Day 168-169 examples 拡充 + Day 170 final audit。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 170,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 170 PI-7 Final Audit 9-step。Step 1 reference read (Phase 1 acceptance 5 項目 + PI 13 項目 + Manifest port metrics)。Step 3a PoC (audit metrics 再計測)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/02-day170-final-audit.md 新設、5/5 + 13/13 + 100% by name 確認。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 1 移行 recommendation 提示 → user 判断 pending (release tag 切るか + Phase 2 着手方針)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 171,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 171 Phase 2 DF root integration 9-step。Step 1 reference read (overlap symbols 70)。Step 3a PoC (dedup script bulk run + structureToPropositionImpact decision)、Step 3b TyDD eval。Step 4 implementation: 70 dedup + structureToPropositionImpact 削除 + Traceability 修正 + root import 復活。lake build 432 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。compatible_change。Phase 2 (a) 完成、Day 172 から polish work。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 173,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 172-173 Phase 2 polish (OpaqueOrigin 拡充 + example 05 + CHANGELOG) batched 9-step。Step 1 reference read (Ontology opaque 32 件)。Step 3a PoC (registry data 設計 + example DevelopmentPhase 確認)、Step 3b TyDD eval。Step 4 implementation: 32 entry registry + theorem + example 05 + CHANGELOG。lake build 全 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Phase 2 完了、Day 174+ で worktree maintenance または Phase 3 検討。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 174,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 174 Phase 3 plan setup 9-step。Step 1 reference read (Day 173 use case 説明 + 限界 8 件)。Step 3a PoC (Phase 3 theme 設計 + α/β/γ/δ option)、Step 3b TyDD eval。Step 4 implementation: usecases/01 + phase-transitions/03 + PI-14/15/16 + Phase3 tier。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 3 着手は user option 確認 pending (推奨 β)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 175,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 175 Phase 3 Theme A1+A2+A3 9-step。Step 1 reference read (AgentSpec.lean root 79 import)。Step 3a PoC (stability tier 分類設計)、Step 3b TyDD eval。Step 4 implementation: API_SURFACE.md + CHANGELOG.md update + CONTRIBUTING.md。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 176 Theme C 着手予定 (governance toolkit packaging)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 177,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 176-177 Phase 3 Theme C C1-C5 batched 9-step。Step 1 reference read (.claude/hooks/ + scripts/)。Step 3a PoC (governance/ 構造設計 + install.sh dry-run)、Step 3b TyDD eval。Step 4 implementation: governance/{scripts,hooks,install.sh,README.md,USAGE.md}、smoke test PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Day 178 Theme C C6 (PI-14 残 2 例 acceptance test) + Theme A A4 (main merge PR prep)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 178,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 178 Phase 3 Theme B examples + Theme C C6 PI-14 batched 9-step。Step 1 reference read (existing examples + governance install)。Step 3a PoC (5 example design + 3 例 install dry-run)、Step 3b TyDD eval。Step 4 implementation: examples/06-10 新規 + PI-14 3 例 install。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Day 179 Theme A A4+A5 (main merge PR prep + v0.1.0 stable tag) または theorem coverage push 検討。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 179,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 179 Phase 3 Theme #4 + Framework 100% 9-step。Step 1 reference read (theorem coverage breakdown + Framework deps)。Step 3a PoC (Foundation 数学依存 audit + pre-commit hook design)、Step 3b TyDD eval。Step 4 implementation: pre-commit-hook.sh template + Framework 2 file port + root import。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Day 180 Phase 3 closure 提案 (acceptance #1 部分残のみ、user 同意で v0.1.0-rc1 維持なら full close 可能)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 180,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 180 Phase 3 Final Audit + closure 9-step。Step 1 reference read (Phase 3 acceptance + PI status)。Step 3a PoC (audit metrics 集計 + retro draft)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/04-day180-phase3-final-audit.md + PI-15/16 deferred + retro Day 174-179。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 着手は user direction 待ち (α/β/γ/δ/ε)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 177,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 177 (遡及 entry、Day 180 audit で識別) 9-step。Day 176-177 を 1 commit に batched したが、PI-5 (1 commit/Day) は同 Day 内の複数 commit 統合の意図であり Day 跨ぎ batch ではない。Day 177 cycle entry を遡及作成。Step 1 reference read (governance/USAGE.md design)。Step 3a PoC (USAGE.md walkthrough draft)、Step 3b TyDD eval。Step 4 implementation: governance/USAGE.md 新設 (Day 176-177 batched commit に含む)。Step 7 mandatory checklist (cycle-check.sh PASS 当時、Day 180 audit で再検証)。Step 5 verifier_history Day 176-177 entry (batched)、Step 9 update-handoff。additive_test (Day 176-177 batched commit に統合)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 181,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 181 PI-5 規律 + PI-15 初期 9-step。Step 1 reference read (Day 180 audit + AgentSpec.lean root + API_SURFACE.md)。Step 3a PoC (memory feedback draft + Check 25 regex design)、Step 3b TyDD eval。Step 4 implementation: feedback_pi5_interpretation.md + MEMORY.md update + cycle-check Check 25。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-25 OK、Check 25 で 2 false positive 検出 = 動作確認済)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 182 Phase 4 候補消化継続 (refinement / γ Foundation / ε 別 priority、user direction 待ち)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 182,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 182 Check 25 refinement 9-step。Step 1 reference read (Day 181 false positive cases)。Step 3a PoC (regex 改善 + filter loop dry-run)、Step 3b TyDD eval。Step 4 implementation: cycle-check.sh Check 25 改修 (trailing dot + child cover filter)、2 false positive 解消。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-25 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 183 以降は user direction 待ち (α v0.1.0 stable 等は user 同意必要)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 183,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 183 Phase 4 γ Foundation port 9-step。Step 1 reference read (Foundation 6 file audit)。Step 3a PoC (4 easy + 2 mathlib heavy 順次 port dry-run)、Step 3b TyDD eval。Step 4 implementation: Foundation/{ControlTheory, InformationTheory, ProcessModel, StatisticalTesting, Probability, RiskTheory}.lean 全 port + AgentSpec.lean root import 6。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-25 全 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Foundation 100% 完成、残 Phase 4 は user direction 待ち。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 184,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 184 PI-12 follow-up 9-step。Step 1 reference read (PI-12 Day 159 + V1-V7 + OpaqueOrigin)。Step 3a PoC (axiom + instance pattern dry-run)、Step 3b TyDD eval。Step 4 implementation: V_MeasurableSemanticInstances.lean 新設 + AgentSpec.lean root import。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-25 全 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_axiom。Day 185 以降は Phase 4 残候補 (α user 同意 / δ low value / ε direction) または Tooling polish。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 185,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 185 Check 26 9-step。Step 1 reference read (PI-13 + Ontology opaque + OpaqueOrigin)。Step 3a PoC (regex + comm dry-run)、Step 3b TyDD eval。Step 4 implementation: cycle-check.sh Check 26 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 残候補 = α/δ/ε のみ user direction 必要。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 186,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 186 PI-16 前倒し 9-step。Step 1 reference read (.github/workflows/agent-spec-lib-build.yml)。Step 3a PoC (set -e + count tracking 設計)、Step 3b TyDD eval。Step 4 implementation: workflow rewrite (full Write、deferred 解消)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 残候補 = α/δ/ε のみ user direction 必要 (continued auto mode、低 value polish work option あり)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 187,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 187 Final State Document 9-step。Step 1 reference read (全 Phase + PI 状態)。Step 3a PoC (final state metrics 集計)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/05-day187-final-state.md。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 5 着手は user direction 待ち。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 188,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 188 Phase 5 α step 1 v0.1.0 bump 9-step。Step 1 reference read (Day 170 user judgment + Day 187 final state)。Step 3a PoC (lakefile + CHANGELOG draft)、Step 3b TyDD eval。Step 4 implementation: lakefile version bump + CHANGELOG [0.1.0] confirm。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。metadata_only。Day 189 main merge PR prep 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 189,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 189 Phase 5 α step 2/3 main merge PR prep 9-step。Step 1 reference read (Day 188 v0.1.0)。Step 3a PoC (git diff stat + conflict detection dry-run)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/06-day189-merge-pr-prep.md 新設 (規模 + conflict + strategy + draft message + risk + checklist)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 190 main merge PR 実施 (user 確認下、rebase + conflict 解消 + squash + gh pr create)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    }
+  ],
+  "gap_analysis": {
+    "high_risk": [
+      {
+        "tag": "GA-S1",
+        "topic": "ResearchNode umbrella",
+        "week": "2",
+        "status": "done_day_54 (7 constructor umbrella inductive 実装、rationale 必須化、ResearchEntity/LifeCyclePhase と直交 3 軸)"
+      },
+      {
+        "tag": "GA-S2",
+        "topic": "FolgeID + 半順序",
+        "week": "2",
+        "status": "done_day_1"
+      },
+      {
+        "tag": "GA-S3",
+        "topic": "Provenance Triple",
+        "week": "3",
+        "status": "done_day_11"
+      },
+      {
+        "tag": "GA-S4",
+        "topic": "Edge Type Inductive",
+        "week": "2",
+        "status": "done_day_2"
+      },
+      {
+        "tag": "GA-S5",
+        "topic": "Retirement first-class",
+        "week": "4",
+        "status": "done_day_12"
+      },
+      {
+        "tag": "GA-S6",
+        "topic": "Failure first-class",
+        "week": "4",
+        "status": "done_day_6"
+      },
+      {
+        "tag": "GA-S8",
+        "topic": "Rationale 型",
+        "week": "4",
+        "status": "done_day_44_48 (Rationale Spine 層 + 4 type 必須化完了、A-Maximal elaborator 強制は Week 5-6)"
+      },
+      {
+        "tag": "GA-C1",
+        "topic": "agent-spec-lib umbrella",
+        "status": "ongoing"
+      },
+      {
+        "tag": "GA-C2",
+        "topic": "Bidirectional Codec (round-trip 証明付)",
+        "status": "done_day_1"
+      },
+      {
+        "tag": "GA-C7",
+        "topic": "SMT ハンマー統合",
+        "week": "6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-C9",
+        "topic": "EnvExtension Auto-Register",
+        "week": "5-6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-C12",
+        "topic": "Perspective Generation",
+        "week": "5-6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-C13",
+        "topic": "Iterative Search Loop",
+        "week": "5-6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-C14",
+        "topic": "Saturation Detection",
+        "week": "5-6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-C15",
+        "topic": "Schema-Driven Extraction",
+        "week": "5-6",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-M1",
+        "topic": "CLEVER 風自己評価",
+        "week": "7-8",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-M2",
+        "topic": "Atlas augment 戦略 (X3DH IDE)",
+        "week": "6-7",
+        "status": "pending"
+      },
+      {
+        "tag": "GA-E5",
+        "topic": "仕様等価性自動検証",
+        "week": "7-8",
+        "status": "pending",
+        "notes": "CLEVER 0.621% の現実を踏まえ限定的"
+      },
+      {
+        "tag": "GA-E6",
+        "topic": "中間段階可観測性",
+        "week": "6-7",
+        "status": "pending"
+      }
+    ],
+    "medium_risk_count": 60,
+    "medium_risk_summary": "GA-S15-S20 型基盤 Week 2-5、GA-C3-C6/C10-C11/C16-C20/C22-C26/C28-C32/C34/C35/C37 能力層 Week 3-6、GA-M3-M4/M7-M15 手法層 Week 3-7、GA-E1-E4/E7/E9 評価層 Week 5-8、GA-I1/I4/I7/I9-I12 統合層 Week 2-7、GA-T1-T2/T5-T6 移行層 Week 7-8",
+    "low_risk_count": 22,
+    "low_risk_summary": "GA-S14/S19、GA-C8/C21/C27/C33/C36、GA-E8/E10、GA-I2-I3/I5-I6/I8/I13-I14、GA-T3-T4/T7-T8。MVP 後または必要時に対応"
+  },
+  "scope_out": [
+    {
+      "item": "GA-E11 (Human-in-the-loop metrics)",
+      "reason": "GA-M2 augment で実質カバー、運用フェーズ課題",
+      "reconsider_condition": "運用開始後、メトリクス不足が顕在化したとき"
+    },
+    {
+      "item": "GA-T9 (CSLib upstream 貢献戦略)",
+      "reason": "Phase 5 以降の発展課題、MVP 不要",
+      "reconsider_condition": "Phase 5 完了 + コミュニティフィードバック"
+    },
+    {
+      "item": "Implementation2Spec (Atlas 未実現 #1)",
+      "reason": "新基盤 MVP スコープ外",
+      "reconsider_condition": "将来の研究貢献候補"
+    },
+    {
+      "item": "InputOutput2Spec (Atlas 未実現 #2)",
+      "reason": "同上",
+      "reconsider_condition": "同上"
+    },
+    {
+      "item": "InterFramework (Atlas 未実現 #3)",
+      "reason": "同上",
+      "reconsider_condition": "同上"
+    },
+    {
+      "item": "TyDD-D1-D5 (Types=Compression quotes)",
+      "reason": "哲学的根拠、Gap 直結せず"
+    },
+    {
+      "item": "TyDD-S1-S8 (Source summaries)",
+      "reason": "Recipe 参照元、個別 Gap 不要"
+    },
+    {
+      "item": "TyDD-N1-N4 (TyDe 2025 deep dives)",
+      "reason": "G1-G5 で間接参照済"
+    },
+    {
+      "item": "TyDD-L8-L10 (Combinatorics/Conatural/mutual recursion)",
+      "reason": "agent-manifesto スコープ外"
+    },
+    {
+      "item": "CompressedTerm (TyDD-H5)",
+      "reason": "high-tokenizer 固有の研究課題"
+    },
+    {
+      "item": "ユーザーの事前知識への適応 (Co-STORM)",
+      "reason": "deep-research-survey Gap Analysis でスコープ外",
+      "reconsider_condition": "別研究機会"
+    },
+    {
+      "item": "モデル非依存ルーティング",
+      "reason": "project_local_llm_routing.md 別研究"
+    },
+    {
+      "item": "外部 Deep Research API 委譲 (OpenAI/Perplexity)",
+      "reason": "自プロジェクトの能力獲得目的に反する"
+    }
+  ],
+  "qa_tasks": [
+    {
+      "aspect": "独立検証の 4 条件",
+      "current": "2/4 (contextSeparated + framingIndependent)",
+      "plan": "CI + 別モデル族で evaluatorIndependent 達成 (Week 6-7)"
+    },
+    {
+      "aspect": "Behavior test",
+      "current": "24 example + 125 ケース有限量化",
+      "plan": "Property-based test (Hypothesis 風) 導入 (Week 6-7)"
+    },
+    {
+      "aspect": "Differential Random Testing",
+      "current": "なし",
+      "plan": "Cedar VGD パターン (21 bug 検出実績) Week 7-8 適用 (GA-M4)"
+    },
+    {
+      "aspect": "CI",
+      "current": "なし",
+      "plan": "Week 6-7 で GitHub Actions 統合 (GA-I11)"
+    },
+    {
+      "aspect": "Self-benchmarking",
+      "current": "なし",
+      "plan": "Week 7-8 VeriSoftBench 形式の再帰評価 (GA-E1)"
+    },
+    {
+      "aspect": "外部 benchmark 比較",
+      "current": "なし",
+      "plan": "Week 7-8 FLTEval/miniF2F/CLEVER 等と照合 (GA-E7)"
+    },
+    {
+      "aspect": "Time-to-proof metrics",
+      "current": "なし",
+      "plan": "Week 6-7 metrics skill 拡張 (GA-E8)"
+    },
+    {
+      "aspect": "仕様等価性の自動検証",
+      "current": "なし (CLEVER 0.621% の根本困難)",
+      "plan": "Atlas augment 戦略で人間介入必須 (GA-E5, GA-M2)"
+    }
+  ],
+  "linter_hooks_settings": [
+    {
+      "id": "6.1",
+      "topic": "Lean 文書 linter (数式と英語のみ許可、ユーザー要望)",
+      "status": "user_pending_decision",
+      "design_proposal": {
+        "scope_options": [
+          "A: agent-spec-lib/",
+          "B: + lean-formalization/",
+          "C: 全 .lean"
+        ],
+        "layer_options": [
+          "X: hook IDE-time",
+          "Y: lake exe build-time",
+          "Z: 両方"
+        ],
+        "allowed_unicode_ranges": [
+          "ASCII U+0000-007F",
+          "Latin Extended U+0080-024F",
+          "Greek U+0370-03FF",
+          "General Punctuation U+2000-206F",
+          "Letterlike U+2100-214F",
+          "Arrows U+2190-21FF",
+          "Math Operators U+2200-22FF, U+2A00-2AFF",
+          "Math Alphanumeric U+1D400-1D7FF"
+        ],
+        "forbidden_unicode_ranges": [
+          "Hiragana U+3040-309F",
+          "Katakana U+30A0-30FF",
+          "CJK U+4E00-9FFF",
+          "Hangul U+AC00-D7AF",
+          "Halfwidth Katakana U+FF65-FF9F"
+        ]
+      }
+    },
+    {
+      "id": "6.2",
+      "topic": ".claude/hooks/ の新基盤対応 (GA-I12)",
+      "status": "pending",
+      "timing": "Week 6-7"
+    },
+    {
+      "id": "6.2.1",
+      "topic": "Pattern #7 構造的強制 hook (pre-commit で artifact-manifest 同 commit を要求)",
+      "mark": "🟡",
+      "status": "partial_done",
+      "detail": "hook .claude/hooks/p3-manifest-on-commit.sh 稼働中、Day 5-35 で運用検証",
+      "origin": "Day 2 TyDD 評価"
+    },
+    {
+      "id": "6.3",
+      "topic": "Claude Code settings.json (新基盤固有 permissions/env vars)",
+      "status": "pending",
+      "timing": "Week 6-7 CI"
+    },
+    {
+      "id": "6.4",
+      "topic": "Git commit 互換性分類 hook (conservative/compatible/breaking)",
+      "status": "active",
+      "detail": ".claude/hooks/ で P3 互換性分類を強制運用中"
+    }
+  ],
+  "verifier_informational_residual": {
+    "survey_r1": [
+      {
+        "item": "SurveyG ablation の指標名明示 (Coverage -5.9 vs Critical Analysis -5.9)"
+      },
+      {
+        "item": "Phase 別 Gate 基準 (Parent Issue 時点の記載は要件外)"
+      }
+    ],
+    "g5_supplement_r1": [
+      {
+        "item": "「22 リンク」の根拠 (実測 19 ユニーク)"
+      },
+      {
+        "item": "CLEVER 0.6% vs 0.621% の表記揺れ (対処済)"
+      }
+    ],
+    "gap_analysis_r1": [
+      {
+        "item": "theorem カウント 1670 vs Meta.lean 1588 の齟齬 (測定範囲の差)"
+      },
+      {
+        "item": "CLAUDE.md 「53 axioms」旧値は agent-manifesto 本体の問題"
+      }
+    ],
+    "week1_r3": [
+      {
+        "item": "Test コードが本番ライブラリに直接 import",
+        "mark": "✅",
+        "status": "done_day_2"
+      },
+      {
+        "item": "example 8 (DecidableEq テスト) のコメント/証明手段の不整合",
+        "mark": "✅",
+        "status": "done (decide 使用 + コメント整合)"
+      },
+      {
+        "item": "$schema URL 非解決可能 (agent-manifesto.internal)",
+        "mark": "⏳",
+        "status": "pending",
+        "timing": "Week 6-7"
+      }
+    ],
+    "verify_r1_2026_04_17": [
+      {
+        "item": "$schema URI 非解決可能",
+        "mark": "⏳",
+        "timing": "Week 6-7 (重複)"
+      },
+      {
+        "item": "AgentSpec.lean のテスト混在",
+        "mark": "✅",
+        "status": "done_day_2"
+      },
+      {
+        "item": "README TyDD 表 (13 行) と Section 12.2 (12 項目) の分類軸乖離",
+        "mark": "⏳",
+        "timing": "Week 2 以降のドキュメント整理"
+      },
+      {
+        "item": "Section 2.3 旧状態記述",
+        "mark": "✅",
+        "status": "done_revision_2"
+      },
+      {
+        "item": "Core.lean 明示的 import なし",
+        "mark": "✅",
+        "status": "done_day_1"
+      },
+      {
+        "item": "artifact-manifest schema divergence (本体 vs 新基盤)",
+        "mark": "⏳",
+        "timing": "Week 6-7"
+      }
+    ]
+  },
+  "cross_references": {
+    "GA-S": {
+      "done": [
+        "S1 umbrella (部分)",
+        "S2 (Day 1 FolgeID)",
+        "S3 (Day 11 ProvRelation)",
+        "S4 (Day 2 Edge)",
+        "S5 (Day 12 RetiredEntity)",
+        "S6 (Day 6 Failure)",
+        "S15 (Ord instance 基盤)",
+        "S18 (Gradual Refinement SemVer 版)"
+      ],
+      "pending": [
+        "S7 State",
+        "S8 Rationale",
+        "S9 Assumption",
+        "S10 ResearchGoal",
+        "S11 Hoare 4-arg",
+        "S12 PropositionId 拡張",
+        "S13 SelfGoverning",
+        "S14 EnforcementLayer",
+        "S16 Multiplicity",
+        "S17 FiberedTypeSpec",
+        "S19 Phantom scope",
+        "S20 Dynamic dependency"
+      ]
+    },
+    "GA-C": {
+      "done": [
+        "C1 umbrella (部分)",
+        "C2 Bidirectional Codec",
+        "C32 Capability-separated import",
+        "C27 Trusted code 最小化"
+      ],
+      "pending": [
+        "C3 Reverse Deps Index",
+        "C4 Semantic Hash",
+        "C5 Content-addressed storage",
+        "C6 Event Log",
+        "C7 SMT hammer",
+        "C8 ProofWidget",
+        "C9 EnvExt Auto-Register",
+        "C10 Typed Holes",
+        "C11 Coverage Verification",
+        "C12-C21",
+        "C22-C26 TyDD Recipe",
+        "C28-C31 G1/G5",
+        "C33-C37"
+      ]
+    },
+    "GA-M": {
+      "status": "全 15 件未着手 (Week 2-8)"
+    },
+    "GA-E": {
+      "status": "全 10 件未着手 (Week 5-8)"
+    },
+    "GA-I": {
+      "done": [
+        "I1 artifact-manifest 基本構造 + Day 29.1/29.2/33 schema reset",
+        "I7 high-tokenizer 再定義方針"
+      ],
+      "pending": [
+        "I2-I6",
+        "I8-I14"
+      ]
+    },
+    "GA-T": {
+      "status": "T1 #599 再起動は新基盤完成後、T2 Phase 0 消化中、T3-T8 Week 6-8"
+    },
+    "GA-W": {
+      "status": "W1-W10 全 Week で意識、Week 1 時点で W4 (sorry 回避) / W7 (termination) / native_decide 回避 遵守"
+    }
+  },
+  "priority_matrix": [
+    {
+      "priority": "P0",
+      "criteria": "新基盤根幹、後回し不可",
+      "gaps": [
+        "GA-S1",
+        "GA-S2",
+        "GA-S4",
+        "GA-S5",
+        "GA-S6",
+        "GA-S8",
+        "GA-C1",
+        "GA-C2 普遍定理"
+      ],
+      "week": "2-4"
+    },
+    {
+      "priority": "P1",
+      "criteria": "高リスク Gap、deterministic 負荷撤廃に必須",
+      "gaps": [
+        "GA-C7",
+        "GA-C9",
+        "GA-M1",
+        "GA-M2",
+        "GA-E5",
+        "GA-E6"
+      ],
+      "week": "5-7"
+    },
+    {
+      "priority": "P2",
+      "criteria": "中リスク Gap、完成度向上",
+      "gaps_summary": "GA-S3/S7/S10-S20, GA-C3-C6/C10-C37, GA-M3-M15, GA-E1-E9, GA-I1-I12 の medium 群, GA-T1-T2/T5-T6",
+      "week": "3-8"
+    },
+    {
+      "priority": "P3",
+      "criteria": "低リスク Gap、将来対応",
+      "gaps_summary": "GA-S14/S19, GA-C8/C21/C27/C33/C36, GA-E8/E10, GA-I2-I6/I8/I13-I14, GA-T3-T4/T7-T8",
+      "week": "MVP 後"
+    },
+    {
+      "priority": "保留",
+      "criteria": "スコープ外確定、再検討条件付",
+      "gaps": [
+        "GA-E11",
+        "GA-T9",
+        "Atlas 未実現 3 projects"
+      ],
+      "week": "条件達成時"
+    },
+    {
+      "priority": "未定",
+      "criteria": "ユーザー判断待ち",
+      "gaps": [
+        "Lean 文書 linter (日本語禁止)"
+      ],
+      "week": "指示待ち"
+    }
+  ],
+  "patterns": [
+    {
+      "id": 1,
+      "pattern": "abbrev Segment := X ⊕ Y で segment 型を先行宣言",
+      "rationale": "TyDD-S1 Types first",
+      "violation_symptom": "structure 直書きは abstraction 欠如"
+    },
+    {
+      "id": 2,
+      "pattern": "def f_list : List X → ... を先に書き、structure 経由呼び出しで def f := f_list t.path",
+      "rationale": "decide の structure pattern reduction stuck 回避 (Day 1 発生)",
+      "violation_symptom": "by decide が reduction stuck で失敗"
+    },
+    {
+      "id": 3,
+      "pattern": "instance instLE : LE T := ⟨...⟩ と明示命名",
+      "rationale": "unfold の anonymous instance 名依存を回避",
+      "violation_symptom": "/verify Round 1 A1 指摘 (anonymous instance の名前推定は脆弱)"
+    },
+    {
+      "id": 4,
+      "pattern": "instance (a b : T) : Decidable (a ≤ b) := inferInstanceAs (...)",
+      "rationale": "by unfold の脆弱性除去",
+      "violation_symptom": "Round 1 A1 と同根本原因"
+    },
+    {
+      "id": 5,
+      "pattern": "Prop signature は def で宣言 (abbrev 禁止)",
+      "rationale": "hole-driven opaque identity 保持",
+      "violation_symptom": "/verify Round 1 A2 指摘 (後続 proof 時の型チェック identity)"
+    },
+    {
+      "id": 6,
+      "pattern": "sorry / axiom / native_decide / partial def 使用禁止",
+      "rationale": "GA-W4 / GA-C27 / GA-W7",
+      "violation_symptom": "Verifier による build 拒否"
+    },
+    {
+      "id": 7,
+      "pattern": "新 module 追加時は artifact-manifest.json に同 commit で反映 (id, path, refs, provides_*, weekN_status)",
+      "rationale": "P3 /trace 構造整合性",
+      "violation_symptom": "artifact-manifest と実コードの乖離"
+    },
+    {
+      "id": 8,
+      "pattern": "Lean 4 予約語 (from/to/match/let/do/where/then/else/fun 等) を field 名・variable 名・identifier に使用しない (Day 2 確立)",
+      "rationale": "Lean 4 parser エラー",
+      "violation_symptom": "unexpected token 'from'; expected identifier or term 等"
+    }
+  ],
+  "related_docs": [
+    {
+      "path": "10-gap-analysis.md",
+      "description": "104 Gap + 10 Warning の詳細、GA- タグ Index、umbrella Gap、クロスリファレンス"
+    },
+    {
+      "path": "99-verifier-rounds.md",
+      "description": "Verifier 全検証履歴 (サーベイ 3 + 補遺 2 + Gap Analysis 3 + Week 1 × 4)"
+    },
+    {
+      "path": "00-synthesis.md",
+      "description": "15 グループ統合まとめ (Section 7 Atlas 12 projects 対応表、G5 補遺)"
+    },
+    {
+      "path": "07-lean4-applications/G5-1-cslib-boole.md",
+      "description": "8 週ロードマップ根拠、CSLib/Boole 分析"
+    },
+    {
+      "path": "07-lean4-applications/G5-2-atlas-dafny.md",
+      "description": "Dafny 成功要因 (Z3 空証明 44.7%)、Lean 転用戦略"
+    },
+    {
+      "path": "07-lean4-applications/G1-cedar-aws.md",
+      "description": "VGD パターン、Differential Random Testing"
+    },
+    {
+      "path": "../../../agent-spec-lib/README.md",
+      "description": "Phase 0 Week 1 進捗 + 8 週ロードマップ"
+    },
+    {
+      "path": "../../../agent-spec-lib/artifact-manifest.json",
+      "description": "依存 edge + TyDD 合致度マトリクス (thin catalog、Day 29.1 reset)"
+    },
+    {
+      "path": "../../../agent-spec-lib/artifact-manifest.schema.json",
+      "description": "JSON Schema 制約 (Day 29.2 導入、Day 33 pattern forbid)"
+    },
+    {
+      "path": "../../../../research/survey_type_driven_development_2025.md",
+      "description": "TyDD 12 Recipes + Tag Index"
+    },
+    {
+      "path": "../../../../research/lean4-handoff.md",
+      "description": "Atlas 12 projects 提案書"
+    },
+    {
+      "path": "../../../.claude/handoffs/handoff-599-pending-rebase.md",
+      "description": "#599 新基盤待機状態、16 Gap の持ち越し"
+    }
+  ],
+  "tydd_review_history": [
+    {
+      "round": 1,
+      "date": "2026-04-17",
+      "scope": "Week 1 最小プレースホルダ",
+      "rate": "~30% (推定)",
+      "verdict": "TyDD/TDD 原則から外れている → re-do へ"
+    },
+    {
+      "round": 2,
+      "date": "2026-04-17",
+      "scope": "Week 1 re-do (SemVer + parse + example)",
+      "rate": "61.5% (8/13)",
+      "verdict": "F6 完全化、Recipe 11 達成、F2 未実装"
+    },
+    {
+      "round": 3,
+      "date": "2026-04-17",
+      "scope": "Week 1 TyDD 完全合致版 (α+β+γ)",
+      "rate": "92.3% (12/13)",
+      "verdict": "実質的完全合致達成"
+    },
+    {
+      "round": "4 (/verify)",
+      "date": "2026-04-17",
+      "scope": "/verify Round 1 (logprob + Subagent multi-evaluator)",
+      "rate": "92.3% 維持",
+      "verdict": "logprob pairwise PASS (A margin 0.623) + Subagent R1 FAIL (addressable 2) → R2 PASS 修正後、P2 検証トークン書込済"
+    }
+  ],
+  "tydd_week1_closure": {
+    "full_match_count": 12,
+    "full_match_items": [
+      "S1",
+      "S4",
+      "D1-D5",
+      "F2 (予備)",
+      "F6",
+      "G1-G6",
+      "H3",
+      "H7",
+      "J4",
+      "J7",
+      "Recipe 11",
+      "Recipe 12"
+    ],
+    "partial_match_count": 1,
+    "partial_match_items": [
+      {
+        "item": "TyDD-J5 Self-hosting recursion",
+        "detail": "artifact-manifest.json JSON のまま、Lean 型化は Week 4 予定"
+      }
+    ],
+    "match_rate": "12/13 = 92.3%",
+    "out_of_scope": [
+      "B1/B3-B6 (Pipeline 必要)",
+      "C1-C3 (LLM 統合必要)",
+      "E1-E5 (Lean-Auto / SMT 必要)",
+      "F1/F3-F5/F7-F8 (Pipeline / Process 層必要)",
+      "H1-H11 scope 外多数",
+      "I1-I7 scope 外多数",
+      "J1-J3/J6 (N=1 で適用不可 / Python 層必要)",
+      "Recipe 1-10 (SMT / pytest / LLM 必要)"
+    ],
+    "benefits_achieved": 8,
+    "benefits_total": 10,
+    "benefits_detail": [
+      {
+        "n": 1,
+        "name": "Deeper understanding of problem domain",
+        "status": "✓"
+      },
+      {
+        "n": 2,
+        "name": "More thoughtful design",
+        "status": "✓"
+      },
+      {
+        "n": 3,
+        "name": "Easier mental models",
+        "status": "✓"
+      },
+      {
+        "n": 4,
+        "name": "Better collaboration through contracts/APIs",
+        "status": "✓"
+      },
+      {
+        "n": 5,
+        "name": "Maintainability",
+        "status": "✓"
+      },
+      {
+        "n": 6,
+        "name": "Clearer path towards implementation",
+        "status": "✓"
+      },
+      {
+        "n": 7,
+        "name": "Top-down / hole-driven development",
+        "status": "⚠ Week 2+ で意識"
+      },
+      {
+        "n": 8,
+        "name": "Higher confidence in correctness",
+        "status": "✓"
+      },
+      {
+        "n": 9,
+        "name": "Less scary refactoring",
+        "status": "✓"
+      },
+      {
+        "n": 10,
+        "name": "Pleasure when programming",
+        "status": "N/A (個人的感情)"
+      }
+    ],
+    "week_targets": [
+      {
+        "week": "2-3",
+        "target": "14/13 以上 (scope 拡大)",
+        "notes": "F1 Pipeline 予備、B4 Hoare 4-arg"
+      },
+      {
+        "week": "3-4",
+        "target": "継続的改善",
+        "notes": "F5 TypeSpec.toFuncSpec、J5 完全版 (preview)"
+      },
+      {
+        "week": "4-5",
+        "target": "high-scope 項目ほぼ全達成",
+        "notes": "B4、F2 lattice、F8 FiberedTypeSpec、H1 multiplicity"
+      },
+      {
+        "week": "5-6",
+        "target": "C1-C3/E1-E5/H2-H4/H7 L2/Recipe 1-10 達成",
+        "notes": "SMT/LLM 統合で大幅拡大"
+      },
+      {
+        "week": "6-7",
+        "target": "H7 L1 達成、G4 CI 化",
+        "notes": "PBT/DRT/benchmark"
+      },
+      {
+        "week": "7-8",
+        "target": "全 scope 項目達成",
+        "notes": "J1 descriptive coding、J3 two-layer"
+      }
+    ]
+  },
+  "mark_legend": {
+    "✅": "解消済 — 既に実装/記述で反映済み、または実態確認で解消を確認",
+    "🔄": "Week 2 着手予定 — Week 2 開始時に優先対処する項目",
+    "⏳": "後続 Week 対処予定 — Week 3 以降の計画済みタスク",
+    "❓": "判断待ち — ユーザー判断が必要な項目",
+    "🔴": "高優先 — 前倒しまたは即時対処",
+    "🟡": "中優先 — 計画 Week 内で対処",
+    "🟢": "低優先 — Week 後半または将来",
+    "⚠": "部分達成 — 仕様の一部のみ達成、残部分は後続 Day/Week",
+    "❗": "breaking change — 互換性分類 breaking change に相当"
+  },
+  "process_improvement_plan": {
+    "created_day": 147,
+    "trigger": "Day 138 'cycle check ってしてる？' user feedback の根本原因 (自己評価バイアス) 系統的対処、Day 144/146 連続 revert で顕在化したサイクル構造問題、構文/意味 × 対象/メタ 三軸評価結果",
+    "rationale": "改善は 4 tier に区分: P0 (自己評価バイアス構造削減 / 自分で着手可) / P1 (サイクル構造修正 / 自分で着手可) / P2 (ガバナンス変更 / user 同意必須) / P3 (Lean 形式系後続改善)。tier 内 item は依存順、tier 間は P0→P1→P2→P3 で実施。",
+    "tiers": {
+      "P0": {
+        "name": "自己評価バイアス構造削減",
+        "user_consent_required": false,
+        "target_days": "148-149",
+        "items": [
+          "PI-1",
+          "PI-2",
+          "PI-3"
+        ],
+        "exit_criteria": "verifier_history で PASS 単一値廃止、N連敗自動 escalate、長期 defer 強制 deadline"
+      },
+      "P1": {
+        "name": "サイクル構造修正",
+        "user_consent_required": false,
+        "target_days": "150-153",
+        "items": [
+          "PI-4",
+          "PI-5",
+          "PI-6"
+        ],
+        "exit_criteria": "Step 4 skip 常態化解消、1 commit/Day、週次 retro エントリ存在"
+      },
+      "P2": {
+        "name": "ガバナンス変更 (user 同意必須)",
+        "user_consent_required": true,
+        "target_days": "user 判断後",
+        "items": [
+          "PI-7",
+          "PI-8"
+        ],
+        "exit_criteria": "Phase 0 終了基準明示、change_category / implementation 判定が subagent 委譲"
+      },
+      "P3": {
+        "name": "Lean 形式系後続改善",
+        "user_consent_required": false,
+        "target_days": "Day 156+",
+        "items": [
+          "PI-9",
+          "PI-10",
+          "PI-11",
+          "PI-12",
+          "PI-13"
+        ],
+        "exit_criteria": "native_decide 撤去、Hook/Lean sync、IsVerifyToken / Measurable / opaque の semantic gap 明示化"
+      },
+      "Phase3": {
+        "name": "Phase 3: Stabilization + Production Polish + Governance Toolkit (draft)",
+        "user_consent_required": true,
+        "target_days": "174-184 (β option = 10 Day)",
+        "items": [
+          "PI-14",
+          "PI-15",
+          "PI-16"
+        ],
+        "themes": [
+          "A: Stabilization & Release",
+          "B: Production Polish",
+          "C: Governance Toolkit Packaging",
+          "D: Build Improvement (optional)"
+        ],
+        "exit_criteria": "5 acceptance criteria 達成 (release stability + production examples + governance toolkit + local CI + theorem coverage 50%)、option (α/β/γ/δ) で scope 調整",
+        "spec_doc": "docs/research/new-foundation-survey/phase-transitions/03-phase3-acceptance-draft.md"
+      }
+    }
+  }
+}
