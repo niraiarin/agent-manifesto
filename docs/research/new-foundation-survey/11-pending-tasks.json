@@ -992,20 +992,22 @@
       "section": "2.14",
       "topic": "[Phase 6 ζ] mathlib4-cache action 採用 (CI Mathlib transitive build skip)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Phase 6 (Day 197+)",
       "decision_deadline": 250,
-      "detail": "Day 197 Day 196 PR #691 CI 観察起因: cold cache で Lean build 35-50 min。Mathlib upstream binary cache (lake-cache project / mathlib4 CI artifact) を取得すれば transitive 1965 jobs を skip 可能、CI 時間 5-10 min に短縮見込み。.github/workflows/agent-spec-lib-build.yml に lake exe cache get step 追加候補。"
+      "detail": "Day 197 Day 196 PR #691 CI 観察起因: cold cache で Lean build 35-50 min。Mathlib upstream binary cache (lake-cache project / mathlib4 CI artifact) を取得すれば transitive 1965 jobs を skip 可能、CI 時間 5-10 min に短縮見込み。.github/workflows/agent-spec-lib-build.yml に lake exe cache get step 追加候補。",
+      "resolved_day": 199
     },
     {
       "id": "PI-22",
       "section": "2.14",
       "topic": "[Phase 6 ζ] cache restore-keys 改善 (branch 跨ぎ partial restore)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Phase 6 (Day 197+)",
       "decision_deadline": 250,
-      "detail": "Day 197 起源: GitHub Actions cache が branch scope で分離、release/phase5 等 new branch で cold cache start。restore-keys 階層化 (lake-{os}-{lakefile-hash} → lake-{os}-* → lake-{os}) で partial restore 改善。"
+      "detail": "Day 197 起源: GitHub Actions cache が branch scope で分離、release/phase5 等 new branch で cold cache start。restore-keys 階層化 (lake-{os}-{lakefile-hash} → lake-{os}-* → lake-{os}) で partial restore 改善。",
+      "resolved_day": 199
     },
     {
       "id": "PI-23",
@@ -4051,6 +4053,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 198 Phase 5 main merge 完遂 9-step。Step 1 reference read (PR #691 status)。Step 3a PoC (CI completion confirm + squash merge dry-check)、Step 3b TyDD eval。Step 4 implementation: gh pr merge 691 --squash → main commit 968de33、release/phase5 branch retain。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-27 全 OK)。Step 5 verifier_history、Step 9 update-handoff。metadata_only。Phase 5 完了、Phase 6 user direction 待機。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 199,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 199 Phase 6 plan + ζ sprint 1 #1+#2 9-step。Step 1 reference read (Phase 5 audit + PI-21〜24 plan)。Step 3a PoC (workflow yaml dry-design + dependency 分析)、Step 3b TyDD eval。Step 4 implementation: 09-phase6-acceptance-draft.md + workflow PI-21+22 改修。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-27 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 200 sprint 1 #3+#4 (CI verification) 着手予定。",
       "steps_completed": [
         1,
         2,
