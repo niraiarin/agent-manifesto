@@ -681,6 +681,34 @@ else
   WARN=1
 fi
 
+# ----- Check 27: source-port equivalence drift detection (PI-20、Day 195、Phase 5 #4) -----
+# scripts/check-source-port-parity.sh + check-source-port-proof-parity.sh の結果を集約。
+# unallowed divergent (PI-17 statement) または divergent (PI-18 proof) を fail-flag。
+PARITY_SCRIPT="$REPO_ROOT/scripts/check-source-port-parity.sh"
+PROOF_PARITY_SCRIPT="$REPO_ROOT/scripts/check-source-port-proof-parity.sh"
+if [ -x "$PARITY_SCRIPT" ] && [ -x "$PROOF_PARITY_SCRIPT" ]; then
+  STMT_OUTPUT=$(bash "$PARITY_SCRIPT" 2>/dev/null)
+  STMT_UNALLOWED=$(echo "$STMT_OUTPUT" | grep -oE "unallowed div:[[:space:]]*[0-9]+" | grep -oE "[0-9]+" | head -1)
+  STMT_BYTE_IDENT=$(echo "$STMT_OUTPUT" | grep -oE "byte-identical:[[:space:]]*[0-9]+" | grep -oE "[0-9]+" | head -1)
+  PROOF_OUTPUT=$(bash "$PROOF_PARITY_SCRIPT" 2>/dev/null)
+  PROOF_DIV=$(echo "$PROOF_OUTPUT" | grep -oE "divergent:[[:space:]]*[0-9]+" | grep -oE "[0-9]+" | head -1)
+  PROOF_BYTE_IDENT=$(echo "$PROOF_OUTPUT" | grep -oE "byte-identical:[[:space:]]*[0-9]+" | grep -oE "[0-9]+" | head -1)
+  if [ -n "$STMT_UNALLOWED" ] && [ "$STMT_UNALLOWED" -gt 0 ]; then
+    echo "[27] NG  source-port statement parity: $STMT_UNALLOWED unallowed divergence"
+    echo "    詳細: bash $PARITY_SCRIPT --verbose"
+    EXIT=1
+  elif [ -n "$PROOF_DIV" ] && [ "$PROOF_DIV" -gt 0 ]; then
+    echo "[27] NG  source-port proof parity: $PROOF_DIV divergent (critical theorems)"
+    echo "    詳細: bash $PROOF_PARITY_SCRIPT"
+    EXIT=1
+  else
+    echo "[27] OK  source-port equivalence (statement: ${STMT_BYTE_IDENT:-?} byte-identical, proof: ${PROOF_BYTE_IDENT:-?} byte-identical)"
+  fi
+else
+  echo "[27] WARN  parity script 不在 (PI-17/18 setup 未完?)"
+  WARN=1
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="
