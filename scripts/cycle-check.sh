@@ -624,23 +624,30 @@ API_SURFACE="$REPO_ROOT/agent-spec-lib/API_SURFACE.md"
 if [ -f "$API_ROOT" ] && [ -f "$API_SURFACE" ]; then
   # 現 root imports
   CURRENT_IMPORTS=$(grep -oE "^import AgentSpec\.[A-Za-z][A-Za-z0-9_.]*" "$API_ROOT" | awk '{print $2}' | sort -u)
-  # API_SURFACE 記載の stable module (`AgentSpec.X` 形式の引用、AgentSpec.lean 自体は除外)
-  SURFACE_MODULES=$(grep -oE "AgentSpec\.[A-Za-z][A-Za-z0-9_.]*" "$API_SURFACE" | grep -v "^AgentSpec\.lean$" | sort -u)
-  # 差分: surface に記載あるが current import に無い (= 削除候補 = breaking risk)
+  # API_SURFACE 記載の AgentSpec.X module (regex で trailing dot を strip、AgentSpec.lean 自体は除外)
+  SURFACE_MODULES=$(grep -oE "AgentSpec\.[A-Za-z][A-Za-z0-9_.]*[A-Za-z0-9_]" "$API_SURFACE" | grep -v "^AgentSpec\.lean$" | sort -u)
+  # 差分: surface に記載あるが current import に無い (= 削除候補)
   REMOVED=$(comm -23 <(echo "$SURFACE_MODULES") <(echo "$CURRENT_IMPORTS"))
   if [ -n "$REMOVED" ]; then
-    REMOVED_COUNT=$(echo "$REMOVED" | wc -l | tr -d ' ')
-    # API_SURFACE.md に記載されているが、Manifest.X の親 namespace のみ言及などの noise を除外
-    # (例: "AgentSpec.Manifest.Framework.*" pattern は親 namespace、import は子 module)
-    # 親 namespace pattern (`AgentSpec.X` で sub-module 持つもの) の dot 数 = 2 を許容
-    REMOVED_FILTERED=$(echo "$REMOVED" | grep -v "^AgentSpec\.\(Manifest\|Tooling\|Spine\|Process\|Provenance\|Manifest\.Framework\|Manifest\.Models\|Manifest\.Models\.Assumptions\)$" || true)
+    # 親 namespace mention は child import が 1 つでもあれば covered と判定
+    # (例: "AgentSpec.Proofs" 言及は "AgentSpec.Proofs.RoundTrip" import で覆われる)
+    REMOVED_FILTERED=""
+    while IFS= read -r mod; do
+      [ -z "$mod" ] && continue
+      # mod が CURRENT_IMPORTS のいずれかの prefix を成すか検査 (= child import で covered)
+      COVERED=$(echo "$CURRENT_IMPORTS" | grep -E "^${mod//./\\.}\\." | head -1)
+      if [ -z "$COVERED" ]; then
+        REMOVED_FILTERED="${REMOVED_FILTERED}${mod}\n"
+      fi
+    done <<< "$REMOVED"
+    REMOVED_FILTERED=$(echo -e "$REMOVED_FILTERED" | grep -v "^$" || true)
     if [ -n "$REMOVED_FILTERED" ]; then
       FILT_COUNT=$(echo "$REMOVED_FILTERED" | wc -l | tr -d ' ')
       echo "[25] WARN  API_SURFACE.md 記載 module で root import 不在 ${FILT_COUNT} 件 (breaking risk):"
       echo "$REMOVED_FILTERED" | sed 's/^/    /'
       WARN=1
     else
-      echo "[25] OK  API surface drift なし (root imports = ${API_ROOT##*/} の AgentSpec.* 全 covered)"
+      echo "[25] OK  API surface drift なし (親 namespace mention は child import で covered)"
     fi
   else
     echo "[25] OK  API surface drift なし"

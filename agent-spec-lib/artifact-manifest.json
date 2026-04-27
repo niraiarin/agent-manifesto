@@ -4817,6 +4817,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 182 Phase 4 polish — Check 25 refinement (false positive 解消)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Day 181 PI-15 初期実装の Check 25 false positive 2 件 (regex 末尾 dot + 親 namespace mention) を解消。改修: (1) regex に  終端を強制、(2) 親 namespace mention (例 'AgentSpec.Proofs') は child import (例 'AgentSpec.Proofs.RoundTrip') があれば covered と判定する filter loop。動作: 2 WARN → 0 件 OK。Phase 4 中の小規模 polish work。残 Phase 4 候補: α v0.1.0 stable (user 同意必要) / γ Foundation port (mathlib heavy) / δ Models (low value) / ε 別 priority (user direction)。subagent dispatch (PI-8) で process_only 判定。",
+      "scope": "Day 181 PI-15 polish、Check 25 noise ゼロ化。Phase 4 残 work は user direction 待ち。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "43c8650207a501ce88d31579ee975794c56f5a8e205b05494932055a11d2751d",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
