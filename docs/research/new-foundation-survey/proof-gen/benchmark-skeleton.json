@@ -1,0 +1,82 @@
+{
+  "$comment": "Phase 7 sprint 1 #4 harness skeleton (Day 212). Sprint 2 で Phase 6 spec gen output から拡張、本 file は scaffolding 確認用 minimal set.",
+  "version": "0.1.0-skeleton",
+  "schema": {
+    "id": "Lean theorem identifier",
+    "statement": "Lean theorem signature without proof",
+    "shape": "trivial / rewriting / constructor / arithmetic / quantified / higher-order",
+    "expected_solvers": "list of solvers expected to succeed (baseline = sorry は常に compile、proof rate measurement の reference として 0 score 扱い)",
+    "imports": "additional imports beyond AgentSpec needed",
+    "premises_form": "for duper: how to pass premises ([], [*], [h1, h2], etc.)"
+  },
+  "benchmarks": [
+    {
+      "id": "p_implies_p",
+      "statement": "(p : Prop) : p → p",
+      "shape": "trivial",
+      "expected_solvers": [
+        "aesop",
+        "duper"
+      ],
+      "imports": [
+        "Aesop",
+        "Duper"
+      ],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "and_symmetry",
+      "statement": "(p q : Prop) (h : p ∧ q) : q ∧ p",
+      "shape": "trivial",
+      "expected_solvers": [
+        "aesop",
+        "duper"
+      ],
+      "imports": [
+        "Aesop",
+        "Duper"
+      ],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "modus_ponens_chain",
+      "statement": "(p q r : Prop) (hpq : p → q) (hqr : q → r) (hp : p) : r",
+      "shape": "quantified",
+      "expected_solvers": [
+        "aesop",
+        "duper"
+      ],
+      "imports": [
+        "Aesop",
+        "Duper"
+      ],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "function_equality_chain",
+      "statement": "(α β γ : Type) (f : α → β) (g : β → γ) (x : α) (y : β) (z : γ) (h1 : f x = y) (h2 : g y = z) : g (f x) = z",
+      "shape": "rewriting",
+      "expected_solvers": [
+        "duper"
+      ],
+      "imports": [
+        "Aesop",
+        "Duper"
+      ],
+      "premises_form": "[h1, h2]"
+    },
+    {
+      "id": "nat_zero_add",
+      "statement": "(n : Nat) : 0 + n = n",
+      "shape": "arithmetic",
+      "expected_solvers": [
+        "aesop"
+      ],
+      "imports": [
+        "Aesop",
+        "Duper"
+      ],
+      "premises_form": "[*]"
+    }
+  ]
+}

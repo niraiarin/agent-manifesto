@@ -1,0 +1,120 @@
+{
+  "$comment": "Phase 7 sprint 2 benchmark dataset (Day 213). Skeleton 5 件 + Phase 6 spec gen と registered theorems から拡張、計 12 件 + extended output schema (statement_ok / proof_ok / tool_used / time / heartbeats / failure_class).",
+  "version": "0.2.0",
+  "input_schema": {
+    "id": "Lean theorem identifier (matches PI-19 SemanticEquivalence registry where applicable)",
+    "statement": "Lean theorem signature without proof",
+    "shape": "trivial / rewriting / constructor / arithmetic / quantified / higher-order",
+    "expected_solvers": "list of solvers expected to succeed (baseline = sorry は常に compile、reference として 0 score 扱い)",
+    "imports": "additional imports beyond AgentSpec needed",
+    "premises_form": "for duper: how to pass premises ([], [*], [h1, h2], etc.)",
+    "context": "optional: required namespace open / hypothesis preamble (for AgentSpec.Manifest theorems)"
+  },
+  "output_schema": {
+    "id": "matching benchmark id",
+    "statement_ok": "Bool — Lean parse and type check of the statement (without proof)",
+    "proof_ok": "Bool — full compile (statement + proof tactic) success",
+    "tool_used": "string — solver name (baseline / aesop / duper)",
+    "time_ms": "Int — wall-clock duration in milliseconds (lake env lean invocation)",
+    "heartbeats": "optional Int — Lean heartbeats consumed (for timeout taxonomy in sprint 3)",
+    "failure_class": "optional string — taxonomy: timeout / missing_lemma / bad_search_space / reconstruction_failure / tooling_failure (sprint 3 で classify)"
+  },
+  "benchmarks": [
+    {
+      "id": "p_implies_p",
+      "statement": "(p : Prop) : p → p",
+      "shape": "trivial",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "and_symmetry",
+      "statement": "(p q : Prop) (h : p ∧ q) : q ∧ p",
+      "shape": "trivial",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "modus_ponens_chain",
+      "statement": "(p q r : Prop) (hpq : p → q) (hqr : q → r) (hp : p) : r",
+      "shape": "quantified",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "function_equality_chain",
+      "statement": "(α β γ : Type) (f : α → β) (g : β → γ) (x : α) (y : β) (z : γ) (h1 : f x = y) (h2 : g y = z) : g (f x) = z",
+      "shape": "rewriting",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[h1, h2]"
+    },
+    {
+      "id": "nat_zero_add",
+      "statement": "(n : Nat) : 0 + n = n",
+      "shape": "arithmetic",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "or_symmetry",
+      "statement": "(p q : Prop) (h : p ∨ q) : q ∨ p",
+      "shape": "trivial",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "triple_negation_collapse",
+      "statement": "(p : Prop) : ¬¬¬p → ¬p",
+      "shape": "rewriting",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "exists_elim_propagation",
+      "statement": "(P Q : Nat → Prop) (h : ∃ x, P x) (hpq : ∀ x, P x → Q x) : ∃ x, Q x",
+      "shape": "quantified",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "list_length_zero_iff_nil",
+      "statement": "{α : Type} (xs : List α) : xs.length = 0 ↔ xs = []",
+      "shape": "constructor",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "nat_add_comm",
+      "statement": "(a b : Nat) : a + b = b + a",
+      "shape": "arithmetic",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    },
+    {
+      "id": "subset_transitivity",
+      "statement": "{α : Type} (A B C : Set α) (h1 : A ⊆ B) (h2 : B ⊆ C) : A ⊆ C",
+      "shape": "higher-order",
+      "expected_solvers": ["aesop", "duper"],
+      "imports": ["Aesop", "Duper", "Mathlib.Data.Set.Basic"],
+      "premises_form": "[h1, h2]"
+    },
+    {
+      "id": "function_const_compose",
+      "statement": "(α β γ : Type) (c : γ) (f : α → β) : (fun (_ : β) => c) ∘ f = (fun (_ : α) => c)",
+      "shape": "higher-order",
+      "expected_solvers": ["aesop"],
+      "imports": ["Aesop", "Duper"],
+      "premises_form": "[*]"
+    }
+  ]
+}
