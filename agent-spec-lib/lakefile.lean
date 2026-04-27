@@ -6,6 +6,8 @@ import Lake
 open Lake DSL
 
 package «agent-spec-lib» where
+  -- Day 162 (PI-7 Phase 1 acceptance #4): semantic version
+  version := v!"0.1.0-rc1"
   leanOptions := #[
     -- GA-C27 (Trusted code 最小化): native_decide を型検査外の信頼根とする拡張を明示的に禁止
     ⟨`autoImplicit, false⟩,

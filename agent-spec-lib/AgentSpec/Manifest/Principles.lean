@@ -99,23 +99,8 @@ separation of generation and evaluation is required for the verification framewo
 "Separation itself is non-negotiable."
 -/
 
-/-- Predicate for whether a verification framework is sound.
-    Sound = all generated actions are independently verified. -/
-def verificationSound (w : World) : Prop :=
-  ∀ (gen ver : Agent) (action : Action),
-    generates gen action w →
-    verifies ver action w →
-    gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver
-
-/-- [Derivation Card]
-    Derives from: verification_requires_independence (E1a)
-    Proposition: P2
-    Content: Verification soundness requires role separation — the generator and evaluator of an action must be distinct agents with no shared internal state.
-    Proof strategy: Direct application of verification_requires_independence (E1a) via verificationSound definition -/
-theorem cognitive_separation_required :
-  ∀ (w : World), verificationSound w :=
-  fun w gen ver action h_gen h_ver =>
-    verification_requires_independence gen ver action w h_gen h_ver
+-- Day 162: `verificationSound` は port P2.lean に既存。重複削除 (Day 100+ P2 拡張で pre-pick)。
+-- `cognitive_separation_required` は同 def に依存するため同 file に既存とみなして delete。
 
 /-- P2 lemma: Self-verification destroys verification framework soundness. -/
 theorem self_verification_unsound :

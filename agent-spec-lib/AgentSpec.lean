@@ -60,6 +60,22 @@ import AgentSpec.Manifest.Framework.CoTFaithfulness
 import AgentSpec.Manifest.Framework.AcyclicGraph
 import AgentSpec.Manifest.Framework.DanglingDetection
 import AgentSpec.Manifest.ConformanceVerification
+
+-- Day 147+ port: Observable / EmpiricalPostulates / ObservableDesign / Axioms / Principles / Evolution / Workflow / Meta / AxiomQuality
+import AgentSpec.Manifest.Observable
+import AgentSpec.Manifest.EmpiricalPostulates
+import AgentSpec.Manifest.ObservableDesign
+import AgentSpec.Manifest.Axioms
+import AgentSpec.Manifest.Principles
+import AgentSpec.Manifest.Evolution
+import AgentSpec.Manifest.Workflow
+import AgentSpec.Manifest.Meta
+import AgentSpec.Manifest.AxiomQuality
+
+-- Day 153+ Tooling 拡充: CriticalPatterns / MeasurableSemantic / OpaqueOrigin
+import AgentSpec.Tooling.CriticalPatterns
+import AgentSpec.Tooling.MeasurableSemantic
+import AgentSpec.Tooling.OpaqueOrigin
 import AgentSpec.Manifest.EvolveSkill
 import AgentSpec.Spine.ResearchSpecLattice
 
