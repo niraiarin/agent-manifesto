@@ -155,12 +155,67 @@ EOF
     echo "duper:    ${PASS_COUNT[duper]}/$TOTAL"
     ;;
 
+  extract)
+    # Day 215 Phase 7 sprint 3 #3: materialised proof script extraction.
+    # For each (id, solver) where solver succeeded in last `run`, generate aesop?/duper?
+    # variant, compile, capture "Try this: ..." line.
+    # Usage: $0 extract [benchmark-file] [output-md]
+    OUT_MD="${3:-$REPO_ROOT/docs/research/new-foundation-survey/proof-gen/materialised-scripts.md}"
+    OUT="$WORK_DIR"
+    mkdir -p "$OUT"
+
+    echo "# Materialised Proof Scripts (Day 215 Phase 7 sprint 3 #3)" > "$OUT_MD"
+    echo "" >> "$OUT_MD"
+    echo "Each row shows the tactic script suggested by \`aesop?\` / \`duper?\` for benchmarks that PASS." >> "$OUT_MD"
+    echo "" >> "$OUT_MD"
+    echo "Source benchmark: $BENCHMARK" >> "$OUT_MD"
+    echo "" >> "$OUT_MD"
+    echo "| id | tool | suggested script |" >> "$OUT_MD"
+    echo "|---|---|---|" >> "$OUT_MD"
+
+    while IFS= read -r ID; do
+      ENTRY=$(jq --arg id "$ID" '.benchmarks[] | select(.id == $id)' "$BENCHMARK")
+      STMT=$(echo "$ENTRY" | jq -r '.statement')
+      PREMISES=$(echo "$ENTRY" | jq -r '.premises_form')
+      IMPORTS=$(echo "$ENTRY" | jq -r '.imports | map("import " + .) | join("\n")')
+
+      for SOLVER in aesop duper; do
+        F="$OUT/${ID}_${SOLVER}_extract.lean"
+        if [ "$SOLVER" = "aesop" ]; then
+          TACTIC="aesop?"
+        else
+          TACTIC="duper? $PREMISES"
+        fi
+        cat > "$F" <<EOF
+import AgentSpec
+$IMPORTS
+
+example $STMT := by $TACTIC
+EOF
+        OUTPUT=$(cd "$AGENT_SPEC_LIB" && lake env lean "$F" 2>&1 | head -20)
+        # Extract "Try this: ..." block (multi-line capture, take suggested tactic line)
+        SCRIPT=$(echo "$OUTPUT" | awk '/^Try this:/{flag=1; next} flag && NF{print; exit}' | sed 's/^[[:space:]]*//;s/^\[apply\][[:space:]]*//')
+        if [ -n "$SCRIPT" ]; then
+          # Escape pipes for markdown table
+          SCRIPT_ESCAPED=$(echo "$SCRIPT" | sed 's/|/\\|/g')
+          echo "| \`$ID\` | $SOLVER | \`$SCRIPT_ESCAPED\` |" >> "$OUT_MD"
+        else
+          echo "| \`$ID\` | $SOLVER | (FAIL or no suggestion) |" >> "$OUT_MD"
+        fi
+      done
+    done < <(jq -r '.benchmarks[].id' "$BENCHMARK")
+
+    echo "Materialised scripts → $OUT_MD"
+    cat "$OUT_MD"
+    ;;
+
   *)
     cat <<USAGE
 Usage:
   $0 list [benchmark-file]                       # benchmark 一覧
   $0 generate <benchmark-file> <id> [out-dir]    # solver 別 test file 生成
   $0 run [benchmark-file]                        # 全 benchmark × 全 solver 実行 + 集計
+  $0 extract [benchmark-file] [output-md]        # PASS combination で aesop?/duper? script 抽出
 
 Default benchmark: $BENCHMARK_DEFAULT
 
