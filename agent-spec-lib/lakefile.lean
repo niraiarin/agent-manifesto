@@ -22,11 +22,14 @@ package «agent-spec-lib» where
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "v4.29.0"
 
--- Week 6 で追加予定（GA-C7 SMT ハンマー統合、GA-I5 CSLib/LeanHammer 依存）:
--- require auto from git
---   "https://github.com/leanprover-community/lean-auto.git" @ "v4.29.0-hammer"
--- require Duper from git
---   "https://github.com/leanprover-community/duper.git" @ "v4.29.0"
+-- Day 209 Phase 7 sprint 1 #2: Duper integration (proof generation tier 2)
+-- lean-auto は Duper の transitive dep として必要 (Duper v4.29.0 lakefile 参照)
+require auto from git
+  "https://github.com/leanprover-community/lean-auto.git" @ "v4.29.0-hammer"
+require Duper from git
+  "https://github.com/leanprover-community/duper.git" @ "v4.29.0"
+
+-- 候補 (Phase 7 後続 sprint で評価):
 -- require CSLib from git
 --   "https://github.com/cs-lib-lean/cslib.git" @ "main"
 
