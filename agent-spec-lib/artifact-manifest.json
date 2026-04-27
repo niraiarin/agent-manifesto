@@ -4945,6 +4945,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 190 Phase 5 α step 3/3 — main merge 完遂 (PR #689 squash merged)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 5 α 完成。PR #689 (research/new-foundation → main) squash merged (commit 6a77de8)。実施: (1) main fetch + merge into research/new-foundation で 3 file conflict (.claude/hooks/p2-verify-on-commit.sh + settings.json + CLAUDE.md)、p2-verify は cd PATH + git -C PATH 両 fallback 化で combine resolution。(2) /verify CONDITIONAL (3 findings、Finding 3 = Day 122 起源 pre-existing structural risk) → user 判断 (d) で issue #690 (governance hardening follow-up) 化 + human-approved P2 token 書き込み。(3) PR 作成 → CI 3 回試行: run 1 timeout 30 min cancel → workflow timeout 60 min 拡張 → run 2 example 03 stale assertion fail (registry length 10→32 未更新、Day 172 拡充後の漏れ) → fix push → run 3 SUCCESS (45 min)。(4) gh pr merge 689 --squash 完遂、main に 391 commits → 1 squash commit に統合。research/new-foundation worktree 維持 (user 判断 #3a)。subagent dispatch (PI-8) で metadata_only 判定 (本 entry は merge governance、Lean 変更なし)。",
+      "scope": "Phase 5 α 完遂、agent-spec-lib v0.1.0 + agent-manifesto Phase 0-4 全成果が main に永続化。",
+      "change_category": "metadata_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "bcc665e70563092430f8fd9c907ed28fac145b7e642c0cb2d394406e89e0c9b3",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
