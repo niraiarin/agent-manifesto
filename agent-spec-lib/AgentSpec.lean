@@ -89,6 +89,9 @@ import AgentSpec.Manifest.Foundation.StatisticalTesting
 import AgentSpec.Manifest.Foundation.Probability
 import AgentSpec.Manifest.Foundation.RiskTheory
 
+-- Day 184 PI-12 follow-up: V1-V7 MeasurableSemantic instances (named axiom 経由)
+import AgentSpec.Tooling.V_MeasurableSemanticInstances
+
 -- Day 171 Phase 2: DF root integration 完成 (70 symbol cross-file dedup 完了)
 import AgentSpec.Manifest.DesignFoundation
 import AgentSpec.Manifest.TaskClassification
