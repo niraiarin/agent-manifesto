@@ -14,8 +14,8 @@ namespace AgentSpec.Examples.OpaqueOrigin
 
 open AgentSpec.Tooling
 
-/-- registry サイズ (Day 160 initial: 10 entry)。 -/
-example : opaqueOriginRegistry.length = 10 := by decide
+/-- registry サイズ (Day 160 initial: 10 entry → Day 172 で 32 entry に拡充、Ontology 全 opaque cover)。 -/
+example : opaqueOriginRegistry.length = 32 := by decide
 
 /-- skillQuality (V1) の origin 文字列を検索する関数の例。 -/
 def lookupOrigin (name : String) : Option String :=
@@ -25,8 +25,10 @@ def lookupOrigin (name : String) : Option String :=
 example : lookupOrigin "skillQuality" = some "benchmark.json GQM Q1 (with/without comparison)" := by
   decide
 
-/-- 未登録 opaque def は none。
-    残 22 件 (canTransition, generates 等) は incremental 追加候補 (PI-13 follow-up)。 -/
-example : lookupOrigin "canTransition" = none := by decide
+/-- canTransition は Day 172 拡充で entry 化済 (T4 由来 opaque)。 -/
+example : (lookupOrigin "canTransition").isSome = true := by decide
+
+/-- 完全に未登録の架空名は none。 -/
+example : lookupOrigin "nonexistent_opaque_xyz" = none := by decide
 
 end AgentSpec.Examples.OpaqueOrigin
