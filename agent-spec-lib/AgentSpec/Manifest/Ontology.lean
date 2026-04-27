@@ -212,6 +212,10 @@ opaque canTransition (agent : Agent) (action : Action) (w w' : World) : Prop
 def validTransition (w w' : World) : Prop :=
   ∃ (agent : Agent) (action : Action), canTransition agent action w w'
 
+/-- Action execution is blocked (constraint violation). Day 161 Axioms port のため Ontology に pre-pick。 -/
+def actionBlocked (agent : Agent) (action : Action) (w : World) : Prop :=
+  ¬∃ w', canTransition agent action w w'
+
 /-! ## Day 84 拡張: T3 用 dependency -/
 
 /-- Precision level: T8 由来、Task の要求精度 (千分率)。required > 0 不変式。 -/
