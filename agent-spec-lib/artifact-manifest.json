@@ -5289,9 +5289,25 @@
       "addressable_count": 0,
       "evaluator": "Day 209 CI failure (95d2e9c) hotfix。Root cause: CI lake build は default target (AgentSpec) のみ build、Duper olean なし、examples/15 の import Duper が unknown module prefix で fail。Fix: .github/workflows/agent-spec-lib-build.yml に lake build (agent-spec-lib) と Verify examples compile の間に lake build Duper step 追加 (1 step insertion)。local pre-commit cycle は lake build Duper standalone 実行で hide されていた、Day 209 review で気づかず。subagent (verifier) 独立: conservative extension + maintenance。cycle-check 27/27 OK。Day 211 単独 commit (sprint 1 #4 harness は Day 212+ に移動)。",
       "scope": "CI gate 修復 (Day 209 regression 解消)、Day 212+ Phase 7 sprint 1 #4 harness 着手予定。",
-      "change_category": "maintenance",
+      "change_category": "process_only",
       "subagent_dispatch": true,
       "cycle_check_log_hash": "e796457bb3be5d17c6afe6e1fed13fe8b09c58b2e71cf4dbd91eaef9bfc61591",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
+    },
+    {
+      "round": "Day 212 Phase 7 sprint 1 #4 single proof harness",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 7 sprint 1 #4 acceptance: single harness 完成。scripts/proof-harness.sh 新規 (list / generate / run 3 command)、benchmark-skeleton.json 新規 (5 件 minimal)、3 mode (baseline sorry / aesop / duper) で同一 theorem list 実行可能。Skeleton run results: aesop 5/5 = 100%, duper 4/5 = 80% (nat_zero_add Nat 算術で fail expected, function_equality_chain で aesop が unexpected pass = over-prediction)、baseline 5/5 design 通り。Bonus fix: Day 211 entry の change_category maintenance は schema 不許可、process_only に修正 (CI は process layer)。subagent (verifier) 独立判定予定。Phase 7 sprint 1 全 4 acceptance (#1 ✓ #2 ✓ #3 documented #4 ✓) 完成。Day 213+ Phase 7 sprint 2 (benchmark dataset 拡張) 着手予定。",
+      "scope": "Phase 7 sprint 1 完了。proof-gen harness skeleton 確立、Day 213 sprint 2 (Phase 6 spec gen output 由来 benchmark に拡張) 着手準備。",
+      "change_category": "additive_test",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "701c52e4686df4683ab12e330af26993cfdcc08cec0cdcf41a54ac05de3ae80f",
       "pass_layers": {
         "cycle_hygiene": "pass",
         "implementation": "pass",
