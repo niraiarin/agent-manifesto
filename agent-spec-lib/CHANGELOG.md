@@ -33,8 +33,22 @@
 - examples/ 未整備 (Phase 1 acceptance #3)
 - CI gate (GitHub Actions) 未稼働 (Phase 1 acceptance #5)
 
+## [Unreleased] — Phase 2 完了 (Day 171-173)
+
+### Added (Phase 2 work)
+
+- **DF root integration** (Day 171): D.lean ↔ DesignFoundation の cross-file 重複 70 symbol を解消、`import AgentSpec.Manifest.DesignFoundation/TaskClassification/Traceability` が root 経由で利用可能
+- **OpaqueOrigin registry 拡充** (Day 172): 10 → 32 entry、Ontology の opaque 全件を semantic origin tag でカバー (PI-13 完成)
+- **examples 拡充** (Day 173): 4 → 5 件 (`05_design_foundation_root.lean` 追加)
+- lake build 432 PASS、Manifest 100% root accessible
+
+### Phase 2 NOT goals (Phase 3 候補)
+
+- Theorem coverage 100% port (現 32%)
+- Tooling 層の semantic 保証強化拡大 (PI-12 / PI-13 follow-up)
+- 別 research priority への分岐
+
 ## [Unreleased] — 0.1.0 stable に向けて
 
-- examples/ 3-5 件追加 (Phase 1 #3)
-- CI gate 整備 (Phase 1 #5)
-- DesignFoundation 部分 port または public def での意味的代替 (Phase 1 #1 完成度)
+- 本 worktree (research/new-foundation) を main へ merge (PR)
+- v0.1.0 stable tag (現 v0.1.0-rc1 維持)
