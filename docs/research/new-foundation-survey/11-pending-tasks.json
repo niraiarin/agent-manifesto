@@ -926,10 +926,11 @@
       "section": "2.14",
       "topic": "[Phase 3 Theme A] API breaking change auto-detect (Day cycle 自動 audit)",
       "mark": "🟡",
-      "status": "deferred",
+      "status": "done",
       "timing": "Phase 3 Theme A 内 (Day 174-178)",
       "decision_deadline": 250,
-      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。Phase 4+ で着手予定 (deadline=Day250 = 70 day grace、API 安定化要請が顕在化したら priority up)。"
+      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。Phase 4+ で着手予定 (deadline=Day250 = 70 day grace、API 安定化要請が顕在化したら priority up)。",
+      "resolved_day": 181
     },
     {
       "id": "PI-16",
@@ -3641,6 +3642,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 177 (遡及 entry、Day 180 audit で識別) 9-step。Day 176-177 を 1 commit に batched したが、PI-5 (1 commit/Day) は同 Day 内の複数 commit 統合の意図であり Day 跨ぎ batch ではない。Day 177 cycle entry を遡及作成。Step 1 reference read (governance/USAGE.md design)。Step 3a PoC (USAGE.md walkthrough draft)、Step 3b TyDD eval。Step 4 implementation: governance/USAGE.md 新設 (Day 176-177 batched commit に含む)。Step 7 mandatory checklist (cycle-check.sh PASS 当時、Day 180 audit で再検証)。Step 5 verifier_history Day 176-177 entry (batched)、Step 9 update-handoff。additive_test (Day 176-177 batched commit に統合)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 181,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 181 PI-5 規律 + PI-15 初期 9-step。Step 1 reference read (Day 180 audit + AgentSpec.lean root + API_SURFACE.md)。Step 3a PoC (memory feedback draft + Check 25 regex design)、Step 3b TyDD eval。Step 4 implementation: feedback_pi5_interpretation.md + MEMORY.md update + cycle-check Check 25。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-25 OK、Check 25 で 2 false positive 検出 = 動作確認済)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 182 Phase 4 候補消化継続 (refinement / γ Foundation / ε 別 priority、user direction 待ち)。",
       "steps_completed": [
         1,
         2,

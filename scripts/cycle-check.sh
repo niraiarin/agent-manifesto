@@ -615,6 +615,41 @@ else
   WARN=1
 fi
 
+# ----- Check 25: API surface drift detection (PI-15、Day 181) -----
+# AgentSpec.lean root の現 imports と API_SURFACE.md 記載 module の差分検出。
+# stable module の root import 削除 (= breaking change) を auto-detect。
+# Phase 4 で signature-level audit に拡張予定。
+API_ROOT="$REPO_ROOT/agent-spec-lib/AgentSpec.lean"
+API_SURFACE="$REPO_ROOT/agent-spec-lib/API_SURFACE.md"
+if [ -f "$API_ROOT" ] && [ -f "$API_SURFACE" ]; then
+  # 現 root imports
+  CURRENT_IMPORTS=$(grep -oE "^import AgentSpec\.[A-Za-z][A-Za-z0-9_.]*" "$API_ROOT" | awk '{print $2}' | sort -u)
+  # API_SURFACE 記載の stable module (`AgentSpec.X` 形式の引用、AgentSpec.lean 自体は除外)
+  SURFACE_MODULES=$(grep -oE "AgentSpec\.[A-Za-z][A-Za-z0-9_.]*" "$API_SURFACE" | grep -v "^AgentSpec\.lean$" | sort -u)
+  # 差分: surface に記載あるが current import に無い (= 削除候補 = breaking risk)
+  REMOVED=$(comm -23 <(echo "$SURFACE_MODULES") <(echo "$CURRENT_IMPORTS"))
+  if [ -n "$REMOVED" ]; then
+    REMOVED_COUNT=$(echo "$REMOVED" | wc -l | tr -d ' ')
+    # API_SURFACE.md に記載されているが、Manifest.X の親 namespace のみ言及などの noise を除外
+    # (例: "AgentSpec.Manifest.Framework.*" pattern は親 namespace、import は子 module)
+    # 親 namespace pattern (`AgentSpec.X` で sub-module 持つもの) の dot 数 = 2 を許容
+    REMOVED_FILTERED=$(echo "$REMOVED" | grep -v "^AgentSpec\.\(Manifest\|Tooling\|Spine\|Process\|Provenance\|Manifest\.Framework\|Manifest\.Models\|Manifest\.Models\.Assumptions\)$" || true)
+    if [ -n "$REMOVED_FILTERED" ]; then
+      FILT_COUNT=$(echo "$REMOVED_FILTERED" | wc -l | tr -d ' ')
+      echo "[25] WARN  API_SURFACE.md 記載 module で root import 不在 ${FILT_COUNT} 件 (breaking risk):"
+      echo "$REMOVED_FILTERED" | sed 's/^/    /'
+      WARN=1
+    else
+      echo "[25] OK  API surface drift なし (root imports = ${API_ROOT##*/} の AgentSpec.* 全 covered)"
+    fi
+  else
+    echo "[25] OK  API surface drift なし"
+  fi
+else
+  echo "[25] WARN  API_SURFACE.md or AgentSpec.lean 不在 (PI-15 setup 未完?)"
+  WARN=1
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="
