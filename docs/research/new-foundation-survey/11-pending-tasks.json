@@ -948,10 +948,11 @@
       "section": "2.14",
       "topic": "[Phase 5 A1] Statement parity audit (source ↔ port theorem statement byte 比較)",
       "mark": "🔴",
-      "status": "pending",
+      "status": "done",
       "timing": "Phase 5 Day 192-194",
       "decision_deadline": 207,
-      "detail": "Day 191 Phase 5 plan 起源。lean-formalization/Manifest/* と agent-spec-lib/AgentSpec/Manifest/* で同名 axiom/theorem の statement を namespace prefix を modulo で比較、divergence を検出する script (scripts/check-source-port-parity.sh)。"
+      "detail": "Day 191 Phase 5 plan 起源。lean-formalization/Manifest/* と agent-spec-lib/AgentSpec/Manifest/* で同名 axiom/theorem の statement を namespace prefix を modulo で比較、divergence を検出する script (scripts/check-source-port-parity.sh)。",
+      "resolved_day": 192
     },
     {
       "id": "PI-18",
@@ -3881,6 +3882,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 191 Phase 5 plan setup 9-step。Step 1 reference read (Day 187 三面評価 + survey GA-E5)。Step 3a PoC (acceptance criteria 5 項目設計)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/07-phase5-acceptance-draft.md + PI-17/18/19/20 + Phase5 tier。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 192 PI-17 (Statement parity audit) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 192,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 192 Phase 5 #1 PI-17 9-step。Step 1 reference read (source/port directory layout)。Step 3a PoC (awk match vs grep+sed dry-run、BSD awk 制限で grep+sed 採用)、Step 3b TyDD eval。Step 4 implementation: check-source-port-parity.sh + parity-allow-list.txt + 13 divergence triage。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 193+ PI-18 (axiom dependency parity) 着手予定。",
       "steps_completed": [
         1,
         2,

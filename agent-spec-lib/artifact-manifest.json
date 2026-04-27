@@ -4977,6 +4977,22 @@
         "implementation": "pass",
         "evaluation": "n_a"
       }
+    },
+    {
+      "round": "Day 192 Phase 5 PI-17 — Statement parity audit script (process_only)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-17 (Phase 5 #1 Statement parity audit) 完成。scripts/check-source-port-parity.sh 新設: lean-formalization/Manifest/* と agent-spec-lib/AgentSpec/Manifest/* で同名 axiom/theorem の statement を namespace prefix を modulo で比較。動作: 538 common decls, 525 byte-identical (97.6%), 13 allow-listed divergent (PI-9 native_decide → decide 11 + governed_update_classified + breaking_in_diff_is_breaking + classify_snoc_ge), unallowed div = 0 → PASS。107 source-only (port で未実装、既知)。scripts/parity-allow-list.txt で known divergences を documented。Phase 5 #1 acceptance 達成、Phase 5 進捗 1/5。subagent dispatch (PI-8) で process_only 判定。",
+      "scope": "Phase 5 #1 達成、source-port statement parity を継続監視可能化。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "c41137a71a20429f318f5efd2026efc4a4e9d0192d26bb53fe9533c54030f359",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
