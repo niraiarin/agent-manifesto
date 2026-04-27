@@ -926,20 +926,20 @@
       "section": "2.14",
       "topic": "[Phase 3 Theme A] API breaking change auto-detect (Day cycle 自動 audit)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "deferred",
       "timing": "Phase 3 Theme A 内 (Day 174-178)",
-      "decision_deadline": 178,
-      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。"
+      "decision_deadline": 250,
+      "detail": "Day 174 Phase 3 plan 起源。v0.1.0 stable に向け API freeze。各 commit の export (AgentSpec.lean root) の signature 差分を audit、breaking 変更を Day cycle で構造的に検出。Phase 2 で発生した cross-file 重複型の問題再発防止。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。Phase 4+ で着手予定 (deadline=Day250 = 70 day grace、API 安定化要請が顕在化したら priority up)。"
     },
     {
       "id": "PI-16",
       "section": "2.14",
       "topic": "[Phase 3 Theme B] examples compile gate を CI に組込み",
       "mark": "🟢",
-      "status": "pending",
+      "status": "deferred",
       "timing": "Phase 3 Theme B 内 (Day 174-182)",
-      "decision_deadline": 182,
-      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。"
+      "decision_deadline": 250,
+      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。既存 CI workflow (.github/workflows/agent-spec-lib-build.yml) で examples の compile は手動 step として include 済み、自動化は priority 低。Phase 4+ で必要時着手 (deadline=Day250)。"
     }
   ],
   "day_plan": [
@@ -3605,6 +3605,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 179 Phase 3 Theme #4 + Framework 100% 9-step。Step 1 reference read (theorem coverage breakdown + Framework deps)。Step 3a PoC (Foundation 数学依存 audit + pre-commit hook design)、Step 3b TyDD eval。Step 4 implementation: pre-commit-hook.sh template + Framework 2 file port + root import。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Day 180 Phase 3 closure 提案 (acceptance #1 部分残のみ、user 同意で v0.1.0-rc1 維持なら full close 可能)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 180,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 180 Phase 3 Final Audit + closure 9-step。Step 1 reference read (Phase 3 acceptance + PI status)。Step 3a PoC (audit metrics 集計 + retro draft)、Step 3b TyDD eval。Step 4 implementation: phase-transitions/04-day180-phase3-final-audit.md + PI-15/16 deferred + retro Day 174-179。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 着手は user direction 待ち (α/β/γ/δ/ε)。",
       "steps_completed": [
         1,
         2,
