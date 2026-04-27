@@ -21,14 +21,24 @@ fi
 # executes in the session CWD (main worktree). Extract the cd target so
 # `git diff --cached` queries the correct worktree.
 GIT_DIR=""
-# Extract via grep -oE then strip — avoids sed `\|` alternation which is GNU-only
-# (BSD sed on macOS returns empty, causing fallback to cwd). Day 122 fix.
+# Day 122 fix (research/new-foundation): cd PATH extraction via grep -oE
+# (BSD sed `\|` alternation 不可、Day 122 で grep+sed POSIX 形式に変更)
 if echo "$COMMAND" | grep -qE '^[[:space:]]*cd[[:space:]]+'; then
-GIT_DIR=$(echo "$COMMAND" | grep -oE '^[[:space:]]*cd[[:space:]]+("[^"]*"|[^ &;]+)' | head -1 | sed -E 's/^[[:space:]]*cd[[:space:]]+//' | tr -d '"')
+  GIT_DIR=$(echo "$COMMAND" | grep -oE '^[[:space:]]*cd[[:space:]]+("[^"]*"|[^ &;]+)' | head -1 | sed -E 's/^[[:space:]]*cd[[:space:]]+//' | tr -d '"')
 fi
+# main: git -C PATH extraction (fallback for non-cd invocations)
+if [ -z "$GIT_DIR" ] && echo "$COMMAND" | grep -qE 'git[[:space:]]+-C[[:space:]]+'; then
+  GIT_DIR=$(echo "$COMMAND" | grep -oE 'git[[:space:]]+-C[[:space:]]+("[^"]*"|[^[:space:]]+)' | head -1 | sed 's/git[[:space:]]*-C[[:space:]]*//' | tr -d '"')
+fi
+
+if [ -z "$GIT_DIR" ]; then
+  SEGMENT=$(echo "$COMMAND" | tr '|' '\n' | grep 'git.*commit' | head -1)
+  GIT_DIR=$(echo "$SEGMENT" | grep -oE '(^|[;&]+[[:space:]]*)cd[[:space:]]+("[^"]*"|[^ "&;]+)' | tail -1 | sed 's/.*cd[[:space:]]*//' | tr -d '"')
+fi
+
 GIT_CMD=(git)
 if [ -n "$GIT_DIR" ] && [ -d "$GIT_DIR" ]; then
-GIT_CMD=(git -C "$GIT_DIR")
+  GIT_CMD=(git -C "$GIT_DIR")
 fi
 STAGED=$("${GIT_CMD[@]}" diff --cached --name-only 2>/dev/null)
 if [ -z "$STAGED" ]; then
