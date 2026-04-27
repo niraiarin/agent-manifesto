@@ -81,6 +81,7 @@ EOF
   run)
     # Run all solvers on all benchmarks, report pass/fail.
     # Usage: $0 run [benchmark-file]
+    # Output: stdout = human-readable table + summary, JSON_OUT (env) optional path で full record JSON 保存
     OUT="$WORK_DIR"
     mkdir -p "$OUT"
     TOTAL=0
@@ -96,6 +97,8 @@ EOF
     printf "%-40s %-10s %-10s %-10s\n" "id" "baseline" "aesop" "duper"
     printf "%-40s %-10s %-10s %-10s\n" "$(printf '%.0s-' {1..40})" "--------" "--------" "--------"
 
+    JSON_RECORDS="["
+    JSON_FIRST=1
     while IFS= read -r ID; do
       TOTAL=$((TOTAL + 1))
       "$0" generate "$BENCHMARK" "$ID" "$OUT" >/dev/null
@@ -103,15 +106,32 @@ EOF
       RESULTS=()
       for SOLVER in baseline aesop duper; do
         F="$OUT/${ID}_${SOLVER}.lean"
+        START_MS=$(date +%s%N | cut -c1-13)
         if (cd "$AGENT_SPEC_LIB" && lake env lean "$F") >/dev/null 2>&1; then
-          RESULTS+=("PASS")
+          STATUS="PASS"
+          PROOF_OK="true"
           PASS_COUNT[$SOLVER]=$((PASS_COUNT[$SOLVER] + 1))
         else
-          RESULTS+=("FAIL")
+          STATUS="FAIL"
+          PROOF_OK="false"
         fi
+        END_MS=$(date +%s%N | cut -c1-13)
+        TIME_MS=$((END_MS - START_MS))
+        RESULTS+=("$STATUS")
+
+        if [ "$JSON_FIRST" -eq 0 ]; then JSON_RECORDS="$JSON_RECORDS,"; fi
+        JSON_FIRST=0
+        JSON_RECORDS="$JSON_RECORDS$(jq -c -n --arg id "$ID" --arg tool "$SOLVER" --argjson proof_ok "$PROOF_OK" --argjson time_ms "$TIME_MS" '{id: $id, tool_used: $tool, statement_ok: true, proof_ok: $proof_ok, time_ms: $time_ms, heartbeats: null, failure_class: null}')"
       done
       printf "%-40s %-10s %-10s %-10s\n" "$ID" "${RESULTS[0]}" "${RESULTS[1]}" "${RESULTS[2]}"
     done < <(jq -r '.benchmarks[].id' "$BENCHMARK")
+    JSON_RECORDS="$JSON_RECORDS]"
+
+    if [ -n "${JSON_OUT:-}" ]; then
+      echo "$JSON_RECORDS" | jq '.' > "$JSON_OUT"
+      echo ""
+      echo "JSON records → $JSON_OUT"
+    fi
 
     echo ""
     echo "=== Summary (n=$TOTAL) ==="

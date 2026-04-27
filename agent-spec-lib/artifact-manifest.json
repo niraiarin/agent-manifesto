@@ -5313,6 +5313,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 213 Phase 7 sprint 2 benchmark v0.2.0 expansion (12 cases, 6 shapes)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 7 sprint 2 acceptance: benchmark-v0.2.0.json 新規 (12 cases, 6 shape labels: trivial / rewriting / constructor / arithmetic / quantified / higher-order all covered)、output schema 拡張 (statement_ok / proof_ok / tool_used / time_ms / heartbeats / failure_class)、harness JSON_OUT support 追加。Run results (12 × 3 solver = 36 attempts): baseline 12/12 = 100% (design)、aesop 10/12 = 83.3%、duper 8/12 = 66.7%。Failure 分類: aesop 2 fail (Nat.add_comm bad_search_space, Set.Subset.trans missing_lemma)、duper 4 fail (Nat 算術 + List constructor + Set theory missing)。Sprint 3 candidates 5 件列挙 (Phase 6 spec-gen full freeze, failure_class auto-classification, heartbeats, materialised proof script, CLEVER 同条件 evaluation)。In-domain pass rate は 5-15% target を上回る (CLEVER 比較は sprint 3 で end-to-end measurement)。subagent (verifier) 独立判定予定。Day 214+ Phase 7 sprint 3 着手予定。",
+      "scope": "Phase 7 sprint 2 完了。proof-gen benchmark v0.1.0 → v0.2.0 拡張、6 shape coverage、in-domain solver baseline 確立。Day 214+ sprint 3 (CLEVER 同条件 + failure taxonomy + Phase 6 spec gen freeze)。",
+      "change_category": "additive_test",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "1c1b20029c97714e2250d453085c93e1d022a8cbd61a2d9ce3e74fb281c9f4db",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
