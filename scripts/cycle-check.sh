@@ -657,6 +657,30 @@ else
   WARN=1
 fi
 
+# ----- Check 26: OpaqueOrigin registry coverage (PI-13 follow-up、Day 185) -----
+# AgentSpec.Manifest.Ontology の opaque def 全件が
+# AgentSpec.Tooling.OpaqueOrigin.opaqueOriginRegistry に entry を持つか確認。
+# Day 172 で 32/32 完成、Phase 4 以降 opaque 追加時 registry 更新を強制。
+ONTOLOGY="$REPO_ROOT/agent-spec-lib/AgentSpec/Manifest/Ontology.lean"
+OPAQUE_ORIGIN="$REPO_ROOT/agent-spec-lib/AgentSpec/Tooling/OpaqueOrigin.lean"
+if [ -f "$ONTOLOGY" ] && [ -f "$OPAQUE_ORIGIN" ]; then
+  ONTOLOGY_OPAQUES=$(grep -oE "^opaque [a-zA-Z][a-zA-Z0-9_]*" "$ONTOLOGY" | awk '{print $2}' | sort -u)
+  REGISTRY_NAMES=$(grep -oE '\("[a-zA-Z][a-zA-Z0-9_]*"' "$OPAQUE_ORIGIN" | sed 's/("//; s/"//' | sort -u)
+  MISSING=$(comm -23 <(echo "$ONTOLOGY_OPAQUES") <(echo "$REGISTRY_NAMES"))
+  if [ -n "$MISSING" ]; then
+    MCOUNT=$(echo "$MISSING" | wc -l | tr -d ' ')
+    echo "[26] WARN  Ontology opaque def で OpaqueOrigin registry 不在 ${MCOUNT} 件:"
+    echo "$MISSING" | sed 's/^/    /'
+    WARN=1
+  else
+    OCOUNT=$(echo "$ONTOLOGY_OPAQUES" | wc -l | tr -d ' ')
+    echo "[26] OK  OpaqueOrigin registry coverage 100% (Ontology opaque ${OCOUNT}/${OCOUNT})"
+  fi
+else
+  echo "[26] WARN  Ontology or OpaqueOrigin file 不在"
+  WARN=1
+fi
+
 # ----- 結果 -----
 echo ""
 echo "=== Summary ==="
