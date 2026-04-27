@@ -77,11 +77,10 @@ import AgentSpec.Tooling.CriticalPatterns
 import AgentSpec.Tooling.MeasurableSemantic
 import AgentSpec.Tooling.OpaqueOrigin
 
--- Day 165 port: DesignFoundation chain (file 単体 build PASS、root import は cross-file 重複で defer)
--- Phase 2 で D.lean との重複解消後 root import 予定。直接 import (`import AgentSpec.Manifest.DesignFoundation` 等) は可能。
--- import AgentSpec.Manifest.DesignFoundation  -- defer
--- import AgentSpec.Manifest.TaskClassification  -- defer
--- import AgentSpec.Manifest.Traceability  -- defer
+-- Day 171 Phase 2: DF root integration 完成 (70 symbol cross-file dedup 完了)
+import AgentSpec.Manifest.DesignFoundation
+import AgentSpec.Manifest.TaskClassification
+import AgentSpec.Manifest.Traceability
 import AgentSpec.Manifest.EvolveSkill
 import AgentSpec.Spine.ResearchSpecLattice
 

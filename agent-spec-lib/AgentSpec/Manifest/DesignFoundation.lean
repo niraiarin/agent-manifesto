@@ -98,22 +98,9 @@ Connection with terminology reference:
 
 -- Day 165: `minimumEnforcement` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: probabilistic_interpretation_insufficient (P5 / T4)
-    Proposition: D1
-    Content: Fixed boundaries (L1) require structural enforcement. Normative guidelines cannot guarantee L1 compliance under nondeterministic interpretation.
-    Proof strategy: rfl (definitional equality — minimumEnforcement maps .fixed to .structural) -/
-theorem d1_fixed_requires_structural :
-  minimumEnforcement .fixed = .structural := by rfl
+-- Day 171: `d1_fixed_requires_structural` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Corollary of D1: Enforcement layer strength is monotone with respect to boundary layers.
-    Enforcement strength required: fixed >= investment-variable >= environmental. -/
-theorem d1_enforcement_monotone :
-  (minimumEnforcement .fixed).strength ≥
-  (minimumEnforcement .investmentVariable).strength ∧
-  (minimumEnforcement .investmentVariable).strength ≥
-  (minimumEnforcement .environmental).strength := by
-  simp [minimumEnforcement, EnforcementLayer.strength]
+-- Day 171: `d1_enforcement_monotone` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D2: Worker/Verifier 分離の構造的実現
@@ -140,21 +127,9 @@ If E1 is falsified, D2 becomes subject to review.
 
 -- Day 165: `sufficientVerification` は port に既存 (D.lean)。重複削除。
 
-/-- Critical risk requires all four conditions.
-    Subagent (contextSeparated only) is insufficient. -/
-theorem critical_requires_all_four :
-  requiredConditions .critical = 4 := by rfl
+-- Day 171: `critical_requires_all_four` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Subagent-only verification (context separation only) is sufficient only for low risk. -/
-theorem subagent_only_sufficient_for_low :
-  let subagentOnly : VerificationIndependence :=
-    { contextSeparated := true
-      framingIndependent := false
-      executionAutomatic := false
-      evaluatorIndependent := false }
-  sufficientVerification subagentOnly .low ∧
-  ¬sufficientVerification subagentOnly .moderate := by
-  simp [sufficientVerification, satisfiedConditions, requiredConditions]
+-- Day 171: `subagent_only_sufficient_for_low` は port D.lean に既存 (DF root integration)。重複削除。
 
 /-- Backward compatibility with former validSeparation: the old 3 conditions are a subset of the new 4 conditions. -/
 def validSeparation (vs : VerificationIndependence) : Prop :=
@@ -162,17 +137,7 @@ def validSeparation (vs : VerificationIndependence) : Prop :=
   vs.framingIndependent = true ∧
   vs.executionAutomatic = true
 
-/-- [Derivation Card]
-    Derives from: verification_requires_independence (E1)
-    Proposition: D2
-    Content: Valid verification requires separation — generator and verifier must have distinct IDs and not share internal state, ensuring contextual and evaluative independence.
-    Proof strategy: Direct application of verification_requires_independence (E1) -/
-theorem d2_from_e1 :
-  ∀ (gen ver : Agent) (action : Action) (w : World),
-    generates gen action w →
-    verifies ver action w →
-    gen.id ≠ ver.id ∧ ¬sharesInternalState gen ver :=
-  verification_requires_independence
+-- Day 171: `d2_from_e1` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D3: 可観測性先行
@@ -192,33 +157,9 @@ Note: design-development-foundation.md defines 3 conditions for observability
 this formalization covers only the implication of T5. Structuring of the 3 conditions is not yet implemented.
 -/
 
-/-- [Derivation Card]
-    Derives from: no_improvement_without_feedback (T5)
-    Proposition: D3
-    Content: Feedback must precede improvement — observability is a necessary precondition for structural improvement.
-    Proof strategy: Direct application of T5 (no_improvement_without_feedback) -/
-theorem d3_observability_precedes_improvement :
-  ∀ (w w' : World),
-    structureImproved w w' →
-    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
-      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
-  no_improvement_without_feedback
+-- Day 171: `d3_observability_precedes_improvement` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: no_process_improvement_without_feedback (T5, #316)
-    Proposition: D3 (process-level)
-    Content: Process-targeted feedback must precede process improvement.
-          Observability of the process itself is a necessary precondition
-          for process improvement. This prevents "blind optimization" where
-          a process improves structures but never evaluates its own effectiveness.
-    Proof strategy: Direct application of no_process_improvement_without_feedback -/
-theorem d3_process_observability_precedes_improvement :
-  ∀ (pid : ProcessId) (w w' : World),
-    processImproved pid w w' →
-    ∃ (f : Feedback), f ∈ w'.feedbacks ∧
-      f.target = .process pid ∧
-      f.timestamp ≥ w.time ∧ f.timestamp ≤ w'.time :=
-  no_process_improvement_without_feedback
+-- Day 171: `d3_process_observability_precedes_improvement` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- Day 165: `DetectionMode` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
@@ -226,23 +167,11 @@ theorem d3_process_observability_precedes_improvement :
 
 -- Day 165: `effectivelyOptimizable` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- D3: A variable lacking any of the 3 conditions is merely a nominal optimization target. -/
-theorem d3_partial_observability_insufficient :
-  ¬effectivelyOptimizable ⟨true, true, .structurallyQueryable, false⟩ ∧
-  ¬effectivelyOptimizable ⟨true, false, .structurallyQueryable, true⟩ ∧
-  ¬effectivelyOptimizable ⟨false, true, .structurallyQueryable, true⟩ := by
-  refine ⟨?_, ?_, ?_⟩ <;> simp [effectivelyOptimizable]
+-- Day 171: `d3_partial_observability_insufficient` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D3: Effective only when all 3 conditions hold and detection is structurally queryable. -/
-theorem d3_full_observability_sufficient :
-  effectivelyOptimizable ⟨true, true, .structurallyQueryable, true⟩ := by
-  simp [effectivelyOptimizable]
+-- Day 171: `d3_full_observability_sufficient` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D3 refinement (Run 41): Human-readable but structurally non-queryable detection is insufficient.
-    Merely writing in notes is ineffective even if degradationDetectable = true. -/
-theorem d3_human_readable_insufficient :
-  ¬effectivelyOptimizable ⟨true, true, .humanReadable, true⟩ := by
-  simp [effectivelyOptimizable]
+-- Day 171: `d3_human_readable_insufficient` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D4: 漸進的自己適用
@@ -353,31 +282,15 @@ Rationale: T8 (precision level) + P4 (observability) + P6 (constraint satisfacti
 
 -- Day 165: `TestKind` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: task_has_precision (T8)
-    Proposition: D5
-    Content: Tests must have non-zero precision — a task with precision level 0 is meaningless and cannot support meaningful optimization or acceptance criteria.
-    Proof strategy: Direct application of task_has_precision (T8) -/
-theorem d5_test_has_precision :
-  ∀ (task : Task),
-    task.precisionRequired.required > 0 :=
-  task_has_precision
+-- Day 171: `d5_test_has_precision` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- Day 165: `specLayerOrder` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- D5: The three layers are strictly ordered. -/
-theorem d5_layer_sequential :
-  specLayerOrder .formalSpec < specLayerOrder .acceptanceTest ∧
-  specLayerOrder .acceptanceTest < specLayerOrder .implementation := by
-  simp [specLayerOrder]
+-- Day 171: `d5_layer_sequential` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- Day 165: `testDeterministic` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- D5 + T4: Structural tests are deterministic, behavioral tests are probabilistic. -/
-theorem d5_structural_test_deterministic :
-  testDeterministic .structural = true ∧
-  testDeterministic .behavioral = false := by
-  constructor <;> rfl
+-- Day 171: `d5_structural_test_deterministic` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D5: SpecLayer 半順序型クラスインスタンス（Run 61 追加）
@@ -424,32 +337,15 @@ BoundaryLayer, BoundaryId, and Mitigation are already defined in Ontology.lean.
 Here we express the design principles as theorems.
 -/
 
-/-- Rationale for D6: Variables corresponding to fixed boundaries can only improve mitigation quality. -/
-theorem d6_fixed_boundary_mitigated :
-  boundaryLayer .ethicsSafety = .fixed ∧
-  boundaryLayer .ontological = .fixed := by
-  simp [boundaryLayer]
+-- Day 171: `d6_fixed_boundary_mitigated` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- Day 165: `DesignStage` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
 -- Day 165: `designStageOrder` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: designStageOrder (definitional)
-    Proposition: D6
-    Content: The three-stage design is strictly ordered — identifyBoundary < designMitigation < defineVariable. The stage ordering function assigns monotonically increasing natural numbers.
-    Proof strategy: simp [designStageOrder] — unfold the ordering function and reduce to Nat inequalities -/
-theorem d6_stage_sequential :
-  designStageOrder .identifyBoundary < designStageOrder .designMitigation ∧
-  designStageOrder .designMitigation < designStageOrder .defineVariable := by
-  simp [designStageOrder]
+-- Day 171: `d6_stage_sequential` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D6: Reverse direction prohibited. Do not attempt to directly improve variables (Goodhart's Law trap).
-    The variable stage is last; there is no backtracking from variables to boundary conditions or mitigations. -/
-theorem d6_no_reverse :
-  ∀ (s : DesignStage),
-    designStageOrder .identifyBoundary ≤ designStageOrder s := by
-  intro s; cases s <;> simp [designStageOrder]
+-- Day 171: `d6_no_reverse` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D6: DesignStage 半順序型クラスインスタンス（Run 61 追加）
@@ -496,30 +392,9 @@ Accumulation is bounded (trust_accumulates_gradually),
 damage is unbounded (trust_decreases_on_materialized_risk).
 -/
 
-/-- [Derivation Card]
-    Derives from: trust_accumulates_gradually (P1)
-    Proposition: D7
-    Content: Trust accumulation is bounded — incremental increases are capped by trustIncrementBound, formalizing the asymmetry of gradual growth.
-    Proof strategy: Direct application of trust_accumulates_gradually (P1) -/
-theorem d7_accumulation_bounded :
-  ∀ (agent : Agent) (w w' : World),
-    actionSpaceSize agent w ≤ actionSpaceSize agent w' →
-    ¬riskMaterialized agent w' →
-    trustLevel agent w ≤ trustLevel agent w' ∧
-    trustLevel agent w' ≤ trustLevel agent w + trustIncrementBound :=
-  trust_accumulates_gradually
+-- Day 171: `d7_accumulation_bounded` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: trust_decreases_on_materialized_risk (P1)
-    Proposition: D7
-    Content: Trust damage from materialized risk is unbounded — a single incident can destroy arbitrarily accumulated trust, formalizing the asymmetry of abrupt destruction.
-    Proof strategy: Direct application of trust_decreases_on_materialized_risk (P1) -/
-theorem d7_damage_unbounded :
-  ∀ (agent : Agent) (w w' : World),
-    actionSpaceSize agent w < actionSpaceSize agent w' →
-    riskMaterialized agent w' →
-    trustLevel agent w' < trustLevel agent w :=
-  trust_decreases_on_materialized_risk
+-- Day 171: `d7_damage_unbounded` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D8: 均衡探索
@@ -534,24 +409,9 @@ By overexpansion_reduces_value,
 there exist cases where expansion of the action space reduces collaborative value.
 -/
 
-/-- [Derivation Card]
-    Derives from: overexpansion_reduces_value (E2)
-    Proposition: D8
-    Content: Overexpansion of the action space can reduce collaborative value — equilibrium search is necessary to avoid value-destroying expansion.
-    Proof strategy: Direct application of overexpansion_reduces_value (E2) -/
-theorem d8_overexpansion_risk :
-  ∃ (agent : Agent) (w w' : World),
-    actionSpaceSize agent w < actionSpaceSize agent w' ∧
-    collaborativeValue w' < collaborativeValue w :=
-  overexpansion_reduces_value
+-- Day 171: `d8_overexpansion_risk` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D8's connection to P1: Capability expansion is inseparable from risk expansion.
-    Direct application of E2. -/
-theorem d8_capability_risk :
-  ∀ (agent : Agent) (w w' : World),
-    actionSpaceSize agent w < actionSpaceSize agent w' →
-    riskExposure agent w < riskExposure agent w' :=
-  capability_risk_coscaling
+-- Day 171: `d8_capability_risk` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D9: メンテナンス原理（自己適用を含む）
@@ -595,54 +455,13 @@ instance : SelfGoverning DesignPrinciple where
 
 -- Day 165: `DesignPrincipleUpdate` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: CompatibilityClass (definitional — exhaustive inductive type)
-    Proposition: D9
-    Content: Any compatibility classification belongs to exactly one of the three classes: conservativeExtension, compatibleChange, or breakingChange.
-    Proof strategy: intro c; cases c <;> simp — exhaustive case analysis on the CompatibilityClass inductive type -/
-theorem d9_update_classified :
-  ∀ (c : CompatibilityClass),
-    c = .conservativeExtension ∨
-    c = .compatibleChange ∨
-    c = .breakingChange := by
-  intro c; cases c <;> simp
+-- Day 171: `d9_update_classified` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- Day 165: `governedPrincipleUpdate` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- Self-application of D9: Proves via the SelfGoverning typeclass that
-    any update to DesignPrinciple is compatibility-classified.
+-- Day 171: `d9_self_applicable` は port D.lean に既存 (DF root integration)。重複削除。
 
-    governed_update_classified can only be called on types that have a
-    SelfGoverning instance. If DesignPrinciple does not implement
-    SelfGoverning, this theorem becomes a type error.
-    -> Missing implementations are structurally detected. -/
-theorem d9_self_applicable :
-  ∀ (_p : DesignPrinciple) (c : CompatibilityClass),
-    c = .conservativeExtension ∨ c = .compatibleChange ∨ c = .breakingChange :=
-  fun _p c => governed_update_classified _p c
-
-/-- D9 exhaustiveness: All principles D1–D17 are enumerated as update targets. -/
-theorem d9_all_principles_enumerated :
-  ∀ (p : DesignPrinciple),
-    p = .d1_enforcementLayering ∨
-    p = .d2_workerVerifierSeparation ∨
-    p = .d3_observabilityFirst ∨
-    p = .d4_progressiveSelfApplication ∨
-    p = .d5_specTestImpl ∨
-    p = .d6_boundaryMitigationVariable ∨
-    p = .d7_trustAsymmetry ∨
-    p = .d8_equilibriumSearch ∨
-    p = .d9_selfMaintenance ∨
-    p = .d10_structuralPermanence ∨
-    p = .d11_contextEconomy ∨
-    p = .d12_constraintSatisfactionTaskDesign ∨
-    p = .d13_premiseNegationPropagation ∨
-    p = .d14_verificationOrderConstraint ∨
-    p = .d15_harnessEngineering ∨
-    p = .d16_informationRelevance ∨
-    p = .d17_deductiveDesignWorkflow ∨
-    p = .d18_multiAgentCoordination := by
-  intro p; cases p <;> simp
+-- Day 171: `d9_all_principles_enumerated` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D4 の自己適用補強
@@ -737,30 +556,9 @@ Connects with P3 theorem group in Principles.lean (modifier_agent_terminates,
 modification_persists_after_termination).
 -/
 
-/-- [Derivation Card]
-    Derives from: session_bounded (T1), structure_persists (T2)
-    Proposition: D10
-    Content: Agents are ephemeral (T1) but structure persists (T2) — accumulation of improvements is possible only through structure, not through persistent agent identity.
-    Proof strategy: Constructor pair ⟨session_bounded, structure_persists⟩ — direct composition of T1 and T2 -/
-theorem d10_agent_temporary_structure_permanent :
-  -- T1: セッションは終了する
-  (∀ (w : World) (s : Session),
-    s ∈ w.sessions →
-    ∃ (w' : World), w.time ≤ w'.time ∧
-      ∃ (s' : Session), s' ∈ w'.sessions ∧
-        s'.id = s.id ∧ s'.status = SessionStatus.terminated) ∧
-  -- T2: 構造は永続する
-  (∀ (w w' : World) (s : Session) (st : Structure),
-    s ∈ w.sessions → st ∈ w.structures →
-    s.status = SessionStatus.terminated →
-    validTransition w w' → st ∈ w'.structures) :=
-  ⟨session_bounded, structure_persists⟩
+-- Day 171: `d10_agent_temporary_structure_permanent` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Corollary of D10: Writing back to structure is the sole means of accumulation.
-    Epochs (T2: structure_accumulates) increase monotonically. -/
-theorem d10_epoch_monotone :
-  ∀ (w w' : World), validTransition w w' → w.epoch ≤ w'.epoch :=
-  structure_accumulates
+-- Day 171: `d10_epoch_monotone` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D11: コンテキスト経済の定理
@@ -779,29 +577,11 @@ structural enforcement (low cost) > procedural enforcement (medium cost) > norma
 
 -- Day 165: `contextCost` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: contextCost (definitional)
-    Proposition: D11
-    Content: Enforcement power and context cost are inversely correlated — structural (0) < procedural (1) < normative (2). Higher enforcement power means lower context cost.
-    Proof strategy: simp [contextCost] — unfold the cost function and reduce to Nat inequalities -/
-theorem d11_enforcement_cost_inverse :
-  contextCost .structural < contextCost .procedural ∧
-  contextCost .procedural < contextCost .normative := by
-  simp [contextCost]
+-- Day 171: `d11_enforcement_cost_inverse` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D11: Promotion to structural enforcement reduces context cost. -/
-theorem d11_structural_minimizes_cost :
-  ∀ (e : EnforcementLayer),
-    contextCost .structural ≤ contextCost e := by
-  intro e; cases e <;> simp [contextCost]
+-- Day 171: `d11_structural_minimizes_cost` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D11 + T3: Context capacity is finite (T3), and
-    bloating of normative guidelines degrades V2 (context efficiency). -/
-theorem d11_context_finite :
-  ∀ (agent : Agent),
-    agent.contextWindow.capacity > 0 ∧
-    agent.contextWindow.used ≤ agent.contextWindow.capacity :=
-  context_finite
+-- Day 171: `d11_context_finite` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D12: 制約充足によるタスク設計定理
@@ -818,32 +598,9 @@ within finite cognitive space (T3) and finite resources (T7).
 Connects with P6 theorem group in Principles.lean.
 -/
 
-/-- [Derivation Card]
-    Derives from: task_is_constraint_satisfaction (P6)
-    Proposition: D12
-    Content: Task design is a constraint satisfaction problem over T3+T7+T8. A feasible strategy must satisfy context capacity (T3), resource budget (T7), and precision requirement (T8) simultaneously.
-    Proof strategy: Direct application of task_is_constraint_satisfaction (P6) — restatement at the design principle level -/
-theorem d12_task_is_csp :
-  ∀ (task : Task) (agent : Agent),
-    agent.contextWindow.capacity > 0 →
-    task.resourceBudget ≤ globalResourceBound →
-    task.precisionRequired.required > 0 →
-    ∀ (s : TaskStrategy),
-      s.task = task →
-      strategyFeasible s agent →
-      s.contextUsage ≤ agent.contextWindow.capacity ∧
-      s.resourceUsage ≤ globalResourceBound ∧
-      s.achievedPrecision > 0 :=
-  task_is_constraint_satisfaction
+-- Day 171: `d12_task_is_csp` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- D12: Task design itself is also probabilistic output (T4),
-    requiring verification through P2 (cognitive role separation). -/
-theorem d12_task_design_probabilistic :
-  ∃ (agent : Agent) (action : Action) (w w₁ w₂ : World),
-    canTransition agent action w w₁ ∧
-    canTransition agent action w w₂ ∧
-    w₁ ≠ w₂ :=
-  output_nondeterministic
+-- Day 171: `d12_task_design_probabilistic` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D13: 前提否定の影響波及定理
@@ -882,57 +639,19 @@ D13's substantive content is captured by:
 - `d13_assumption_impact_monotone`: Monotonicity of assumption impact
 -/
 
-/-- D13: P3's retirement operation presupposes T5 (feedback).
-    Without feedback, negation of premises cannot be detected. -/
-theorem d13_retirement_requires_feedback :
-  ∀ (w : World),
-    w.feedbacks = [] →
-    ¬(∃ (f : Feedback), f ∈ w.feedbacks ∧ f.kind = .measurement) :=
-  fun _ hnil ⟨_, hf, _⟩ => by simp [hnil] at hf
+-- Day 171: `d13_retirement_requires_feedback` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Enumeration of all propositions. Used in affected computation. -/
-def allPropositions : List PropositionId :=
-  [.t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8,
-   .e1, .e2,
-   .p1, .p2, .p3, .p4, .p5, .p6,
-   .l1, .l2, .l3, .l4, .l5, .l6,
-   .d1, .d2, .d3, .d4, .d5, .d6, .d7, .d8, .d9, .d10, .d11, .d12, .d13, .d14,
-   .d15, .d16, .d17, .d18]
+-- Day 171: `allPropositions` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Set of propositions that directly depend on proposition s (reverse edges).
-    dependencies = "what it depends on"; dependents = "what depends on it". -/
-def PropositionId.dependents (s : PropositionId) : List PropositionId :=
-  allPropositions.filter (fun p => propositionDependsOn p s)
+-- Day 171: `PropositionId.dependents` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Computes the impact set when premise s is negated.
-    Transitive closure of the reverse dependency graph.
-    The fuel parameter guarantees termination (depth <= 35 suffices since the graph is a DAG).
+-- Day 171: `affected` は port D.lean に既存 (DF root integration)。重複削除。
 
-    **Incompleteness limitation**: This function only tracks propagation among
-    named propositions enumerated in PropositionId. By Goedel's first incompleteness theorem,
-    impact on unnamed derivational consequences cannot be detected (see Ontology.lean §6.2 note). -/
-def affected (s : PropositionId) (fuel : Nat := 35) : List PropositionId :=
-  match fuel with
-  | 0 => []
-  | fuel' + 1 =>
-    let direct := s.dependents
-    let transitive := direct.flatMap (fun p => affected p fuel')
-    (direct ++ transitive).eraseDups
+-- Day 171: `d13_propagation` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Operational definition of D13: Impact propagation upon premise negation.
-    Computes the impact set via affected, representing that each proposition requires re-verification. -/
-def d13_propagation (negated : PropositionId) : List PropositionId :=
-  affected negated
+-- Day 171: `d13_constraint_negation_has_impact` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Negation of T (constraint) has the largest impact:
-    T is the rationale for many propositions, so the impact set is large. -/
-theorem d13_constraint_negation_has_impact :
-  (d13_propagation .t4).length > 0 := by native_decide
-
-/-- Negation of L5 (platform boundary) affects only D1:
-    L5 is environment-dependent and close to a root node, so its impact is limited. -/
-theorem d13_l5_limited_impact :
-  (d13_propagation .l5).length ≤ (d13_propagation .t4).length := by native_decide
+-- Day 171: `d13_l5_limited_impact` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D13 Extension: Assumption-level Impact Propagation (#225)
@@ -957,48 +676,13 @@ The bridge: an assumption maps to a set of PropositionIds it supports.
 When the assumption expires, all dependents of those PropositionIds are affected.
 -/
 
-/-- Computes the impact set when an assumption expires.
-    An assumption supports a set of propositions (its dependencies).
-    Expiration propagates through all dependents of those propositions.
+-- Day 171: `assumptionImpact` は port D.lean に既存 (DF root integration)。重複削除。
 
-    This generalizes d13_propagation (single PropositionId) to
-    assumption-level expiration (set of PropositionIds). -/
-def assumptionImpact (supportedPropositions : List PropositionId) : List PropositionId :=
-  (supportedPropositions.flatMap (fun p => affected p)).eraseDups
+-- Day 171: `assumptionImpactRaw` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Raw (pre-dedup) impact set for assumption expiration.
-    Used internally for proofs; assumptionImpact applies eraseDups on top. -/
-def assumptionImpactRaw (supportedPropositions : List PropositionId) : List PropositionId :=
-  supportedPropositions.flatMap (fun p => affected p)
+-- Day 171: `d13_assumption_subsumes_proposition` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: d13_propagation (D13), affected (D13)
-    Proposition: D13 (extension)
-    Content: Assumption expiration subsumes individual proposition negation — if an assumption supports proposition p, then the raw impact of the assumption's expiration includes all of d13_propagation p.
-    Proof strategy: List.mem_flatMap propagation -/
-theorem d13_assumption_subsumes_proposition :
-  ∀ (p : PropositionId) (supported : List PropositionId),
-    p ∈ supported →
-    ∀ (q : PropositionId),
-      q ∈ d13_propagation p →
-      q ∈ assumptionImpactRaw supported := by
-  intro p supported hp q hq
-  simp only [assumptionImpactRaw, d13_propagation] at *
-  exact List.mem_flatMap.mpr ⟨p, hp, hq⟩
-
-/-- [Derivation Card]
-    Derives from: assumptionImpactRaw (D13 extension)
-    Proposition: D13 (extension)
-    Content: Broader assumptions have broader impact — if s₁ ⊆ s₂ then assumptionImpactRaw s₁ ⊆ assumptionImpactRaw s₂. Monotonicity with respect to support set inclusion.
-    Proof strategy: Monotonicity of flatMap — superset of inputs produces superset of outputs -/
-theorem d13_assumption_impact_monotone :
-  ∀ (s₁ s₂ : List PropositionId),
-    (∀ p, p ∈ s₁ → p ∈ s₂) →
-    ∀ q, q ∈ assumptionImpactRaw s₁ → q ∈ assumptionImpactRaw s₂ := by
-  intro s₁ s₂ hsub q hq
-  simp only [assumptionImpactRaw] at *
-  obtain ⟨p, hp, hpq⟩ := List.mem_flatMap.mp hq
-  exact List.mem_flatMap.mpr ⟨p, hsub p hp, hpq⟩
+-- Day 171: `d13_assumption_impact_monotone` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- Structure-PropositionId Bridge — 二層依存追跡の統合
@@ -1029,24 +713,9 @@ def structurePropositions : StructureKind → List PropositionId
   | .test             => []
   | .document         => []
 
-/-- Set of propositions affected at the PropositionId level by changes to a StructureKind.
-    Structure change -> contained PropositionIds -> compute propagation targets via affected.
-    Integrates two-layer dependency tracking into a single pipeline. -/
-def structureToPropositionImpact (k : StructureKind) : List PropositionId :=
-  (structurePropositions k).flatMap (fun p => affected p)
-
-/-- Changes to manifest have the widest proposition-level impact.
-    Propagates to all dependents of T1-T8, E1-E2, P1-P6. -/
-theorem manifest_has_widest_impact :
-  ∀ (k : StructureKind),
-    (structureToPropositionImpact k).length ≤
-    (structureToPropositionImpact .manifest).length := by
-  intro k; cases k <;> native_decide
-
-/-- Changes to designConvention have non-empty proposition-level impact.
-    Proves that dependents of D1-D17 exist. -/
-theorem design_convention_has_impact :
-  (structureToPropositionImpact .designConvention).length > 0 := by native_decide
+-- Day 171: `structureToPropositionImpact` + 2 theorems (manifest_has_widest_impact / design_convention_has_impact) は
+-- D.lean の `affected` 削除 (Day 171 dedup) の影響で reference 切れ + native_decide 違反 (PI-9)。
+-- 同等の意味的内容は D.lean 側の affected / dependents を直接利用すること。Phase 2.1 で適切に再構築。
 
 -- ============================================================
 -- D14: 検証順序の制約充足性定理
@@ -1069,23 +738,7 @@ Information gain, risk-order (fail-fast), and cost-order are all models satisfyi
 The choice of specific method is at the L6 (design convention) level.
 -/
 
-/-- [Derivation Card]
-    Derives from: task_is_constraint_satisfaction (P6)
-    Proposition: D14
-    Content: Verification order is part of the constraint satisfaction problem — when resources are finite (T7) and precision requirements exist (T8), the choice of verification order is within the scope of P6 constraint satisfaction.
-    Proof strategy: Direct application of task_is_constraint_satisfaction (P6) — same proof term as D12, applied to verification ordering context -/
-theorem d14_verification_order_is_csp :
-  ∀ (task : Task) (agent : Agent),
-    agent.contextWindow.capacity > 0 →
-    task.resourceBudget ≤ globalResourceBound →
-    task.precisionRequired.required > 0 →
-    ∀ (s : TaskStrategy),
-      s.task = task →
-      strategyFeasible s agent →
-      s.contextUsage ≤ agent.contextWindow.capacity ∧
-      s.resourceUsage ≤ globalResourceBound ∧
-      s.achievedPrecision > 0 :=
-  task_is_constraint_satisfaction
+-- Day 171: `d14_verification_order_is_csp` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D15: Harness Engineering Theorems (ForgeCode Analysis #147)
@@ -1133,73 +786,11 @@ requires external assessment (E1). This is the formal basis for satisficing and
 adaptive computation depth policies (Phase 3c triggers, progressive thinking).
 -/
 
-/-- [Derivation Card]
-    Proposition: D15
-    Theorem: d15a_unbounded_retry_infeasible
-    Derives from: T7 (resource_finite), T4 (output_nondeterministic)
-    Content: Under finite resources, a retry count must be bounded.
-    Proof strategy: Direct contradiction — n attempts exceeding globalResourceBound contradicts ≤ bound.
+-- Day 171: `d15a_unbounded_retry_infeasible` は port D.lean に既存 (DF root integration)。重複削除。
 
-    D15a: Under finite resources, a retry count must be bounded.
-    If resourceUsage per attempt is positive and resources are globally bounded,
-    then the number of feasible attempts is bounded.
+-- Day 171: `d15b_non_convergence_requires_human` は port D.lean に既存 (DF root integration)。重複削除。
 
-    Derivation: T7 (resource_finite) + T4 (output_nondeterministic).
-    ForgeCode: max_tool_failure_per_turn. -/
-theorem d15a_unbounded_retry_infeasible :
-  ∀ (costPerAttempt : Nat),
-    costPerAttempt > 0 →
-    ∀ (n : Nat),
-      n * costPerAttempt > globalResourceBound →
-      -- n attempts would exceed the global resource bound
-      -- therefore n is not feasible
-      ¬(n * costPerAttempt ≤ globalResourceBound) := by
-  intro cost h_pos n h_exceed h_le
-  exact Nat.not_le.mpr h_exceed h_le
-
-/-- D15b: An agent that does not converge must yield to human feedback.
-    Resources are revocable by humans (T6), and improvement requires
-    feedback (T5). Therefore, non-convergence implies the need for
-    human intervention — not continued autonomous execution.
-
-    Derivation: T6 (resource_revocable) + T5 (no_improvement_without_feedback).
-    ForgeCode: max_requests_per_turn = 50.
-
-    Formalized as: for any resource allocation, a human can revoke it
-    (restating T6 in the context of non-converging agent loops). -/
-theorem d15b_non_convergence_requires_human :
-  ∀ (w : World) (alloc : ResourceAllocation),
-    alloc ∈ w.allocations →
-    ∃ (w' : World) (human : Agent),
-      isHuman human ∧
-      validTransition w w' ∧
-      alloc ∉ w'.allocations :=
-  fun w alloc h_alloc =>
-    resource_revocable w alloc h_alloc
-
-/-- D15c: Evicting zero-precision-contribution context preserves feasibility.
-    If a strategy is feasible and we reduce contextUsage while keeping
-    all other dimensions unchanged, the strategy remains feasible.
-
-    Derivation: T3 (context_finite) + T8 (task_has_precision) + P6 (CSP).
-    ForgeCode: droppable messages + compaction strategy.
-
-    This captures the invariant that removing content that does not affect
-    achievedPrecision or resourceUsage preserves strategyFeasible. -/
-theorem d15c_eviction_preserves_feasibility :
-  ∀ (s : TaskStrategy) (agent : Agent),
-    strategyFeasible s agent →
-    ∀ (s' : TaskStrategy),
-      s'.task = s.task →
-      -- eviction: context usage decreases or stays same
-      s'.contextUsage ≤ s.contextUsage →
-      -- resource usage unchanged
-      s'.resourceUsage = s.resourceUsage →
-      -- precision unchanged (evicted content had zero precision contribution)
-      s'.achievedPrecision = s.achievedPrecision →
-      strategyFeasible s' agent := by
-  intro s agent ⟨h_ctx, h_res, h_prec⟩ s' h_task h_ctx' h_res' h_prec'
-  exact ⟨Nat.le_trans h_ctx' h_ctx, h_res' ▸ (h_task ▸ h_res), h_prec' ▸ (h_task ▸ h_prec)⟩
+-- Day 171: `d15c_eviction_preserves_feasibility` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D15d: Computation Saturation (Metacognitive Termination)
@@ -1245,32 +836,7 @@ Operational instances in this project:
 
 -- Day 165: `marginalReturn` は port に既存 (D.lean / Ontology / etc)。重複削除。
 
-/-- D15d: For every task, zero-return computation steps exist.
-
-    Unlike D16a (which requires `precisionRequired > 0` as a premise),
-    D15d derives this from T8's structural guarantee (PrecisionLevel.required_pos),
-    eliminating the premise. This means: waste computation exists *unconditionally*
-    for every well-formed task — there is no task for which all possible computation
-    would be useful.
-
-    Combined with D15a (finite budget → finite steps), this establishes that
-    the set of feasible computation steps always contains waste. The saturation
-    point — where useful computation ends and waste begins — exists within
-    the feasible budget, not at its boundary.
-
-    Derivation: context_contribution_nonuniform (T3) + PrecisionLevel.required_pos (T8).
-    Axiom count: 0 new axioms. Uses context_contribution_nonuniform from T₀. -/
-theorem d15d_computation_saturation :
-  ∀ (task : Task),
-    ∃ (step : ComputationStep),
-      marginalReturn step task = 0 := by
-  intro task
-  -- T8 structural: every task has positive precision requirement
-  have h_prec := task.precisionRequired.required_pos
-  -- T3 extension: zero-contribution items exist for any such task
-  obtain ⟨item, h_zero⟩ := context_contribution_nonuniform task h_prec
-  -- Wrap as ComputationStep with minimal cost
-  exact ⟨⟨item, 1, by omega⟩, h_zero⟩
+-- Day 171: `d15d_computation_saturation` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D16: Information Relevance Theorems (ForgeCode Analysis #147 B-group)
@@ -1299,91 +865,11 @@ Rationale: context_contribution_nonuniform + T7 (resource finite) + T3 (context 
 Applicable to B5 (progressive thinking policy).
 -/
 
-/-- [Derivation Card]
-    Proposition: D16
-    Theorem: d16a_zero_contribution_items_exist
-    Derives from: T3 (context_contribution_nonuniform)
-    Content: For any task with positive precision, zero-contribution context items exist and can be evicted.
-    Proof strategy: Existential witness from context_contribution_nonuniform axiom.
+-- Day 171: `d16a_zero_contribution_items_exist` は port D.lean に既存 (DF root integration)。重複削除。
 
-    D16a: For any task with positive precision requirements,
-    there exist context items with zero precision contribution.
-    These items can be evicted without affecting task precision.
+-- Day 171: `d16b_context_composition_matters` は port D.lean に既存 (DF root integration)。重複削除。
 
-    Derivation: context_contribution_nonuniform (T3 extension).
-    ForgeCode: semantic search filters out irrelevant files (B1).
-    ForgeCode: droppable flag marks zero-contribution items (A1). -/
-theorem d16a_zero_contribution_items_exist :
-  ∀ (task : Task),
-    task.precisionRequired.required > 0 →
-    ∃ (item : ContextItem),
-      precisionContribution item task = 0 :=
-  fun task h_prec => context_contribution_nonuniform task h_prec
-
-/-- D16b: Context composition affects task feasibility.
-    Different context compositions yield different precision outcomes.
-
-    Specifically: for any task with positive precision requirements,
-    there exist two distinct context items with different precision contributions.
-    Therefore, which items are included in the finite context window (T3)
-    affects the achievable precision.
-
-    This is the formal basis for:
-    - B3: Tool naming aligned with training data increases success probability
-    - B6: Prompt composition should prioritize high-contribution information
-
-    Derivation: context_contribution_nonuniform (zero-contribution item exists)
-    + task_has_precision (T8: precision requirement > 0 implies someone must contribute).
-    If zero-contribution items exist and precision must be achieved,
-    then at least one item must have positive contribution — establishing
-    that contributions are not all equal (i.e., composition matters).
-
-    Limitation: This theorem is an encoding theorem. It conjoins D16a's conclusion
-    with the premise h_prec, which is a trivially-true pattern (premise restated in
-    conclusion). The non-trivial claim "composition matters" is justified by the
-    docstring reasoning but not formally captured — proving existence of a
-    positive-contribution item would require additional axioms or making
-    precisionContribution non-opaque. Filed as a known formalization gap. -/
-theorem d16b_context_composition_matters :
-  ∀ (task : Task),
-    task.precisionRequired.required > 0 →
-    ∃ (item : ContextItem),
-      precisionContribution item task = 0 ∧
-      task.precisionRequired.required > 0 :=
-  -- D16b differs from D16a in what it concludes:
-  -- D16a: zero-contribution items exist (pure existence)
-  -- D16b: zero-contribution items exist AND precision is required (conjunction)
-  -- The conjunction establishes that context composition is a NON-TRIVIAL
-  -- optimization problem: items that don't help coexist with a requirement
-  -- that demands help. Including zero-contribution items wastes finite
-  -- context capacity (T3) without advancing precision (T8).
-  fun task h_prec =>
-    let ⟨item, hitem⟩ := context_contribution_nonuniform task h_prec
-    ⟨item, hitem, h_prec⟩
-
-/-- D16c: Under finite resources, allocating more resources to higher-contribution
-    phases is rational. If zero-contribution items exist in the context (D16a),
-    then the resource spent processing them is wasted under T7.
-
-    This is the formal basis for B5 (progressive thinking policy):
-    phases with higher precision contribution deserve more cognitive resources.
-
-    Derivation: context_contribution_nonuniform + T7 (resource_finite).
-
-    Formalized as: given finite resources (T7, w parameter) and positive
-    precision requirements (T8), zero-contribution items exist (D16a).
-    The resource bound is accepted as a premise but the conclusion
-    depends only on D16a — the formal content is that waste exists
-    regardless of specific budget levels. The w/h_bound parameters
-    establish the resource-finite context without being used in the proof. -/
-theorem d16c_resource_follows_contribution :
-  ∀ (task : Task) (w : World),
-    task.precisionRequired.required > 0 →
-    (w.allocations.map (·.amount)).foldl (· + ·) 0 ≤ globalResourceBound →
-    ∃ (item : ContextItem),
-      precisionContribution item task = 0 := by
-  intro task w h_prec _h_bound
-  exact context_contribution_nonuniform task h_prec
+-- Day 171: `d16c_resource_follows_contribution` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D18: マルチエージェント協調の定理
@@ -1407,35 +893,9 @@ additivity). Without T7b, D12's task decomposition could not distinguish
 sequential from parallel execution, making multi-agent coordination underivable.
 -/
 
-/-- [Derivation Card]
-    Derives from: sequential_exceeds_component (T7b)
-    Proposition: D18
-    Content: For two independent tasks with positive duration, sequential execution
-      time strictly exceeds either task's individual duration. Therefore, if a time
-      budget constrains execution, parallel coordination reduces temporal cost.
-    Proof strategy: direct application of T7b -/
-theorem d18_parallel_reduces_temporal_cost :
-  ∀ (t1 t2 : Task),
-    executionDuration t1 > 0 →
-    executionDuration t2 > 0 →
-    executionDuration t1 + executionDuration t2 > executionDuration t1 :=
-  fun t1 t2 h1 h2 => (sequential_exceeds_component t1 t2 h1 h2).1
+-- Day 171: `d18_parallel_reduces_temporal_cost` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: d18_parallel_reduces_temporal_cost (D18), context_finite (T3)
-    Proposition: D18
-    Content: Under finite context (T3), decomposing a task that exceeds single-agent
-      capacity (D12) into parallel subtasks is rational when time budget is constrained.
-      The time saved by parallelism can be allocated to other resource dimensions.
-    Proof strategy: combine T7b asymmetry with T3 capacity constraint -/
-theorem d18_coordination_rational_under_constraints :
-  ∀ (t1 t2 : Task),
-    executionDuration t1 > 0 →
-    executionDuration t2 > 0 →
-    -- Sequential exceeds parallel (= max component)
-    executionDuration t1 + executionDuration t2 > executionDuration t1 ∧
-    executionDuration t1 + executionDuration t2 > executionDuration t2 :=
-  fun t1 t2 h1 h2 => sequential_exceeds_component t1 t2 h1 h2
+-- Day 171: `d18_coordination_rational_under_constraints` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D17: 演繹的設計ワークフロー定理
@@ -1465,16 +925,7 @@ not an arbitrary convention. Steps cannot be reordered because each step's
 premises require the output of prior steps.
 -/
 
-/-- Steps of the deductive design workflow.
-    Each step produces output required by subsequent steps. -/
-inductive DeductiveDesignStep where
-  | investigate  -- 環境調査: T5 (feedback requires observation) + D3 (observability first)
-  | extract      -- 仮定抽出: P3 (governed learning: observation → hypothesis) + T6 (human judgment)
-  | construct    -- 公理系構築: D5 (spec/test/impl triple) + D9 (self-maintenance)
-  | derive       -- 設計導出: D1-D16 applied through conditional axiom system
-  | validate     -- 検証: E1 (verification independence) + D2 (worker/verifier)
-  | feedback     -- フィードバック: T5 (no improvement without feedback) + D13 (impact propagation)
-  deriving BEq, Repr
+-- Day 171: `DeductiveDesignStep` は port D.lean に既存 (DF root integration)。重複削除。
 
 /-!
 ## Note on step ordering
@@ -1506,97 +957,25 @@ The type connection replaces the encoding theorem ordering with
 a structural dependency: step N's output type IS step N+1's input.
 -/
 
-/-- Output of Step 0 (investigate): collected platform design decisions.
-    T4 (nondeterministic output) means a single investigation may miss PDs.
-    Mitigation: parallel agents + iterative loop + category coverage check. -/
-structure InvestigationReport where
-  platformName : String
-  decisionCount : Nat
-  sourceCount : Nat
-  /-- Number of independent investigation passes (T4 mitigation: parallel agents) -/
-  investigationPasses : Nat
-  /-- Number of platform primitive categories covered (structural completeness check) -/
-  categoriesCovered : Nat
-  /-- Total known categories for this platform -/
-  categoriesTotal : Nat
-  deriving Repr
+-- Day 171: `InvestigationReport` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Investigation completeness check.
-    Requires multiple passes (T4 mitigation) and category coverage. -/
-def investigateStepValid (r : InvestigationReport) : Bool :=
-  r.investigationPasses ≥ 2 &&    -- At least 2 independent passes
-  r.categoriesCovered == r.categoriesTotal &&  -- All categories covered
-  r.decisionCount > 0 &&
-  r.sourceCount > 0
+-- Day 171: `investigateStepValid` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Output of Step 1 (extract): assumptions with epistemic source tracking. -/
-structure AssumptionSet where
-  humanDecisionCount : Nat
-  llmInferenceCount : Nat
-  allHaveTemporalValidity : Bool
-  deriving Repr
+-- Day 171: `AssumptionSet` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Output of Step 2 (construct): conditional axiom system build result. -/
-structure ConditionalAxiomBuildResult where
-  axiomCount : Nat
-  theoremCount : Nat
-  sorryCount : Nat
-  buildSuccess : Bool
-  deriving Repr
+-- Day 171: `ConditionalAxiomBuildResult` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Output of Step 3 (derive): derived design decisions. -/
-structure DerivationOutput where
-  decisionCount : Nat
-  allAxiomsUsed : Bool
-  deriving Repr
+-- Day 171: `DerivationOutput` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Output of Step 4 (validate): accuracy measurement. -/
-structure ValidationMetrics where
-  totalPD : Nat
-  matchCount : Nat
-  partialCount : Nat
-  missCount : Nat
-  deriving Repr
+-- Day 171: `ValidationMetrics` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Verification risk level for step transitions.
-    Maps to D2's VerificationRisk via the transition's impact on soundness. -/
-def stepTransitionRisk : DeductiveDesignStep → VerificationRisk
-  | .investigate => .high      -- 0→1: investigation completeness determines all downstream quality
-  | .extract     => .high      -- 1→2: assumption correctness
-  | .construct   => .high      -- 2→3: axiom system soundness
-  | .derive      => .moderate  -- 3→4: derivation traceability
-  | .validate    => .moderate  -- 4→5: measurement reproducibility
-  | .feedback    => .low       -- terminal step
+-- Day 171: `stepTransitionRisk` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: D2 (VerificationRisk, requiredConditions), stepTransitionRisk
-    Proposition: D17 (intermediate verification)
-    Content: Steps with high-risk transitions (investigate, extract, construct) require
-      at least 3/4 independence conditions for verification.
-      investigate is high because its completeness determines all downstream quality
-      (D13 impact propagation from Step 0 deficiency reaches Step 5). -/
-theorem d17_high_risk_transitions_need_hook_verify :
-  requiredConditions (stepTransitionRisk .investigate) ≥ 3 ∧
-  requiredConditions (stepTransitionRisk .extract) ≥ 3 ∧
-  requiredConditions (stepTransitionRisk .construct) ≥ 3 := by
-  simp [stepTransitionRisk, requiredConditions]
+-- Day 171: `d17_high_risk_transitions_need_hook_verify` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: stepTransitionRisk, ConditionalAxiomBuildResult
-    Proposition: D17 (construct soundness)
-    Content: A valid construct step must produce sorryCount = 0 and buildSuccess = true.
-      These are necessary conditions for the conditional axiom system to be sound. -/
-def constructStepValid (r : ConditionalAxiomBuildResult) : Bool :=
-  r.sorryCount == 0 && r.buildSuccess
+-- Day 171: `constructStepValid` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: AssumptionSet, TemporalValidity (#225)
-    Proposition: D17 (extract completeness)
-    Content: A valid extract step must produce assumptions that all have TemporalValidity.
-      This is required by #225 (temporal validity is a fundamental property of
-      conditional axiom systems). -/
-def extractStepValid (a : AssumptionSet) : Bool :=
-  a.allHaveTemporalValidity && a.humanDecisionCount + a.llmInferenceCount > 0
+-- Day 171: `extractStepValid` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- D17 State Machine (#265): Typed state transitions with verify gates
@@ -1611,100 +990,21 @@ high-risk steps (extract, construct) require validity proofs as preconditions.
 Feedback loops reset state to the appropriate step based on D13 impact scope.
 -/
 
-/-- Workflow state: accumulates outputs of completed steps. -/
-structure WorkflowState where
-  investigation : Option InvestigationReport
-  assumptions   : Option AssumptionSet
-  axiomSystem   : Option ConditionalAxiomBuildResult
-  derivation    : Option DerivationOutput
-  validation    : Option ValidationMetrics
-  iteration     : Nat
-  deriving Repr
+-- Day 171: `WorkflowState` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Compute current step from state (no encoding theorem needed). -/
-def WorkflowState.currentStep (s : WorkflowState) : DeductiveDesignStep :=
-  if s.investigation.isNone then .investigate
-  else if s.assumptions.isNone then .extract
-  else if s.axiomSystem.isNone then .construct
-  else if s.derivation.isNone then .derive
-  else if s.validation.isNone then .validate
-  else .feedback
+-- Day 171: `WorkflowState.currentStep` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Initial workflow state: all steps pending. -/
-def WorkflowState.initial : WorkflowState :=
-  { investigation := none, assumptions := none, axiomSystem := none,
-    derivation := none, validation := none, iteration := 0 }
+-- Day 171: `WorkflowState.initial` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Feedback actions determine reset scope (D13 impact propagation). -/
-inductive FeedbackAction where
-  | addAssumption (content : String)
-  | extendCoreAxiom (content : String)
-  | markOutOfScope (pdId : String)
-  | improveWorkflow (content : String)
-  deriving Repr
+-- Day 171: `FeedbackAction` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Workflow transitions with verify gates on high-risk steps. -/
-inductive WorkflowTransition where
-  | completeInvestigation (report : InvestigationReport)
-      (verified : investigateStepValid report = true)
-  | completeExtraction (aset : AssumptionSet)
-      (verified : extractStepValid aset = true)
-  | completeConstruction (result : ConditionalAxiomBuildResult)
-      (verified : constructStepValid result = true)
-  | completeDerivation (output : DerivationOutput)
-  | completeValidation (metrics : ValidationMetrics)
-  | feedbackLoop (action : FeedbackAction)
+-- Day 171: `WorkflowTransition` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- Apply a transition to the current state.
-    Returns none if the transition is invalid for the current step. -/
-def applyTransition (s : WorkflowState) (t : WorkflowTransition) : Option WorkflowState :=
-  match t with
-  | .completeInvestigation r _ =>
-    if s.currentStep == .investigate then some { s with investigation := some r }
-    else none
-  | .completeExtraction a _ =>
-    if s.currentStep == .extract then some { s with assumptions := some a }
-    else none
-  | .completeConstruction r _ =>
-    if s.currentStep == .construct then some { s with axiomSystem := some r }
-    else none
-  | .completeDerivation o =>
-    if s.currentStep == .derive then some { s with derivation := some o }
-    else none
-  | .completeValidation m =>
-    if s.currentStep == .validate then some { s with validation := some m }
-    else none
-  | .feedbackLoop action =>
-    if s.currentStep == .feedback then
-      match action with
-      | .addAssumption _ =>
-        some { s with assumptions := none, axiomSystem := none,
-                      derivation := none, validation := none,
-                      iteration := s.iteration + 1 }
-      | .extendCoreAxiom _ =>
-        some { WorkflowState.initial with iteration := s.iteration + 1 }
-      | .markOutOfScope _ =>
-        some { s with validation := none, iteration := s.iteration + 1 }
-      | .improveWorkflow _ =>
-        some { WorkflowState.initial with iteration := s.iteration + 1 }
-    else none
+-- Day 171: `applyTransition` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- [Derivation Card]
-    Derives from: WorkflowState.initial, WorkflowState.currentStep
-    Proposition: D17 (initial state)
-    Content: The initial state starts at the investigate step.
-      This is structural — not an encoding theorem. The currentStep
-      function computes the step from the Option fields. -/
-theorem d17_initial_starts_at_investigate :
-  WorkflowState.initial.currentStep = .investigate := by rfl
+-- Day 171: `d17_initial_starts_at_investigate` は port D.lean に既存 (DF root integration)。重複削除。
 
-/-- The initial workflow state starts at the investigate step and
-    feedback with addAssumption preserves investigation while resetting downstream.
-    Combined into a single non-trivial theorem about the state machine's behavior. -/
-theorem d17_state_machine_properties :
-  WorkflowState.initial.currentStep = .investigate ∧
-  WorkflowState.initial.iteration = 0 := by
-  exact ⟨rfl, rfl⟩
+-- Day 171: `d17_state_machine_properties` は port D.lean に既存 (DF root integration)。重複削除。
 
 -- ============================================================
 -- Sorry Inventory

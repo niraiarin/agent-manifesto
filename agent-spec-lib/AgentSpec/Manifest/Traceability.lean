@@ -1,5 +1,6 @@
 import AgentSpec.Manifest.Ontology
 import AgentSpec.Manifest.DesignFoundation
+import AgentSpec.Manifest.D  -- Day 171: affected def を D.lean から取得
 
 /-!
 # Closed-Loop Traceability - Full Correspondence of Conditional Axioms and Artifacts
@@ -9,7 +10,7 @@ Conservative extension: 新しい axiom は追加しない。
 -/
 
 namespace AgentSpec.Manifest.Traceability
-open Manifest
+open AgentSpec.Manifest
 
 inductive TestAxis where
   | structural | behavioral | metrics | depgraph | quality
@@ -83,7 +84,7 @@ def TraceMatrix.closedLoop (m : TraceMatrix) : Prop :=
   m.fullPropositionCoverage ∧ m.fullTestLinkage ∧ m.fullArtifactJustification
 
 def TraceMatrix.impactedTests (m : TraceMatrix) (changed : PropositionId) : List TestCaseId :=
-  let affectedProps := Manifest.affected changed
+  let affectedProps := affected changed
   let allAffected := changed :: affectedProps
   m.propTests.filter (fun l => allAffected.any (· == l.proposition)) |>.map (·.testCase)
 
@@ -93,7 +94,7 @@ def TraceMatrix.impactedArtifacts (m : TraceMatrix) (changed : PropositionId) : 
 
 theorem closedLoop_implies_impact_covered
   (m : TraceMatrix) (p : PropositionId) (h : m.closedLoop) :
-  ∀ q ∈ Manifest.affected p, m.propositionCovered q = true := by
+  ∀ q ∈ affected p, m.propositionCovered q = true := by
   intro q _; exact h.1 q
 
 theorem closedLoop_no_uncovered
@@ -123,17 +124,17 @@ def l1TraceMatrix : TraceMatrix :=
     artifactProps := [
       ⟨l1_hook, [.l1, .t6]⟩, ⟨l1_deny, [.l1, .t6, .p1]⟩, ⟨l1_rule, [.l1]⟩ ] }
 
-theorem l1_poc_l1_covered : l1TraceMatrix.propositionCovered .l1 = true := by native_decide
-theorem l1_poc_t6_covered : l1TraceMatrix.propositionCovered .t6 = true := by native_decide
-theorem l1_poc_p1_covered : l1TraceMatrix.propositionCovered .p1 = true := by native_decide
-theorem l1_poc_s1_1_linked : l1TraceMatrix.testLinked l1_test_s1_1 = true := by native_decide
-theorem l1_poc_s1_5_linked : l1TraceMatrix.testLinked l1_test_s1_5 = true := by native_decide
-theorem l1_poc_s1_6_linked : l1TraceMatrix.testLinked l1_test_s1_6 = true := by native_decide
-theorem l1_poc_b1_1_linked : l1TraceMatrix.testLinked l1_test_b1_1 = true := by native_decide
-theorem l1_poc_b1_2_linked : l1TraceMatrix.testLinked l1_test_b1_2 = true := by native_decide
-theorem l1_poc_hook_justified : l1TraceMatrix.artifactJustified l1_hook = true := by native_decide
-theorem l1_poc_deny_justified : l1TraceMatrix.artifactJustified l1_deny = true := by native_decide
+theorem l1_poc_l1_covered : l1TraceMatrix.propositionCovered .l1 = true := by decide
+theorem l1_poc_t6_covered : l1TraceMatrix.propositionCovered .t6 = true := by decide
+theorem l1_poc_p1_covered : l1TraceMatrix.propositionCovered .p1 = true := by decide
+theorem l1_poc_s1_1_linked : l1TraceMatrix.testLinked l1_test_s1_1 = true := by decide
+theorem l1_poc_s1_5_linked : l1TraceMatrix.testLinked l1_test_s1_5 = true := by decide
+theorem l1_poc_s1_6_linked : l1TraceMatrix.testLinked l1_test_s1_6 = true := by decide
+theorem l1_poc_b1_1_linked : l1TraceMatrix.testLinked l1_test_b1_1 = true := by decide
+theorem l1_poc_b1_2_linked : l1TraceMatrix.testLinked l1_test_b1_2 = true := by decide
+theorem l1_poc_hook_justified : l1TraceMatrix.artifactJustified l1_hook = true := by decide
+theorem l1_poc_deny_justified : l1TraceMatrix.artifactJustified l1_deny = true := by decide
 theorem l1_poc_t6_impacts_tests :
-  l1TraceMatrix.impactedTests .t6 ≠ [] := by native_decide
+  l1TraceMatrix.impactedTests .t6 ≠ [] := by decide
 
 end AgentSpec.Manifest.Traceability
