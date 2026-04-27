@@ -7,8 +7,8 @@ open Lake DSL
 
 package «agent-spec-lib» where
   -- Day 162 (PI-7 Phase 1 acceptance #4): semantic version
-  -- Day 173 (Phase 2 完了、user 判断: rc1 維持 — Day 170 audit 1 で v0.1.0-rc1 維持決定)
-  version := v!"0.1.0-rc1"
+  -- Day 188 (Phase 5 α、Day 187 user direction で rc1 維持 → stable bump 振替): v0.1.0 stable
+  version := v!"0.1.0"
   leanOptions := #[
     -- GA-C27 (Trusted code 最小化): native_decide を型検査外の信頼根とする拡張を明示的に禁止
     ⟨`autoImplicit, false⟩,

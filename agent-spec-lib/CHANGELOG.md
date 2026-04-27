@@ -42,27 +42,75 @@
 - **examples 拡充** (Day 173): 4 → 5 件 (`05_design_foundation_root.lean` 追加)
 - lake build 432 PASS、Manifest 100% root accessible
 
-## [Unreleased] — 0.1.0 stable に向けて (Phase 3 (α) Full criteria)
+## [0.1.0] — 2026-04-27 (Day 188 stable release)
 
-### Theme A: Stabilization & Release (Day 175-179)
+Phase 3 (α) Full criteria + Phase 4 完了、production-ready 状態に到達。
 
-- Day 175: API_SURFACE.md 新設 (53 module stable / 10 provisional / breaking 履歴)
-- Day 176-177: CHANGELOG finalize + CONTRIBUTING.md
-- Day 178: PI-15 API breaking change auto-detect (cycle-check Check 25 候補)
-- Day 179: v0.1.0 stable tag + main merge PR prep
+### Added (Phase 3 + 4 累積)
 
-### Theme B: Production Polish (Day 185-189 並行)
+- **API_SURFACE.md** (Day 175): 79 module を stable 53 / provisional 10 に分類、breaking 履歴記録
+- **CONTRIBUTING.md** (Day 175): 互換性分類 + PI 規律 16 件 + workflow guide
+- **governance/ sub-package** (Day 176-178、Phase 3 Theme C):
+  - `install.sh`: 別 project に hooks + scripts を deploy
+  - `scripts/cycle-check.sh` + `check-doc-length.sh`
+  - `hooks/{l1-file-guard, l1-safety-check, p2-verify-on-commit}.sh`
+  - `templates/pre-commit-hook.sh` (Day 179)
+  - `README.md` + `USAGE.md` (Day 176-177)
+  - 3 例 install acceptance PASS (PI-14)
+- **examples 5 → 10 件** (Day 178、Phase 3 Theme B):
+  - `06_axiom_combination` (T1+T6 axiom 連動)
+  - `07_tooling_chain_e2e` (IsVerifyToken + agent_verify + OpaqueOrigin)
+  - `08_governance_recipe` (Use case 4 Lean side reference)
+  - `09_trust_delegation_pattern` (TrustDelegation + named axiom)
+  - `10_agent_infrastructure` (BoundaryLayer + canTransition)
+- **Foundation 6/6 port** (Day 183、Phase 4 γ):
+  - ControlTheory, InformationTheory, ProcessModel, StatisticalTesting (no mathlib)
+  - Probability (Mathlib.Probability + Log)
+  - RiskTheory (Mathlib.Order.Monotone)
+  - 17 theorem 追加
+- **PI-12 follow-up** (Day 184): V1-V7 MeasurableSemantic instances (named axiom 経由、`#print axioms` で attestation 追跡可能)
+- **PI-13 follow-up** (Day 185): cycle-check Check 26 (OpaqueOrigin registry coverage 100% enforce)
+- **PI-15** (Day 181-182): cycle-check Check 25 (API surface drift detection)
+- **PI-16** (Day 186): CI workflow に examples compile を strict mode 組込
 
-- examples 5 → 10+ 件 (各 use case ごと realistic)
-- DesignFoundation 70 theorem port
-- theorem coverage 32% → 50%
+### Process Improvement (PI 16/16 = 100% done)
 
-### Theme C: Governance Toolkit Packaging (Day 180-184) — highest priority
+- PI-1 pass_layers field、PI-2 failed_attempt + Check 21、PI-3 decision_deadline + Check 22
+- PI-4 Step 3 PoC + TyDD eval 分割、PI-5 1 commit/Day 化、PI-6 weekly_retro + Check 23
+- PI-7 Phase 0 chronological gate (Day 155 + 170 audit 2 回完遂)
+- PI-8 change_category subagent 委譲 (Day 158+ 全 entry で適用)
+- PI-9 native_decide 撤去 (11 occurrence 全置換)
+- PI-10 Hook ↔ Lean criticalPatterns sync + Check 24
+- PI-11 IsVerifyToken / TrustDelegation 二分岐
+- PI-12 + PI-13 + PI-14 + PI-15 + PI-16 (Phase 3+4 で完成)
 
-- governance/ sub-package 分離
-- install.sh による別 project deploy
-- PI-14 acceptance test (3 例 project)
+### Build & verification
 
-### Theme D: Build Improvement (optional)
+- lake build: **2056 jobs PASS**
+- sorry: 0
+- native_decide tactic: 0
+- cycle-check Check 1-26: 全 PASS
+- examples 10 件: 全 compile PASS
+- governance install: 3 例 acceptance PASS
 
-- Mathlib slim profile
+### Known limitations (Phase 5 候補)
+
+- Models 1169 JSON fixture port は production 価値 very low、defer
+- Mathlib slim profile 未着手 (Probability 1965 transitive build jobs)
+- AgentSpecTest 拡充は Phase 5 以降
+
+### Migration from 0.1.0-rc1 / rc2
+
+- breaking change なし (Phase 3+4 全て additive / process_only)
+- API_SURFACE.md の stable 53 module は freeze 対象、major version bump (v0.2.0+) で変更
+- provisional 10 module は minor version で変更可能
+
+## [Unreleased] — 次 release (v0.1.1 or v0.2.0)
+
+- Phase 5 候補 (user direction 次第):
+  - α completed (本 release で v0.1.0 達成)
+  - δ Models port (defer 維持推奨)
+  - ε 別 research priority
+  - ζ examples 11-20
+  - η Mathlib slim profile
+  - θ AgentSpecTest 拡充
