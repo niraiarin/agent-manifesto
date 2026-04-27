@@ -1,0 +1,77 @@
+name: agent-spec-lib build & verify
+
+# Day 164 (PI-7 Phase 1 acceptance #5): CI gate for agent-spec-lib.
+# Reads only repository-controlled inputs (no untrusted issue/PR body content).
+
+on:
+  push:
+    branches:
+      - main
+      - 'research/**'
+    paths:
+      - 'agent-spec-lib/**'
+      - '.github/workflows/agent-spec-lib-build.yml'
+  pull_request:
+    paths:
+      - 'agent-spec-lib/**'
+      - '.github/workflows/agent-spec-lib-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Lean 4 build + verify (agent-spec-lib)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan + Lean 4
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache Lake build artifacts
+        uses: actions/cache@v4
+        with:
+          path: agent-spec-lib/.lake
+          key: lake-${{ runner.os }}-${{ hashFiles('agent-spec-lib/lakefile.lean', 'agent-spec-lib/lean-toolchain') }}
+          restore-keys: |
+            lake-${{ runner.os }}-
+
+      - name: lake build (agent-spec-lib)
+        working-directory: agent-spec-lib
+        run: lake build
+
+      - name: Verify examples compile
+        working-directory: agent-spec-lib
+        run: |
+          for f in examples/*.lean; do
+            echo "=== $f ==="
+            lake env lean "$f"
+          done
+
+      - name: Sanity check — sorry / axiom counts
+        working-directory: agent-spec-lib
+        run: |
+          SORRY=$(grep -rE "^  *sorry$|by sorry|:= sorry" AgentSpec/ --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
+          AXIOMS=$(grep -rE "^axiom " AgentSpec/Manifest/ --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
+          THEOREMS=$(grep -rE "^theorem " AgentSpec/ --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
+          echo "sorry: $SORRY"
+          echo "axiom (Manifest): $AXIOMS"
+          echo "theorem (total):  $THEOREMS"
+          if [ "$SORRY" -ne 0 ]; then
+            echo "FAIL: sorry detected (expected 0)"
+            exit 1
+          fi
+
+      - name: Sanity check — native_decide ban (PI-9)
+        working-directory: agent-spec-lib
+        run: |
+          NATIVE=$(grep -rE "by native_decide|^  *native_decide$" AgentSpec/ --include="*.lean" 2>/dev/null | wc -l | tr -d ' ')
+          echo "native_decide tactic uses: $NATIVE"
+          if [ "$NATIVE" -ne 0 ]; then
+            echo "FAIL: native_decide detected (PI-9 violation)"
+            grep -rnE "by native_decide|^  *native_decide$" AgentSpec/ --include="*.lean" 2>/dev/null
+            exit 1
+          fi
