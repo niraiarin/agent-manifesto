@@ -5281,6 +5281,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 211 Phase 7 sprint 1 CI hotfix (Duper build step)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Day 209 CI failure (95d2e9c) hotfix。Root cause: CI lake build は default target (AgentSpec) のみ build、Duper olean なし、examples/15 の import Duper が unknown module prefix で fail。Fix: .github/workflows/agent-spec-lib-build.yml に lake build (agent-spec-lib) と Verify examples compile の間に lake build Duper step 追加 (1 step insertion)。local pre-commit cycle は lake build Duper standalone 実行で hide されていた、Day 209 review で気づかず。subagent (verifier) 独立: conservative extension + maintenance。cycle-check 27/27 OK。Day 211 単独 commit (sprint 1 #4 harness は Day 212+ に移動)。",
+      "scope": "CI gate 修復 (Day 209 regression 解消)、Day 212+ Phase 7 sprint 1 #4 harness 着手予定。",
+      "change_category": "maintenance",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "e796457bb3be5d17c6afe6e1fed13fe8b09c58b2e71cf4dbd91eaef9bfc61591",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
