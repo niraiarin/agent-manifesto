@@ -986,6 +986,46 @@
       "decision_deadline": 207,
       "detail": "Day 191 Phase 5 plan 起源。equivalence drift (added/removed/modified theorem statement または dep mismatch) を auto detect。Check 25 (API drift) と同型 pattern。",
       "resolved_day": 195
+    },
+    {
+      "id": "PI-21",
+      "section": "2.14",
+      "topic": "[Phase 6 ζ] mathlib4-cache action 採用 (CI Mathlib transitive build skip)",
+      "mark": "🟡",
+      "status": "pending",
+      "timing": "Phase 6 (Day 197+)",
+      "decision_deadline": 250,
+      "detail": "Day 197 Day 196 PR #691 CI 観察起因: cold cache で Lean build 35-50 min。Mathlib upstream binary cache (lake-cache project / mathlib4 CI artifact) を取得すれば transitive 1965 jobs を skip 可能、CI 時間 5-10 min に短縮見込み。.github/workflows/agent-spec-lib-build.yml に lake exe cache get step 追加候補。"
+    },
+    {
+      "id": "PI-22",
+      "section": "2.14",
+      "topic": "[Phase 6 ζ] cache restore-keys 改善 (branch 跨ぎ partial restore)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Phase 6 (Day 197+)",
+      "decision_deadline": 250,
+      "detail": "Day 197 起源: GitHub Actions cache が branch scope で分離、release/phase5 等 new branch で cold cache start。restore-keys 階層化 (lake-{os}-{lakefile-hash} → lake-{os}-* → lake-{os}) で partial restore 改善。"
+    },
+    {
+      "id": "PI-23",
+      "section": "2.14",
+      "topic": "[Phase 6 ζ] Mathlib slim profile (Probability/Order subset 化)",
+      "mark": "🟡",
+      "status": "deferred",
+      "timing": "Phase 6 (Day 197+)、Phase 3 Theme D defer",
+      "decision_deadline": 250,
+      "detail": "Day 197 起源 (元 Phase 3 Theme D)。Foundation/Probability + RiskTheory が Mathlib heavy import。subset profile (Probability.PMF.Basic + Order.Monotone のみ) で transitive build 数を 1965 → ~500 に削減見込み。"
+    },
+    {
+      "id": "PI-24",
+      "section": "2.14",
+      "topic": "[Phase 6 ζ] Lean 4.30+ upgrade (parallel elaboration 改善)",
+      "mark": "🟢",
+      "status": "pending",
+      "timing": "Phase 6 (Day 197+)、ecosystem 同期必要",
+      "decision_deadline": 280,
+      "detail": "Day 197 起源: 現 Lean 4.29.0、4.30+ で parallel elaboration 改善あり (issue tracker)。Mathlib v4.30 release 同期で安全に upgrade 可能、CI 時間追加短縮見込み。breaking 含む可能性、carefulに timing。"
     }
   ],
   "day_plan": [
@@ -3987,6 +4027,24 @@
         9
       ],
       "steps_skipped": []
+    },
+    {
+      "day": 197,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 197 Phase 6 ζ Build performance plan 反映 9-step。Step 1 reference read (PR #691 CI 観察 + Phase 3 Theme D defer)。Step 3a PoC (PI 設計 + Phase 6 tier 設計)、Step 3b TyDD eval。Step 4 implementation: PI-21〜24 + Phase6 tier + audit doc 追記。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-27 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 198 PR #691 merge 確認 + Phase 6 primary direction 待機。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
     }
   ],
   "gap_analysis": {
@@ -4831,6 +4889,26 @@
         ],
         "exit_criteria": "5 acceptance criteria 達成、4 PI 全 done、divergence documented、main へ merge",
         "spec_doc": "docs/research/new-foundation-survey/phase-transitions/07-phase5-acceptance-draft.md"
+      },
+      "Phase6": {
+        "name": "Phase 6: 候補集 (Survey P0 #5 / SMT 統合 / Atlas augment / CLEVER framework / Build performance)",
+        "user_consent_required": true,
+        "target_days": "Day 197+ (user direction で primary 候補選定)",
+        "items": [
+          "PI-21",
+          "PI-22",
+          "PI-23",
+          "PI-24"
+        ],
+        "themes": [
+          "A: Survey P0 #5 仕様生成 (highest)",
+          "B: SMT 統合 (GA-C7)",
+          "C: Atlas augment (GA-M2)",
+          "D: CLEVER framework 拡張 (GA-M1)",
+          "ζ: Build performance (PI-21〜24、CI 改善)"
+        ],
+        "exit_criteria": "user direction 次第、theme 別 acceptance criteria は Day 197+ で draft",
+        "spec_doc": "TBD (Day 197+ Phase 6 setup で作成)"
       }
     }
   }
