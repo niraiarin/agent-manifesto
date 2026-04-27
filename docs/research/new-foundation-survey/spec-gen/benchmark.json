@@ -1,0 +1,47 @@
+{
+  "$comment": "Phase 6 sprint 3 A #3 benchmark dataset (Day 204、PoC 5 件)",
+  "version": "0.1.0-rc1",
+  "schema": {
+    "id": "Lean theorem name (PI-19 registry)",
+    "natural_language_requirement": "自然言語要件 (subagent への入力)",
+    "expected_axiom_deps": "PI-19 registry の axiomDeps (期待される dependency)",
+    "expected_byte_pattern": "byte 比較用 pattern (option、subagent 出力との fuzzy match 用)"
+  },
+  "benchmarks": [
+    {
+      "id": "v1_measurable",
+      "natural_language_requirement": "V1 (skillQuality) は measurable である、つまり外部測定手続きが存在する",
+      "expected_axiom_deps": "no axioms",
+      "difficulty": "easy",
+      "expected_pass_rate": 60
+    },
+    {
+      "id": "platform_not_in_constraint_boundary",
+      "natural_language_requirement": "L5 (platform) は T1-T8 のいずれの constraint の boundary mapping にも含まれない",
+      "expected_axiom_deps": "[propext]",
+      "difficulty": "medium",
+      "expected_pass_rate": 30
+    },
+    {
+      "id": "constraint_has_boundary",
+      "natural_language_requirement": "全 ConstraintId (T1-T8) は少なくとも 1 つの BoundaryId に対応する (constraintBoundary が non-empty)",
+      "expected_axiom_deps": "[propext]",
+      "difficulty": "medium",
+      "expected_pass_rate": 30
+    },
+    {
+      "id": "d2_from_e1",
+      "natural_language_requirement": "P2 (検証独立性、cognitive_separation) は E1 (verification_requires_independence) から導出される",
+      "expected_axiom_deps": "[verification_requires_independence]",
+      "difficulty": "hard",
+      "expected_pass_rate": 15
+    },
+    {
+      "id": "observable_and",
+      "natural_language_requirement": "Observable な P と Q の連言 (P ∧ Q) も Observable である",
+      "expected_axiom_deps": "[propext]",
+      "difficulty": "medium",
+      "expected_pass_rate": 30
+    }
+  ]
+}

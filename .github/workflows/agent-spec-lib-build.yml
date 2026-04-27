@@ -1,12 +1,14 @@
 name: agent-spec-lib build & verify
 # Day 164 (PI-7 Phase 1 acceptance #5): CI gate for agent-spec-lib.
 # Day 186 PI-16: examples compile を strict mode に強化 (deferred 解消)。
+# Day 199 Phase 6 ζ PI-21+22: mathlib4-cache get + restore-keys 階層化 (cold cache 35-50 min → 5-15 min 想定)。
 # Reads only repository-controlled inputs (no untrusted issue/PR body content).
 on:
   push:
     branches:
       - main
       - 'research/**'
+      - 'release/**'
     paths:
       - 'agent-spec-lib/**'
       - '.github/workflows/agent-spec-lib-build.yml'
@@ -26,13 +28,24 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - name: Cache Lake build artifacts
+      - name: Cache Lake build artifacts (PI-22 restore-keys 階層化)
         uses: actions/cache@v4
         with:
           path: agent-spec-lib/.lake
           key: lake-${{ runner.os }}-${{ hashFiles('agent-spec-lib/lakefile.lean', 'agent-spec-lib/lean-toolchain') }}
           restore-keys: |
+            lake-${{ runner.os }}-${{ hashFiles('agent-spec-lib/lean-toolchain') }}-
             lake-${{ runner.os }}-
+      - name: Get Mathlib cache (PI-21)
+        working-directory: agent-spec-lib
+        continue-on-error: true
+        run: |
+          if [ -f "lake-manifest.json" ]; then
+            echo "=== Attempting lake exe cache get ==="
+            lake exe cache get 2>&1 | tail -20 || echo "WARN: cache get failed, falling back to full build"
+          else
+            echo "lake-manifest.json not found"
+          fi
       - name: lake build (agent-spec-lib)
         working-directory: agent-spec-lib
         run: lake build

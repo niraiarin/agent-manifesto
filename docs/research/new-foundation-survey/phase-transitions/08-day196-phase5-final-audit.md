@@ -125,15 +125,29 @@ Phase 5 work は research/new-foundation worktree 内、main へ別途 PR 化:
 
 | 候補 | tag | priority |
 |---|---|---|
+| **A. Survey P0 #5「正しい仕様の生成」** | (G2-4.1) | **P0、最重要研究領域** |
 | **B. SMT ハンマー統合** | GA-C7 | P1 |
 | **C. Atlas augment 戦略** | GA-M2 | P1 |
 | **D. CLEVER 風自己評価** | GA-M1 | P1 |
 | **E. EnvExtension Auto-Register** | GA-C9 | P1 |
 | **F. Perspective Generation / Iterative Search** | GA-C12-15 | P1 |
-| Survey P0 #5「正しい仕様の生成」 | (G2-4.1) | **P0、最重要研究領域** |
+| **ζ. Build performance** (PI-21〜24) | (本 audit 起源) | maintenance |
 
 Phase 6 primary candidate: **Survey P0 #5「正しい仕様の生成」** または **B. SMT ハンマー統合**。
 Phase 5 で証明された pattern (registry + audit + Lean 値化) を Phase 6 で extend。
+
+### Phase 6 ζ: Build performance (Day 197 PR #691 CI 観察起因)
+
+PR #691 で Lean build CI が cold cache で 35-50 min を要した観察から、CI 時間短縮の改善余地を整理:
+
+| PI | 内容 | 期待効果 |
+|---|---|---|
+| **PI-21** | mathlib4-cache action 採用 (lake exe cache get) | transitive 1965 jobs を skip、CI 5-10 min |
+| **PI-22** | cache restore-keys 改善 (branch 跨ぎ partial restore) | new branch でも partial cache hit |
+| **PI-23** | Mathlib slim profile (subset 化、Phase 3 Theme D defer 元) | transitive 1965 → ~500 |
+| **PI-24** | Lean 4.30+ upgrade (parallel elaboration 改善) | additional 短縮、ecosystem 同期必要 |
+
+これら 4 項目は Phase 6 ζ themed sprint として bundle 可能、または primary work と並列実施。
 
 ## 次 step
 
