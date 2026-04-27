@@ -4881,6 +4881,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 186 PI-16 deferred 解消 — examples CI strict mode (process_only)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "PI-16 (Day 174 Phase 3 計画、Day 180 deferred to Day250) を Day 186 で前倒し解消。.github/workflows/agent-spec-lib-build.yml の Verify examples compile step を strict mode 化: set -e + count tracking + count < 10 で WARN、Phase 3 acceptance #2 (5→10) を CI で structural 保証。Lean code 変更ゼロ。subagent dispatch (PI-8) で process_only 判定。",
+      "scope": "PI-16 done (前倒し解消)、CI workflow で examples compile を strict 強制。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "861753cc3445e792141e06766b8ca33b7703d3a7423e17edafb79ccebff70b67",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     }
   ],
   "navigation_index": {

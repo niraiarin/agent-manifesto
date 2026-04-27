@@ -1,6 +1,7 @@
 name: agent-spec-lib build & verify
 
 # Day 164 (PI-7 Phase 1 acceptance #5): CI gate for agent-spec-lib.
+# Day 186 PI-16: examples compile を strict mode に強化 (deferred 解消)。
 # Reads only repository-controlled inputs (no untrusted issue/PR body content).
 
 on:
@@ -43,13 +44,20 @@ jobs:
         working-directory: agent-spec-lib
         run: lake build
 
-      - name: Verify examples compile
+      - name: Verify examples compile (PI-16, Day 186 strict)
         working-directory: agent-spec-lib
         run: |
+          set -e
+          EXAMPLE_COUNT=0
           for f in examples/*.lean; do
-            echo "=== $f ==="
+            echo "=== compiling $f ==="
             lake env lean "$f"
+            EXAMPLE_COUNT=$((EXAMPLE_COUNT + 1))
           done
+          echo "examples compile PASS: $EXAMPLE_COUNT files"
+          if [ "$EXAMPLE_COUNT" -lt 10 ]; then
+            echo "WARN: examples count $EXAMPLE_COUNT < expected 10 (Phase 3 acceptance)" >&2
+          fi
 
       - name: Sanity check — sorry / axiom counts
         working-directory: agent-spec-lib

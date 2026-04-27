@@ -937,10 +937,11 @@
       "section": "2.14",
       "topic": "[Phase 3 Theme B] examples compile gate を CI に組込み",
       "mark": "🟢",
-      "status": "deferred",
+      "status": "done",
       "timing": "Phase 3 Theme B 内 (Day 174-182)",
       "decision_deadline": 250,
-      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。既存 CI workflow (.github/workflows/agent-spec-lib-build.yml) で examples の compile は手動 step として include 済み、自動化は priority 低。Phase 4+ で必要時着手 (deadline=Day250)。"
+      "detail": "Day 174 Phase 3 plan 起源。examples/ の compile を agent-spec-lib-build.yml に統合 (現状 separate command でのみ確認)。examples が増えても CI で自動検証。 | Day 180 Phase 3 Final Audit: 未着手のまま Phase 3 closure。既存 CI workflow (.github/workflows/agent-spec-lib-build.yml) で examples の compile は手動 step として include 済み、自動化は priority 低。Phase 4+ で必要時着手 (deadline=Day250)。",
+      "resolved_day": 186
     }
   ],
   "day_plan": [
@@ -3732,6 +3733,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 185 Check 26 9-step。Step 1 reference read (PI-13 + Ontology opaque + OpaqueOrigin)。Step 3a PoC (regex + comm dry-run)、Step 3b TyDD eval。Step 4 implementation: cycle-check.sh Check 26 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 残候補 = α/δ/ε のみ user direction 必要。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 186,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 186 PI-16 前倒し 9-step。Step 1 reference read (.github/workflows/agent-spec-lib-build.yml)。Step 3a PoC (set -e + count tracking 設計)、Step 3b TyDD eval。Step 4 implementation: workflow rewrite (full Write、deferred 解消)。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-26 全 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Phase 4 残候補 = α/δ/ε のみ user direction 必要 (continued auto mode、低 value polish work option あり)。",
       "steps_completed": [
         1,
         2,
