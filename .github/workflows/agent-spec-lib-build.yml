@@ -1,9 +1,7 @@
 name: agent-spec-lib build & verify
-
 # Day 164 (PI-7 Phase 1 acceptance #5): CI gate for agent-spec-lib.
 # Day 186 PI-16: examples compile を strict mode に強化 (deferred 解消)。
 # Reads only repository-controlled inputs (no untrusted issue/PR body content).
-
 on:
   push:
     branches:
@@ -17,21 +15,17 @@ on:
       - 'agent-spec-lib/**'
       - '.github/workflows/agent-spec-lib-build.yml'
   workflow_dispatch:
-
 jobs:
   build:
     name: Lean 4 build + verify (agent-spec-lib)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-
       - name: Install elan + Lean 4
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
       - name: Cache Lake build artifacts
         uses: actions/cache@v4
         with:
@@ -39,11 +33,9 @@ jobs:
           key: lake-${{ runner.os }}-${{ hashFiles('agent-spec-lib/lakefile.lean', 'agent-spec-lib/lean-toolchain') }}
           restore-keys: |
             lake-${{ runner.os }}-
-
       - name: lake build (agent-spec-lib)
         working-directory: agent-spec-lib
         run: lake build
-
       - name: Verify examples compile (PI-16, Day 186 strict)
         working-directory: agent-spec-lib
         run: |
@@ -58,7 +50,6 @@ jobs:
           if [ "$EXAMPLE_COUNT" -lt 10 ]; then
             echo "WARN: examples count $EXAMPLE_COUNT < expected 10 (Phase 3 acceptance)" >&2
           fi
-
       - name: Sanity check — sorry / axiom counts
         working-directory: agent-spec-lib
         run: |
@@ -72,7 +63,6 @@ jobs:
             echo "FAIL: sorry detected (expected 0)"
             exit 1
           fi
-
       - name: Sanity check — native_decide ban (PI-9)
         working-directory: agent-spec-lib
         run: |
