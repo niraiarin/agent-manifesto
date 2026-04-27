@@ -4785,6 +4785,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 177 (遡及 entry、Day 180 audit で識別) — USAGE.md drop in batched commit",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Day 180 cycle-check audit で Day 177 が cycle entry 不在と判明 (Day 176-177 batched commit に統合)。本 entry は遡及記録: 当時 governance/USAGE.md (runtime workflow walkthrough + troubleshooting + Q&A) を Day 176-177 batched commit に含めた。PI-5 (1 commit/Day) 解釈拡大の負の側面 = Day 177 が cycle 外になり cycle-check の連続性検査対象外。今後 PI-5 を「同 Day 内の複数 commit 統合」と限定解釈する規律強化。",
+      "scope": "Day 177 cycle entry 復元、PI-5 解釈の規律強化記録。",
+      "change_category": "process_only",
+      "subagent_dispatch": false,
+      "cycle_check_log_hash": "9b62fd77ff34e76a0098af2522e8140d2d581c20e76cb84a8fe7765446059fcb",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "n_a"
+      }
     }
   ],
   "navigation_index": {
