@@ -106,14 +106,29 @@ EOF
       RESULTS=()
       for SOLVER in baseline aesop duper; do
         F="$OUT/${ID}_${SOLVER}.lean"
+        STDERR_FILE="$OUT/${ID}_${SOLVER}.stderr"
         START_MS=$(date +%s%N | cut -c1-13)
-        if (cd "$AGENT_SPEC_LIB" && lake env lean "$F") >/dev/null 2>&1; then
+        # Lean writes errors to stdout, not stderr. Capture both.
+        if (cd "$AGENT_SPEC_LIB" && lake env lean "$F") >"$STDERR_FILE" 2>&1; then
           STATUS="PASS"
           PROOF_OK="true"
+          FAILURE_CLASS="null"
           PASS_COUNT[$SOLVER]=$((PASS_COUNT[$SOLVER] + 1))
         else
           STATUS="FAIL"
           PROOF_OK="false"
+          # Day 214 Phase 7 sprint 3 #2: failure_class auto-classification
+          if grep -qiE "deterministic timeout|out of time|maxHeartbeats|maximum recursion depth" "$STDERR_FILE" 2>/dev/null; then
+            FAILURE_CLASS='"timeout"'
+          elif grep -qiE "unknown identifier|unknown constant|no instance found|cannot find synthesis" "$STDERR_FILE" 2>/dev/null; then
+            FAILURE_CLASS='"missing_lemma"'
+          elif grep -qiE "made no progress|no applicable rule|exhausted|failed to solve|unable to do so" "$STDERR_FILE" 2>/dev/null; then
+            FAILURE_CLASS='"bad_search_space"'
+          elif grep -qiE "type mismatch|reconstruction failed|elaboration failed|expected type" "$STDERR_FILE" 2>/dev/null; then
+            FAILURE_CLASS='"reconstruction_failure"'
+          else
+            FAILURE_CLASS='"tooling_failure"'
+          fi
         fi
         END_MS=$(date +%s%N | cut -c1-13)
         TIME_MS=$((END_MS - START_MS))
@@ -121,7 +136,7 @@ EOF
 
         if [ "$JSON_FIRST" -eq 0 ]; then JSON_RECORDS="$JSON_RECORDS,"; fi
         JSON_FIRST=0
-        JSON_RECORDS="$JSON_RECORDS$(jq -c -n --arg id "$ID" --arg tool "$SOLVER" --argjson proof_ok "$PROOF_OK" --argjson time_ms "$TIME_MS" '{id: $id, tool_used: $tool, statement_ok: true, proof_ok: $proof_ok, time_ms: $time_ms, heartbeats: null, failure_class: null}')"
+        JSON_RECORDS="$JSON_RECORDS$(jq -c -n --arg id "$ID" --arg tool "$SOLVER" --argjson proof_ok "$PROOF_OK" --argjson time_ms "$TIME_MS" --argjson failure_class "$FAILURE_CLASS" '{id: $id, tool_used: $tool, statement_ok: true, proof_ok: $proof_ok, time_ms: $time_ms, heartbeats: null, failure_class: $failure_class}')"
       done
       printf "%-40s %-10s %-10s %-10s\n" "$ID" "${RESULTS[0]}" "${RESULTS[1]}" "${RESULTS[2]}"
     done < <(jq -r '.benchmarks[].id' "$BENCHMARK")
