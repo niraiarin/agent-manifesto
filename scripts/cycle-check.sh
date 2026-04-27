@@ -561,11 +561,11 @@ OVERDUE=$(jq -r --argjson cd "$CURRENT_DAY" '
 ' "$PENDING" 2>/dev/null)
 if [ -n "$OVERDUE" ] && [ "$OVERDUE" != "[]" ]; then
   N_OVERDUE=$(echo "$OVERDUE" | jq 'length')
-  echo "[22] NG  decision_deadline 超過 $N_OVERDUE 件 (current Day=$CURRENT_DAY、promote/retire/escalate 必須):"
+  echo "[22] NG  decision_deadline 超過 ${N_OVERDUE} 件 (current Day=${CURRENT_DAY}、promote/retire/escalate 必須):"
   echo "$OVERDUE" | jq -r '.[] | "    [\(.id)] \(.topic) — deadline=Day\(.deadline) status=\(.status)"'
   EXIT=1
 else
-  echo "[22] OK  decision_deadline 超過 なし (current Day=$CURRENT_DAY)"
+  echo "[22] OK  decision_deadline 超過 なし (current Day=${CURRENT_DAY})"
 fi
 
 # ----- Check 23: 直近 7 Day 内に weekly_retro entry 存在 (PI-6、Day 152) -----
