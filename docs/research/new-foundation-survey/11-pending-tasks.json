@@ -122,21 +122,23 @@
       "section": "6.4",
       "topic": "Day 87 P3: Day-number empirical gating (Check 3 calendar→Day#)",
       "mark": "🟡",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 88+",
       "gaps": [],
-      "detail": "Day 87 empirical #7 negative 識別。Day 78→Day 87 は calendar で同日 (Day-cycle 圧縮) → Check 3 calendar 7-day で OK 判定だが Day-number gap +9 で 2 Day overdue。Check 3 を expected_next_empirical_day = last_empirical_day + 7 で Day# gating、HARD GATE 化候補 | PI-3 deadline=Day163 (14 day grace from Day 149 = current+14)。",
-      "decision_deadline": 163
+      "detail": "Day 87 empirical #7 negative 識別。Day 78→Day 87 は calendar で同日 (Day-cycle 圧縮) → Check 3 calendar 7-day で OK 判定だが Day-number gap +9 で 2 Day overdue。Check 3 を expected_next_empirical_day = last_empirical_day + 7 で Day# gating、HARD GATE 化候補 | PI-3 deadline=Day163 (14 day grace from Day 149 = current+14)。 | Day 165 PI-3 deadline (Day163) 超過、retire 判断: 60+ Day defer 後も未稼働、現 PI 体制 (Check 21/22 等) で代替可能、本項目は cycle-check 改修としては優先順位低と判断。Phase 2 で必要なら再起。",
+      "decision_deadline": 163,
+      "resolved_day": 165
     },
     {
       "section": "6.4",
       "topic": "Day 87 Plausible: property-based test 導入 (TyDD 統合サイクル step 5)",
       "mark": "🟢",
-      "status": "pending",
+      "status": "done",
       "timing": "Day 88+",
       "gaps": [],
-      "detail": "Day 87 empirical #7 negative 識別。CLAUDE.md 新節 TyDD 統合サイクル step 5 (round-trip / property-based test) 未履行。Mathlib v4.29.0 に Plausible 含まれる、agent-spec-lib では 0 利用。GA-S15 Lattice (Day 76-77) の commutativity/associativity 等の property-based test 候補 | PI-3 deadline=Day163。",
-      "decision_deadline": 163
+      "detail": "Day 87 empirical #7 negative 識別。CLAUDE.md 新節 TyDD 統合サイクル step 5 (round-trip / property-based test) 未履行。Mathlib v4.29.0 に Plausible 含まれる、agent-spec-lib では 0 利用。GA-S15 Lattice (Day 76-77) の commutativity/associativity 等の property-based test 候補 | PI-3 deadline=Day163。 | Day 165 PI-3 deadline (Day163) 超過、retire 判断: TyDD step 5 は採用済の round-trip / property test pattern が一部 Lean 内 theorem (Day 161 Evolution) で実現、Plausible 個別導入は Phase 2 で必要時に。",
+      "decision_deadline": 163,
+      "resolved_day": 165
     },
     {
       "section": "6.4",
@@ -3391,6 +3393,24 @@
       "commit": "TBD",
       "status": "done",
       "scope": "Day 165 DF chain port surprise 9-step。Step 1 reference read。Step 3a PoC (DF dedup script + extract 25 duplicates)、Step 3b TyDD eval (S1/S4/F/B/H OK)。Step 4 implementation: DF + TaskClass + Traceability port、AgentSpec.lean に defer 注記。lake build 429 PASS。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_definition。Manifest port 100% by file 達成。Day 166 examples 拡充 or DF root integration 試行 (時間次第)。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 166,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 166 PI-3 retire + 週次 retro 9-step。Step 1 reference read (Check 22 NG output + Check 23 WARN)。Step 3a PoC (jq retire transformation dry-run)、Step 3b TyDD eval。Step 4 implementation: 2 deferred 項目 retire (Day 87 P3 + Plausible)、weekly_retro Day 156-165 追加。Step 7 mandatory checklist (cycle-check.sh PASS、Check 20-24 OK)。Step 5 verifier_history、Step 9 update-handoff。process_only。Day 167-169 Phase 2 root integration、Day 170 final audit。",
       "steps_completed": [
         1,
         2,
