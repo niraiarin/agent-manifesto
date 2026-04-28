@@ -1,0 +1,122 @@
+[
+  {
+    "id": "adv_a1_nat_add_assoc",
+    "nl_input": "自然数加算の結合律",
+    "generated_statement": "(a b c : Nat) : (a + b) + c = a + (b + c)",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "adv_a2_nat_add_comm",
+    "nl_input": "自然数加算の交換律",
+    "generated_statement": "(a b : Nat) : a + b = b + a",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "adv_a3_nat_two_mul_reverse",
+    "nl_input": "自然数の 2n と n+n は等しい",
+    "generated_statement": "(n : Nat) : 2 * n = n + n",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "adv_a4_nat_succ_eq_add_one",
+    "nl_input": "自然数の後者は 1 を足したもの",
+    "generated_statement": "(n : Nat) : Nat.succ n = n + 1",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_b1_color_decidable_neq",
+    "nl_input": "独自 3 色 enum の異なる色は decidable 不等",
+    "generated_statement": ": Color.red ≠ Color.green",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_b2_my_option_constructor_disjoint",
+    "nl_input": "独自 Option 型の two constructor 値は異なる",
+    "generated_statement": ": (MyOpt.none : MyOpt Nat) ≠ MyOpt.some 0",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_b3_my_len_zero_on_nil",
+    "nl_input": "独自 List 長関数は空リストで 0 を返す",
+    "generated_statement": ": myLen ([] : List Nat) = 0",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_c1_pos_nat_predecessor_exists",
+    "nl_input": "正の自然数には先行する自然数が存在する",
+    "generated_statement": "(n : Nat) (h : n > 0) : ∃ m, n = m + 1",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_c2_nonempty_list_has_member",
+    "nl_input": "空でないリストには要素が存在する",
+    "generated_statement": "{α : Type} (xs : List α) (h : xs ≠ []) : ∃ x, x ∈ xs",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "adv_c3_nat_le_self_double",
+    "nl_input": "任意の自然数は自身の 2 倍以下",
+    "generated_statement": "(n : Nat) : n ≤ 2 * n",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "adv_d1_manifest_test_axis_constructor_disjoint",
+    "nl_input": "AgentSpec の TestAxis 構築子 structural と behavioral は異なる",
+    "generated_statement": ": AgentSpec.Manifest.Traceability.TestAxis.structural ≠ AgentSpec.Manifest.Traceability.TestAxis.behavioral",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "adv_d2_manifest_list_length_after_cons",
+    "nl_input": "AgentSpec.SemVer のリストに要素を 1 つ加えると長さが 1 増える",
+    "generated_statement": "(v : AgentSpec.SemVer) (vs : List AgentSpec.SemVer) : (v :: vs).length = vs.length + 1",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  }
+]

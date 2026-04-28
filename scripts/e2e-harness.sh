@@ -59,12 +59,15 @@ case "$CMD" in
       STMT=$(echo "$ENTRY" | jq -r '.recorded_spec_gen_output')
       IMPORTS=$(echo "$ENTRY" | jq -r '.imports | map("import " + .) | join("\n")')
       NS_OPEN=$(echo "$ENTRY" | jq -r '.namespace_open')
+      PRELUDE=$(echo "$ENTRY" | jq -r '.prelude // ""')
 
       # Step 1: statement compile (with sorry)
       STMT_FILE="$OUT/${ID}_stmt.lean"
       cat > "$STMT_FILE" <<EOF
 $IMPORTS
 $NS_OPEN
+
+$PRELUDE
 
 theorem stub $STMT := by sorry
 EOF
@@ -95,6 +98,8 @@ $IMPORTS
 import Aesop
 import Duper
 $NS_OPEN
+
+$PRELUDE
 
 theorem stub $STMT := $TACTIC
 EOF

@@ -5425,6 +5425,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 220 Phase 8 sprint 3 adversarial mid benchmark (measurement triangle 完成)",
+      "date": "2026-04-28",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 8 sprint 3 acceptance: benchmark-adversarial-day220.json 12 case (4 design axes (a)mathlib_non_simp/(b)custom_inductive/(c)requires_cases/(d)manifest_mathlib_hybrid)、e2e-harness.sh に optional prelude field 追加 (backward compat、jq // で空文字 default、verifier subagent 独立確認済)。Run results: spec compile 12/12 = 100%, proof 7/12 = 58.3%, e2e 7/12 = 58.3%。Phase 8 measurement triangle 完成: Day 218 (Manifest in-domain) 0% / Day 220 (adversarial mid) 58.3% / Day 219 (independent common math) 91.7%。Adversarial calibration finding: 5-15% target band を 58.3% で超過、原因は deriving DecidableEq の auto-decide + 定義展開 (rfl-based simp) で aesop が浮上、CLEVER 0.6% に到達するには adversarial design を更に洗練 (deriving auto-decision 排除、definitional unfold で解けない命題群) が必要。Sprint 3 acceptance #1+#2+#4 ✓ #3 partial (Phase 8 final report は別 Day で集約)。subagent (verifier) 独立判定: conservative_extension / additive_test 確定 (backward compat 確認、jq // で safe)。Day 221+ Phase 8 final report draft + main merge prep 予定。",
+      "scope": "Phase 8 sprint 3 完了 + 重要 finding: adversarial design でも 58.3% pass = aesop の deriving DecidableEq + 定義展開 coverage が想定以上。CLEVER 0.6% claim defensible にするには adversarial calibration recipe を更に洗練 (Phase 9 candidate)。Phase 8 本質的成果は measurement triangle 完成 + bias source 同定。",
+      "change_category": "additive_test",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "096c5506b9e5a29c1063c5bd29c705dc00eb76b07c5dc1a9a6e195bff8a2468e",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
