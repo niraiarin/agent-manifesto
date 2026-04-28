@@ -5473,6 +5473,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 223 Phase 8 main merge 完遂 — PR #694 squash commit ff4c547 (metadata_only)",
+      "date": "2026-04-28",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 8 main merge 完成。PR #694 squash merge → main commit ff4c547 (mergedAt 2026-04-28T02:42:24Z, mergedBy niraiarin)。Day 216-222 7 commits を release/phase8 branch 経由で main に統合 (Phase 5/6/7 同 pattern)。CI: 両 check (Lean 4 build + verify, agent-spec-lib build & verify) SUCCESS。release/phase8 worktree retain (/private/tmp/agent-manifesto-phase8-worktree、Phase 5/6/7 と同方針)。main commit chain: 6a77de8 (Phase 0-4) → 968de33 (Phase 5) → c406008 (Phase 6) → 26a7431 (Phase 7) → ff4c547 (Phase 8) = 5 squash commits。Phase 8 measurement triangle (0% / 58.3% / 91.7%) + bias source identification + adversarial calibration recipe A-D が main 永続化完了。Day 224+ Phase 9 candidate 選定 (adversarial calibration recipe 洗練 / PI-23 Mathlib slim / PI-24 Lean 4.30 / LeanCopilot 再評価 / failure taxonomy 細分化) または別 direction 待機。subagent (verifier) 独立判定: metadata_only 確定 (post-merge bookkeeping のみ、新規 source code 変更無)。",
+      "scope": "Phase 8 完成 (main 永続化)、累積 main commit history clean (Phase 0-4 squash + Phase 5 + Phase 6 + Phase 7 + Phase 8 = 5 squash commits on main)、Day 224+ Phase 9 candidate 列挙準備。",
+      "change_category": "metadata_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "d5f82f718271442d14bf0c1163455de6dd092992436fe5cad52388c4bc9d5b00",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
