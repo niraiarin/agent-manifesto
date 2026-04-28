@@ -1,0 +1,171 @@
+{
+  "$comment": "Phase 8 sprint 3 adversarial mid benchmark (Day 220). Day 218 (Manifest in-domain) 0% と Day 219 (independent common math) 91.7% の中間 band を実現するため、(a) Mathlib lemma 存在するが simp 方向逆 / aesop default rule 対象外、(b) 自己定義 inductive 型 + lemma、(c) cases / induction 必要、(d) AgentSpec.Manifest と Mathlib hybrid の 4 軸で 12 case 設計。Target band: 5-15% pass rate (CLEVER 0.6% 比 ~10x の主張ライン)。",
+  "version": "0.3.0-adversarial",
+  "input_schema": {
+    "id": "benchmark identifier",
+    "nl_input": "自然言語要件",
+    "recorded_spec_gen_output": "Lean theorem signature: <binders> : <result type>",
+    "imports": "Lean imports required",
+    "namespace_open": "namespace context (or empty)",
+    "prelude": "(optional) helper code (custom inductive types, defs) injected before the theorem",
+    "shape": "trivial / rewriting / constructor / arithmetic / quantified / higher-order",
+    "difficulty": "adversarial-easy / adversarial-mid / adversarial-hard",
+    "design_axis": "(a) mathlib_non_simp / (b) custom_inductive / (c) requires_cases_or_induction / (d) manifest_mathlib_hybrid"
+  },
+  "output_schema": {
+    "id": "benchmark id",
+    "nl_input": "carryover",
+    "generated_statement": "spec-gen output",
+    "statement_compile_ok": "Bool",
+    "proof_attempt_tool": "string or null",
+    "proof_compile_ok": "Bool",
+    "e2e_pass": "Bool",
+    "failure_stage": "spec / proof / both / none"
+  },
+  "benchmarks": [
+    {
+      "id": "adv_a1_nat_add_assoc",
+      "nl_input": "自然数加算の結合律",
+      "recorded_spec_gen_output": "(a b c : Nat) : (a + b) + c = a + (b + c)",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "arithmetic",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(a) mathlib_non_simp",
+      "rationale": "Day 219 hard_nat_add_assoc で aesop+duper 両方 fail 確認。Mathlib に Nat.add_assoc あるが aesop default で適用されない。"
+    },
+    {
+      "id": "adv_a2_nat_add_comm",
+      "nl_input": "自然数加算の交換律",
+      "recorded_spec_gen_output": "(a b : Nat) : a + b = b + a",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "arithmetic",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(a) mathlib_non_simp",
+      "rationale": "add_assoc と同 pattern (commutativity も aesop default で fail 想定)"
+    },
+    {
+      "id": "adv_a3_nat_two_mul_reverse",
+      "nl_input": "自然数の 2n と n+n は等しい",
+      "recorded_spec_gen_output": "(n : Nat) : 2 * n = n + n",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "arithmetic",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(a) mathlib_non_simp",
+      "rationale": "Nat.two_mul は方向逆、aesop simp normalization が他方向に倒すと解けない"
+    },
+    {
+      "id": "adv_a4_nat_succ_eq_add_one",
+      "nl_input": "自然数の後者は 1 を足したもの",
+      "recorded_spec_gen_output": "(n : Nat) : Nat.succ n = n + 1",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "rewriting",
+      "difficulty": "adversarial-easy",
+      "design_axis": "(a) mathlib_non_simp",
+      "rationale": "definitional だが Nat.succ_eq_add_one が方向で issue を起こす可能性"
+    },
+    {
+      "id": "adv_b1_color_decidable_neq",
+      "nl_input": "独自 3 色 enum の異なる色は decidable 不等",
+      "recorded_spec_gen_output": ": Color.red ≠ Color.green",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "inductive Color where\n  | red\n  | green\n  | blue\n  deriving DecidableEq",
+      "shape": "constructor",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(b) custom_inductive",
+      "rationale": "自己定義 inductive、aesop に rule 無、decide で解ける可能性"
+    },
+    {
+      "id": "adv_b2_my_option_constructor_disjoint",
+      "nl_input": "独自 Option 型の two constructor 値は異なる",
+      "recorded_spec_gen_output": ": (MyOpt.none : MyOpt Nat) ≠ MyOpt.some 0",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "inductive MyOpt (α : Type) where\n  | none\n  | some : α → MyOpt α\n  deriving DecidableEq",
+      "shape": "constructor",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(b) custom_inductive",
+      "rationale": "constructor injectivity / disjointness、aesop simp で解ける可能性"
+    },
+    {
+      "id": "adv_b3_my_len_zero_on_nil",
+      "nl_input": "独自 List 長関数は空リストで 0 を返す",
+      "recorded_spec_gen_output": ": myLen ([] : List Nat) = 0",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "def myLen {α : Type} : List α → Nat\n  | [] => 0\n  | _ :: xs => myLen xs + 1",
+      "shape": "rewriting",
+      "difficulty": "adversarial-easy",
+      "design_axis": "(b) custom_inductive",
+      "rationale": "definitional 展開だが aesop default で myLen 未登録"
+    },
+    {
+      "id": "adv_c1_pos_nat_predecessor_exists",
+      "nl_input": "正の自然数には先行する自然数が存在する",
+      "recorded_spec_gen_output": "(n : Nat) (h : n > 0) : ∃ m, n = m + 1",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "quantified",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(c) requires_cases_or_induction",
+      "rationale": "Nat の cases tactic で n=0 矛盾 + n=succ k で witness 提示が必要、aesop default で cases 試行しない可能性"
+    },
+    {
+      "id": "adv_c2_nonempty_list_has_member",
+      "nl_input": "空でないリストには要素が存在する",
+      "recorded_spec_gen_output": "{α : Type} (xs : List α) (h : xs ≠ []) : ∃ x, x ∈ xs",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "quantified",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(c) requires_cases_or_induction",
+      "rationale": "List の cases で空 list 矛盾 + xs=x::ys で witness 提示"
+    },
+    {
+      "id": "adv_c3_nat_le_self_double",
+      "nl_input": "任意の自然数は自身の 2 倍以下",
+      "recorded_spec_gen_output": "(n : Nat) : n ≤ 2 * n",
+      "imports": [],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "arithmetic",
+      "difficulty": "adversarial-mid",
+      "design_axis": "(c) requires_cases_or_induction",
+      "rationale": "omega で解ける想定だが aesop default で omega 起動しない"
+    },
+    {
+      "id": "adv_d1_manifest_test_axis_constructor_disjoint",
+      "nl_input": "AgentSpec の TestAxis 構築子 structural と behavioral は異なる",
+      "recorded_spec_gen_output": ": AgentSpec.Manifest.Traceability.TestAxis.structural ≠ AgentSpec.Manifest.Traceability.TestAxis.behavioral",
+      "imports": ["AgentSpec.Manifest.Traceability"],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "constructor",
+      "difficulty": "adversarial-hard",
+      "design_axis": "(d) manifest_mathlib_hybrid",
+      "rationale": "AgentSpec.Manifest 内 TestAxis (deriving DecidableEq) の constructor disjointness、aesop に rule 無、decide で解ける可能性 (DecidableEq instance 経由)"
+    },
+    {
+      "id": "adv_d2_manifest_list_length_after_cons",
+      "nl_input": "AgentSpec.SemVer のリストに要素を 1 つ加えると長さが 1 増える",
+      "recorded_spec_gen_output": "(v : AgentSpec.SemVer) (vs : List AgentSpec.SemVer) : (v :: vs).length = vs.length + 1",
+      "imports": ["AgentSpec.Core"],
+      "namespace_open": "",
+      "prelude": "",
+      "shape": "higher-order",
+      "difficulty": "adversarial-hard",
+      "design_axis": "(d) manifest_mathlib_hybrid",
+      "rationale": "Manifest type を element に持つ List 操作、List.length_cons は Mathlib にあるが Manifest 型と組み合わせる adversarial mix"
+    }
+  ]
+}
