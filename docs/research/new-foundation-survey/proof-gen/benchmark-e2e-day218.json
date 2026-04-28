@@ -1,0 +1,59 @@
+{
+  "$comment": "Phase 8 sprint 1 e2e benchmark scaffolding (Day 218). Phase 6 spec-gen Day 204 PoC 5 件の recorded output を使い、proof-gen 部分のみ自動化して end-to-end pass rate を測定。Sprint 2 で independent NL benchmark に拡張、CLEVER same-condition は sprint 3。",
+  "version": "0.1.0-e2e-scaffold",
+  "input_schema": {
+    "id": "matches Phase 6 spec-gen benchmark.id",
+    "nl_input": "Phase 6 spec-gen Day 203 prompt と同じ自然言語要件",
+    "recorded_spec_gen_output": "Day 204 subagent dispatch で生成された Lean theorem statement (byte-identical with PI-19 registry)",
+    "imports": "AgentSpec module imports required",
+    "namespace_open": "namespace context (e.g., open AgentSpec.Manifest)"
+  },
+  "output_schema": {
+    "id": "benchmark id",
+    "nl_input": "carryover from input",
+    "generated_statement": "spec-gen output (recorded or live)",
+    "statement_compile_ok": "Bool — Lean parse + type check of recorded statement (with sorry proof)",
+    "proof_attempt_tool": "string — solver tried (aesop / duper)",
+    "proof_compile_ok": "Bool — full compile with proof tactic",
+    "e2e_pass": "Bool — statement_compile_ok && proof_compile_ok (any solver)",
+    "failure_stage": "spec / proof / both / none (PASS)"
+  },
+  "benchmarks": [
+    {
+      "id": "v1_measurable",
+      "nl_input": "V1 (skillQuality) は measurable である、つまり外部測定手続きが存在する",
+      "recorded_spec_gen_output": ": Measurable skillQuality",
+      "imports": [
+        "AgentSpec.Manifest.Observable"
+      ],
+      "namespace_open": "open AgentSpec.Manifest"
+    },
+    {
+      "id": "platform_not_in_constraint_boundary",
+      "nl_input": "L5 (platform) は T1-T8 のいずれの constraint の boundary mapping にも含まれない",
+      "recorded_spec_gen_output": ": ∀ c : ConstraintId, BoundaryId.platform ∉ constraintBoundary c",
+      "imports": [
+        "AgentSpec.Manifest.Observable"
+      ],
+      "namespace_open": "open AgentSpec.Manifest"
+    },
+    {
+      "id": "constraint_has_boundary",
+      "nl_input": "全 ConstraintId (T1-T8) は少なくとも 1 つの BoundaryId に対応する (constraintBoundary が non-empty)",
+      "recorded_spec_gen_output": ": ∀ c : ConstraintId, (constraintBoundary c).length > 0",
+      "imports": [
+        "AgentSpec.Manifest.Observable"
+      ],
+      "namespace_open": "open AgentSpec.Manifest"
+    },
+    {
+      "id": "observable_and",
+      "nl_input": "Observable な P と Q の連言 (P ∧ Q) も Observable である",
+      "recorded_spec_gen_output": "{P Q : World → Prop} (hp : Observable P) (hq : Observable Q) : Observable (fun w => P w ∧ Q w)",
+      "imports": [
+        "AgentSpec.Manifest.Observable"
+      ],
+      "namespace_open": "open AgentSpec.Manifest"
+    }
+  ]
+}
