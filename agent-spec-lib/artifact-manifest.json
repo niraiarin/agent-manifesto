@@ -5409,6 +5409,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 219 Phase 8 sprint 2 independent NL benchmark (91.7% measurement bias finding)",
+      "date": "2026-04-27",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 8 sprint 2 acceptance: benchmark-e2e-day219.json 12 case (PI-19 vocabulary 非依存)、6 shape coverage、3 difficulty (easy/medium/hard)。Run results: spec compile 12/12 = 100%, proof 11/12 = 91.7%, e2e 11/12 = 91.7%。重要 measurement bias finding: Day 218 (Manifest domain) 0% vs Day 219 (independent common math) 91.7% で 92% gap。原因: Mathlib の @[simp] / @[aesop] attribute が Nat / List / Set / Prop の standard math を直接 cover、Manifest custom definitions は cover 外。Sprint 2 #3 (≥3 hard tasks) は partial: 4 hard 中 3 件が aesop で解けた = 我々の hard calibration が CLEVER adversarial design 比 generous。Sprint 3 で adversarial mid benchmark (Mathlib direct lookup 外、multi-step reasoning、domain mixing) を設計し真の CLEVER same-condition measurement へ。5-15% target 評価: measurement design 次第、adversarial benchmark で再検証必要。subagent (verifier) 独立判定予定。Day 220+ sprint 3 (adversarial mid benchmark + final report) 着手予定。",
+      "scope": "Phase 8 sprint 2 完了 + 重要 finding: in-domain 0% vs common math 91.7% の gap が aesop/duper の lemma database coverage に依存。Sprint 3 adversarial mid benchmark 設計が CLEVER same-condition の本質。",
+      "change_category": "additive_test",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "52d37be6084753829475d062f7d50de3f14c675705a49cf45322a72b49cb4bf4",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
