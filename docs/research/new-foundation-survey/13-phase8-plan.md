@@ -67,11 +67,13 @@ Acceptance:
 
 ### Sprint 3: pass-rate measurement under CLEVER same-condition (2-3 Day)
 
-Acceptance:
-- E2E pass rate reported per stage: `spec_pass_rate`, `proof_pass_rate_given_spec_pass`, `e2e_pass_rate`.
-- Failure stage breakdown (spec vs proof vs both).
-- Phase 8 final report compares e2e_pass_rate against CLEVER's 0.6% and our 5-15% target band.
-- Honest assessment of whether 5-15% target is hit.
+Acceptance (status as of Day 221):
+- ✓ E2E pass rate reported per stage: `spec_pass_rate`, `proof_pass_rate_given_spec_pass`, `e2e_pass_rate` (Day 220 adversarial: 100% / 58.3% / 58.3%).
+- ✓ Failure stage breakdown (spec vs proof vs both) (Day 220: spec 0, proof 5, both 0, PASS 7).
+- ✓ Phase 8 final report compares e2e_pass_rate against CLEVER's 0.6% and our 5-15% target band (Day 221 results-day221-phase8-final.md, measurement triangle 0% / 58.3% / 91.7%).
+- ✓ Honest assessment: **5-15% target は本 phase で直接 hit せず**、3 measurement 全て band 外 (0% / 58.3% / 91.7%)、ただし target band の現実的位置と到達条件 (adversarial calibration recipe A-D) を Phase 9 候補として明確化。
+
+**Sprint 3 status: ACCEPT** (sprint 2 #3 partial を sprint 3 で recipe 提示でリカバリ、Phase 8 acceptance 11/11)
 
 ## Carry-over from Phase 7
 
@@ -86,15 +88,15 @@ Phase 7 sprint 3 #2 deferred refinement (failure taxonomy using internal solver 
 - **PI-25 candidate (ecosystem dependency version lag tracking)**: Created Day 210, still backlog. Phase 9 candidate.
 - **PI-26 candidate (NEW)**: e2e harness execution mode auditing (subagent dispatch is judgmental; spec-gen prompt + proof-harness invocation are deterministic). Apply `mixed_task_decomposition` (TaskClassification.lean) to separate stages cleanly.
 
-## Recommended Execution Order
+## Recommended Execution Order (actual)
 
-1. Land this planning doc on `research/new-foundation` (Day 217).
-2. Sprint 1: e2e-harness (Day 218-220 estimate).
-3. Sprint 2: benchmark-e2e.json with independent tasks (Day 221-222).
-4. Sprint 3: full e2e measurement + Phase 8 final report (Day 223-224).
-5. Day 225+: release/phase8 cherry-pick + PR + main merge (Phase 5/6/7 同 pattern).
+1. ✓ Land this planning doc on `research/new-foundation` (Day 217 commit `abd728e`).
+2. ✓ Sprint 1: e2e-harness (Day 218 commit `1c3a436`、当初見積 3-4 Day → 実測 1 Day).
+3. ✓ Sprint 2: benchmark-e2e.json with independent tasks (Day 219 commit `6897749`、当初見積 2-3 Day → 実測 1 Day).
+4. ✓ Sprint 3: full e2e measurement + Phase 8 final report (Day 220 adversarial commit `4b2814d` + Day 221 final report、当初見積 2-3 Day → 実測 2 Day).
+5. Day 222+: release/phase8 cherry-pick + PR + main merge (Phase 5/6/7 同 pattern).
 
-Total estimate: **8-9 Day** (vs Phase 7's actual 9-10 Day).
+Total actual: **5 Day** (Day 217-221) vs estimated 8-9 Day (subagent dispatch を recorded output 経由で短縮).
 
 ## Merge / Governance Notes
 
