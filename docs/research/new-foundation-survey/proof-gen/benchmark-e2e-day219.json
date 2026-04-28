@@ -1,0 +1,133 @@
+{
+  "$comment": "Phase 8 sprint 2 independent NL benchmark (Day 219). 12 cases、Phase 6 spec-gen Day 204 と独立、6 shape × 3 difficulty (easy/medium/hard)。CLEVER same-condition の realistic pass rate 分布を測定するため、aesop/duper baseline で解ける見込みのもの (easy/medium) も含める。Sprint 3 で full measurement、target 5-15% 検証。",
+  "version": "0.2.0-independent",
+  "input_schema": {
+    "id": "benchmark identifier (NL-derived, not from PI-19 registry)",
+    "nl_input": "自然言語要件 (PI-19 vocabulary 非依存)",
+    "recorded_spec_gen_output": "Lean theorem signature: <binders> : <result type> (without proof)",
+    "imports": "Lean imports required",
+    "namespace_open": "namespace context (or empty string)",
+    "shape": "trivial / rewriting / constructor / arithmetic / quantified / higher-order",
+    "difficulty": "easy / medium / hard"
+  },
+  "output_schema": {
+    "id": "benchmark id",
+    "nl_input": "carryover",
+    "generated_statement": "spec-gen output",
+    "statement_compile_ok": "Bool",
+    "proof_attempt_tool": "string or null",
+    "proof_compile_ok": "Bool",
+    "e2e_pass": "Bool",
+    "failure_stage": "spec / proof / both / none"
+  },
+  "benchmarks": [
+    {
+      "id": "easy_self_implication",
+      "nl_input": "任意の命題は自身を含意する",
+      "recorded_spec_gen_output": "(p : Prop) : p → p",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "trivial",
+      "difficulty": "easy"
+    },
+    {
+      "id": "easy_and_commutative",
+      "nl_input": "連言は可換である",
+      "recorded_spec_gen_output": "(p q : Prop) : p ∧ q → q ∧ p",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "trivial",
+      "difficulty": "easy"
+    },
+    {
+      "id": "easy_or_idempotent",
+      "nl_input": "選言は冪等である",
+      "recorded_spec_gen_output": "(p : Prop) : p ∨ p → p",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "trivial",
+      "difficulty": "easy"
+    },
+    {
+      "id": "med_modus_tollens",
+      "nl_input": "対偶律: 含意と後件否定から前件否定を導く",
+      "recorded_spec_gen_output": "(p q : Prop) (h : p → q) (hnq : ¬q) : ¬p",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "quantified",
+      "difficulty": "medium"
+    },
+    {
+      "id": "med_nat_zero_left",
+      "nl_input": "自然数の左零和: 0 + n = n",
+      "recorded_spec_gen_output": "(n : Nat) : 0 + n = n",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "arithmetic",
+      "difficulty": "medium"
+    },
+    {
+      "id": "med_list_append_nil",
+      "nl_input": "リスト末尾 nil 連結は元のリスト",
+      "recorded_spec_gen_output": "{α : Type} (xs : List α) : xs ++ [] = xs",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "rewriting",
+      "difficulty": "medium"
+    },
+    {
+      "id": "med_function_compose_assoc",
+      "nl_input": "関数合成は結合的",
+      "recorded_spec_gen_output": "{α β γ δ : Type} (f : α → β) (g : β → γ) (h : γ → δ) : (h ∘ g) ∘ f = h ∘ (g ∘ f)",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "higher-order",
+      "difficulty": "medium"
+    },
+    {
+      "id": "med_exists_intro_via_concrete",
+      "nl_input": "具体的な値が条件を満たすなら存在する",
+      "recorded_spec_gen_output": "(P : Nat → Prop) (h : P 0) : ∃ n, P n",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "quantified",
+      "difficulty": "medium"
+    },
+    {
+      "id": "hard_nat_add_assoc",
+      "nl_input": "自然数加算は結合的",
+      "recorded_spec_gen_output": "(a b c : Nat) : (a + b) + c = a + (b + c)",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "arithmetic",
+      "difficulty": "hard"
+    },
+    {
+      "id": "hard_list_reverse_involutive",
+      "nl_input": "リスト反転は対合 (二度かけると元に戻る)",
+      "recorded_spec_gen_output": "{α : Type} (xs : List α) : xs.reverse.reverse = xs",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "rewriting",
+      "difficulty": "hard"
+    },
+    {
+      "id": "hard_set_inter_subset",
+      "nl_input": "二集合の積集合は両方の部分集合",
+      "recorded_spec_gen_output": "{α : Type} (A B : Set α) : A ∩ B ⊆ A ∧ A ∩ B ⊆ B",
+      "imports": ["Mathlib.Data.Set.Basic"],
+      "namespace_open": "",
+      "shape": "higher-order",
+      "difficulty": "hard"
+    },
+    {
+      "id": "hard_decidable_classical",
+      "nl_input": "排中律 (任意の命題は真か偽か)",
+      "recorded_spec_gen_output": "(p : Prop) [Decidable p] : p ∨ ¬p",
+      "imports": [],
+      "namespace_open": "",
+      "shape": "constructor",
+      "difficulty": "hard"
+    }
+  ]
+}

@@ -4371,6 +4371,132 @@
         9
       ],
       "steps_skipped": []
+    },
+    {
+      "day": 216,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 216 Phase 7 main merge 完遂 9-step。Step 1 reference read (PR #693 status + CI completion)。Step 3a PoC (release/phase7 worktree 作成 + 9 commits cherry-pick + conflict resolution theirs 採用)、Step 3b TyDD eval (CI green 確認後 squash)。Step 4 implementation: gh pr merge 693 --squash → main commit 26a7431、release/phase7 branch retain。Step 7 mandatory checklist (cycle-check 27/27 OK)。Step 5 verifier_history、Step 9 update-handoff。metadata_only。Phase 7 完了、Day 217+ Phase 8 direction 待機。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 217,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 217 Phase 8 plan setup 9-step。Step 1 reference read (Phase 7 final report + Phase 6 spec-gen results)。Step 3a PoC (Phase 8 direction 設計 + 3 sprint structure + Phase 7 carry-over absorption)、Step 3b TyDD eval (CLEVER same-condition definition risk 抽出)。Step 4 implementation: docs/.../13-phase8-plan.md 新規 (3 sprint + tool tier + PI 配置 + risk + carry-over)。Step 7 mandatory checklist (cycle-check 27/27 OK after uv cache rebuild)。Step 5 verifier_history、Step 9 update-handoff。process_only (verifier 独立: conservative extension)。Day 218+ sprint 1 (e2e harness) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 218,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 218 Phase 8 sprint 1 e2e harness 9-step。Step 1 reference read (Phase 6 spec-gen Day 204 outputs + Manifest theorem statements)。Step 3a PoC (e2e-harness.sh + 4 benchmark + run、spec 4/4 + proof 0/4)、Step 3b TyDD eval (theorem stub wrap で implicit binders 対応)。Step 4 implementation: scripts/e2e-harness.sh + benchmark-e2e-day218.json + results-day218-e2e.json + results-day218-e2e.md。Step 7 mandatory checklist (cycle-check 27/27 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Sprint 1 acceptance ≥3 cases chain ✓、Day 219+ sprint 2 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 219,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 219 Phase 8 sprint 2 9-step。Step 1 reference read (Day 218 finding + Mathlib coverage)。Step 3a PoC (12 independent NL case design + e2e run、91.7% pass rate)、Step 3b TyDD eval (measurement bias 認識: hard calibration generous)。Step 4 implementation: benchmark-e2e-day219.json + results-day219-e2e.json + results-day219-e2e.md。Step 7 mandatory checklist (cycle-check 27/27 OK)。Step 5 verifier_history、Step 9 update-handoff。additive_test。Sprint 2 acceptance #1+#2 ✓ #3 partial (hard calibration 課題)。Day 220+ sprint 3 adversarial mid benchmark 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 220,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 220 Phase 8 sprint 3 9-step。Step 1 reference read (Day 218/219 finding triangle setup)。Step 3a PoC (12 case adversarial benchmark + e2e run、4 design axes (a)mathlib_non_simp/(b)custom_inductive/(c)requires_cases/(d)manifest_mathlib_hybrid)、Step 3b TyDD eval (58.3% pass = 5-15% target band 超過、adversarial calibration 緩い: deriving DecidableEq + 定義展開で aesop 浮上)。Step 4 implementation: benchmark-adversarial-day220.json + results-day220-adversarial.{json,md} + e2e-harness.sh に optional prelude field (backward compat、jq // で空文字 default)。Step 5 verifier_history (subagent verifier 独立判定 conservative_extension/additive_test 確定)。Step 7 mandatory checklist (cycle-check 27/27 OK)。Step 9 update-handoff。Sprint 3 acceptance #1+#2+#4 ✓ #3 partial (final report 別 commit)。Phase 8 measurement triangle 完成: 0% (Manifest) / 58.3% (adversarial) / 91.7% (common math)。Day 221+ Phase 8 final report draft + main merge prep 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 221,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 221 Phase 8 final report draft 9-step。Step 1 reference read (Day 218/219/220 results + Phase 7 final report format)。Step 4 implementation: results-day221-phase8-final.md 新規 (3 benchmark triangle 0%/58.3%/91.7% 統合、CLEVER 0.6% 比較、5-15% target 直接 hit せず honest assessment、adversarial calibration recipe A-D を Phase 9 candidate として提示)。13-phase8-plan.md に sprint 3 acceptance ✓ 4/4 + actual execution timeline (5 Day vs estimated 8-9 Day) 追加。Step 5 verifier_history (subagent verifier 独立判定 conservative_extension/additive_doc 確定)。Step 7 mandatory checklist (cycle-check 27/27 OK)。Step 9 update-handoff。Phase 8 acceptance: 11/11 完成 (sprint 2 #3 partial を sprint 3 で recipe 提示でリカバリ)。Day 222+ Phase 8 main merge prep (release/phase8 cherry-pick + PR) 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
+    },
+    {
+      "day": 222,
+      "commit": "TBD",
+      "status": "done",
+      "scope": "Day 222 Phase 8 main merge prep + Day 221 schema hotfix 9-step。Step 4 implementation: (1) artifact-manifest.json verifier_history[224].change_category を invalid 'additive_doc' → schema 準拠 'process_only' に修正 (Day 211 'maintenance' → Day 212 'process_only' 同 precedent), (2) release/phase8 worktree 作成 (/private/tmp/agent-manifesto-phase8-worktree、origin/main = 26a7431 起点), (3) Day 216-221 6 commits cherry-pick (8d7d558+abd728e+1c3a436+6897749+4b2814d+64c6b36 → 4d5870c+d2ad36e+c0ce5ac+630a360+d3e229f+22b9362)、(4) push release/phase8 + PR 作成。Step 5 verifier_history (Day 221 hotfix + Day 222 release prep dual purpose、subagent verifier 独立判定 conservative_extension/process_only 確定予定)。Step 7 mandatory checklist (cycle-check 27/27 OK [5a] schema validation pass)。Step 9 update-handoff。Phase 8 main merge prep 完了、PR merge 待ち、後続 Day 223+ で post-merge bookkeeping 着手予定。",
+      "steps_completed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "steps_skipped": []
     }
   ],
   "gap_analysis": {

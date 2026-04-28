@@ -1,0 +1,122 @@
+[
+  {
+    "id": "easy_self_implication",
+    "nl_input": "任意の命題は自身を含意する",
+    "generated_statement": "(p : Prop) : p → p",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "easy_and_commutative",
+    "nl_input": "連言は可換である",
+    "generated_statement": "(p q : Prop) : p ∧ q → q ∧ p",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "easy_or_idempotent",
+    "nl_input": "選言は冪等である",
+    "generated_statement": "(p : Prop) : p ∨ p → p",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "med_modus_tollens",
+    "nl_input": "対偶律: 含意と後件否定から前件否定を導く",
+    "generated_statement": "(p q : Prop) (h : p → q) (hnq : ¬q) : ¬p",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "med_nat_zero_left",
+    "nl_input": "自然数の左零和: 0 + n = n",
+    "generated_statement": "(n : Nat) : 0 + n = n",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "med_list_append_nil",
+    "nl_input": "リスト末尾 nil 連結は元のリスト",
+    "generated_statement": "{α : Type} (xs : List α) : xs ++ [] = xs",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "med_function_compose_assoc",
+    "nl_input": "関数合成は結合的",
+    "generated_statement": "{α β γ δ : Type} (f : α → β) (g : β → γ) (h : γ → δ) : (h ∘ g) ∘ f = h ∘ (g ∘ f)",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "med_exists_intro_via_concrete",
+    "nl_input": "具体的な値が条件を満たすなら存在する",
+    "generated_statement": "(P : Nat → Prop) (h : P 0) : ∃ n, P n",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "hard_nat_add_assoc",
+    "nl_input": "自然数加算は結合的",
+    "generated_statement": "(a b c : Nat) : (a + b) + c = a + (b + c)",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "hard_list_reverse_involutive",
+    "nl_input": "リスト反転は対合 (二度かけると元に戻る)",
+    "generated_statement": "{α : Type} (xs : List α) : xs.reverse.reverse = xs",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "hard_set_inter_subset",
+    "nl_input": "二集合の積集合は両方の部分集合",
+    "generated_statement": "{α : Type} (A B : Set α) : A ∩ B ⊆ A ∧ A ∩ B ⊆ B",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "aesop",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  },
+  {
+    "id": "hard_decidable_classical",
+    "nl_input": "排中律 (任意の命題は真か偽か)",
+    "generated_statement": "(p : Prop) [Decidable p] : p ∨ ¬p",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": "duper",
+    "proof_compile_ok": true,
+    "e2e_pass": true,
+    "failure_stage": "none"
+  }
+]

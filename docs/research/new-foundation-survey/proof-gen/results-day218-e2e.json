@@ -1,0 +1,42 @@
+[
+  {
+    "id": "v1_measurable",
+    "nl_input": "V1 (skillQuality) は measurable である、つまり外部測定手続きが存在する",
+    "generated_statement": ": Measurable skillQuality",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "platform_not_in_constraint_boundary",
+    "nl_input": "L5 (platform) は T1-T8 のいずれの constraint の boundary mapping にも含まれない",
+    "generated_statement": ": ∀ c : ConstraintId, BoundaryId.platform ∉ constraintBoundary c",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "constraint_has_boundary",
+    "nl_input": "全 ConstraintId (T1-T8) は少なくとも 1 つの BoundaryId に対応する (constraintBoundary が non-empty)",
+    "generated_statement": ": ∀ c : ConstraintId, (constraintBoundary c).length > 0",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  },
+  {
+    "id": "observable_and",
+    "nl_input": "Observable な P と Q の連言 (P ∧ Q) も Observable である",
+    "generated_statement": "{P Q : World → Prop} (hp : Observable P) (hq : Observable Q) : Observable (fun w => P w ∧ Q w)",
+    "statement_compile_ok": true,
+    "proof_attempt_tool": null,
+    "proof_compile_ok": false,
+    "e2e_pass": false,
+    "failure_stage": "proof"
+  }
+]
