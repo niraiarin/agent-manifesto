@@ -5441,6 +5441,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 221 Phase 8 final report (measurement triangle + adversarial calibration recipe)",
+      "date": "2026-04-28",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 8 final report acceptance: results-day221-phase8-final.md (3 benchmark triangle 統合、CLEVER 0.6% 比較、5-15% target 評価、adversarial calibration recipe A-D 提示)。13-phase8-plan.md に sprint 3 acceptance ✓ 4/4 + actual execution timeline 追加 (Day 217-221 5 Day, vs estimated 8-9 Day)。Phase 8 acceptance: 11/11 完成 (sprint 1 4/4 + sprint 2 3/4+1partial + sprint 3 4/4、partial を sprint 3 #4 recipe 提示でリカバリ)。Honest assessment: 5-15% target は本 phase で **直接 hit せず**、3 measurement (0%/58.3%/91.7%) 全て band 外、ただし target band の現実的位置 (0% < CLEVER 0.6% < 5-15% band < 58.3% < 91.7%) と到達条件 (adversarial calibration recipe A-D: deriving DecidableEq 排除 + definitional unfold 不可 + omega/induction 必須命題群 + Mathlib @[simp] 攻撃面外) を Phase 9 candidate として明確化。subagent (verifier) 独立判定: conservative_extension / additive_doc 確定 (target 自体は plan で維持、honest assessment は finding 記録、Phase 9 は forward path として additive)。Day 222+ release/phase8 main merge prep 着手予定。",
+      "scope": "Phase 8 完成 + measurement triangle 完成 + adversarial calibration recipe 確立。本質的成果: bias source identification (in-domain lemma database 不在 vs Mathlib coverage vs adversarial design) + 5-15% band hit を defensible にする recipe を Phase 9 candidate として提示。Phase 8 main merge prep へ。",
+      "change_category": "additive_doc",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "e88329fb321826e7b6426546a5953f9c2b8709c168b4b6d846a9500d55187317",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
