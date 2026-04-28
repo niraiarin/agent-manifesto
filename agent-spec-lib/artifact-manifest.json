@@ -5489,6 +5489,22 @@
         "implementation": "pass",
         "evaluation": "pass"
       }
+    },
+    {
+      "round": "Day 224 weekly_retro (window 206-223 復帰) + Phase 9 plan setup (adversarial calibration recipe primary)",
+      "date": "2026-04-28",
+      "result": "PASS",
+      "addressable_count": 0,
+      "evaluator": "Phase 9 direction 確定: adversarial calibration recipe 洗練 (Day 220 finding 起点、Recipe A-D 12+ case benchmark + 5-15% band hit defensible 検証)。weekly_retro 19 Day lapse から復帰 (Day 205 → Day 224、policy >7 を 12 Day 超過、window 206-223、commit_count 18、process_only 8、impl_pass 7、theorem/axiom delta 0、loc_delta 4000)。Phase 7+8 累積 31 Day 想定 → 17 Day 実測 (≈55% pace)。docs/research/new-foundation-survey/14-phase9-plan.md draft: 3 sprint (Recipe A+B benchmark / Recipe C+D + harness extension / full run + final report) × 12 acceptance、PI-23/24/25/26/27 placement、paper survey (CLEVER + miniF2F + ProofNet + LeanDojo + REAL-Prover)、risk (recipe 設計コスト + pass rate inversion + subagent dispatch dependency)。Phase 9 estimate 12 Day。Phase 8 sprint 3 #2/#4 carry-over 統合 (failure taxonomy split + adversarial recipe primary)。subagent (verifier) 独立判定 process_only / conservative_extension 確定 (PI-8 PASS 1 cosmetic finding addressed: lapse 11→19 Day fix)。Day 225+ Phase 9 sprint 1 着手予定。",
+      "scope": "Phase 9 plan 確定 (adversarial calibration recipe primary)、weekly_retro 復帰 (window 206-223)、Day 224 day_plan entry append、Phase 9 sprint 1 着手 ready。",
+      "change_category": "process_only",
+      "subagent_dispatch": true,
+      "cycle_check_log_hash": "7faed01ea8bc1bed7a80e9a88bb239379ae47f4b6d914c0d039590668cf723ef",
+      "pass_layers": {
+        "cycle_hygiene": "pass",
+        "implementation": "pass",
+        "evaluation": "pass"
+      }
     }
   ],
   "navigation_index": {
@@ -5728,6 +5744,20 @@
       "axiom_delta": 0,
       "loc_delta": 700,
       "highlights": "Day 197-204 (8 Day window) Phase 6 sprint 1+2+3 全完遂、想定 22 Day を 8 Day で完了 (3 sprint × 14 acceptance + 1 適切 defer = 100% effective)。sprint 1 ζ Build performance: PI-21+22 で CI 35-50min → 7min on warm cache。sprint 2 D CLEVER framework: pass rate calculator + triage protocol + report generator + example 12 (M1/M2/M3 metrics analog)。sprint 3 A spec generation: 5/5 PoC = 100% statement parity in constrained setting (CLEVER 0.6% 同条件比較は Phase 7+)。次 window: main merge + Phase 7 plan (proof generation primary 候補)。"
+    },
+    {
+      "window_start_day": 206,
+      "window_end_day": 223,
+      "generated_day": 224,
+      "commit_count": 18,
+      "process_only_count": 8,
+      "implementation_pass_count": 7,
+      "implementation_fail_count": 0,
+      "implementation_not_attempted_count": 0,
+      "theorem_delta": 0,
+      "axiom_delta": 0,
+      "loc_delta": 4000,
+      "highlights": "Day 206-223 (18 Day 拡張 window、retro lapse 11 Day から復帰) Phase 7 + Phase 8 全完遂、想定 22+9 = 31 Day を 17 Day で完了 (Phase 7 9 commits + Phase 8 6 commits + 3 release metadata commits)。Phase 7 (Day 207-215): proof generation eval framework — Aesop 83.3% / Duper 66.7% (in-domain v0.2.0 12 cases) / LeanCopilot blocked-documented v4.28.0 / 5-class failure taxonomy / 24 materialised scripts / 12/12 acceptance ✓。Phase 8 (Day 217-222): CLEVER same-condition end-to-end measurement — measurement triangle (e2e harness 0% / adversarial mid 58.3% / independent NL 91.7%) で 5-15% target band の達成条件と bias source 同定 / adversarial calibration recipe A-D 提示 / 11/11 acceptance ✓。Day 206/216/223 release commits: Phase 6/7/8 main merge metadata (PR #692→c406008、#693→26a7431、#694→ff4c547、main commit chain 4→5)。theorem/axiom delta=0 (eval/measurement focus、core Manifest 不変)。process_only 44% (8/18) は plan setup + final audit + main merge bookkeeping 重め。次 window: Phase 9 sprint 1 = adversarial calibration recipe 洗練 (Recipe A-D 12+ case benchmark + 5-15% band hit defensible 検証)。"
     }
   ]
 }
