@@ -35,3 +35,11 @@ scripts/__pycache__/
 depgraph-[0-9]*.json
 .cascade-state/
 .claude/metrics/cycle-check-runs/
+
+# Session handoffs are runtime ephemera — keep .gitkeep + .archive/ structure
+# but exclude the actual session-state files. Resume bookmarks (md) and JSONL
+# event logs are local-only; they are not load-bearing for the repo.
+.claude/handoffs/handoff-*.jsonl
+.claude/handoffs/handoff-resume-*.md
+.claude/handoffs/handoff-resume-*.md.injected
+.claude/handoffs/.archive/
