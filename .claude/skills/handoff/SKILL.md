@@ -184,8 +184,8 @@ on repo files) is FORBIDDEN until the role is consciously enacted.
 
 resume.md は次セッションが **resume.md だけ読んで ACT できる** よう self-sufficient であるべき。次の 5 制約を全て満たすこと:
 
-1. **Command surface explicitness**: Next Steps で言及する slash command (`/foo`) は必ず terminal-command equivalent (script path + args + env vars) と並記する。slash command は CC session scope なので cross-repo handoff で resolve しない可能性がある。
-2. **Path anchor explicitness**: 全 relative path に `<repo>/` または `<cwd>/` anchor を付ける。cwd ≠ work repo の cross-repo case では絶対パス推奨。
+1. **Command surface explicitness**: Next Steps で言及する slash command (`/foo`) は必ず terminal-command equivalent (script path + args + env vars) と並記する。slash command は CC session scope なので cross-repo handoff で resolve しない可能性がある。dispatch 系で prompt file を必要とする command は **prompt file path を明示** するか、または **「Coordinator が当該 task の brief を ADR-031 14-field template で composition」** sub-step を Next Steps に挿入する (どちらか必須)。空白の dispatch 指示は次セッションの discretionary fill-in を強制する (iter 2 verification で identified)。
+2. **Path anchor explicitness**: 全 path (relative も absolute も) に anchor を付ける。relative なら `<repo>/` `<cwd>/` `<workspace>/` 等の prefix、cross-repo case (cwd ≠ work repo) では絶対 path を推奨。**この制約は cross-references field にも適用** — ADR / requirement file / memory pointer を cite する場合、絶対 path または `<repo>/decisions/ADR-NNN.md` 形式の anchored path で記載する (iter 2 verification で "ADR-031 absolute path 未記載" として identified)。
 3. **Cross-repo cwd role declaration**: cwd ≠ work repo の場合、cwd の role を明示する: `passive base` (no commits) / `commit target` / `discard at end`。
 4. **Bounded protocol completeness**: 引用する bounded-iteration protocol (例: `≥3 ≤5 rounds, convergence = 2 consecutive sufficient`) は **success branch と cap-exceeded fallback の両方** を記載する。
 5. **Resource counter envelope**: consumption tally (Codex dispatches, token usage 等) は `{limit, window, carryover policy}` と並記する。tally だけでは次セッションの予算判断に使えない。
