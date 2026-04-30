@@ -167,6 +167,16 @@ intent: <what the user originally asked for>
 - <decision with rationale>
 ```
 
+**Self-sufficiency requirements** (iter 1 empirical findings 2026-04-30 — Codex GPT-5.5 + CC subagent 並行検証で converged):
+
+resume.md は次セッションが **resume.md だけ読んで ACT できる** よう self-sufficient であるべき。次の 5 制約を全て満たすこと:
+
+1. **Command surface explicitness**: Next Steps で言及する slash command (`/foo`) は必ず terminal-command equivalent (script path + args + env vars) と並記する。slash command は CC session scope なので cross-repo handoff で resolve しない可能性がある。
+2. **Path anchor explicitness**: 全 relative path に `<repo>/` または `<cwd>/` anchor を付ける。cwd ≠ work repo の cross-repo case では絶対パス推奨。
+3. **Cross-repo cwd role declaration**: cwd ≠ work repo の場合、cwd の role を明示する: `passive base` (no commits) / `commit target` / `discard at end`。
+4. **Bounded protocol completeness**: 引用する bounded-iteration protocol (例: `≥3 ≤5 rounds, convergence = 2 consecutive sufficient`) は **success branch と cap-exceeded fallback の両方** を記載する。
+5. **Resource counter envelope**: consumption tally (Codex dispatches, token usage 等) は `{limit, window, carryover policy}` と並記する。tally だけでは次セッションの予算判断に使えない。
+
 **設計根拠 (`structured_log` cross-reference フィールド)**:
 - resume.md は human/LLM-readable、JSONL は machine-readable typed state
 - 2 つの artifact が parallel に書かれるが、resume.md から JSONL への参照がないと次セッションは JSONL の存在を認識できない
