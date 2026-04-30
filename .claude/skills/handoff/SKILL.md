@@ -149,6 +149,19 @@ phase: <current phase>
 structured_log: `.claude/handoffs/handoff-<timestamp>.jsonl` (対応 JSONL へのポインタ。本 resume.md と同 state の typed checkpoint、audit / scripting / 別エージェント統合時に参照)
 intent: <what the user originally asked for>
 
+## Role enactment (REQUIRED — read before any tool use)
+
+The next session MUST start by enacting the role declared here, NOT by
+direct-executing changes. Default Claude Code behavior (Edit/Write/Bash
+on repo files) is FORBIDDEN until the role is consciously enacted.
+
+- **Tier**: <e.g., Tier 0 Coordinator (CC native) / Tier 1 Implementor>
+- **Skill discipline**: <which skills/dispatch tools are mandatory; what is forbidden>
+  - Example: "All code changes via plugin (skills/tools/scripts/hooks). Direct Edit/Write to repo source FORBIDDEN. Implementor work dispatched via tools/tydd-codex-dispatch.sh implementor with ADR-031 14-field brief template. Verifier review via /tydd-verifier."
+- **Cross-references** (read these before first tool call):
+  - <memory pointer 1>
+  - <ADR / requirement file pointer>
+
 ## Progress
 ### Done
 - <completed items>
@@ -166,6 +179,17 @@ intent: <what the user originally asked for>
 ## Key Decisions
 - <decision with rationale>
 ```
+
+**Self-sufficiency requirements** (iter 1 empirical findings 2026-04-30 — Codex GPT-5.5 + CC subagent 並行検証で converged):
+
+resume.md は次セッションが **resume.md だけ読んで ACT できる** よう self-sufficient であるべき。次の 5 制約を全て満たすこと:
+
+1. **Command surface explicitness**: Next Steps で言及する slash command (`/foo`) は必ず terminal-command equivalent (script path + args + env vars) と並記する。slash command は CC session scope なので cross-repo handoff で resolve しない可能性がある。
+2. **Path anchor explicitness**: 全 relative path に `<repo>/` または `<cwd>/` anchor を付ける。cwd ≠ work repo の cross-repo case では絶対パス推奨。
+3. **Cross-repo cwd role declaration**: cwd ≠ work repo の場合、cwd の role を明示する: `passive base` (no commits) / `commit target` / `discard at end`。
+4. **Bounded protocol completeness**: 引用する bounded-iteration protocol (例: `≥3 ≤5 rounds, convergence = 2 consecutive sufficient`) は **success branch と cap-exceeded fallback の両方** を記載する。
+5. **Resource counter envelope**: consumption tally (Codex dispatches, token usage 等) は `{limit, window, carryover policy}` と並記する。tally だけでは次セッションの予算判断に使えない。
+6. **Role enactment declaration** (iter 2 empirical 2026-04-30 — real-world failure: 別 session が resume.md 受領後 Tier 0 Coordinator 役割を取らず File Edit を直接実行): resume.md の冒頭近く (metadata block 直後) に **Role enactment** subsection を必須配置する。next session の tier、skill discipline、direct-execute 禁止条項、cross-references を明記する。 framing なしで agent が resume.md だけ読んで自律 infer する場合、role 宣言が無いと Claude Code default behavior (直接 Edit/Write/Bash) に fall back するため、artifact 自身が role を hand-off せねばならない。
 
 **設計根拠 (`structured_log` cross-reference フィールド)**:
 - resume.md は human/LLM-readable、JSONL は machine-readable typed state
